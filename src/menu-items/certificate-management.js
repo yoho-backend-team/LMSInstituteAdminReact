@@ -30,7 +30,7 @@ const pages = {
           id: 'student-certificates',
           title: 'Student Certificates',
           type: 'item',
-          url: '/certificate-management/students',
+          url: '/certificate-management/student-certificates',
           icon: icons.IconCertificate2,
           target: false,
           breadcrumbs: false
@@ -39,7 +39,7 @@ const pages = {
           id: 'staff-certificates',
           title: 'Staff Certificates',
           type: 'item',
-          url: '/certificate-management/staffs',
+          url: '/certificate-management/staff-certificates',
           icon: icons.IconCertificate2,
           target: false,
           breadcrumbs: false

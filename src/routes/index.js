@@ -60,6 +60,10 @@ const CoursesPage = Loadable(lazy(() => import('views/course-management/courses'
 const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
 const OnlineExamsPage = Loadable(lazy(() => import('views/exam-management/online-exam')));
 
+// Result Management
+const OfflineExamResultPage = Loadable(lazy(() => import('views/result-management/offline-exams')));
+const OnlineExamResultPage = Loadable(lazy(() => import('views/result-management/online-exams')));
+
 // Help Center
 const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support')));
 const TechnicalSupportPage = Loadable(lazy(() => import('views/help-center/technical-support')));
@@ -140,10 +144,10 @@ const ApplicationRoutes = () => {
       </Route>
 
       <Route path="/attendance-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/attendance-management/students" />} />
-        <Route path="students" element={<StudentAttendancesPage />} />
-        <Route path="teaching-staffs" element={<TeachingStaffAttendancesPage />} />
-        <Route path="non-teaching-staffs" element={<NonTeachingStaffAttendancesPage />} />
+        <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
+        <Route path="student-attendances" element={<StudentAttendancesPage />} />
+        <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
+        <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
       </Route>
 
       <Route path="/batch-management" element={<MainLayout />}>
@@ -192,6 +196,11 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/exam-management/online-exams" />} />
         <Route path="offline-exams" element={<OfflineExamsPage />} />
         <Route path="online-exams" element={<OnlineExamsPage />} />
+      </Route>
+      <Route path="/result-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/exam-management/online-exam-results" />} />
+        <Route path="offline-exam-results" element={<OfflineExamResultPage />} />
+        <Route path="online-exam-results" element={<OnlineExamResultPage />} />
       </Route>
 
       <Route path="/id-card-management" element={<MainLayout />}>

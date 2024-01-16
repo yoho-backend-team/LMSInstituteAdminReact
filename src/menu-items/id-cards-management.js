@@ -31,7 +31,7 @@ const pages = {
           id: 'student-id-cards',
           title: 'Student IDCards',
           type: 'item',
-          url: '/id-card-management/students',
+          url: '/id-card-management/student-id-cards',
           icon: icons.IconIdBadge,
           target: false,
           breadcrumbs: false
@@ -40,7 +40,7 @@ const pages = {
           id: 'staff-id-cards',
           title: 'Staff IDCards',
           type: 'item',
-          url: '/id-card-management/staffs',
+          url: '/id-card-management/staff-id-cards',
           icon: icons.IconIdBadge2,
           target: false,
           breadcrumbs: false
