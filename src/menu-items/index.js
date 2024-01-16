@@ -1,7 +1,4 @@
 import dashboard from './dashboard';
-import pages from './pages';
-import utilities from './utilities';
-import other from './other';
 import userManagement from './user-management';
 import branchManagement from './branch-management';
 import staffManagement from './staff-management';
@@ -12,7 +9,13 @@ import classManagement from './class-management';
 import examManagement from './exam-management';
 import attendanceManagement from './attendance-management';
 import paymentManagement from './payment-management';
-import feeManagement from './fee-management';
+import batchManagement from './batch-management';
+import refundManagement from './refund-management';
+import certificateManagement from './certificate-management';
+import IdCardManagement from './id-cards-management';
+import resultManagement from './result-management';
+import allNotifications from './notification-management';
+import helpCenter from './help-center';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
@@ -20,6 +23,7 @@ const menuItems = {
     dashboard,
     branchManagement,
     userManagement,
+    batchManagement,
     staffManagement,
     studentManagement,
     courseManagement,
@@ -27,11 +31,14 @@ const menuItems = {
     classManagement,
     examManagement,
     attendanceManagement,
+    resultManagement,
     paymentManagement,
-    feeManagement,
-    pages,
-    utilities,
-    other
+    refundManagement,
+
+    allNotifications,
+    certificateManagement,
+    IdCardManagement,
+    helpCenter
   ]
 };
 

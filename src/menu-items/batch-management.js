@@ -1,34 +1,35 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconGitBranch } from '@tabler/icons';
 
 // constant
 const icons = {
   IconKey,
   IconShieldLock,
   IconUser,
-  IconUsers
+  IconUsers,
+  IconGitBranch
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
-  id: 'fee-management',
+  id: 'batch-management',
   title: '',
   type: 'group',
   children: [
     {
       id: 'authentication',
-      title: 'Fee Management',
+      title: 'Batch Management',
       type: 'collapse',
-      icon: icons.IconShieldLock,
+      icon: icons.IconGitBranch,
 
       children: [
         {
-          id: 'fees',
-          title: 'Fees',
+          id: 'branches',
+          title: 'Branches',
           type: 'item',
-          url: '/fee-management/fees',
-          icon: icons.IconUsers,
+          url: '/batch-management/batches',
+          icon: icons.IconGitBranch,
           target: false,
           breadcrumbs: false
         }
