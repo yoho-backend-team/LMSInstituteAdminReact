@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers,IconCash } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -25,10 +25,28 @@ const pages = {
 
       children: [
         {
-          id: 'payments',
-          title: 'Payments',
+          id: 'fees',
+          title: 'Fees',
           type: 'item',
-          url: '/payment-management/payments',
+          url: '/payment-management/fees',
+          icon: icons.IconCash,
+          target: false,
+          breadcrumbs: false
+        },
+        {
+          id: 'salaries',
+          title: 'Salaries',
+          type: 'item',
+          url: '/payment-management/salaries',
+          icon: icons.IconCash,
+          target: false,
+          breadcrumbs: false
+        },
+        {
+          id: 'subscriptions',
+          title: 'Subscriptions',
+          type: 'item',
+          url: '/payment-management/subscriptions',
           icon: icons.IconCash,
           target: false,
           breadcrumbs: false
