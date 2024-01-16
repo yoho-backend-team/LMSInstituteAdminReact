@@ -17,4 +17,4 @@ const Students = () => (
   </MainCard>
 );
 
-export default SamplePage;
+export default Students;
