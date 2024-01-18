@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "Admin",
+    "users": [
+      {
+        "id": 101,
+        "username": "admin_user1",
+        "email": "admin_user1@example.com",
+        "imageUrl": "https://example.com/admin_user1.jpg"
+      },
+      {
+        "id": 102,
+        "username": "admin_user2",
+        "email": "admin_user2@example.com",
+        "imageUrl": "https://example.com/admin_user2.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Moderator",
+    "users": [
+      {
+        "id": 201,
+        "username": "moderator_user1",
+        "email": "moderator_user1@example.com",
+        "imageUrl": "https://example.com/moderator_user1.jpg"
+      },
+      {
+        "id": 202,
+        "username": "moderator_user2",
+        "email": "moderator_user2@example.com",
+        "imageUrl": "https://example.com/moderator_user2.jpg"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "User",
+    "users": [
+      {
+        "id": 301,
+        "username": "user1",
+        "email": "user1@example.com",
+        "imageUrl": "https://example.com/user1.jpg"
+      },
+      {
+        "id": 302,
+        "username": "user2",
+        "email": "user2@example.com",
+        "imageUrl": "https://example.com/user2.jpg"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Guest",
+    "users": [
+      {
+        "id": 401,
+        "username": "guest_user1",
+        "email": "guest_user1@example.com",
+        "imageUrl": "https://example.com/guest_user1.jpg"
+      },
+      {
+        "id": 402,
+        "username": "guest_user2",
+        "email": "guest_user2@example.com",
+        "imageUrl": "https://example.com/guest_user2.jpg"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Editor",
+    "users": [
+      {
+        "id": 501,
+        "username": "editor_user1",
+        "email": "editor_user1@example.com",
+        "imageUrl": "https://example.com/editor_user1.jpg"
+      },
+      {
+        "id": 502,
+        "username": "editor_user2",
+        "email": "editor_user2@example.com",
+        "imageUrl": "https://example.com/editor_user2.jpg"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Subscriber",
+    "users": [
+      {
+        "id": 601,
+        "username": "subscriber_user1",
+        "email": "subscriber_user1@example.com",
+        "imageUrl": "https://example.com/subscriber_user1.jpg"
+      },
+      {
+        "id": 602,
+        "username": "subscriber_user2",
+        "email": "subscriber_user2@example.com",
+        "imageUrl": "https://example.com/subscriber_user2.jpg"
+      }
+    ]
+  }
+]

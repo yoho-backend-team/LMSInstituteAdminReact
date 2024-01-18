@@ -11,11 +11,11 @@ const SamplePage = () => (
     <Grid item xs={12}>
       <Typography variant="h3">Create a new batch</Typography>
     </Grid>
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} sm={3}>
       <Typography variant="h4">Details</Typography>
       <Typography sx={{ color: 'text.secondary' }}>Name, start date, end date</Typography>
     </Grid>
-    <Grid item xs={12} sm={8}>
+    <Grid item xs={12} sm={9}>
       <DatePickerWrapper>
         <AddBathFormInputs />
       </DatePickerWrapper>

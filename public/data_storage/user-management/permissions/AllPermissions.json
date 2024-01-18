@@ -1,0 +1,159 @@
+[
+    {
+      "id": 1,
+      "name": "Module 1",
+      "screens": [
+        {
+          "id": 101,
+          "screen_name": "Dashboard",
+          "permissions": [
+            {"id": 1001, "name": "view"},
+            {"id": 1002, "name": "edit"},
+            {"id": 1003, "name": "delete"},
+            {"id": 1004, "name": "create"}
+          ]
+        },
+        {
+          "id": 102,
+          "screen_name": "Users",
+          "permissions": [
+            {"id": 1005, "name": "view"},
+            {"id": 1006, "name": "add"},
+            {"id": 1007, "name": "delete"},
+            {"id": 1008, "name": "update"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Module 2",
+      "screens": [
+        {
+          "id": 201,
+          "screen_name": "Settings",
+          "permissions": [
+            {"id": 1009, "name": "view"},
+            {"id": 1010, "name": "modify"},
+            {"id": 1011, "name": "configure"},
+            {"id": 1012, "name": "reset"}
+          ]
+        },
+        {
+          "id": 202,
+          "screen_name": "Reports",
+          "permissions": [
+            {"id": 1013, "name": "view"},
+            {"id": 1014, "name": "generate"},
+            {"id": 1015, "name": "export"},
+            {"id": 1016, "name": "analyze"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Module 3",
+      "screens": [
+        {
+          "id": 301,
+          "screen_name": "Profile",
+          "permissions": [
+            {"id": 1017, "name": "view"},
+            {"id": 1018, "name": "update"},
+            {"id": 1019, "name": "change_password"},
+            {"id": 1020, "name": "upload_picture"}
+          ]
+        },
+        {
+          "id": 302,
+          "screen_name": "Analytics",
+          "permissions": [
+            {"id": 1021, "name": "view"},
+            {"id": 1022, "name": "configure"},
+            {"id": 1023, "name": "analyze_data"},
+            {"id": 1024, "name": "export_data"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Module 4",
+      "screens": [
+        {
+          "id": 401,
+          "screen_name": "Messages",
+          "permissions": [
+            {"id": 1025, "name": "view"},
+            {"id": 1026, "name": "send"},
+            {"id": 1027, "name": "receive"},
+            {"id": 1028, "name": "delete"}
+          ]
+        },
+        {
+          "id": 402,
+          "screen_name": "Notifications",
+          "permissions": [
+            {"id": 1029, "name": "view"},
+            {"id": 1030, "name": "configure"},
+            {"id": 1031, "name": "send_notification"},
+            {"id": 1032, "name": "delete_notification"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Module 5",
+      "screens": [
+        {
+          "id": 501,
+          "screen_name": "Calendar",
+          "permissions": [
+            {"id": 1033, "name": "view"},
+            {"id": 1034, "name": "add_event"},
+            {"id": 1035, "name": "edit_event"},
+            {"id": 1036, "name": "delete_event"}
+          ]
+        },
+        {
+          "id": 502,
+          "screen_name": "Tasks",
+          "permissions": [
+            {"id": 1037, "name": "view"},
+            {"id": 1038, "name": "create_task"},
+            {"id": 1039, "name": "edit_task"},
+            {"id": 1040, "name": "delete_task"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Module 6",
+      "screens": [
+        {
+          "id": 601,
+          "screen_name": "Gallery",
+          "permissions": [
+            {"id": 1041, "name": "view"},
+            {"id": 1042, "name": "upload_photo"},
+            {"id": 1043, "name": "delete_photo"},
+            {"id": 1044, "name": "create_album"}
+          ]
+        },
+        {
+          "id": 602,
+          "screen_name": "Settings",
+          "permissions": [
+            {"id": 1045, "name": "view"},
+            {"id": 1046, "name": "modify"},
+            {"id": 1047, "name": "customize"},
+            {"id": 1048, "name": "reset"}
+          ]
+        }
+      ]
+    }
+  ]
+  

@@ -12,15 +12,15 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Tooltip,
   Typography,
   Box,
   Button,
-  TextField
+  TextField,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions
 } from '@mui/material';
 
 // ** Custom Components
@@ -30,12 +30,9 @@ import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 
 // ** Api Services Import
-import { addGroup, getAllPermissions } from '../services/groupService';
+import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
 
-const GroupAddDialog = (props) => {
-  // ** Props
-  const { addDialogOpen, setAddDialogOpen } = props;
-
+const GroupAddPage = () => {
   // ** States
   const [groupName, setGroupName] = React.useState('');
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
@@ -65,8 +62,6 @@ const GroupAddDialog = (props) => {
       } else {
         toast.error(result.message);
       }
-
-      handleAddDialogClose();
     } catch (error) {
       console.log(error);
     }
@@ -103,7 +98,6 @@ const GroupAddDialog = (props) => {
   const getPermissions = async () => {
     try {
       const result = await getAllPermissions();
-
       if (result.success) {
         setPermissions(result.data);
       } else {
@@ -149,27 +143,18 @@ const GroupAddDialog = (props) => {
     );
   };
 
-  // ** Method for Close Dialog
-  const handleAddDialogClose = () => {
-    setAddDialogOpen(false);
-    setSelectedCheckbox([]);
-    setIsIndeterminateCheckbox(false);
-  };
-
   return (
-    <Dialog fullWidth maxWidth="md" scroll="body" onClose={handleAddDialogClose} open={addDialogOpen}>
-      <DialogTitle
-        component="div"
+    <Card fullWidth maxWidth="md" scroll="body">
+      <CardHeader
         sx={{
           textAlign: 'center',
           px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`],
           pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
         }}
-      >
-        <Typography variant="h3">{`Add Role`}</Typography>
-        <Typography color="text.secondary">Set Role Permissions</Typography>
-      </DialogTitle>
-      <DialogContent
+        title="Add New Group"
+        subheader="Set Group Permissions"
+      ></CardHeader>
+      <CardContent
         sx={{
           pb: (theme) => `${theme.spacing(5)} !important`,
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
@@ -186,7 +171,7 @@ const GroupAddDialog = (props) => {
             />
           </FormControl>
         </Box>
-        <Typography variant="h4">Role Permissions</Typography>
+        <Typography variant="h4">Group Permissions</Typography>
         <TableContainer>
           <Table size="small">
             <TableHead>
@@ -230,8 +215,8 @@ const GroupAddDialog = (props) => {
             <TableBody>{renderPermissions()}</TableBody>
           </Table>
         </TableContainer>
-      </DialogContent>
-      <DialogActions
+      </CardContent>
+      <CardActions
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -243,13 +228,10 @@ const GroupAddDialog = (props) => {
           <Button type="submit" variant="contained" onClick={handleAddGroup}>
             Submit
           </Button>
-          <Button color="secondary" variant="tonal" onClick={handleAddDialogClose}>
-            Cancel
-          </Button>
         </Box>
-      </DialogActions>
-    </Dialog>
+      </CardActions>
+    </Card>
   );
 };
 
-export default GroupAddDialog;
+export default GroupAddPage;

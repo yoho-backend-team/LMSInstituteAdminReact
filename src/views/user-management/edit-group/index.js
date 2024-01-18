@@ -1,111 +1,65 @@
-// ** React Components
-import React, { useEffect } from 'react';
-
-// ** Mui Components
+import React, { useState, useEffect } from 'react';
 import {
-  Checkbox,
-  FormControlLabel,
+  Typography,
+  Box,
   FormControl,
+  TextField,
   Table,
+  TableContainer,
+  TableCell,
   TableHead,
   TableRow,
   TableBody,
-  TableCell,
-  TableContainer,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Tooltip,
-  Typography,
-  Box,
   Button,
-  TextField
+  Icon,
+  FormControlLabel,
+  Checkbox,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions
 } from '@mui/material';
-
-// ** Custom Components
-import Icon from 'components/icon';
-
-// ** Toast Import
 import toast from 'react-hot-toast';
+import { getAllPermissions, getPermissionsByRoleId, updateGroup } from 'features/user-management/groups/services/groupService';
 
-// ** Api Services Import
-import { addGroup, getAllPermissions } from '../services/groupService';
-
-const GroupAddDialog = (props) => {
-  // ** Props
-  const { addDialogOpen, setAddDialogOpen } = props;
-
-  // ** States
-  const [groupName, setGroupName] = React.useState('');
-  const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
-  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
-  const [permissions, setPermissions] = React.useState([]);
-
-  // ** useEffects
-  useEffect(() => {
-    if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
-      setIsIndeterminateCheckbox(true);
-    } else {
-      setIsIndeterminateCheckbox(false);
-    }
-  }, [selectedCheckbox, permissions]);
+const GroupEditDialog = () => {
+  const [selectedCheckbox, setSelectedCheckbox] = useState([]);
+  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
+  const [permissions, setPermissions] = useState([]);
+  const [permissionCount, setPermissionCount] = useState('');
+  const [groupName, setGroupName] = useState('');
 
   useEffect(() => {
     getPermissions();
   }, []);
 
-  // ** Method for AddNewGroup
-  const handleAddGroup = async () => {
-    try {
-      const result = await addGroup(groupName, selectedCheckbox);
+  useEffect(() => {
+    getAllPermissionsIdByRole();
+  }, []);
 
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
-
-      handleAddDialogClose();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // ** Method for SelectAllPermissions
-  const handleSelectAllCheckbox = () => {
-    if (isIndeterminateCheckbox) {
-      setSelectedCheckbox([]);
-    } else {
-      permissions.forEach((screens) => {
-        screens?.screens?.forEach((permissions) => {
-          permissions?.permissions?.forEach((permission) => {
-            togglePermission(permission.id);
-          });
-        });
-      });
-    }
-  };
-
-  // ** Method for Manage Permission selection
-  const togglePermission = (id) => {
-    const arr = selectedCheckbox;
-    if (selectedCheckbox.includes(id)) {
-      arr.splice(arr.indexOf(id), 1);
-      setSelectedCheckbox([...arr]);
-    } else {
-      arr.push(id);
-      setSelectedCheckbox([...arr]);
-    }
-  };
-
-  // ** Method for GetAllPermissions
   const getPermissions = async () => {
     try {
       const result = await getAllPermissions();
 
       if (result.success) {
         setPermissions(result.data);
+        setPermissionCount(result.permissionsCount);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllPermissionsIdByRole = async () => {
+    try {
+      const result = await getPermissionsByRoleId(1);
+
+      if (result.success) {
+        result.data?.forEach((permission) => {
+          togglePermission(permission);
+        });
       } else {
         console.log(result.message);
       }
@@ -114,10 +68,33 @@ const GroupAddDialog = (props) => {
     }
   };
 
-  // ** Method for RenderPermissions
+  const togglePermission = (id) => {
+    const arr = selectedCheckbox;
+    if (selectedCheckbox?.includes(id)) {
+      arr.splice(arr.indexOf(id), 1);
+      setSelectedCheckbox([...arr]);
+    } else {
+      arr.push(id);
+      setSelectedCheckbox([...arr]);
+    }
+  };
+
+  const handleSelectAllCheckbox = () => {
+    if (isIndeterminateCheckbox) {
+      setSelectedCheckbox([]);
+    } else {
+      const arr = [];
+      permissionCount?.forEach((permission) => {
+        arr.push(permission.id);
+      });
+      setSelectedCheckbox(arr);
+      setIsIndeterminateCheckbox(true);
+    }
+  };
+
   const renderPermissions = () => {
-    return permissions.map((module) =>
-      module.screens.map((screen, index) => (
+    return permissions?.map((module) =>
+      module?.screens?.map((screen, index) => (
         <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
           <TableCell
             sx={{
@@ -126,19 +103,20 @@ const GroupAddDialog = (props) => {
               fontSize: (theme) => theme.typography.h6.fontSize
             }}
           >
-            {screen.screen_name}
+            {screen?.screen_name}
           </TableCell>
-          {screen.permissions.map((permission, index) => (
+          {screen?.permissions?.map((permission, index) => (
             <TableCell key={index}>
               <FormControlLabel
-                label={permission.name}
+                label={permission?.name}
                 sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
                 control={
                   <Checkbox
                     size="small"
                     id={`${index}-write`}
-                    onChange={() => togglePermission(permission.id)}
-                    checked={selectedCheckbox.includes(permission.id)}
+                    // disabled/
+                    onChange={() => togglePermission(permission?.id)}
+                    checked={selectedCheckbox?.includes(permission?.id)}
                   />
                 }
               />
@@ -149,27 +127,31 @@ const GroupAddDialog = (props) => {
     );
   };
 
-  // ** Method for Close Dialog
-  const handleAddDialogClose = () => {
-    setAddDialogOpen(false);
-    setSelectedCheckbox([]);
-    setIsIndeterminateCheckbox(false);
-  };
+  const handleGroupEdit = async () => {
+    try {
+      const result = await updateGroup('1', groupName, selectedCheckbox);
 
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <Dialog fullWidth maxWidth="md" scroll="body" onClose={handleAddDialogClose} open={addDialogOpen}>
-      <DialogTitle
-        component="div"
+    <Card fullWidth maxWidth="md" scroll="body">
+      <CardHeader
         sx={{
           textAlign: 'center',
           px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`],
           pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
         }}
-      >
-        <Typography variant="h3">{`Add Role`}</Typography>
-        <Typography color="text.secondary">Set Role Permissions</Typography>
-      </DialogTitle>
-      <DialogContent
+        title="Edit Group"
+        subheader="Set Group Permissions"
+      ></CardHeader>
+      <CardContent
         sx={{
           pb: (theme) => `${theme.spacing(5)} !important`,
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
@@ -186,7 +168,7 @@ const GroupAddDialog = (props) => {
             />
           </FormControl>
         </Box>
-        <Typography variant="h4">Role Permissions</Typography>
+        <Typography variant="h4">Group Permissions</Typography>
         <TableContainer>
           <Table size="small">
             <TableHead>
@@ -220,7 +202,7 @@ const GroupAddDialog = (props) => {
                         size="small"
                         onChange={handleSelectAllCheckbox}
                         indeterminate={isIndeterminateCheckbox}
-                        checked={selectedCheckbox.length === permissions.length}
+                        checked={selectedCheckbox?.length === permissionCount?.length}
                       />
                     }
                   />
@@ -230,8 +212,8 @@ const GroupAddDialog = (props) => {
             <TableBody>{renderPermissions()}</TableBody>
           </Table>
         </TableContainer>
-      </DialogContent>
-      <DialogActions
+      </CardContent>
+      <CardActions
         sx={{
           display: 'flex',
           justifyContent: 'center',
@@ -240,16 +222,13 @@ const GroupAddDialog = (props) => {
         }}
       >
         <Box className="demo-space-x">
-          <Button type="submit" variant="contained" onClick={handleAddGroup}>
+          <Button type="submit" variant="contained" onClick={handleGroupEdit}>
             Submit
           </Button>
-          <Button color="secondary" variant="tonal" onClick={handleAddDialogClose}>
-            Cancel
-          </Button>
         </Box>
-      </DialogActions>
-    </Dialog>
+      </CardActions>
+    </Card>
   );
 };
 
-export default GroupAddDialog;
+export default GroupEditDialog;

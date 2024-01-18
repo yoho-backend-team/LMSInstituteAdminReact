@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 // ** Icon Imports
 import Icon from 'components/icon';
 
-const UserSuspendDialog = (props) => {
+const DeleteGroupDialog = (props) => {
   // ** Props
   const { open, setOpen, handleDeleteGroup } = props;
 
@@ -116,4 +116,4 @@ const UserSuspendDialog = (props) => {
   );
 };
 
-export default UserSuspendDialog;
+export default DeleteGroupDialog;
