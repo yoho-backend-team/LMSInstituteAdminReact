@@ -6,10 +6,12 @@ import BatchCard from 'features/branch-management/branches/components/batchcard'
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const Branches = () => (
-  
+const Branches = () => {
+  return (
+    <>
       <BatchCard />
-
-);
+    </>
+  );
+};
 
 export default Branches;

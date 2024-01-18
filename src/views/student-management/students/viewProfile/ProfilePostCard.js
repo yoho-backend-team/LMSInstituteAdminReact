@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 import PropTypes from 'prop-types';
 import { useState, useRef } from 'react';
@@ -18,7 +18,7 @@ import {
   IconButton,
   AvatarGroup,
   InputAdornment,
-  FormControlLabel,
+  FormControlLabel
 } from '@mui/material';
 // hooks
 // import useAuth from '../../../../hooks/useAuth';
@@ -29,53 +29,51 @@ import {
 // import Image from '../../../../components/Image';
 // import Iconify from '../../../../components/Iconify';
 // import MyAvatar from '../../../../components/MyAvatar';
-import {Avatar as MyAvatar} from '@mui/material';
+import { Avatar as MyAvatar } from '@mui/material';
 // import EmojiPicker from '../../../../components/EmojiPicker';
 
 // ----------------------------------------------------------------------
 
 ProfilePostCard.propTypes = {
-  post: PropTypes.object,
+  post: PropTypes.object
 };
 
-
 const ProfilePostCard = () => {
+  const { user } = useAuth();
 
-    const { user } = useAuth();
+  const commentInputRef = useRef(null);
 
-    const commentInputRef = useRef(null);
-  
-    const fileInputRef = useRef(null);
-  
-    const [isLiked, setLiked] = useState(post.isLiked);
-  
-    const [likes, setLikes] = useState(post.personLikes.length);
-  
-    const [message, setMessage] = useState('');
-  
-    const hasComments = post.comments.length > 0;
-  
-    const handleLike = () => {
-      setLiked(true);
-      setLikes((prevLikes) => prevLikes + 1);
-    };
-  
-    const handleUnlike = () => {
-      setLiked(false);
-      setLikes((prevLikes) => prevLikes - 1);
-    };
-  
-    const handleChangeMessage = (value) => {
-      setMessage(value);
-    };
-  
-    const handleClickAttach = () => {
-      fileInputRef.current?.click();
-    };
-  
-    const handleClickComment = () => {
-      commentInputRef.current?.focus();
-    };
+  const fileInputRef = useRef(null);
+
+  const [isLiked, setLiked] = useState(post.isLiked);
+
+  const [likes, setLikes] = useState(post.personLikes.length);
+
+  const [message, setMessage] = useState('');
+
+  const hasComments = post.comments.length > 0;
+
+  const handleLike = () => {
+    setLiked(true);
+    setLikes((prevLikes) => prevLikes + 1);
+  };
+
+  const handleUnlike = () => {
+    setLiked(false);
+    setLikes((prevLikes) => prevLikes - 1);
+  };
+
+  const handleChangeMessage = (value) => {
+    setMessage(value);
+  };
+
+  const handleClickAttach = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleClickComment = () => {
+    commentInputRef.current?.focus();
+  };
   return (
     <Card>
       <CardHeader
@@ -91,17 +89,13 @@ const ProfilePostCard = () => {
             {fDate(post.createdAt)}
           </Typography>
         }
-        action={
-          <IconButton>
-            <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} />
-          </IconButton>
-        }
+        action={<IconButton>{/* <Iconify icon={'eva:more-vertical-fill'} width={20} height={20} /> */}</IconButton>}
       />
 
       <Stack spacing={3} sx={{ p: 3 }}>
         <Typography>{post.message}</Typography>
 
-        <Image alt="post media" src={post.media} ratio="16/9" sx={{ borderRadius: 1 }} />
+        {/* <Image alt="post media" src={post.media} ratio="16/9" sx={{ borderRadius: 1 }} /> */}
 
         <Stack direction="row" alignItems="center">
           <FormControlLabel
@@ -110,8 +104,8 @@ const ProfilePostCard = () => {
                 size="small"
                 color="error"
                 checked={isLiked}
-                icon={<Iconify icon={'eva:heart-fill'} />}
-                checkedIcon={<Iconify icon={'eva:heart-fill'} />}
+                // icon={<Iconify icon={'eva:heart-fill'} />}
+                // checkedIcon={<Iconify icon={'eva:heart-fill'} />}
                 onChange={isLiked ? handleUnlike : handleLike}
               />
             }
@@ -124,12 +118,8 @@ const ProfilePostCard = () => {
             ))}
           </AvatarGroup>
           <Box sx={{ flexGrow: 1 }} />
-          <IconButton onClick={handleClickComment}>
-            <Iconify icon={'eva:message-square-fill'} width={20} height={20} />
-          </IconButton>
-          <IconButton>
-            <Iconify icon={'eva:share-fill'} width={20} height={20} />
-          </IconButton>
+          <IconButton onClick={handleClickComment}>{/* <Iconify icon={'eva:message-square-fill'} width={20} height={20} /> */}</IconButton>
+          <IconButton>{/* <Iconify icon={'eva:share-fill'} width={20} height={20} /> */}</IconButton>
         </Stack>
 
         {hasComments && (
@@ -171,29 +161,27 @@ const ProfilePostCard = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton size="small" onClick={handleClickAttach}>
-                    <Iconify icon={'ic:round-add-photo-alternate'} width={24} height={24} />
+                    {/* <Iconify icon={'ic:round-add-photo-alternate'} width={24} height={24} /> */}
                   </IconButton>
-                  <EmojiPicker alignRight value={message} setValue={setMessage} />
+                  {/* <EmojiPicker alignRight value={message} setValue={setMessage} /> */}
                 </InputAdornment>
-              ),
+              )
             }}
             sx={{
               ml: 2,
               mr: 1,
               '& fieldset': {
                 borderWidth: `1px !important`,
-                borderColor: (theme) => `${theme.palette.grey[500_32]} !important`,
-              },
+                borderColor: (theme) => `${theme.palette.grey[500_32]} !important`
+              }
             }}
           />
-          <IconButton>
-            <Iconify icon={'ic:round-send'} width={24} height={24} />
-          </IconButton>
+          <IconButton>{/* <Iconify icon={'ic:round-send'} width={24} height={24} /> */}</IconButton>
           <input type="file" ref={fileInputRef} style={{ display: 'none' }} />
         </Stack>
       </Stack>
     </Card>
-  )
-}
+  );
+};
 
-export default ProfilePostCard
+export default ProfilePostCard;

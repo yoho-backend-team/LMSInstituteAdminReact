@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { useRef } from 'react';
 // @mui
 import { Box, Card, Button, TextField, IconButton } from '@mui/material';
@@ -6,12 +6,12 @@ import { Box, Card, Button, TextField, IconButton } from '@mui/material';
 // import Iconify from '../../../../components/Iconify';
 
 const ProfilePostInput = () => {
-    const fileInputRef = useRef(null);
+  const fileInputRef = useRef(null);
 
-    const handleAttach = () => {
-      fileInputRef.current?.click();
-    };
-  
+  const handleAttach = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <Card sx={{ p: 3 }}>
       <TextField
@@ -22,8 +22,8 @@ const ProfilePostInput = () => {
         sx={{
           '& fieldset': {
             borderWidth: `1px !important`,
-            borderColor: (theme) => `${theme.palette.grey[500_32]} !important`,
-          },
+            borderColor: (theme) => `${theme.palette.grey[500_32]} !important`
+          }
         }}
       />
 
@@ -32,15 +32,15 @@ const ProfilePostInput = () => {
           mt: 3,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
         <Box sx={{ display: 'flex' }}>
           <IconButton size="small" onClick={handleAttach} sx={{ mr: 1 }}>
-            <Iconify icon={'ic:round-add-photo-alternate'} width={24} height={24} />
+            {/* <Iconify icon={'ic:round-add-photo-alternate'} width={24} height={24} /> */}
           </IconButton>
           <IconButton size="small" onClick={handleAttach}>
-            <Iconify icon={'eva:attach-2-fill'} width={24} height={24} />
+            {/* <Iconify icon={'eva:attach-2-fill'} width={24} height={24} /> */}
           </IconButton>
         </Box>
         <Button variant="contained">Post</Button>
@@ -48,7 +48,7 @@ const ProfilePostInput = () => {
 
       <input ref={fileInputRef} type="file" style={{ display: 'none' }} />
     </Card>
-  )
-}
+  );
+};
 
-export default ProfilePostInput
+export default ProfilePostInput;

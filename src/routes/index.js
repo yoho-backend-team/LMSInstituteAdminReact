@@ -29,6 +29,8 @@ const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
 
 //Branch Management
 const BranchesPage = Loadable(lazy(() => import('views/branch-management/branches')));
+const AddBranchPage = Loadable(lazy(() => import('views/branch-management/add-branch')));
+const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/view-branch')));
 
 // Batch Management
 const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
@@ -93,7 +95,7 @@ const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management
 
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
-const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/viewProfile')));
+// const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/viewProfile')));
 
 
 //Error Pages
@@ -164,6 +166,8 @@ const ApplicationRoutes = () => {
       <Route path="/branch-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/branch-management/branches" />} />
         <Route path="branches" element={<BranchesPage />} />
+        <Route path="branches/add" element={<AddBranchPage />} />
+        <Route path="branches/:id" element={<ViewBranchPage />} />
       </Route>
 
       <Route path="/certificate-management" element={<MainLayout />}>
