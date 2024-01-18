@@ -41,7 +41,6 @@ const CourseEditModal = ({ open, handleEditClose }) => {
     reset,
     control,
     setValue,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -53,7 +52,7 @@ const CourseEditModal = ({ open, handleEditClose }) => {
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-
+  console.log(selectedImage);
   const handleClose = () => {
     setValue('course', '');
     setValue('status', '');

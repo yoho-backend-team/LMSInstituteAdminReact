@@ -1,15 +1,14 @@
-import { forwardRef, useState } from 'react';
+import {useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import CustomTextField from 'components/mui/text-field';
-import format from 'date-fns/format';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const CourseFilter = () => {
-  
+
   const [statusValue, setStatusValue] = useState('');
 
   const handleStatusValue = (e) => {
