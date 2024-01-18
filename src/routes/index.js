@@ -32,6 +32,8 @@ const BranchesPage = Loadable(lazy(() => import('views/branch-management/branche
 
 // Batch Management
 const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
+const AddBatchPage = Loadable(lazy(() => import('views/batch-management/add-batch')));
+const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-batch')));
 
 // Attendance Management
 const StudentAttendancesPage = Loadable(lazy(() => import('views/attendance-management/students')));
@@ -153,6 +155,8 @@ const ApplicationRoutes = () => {
       <Route path="/batch-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/batch-management/batches" />} />
         <Route path="batches" element={<BatchesPage />} />
+        <Route path="batches/add" element={<AddBatchPage />} />
+        <Route path="batches/:id" element={<ViewBatchPage />} />
       </Route>
 
       <Route path="/branch-management" element={<MainLayout />}>

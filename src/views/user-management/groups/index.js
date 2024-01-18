@@ -1,20 +1,219 @@
-// material-ui
-import { Typography } from '@mui/material';
+// ** Mui Components
+import { Grid, Typography, Box, Card, CardContent, AvatarGroup, Avatar, IconButton, Button } from '@mui/material';
 
-// project imports
-import MainCard from 'components/cards/MainCard';
+// ** React  Import
+import React, { useState, useEffect } from 'react';
 
-// ==============================|| SAMPLE PAGE ||============================== //
+// ** Custom Components
+import Icon from 'components/icon';
+import Header from 'components/Header';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import GroupViewDialog from 'features/user-management/groups/components/GroupViewDialog';
+import GroupEditDialog from 'features/user-management/groups/components/GroupEditDialog';
+import GroupAddDialog from 'features/user-management/groups/components/GroupAddDialog';
+import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
 
-const Groups = () => (
-  <MainCard title="Groups">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+// ** React Router Import
+import { Link } from 'react-router-dom';
 
-export default Groups;
+// ** Axios Import
+// import axios from 'axios';
+
+// ** Toast Import
+import toast from 'react-hot-toast';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
+import { selectGroups, selectLoading as selectGroupLoading } from 'features/user-management/groups/redux/groupSelectors';
+import { deleteGroup, searchGroups } from 'features/user-management/groups/services/groupService';
+import { setGroups } from 'features/user-management/groups/redux/groupSlice';
+
+const GroupManagement = () => {
+  // ** Dialog State
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  // ** SearchQuery State
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // ** Selected State
+  const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
+  const [selectedViewGroup, setSelectedViewGroup] = useState('');
+  const [selectedEditGroup, setSelectedEditGroup] = useState('');
+
+  const dispatch = useDispatch();
+  const groups = useSelector(selectGroups);
+  const groupLoading = useSelector(selectGroupLoading);
+
+  useEffect(() => {
+    dispatch(getAllGroups());
+  }, [dispatch, addDialogOpen, editDialogOpen]);
+
+  // ** Add Role Image
+  const AddRoleAvatar = require('assets/images/avatar/add-role.png');
+
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteGroupId);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle Search Function
+  const handleSearch = async (value) => {
+    try {
+      setSearchQuery(value);
+      // Set loading to true while fetching data
+      const result = await searchGroups(value);
+
+      if (result.success) {
+        console.log('Search results:', result.data);
+        // Update the Redux state using the setGroups action
+        dispatch(setGroups(result.data));
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Render Group Cards
+  const renderCards = () => {
+    return groups?.map((item, index) => (
+      <Grid item xs={12} sm={6} lg={4} key={index}>
+        <Card>
+          <CardContent>
+            <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography sx={{ color: 'text.secondary' }}>{`Total ${item.users?.length} users`}</Typography>
+              <AvatarGroup
+                max={4}
+                className="pull-up"
+                sx={{
+                  '& .MuiAvatar-root': { width: 32, height: 32, fontSize: (theme) => theme.typography.body2.fontSize }
+                }}
+              >
+                {item?.users?.map((user, index) => (
+                  <Avatar key={index} alt={item.role.name} src={user?.name} />
+                ))}
+              </AvatarGroup>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                <Typography variant="h4" sx={{ mb: 1 }}>
+                  {item.role.name}
+                </Typography>
+
+                <Typography
+                  component={Link}
+                  to=""
+                  sx={{ color: 'primary.main', textDecoration: 'none', boxShadow: 'none' }}
+                  onClick={() => {
+                    setSelectedEditGroup(item?.role);
+                    setEditDialogOpen(true);
+                  }}
+                >
+                  Edit Role
+                </Typography>
+              </Box>
+              <Box>
+                <IconButton
+                  size="small"
+                  sx={{ color: 'dark.dark' }}
+                  onClick={() => {
+                    setSelectedViewGroup(item?.role);
+                    setViewDialogOpen(true);
+                  }}
+                >
+                  <Icon icon="tabler:eye-filled" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  sx={{ color: 'error.main' }}
+                  onClick={() => {
+                    setSelectedDeleteGroupId(item.role.id);
+                    setDeleteDialogOpen(true);
+                  }}
+                >
+                  <Icon icon="tabler:archive" />
+                </IconButton>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    ));
+  };
+
+  return (
+    <>
+      {groupLoading ? (
+        <GroupSkeleton />
+      ) : (
+        <Grid>
+          <Header title="Groups" handleSearch={handleSearch} searchQuery={searchQuery} />
+
+          <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+            <Grid item xs={12} sm={6} lg={4}>
+              <Card sx={{ cursor: 'pointer' }} onClick={() => setAddDialogOpen(true)}>
+                <Grid container sx={{ height: '100%' }}>
+                  <Grid item xs={5}>
+                    <Box
+                      sx={{
+                        height: '100%',
+                        minHeight: 140,
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      <img height={122} alt="add-role" src={AddRoleAvatar} />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <CardContent sx={{ pl: 0, height: '100%' }}>
+                      <Box sx={{ textAlign: 'right' }}>
+                        <Button variant="contained" sx={{ mb: 3, whiteSpace: 'nowrap' }} onClick={() => setAddDialogOpen(true)}>
+                          Add New Role
+                        </Button>
+                        <Typography sx={{ color: 'text.secondary' }}>Add role, if it doesnt exist.</Typography>
+                      </Box>
+                    </CardContent>
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
+
+            {renderCards()}
+          </Grid>
+
+          <GroupAddDialog addDialogOpen={addDialogOpen} setAddDialogOpen={setAddDialogOpen} />
+          <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+          <GroupViewDialog
+            open={viewDialogOpen}
+            setViewDialogOpen={setViewDialogOpen}
+            group={selectedViewGroup}
+            setSelectedViewGroup={setSelectedViewGroup}
+          />
+          <GroupEditDialog
+            open={editDialogOpen}
+            setEditDialogOpen={setEditDialogOpen}
+            group={selectedEditGroup}
+            setSelectedEditGroup={setSelectedEditGroup}
+          />
+        </Grid>
+      )}
+    </>
+  );
+};
+export default GroupManagement;

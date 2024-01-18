@@ -1,28 +1,29 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState } from 'react';
 
 // ** Next Import
-import Link from 'next/link'
+// import Link from 'next/link'
+import { Link } from 'react-router-dom';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Menu from '@mui/material/Menu'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import IconButton from '@mui/material/IconButton'
+import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 
 // ** Icon Imports
-import Icon from 'components/icon'
+import Icon from 'components/icon';
 
 // ** Hook Import
-import { useSettings } from 'hooks/useSettings'
+
 
 const MenuItemWrapper = ({ children, option }) => {
   if (option.href) {
     return (
       <Box
         component={Link}
-        href={option.href}
+        to={option.href}
         {...option.linkProps}
         sx={{
           px: 4,
@@ -36,35 +37,35 @@ const MenuItemWrapper = ({ children, option }) => {
       >
         {children}
       </Box>
-    )
+    );
   } else {
-    return <>{children}</>
+    return <>{children}</>;
   }
-}
+};
 
-const OptionsMenu = props => {
+const OptionsMenu = (props) => {
   // ** Props
-  const { icon, options, menuProps, iconProps, leftAlignMenu, iconButtonProps } = props
+  const { icon, options, menuProps, iconProps, leftAlignMenu, iconButtonProps } = props;
 
   // ** State
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState(null);
 
   // ** Hook & Var
-  const { settings } = useSettings()
-  const { direction } = settings
 
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
+  const direction = 'ltr';
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
 
   return (
     <>
-      <IconButton aria-haspopup='true' onClick={handleClick} {...iconButtonProps}>
-        {icon ? icon : <Icon icon='tabler:dots-vertical' {...iconProps} />}
+      <IconButton aria-haspopup="true" onClick={handleClick} {...iconButtonProps}>
+        {icon ? icon : <Icon icon="tabler:dots-vertical" {...iconProps} />}
       </IconButton>
       <Menu
         keepMounted
@@ -83,18 +84,18 @@ const OptionsMenu = props => {
               <MenuItem key={index} onClick={handleClose}>
                 {option}
               </MenuItem>
-            )
+            );
           } else if ('divider' in option) {
-            return option.divider && <Divider key={index} {...option.dividerProps} />
+            return option.divider && <Divider key={index} {...option.dividerProps} />;
           } else {
             return (
               <MenuItem
                 key={index}
                 {...option.menuItemProps}
                 {...(option.href && { sx: { p: 0 } })}
-                onClick={e => {
-                  handleClose()
-                  option.menuItemProps && option.menuItemProps.onClick ? option.menuItemProps.onClick(e) : null
+                onClick={(e) => {
+                  handleClose();
+                  option.menuItemProps && option.menuItemProps.onClick ? option.menuItemProps.onClick(e) : null;
                 }}
               >
                 <MenuItemWrapper option={option}>
@@ -102,12 +103,12 @@ const OptionsMenu = props => {
                   {option.text}
                 </MenuItemWrapper>
               </MenuItem>
-            )
+            );
           }
         })}
       </Menu>
     </>
-  )
-}
+  );
+};
 
-export default OptionsMenu
+export default OptionsMenu;
