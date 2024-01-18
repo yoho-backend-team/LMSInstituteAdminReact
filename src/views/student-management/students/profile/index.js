@@ -1,22 +1,22 @@
 // material-ui
-import { Box, Avatar, Divider, Typography, Stack, Grid } from '@mui/material';
+import { Box, Avatar, Typography, Stack, Grid } from '@mui/material';
 // import { PropTypes } from '@mui/material';
-import SocialsButton from './CardStyle/SocialButton';
-import SvgIconStyle from './CardStyle/svgIconStyle';
+import SocialsButton from './SocialButton';
+import SvgIconStyle from './svgIconStyle';
 import Container from '@mui/material/Container';
 // import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 // project imports
 import styled from '@emotion/styled';
 // import MainCard from 'components/cards/MainCard';
-import Image from './CardStyle/image';
-import cssStyles from './CardStyle/cssStyles';
+import Image from './image';
+import cssStyles from './cssStyles';
 // import UserCard from './CardStyle/userCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const OverlayStyle = styled('div')(({ theme }) => ({
-  ...cssStyles().bgBlur({ blur: 2, color: theme.palette.primary.darker }),
+  ...cssStyles().bgBlur({ blur: 2, color: theme.palette.primary.main }),
   top: 0,
   zIndex: 8,
   content: "''",
@@ -30,6 +30,12 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 // UserCard.propTypes = {
 //   user: PropTypes.object.isRequired,
 // };
+// const studentsList={
+//   {
+//     name:'Anish',
+
+//   }
+// }
 
 const Students = () => (
   <Container>
@@ -82,18 +88,17 @@ const Students = () => (
           <Typography variant="subtitle1" sx={{ mt: 6 }}>
             Anish
           </Typography>
-
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Front-end Developer
+           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+           Full-Stack Web Development
           </Typography>
 
           <Stack alignItems="center">
             <SocialsButton initialColor sx={{ my: 2.5 }} />
           </Stack>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-          <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {/* <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
             <div>
               <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                 Follower
@@ -114,7 +119,7 @@ const Students = () => (
               </Typography>
               <Typography variant="subtitle1">2</Typography>
             </div>
-          </Box>
+          </Box> */}
         </Card>
       </Grid>
       <Grid Item sm={4} xs={12}>
@@ -164,9 +169,9 @@ const Students = () => (
             <SocialsButton initialColor sx={{ my: 2.5 }} />
           </Stack>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-          <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {/* <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
             <div>
               <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                 Follower
@@ -187,7 +192,7 @@ const Students = () => (
               </Typography>
               <Typography variant="subtitle1">2</Typography>
             </div>
-          </Box>
+          </Box> */}
         </Card>
       </Grid>
       <Grid Item sm={4} xs={12}>
@@ -237,9 +242,9 @@ const Students = () => (
             <SocialsButton initialColor sx={{ my: 2.5 }} />
           </Stack>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-          <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {/* <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
             <div>
               <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                 Follower
@@ -260,7 +265,7 @@ const Students = () => (
               </Typography>
               <Typography variant="subtitle1">2</Typography>
             </div>
-          </Box>
+          </Box> */}
         </Card>
       </Grid>
       <Grid Item sm={4} xs={12}>
@@ -310,9 +315,9 @@ const Students = () => (
             <SocialsButton initialColor sx={{ my: 2.5 }} />
           </Stack>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          {/* <Divider sx={{ borderStyle: 'dashed' }} /> */}
 
-          <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          {/* <Box sx={{ py: 3, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
             <div>
               <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
                 Follower
@@ -333,7 +338,7 @@ const Students = () => (
               </Typography>
               <Typography variant="subtitle1">2</Typography>
             </div>
-          </Box>
+          </Box> */}
         </Card>
       </Grid>
     </Box>

@@ -92,7 +92,9 @@ const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/te
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs')));
 
 // Student Management
-const StudentsPage = Loadable(lazy(() => import('views/student-management/students')));
+const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
+const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/viewProfile')));
+
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
