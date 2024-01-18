@@ -16,28 +16,29 @@ SocialsButton.propTypes = {
 export default function SocialsButton({ initialColor = false, simple = true, links = {}, sx, ...other }) {
   const SOCIALS = [
     {
-      name: 'FaceBook',
-      icon: 'eva:facebook-fill',
+      name: 'Call Now',
+      icon: 'eva:phone-fill',
       socialColor: '#1877F2',
-      path: links.facebook || '#facebook-link',
+      path: 'views/student-management/students/viewProfile',
     },
     {
-      name: 'Instagram',
-      icon: 'ant-design:instagram-filled',
+      name: 'Send Email',
+      icon: 'eva:email-fill',
       socialColor: '#E02D69',
       path: links.instagram || '#instagram-link',
     },
+   
     {
-      name: 'Linkedin',
-      icon: 'eva:linkedin-fill',
-      socialColor: '#007EBB',
-      path: links.linkedin || '#linkedin-link',
+      name: 'Active',
+      icon: 'eva:person-done-fill',
+      socialColor: '#65B741',
+      path: links.twitter || '#twitter-link',
     },
     {
-      name: 'Twitter',
-      icon: 'eva:twitter-fill',
-      socialColor: '#00AAEC',
-      path: links.twitter || '#twitter-link',
+      name: 'View Profile',
+      icon: 'eva:navigation-2-fill',
+      socialColor: '#007EBB',
+      path: links.linkedin || '#linkedin-link',
     },
   ];
 
