@@ -1,8 +1,6 @@
 // material-ui
 import { Grid } from '@mui/material';
 
-// project imports
-// import MainCard from 'components/cards/MainCard';
 import CategoryCard from 'features/course-management/categories/components/CategoryCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
