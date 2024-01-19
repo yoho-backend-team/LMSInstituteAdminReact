@@ -6,7 +6,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const SamplePage = () => (
+const AddBatchPage = () => (
   <Grid container spacing={4} sx={{ p: 1 }}>
     <Grid item xs={12}>
       <Typography variant="h3">Create a new batch</Typography>
@@ -30,4 +30,4 @@ const SamplePage = () => (
   </Grid>
 );
 
-export default SamplePage;
+export default AddBatchPage;
