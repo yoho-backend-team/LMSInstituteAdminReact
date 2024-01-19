@@ -1,13 +1,13 @@
 import { Grid } from '@mui/material';
 import CategoryCard from 'features/course-management/categories/components/CategoryCard';
-import CourseFilter from 'features/course-management/categories/components/CourseFilterCard';
-import CourseCardHeader from 'features/course-management/categories/components/CourseCardHeader';
+import CategoryFilter from 'features/course-management/categories/components/CategoryFilterCard';
+import CategoryCardHeader from 'features/course-management/categories/components/CategoryCardHeader';
 
 const Categories = () => (
   <Grid>
     <Grid item xs={12} sm={12}>
-      <CourseFilter />
-      <CourseCardHeader />
+      <CategoryFilter />
+      <CategoryCardHeader />
     </Grid>
     <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
       <CategoryCard
