@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
-import CourseEditModal from './CourseEditModal';
+import CourseEditModal from './CategoryEditModal';
 
 const CardStatsVertical = (props) => {
   // ** Props
