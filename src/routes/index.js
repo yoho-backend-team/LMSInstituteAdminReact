@@ -93,7 +93,7 @@ const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management
 
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
-const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/viewProfile')));
+const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/view-profile')));
 
 
 //Error Pages
@@ -243,6 +243,7 @@ const ApplicationRoutes = () => {
       <Route path="/student-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/student-management/students" />} />
         <Route path="students" element={<StudentsPage />} />
+        <Route path="view-profile" element={<ViewStudentProfile />} />
       </Route>
 
       <Route element={<MinimalLayout />}>
