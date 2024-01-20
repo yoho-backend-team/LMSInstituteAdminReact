@@ -15,33 +15,29 @@ const Courses = () => (
     <CourseCard
       title="React FrontEnd"
       description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"
-      rating="4 star"
-      reviews="98 reviews"
-      ratingnumb="4"
+      rating={4}
+      reviews="98"
       image="https://plus.unsplash.com/premium_photo-1663126346116-f0ccaf232268?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dGVhY2hpbmd8ZW58MHx8MHx8fDA%3D"
     />
         <CourseCard
       title="Angular FrontEnd"
       description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"
-      rating="4 star"
-      reviews="98 reviews"
-      ratingnumb="4"
+      rating={4}
+      reviews="98"
       image="https://images.unsplash.com/photo-1583468982228-19f19164aee2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRlYWNoaW5nfGVufDB8fDB8fHww"
     />
         <CourseCard
       title="Java Backend"
       description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"
-      rating="3 star"
-      reviews="98 reviews"
-      ratingnumb="3"
+      rating={3}
+      reviews="98"
       image="https://images.unsplash.com/photo-1605711285791-0219e80e43a3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dGVhY2hpbmd8ZW58MHx8MHx8fDA%3D"
     />
         <CourseCard
       title="React FrontEnd"
       description="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"
-      rating="2 star"
-      reviews="98 reviews"
-      ratingnumb="2"
+      rating={2}
+      reviews="98"
       image="https://plus.unsplash.com/premium_photo-1677966720018-580c48b67bd0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHRlYWNoaW5nfGVufDB8fDB8fHww"
     />
   </Grid>
