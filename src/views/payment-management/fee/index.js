@@ -1,20 +1,56 @@
 // material-ui
-import { Typography } from '@mui/material';
+// import { Typography } from '@mui/material';
 
 // project imports
-import MainCard from 'components/cards/MainCard';
+// import MainCard from 'components/cards/MainCard';
+import { useState } from 'react';
+import CustomizedInput from 'features/course-management/add-course/components/CustomizedInput';
+import { Grid } from '@mui/material';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const Fee = () => (
-  <MainCard title="Payments">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+const Fee = () => {
+  const [features, setFeatures] = useState([]);
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={6}>
+        <CustomizedInput
+          placeholder={'Add New Features'}
+          data={features}
+          setData={setFeatures}
+          cardTitle={'Course Features'}
+          buttonTitle={'Add Corse Feature'}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <CustomizedInput
+          placeholder={'Add New Features'}
+          data={features}
+          setData={setFeatures}
+          cardTitle={'Course Features'}
+          buttonTitle={'Add Corse Feature'}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <CustomizedInput
+          placeholder={'Add New Features'}
+          data={features}
+          setData={setFeatures}
+          cardTitle={'Course Features'}
+          buttonTitle={'Add Corse Feature'}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <CustomizedInput
+          placeholder={'Add New Features'}
+          data={features}
+          setData={setFeatures}
+          cardTitle={'Course Features'}
+          buttonTitle={'Add Corse Feature'}
+        />
+      </Grid>
+    </Grid>
+  );
+};
 
 export default Fee;

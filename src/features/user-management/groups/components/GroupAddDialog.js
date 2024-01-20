@@ -1,3 +1,4 @@
+// ** React Components
 import React, { useEffect } from 'react';
 
 // ** Mui Components
@@ -22,17 +23,26 @@ import {
   TextField
 } from '@mui/material';
 
-import axios from 'axios';
+// ** Custom Components
 import Icon from 'components/icon';
-import toast from 'react-hot-toast';
-import { addGroup } from '../services/groupService';
 
-const GroupAddDialog = ({ addDialogOpen, setAddDialogOpen }) => {
+// ** Toast Import
+import toast from 'react-hot-toast';
+
+// ** Api Services Import
+import { addGroup, getAllPermissions } from '../services/groupService';
+
+const GroupAddDialog = (props) => {
+  // ** Props
+  const { addDialogOpen, setAddDialogOpen } = props;
+
+  // ** States
   const [groupName, setGroupName] = React.useState('');
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
 
+  // ** useEffects
   useEffect(() => {
     if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
       setIsIndeterminateCheckbox(true);
@@ -42,39 +52,11 @@ const GroupAddDialog = ({ addDialogOpen, setAddDialogOpen }) => {
   }, [selectedCheckbox, permissions]);
 
   useEffect(() => {
-    getAllPermissions();
+    getPermissions();
   }, []);
 
+  // ** Method for AddNewGroup
   const handleAddGroup = async () => {
-    // let data = {
-    //   name: groupName,
-    //   permissions: selectedCheckbox
-    // };
-    // let config = {
-    //   method: 'post',
-    //   maxBodyLength: Infinity,
-    //   url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/create`,
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
-    //   },
-    //   data: data
-    // };
-
-    // await axios
-    //   .request(config)
-    //   .then((response) => {
-    //     if (response.data.status) {
-    //       toast.success('Group created successfully');
-    //     }
-    //     if (response.data.status === false) {
-    //       toast.error('Failed to create group');
-    //     }
-    //     handleAddDialogClose();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     try {
       const result = await addGroup(groupName, selectedCheckbox);
 
@@ -90,6 +72,7 @@ const GroupAddDialog = ({ addDialogOpen, setAddDialogOpen }) => {
     }
   };
 
+  // ** Method for SelectAllPermissions
   const handleSelectAllCheckbox = () => {
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
@@ -104,6 +87,7 @@ const GroupAddDialog = ({ addDialogOpen, setAddDialogOpen }) => {
     }
   };
 
+  // ** Method for Manage Permission selection
   const togglePermission = (id) => {
     const arr = selectedCheckbox;
     if (selectedCheckbox.includes(id)) {
@@ -115,22 +99,22 @@ const GroupAddDialog = ({ addDialogOpen, setAddDialogOpen }) => {
     }
   };
 
-  const getAllPermissions = async () => {
-    await axios
-      .get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/permission/get-all`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      .then((response) => {
-        setPermissions(response.data.data);
-        console.log('permissions', response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  // ** Method for GetAllPermissions
+  const getPermissions = async () => {
+    try {
+      const result = await getAllPermissions();
+
+      if (result.success) {
+        setPermissions(result.data);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  // ** Method for RenderPermissions
   const renderPermissions = () => {
     return permissions.map((module) =>
       module.screens.map((screen, index) => (
@@ -165,6 +149,7 @@ const GroupAddDialog = ({ addDialogOpen, setAddDialogOpen }) => {
     );
   };
 
+  // ** Method for Close Dialog
   const handleAddDialogClose = () => {
     setAddDialogOpen(false);
     setSelectedCheckbox([]);

@@ -1,15 +1,3 @@
-// import { useRoutes } from 'react-router-dom';
-
-// // routes
-// import MainRoutes from './MainRoutes';
-// import AuthenticationRoutes from './AuthenticationRoutes';
-
-// // ==============================|| ROUTING RENDER ||============================== //
-
-// export default function ThemeRoutes() {
-//   return useRoutes([MainRoutes, AuthenticationRoutes]);
-// }
-
 import { lazy } from 'react';
 
 // project imports
@@ -25,10 +13,16 @@ const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authent
 
 // User Management
 const GroupsPage = Loadable(lazy(() => import('views/user-management/groups')));
+const AddGroupPage = Loadable(lazy(() => import('views/user-management/add-group')));
+const ViewGroupPage = Loadable(lazy(() => import('views/user-management/view-group')));
+const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-group')));
 const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
+const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
 
 //Branch Management
 const BranchesPage = Loadable(lazy(() => import('views/branch-management/branches')));
+const AddBranchPage = Loadable(lazy(() => import('views/branch-management/add-branch')));
+const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/view-branch')));
 
 // Batch Management
 const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
@@ -57,6 +51,7 @@ const ExamContentsPage = Loadable(lazy(() => import('views/content-management/ex
 // Course Management
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
 const CoursesPage = Loadable(lazy(() => import('views/course-management/courses')));
+const AddCoursePage = Loadable(lazy(() => import('views/course-management/add-course')));
 
 // Exam Management
 const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
@@ -101,20 +96,6 @@ const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
 const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 
-// const UserViewPage = Loadable(lazy(() => import('views/user-management/view-user')));
-// const InstitutesPage = Loadable(lazy(() => import('views/institute-management/institutes/institutes')));
-// const InstituteProfile = Loadable(lazy(() => import('views/institute-management/institutes/overView/instituteProfile')));
-// const TaxesPage = Loadable(lazy(() => import('views/tax-management/taxes')));
-// const DiscountsPage = Loadable(lazy(() => import('views/discount-management/discounts')));
-// const NotificationsPage = Loadable(lazy(() => import('views/notification-management/notifications')));
-// const PaymentsPage = Loadable(lazy(() => import('views/payment-management/payments')));
-// const SubscriptionsPage = Loadable(lazy(() => import('views/subscription-management/subscriptions')));
-// const ReportsPage = Loadable(lazy(() => import('views/report-management/reports')));
-// const HelpsPage = Loadable(lazy(() => import('views/help-center/helps')));
-// const TicketsPage = Loadable(lazy(() => import('views/help-center/tickets')));
-// const Page404 = Loadable(lazy(() => import('views/404Page')));
-// const Page401 = Loadable(lazy(() => import('views/401Page')));
-
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // const Protected = () => {
@@ -144,7 +125,11 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/user-management/groups" />} />
         {/* <Route element={<ProtectedRoute element={<GroupsPage />} screen={'Groups'} name={'Read'} />}> */}
         <Route path="groups" element={<GroupsPage />} />
+        <Route path="groups/add" element={<AddGroupPage />} />
+        <Route path="groups/view" element={<ViewGroupPage />} />
+        <Route path="groups/edit/:id" element={<EditGroupPage />} />
         <Route path="users" element={<UsersPage />} />
+        <Route path="users/:id" element={<ViewUserPage />} />
       </Route>
 
       <Route path="/attendance-management" element={<MainLayout />}>
@@ -164,6 +149,8 @@ const ApplicationRoutes = () => {
       <Route path="/branch-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/branch-management/branches" />} />
         <Route path="branches" element={<BranchesPage />} />
+        <Route path="branches/add" element={<AddBranchPage />} />
+        <Route path="branches/:id" element={<ViewBranchPage />} />
       </Route>
 
       <Route path="/certificate-management" element={<MainLayout />}>
@@ -190,6 +177,7 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/course-management/categories" />} />
         <Route path="categories" element={<CategoriesPage />} />
         <Route path="courses" element={<CoursesPage />} />
+        <Route path="courses/add" element={<AddCoursePage />} />
       </Route>
 
       <Route path="/help-center" element={<MainLayout />}>

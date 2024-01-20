@@ -6,7 +6,7 @@ export const getAllGroups = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllGroups(); // Implement this function in your services
-    dispatch(setGroups(response?.data?.data));
+    dispatch(setGroups(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

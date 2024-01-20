@@ -3,11 +3,11 @@ import axios from 'axios';
 
 const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role`;
 const PERMISSION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/permission`;
-const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/role-search`;
+// const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/role-search`;
 
 export const getAllGroups = async () => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all`, {
+    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -26,6 +26,27 @@ export const getAllGroups = async () => {
     console.error('Error in getAllGroups:', error);
 
     // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+export const searchGroups = async (searchQuery) => {
+  try {
+    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: { search: searchQuery }
+    });
+
+    if (response.data) {
+      return { success: true, data: response.data };
+    } else {
+      return { success: false, message: 'Failed to fetch search results' };
+    }
+  } catch (error) {
+    console.error('Error in searchGroups:', error);
     throw error;
   }
 };
@@ -103,27 +124,6 @@ export const updateGroup = async (groupId, groupName, selectedCheckbox) => {
   }
 };
 
-export const searchGroups = async (searchQuery) => {
-  try {
-    const response = await axios.get(SEARCH_API_ENDPOINT, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data.data) {
-      return { success: true, data: response.data.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchGroups:', error);
-    throw error;
-  }
-};
-
 export const getAllPermissionsByRoleId = async (roleId) => {
   try {
     const response = await axios.get(`${PERMISSION_API_ENDPOINT}/permissions-by-role-id`, {
@@ -147,15 +147,15 @@ export const getAllPermissionsByRoleId = async (roleId) => {
 
 export const getAllPermissions = async () => {
   try {
-    const response = await axios.get(`${PERMISSION_API_ENDPOINT}/get-all`, {
+    const response = await axios.get(`/data_storage/user-management/permissions/AllPermissions.json`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
-    if (response.data.data) {
-      return { success: true, data: response.data.data, permissionsCount: response.data.permissions };
+    if (response.data) {
+      return { success: true, data: response.data, permissionsCount: response.data?.length };
     } else {
       return { success: false, message: 'Failed to fetch permissions' };
     }
@@ -185,6 +185,3 @@ export const getPermissionsByRoleId = async (roleId) => {
     throw error;
   }
 };
-
-// You can add other group-related API calls here
-// For example: createGroup, updateGroup, deleteGroup, etc.

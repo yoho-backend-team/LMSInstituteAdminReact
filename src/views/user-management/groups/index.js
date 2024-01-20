@@ -8,16 +8,13 @@ import React, { useState, useEffect } from 'react';
 import Icon from 'components/icon';
 import Header from 'components/Header';
 import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
-import GroupViewDialog from 'features/user-management/groups/components/GroupViewDialog';
-import GroupEditDialog from 'features/user-management/groups/components/GroupEditDialog';
-import GroupAddDialog from 'features/user-management/groups/components/GroupAddDialog';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
 
 // ** React Router Import
 import { Link } from 'react-router-dom';
 
 // ** Axios Import
-// import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 // ** Toast Import
 import toast from 'react-hot-toast';
@@ -30,9 +27,6 @@ import { setGroups } from 'features/user-management/groups/redux/groupSlice';
 
 const GroupManagement = () => {
   // ** Dialog State
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // ** SearchQuery State
@@ -40,16 +34,15 @@ const GroupManagement = () => {
 
   // ** Selected State
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
-  const [selectedViewGroup, setSelectedViewGroup] = useState('');
-  const [selectedEditGroup, setSelectedEditGroup] = useState('');
 
   const dispatch = useDispatch();
   const groups = useSelector(selectGroups);
   const groupLoading = useSelector(selectGroupLoading);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getAllGroups());
-  }, [dispatch, addDialogOpen, editDialogOpen]);
+  }, [dispatch]);
 
   // ** Add Role Image
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
@@ -104,44 +97,35 @@ const GroupManagement = () => {
                 }}
               >
                 {item?.users?.map((user, index) => (
-                  <Avatar key={index} alt={item.role.name} src={user?.name} />
+                  <Avatar key={index} alt={item?.name} src={user?.name} />
                 ))}
               </AvatarGroup>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography variant="h4" sx={{ mb: 1 }}>
-                  {item.role.name}
+                  {item?.name}
                 </Typography>
 
                 <Typography
                   component={Link}
-                  to=""
+                  to={`edit/${item.id}`}
                   sx={{ color: 'primary.main', textDecoration: 'none', boxShadow: 'none' }}
-                  onClick={() => {
-                    setSelectedEditGroup(item?.role);
-                    setEditDialogOpen(true);
-                  }}
                 >
                   Edit Role
                 </Typography>
               </Box>
-              <Box>
-                <IconButton
-                  size="small"
-                  sx={{ color: 'dark.dark' }}
-                  onClick={() => {
-                    setSelectedViewGroup(item?.role);
-                    setViewDialogOpen(true);
-                  }}
-                >
-                  <Icon icon="tabler:eye-filled" />
-                </IconButton>
+              <Box sx={{ display: 'flex' }}>
+                <Box component={Link} to={'view'}>
+                  <IconButton size="small" sx={{ color: 'dark.dark' }}>
+                    <Icon icon="tabler:eye-filled" />
+                  </IconButton>
+                </Box>
                 <IconButton
                   size="small"
                   sx={{ color: 'error.main' }}
                   onClick={() => {
-                    setSelectedDeleteGroupId(item.role.id);
+                    setSelectedDeleteGroupId(item.id);
                     setDeleteDialogOpen(true);
                   }}
                 >
@@ -165,7 +149,7 @@ const GroupManagement = () => {
 
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
             <Grid item xs={12} sm={6} lg={4}>
-              <Card sx={{ cursor: 'pointer' }} onClick={() => setAddDialogOpen(true)}>
+              <Card sx={{ cursor: 'pointer' }} onClick={() => navigate('add')}>
                 <Grid container sx={{ height: '100%' }}>
                   <Grid item xs={5}>
                     <Box
@@ -183,10 +167,10 @@ const GroupManagement = () => {
                   <Grid item xs={7}>
                     <CardContent sx={{ pl: 0, height: '100%' }}>
                       <Box sx={{ textAlign: 'right' }}>
-                        <Button variant="contained" sx={{ mb: 3, whiteSpace: 'nowrap' }} onClick={() => setAddDialogOpen(true)}>
-                          Add New Role
+                        <Button variant="contained" sx={{ mb: 3, whiteSpace: 'nowrap' }} onClick={() => navigate('add')}>
+                          Add New Group
                         </Button>
-                        <Typography sx={{ color: 'text.secondary' }}>Add role, if it doesnt exist.</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>Add group, if it doesnt exist.</Typography>
                       </Box>
                     </CardContent>
                   </Grid>
@@ -197,20 +181,7 @@ const GroupManagement = () => {
             {renderCards()}
           </Grid>
 
-          <GroupAddDialog addDialogOpen={addDialogOpen} setAddDialogOpen={setAddDialogOpen} />
           <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
-          <GroupViewDialog
-            open={viewDialogOpen}
-            setViewDialogOpen={setViewDialogOpen}
-            group={selectedViewGroup}
-            setSelectedViewGroup={setSelectedViewGroup}
-          />
-          <GroupEditDialog
-            open={editDialogOpen}
-            setEditDialogOpen={setEditDialogOpen}
-            group={selectedEditGroup}
-            setSelectedEditGroup={setSelectedEditGroup}
-          />
         </Grid>
       )}
     </>
