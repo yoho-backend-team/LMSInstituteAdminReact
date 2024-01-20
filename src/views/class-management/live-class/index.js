@@ -1,20 +1,25 @@
 // material-ui
-import { Typography } from '@mui/material';
-
+import { Grid } from '@mui/material';
 // project imports
-import MainCard from 'components/cards/MainCard';
+
+import LiveClassCard from 'features/class-management/live-classes/components/LiveClassCard';
+import LiveClassCardHeader from 'features/class-management/live-classes/components/LiveClassCardHeader';
+import LiveClassFilterCard from 'features/class-management/live-classes/components/LiveClassFilterCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const LiveClass = () => (
-  <MainCard title="Live">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+const LiveClass = () => {
+  return (
+    <>
+      <Grid>
+        <LiveClassFilterCard />
+        <LiveClassCardHeader />
+        <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+          <LiveClassCard />
+        </Grid>
+      </Grid>
+    </>
+  );
+};
 
 export default LiveClass;

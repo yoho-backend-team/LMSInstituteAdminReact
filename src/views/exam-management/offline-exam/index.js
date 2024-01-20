@@ -1,20 +1,23 @@
 // material-ui
-import { Typography } from '@mui/material';
-
+import { Grid } from '@mui/material';
 // project imports
-import MainCard from 'components/cards/MainCard';
-
+import OfflineExamCard from 'features/exam-management/offline-exams/components/OfflineExamCard';
+import OfflineExamCardHeader from 'features/exam-management/offline-exams/components/OfflineExamCardHeader';
+import OfflineExamFilterCard from 'features/exam-management/offline-exams/components/OfflineExamFilterCard';
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const OfflineExams = () => (
-  <MainCard title="Offline Exams">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+const OfflineExam = () => {
+  return (
+    <>
+      <Grid>
+        <OfflineExamFilterCard />
+        <OfflineExamCardHeader />
+        <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+          <OfflineExamCard />
+        </Grid>
+      </Grid>
+    </>
+  );
+};
 
-export default OfflineExams;
+export default OfflineExam;
