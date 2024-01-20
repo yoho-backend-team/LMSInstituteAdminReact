@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
-import CourseEditModal from './CategoryEditModal';
+import CategoryEditModal from './CategoryEditModal';
 
 const CardStatsVertical = (props) => {
   // ** Props
@@ -47,7 +47,7 @@ const CardStatsVertical = (props) => {
           <CustomChip rounded size="small" skin="light" color={chipColor} label={chipText} sx={{ mt: 2 }} />
         </CardContent>
       </Card>
-      <CourseEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <CategoryEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
     </Grid>
   );
 };

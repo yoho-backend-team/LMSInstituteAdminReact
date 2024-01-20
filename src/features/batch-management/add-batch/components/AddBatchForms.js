@@ -15,7 +15,6 @@ import { TextField as CustomTextField } from '@mui/material';
 import DatePicker from 'react-datepicker';
 import CustomChip from 'components/mui/chip';
 
-
 const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
 });
@@ -56,8 +55,6 @@ const FormLayoutsSeparator = () => {
 
   return (
     <Card>
-      {/* <CardHeader title="Multi Column with Form Separator" />
-      <Divider sx={{ m: '0 !important' }} /> */}
       <form onSubmit={(e) => e.preventDefault()}>
         <CardContent>
           <Grid container spacing={5}>

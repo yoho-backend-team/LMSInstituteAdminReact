@@ -8,7 +8,8 @@ import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
 import React from 'react'
 import Icon from 'components/icon';
-
+import CourseEditModal from './CourseEditModal';
+import { useState } from 'react';
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)(({ theme }) => ({
@@ -39,7 +40,14 @@ const StyledGrid1 = styled(Grid)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius
   }))
 const CourseCard = (props) => {
-  const { sx, title, description, rating, reviews,ratingnumb,image} = props;
+  const { sx, title, description, rating, reviews,image} = props;
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const handleEditClose = () => {
+    setEditModalOpen(false);
+  };
+  const handleEdit = () => {
+    setEditModalOpen(true);
+  };
   return (
     <Grid item xs={12} sm={12} lg={6}>
     <Card sx={{ ...sx }}>
@@ -50,8 +58,8 @@ const CourseCard = (props) => {
            {title}
           </Typography>
           <Box sx={{ mb: 2.75, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-            <Rating readOnly value={ratingnumb} name='read-only' sx={{ mr: 2 }} />
-            <Typography sx={{ color: 'text.secondary' }}>{rating} | {reviews}</Typography>
+            <Rating readOnly value={rating} name='read-only' sx={{ mr: 2 }} />
+            <Typography sx={{ color: 'text.secondary' }}>{rating} star | {reviews} reviews</Typography>
           </Box>
           <Typography sx={{ color: 'text.secondary' }}>
             {description}
@@ -76,6 +84,7 @@ const CourseCard = (props) => {
     </Grid>
     
   </Card>
+  <CourseEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
   </Grid>
   )
 }
