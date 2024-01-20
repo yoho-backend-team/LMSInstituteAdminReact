@@ -13,36 +13,29 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import { useTheme } from '@mui/material/styles';
-
+// import CardMedia from '@mui/material/CardMedia';
+import CourseInputCard from './CourseVideoInput';
 // ** Custom Components Import
 import Icon from 'components/icon';
-import OptionsMenu from 'components/option-menu';
+// import OptionsMenu from 'components/option-menu';
 import CustomAvatar from 'components/mui/avatar';
-import ReactApexChart from 'react-apexcharts';
-
+// import ReactApexChart from 'react-ape/xcharts';
+import Grid from '@mui/material/Grid';
 // ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
+import CustomizedInput from './CustomizedInputWithoutCard';
+import { IconButton } from '@mui/material';
 
 const tabData = [
   {
-    type: 'orders',
+    type: 'description',
     avatarIcon: 'tabler:shopping-cart',
     series: [{ data: [28, 10, 45, 38, 15, 30, 35, 28, 8] }]
   },
   {
-    type: 'sales',
+    type: 'video',
     avatarIcon: 'tabler:chart-bar',
     series: [{ data: [35, 25, 15, 40, 42, 25, 48, 8, 30] }]
-  },
-  {
-    type: 'profit',
-    avatarIcon: 'tabler:currency-dollar',
-    series: [{ data: [10, 22, 27, 33, 42, 32, 27, 22, 8] }]
-  },
-  {
-    type: 'income',
-    avatarIcon: 'tabler:chart-pie-2',
-    series: [{ data: [5, 9, 12, 18, 20, 25, 30, 36, 48] }]
   }
 ];
 
@@ -84,27 +77,32 @@ const renderTabs = (value, theme) => {
   });
 };
 
-const renderTabPanels = (value, theme, options, colors) => {
-  return tabData.map((item, index) => {
-    const max = Math.max(...item.series[0].data);
-    const seriesIndex = item.series[0].data.indexOf(max);
-    const finalColors = colors.map((color, i) => (seriesIndex === i ? hexToRGBA(theme.palette.primary.main, 1) : color));
-
-    return (
-      <TabPanel key={index} value={item.type}>
-        <ReactApexChart type="bar" height={258} options={{ ...options, colors: finalColors }} series={item.series} />
-      </TabPanel>
-    );
-  });
-};
-
-const CardWidgetsEarningReportsWithTabs = () => {
+const CardWidgetsEarningReportsWithTabs = ({ module }) => {
   // ** State
-  const [value, setValue] = useState('orders');
-
+  const [value, setValue] = useState('description');
+  const [features, setFeatures] = useState([]);
   // ** Hook
   const theme = useTheme();
-
+  const renderTabPanels = () => {
+    return tabData.map((item, index) => {
+      return (
+        <TabPanel key={index} value={item.type}>
+          {index === 0 && (
+            <Grid sx={{ mt: 3 }}>
+              <CustomizedInput
+                placeholder={'Add New Features'}
+                data={features}
+                setData={setFeatures}
+                cardTitle={'Course Features'}
+                buttonTitle={'Add Corse Feature'}
+              />
+            </Grid>
+          )}
+          {index === 1 && <CourseInputCard />}
+        </TabPanel>
+      );
+    });
+  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -189,15 +187,13 @@ const CardWidgetsEarningReportsWithTabs = () => {
   };
 
   return (
-    <Card sx={{mt:-6}}>
+    <Card>
       <CardHeader
-        title="Earning Reports"
-        subheader="Yearly Earnings Overview"
+        title={module}
         action={
-          <OptionsMenu
-            options={['Last Week', 'Last Month', 'Last Year']}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-          />
+          <IconButton aria-label="capture screenshot" color="primary">
+            <Icon icon="tabler:pencil" />
+          </IconButton>
         }
       />
       <CardContent sx={{ '& .MuiTabPanel-root': { p: 0 } }}>
@@ -214,28 +210,6 @@ const CardWidgetsEarningReportsWithTabs = () => {
             }}
           >
             {renderTabs(value, theme)}
-            <Tab
-              disabled
-              value="add"
-              label={
-                <Box
-                  sx={{
-                    width: 110,
-                    height: 94,
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderRadius: '10px',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    border: `1px dashed ${theme.palette.divider}`
-                  }}
-                >
-                  <Avatar variant="rounded" sx={{ width: 34, height: 34, backgroundColor: 'action.selected' }}>
-                    <Icon icon="tabler:plus" />
-                  </Avatar>
-                </Box>
-              }
-            />
           </TabList>
           {renderTabPanels(value, theme, options, colors)}
         </TabContext>
