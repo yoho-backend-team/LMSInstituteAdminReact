@@ -165,10 +165,9 @@ const AddCoursePage = () => {
   };
  
   const groups = [
-    { id: '1', name: 'Group 1' },
-    { id: '2', name: 'Group 2' },
-    { id: '3', name: 'Group 3' },
-    // Add more dummy groups as needed
+    { id: '1', name: 'Offline Class' },
+    { id: '2', name: 'Online class' },
+    { id: '3', name: 'Hybrid' },
   ];
 
 
