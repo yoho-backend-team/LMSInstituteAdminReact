@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Step from '@mui/material/Step';
 import Stepper from '@mui/material/Stepper';
-// import MenuItem from '@mui/material/MenuItem';
 import Autocomplete from '@mui/material/Autocomplete';
 import CardContent from '@mui/material/CardContent';
 import StepLabel from '@mui/material/StepLabel';
@@ -23,7 +22,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-// import DatePickerWrapper from '@core/styles/libs/react-datepicker';
 // ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
@@ -55,14 +53,7 @@ const steps = [
   }
 ];
 
-const defaultAccountValues = {
-  email: '',
-  username: '',
-  password: '',
-  name: '',
-  contact: '',
-  confirm_password: ''
-};
+const defaultAccountValues = {};
 
 const defaultPersonalValues = {
   Course_duration: '',
@@ -71,7 +62,7 @@ const defaultPersonalValues = {
   description: '',
   course_overview: '',
   Learning_Format: [],
-  Course_Category: ""
+  Course_Category: ''
 };
 
 const defaultSocialValues = {
@@ -87,17 +78,7 @@ const defaultGalleryValues = {
   gallery: ''
 };
 
-const accountSchema = yup.object().shape({
-  username: yup.string().required(),
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  contact: yup.number().required(),
-  password: yup.string().min(6).required(),
-  confirm_password: yup
-    .string()
-    .required()
-    .oneOf([yup.ref('password'), ''], 'Passwords must match')
-});
+const accountSchema = yup.object().shape({});
 
 const personalSchema = yup.object().shape({
   Course_duration: yup.number().required(),
@@ -107,12 +88,11 @@ const personalSchema = yup.object().shape({
   course_overview: yup.string().required(),
   //   language: yup.array().min(1).required()
   Learning_Format: yup.array().min(1, 'Select at least one Learning Format').required(),
-  Course_Category:  yup.string().required()
+  Course_Category: yup.string().required()
 });
 
 const socialSchema = yup.object().shape({});
 const gallerySchema = yup.object().shape({});
-
 
 const AddCoursePage = () => {
   // ** States
@@ -120,11 +100,10 @@ const AddCoursePage = () => {
   const [groups, setGroups] = useState([]);
   const [features, setFeatures] = useState([]);
 
- 
   // ** Hooks
   const {
     reset: accountReset,
-    control: accountControl,
+    // control: accountControl,
     handleSubmit: handleAccountSubmit,
     formState: { errors: accountErrors }
   } = useForm({
@@ -179,7 +158,7 @@ const AddCoursePage = () => {
       description: '',
       course_overview: '',
       Learning_Format: [],
-      Course_Category:""
+      Course_Category: ''
     });
   };
   useEffect(() => {
@@ -209,7 +188,7 @@ const AddCoursePage = () => {
   };
 
   const onSubmit = async () => {
-    const accountData = accountControl?._formValues;
+    // const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
     const socialData = socialControl?._formValues;
     setActiveStep(activeStep + 1);
@@ -225,13 +204,9 @@ const AddCoursePage = () => {
       data.append('linkedin', socialData?.linkedIn);
       data.append('instagram', socialData?.instagram);
       data.append('twitter', socialData?.twitter);
-      data.append('name', accountData?.name);
       data.append('logo', logo);
       data.append('image', instituteImage);
       data.append('gallery', galleryImages);
-      data.append('user_email', accountData?.email);
-      data.append('user_mobile', accountData?.contact);
-      data.append('username', accountData?.username);
 
       let config = {
         method: 'post',
@@ -254,9 +229,6 @@ const AddCoursePage = () => {
         });
     }
   };
-
- 
-
 
   const getStepContent = (step) => {
     switch (step) {
@@ -522,13 +494,13 @@ const AddCoursePage = () => {
               </Grid>
             </Grid>
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Next
-                </Button>
-              </Grid>
+              <Button variant="tonal" color="secondary" onClick={handleBack}>
+                Back
+              </Button>
+              <Button type="submit" variant="contained">
+                Next
+              </Button>
+            </Grid>
           </form>
         );
       case 2:
@@ -652,8 +624,8 @@ const AddCoursePage = () => {
       case 3:
         return (
           <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
-            <Grid >
-            <CourseModule/>
+            <Grid>
+              <CourseModule />
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={handleBack}>
                   Back
