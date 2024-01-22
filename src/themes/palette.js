@@ -79,7 +79,7 @@ const DefaultPalette = () => {
     const color = tinycolor(primaryColor);
 
     return {
-      light: color.lighten(20).toHexString(),
+      light: color.lighten(30).toHexString(),
       main: primaryColor,
       dark: color.darken(20).toHexString(),
       800: color.darken(40).toHexString(),
