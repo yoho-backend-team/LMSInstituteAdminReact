@@ -46,9 +46,6 @@ const UserList = () => {
   }, [dispatch]);
 
   const [groups, setGroups] = useState([]);
- 
-
- 
 
   return (
     <>
