@@ -19,7 +19,7 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'Call Now',
       icon: 'eva:phone-fill',
       socialColor: '#1877F2',
-      path: 'view-profile',
+      path: 'add-new-student',
     },
     {
       name: 'Send Email',
@@ -38,7 +38,7 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'View Profile',
       icon: 'eva:navigation-2-fill',
       socialColor: '#007EBB',
-      path: links.linkedin || '#linkedin-link',
+      path: 'view-profile',
     },
   ];
 
