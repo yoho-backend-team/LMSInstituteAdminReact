@@ -51,7 +51,7 @@ const defaultValues = {
   course: ''
 };
 
-const OnlineClassAddModal = ({ open, handleAddClose }) => {
+const OfflineClassAddModal = ({ open, handleAddClose }) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -148,7 +148,7 @@ const OnlineClassAddModal = ({ open, handleAddClose }) => {
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          Add New Class
+          Add Offline Class
         </DialogTitle>
         <DialogContent
           sx={{
@@ -304,4 +304,4 @@ const OnlineClassAddModal = ({ open, handleAddClose }) => {
   );
 };
 
-export default OnlineClassAddModal;
+export default OfflineClassAddModal;
