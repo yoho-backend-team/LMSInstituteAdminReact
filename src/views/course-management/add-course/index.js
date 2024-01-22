@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
@@ -33,6 +33,8 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CustomChip from 'components/mui/chip';
 import CourseModule from 'features/course-management/add-course/components/CourseModule';
 import StepperWrapper from 'styles/mui/stepper';
+
+
 
 const steps = [
   {
@@ -97,7 +99,7 @@ const gallerySchema = yup.object().shape({});
 const AddCoursePage = () => {
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-  const [groups, setGroups] = useState([]);
+
   const [features, setFeatures] = useState([]);
 
   // ** Hooks
@@ -161,31 +163,14 @@ const AddCoursePage = () => {
       Course_Category: ''
     });
   };
-  useEffect(() => {
-    getAllGroups();
-  }, []);
+ 
+  const groups = [
+    { id: '1', name: 'Group 1' },
+    { id: '2', name: 'Group 2' },
+    { id: '3', name: 'Group 3' },
+    // Add more dummy groups as needed
+  ];
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes/read`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   const onSubmit = async () => {
     // const accountData = accountControl?._formValues;
