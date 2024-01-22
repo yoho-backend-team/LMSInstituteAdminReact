@@ -1,6 +1,9 @@
 // ** React Imports
 import { Fragment, useState, forwardRef } from 'react';
 import MenuItem from '@mui/material/MenuItem';
+import CustomRadioIcons from 'components/custom-radio/icons';
+import FormControl from '@mui/material/FormControl';
+import Tooltip from '@mui/material/Tooltip';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
@@ -41,8 +44,12 @@ const steps = [
     subtitle: 'Setup Informion'
   },
   {
-    title: 'Gallery Info',
-    subtitle: 'Add Logo, Image, Gallery Information'
+    title: 'Documents',
+    subtitle: 'Add your documents'
+  },
+  {
+    title: 'Payments',
+    subtitle: 'Payment info'
   },
   {
     title: 'Account Details',
@@ -118,8 +125,112 @@ const personalSchema = yup.object().shape({
 
 // const socialSchema = yup.object().shape({});
 const gallerySchema = yup.object().shape({});
+const data = [
+  {
+    value: 'basic',
+    title: (
+      <Typography variant="h4" sx={{ mb: 1 }}>
+        Basic
+      </Typography>
+    ),
+    content: (
+      <Box sx={{ my: 'auto', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>A simple start for start ups & Students</Typography>
+        <Box sx={{ mt: 1, display: 'flex' }}>
+          <Typography component="sup" sx={{ mt: 1.5, color: 'primary.main', alignSelf: 'flex-start' }}>
+            $
+          </Typography>
+          <Typography variant="h2" sx={{ color: 'primary.main' }}>
+            0
+          </Typography>
+          <Typography component="sub" sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>
+            /month
+          </Typography>
+        </Box>
+      </Box>
+    )
+  },
+  {
+    isSelected: true,
+    value: 'standard',
+    title: (
+      <Typography variant="h4" sx={{ mb: 1 }}>
+        Standard
+      </Typography>
+    ),
+    content: (
+      <Box sx={{ my: 'auto', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>For small to medium businesses</Typography>
+        <Box sx={{ mt: 1, display: 'flex' }}>
+          <Typography component="sup" sx={{ mt: 1.5, color: 'primary.main', alignSelf: 'flex-start' }}>
+            $
+          </Typography>
+          <Typography variant="h2" sx={{ color: 'primary.main' }}>
+            99
+          </Typography>
+          <Typography component="sub" sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>
+            /month
+          </Typography>
+        </Box>
+      </Box>
+    )
+  },
+  {
+    value: 'enterprise',
+    title: (
+      <Typography variant="h4" sx={{ mb: 1 }}>
+        Enterprise
+      </Typography>
+    ),
+    content: (
+      <Box sx={{ my: 'auto', display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>Solution for enterprise & organizations</Typography>
+        <Box sx={{ mt: 1, display: 'flex' }}>
+          <Typography component="sup" sx={{ mt: 1.5, color: 'primary.main', alignSelf: 'flex-start' }}>
+            $
+          </Typography>
+          <Typography variant="h2" sx={{ color: 'primary.main' }}>
+            499
+          </Typography>
+          <Typography component="sub" sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>
+            /month
+          </Typography>
+        </Box>
+      </Box>
+    )
+  }
+];
+const initialSelected = data.filter((item) => item.isSelected)[data.filter((item) => item.isSelected).length - 1].value;
+
+// ** State
 
 const StepperLinearWithValidation = () => {
+  const [cvc, setCvc] = useState('');
+  const [name, setName] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [selectedRadio, setSelectedRadio] = useState(initialSelected);
+
+  const handleInputChange = ({ target }) => {
+    if (target.name === 'cardNumber') {
+      target.value = formatCreditCardNumber(target.value, Payment);
+      setCardNumber(target.value);
+    } else if (target.name === 'expiry') {
+      target.value = formatExpirationDate(target.value);
+      setExpiry(target.value);
+    } else if (target.name === 'cvc') {
+      target.value = formatCVC(target.value, cardNumber, Payment);
+      setCvc(target.value);
+    }
+  };
+
+  const handleRadioChange = (prop) => {
+    if (typeof prop === 'string') {
+      setSelectedRadio(prop);
+    } else {
+      setSelectedRadio(prop.target.value);
+    }
+  };
   // ** States
   const [activeStep, setActiveStep] = useState(0);
 
@@ -294,15 +405,15 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [instituteImage, setInstituteImage] = useState('');
+  // const [instituteImage, setInstituteImage] = useState('');
   const [galleryImages, setGalleryImages] = useState([]);
   // const [date] = useState(new Date());
   const [logoSrc, setLogoSrc] = useState(
     'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
   );
-  const [instituteSrc, setInstituteSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-  );
+  // const [instituteSrc, setInstituteSrc] = useState(
+  //   'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+  // );
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -315,17 +426,17 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-  const handleInstituteImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setInstituteSrc(reader.result);
-      reader.readAsDataURL(files[0]);
-      setInstituteImage(files[0]);
-      // if (reader.result !== null) {
-      // }
-    }
-  };
+  // const handleInstituteImageChange = (file) => {
+  //   const reader = new FileReader();
+  //   const { files } = file.target;
+  //   if (files && files.length !== 0) {
+  //     reader.onload = () => setInstituteSrc(reader.result);
+  //     reader.readAsDataURL(files[0]);
+  //     setInstituteImage(files[0]);
+  //     // if (reader.result !== null) {
+  //     // }
+  //   }
+  // };
 
   // const personalData = personalControl?._formValues;
 
@@ -336,10 +447,10 @@ const StepperLinearWithValidation = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
-  const handleInstituteImageReset = () => {
-    setInstituteImage('');
-    setInstituteSrc('/images/avatars/15.png');
-  };
+  // const handleInstituteImageReset = () => {
+  // setInstituteImage('');
+  //   setInstituteSrc('/images/avatars/15.png');
+  // };
 
   const getStepContent = (step) => {
     switch (step) {
@@ -655,21 +766,21 @@ const StepperLinearWithValidation = () => {
       case 1:
         return (
           <form key={2} onSubmit={handleGallerySubmit(onSubmit)}>
-            <Grid container spacing={5}>
+            <Grid container spacing={5} item >
               <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[2].title}
+                  {steps[1].title}
                 </Typography>
                 <Typography variant="caption" component="p">
-                  {steps[2].subtitle}
+                  {steps[1].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Institute Logo
+                  Upload Profile Picture
                 </Typography>
                 <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload logo here
+                  Upload here
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <ImgStyled src={logoSrc} alt="Profile Pic" />
@@ -692,7 +803,7 @@ const StepperLinearWithValidation = () => {
                   </div>
                 </Box>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <Typography color="dark" sx={{ fontWeight: 600 }}>
                   Upload Institute Image
                 </Typography>
@@ -719,13 +830,13 @@ const StepperLinearWithValidation = () => {
                     <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
                   </div>
                 </Box>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Gallery
+                  Upload Documents
                 </Typography>
                 <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload Your Gallery
+                  Upload here
                 </Typography>
                 <Gallery setGalleryImages={setGalleryImages} galleryImages={galleryImages} />
               </Grid>
@@ -742,17 +853,142 @@ const StepperLinearWithValidation = () => {
         );
       case 2:
         return (
-          <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
+          <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[0].title}
+                  {steps[2].title}
                 </Typography>
                 <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
+                  {steps[2].subtitle}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12}>
+                <Box sx={{ mb: 6 }}>
+                  <Typography variant="h3" sx={{ mb: 1.5 }}>
+                    Select Plan
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>Select plan as per your requirement</Typography>
+                </Box>
+
+                <Grid container spacing={5} sx={{ mb: 3 }}>
+                  {data.map((item, index) => (
+                    <CustomRadioIcons
+                      key={index}
+                      data={data[index]}
+                      selected={selectedRadio}
+                      name="custom-radios-plan"
+                      gridProps={{ sm: 4, xs: 12 }}
+                      handleChange={handleRadioChange}
+                    />
+                  ))}
+
+                  <Grid item xs={12} sx={{ pt: (theme) => `${theme.spacing(6)} !important` }}>
+                    <Typography variant="h3" sx={{ mb: 1.5 }}>
+                      Payment Information
+                    </Typography>
+                    <Typography sx={{ color: 'text.secondary' }}>Enter your card information</Typography>
+                  </Grid>
+                  <Grid item xs={12} sx={{ pt: (theme) => `${theme.spacing(6)} !important` }}>
+                    <FormControl fullWidth>
+                      <CustomTextField
+                        fullWidth
+                        name="cardNumber"
+                        value={cardNumber}
+                        autoComplete="off"
+                        label="Card Number"
+                        onChange={handleInputChange}
+                        placeholder="0000 0000 0000 0000"
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <CustomTextField
+                      fullWidth
+                      name="name"
+                      value={name}
+                      autoComplete="off"
+                      label="Name on Card"
+                      placeholder="John Doe"
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <CustomTextField
+                      fullWidth
+                      name="expiry"
+                      label="Expiry"
+                      value={expiry}
+                      placeholder="MM/YY"
+                      onChange={handleInputChange}
+                      inputProps={{ maxLength: '5' }}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={3}>
+                    <CustomTextField
+                      fullWidth
+                      name="cvc"
+                      label="CVC"
+                      value={cvc}
+                      placeholder="234"
+                      autoComplete="off"
+                      onChange={handleInputChange}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start" sx={{ '& svg': { cursor: 'pointer' } }}>
+                            <Tooltip title="Card Verification Value">
+                              <Box sx={{ display: 'flex' }}>
+                                <Icon fontSize="1.25rem" icon="tabler:question-circle" />
+                              </Box>
+                            </Tooltip>
+                          </InputAdornment>
+                        )
+                      }}
+                    />
+                  </Grid>
+                  {/* <Grid item xs={12} sx={{ pt: (theme) => `${theme.spacing(6)} !important` }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Button
+                      color="secondary"
+                      variant="tonal"
+                      // onClick={handlePrev}
+                      sx={{ '& svg': { mr: 2 } }}
+                    >
+                      <Icon fontSize="1.125rem" icon="tabler:arrow-left" />
+                      Previous
+                    </Button>
+                    <Button color="success" variant="contained" onClick={() => alert('Submitted..!!')}>
+                      Submit
+                    </Button>
+                  </Box>
+                </Grid> */}
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Button variant="tonal" color="secondary" onClick={handleBack}>
+                    Back
+                  </Button>
+                  <Button type="submit" variant="contained">
+                    Next
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </form>
+        );
+      case 3:
+        return (
+          <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  {steps[3].title}
+                </Typography>
+                <Typography variant="caption" component="p">
+                  {steps[3].subtitle}
+                </Typography>
+              </Grid>
+              {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="name"
                   control={accountControl}
@@ -770,9 +1006,9 @@ const StepperLinearWithValidation = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
 
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="email"
                   control={accountControl}
@@ -791,8 +1027,8 @@ const StepperLinearWithValidation = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+              </Grid> */}
+              {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="contact"
                   control={accountControl}
@@ -811,7 +1047,7 @@ const StepperLinearWithValidation = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="username"
@@ -864,6 +1100,7 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="confirm_password"
@@ -899,6 +1136,7 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
+
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={handleBack}>
                   Back
@@ -979,5 +1217,4 @@ const StepperLinearWithValidation = () => {
     </Card>
   );
 };
-
 export default StepperLinearWithValidation;
