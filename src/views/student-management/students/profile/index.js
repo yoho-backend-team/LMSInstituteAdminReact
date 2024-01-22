@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 // import MainCard from 'components/cards/MainCard';
 import Image from './image';
 import cssStyles from './cssStyles';
+import StudentFilter from '../view-profile/studentFilterCard';
 // import UserCard from './CardStyle/userCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
@@ -39,10 +40,13 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 
 const Students = () => (
   <Container>
+    <Grid item xs={12} md={12} lg={12} mb={2}>
+        <StudentFilter />
+      </Grid>
     <Box
       sx={{
         display: 'grid',
-        gap: 3,
+        gap: 6,
         gridTemplateColumns: {
           xs: 'repeat(1, 1fr)',
           sm: 'repeat(2, 1fr)',
@@ -81,7 +85,7 @@ const Students = () => (
                 position: 'absolute'
               }}
             />
-            <OverlayStyle />
+            <OverlayStyle/>
             <Image src="https://i.pinimg.com/originals/52/2c/1a/522c1a4289f2e2d0e29ed59071de9dce.jpg" alt="overlaystyle" ratio="16/9" />
           </Box>
 

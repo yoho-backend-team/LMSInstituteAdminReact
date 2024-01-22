@@ -9,7 +9,10 @@ import UserViewRight from './UserViewRight'
 
 const UserView = ({ tab, invoiceData }) => {
   return (
-    <Grid container spacing={6}>
+    <>
+     
+     <Grid container spacing={6}>
+      
       <Grid item xs={12} md={5} lg={4}>
         <UserViewLeft />
       </Grid>
@@ -17,6 +20,8 @@ const UserView = ({ tab, invoiceData }) => {
         <UserViewRight tab={tab} invoiceData={invoiceData} />
       </Grid>
     </Grid>
+    </>
+   
   )
 }
 
