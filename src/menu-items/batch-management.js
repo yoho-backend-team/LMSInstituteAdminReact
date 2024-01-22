@@ -25,8 +25,8 @@ const pages = {
 
       children: [
         {
-          id: 'branches',
-          title: 'Branches',
+          id: 'batches',
+          title: 'Batches',
           type: 'item',
           url: '/batch-management/batches',
           icon: icons.IconGitBranch,
