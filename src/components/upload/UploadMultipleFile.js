@@ -12,7 +12,7 @@ import MultiFilePreview from './MultiFilePreview';
 
 const DropZoneStyle = styled('div')(({ theme }) => ({
   outline: 'none',
-  padding: theme.spacing(5, 1),
+  padding: theme.spacing(2.8, 1),
   borderRadius: theme.shape.borderRadius,
   backgroundColor: theme.palette.background.neutral,
   border: `1px dashed ${theme.palette.grey[500_32]}`,
