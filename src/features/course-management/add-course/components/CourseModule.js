@@ -39,12 +39,30 @@ const DynamicTabsExample = () => {
   const [value, setValue] = useState('1');
   const [moduleName, setModuleName] = useState('');
   const [tabs, setTabs] = useState([
-    // {
-    //   id: '1',
-    //   label: 'This is Introduction for react',
-    //   content:
-    //     'Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.'
-    // }
+    {
+      id: '1',
+      label: 'This is Introduction for react',
+      content:
+        'Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.'
+    },
+    {
+      id: '2',
+      label: 'Hooks in react',
+      content:
+        'Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.'
+    },
+    {
+      id: '3',
+      label: 'Components in react',
+      content:
+        'Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.'
+    },
+    {
+      id: '4',
+      label: 'States and props in react',
+      content:
+        'Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.'
+    },
   ]);
 
   const handleChange = (event, newValue) => {

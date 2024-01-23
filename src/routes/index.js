@@ -30,6 +30,7 @@ const AddBatchPage = Loadable(lazy(() => import('views/batch-management/add-batc
 const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-batch')));
 
 // Attendance Management
+const StudentAttendanceViewPage = Loadable(lazy(() => import('views/attendance-management/view-students/index')));
 const StudentAttendancesPage = Loadable(lazy(() => import('views/attendance-management/students')));
 const TeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching -staffs')));
 const NonTeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staffs')));
@@ -47,6 +48,9 @@ const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/of
 const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
 const CourseContentsPage = Loadable(lazy(() => import('views/content-management/course-content')));
 const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
+const CreateExamPaper = Loadable(lazy(() => import('views/content-management/exam-content/create-exam-paper/index')));
+const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
+
 
 // Course Management
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
@@ -90,7 +94,6 @@ const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/view-profile')));
 const AddNewStudent = Loadable(lazy(() => import('views/student-management/students/profile/add-new-student/addNewStudent')));
-
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -136,6 +139,7 @@ const ApplicationRoutes = () => {
       <Route path="/attendance-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
         <Route path="student-attendances" element={<StudentAttendancesPage />} />
+        <Route path="student-attendances/view" element={<StudentAttendanceViewPage />} />
         <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
         <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
       </Route>
@@ -172,6 +176,8 @@ const ApplicationRoutes = () => {
         <Route path="class-contents" element={<ClassContentsPage />} />
         <Route path="course-contents" element={<CourseContentsPage />} />
         <Route path="exam-contents" element={<ExamContentsPage />} />
+        <Route path="exam-contents/create-exam-paper" element={<CreateExamPaper />} />
+        <Route path="exam-contents/create-exam-paper/create-question" element={<CreateQuestionPage />} />
       </Route>
 
       <Route path="/course-management" element={<MainLayout />}>
@@ -233,8 +239,7 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/student-management/students" />} />
         <Route path="students" element={<StudentsPage />} />
         <Route path="view-profile" element={<ViewStudentProfile />} />
-        <Route path="add-new-student" element={<AddNewStudent/>} />
-
+        <Route path="add-new-student" element={<AddNewStudent />} />
       </Route>
 
       <Route element={<MinimalLayout />}>

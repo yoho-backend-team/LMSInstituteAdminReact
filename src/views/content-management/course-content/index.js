@@ -6,10 +6,11 @@ import Tab from '@mui/material/Tab';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
-import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import StudyMaterial from 'features/content-management/course-contents/components/StudyMaterialDataGrid';
 import Notes from 'features/content-management/course-contents/components/NotesDataGrid';
+import CourseModule from 'features/course-management/add-course/components/CourseModule';
+import QuestionPaper from 'features/content-management/course-contents/components/QuestionPaper';
 const TabsFullWidth = () => {
   // ** State
   const [value, setValue] = useState('1');
@@ -34,10 +35,10 @@ const TabsFullWidth = () => {
           <Notes />
         </TabPanel>
         <TabPanel value="3">
-          <Typography>
-            Danish tiramisu jujubes cupcake chocolate bar cake cheesecake chupa chups. Macaroon ice cream tootsie roll carrot cake gummi
-            bears.
-          </Typography>
+          <CourseModule />
+        </TabPanel>
+        <TabPanel value="4">
+          <QuestionPaper />
         </TabPanel>
       </TabContext>
     </Card>
