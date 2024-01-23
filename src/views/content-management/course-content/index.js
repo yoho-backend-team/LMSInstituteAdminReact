@@ -10,6 +10,7 @@ import Card from '@mui/material/Card';
 import StudyMaterial from 'features/content-management/course-contents/components/StudyMaterialDataGrid';
 import Notes from 'features/content-management/course-contents/components/NotesDataGrid';
 import CourseModule from 'features/course-management/add-course/components/CourseModule';
+import QuestionPaper from 'features/content-management/course-contents/components/QuestionPaper';
 const TabsFullWidth = () => {
   // ** State
   const [value, setValue] = useState('1');
@@ -33,8 +34,11 @@ const TabsFullWidth = () => {
         <TabPanel value="2" sx={{ p: 0 }}>
           <Notes />
         </TabPanel>
-        <TabPanel value="3" >
+        <TabPanel value="3">
           <CourseModule />
+        </TabPanel>
+        <TabPanel value="4">
+          <QuestionPaper />
         </TabPanel>
       </TabContext>
     </Card>

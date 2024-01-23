@@ -1,0 +1,44 @@
+// ** MUI Imports
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { Grid, TextField } from '@mui/material';
+
+// ** Icon Imports
+import Icon from 'components/icon';
+import { Link } from 'react-router-dom';
+
+const TableHeader = (props) => {
+  // ** Props
+  const { handleFilter, value } = props;
+
+  return (
+    <Box
+      sx={{
+        py: 2,
+        px: 3,
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}
+    >
+      <Grid></Grid>
+      <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+        <Grid item sm={5} xs={12}></Grid>
+        <Grid item sm={4} xs={12}>
+          <TextField fullWidth value={value} sx={{}} placeholder="Search Exam Papers" onChange={(e) => handleFilter(e.target.value)} />
+        </Grid>
+        <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+          <Box component={Link} to="create-exam-paper">
+            <Button fullWidth variant="contained" sx={{ '& svg': { mr: 2 } }}>
+              <Icon fontSize="1.125rem" icon="tabler:plus" />
+              Add New Exam Paper
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export default TableHeader;
