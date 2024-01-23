@@ -12,6 +12,11 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import Icon from 'components/icon';
+import { useState } from 'react';
+import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
+
+
+
 const LiveClassCard = () => {
  // const [copiedIndex, setCopiedIndex] = useState(null);
 
@@ -95,6 +100,16 @@ const LiveClassCard = () => {
     }
     // Add more card data as needed
   ];
+
+
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const handleEditClose = () => {
+    setEditModalOpen(false);
+  };
+  const handleEdit = () => {
+    setEditModalOpen(true);
+  };
+
 
   const handleCopyLink = (index) => {
     // You can implement the logic to copy the link here
@@ -180,7 +195,7 @@ const LiveClassCard = () => {
                 </Box>
 
                 <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
-                  <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
+                  <IconButton  onClick={() => handleEdit()} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
                     <Icon icon="tabler:edit" />
                   </IconButton>
                   <IconButton aria-label="capture screenshot" color="error">
@@ -192,6 +207,8 @@ const LiveClassCard = () => {
           </Card>
         </Grid>
       ))}
+      <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+
     </Grid>
   );
 }

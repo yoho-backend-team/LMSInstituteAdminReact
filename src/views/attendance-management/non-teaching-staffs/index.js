@@ -1,20 +1,24 @@
 // material-ui
-import { Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // project imports
-import MainCard from 'components/cards/MainCard';
+
+import NonTeachingStaffCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCard';
+import NonTeachingStaffCardHeader from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCardHeader';
+import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const NonTeachingStaffs = () => (
-  <MainCard title="Non Teaching Staffs">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+const NonTeachingStaffs = () => {
+  return (
+    <Grid>
+      <NonTeachingStaffFilterCard />
+      <NonTeachingStaffCardHeader />
+      <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+        <NonTeachingStaffCard />
+      </Grid>
+    </Grid>
+  );
+};
 
 export default NonTeachingStaffs;

@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -13,10 +12,14 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import Icon from 'components/icon';
-import { useState } from 'react';
-import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
+// ** React Router Import
+import { Link } from 'react-router-dom';
+// import { useState } from 'react';
 
-const OfflineClassCard = () => {
+
+const StudentAttendanceCard = () => {
+  // const [copiedIndex, setCopiedIndex] = useState(null);
+
   const cardData = [
     // Add your card data here
     // For example:
@@ -100,38 +103,31 @@ const OfflineClassCard = () => {
 
 
 
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const handleEditClose = () => {
-    setEditModalOpen(false);
-  };
-  const handleEdit = () => {
-    setEditModalOpen(true);
-  };
-
   const handleCopyLink = (index) => {
     // You can implement the logic to copy the link here
     // For simplicity, let's just log the index to the console
     console.log(`Link copied for card at index ${index}`);
     // setCopiedIndex(index);
   };
+
   return (
     <Grid container spacing={2}>
       {cardData.map((card, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card sx={{ position: 'relative' }}>
             {/* <CardMedia sx={{ height: '12.625rem' }} image={card.image} />
-                <Avatar
-                  alt={card.classname}
-                  src={card.avatar}
-                  sx={{
-                    width: 75,
-                    height: 75,
-                    left: '1.313rem',
-                    top: '10.28125rem',
-                    position: 'absolute',
-                    border: (theme) => `0.25rem solid ${theme.palette.common.white}`
-                  }}
-                /> */}
+            <Avatar
+              alt={card.classname}
+              src={card.avatar}
+              sx={{
+                width: 75,
+                height: 75,
+                left: '1.313rem',
+                top: '10.28125rem',
+                position: 'absolute',
+                border: (theme) => `0.25rem solid ${theme.palette.common.white}`
+              }}
+            /> */}
             <CardContent>
               <Box
                 sx={{
@@ -191,22 +187,18 @@ const OfflineClassCard = () => {
                 </Box>
 
                 <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
-                  <IconButton  onClick={() => handleEdit()} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
-                    <Icon icon="tabler:edit" />
-                  </IconButton>
-                  <IconButton aria-label="capture screenshot" color="error">
-                    <Icon icon="tabler:archive-filled" />
-                  </IconButton>
+                 
+                  <IconButton component={Link} to={'view'} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
+                  <Icon icon="tabler:eye-filled" />
+                </IconButton>
                 </Box>
               </Box>
             </CardContent>
           </Card>
         </Grid>
       ))}
-      <OfflineClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
-
     </Grid>
   );
 };
 
-export default OfflineClassCard;
+export default StudentAttendanceCard;

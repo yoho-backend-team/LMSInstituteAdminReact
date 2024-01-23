@@ -1,20 +1,23 @@
 // material-ui
-import { Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // project imports
-import MainCard from 'components/cards/MainCard';
 
+import TeachingStaffCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCard';
+import TeachingStaffCardHeader from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCardHeader';
+import TeachingStaffFilterCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffFilterCard';
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const TeachingStaff = () => (
-  <MainCard title="Teaching Staff">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+const TeachingStaff = () => {
+  return (
+    <Grid>
+      <TeachingStaffFilterCard />
+      <TeachingStaffCardHeader />
+      <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+        <TeachingStaffCard />
+      </Grid>
+    </Grid>
+  );
+};
 
 export default TeachingStaff;

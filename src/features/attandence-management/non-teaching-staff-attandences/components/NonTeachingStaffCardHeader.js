@@ -5,16 +5,16 @@ import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
-import { useState } from 'react';
-import OnlineExamAddModal from './add-OnlineExam/OnlineExamAddModal';
+// import { useState } from 'react';
+// import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
 
-const OnlineExamCardHeader = (props) => {
+const NonTeachingStaffCardHeader = (props) => {
   const { value, handleFilter } = props;
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  // const [isAddModalOpen, setAddModalOpen] = useState(false);
 
-  const handleAddClose = () => {
-    setAddModalOpen(false);
-  };
+  // const handleAddClose = () => {
+  //   setAddModalOpen(false);
+  // };
 
   const handleAdd = (itemId) => {
     console.log('Add clicked for item ID:', itemId);
@@ -39,19 +39,19 @@ const OnlineExamCardHeader = (props) => {
           sx={{
             width: 400
           }}
-          placeholder="Search Exams"
+          placeholder="Search Class"
           onChange={(e) => handleFilter(e.target.value)}
         />
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
-            Add Online Exam
+            Add
           </Button>
         </Box>
       </Box>
-      <OnlineExamAddModal open={isAddModalOpen} handleAddClose={handleAddClose} />
+      {/* <LiveClassAddModal open={isAddModalOpen} handleAddClose={handleAddClose} /> */}
     </>
   );
 };
 
-export default OnlineExamCardHeader;
+export default NonTeachingStaffCardHeader;
