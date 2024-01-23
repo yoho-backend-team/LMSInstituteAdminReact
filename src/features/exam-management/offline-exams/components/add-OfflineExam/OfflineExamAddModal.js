@@ -178,7 +178,7 @@ const OfflineExamAddModal = ({ open, handleAddClose }) => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField fullWidth select defaultValue="" label="Question Paper" id="custom-select">
+                <TextField fullWidth select defaultValue="" label="Exam Paper" id="custom-select">
                   <MenuItem value="">
                     <em>Thasthahir</em>
                   </MenuItem>
