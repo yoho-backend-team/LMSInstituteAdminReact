@@ -9,7 +9,7 @@ import CustomTextField from 'components/mui/text-field';
 import { Button } from '@mui/material';
 // import { Button } from '@mui/material';
 
-const StudentFilter = () => {
+const TeacherFilter = () => {
 
   const [statusValue, setStatusValue] = useState('');
 
@@ -18,13 +18,13 @@ const StudentFilter = () => {
   };
 
   return (
-      <Grid container spacing={6}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Filters" />
             
             <CardContent >
-              <Grid container spacing={2} >
+              <Grid container spacing={3} >
                 
                 
                 <Grid item xs={12} sm={3}>
@@ -76,9 +76,26 @@ const StudentFilter = () => {
                     <MenuItem value="sent">Sent</MenuItem>
                   </CustomTextField>
                 </Grid>
-                <Grid item xs={12} sm={3} sx={{alignItems:'center',justifyContent:'center'}}>
-                  <Button sx={{p:1,px:2}}>
-                    Add New Student
+                <Grid item xs={12} sm={3} >
+                  <CustomTextField
+                    select
+                    fullWidth
+                    label="Status"
+                    SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="downloaded">Downloaded</MenuItem>
+                    <MenuItem value="draft">Draft</MenuItem>
+                    <MenuItem value="paid">Paid</MenuItem>
+                    <MenuItem value="partial payment">Partial Payment</MenuItem>
+                    <MenuItem value="past due">Past Due</MenuItem>
+                    <MenuItem value="sent">Sent</MenuItem>
+                  </CustomTextField>
+                </Grid>
+                <Grid item xs={12} sm={9}/>
+                <Grid item xs={12} sm={3}>
+                  <Button variant='contained' size='medium' fullWidth href="add-new-staff">
+                    Add New Staff
                   </Button>
                 </Grid>
               </Grid>
@@ -89,4 +106,4 @@ const StudentFilter = () => {
   );
 };
 
-export default StudentFilter;
+export default TeacherFilter;

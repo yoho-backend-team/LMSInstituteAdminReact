@@ -89,6 +89,10 @@ const RefundsPage = Loadable(lazy(() => import('views/refund-management/refunds'
 // Staff Management
 const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/teaching-staffs')));
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs')));
+const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs/view-profile')));
+const AddNewStaff = Loadable(lazy(() => import('views/staff-management/add-new-staff/addNewStaff')));
+
+
 
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
@@ -232,6 +236,8 @@ const ApplicationRoutes = () => {
       <Route path="/staff-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
         <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
+        <Route path="view-profile" element={<ViewTeachingProfile/>} />
+        <Route path="add-new-staff" element={<AddNewStaff/>} />
         <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
       </Route>
 
