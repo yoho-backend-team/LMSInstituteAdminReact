@@ -56,6 +56,7 @@ const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
 const CoursesPage = Loadable(lazy(() => import('views/course-management/courses')));
 const AddCoursePage = Loadable(lazy(() => import('views/course-management/add-course')));
+const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-course')));
 
 // Exam Management
 const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
@@ -185,6 +186,7 @@ const ApplicationRoutes = () => {
         <Route path="categories" element={<CategoriesPage />} />
         <Route path="courses" element={<CoursesPage />} />
         <Route path="courses/add" element={<AddCoursePage />} />
+        <Route path="courses/:id" element={<ViewCoursePage />} />
       </Route>
 
       <Route path="/help-center" element={<MainLayout />}>
