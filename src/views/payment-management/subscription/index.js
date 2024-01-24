@@ -1,20 +1,75 @@
-// material-ui
-import { Typography } from '@mui/material';
+// ** React Imports
+import { useState } from 'react';
 
-// project imports
-import MainCard from 'components/cards/MainCard';
+// ** MUI Imports
+import Card from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
+import MuiCardContent from '@mui/material/CardContent';
 
-// ==============================|| SAMPLE PAGE ||============================== //
+// ** Third Party Imports
+// import axios from 'axios';
 
-const Subscription = () => (
-  <MainCard title="Payments">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+// ** Demo Imports
+// import PricingCTA from 'src/views/pages/pricing/PricingCTA';
+// import PricingTable from 'src/views/pages/pricing/PricingTable';
+// import PricingPlans from 'src/views/pages/pricing/PricingPlans';
+// import PricingHeader from 'src/views/pages/pricing/PricingHeader';
+// import PricingFooter from 'src/views/pages/pricing/PricingFooter';
+
+import SubscriptionHeader from 'features/payment-management/subscriptions/components/SubscriptionHeader';
+import SubscriptionCTA from 'features/payment-management/subscriptions/components/SubscriptionCTA';
+import SubscriptionPlans from 'features/payment-management/subscriptions/components/SubscriptionPlans';
+
+// ** Styled Components
+const CardContent = styled(MuiCardContent)(({ theme }) => ({
+  padding: `${theme.spacing(20, 36)} !important`,
+  [theme.breakpoints.down('xl')]: {
+    padding: `${theme.spacing(20)} !important`
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: `${theme.spacing(10, 5)} !important`
+  }
+}));
+
+const Subscription = () => {
+  // ** States
+  const [plan, setPlan] = useState('annually');
+
+  const handleChange = (e) => {
+    if (e.target.checked) {
+      setPlan('annually');
+    } else {
+      setPlan('monthly');
+    }
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <SubscriptionHeader plan={plan} handleChange={handleChange}/>
+        {/* <PricingPlans plan={plan} data={apiData.pricingPlans} /> */}
+        <SubscriptionPlans />
+      </CardContent>
+      <SubscriptionCTA />
+      <CardContent>
+        {/* <PricingTable data={apiData} /> */}
+      </CardContent>
+      <CardContent sx={{ backgroundColor: 'action.hover' }}>
+        {/* <PricingFooter data={apiData} /> */}
+      </CardContent>
+    </Card>
+  );
+};
+
+// export const getStaticProps = async () => {
+//   const res = await axios.get('/pages/pricing');
+//   const apiData = res.data;
+
+//   return {
+//     props: {
+//       apiData
+//     }
+//   };
+// };
 
 export default Subscription;
