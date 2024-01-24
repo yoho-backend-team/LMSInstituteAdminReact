@@ -101,6 +101,10 @@ const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
 const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 
+
+//Calender
+const CalenderPage = Loadable(lazy(() => import('views/calender')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // const Protected = () => {
@@ -124,6 +128,10 @@ const ApplicationRoutes = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<DashboardDefault />} />
+      </Route>
+      <Route path="/calender" element={<MainLayout />}>
+        <Route index element={<CalenderPage />} />
+        {/* <Route path="" element={} /> */}
       </Route>
 
       <Route path="/user-management" element={<MainLayout />}>
