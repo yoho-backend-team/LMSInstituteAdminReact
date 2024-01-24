@@ -79,7 +79,7 @@ const DefaultPalette = () => {
     const color = tinycolor(primaryColor);
 
     return {
-      light: color.lighten(30).toHexString(),
+      light: color.lighten(20).toHexString(),
       main: primaryColor,
       dark: color.darken(20).toHexString(),
       800: color.darken(40).toHexString(),
@@ -98,8 +98,8 @@ const DefaultPalette = () => {
   const darkPaperBgColor = '#2F3349';
   const mainColor = mode === 'light' ? lightColor : darkColor;
 
-  const primary = generatePrimaryObject('#872341');
-  const secondary = generatePrimaryObject('#F05941')
+  const primary = generatePrimaryObject('#974EC3');
+  const secondary = generatePrimaryObject('#FE7BE5')
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor;
