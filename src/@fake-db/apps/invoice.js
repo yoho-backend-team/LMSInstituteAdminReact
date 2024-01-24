@@ -1,13 +1,14 @@
-// ** Third Party Imports
-// import axios from 'axios'
-// ** Demo Components Imports
-// import UserViewPage from ''
-import UserViewPage from './view/UserViewPage'
+// ** Mock Adapter
+import mock from 'src/@fake-db/mock'
+
+// ** Utils Import
+import { getDateRange } from 'src/@core/utils/get-daterange'
 
 const now = new Date()
 const currentMonth = now.toLocaleString('default', { month: 'short' })
 
-const invoiceData = [
+const data = {
+  invoices: [
     {
       id: 4987,
       issuedDate: `13 ${currentMonth} ${now.getFullYear()}`,
@@ -826,37 +827,119 @@ const invoiceData = [
       balance: '-$205',
       dueDate: `25 ${currentMonth} ${now.getFullYear()}`
     }
-  
   ]
-const UserView = ({ tab, invoiceData }) => {
-  return <UserViewPage tab={tab} invoiceData={invoiceData} />
 }
 
+// ------------------------------------------------
+// GET: Return Invoice List
+// ------------------------------------------------
+mock.onGet('/apps/invoice/invoices').reply(config => {
+  const { q = '', status = '', dates = [] } = config.params ?? ''
+  const queryLowered = q.toLowerCase()
 
-
-export const getStaticPaths = () => {
-  return {
-    paths: [
-      { params: { tab: 'account' } },
-      { params: { tab: 'security' } },
-      { params: { tab: 'billing-plan' } },
-      { params: { tab: 'notification' } },
-      { params: { tab: 'connection' } }
-    ],
-    fallback: false
-  }
-}
-
-export const getStaticProps = async ({ params }) => {
-  // const res = await axios.get('../view-profile/mockData/invoice')
-  // const invoiceData = res.data.allData
-
-  return {
-    props: {
-      invoiceData,
-      tab: params?.tab
+  const filteredData = data.invoices.filter(invoice => {
+    if (dates.length) {
+      const [start, end] = dates
+      const filtered = []
+      const range = getDateRange(start, end)
+      const invoiceDate = new Date(invoice.issuedDate)
+      range.filter(date => {
+        const rangeDate = new Date(date)
+        if (
+          invoiceDate.getFullYear() === rangeDate.getFullYear() &&
+          invoiceDate.getDate() === rangeDate.getDate() &&
+          invoiceDate.getMonth() === rangeDate.getMonth()
+        ) {
+          filtered.push(invoice.id)
+        }
+      })
+      if (filtered.length && filtered.includes(invoice.id)) {
+        return (
+          (invoice.companyEmail.toLowerCase().includes(queryLowered) ||
+            invoice.name.toLowerCase().includes(queryLowered) ||
+            String(invoice.id).toLowerCase().includes(queryLowered) ||
+            String(invoice.total).toLowerCase().includes(queryLowered) ||
+            String(invoice.balance).toLowerCase().includes(queryLowered) ||
+            invoice.dueDate.toLowerCase().includes(queryLowered)) &&
+          invoice.invoiceStatus.toLowerCase() === (status.toLowerCase() || invoice.invoiceStatus.toLowerCase())
+        )
+      }
+    } else {
+      return (
+        (invoice.companyEmail.toLowerCase().includes(queryLowered) ||
+          invoice.name.toLowerCase().includes(queryLowered) ||
+          String(invoice.id).toLowerCase().includes(queryLowered) ||
+          String(invoice.total).toLowerCase().includes(queryLowered) ||
+          String(invoice.balance).toLowerCase().includes(queryLowered) ||
+          invoice.dueDate.toLowerCase().includes(queryLowered)) &&
+        invoice.invoiceStatus.toLowerCase() === (status.toLowerCase() || invoice.invoiceStatus.toLowerCase())
+      )
     }
-  }
-}
+  })
 
-export default UserView
+  return [
+    200,
+    {
+      params: config.params,
+      allData: data.invoices,
+      invoices: filteredData,
+      total: filteredData.length
+    }
+  ]
+})
+
+// ------------------------------------------------
+// GET: Return Single Invoice
+// ------------------------------------------------
+mock.onGet('apps/invoice/single-invoice').reply(config => {
+  const { id } = config.params
+  const invoiceData = data.invoices.filter(invoice => invoice.id === parseInt(id, 10))
+  if (invoiceData.length) {
+    const responseData = {
+      invoice: invoiceData[0],
+      paymentDetails: {
+        totalDue: '$12,110.55',
+        bankName: 'American Bank',
+        country: 'United States',
+        iban: 'ETD95476213874685',
+        swiftCode: 'BR91905'
+      }
+    }
+
+    return [200, responseData]
+  } else {
+    return [404, { message: 'Unable to find the requested invoice!' }]
+  }
+})
+
+// ------------------------------------------------
+// GET: Return Clients
+// ------------------------------------------------
+mock.onGet('/apps/invoice/clients').reply(() => {
+  const clients = data.invoices.map(invoice => {
+    const { address, company, companyEmail, country, contact, name } = invoice
+
+    return {
+      name,
+      address,
+      company,
+      country,
+      contact,
+      companyEmail
+    }
+  })
+
+  return [200, clients.slice(0, 5)]
+})
+
+// ------------------------------------------------
+// DELETE: Deletes Invoice
+// ------------------------------------------------
+mock.onDelete('/apps/invoice/delete').reply(config => {
+  // Get invoice id from URL
+  const invoiceId = Number(config.data)
+  const invoiceIndex = data.invoices.findIndex(t => t.id === invoiceId)
+  data.invoices.splice(invoiceIndex, 1)
+
+  return [200]
+})

@@ -90,6 +90,10 @@ const RefundsPage = Loadable(lazy(() => import('views/refund-management/refunds'
 // Staff Management
 const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/teaching-staffs')));
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs')));
+const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs/view-profile')));
+const AddNewStaff = Loadable(lazy(() => import('views/staff-management/add-new-staff/addNewStaff')));
+
+
 
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
@@ -100,6 +104,10 @@ const AddNewStudent = Loadable(lazy(() => import('views/student-management/stude
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
 const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
+
+
+//Calender
+const CalenderPage = Loadable(lazy(() => import('views/calender')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -124,6 +132,10 @@ const ApplicationRoutes = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<DashboardDefault />} />
+      </Route>
+      <Route path="/calender" element={<MainLayout />}>
+        <Route index element={<CalenderPage />} />
+        {/* <Route path="" element={} /> */}
       </Route>
 
       <Route path="/user-management" element={<MainLayout />}>
@@ -234,6 +246,8 @@ const ApplicationRoutes = () => {
       <Route path="/staff-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
         <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
+        <Route path="view-profile" element={<ViewTeachingProfile/>} />
+        <Route path="add-new-staff" element={<AddNewStaff/>} />
         <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
       </Route>
 

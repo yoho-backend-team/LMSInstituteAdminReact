@@ -11,7 +11,8 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
+import TeacherFilter from './TeacherFilterCard';
+// import { Link } from 'react-router-dom';
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)(({ theme }) => ({
@@ -126,8 +127,10 @@ const data=[
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Teaching = () => (
-  <>
-    <Grid container xs={12} spacing={3}>
+  
+  <Grid>
+ <TeacherFilter/>
+    <Grid container xs={12} spacing={3} mt={2}> 
       {data.map((item,i)=>(
         <Grid item xs={12} sm={12} lg={6} xl={6} key={i} >
         <Card>
@@ -148,9 +151,9 @@ const Teaching = () => (
               </CardContent>
               <CardActions className="card-action-dense" sx={{ width: '100%', p: 1 }}>
                 {/* <Button sx={{ p: 1, m: 1 }}>contact</Button> */}
-                <Link to='/'>
-                <Button sx={{ p: 1,ml:2 }}>View Profile</Button>
-                </Link>
+                {/* <Link to = ""> */}
+                <Button sx={{ p: 1,ml:2 }} href ='view-profile'>View Profile</Button>
+                {/* </Link> */}
               </CardActions>
             </StyledGrid1>
             <StyledGrid2 item xs={12} sm={6}>
@@ -168,7 +171,8 @@ const Teaching = () => (
       )}
      
     </Grid>
-  </>
+    </Grid>
+  
 );
 
 export default Teaching;
