@@ -27,9 +27,9 @@ import DialogContentText from '@mui/material/DialogContentText'
 import Icon from 'components/icon'
 
 // ** Custom Components
-import CustomChip from 'components/mui/chip'
-import CustomAvatar from 'components/mui/avatar'
-import CustomTextField from 'components/mui/text-field'
+  import CustomChip from 'components/mui/chip'
+  import CustomAvatar from 'components/mui/avatar'
+  import CustomTextField from 'components/mui/text-field'
 import UserSuspendDialog from './UserSubscriptionDialog'
 import UserSubscriptionDialog from './UserSubscriptionDialog'
 
@@ -98,8 +98,8 @@ const UserViewLeft = () => {
   if (data) {
     return (
       <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
+        <Grid item xs={12} >
+          <Card >
             <CardContent sx={{ pt: 13.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
               {data.avatar ? (
                 <CustomAvatar
@@ -376,7 +376,7 @@ const UserViewLeft = () => {
               <LinearProgress value={75} variant='determinate' sx={{ height: 10 }} />
               <Typography sx={{ mt: 1.5, mb: 6, color: 'text.secondary' }}>4 days remaining</Typography>
               <Button fullWidth variant='contained' onClick={handlePlansClickOpen}>
-                Upgrade Plan
+                  Upgrade Plan
               </Button>
             </CardContent>
 
