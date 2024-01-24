@@ -11,6 +11,7 @@ import Icon from 'components/icon';
 import CourseEditModal from './CourseEditModal';
 import { useState } from 'react';
 import CustomChip from 'components/mui/chip';
+import { Link } from 'react-router-dom';
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)(({ theme }) => ({
@@ -74,7 +75,7 @@ const CourseCard = (props) => {
             </CardContent>
             <CardActions className="card-action-dense" sx={{ width: '100%', paddingTop: '15px' }}>
               <Box sx={{ display: 'flex' }}>
-              <IconButton aria-label="capture screenshot" color="primary">
+              <IconButton component={Link} to='view' aria-label="capture screenshot" color="primary">
                 <Icon icon="tabler:eye" />
               </IconButton>
                 <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">

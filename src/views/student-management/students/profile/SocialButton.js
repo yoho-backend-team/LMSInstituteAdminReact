@@ -19,7 +19,7 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'Call Now',
       icon: 'eva:phone-fill',
       socialColor: '#1877F2',
-      path: 'add-new-student',
+      path: links.instagram || '#instagram-link',
     },
     {
       name: 'Send Email',
