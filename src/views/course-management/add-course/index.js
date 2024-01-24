@@ -63,7 +63,7 @@ const defaultAccountValues = {};
 
 const defaultPersonalValues = {
   Course_duration: '',
-  institute_name: '',
+  course_name: '',
   Course_Price: '',
   description: '',
   course_overview: '',
@@ -87,7 +87,7 @@ const accountSchema = yup.object().shape({});
 
 const personalSchema = yup.object().shape({
   Course_duration: yup.number().required(),
-  institute_name: yup.string().required(),
+  course_name: yup.string().required(),
   Course_Price: yup.number().required(),
   description: yup.string().required(),
   course_overview: yup.string().required(),
@@ -155,7 +155,7 @@ const AddCoursePage = () => {
     accountReset({ email: '', username: '', password: '', confirm_password: '', name: '', contact: '' });
     personalReset({
       Course_duration: Number(''),
-      institute_name: '',
+      course_name: '',
       Course_Price: Number(''),
       description: '',
       course_overview: '',
@@ -223,7 +223,7 @@ const AddCoursePage = () => {
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
-      data.append('institutename', personalData?.institute_name);
+      data.append('coursename', personalData?.course_name);
       data.append('description', personalData?.description);
       data.append('course_overview', personalData?.course_overview);
       data.append('Course_duration', personalData?.Course_duration);
@@ -234,13 +234,13 @@ const AddCoursePage = () => {
       data.append('instagram', socialData?.instagram);
       data.append('twitter', socialData?.twitter);
       data.append('logo', logo);
-      data.append('image', instituteImage);
+      data.append('image', courseImage);
       data.append('gallery', galleryImages);
 
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes/create`,
+        url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/course-management/courses/create`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         },
@@ -279,19 +279,19 @@ const AddCoursePage = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="institute_name"
+                  name="course_name"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Institute Name"
+                      label="Course Name"
                       onChange={onChange}
                       placeholder="Leonard"
-                      error={Boolean(personalErrors['institute_name'])}
-                      aria-describedby="stepper-linear-personal-institute_name"
-                      {...(personalErrors['institute_name'] && { helperText: 'This field is required' })}
+                      error={Boolean(personalErrors['course_name'])}
+                      aria-describedby="stepper-linear-personal-course_name"
+                      {...(personalErrors['course_name'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
@@ -348,7 +348,7 @@ const AddCoursePage = () => {
                       label="Course Category"
                       id="validation-billing-select"
                       aria-describedby="validation-billing-select"
-                      error={Boolean(personalErrors['Course Category'])}
+                      error={Boolean(personalErrors['Course_Category'])}
                       {...(personalErrors['Course_Category'] && { helperText: 'This field is required' })}
                       onChange={onChange}
                       value={value}
