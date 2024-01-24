@@ -214,18 +214,18 @@ const CourseViewPage = () => {
           <Typography variant="h2">Our Alumni In Top Companies</Typography>
         </Grid>
       <Grid container marginTop={2} spacing={4}>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Amazon.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Microsoft.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Google.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/LinkedIn.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Adobe.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Deloitte.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Netflix.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://upload.wikimedia.org/wikipedia/commons/9/96/Zoho-logo.png?20190620054740' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/JPMorgan-Chase.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/HSBC.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Deutsche.png?w=200&dpr=1' /></Grid>
-        <Grid item md={3} xs={4}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Airbus.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Amazon.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Microsoft.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Google.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/LinkedIn.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Adobe.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Deloitte.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Netflix.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://upload.wikimedia.org/wikipedia/commons/9/96/Zoho-logo.png?20190620054740' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/JPMorgan-Chase.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/HSBC.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Deutsche.png?w=200&dpr=1' /></Grid>
+        <Grid item md={3} xs={6}><Image style={{width:"120px"}} src='https://www.simplilearn.com/ice9/logos/Airbus.png?w=200&dpr=1' /></Grid>
         </Grid>
         </Grid>
 
