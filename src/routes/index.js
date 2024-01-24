@@ -56,6 +56,7 @@ const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
 const CoursesPage = Loadable(lazy(() => import('views/course-management/courses')));
 const AddCoursePage = Loadable(lazy(() => import('views/course-management/add-course')));
+const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-course')));
 
 // Exam Management
 const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
@@ -104,6 +105,10 @@ const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
 const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 
+
+//Calender
+const CalenderPage = Loadable(lazy(() => import('views/calender')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // const Protected = () => {
@@ -127,6 +132,10 @@ const ApplicationRoutes = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<DashboardDefault />} />
+      </Route>
+      <Route path="/calender" element={<MainLayout />}>
+        <Route index element={<CalenderPage />} />
+        {/* <Route path="" element={} /> */}
       </Route>
 
       <Route path="/user-management" element={<MainLayout />}>
@@ -189,6 +198,7 @@ const ApplicationRoutes = () => {
         <Route path="categories" element={<CategoriesPage />} />
         <Route path="courses" element={<CoursesPage />} />
         <Route path="courses/add" element={<AddCoursePage />} />
+        <Route path="courses/:id" element={<ViewCoursePage />} />
       </Route>
 
       <Route path="/help-center" element={<MainLayout />}>
