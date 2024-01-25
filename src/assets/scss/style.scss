@@ -153,3 +153,32 @@
 //     color: $darkBackground !important;
 //   }
 // }
+
+///FlippingCard/////
+
+
+  .card-container {
+    // position: relative;
+    &.flipped {
+      .front {
+        transform: rotateY(180deg);
+      }
+      .back {
+        transform: rotateY(0deg);
+      }
+    }
+    .front,
+    .back {
+      position: absolute;
+      backface-visibility: hidden;
+      transition: -webkit-transform ease 500ms;
+      transition: transform ease 500ms;
+    }
+    .front {
+      transform: rotateY(0deg);
+    }
+    .back {
+      transform: rotateY(-180deg);
+    }
+  }
+

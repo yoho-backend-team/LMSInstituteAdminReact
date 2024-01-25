@@ -46,7 +46,7 @@ const Students = () => (
     <Box
       sx={{
         display: 'grid',
-        gap: 6,
+        gap: 2,
         gridTemplateColumns: {
           xs: 'repeat(1, 1fr)',
           sm: 'repeat(2, 1fr)',
