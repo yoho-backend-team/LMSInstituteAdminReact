@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 // import Avatar from '@mui/material/Avatar';
-
+import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 
@@ -67,53 +67,55 @@ const NonTeachingStaffCard = () => {
       <Grid container spacing={2}>
         {staffData.map((staff) => (
           <Grid key={staff.id} item xs={12} sm={6} md={4}>
-            <Card className="custom-card">
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Box>
-                    <CardMedia
-                      component="img"
-                      alt="Profile"
-                      image={staff.profileImage}
-                      sx={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: 20
-                      }}
-                    />
-                  </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography variant="h4" mb={1}>
-                      Present
-                    </Typography>
-                    <Typography color="text.secondary"> {staff.presentCount}</Typography>
+            <Link component={Link} to={'view'} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Card className="custom-card">
+                <CardContent>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Box>
+                      <CardMedia
+                        component="img"
+                        alt="Profile"
+                        image={staff.profileImage}
+                        sx={{
+                          width: 60,
+                          height: 60,
+                          borderRadius: 20
+                        }}
+                      />
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <Typography variant="h4" mb={1}>
+                        Present
+                      </Typography>
+                      <Typography color="text.secondary"> {staff.presentCount}</Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <Typography variant="h4" mb={1}>
+                        Absent
+                      </Typography>
+                      <Typography color="text.secondary"> {staff.absentCount}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <Typography variant="h4" mb={1}>
+                        Rating
+                      </Typography>
+                      <Typography color="text.secondary"> {staff.rating}</Typography>
+                    </Box>
                   </Box>
 
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography variant="h4" mb={1}>
-                      Absent
-                    </Typography>
-                    <Typography color="text.secondary"> {staff.absentCount}</Typography>
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="h4">{staff.name}</Typography>
+
+                    <Typography variant="h5">{staff.email}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Typography variant="h4" mb={1}>
-                      Rating
-                    </Typography>
-                    <Typography color="text.secondary"> {staff.rating}</Typography>
+
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body1">{staff.description}</Typography>
                   </Box>
-                </Box>
-
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="h4">{staff.name}</Typography>
-
-                  <Typography variant="h5">{staff.email}</Typography>
-                </Box>
-
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body1">{staff.description}</Typography>
-                </Box>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>
