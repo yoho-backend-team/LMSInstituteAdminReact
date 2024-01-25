@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid';
 // ** Custom Components Imports
 import SubscriptionDetails from './SubscriptionDetails';
 
-
 const SubscriptionPlans = (props) => {
   // ** Props
   const { plan, data } = props;

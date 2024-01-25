@@ -29,6 +29,8 @@ const BoxFeature = styled(Box)(({ theme }) => ({
   }
 }));
 
+
+
 const SubscriptionDetails = (props) => {
   // ** Props
   const { plan, data } = props;
