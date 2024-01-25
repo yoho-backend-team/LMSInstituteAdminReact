@@ -156,33 +156,87 @@
 
 ///FlippingCard/////
 
+// .card-container {
 
-  .card-container {
+//   // position: relative;
+//   &.flipped {
+//     .front {
+//       transform: rotateY(180deg);
+//     }
+//     .back {
+//       transform: rotateY(0deg);
+//     }
+//   }
+//   .idCardConatiner{
+//     position: relative;
+//   }
+//   .front,
+//   .back {
+//    position:absolute;
+//     backface-visibility: hidden !important;
+//     transition: -webkit-transform ease 500ms;
+//     transition: transform ease 500ms;
+//   }
+//   .front {
+//     transform: rotateY(0deg);
+//   }
+//   .back {
+//     transform: rotateY(-180deg);
+//   }
+// }
 
-    // position: relative;
-    &.flipped {
-      .front {
-        transform: rotateY(180deg);
-      }
-      .back {
-        transform: rotateY(0deg);
-      }
-    }
-    .idCardConatiner{
-      position: relative;
-    }
-    .front,
-    .back {
-     position:absolute;
-      backface-visibility: hidden;
-      transition: -webkit-transform ease 500ms;
-      transition: transform ease 500ms;
-    }
-    .front {
-      transform: rotateY(0deg);
-    }
-    .back {
-      transform: rotateY(-180deg);
-    }
-  }
-
+// .page-container {
+//   position: relative;
+//   width: 100%;
+//   height: 100vh;
+//   display: block;
+//   // perspective: 1000px;
+//   .card-container {
+//     height: 350px;
+//     margin: 0;
+//     padding: 0;
+//     top: 20px;
+//     width: 330px;
+//     margin-left: 35%;
+//     margin-right: 35%;
+//     position: relative;
+//     transform-style: preserve-3d;
+//     box-sizing: border-box;
+//     &.flipped {
+//       .front {
+//         transform: rotateY(180deg);
+//       }
+//       .back {
+//         transform: rotateY(0deg);
+//       }
+//     }
+//     .front,
+//     .back {
+//       box-sizing: border-box;
+//       height: 100%;
+//       width: 100%;
+//       display: block;
+//       // background: $new-white;
+//       box-shadow: 10px 10px 5px rgb(95, 77, 99);
+//       padding: 10px;
+//       position: absolute;
+//       border-radius: 10px;
+//       backface-visibility: hidden;
+//       transform-style: preserve-3d;
+//       transition: -webkit-transform ease 500ms;
+//       transition: transform ease 500ms;
+//     }
+//     .front {
+//       z-index: 2;
+//       transform: rotateY(0deg);
+//       /* front tile styles go here! */
+//     }
+//     .back {
+//       // background: $new-white;
+//       transform: rotateY(-180deg);
+//       padding: 20px;
+//       font-size: 20px;
+//       /* back tile styles go here! */
+//     }
+//   }
+// }
