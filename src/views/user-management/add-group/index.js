@@ -1,5 +1,5 @@
 // ** React Components
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 
 // ** Mui Components
 import {
@@ -20,9 +20,11 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions
+  CardActions,
+  Grid
 } from '@mui/material';
-
+import MenuItem from '@mui/material/MenuItem'
+import ListItemText from '@mui/material/ListItemText'
 // ** Custom Components
 import Icon from 'components/icon';
 
@@ -38,6 +40,36 @@ const GroupAddPage = () => {
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
+  const [personName, setPersonName] = useState([]);
+  // const [personNameNative, setPersonNameNative] = useState([]);
+
+  const handleChange = (event) => {
+    setPersonName(event.target.value);
+  };
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        width: 250,
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+      }
+    }
+  };
+
+  const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder'
+  ];
 
   // ** useEffects
   useEffect(() => {
@@ -160,17 +192,43 @@ const GroupAddPage = () => {
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
         }}
       >
-        <Box sx={{ my: 4 }}>
-          <FormControl fullWidth>
-            <TextField
-              fullWidth
-              label="Role Name"
-              value={groupName}
-              onChange={(e) => setGroupName(e.target.value)}
-              placeholder="Enter Role Name"
-            />
-          </FormControl>
-        </Box>
+        <Grid sx={{ my: 4, gap: 2 }} container>
+          <Grid xs={12} sm={5.9}>
+            <FormControl fullWidth>
+              <TextField
+                fullWidth
+                label="Group Name"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                placeholder="Enter Role Name"
+              />
+            </FormControl>
+          </Grid>
+          <Grid xs={12} sm={5.9}>
+            <FormControl fullWidth>
+              <TextField
+                select
+                fullWidth
+                label="Branch"
+                id="select-multiple-checkbox"
+                SelectProps={{
+                  MenuProps,
+                  multiple: true,
+                  value: personName,
+                  onChange: (e) => handleChange(e),
+                  renderValue: (selected) => selected.join(', ')
+                }}
+              >
+                {names.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    <Checkbox checked={personName.indexOf(name) > -1} />
+                    <ListItemText primary={name} />
+                  </MenuItem>
+                ))}
+              </TextField>
+            </FormControl>
+          </Grid>
+        </Grid>
         <Typography variant="h4">Group Permissions</Typography>
         <TableContainer>
           <Table size="small">
