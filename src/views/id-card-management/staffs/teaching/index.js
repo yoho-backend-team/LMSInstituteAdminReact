@@ -52,7 +52,7 @@ const TeachingIdCard = () => {
     setFlipped(!flipped);
   };
   return (
-    <Grid container spacing={3} sx={{}}>
+    <Grid container spacing={3} sx={{display:'flex',}} >
       {array.map((i, index) => (
         <Grid
           key={index}
@@ -63,7 +63,8 @@ const TeachingIdCard = () => {
             position: 'relative',
             width: '100%',
             height: 460,
-            display: 'block'
+            display: 'block',
+            
           }}
         >
           <Grid
@@ -71,6 +72,7 @@ const TeachingIdCard = () => {
             onMouseLeave={() => flip(null)}
             className={`${index === flippedIndex ? 'flipped' : ''}`}
             sx={{
+            
               position: 'relative',
               '&.flipped': {
                 '.front': {
@@ -97,7 +99,7 @@ const TeachingIdCard = () => {
             }}
           >
             <Card className="front" sx={{ width: '100%' }}>
-              <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <CardContent sx={{ pt: 6.5, display: 'flex',alignItems: 'center', flexDirection: 'column' }}>
                 {data.avatar ? (
                   <CustomAvatar
                     src={data.avatar}
@@ -175,17 +177,17 @@ const TeachingIdCard = () => {
                 </Box>
               </CardContent>
             </Card>
-            <Card className="back" sx={{ width: '100%' }}>
-              <CardContent sx={{ pb: 3 }}>
+            <Card className="back" sx={{ width: '100%'}}>
+              <CardContent sx={{ pb: 3 }} >
                 <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                   Details
                 </Typography>
                 <Box sx={{ pt: 4 }}>
-                  <Box sx={{ display: 'flex', mb: 3 }}>
+                  <Box sx={{ display: 'flex', mb: 3,flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', mb: 2 }}>
+                  <Box sx={{ display: 'flex', mb: 2,flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
                   </Box>
@@ -202,23 +204,23 @@ const TeachingIdCard = () => {
                       }}
                     />
                   </Box>
-                  <Box sx={{ display: 'flex', mb: 2 }}>
+                  <Box sx={{ display: 'flex', mb: 2,flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
                     <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', mb: 2 }}>
+                  <Box sx={{ display: 'flex', mb: 2,flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>Tax-8894</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', mb: 2 }}>
+                  <Box sx={{ display: 'flex', mb: 2,flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', mb: 2 }}>
+                  <Box sx={{ display: 'flex', mb: 2,flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>English</Typography>
                   </Box>
-                  <Box sx={{ display: 'flex' }}>
+                  <Box sx={{ display: 'flex',flexWrap:'wrap' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
                     <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
                   </Box>

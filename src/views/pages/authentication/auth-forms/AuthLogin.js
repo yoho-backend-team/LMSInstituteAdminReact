@@ -40,6 +40,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
+  // console.log(others.handleOtpPage)
   // const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   // const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
@@ -144,7 +145,13 @@ const FirebaseLogin = ({ ...others }) => {
                 }
                 label="Remember me"
               />
-              <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
+
+              <Typography
+                onClick={others?.handleOtpPage}
+                variant="subtitle1"
+                color="secondary"
+                sx={{ textDecoration: 'none', cursor: 'pointer' }}
+              >
                 Forgot Password?
               </Typography>
             </Stack>
