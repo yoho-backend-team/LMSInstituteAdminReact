@@ -7,6 +7,7 @@ const AuthIllustrationV1Wrapper = styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: 400,
   position: 'relative',
+  zIndex: 1,
   [theme.breakpoints.up('md')]: {
     '&:before': {
       zIndex: -1,
