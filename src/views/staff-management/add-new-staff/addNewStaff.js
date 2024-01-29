@@ -21,6 +21,8 @@ import CardContent from '@mui/material/CardContent';
 import InputAdornment from '@mui/material/InputAdornment';
 import Gallery from './gallery';
 import axios from 'axios';
+
+
 // ** Third Party Imports
 import * as yup from 'yup';
 // import toast from 'react-hot-toast';
@@ -34,6 +36,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import StepperCustomDot from './StepperCustomDot';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
 // ** Styled Components
 import StepperWrapper from 'styles/mui/stepper';
 import DatePicker from 'react-datepicker';
@@ -56,6 +60,33 @@ const steps = [
     subtitle: 'Enter your Account Details'
   }
 ];
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+};
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder'
+];
+
 
 const defaultAccountValues = {
   email: '',
@@ -210,6 +241,7 @@ const StepperLinearWithValidation = () => {
   const [expiry, setExpiry] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [selectedRadio, setSelectedRadio] = useState(initialSelected);
+  const [selectedBranches, setSelectedBranches] = useState([]);
 
   const handleInputChange = ({ target }) => {
     if (target.name === 'cardNumber') {
@@ -230,6 +262,10 @@ const StepperLinearWithValidation = () => {
     } else {
       setSelectedRadio(prop.target.value);
     }
+  };
+  
+  const handleBranchChange = (event) => {
+    setSelectedBranches(event.target.value);
   };
   // ** States
   const [activeStep, setActiveStep] = useState(0);
@@ -734,6 +770,31 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  sx={{ mb: 4 }}
+                  select
+                  fullWidth
+                  label="Branch"
+                  id="select-multiple-checkbox"
+                  SelectProps={{
+                    MenuProps,
+                    multiple: true,
+                    value: selectedBranches,
+                    onChange: (e) => handleBranchChange(e),
+                    renderValue: (selected) => selected.join(', ')
+                  }}
+                >
+                  {names.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      <Checkbox checked={selectedBranches.indexOf(name) > -1} />
+                      <ListItemText primary={name} />
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
               {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="official_website"
@@ -790,7 +851,7 @@ const StepperLinearWithValidation = () => {
       case 1:
         return (
           <form key={2} onSubmit={handleGallerySubmit(onSubmit)}>
-            <Grid container spacing={5} item >
+            <Grid container spacing={5} item>
               <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   {steps[1].title}

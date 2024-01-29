@@ -37,6 +37,8 @@ import { styled } from '@mui/material/styles';
 // ** Styled Components
 import StepperWrapper from 'styles/mui/stepper';
 import DatePicker from 'react-datepicker';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
 
 const steps = [
   {
@@ -55,6 +57,31 @@ const steps = [
     title: 'Account Details',
     subtitle: 'Enter your Account Details'
   }
+];
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+};
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder'
 ];
 
 const defaultAccountValues = {
@@ -210,6 +237,16 @@ const StepperLinearWithValidation = () => {
   const [expiry, setExpiry] = useState('');
   const [cardNumber, setCardNumber] = useState('');
   const [selectedRadio, setSelectedRadio] = useState(initialSelected);
+  const [personName, setPersonName] = useState([]);
+
+  const [selectedBranches, setSelectedBranches] = useState([]);
+
+  const handleChange = (event) => {
+    setPersonName(event.target.value);
+  };
+  const handleBranchChange = (event) => {
+    setSelectedBranches(event.target.value);
+  };
 
   const handleInputChange = ({ target }) => {
     if (target.name === 'cardNumber') {
@@ -232,7 +269,7 @@ const StepperLinearWithValidation = () => {
     }
   };
   // ** States
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
 
   const [state, setState] = useState({
     password: '',
@@ -766,7 +803,7 @@ const StepperLinearWithValidation = () => {
       case 1:
         return (
           <form key={2} onSubmit={handleGallerySubmit(onSubmit)}>
-            <Grid container spacing={5} item >
+            <Grid container spacing={5} item>
               <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   {steps[1].title}
@@ -863,6 +900,50 @@ const StepperLinearWithValidation = () => {
                   {steps[2].subtitle}
                 </Typography>
               </Grid>
+
+              
+                <Grid container spacing={4} sx={{mt:1}}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      sx={{ ml: 3 }}
+                      select
+                      fullWidth
+                      label="Course"
+                      id="select-multiple-default"
+                      SelectProps={{ MenuProps, multiple: true, value: personName, onChange: (e) => handleChange(e) }}
+                    >
+                      {names.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          {name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Branch"
+                      id="select-multiple-checkbox"
+                      SelectProps={{
+                        MenuProps,
+                        multiple: true,
+                        value: selectedBranches,
+                        onChange: (e) => handleBranchChange(e),
+                        renderValue: (selected) => selected.join(', ')
+                      }}
+                    >
+                      {names.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={selectedBranches.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                </Grid>
+
               <Grid item xs={12} sm={12}>
                 <Box sx={{ mb: 6 }}>
                   <Typography variant="h3" sx={{ mb: 1.5 }}>

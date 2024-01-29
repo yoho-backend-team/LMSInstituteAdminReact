@@ -15,6 +15,8 @@ import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 // ** Custom Component Import
 import { TextField as CustomTextField } from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
@@ -50,11 +52,16 @@ const names = [
 const AddBatchPage = () => {
   // ** States
   const [date, setDate] = useState(null);
-  const [personName, setPersonName] = useState([]);
-  //   const [personNameNative, setPersonNameNative] = useState([]);
 
-  const handleChange = (event) => {
-    setPersonName(event.target.value);
+  const [selectedBranches, setSelectedBranches] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+
+  const handleBranchChange = (event) => {
+    setSelectedBranches(event.target.value);
+  };
+
+  const handleStudentsChange = (event) => {
+    setSelectedStudents(event.target.value);
   };
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
@@ -85,6 +92,7 @@ const AddBatchPage = () => {
                       onChange={(date) => setDate(date)}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <DatePicker
                       selected={date}
@@ -96,7 +104,31 @@ const AddBatchPage = () => {
                       onChange={(date) => setDate(date)}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
+
+                  <Grid item xs={12} sm={6}>
+                    <CustomTextField
+                      select
+                      fullWidth
+                      label="Branch"
+                      id="select-multiple-checkbox"
+                      SelectProps={{
+                        MenuProps,
+                        multiple: true,
+                        value: selectedBranches,
+                        onChange: (e) => handleBranchChange(e),
+                        renderValue: (selected) => selected.join(', ')
+                      }}
+                    >
+                      {names.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={selectedBranches.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </CustomTextField>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6}>
                     <CustomTextField select fullWidth label="Course" id="form-layouts-separator-select" defaultValue="">
                       <MenuItem value="UK">UK</MenuItem>
                       <MenuItem value="USA">USA</MenuItem>
@@ -113,8 +145,8 @@ const AddBatchPage = () => {
                       SelectProps={{
                         MenuProps,
                         multiple: true,
-                        value: personName,
-                        onChange: (e) => handleChange(e),
+                        value: selectedStudents,
+                        onChange: (e) => handleStudentsChange(e),
                         renderValue: (selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                             {selected.map((value) => (

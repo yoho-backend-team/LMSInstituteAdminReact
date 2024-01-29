@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
+import { Button, Grid, Typography } from '@mui/material';
+
 // ** Custom Component Import
 
 // ** Third Party Imports
@@ -21,7 +21,11 @@ import { useForm, Controller } from 'react-hook-form';
 import Icon from 'components/icon';
 
 import { TextField } from '@mui/material';
+
 import toast from 'react-hot-toast';
+
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -64,6 +68,31 @@ const schema = yup.object().shape({
     .required('Password confirmation is required')
 });
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+};
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder'
+];
+
 const defaultValues = {
   email: '',
   password: '',
@@ -80,12 +109,17 @@ const SidebarAddUser = (props) => {
   const { open, toggle } = props;
 
   // ** State
+  const [selectedBranches, setSelectedBranches] = useState([]);
 
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const [groups, setGroups] = useState([]);
+
+  const handleBranchChange = (event) => {
+    setSelectedBranches(event.target.value);
+  };
 
   useEffect(() => {
     getAllGroups();
@@ -248,6 +282,31 @@ const SidebarAddUser = (props) => {
               </ButtonStyled>
             </div>
           </Box>
+
+          <Grid item xs={12} sm={12}>
+            <TextField
+              sx={{ mb: 4 }}
+              select
+              fullWidth
+              label="Branch"
+              id="select-multiple-checkbox"
+              SelectProps={{
+                MenuProps,
+                multiple: true,
+                value: selectedBranches,
+                onChange: (e) => handleBranchChange(e),
+                renderValue: (selected) => selected.join(', ')
+              }}
+            >
+              {names.map((name) => (
+                <MenuItem key={name} value={name}>
+                  <Checkbox checked={selectedBranches.indexOf(name) > -1} />
+                  <ListItemText primary={name} />
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
           <Controller
             name="fullName"
             control={control}
