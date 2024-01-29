@@ -83,7 +83,7 @@ const socialSchema = yup.object().shape({
 
 const StepperLinearWithValidation = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
 
   // ** Hooks
   const {
