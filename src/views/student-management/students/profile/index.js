@@ -41,8 +41,8 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 const Students = () => (
   <Container>
     <Grid item xs={12} md={12} lg={12} mb={2}>
-        <StudentFilter />
-      </Grid>
+      <StudentFilter />
+    </Grid>
     <Box
       sx={{
         display: 'grid',
@@ -85,15 +85,15 @@ const Students = () => (
                 position: 'absolute'
               }}
             />
-            <OverlayStyle/>
+            <OverlayStyle />
             <Image src="https://i.pinimg.com/originals/52/2c/1a/522c1a4289f2e2d0e29ed59071de9dce.jpg" alt="overlaystyle" ratio="16/9" />
           </Box>
 
           <Typography variant="subtitle1" sx={{ mt: 6 }}>
             Anish
           </Typography>
-           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-           Full-Stack Web Development
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Full-Stack Web Development
           </Typography>
 
           <Stack alignItems="center">

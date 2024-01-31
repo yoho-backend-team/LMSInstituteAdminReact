@@ -1,16 +1,17 @@
 import PropTypes from 'prop-types';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Link, Stack, Button, Tooltip, IconButton } from '@mui/material';
+import { Stack, Button, Tooltip, IconButton } from '@mui/material';
 // import Iconify from './Iconify';
-import Iconify from '../../../../components/icon'
+import Iconify from '../../../../components/icon';
+import { Link } from 'react-router-dom';
 // ----------------------------------------------------------------------
 
 SocialsButton.propTypes = {
   initialColor: PropTypes.bool,
   links: PropTypes.objectOf(PropTypes.string),
   simple: PropTypes.bool,
-  sx: PropTypes.object,
+  sx: PropTypes.object
 };
 
 export default function SocialsButton({ initialColor = false, simple = true, links = {}, sx, ...other }) {
@@ -19,27 +20,27 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'Call Now',
       icon: 'eva:phone-fill',
       socialColor: '#1877F2',
-      path: links.instagram || '#instagram-link',
+      path: links.instagram || ''
     },
     {
       name: 'Send Email',
       icon: 'eva:email-fill',
       socialColor: '#E02D69',
-      path: links.instagram || '#instagram-link',
+      path: links.instagram || ''
     },
-   
+
     {
       name: 'Active',
       icon: 'eva:person-done-fill',
       socialColor: '#65B741',
-      path: links.twitter || '#twitter-link',
+      path: links.twitter || ''
     },
     {
       name: 'View Profile',
       icon: 'eva:navigation-2-fill',
       socialColor: '#007EBB',
-      path: 'view-profile',
-    },
+      path: '1'
+    }
   ];
 
   return (
@@ -47,7 +48,7 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       {SOCIALS.map((social) => {
         const { name, icon, path, socialColor } = social;
         return simple ? (
-          <Link key={name} href={path}>
+          <Link key={name} to={path}>
             <Tooltip title={name} placement="top">
               <IconButton
                 color="inherit"
@@ -55,10 +56,10 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
                   ...(initialColor && {
                     color: socialColor,
                     '&:hover': {
-                      bgcolor: alpha(socialColor, 0.08),
-                    },
+                      bgcolor: alpha(socialColor, 0.08)
+                    }
                   }),
-                  ...sx,
+                  ...sx
                 }}
                 {...other}
               >
@@ -82,10 +83,10 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
                 borderColor: socialColor,
                 '&:hover': {
                   borderColor: socialColor,
-                  bgcolor: alpha(socialColor, 0.08),
-                },
+                  bgcolor: alpha(socialColor, 0.08)
+                }
               }),
-              ...sx,
+              ...sx
             }}
             {...other}
           >
