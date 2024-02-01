@@ -2,6 +2,7 @@
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
+
 // ** Custom Component Import
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, TextField as CustomTextField } from '@mui/material';
@@ -9,8 +10,9 @@ import { Controller, useForm } from 'react-hook-form';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import * as yup from 'yup';
+
 // ** Third Party Imports
+import * as yup from 'yup';
 
 const branchSchema = yup.object().shape({
   branchName: yup.string().required('Branch Name is required'),
@@ -25,7 +27,6 @@ const branchSchema = yup.object().shape({
 
 const BranchEditModal = ({ open, handleEditClose }) => {
   // ** States
-
   const {
     handleSubmit,
     control,
@@ -50,7 +51,7 @@ const BranchEditModal = ({ open, handleEditClose }) => {
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, height: '81%', maxHeight: 750 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-edit"
@@ -65,13 +66,11 @@ const BranchEditModal = ({ open, handleEditClose }) => {
         </DialogTitle>
         <DialogContent
           sx={{
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(2)} !important`],
+            pt: (theme) => [`${theme.spacing(2)} !important`, `${theme.spacing(2)} !important`],
             pb: (theme) => `${theme.spacing(3)} !important`,
             px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
           }}
         >
-          {/* <CardHeader title="Multi Column with Form Separator" />
-       <Divider sx={{ m: '0 !important' }} /> */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent>
               <Grid container spacing={3}>

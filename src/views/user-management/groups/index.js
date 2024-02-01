@@ -1,5 +1,5 @@
 // ** Mui Components
-import { Grid, Typography, Box, Card, CardContent, AvatarGroup, Avatar, IconButton, Button } from '@mui/material';
+import { Grid, Typography, Box, Card, CardContent, IconButton, Button, Switch } from '@mui/material';
 
 // ** React  Import
 import React, { useState, useEffect } from 'react';
@@ -89,7 +89,7 @@ const GroupManagement = () => {
           <CardContent>
             <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography sx={{ color: 'text.secondary' }}>{`Total ${item.users?.length} users`}</Typography>
-              <AvatarGroup
+              {/* <AvatarGroup
                 max={4}
                 className="pull-up"
                 sx={{
@@ -99,7 +99,14 @@ const GroupManagement = () => {
                 {item?.users?.map((user, index) => (
                   <Avatar key={index} alt={item?.name} src={user?.name} />
                 ))}
-              </AvatarGroup>
+              </AvatarGroup> */}
+
+              <Switch
+                defaultChecked={item?.status}
+                color={item?.status === true ? 'success' : 'error'}
+                value={!item?.status}
+                onChange={(e) => console.log(e.target.value)}
+              />
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>

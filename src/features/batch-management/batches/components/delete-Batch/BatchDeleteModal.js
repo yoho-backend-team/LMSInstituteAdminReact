@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 // ** Icon Imports
 import Icon from 'components/icon';
 
-const BranchDeleteModal = (props) => {
+const BatchDeleteModal = (props) => {
   // ** Props
   const { open, setOpen, handleDeleteGroup } = props;
 
@@ -52,7 +52,7 @@ const BranchDeleteModal = (props) => {
             <Typography variant="h4" sx={{ mb: 3, color: 'text.secondary' }}>
               Are you sure?
             </Typography>
-            <Typography>You wont be able to revert branch!</Typography>
+            <Typography>You wont be able to revert group!</Typography>
           </Box>
         </DialogContent>
         <DialogActions
@@ -66,11 +66,11 @@ const BranchDeleteModal = (props) => {
             variant="contained"
             sx={{ mr: 2 }}
             onClick={() => {
-              handleConfirmation('yes');
               handleDeleteGroup();
+              handleConfirmation('yes');
             }}
           >
-            Yes, Delete Branch!
+            Yes, Delete Group!
           </Button>
           <Button variant="tonal" color="secondary" onClick={() => handleConfirmation('cancel')}>
             Cancel
@@ -104,7 +104,7 @@ const BranchDeleteModal = (props) => {
             <Typography variant="h4" sx={{ mb: 3 }}>
               {userInput === 'yes' ? 'Deleted!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? 'Branch has been deleted.' : 'Cancelled branch deletion :)'}</Typography>
+            <Typography>{userInput === 'yes' ? 'Group has been deleted.' : 'Cancelled group deletion :)'}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', mb: 3 }}>
@@ -117,4 +117,4 @@ const BranchDeleteModal = (props) => {
   );
 };
 
-export default BranchDeleteModal;
+export default BatchDeleteModal;

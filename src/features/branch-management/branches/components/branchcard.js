@@ -38,7 +38,7 @@ const BranchCard = () => {
 
   const handleDeleteClick = () => {
     // Implement delete logic here
-      setDeleteDialogOpen(true);
+    setDeleteDialogOpen(true);
     handleClose();
   };
 
