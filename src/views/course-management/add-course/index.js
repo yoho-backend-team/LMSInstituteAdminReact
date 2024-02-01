@@ -25,7 +25,7 @@ import * as yup from 'yup';
 // ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
-import { Checkbox, TextField as CustomTextField, Stack, TextField} from '@mui/material';
+import { Checkbox, TextField as CustomTextField, Stack, TextField } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
 // ** Styled Components
@@ -37,8 +37,6 @@ import CourseModule from 'features/course-management/add-course/components/Cours
 import StepperWrapper from 'styles/mui/stepper';
 import * as Yup from 'yup';
 import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
-
-
 
 const steps = [
   {
@@ -169,7 +167,7 @@ const AddCoursePage = () => {
     { id: '2', name: 'Online class' },
     { id: '3', name: 'Hybrid' }
   ];
-  const {  watch, setValue, handleSubmit } = methods;
+  const { watch, setValue, handleSubmit } = methods;
 
   const values = watch();
 
@@ -258,9 +256,6 @@ const AddCoursePage = () => {
         });
     }
   };
-
-
- 
 
   const getStepContent = (step) => {
     switch (step) {
@@ -477,95 +472,93 @@ const AddCoursePage = () => {
         );
       case 1:
         return (
-          <FormProvider methods={methods}  key={2} onSubmit={handleSubmit(onSubmit)}>
-              <Grid container spacing={5}>
-                <Grid item xs={12} sm={6}>
-                  <CustomizedInput
-                    placeholder={'Add New Prerequities'}
-                    data={features}
-                    setData={setFeatures}
-                    cardTitle={'Course prerequities'}
-                    buttonTitle={'Add Corse Prerequities'}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomizedInput
-                    placeholder={'Add New Features'}
-                    data={features}
-                    setData={setFeatures}
-                    cardTitle={'Course Features'}
-                    buttonTitle={'Add Corse Feature'}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomizedInput
-                    placeholder={'Add New Skills'}
-                    data={features}
-                    setData={setFeatures}
-                    cardTitle={'Course Skills'}
-                    buttonTitle={'Add Corse Skills'}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomizedInput
-                    placeholder={'Add New Benefits'}
-                    data={features}
-                    setData={setFeatures}
-                    cardTitle={'Course Benefits'}
-                    buttonTitle={'Add Corse Benefits'}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <CustomizedInput
-                    placeholder={'Add New Eligibility'}
-                    data={features}
-                    setData={setFeatures}
-                    cardTitle={'Course Eligibility'}
-                    buttonTitle={'Add Corse Eligibility'}
-                  />
-                </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Card sx={{ p: 3 }}>
-                      <Stack spacing={3}>
-                        <div>
-                        <CardHeader
-                        title="Course Tools"
-                        />
-                          <RHFUploadMultiFile
-                            name="images"
-                            showPreview
-                            accept="image/*"
-                            maxSize={3145728}
-                            onDrop={handleDrop}
-                            onRemove={handleRemove}
-                            onRemoveAll={handleRemoveAll}
-                          />
-                        </div>
-                      </Stack>
-                    </Card>
-                </Grid>
+          <FormProvider methods={methods} key={2} onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={5}>
+              <Grid item xs={12} sm={6}>
+                <CustomizedInput
+                  placeholder={'Add New Prerequities'}
+                  data={features}
+                  setData={setFeatures}
+                  cardTitle={'Course prerequities'}
+                  buttonTitle={'Add Corse Prerequities'}
+                />
               </Grid>
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between',mt:2 }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Next
-                </Button>
+              <Grid item xs={12} sm={6}>
+                <CustomizedInput
+                  placeholder={'Add New Features'}
+                  data={features}
+                  setData={setFeatures}
+                  cardTitle={'Course Features'}
+                  buttonTitle={'Add Corse Feature'}
+                />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomizedInput
+                  placeholder={'Add New Skills'}
+                  data={features}
+                  setData={setFeatures}
+                  cardTitle={'Course Skills'}
+                  buttonTitle={'Add Corse Skills'}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomizedInput
+                  placeholder={'Add New Benefits'}
+                  data={features}
+                  setData={setFeatures}
+                  cardTitle={'Course Benefits'}
+                  buttonTitle={'Add Corse Benefits'}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomizedInput
+                  placeholder={'Add New Eligibility'}
+                  data={features}
+                  setData={setFeatures}
+                  cardTitle={'Course Eligibility'}
+                  buttonTitle={'Add Corse Eligibility'}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ p: 3 }}>
+                  <Stack spacing={3}>
+                    <div>
+                      <CardHeader title="Course Tools" />
+                      <RHFUploadMultiFile
+                        name="images"
+                        showPreview
+                        accept="image/*"
+                        maxSize={3145728}
+                        onDrop={handleDrop}
+                        onRemove={handleRemove}
+                        onRemoveAll={handleRemoveAll}
+                      />
+                    </div>
+                  </Stack>
+                </Card>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <Button variant="tonal" color="secondary" onClick={handleBack}>
+                Back
+              </Button>
+              <Button type="submit" variant="contained">
+                Next
+              </Button>
+            </Grid>
           </FormProvider>
         );
       case 2:
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
-          <CourseValidate/>
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' ,mt:2}}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Next
-                </Button>
+            <CourseValidate />
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+              <Button variant="tonal" color="secondary" onClick={handleBack}>
+                Back
+              </Button>
+              <Button type="submit" variant="contained">
+                Next
+              </Button>
             </Grid>
           </form>
         );
@@ -574,7 +567,7 @@ const AddCoursePage = () => {
           <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
             <Grid>
               <CourseModule />
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between'}}>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={handleBack}>
                   Back
                 </Button>
