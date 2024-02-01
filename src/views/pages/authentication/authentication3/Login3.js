@@ -1,47 +1,25 @@
 import { Link } from 'react-router-dom';
-
-// material-ui
 import { Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-
-// project imports
 import AuthFooter from 'components/cards/AuthFooter';
 import Logo from 'components/logo';
 import { useState } from 'react';
 import AuthCardWrapper from '../AuthCardWrapper';
 import AuthWrapper1 from '../AuthWrapper1';
 import AuthLogin from '../auth-forms/AuthLogin';
-
-// ** React Imports
-
-// ** Next Import
-
-// ** MUI Components
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MuiCard from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import FormHelperText from '@mui/material/FormHelperText';
 import { styled } from '@mui/material/styles';
-
-// ** Third Party Imports
 import Cleave from 'cleave.js/react';
 import { Controller, useForm } from 'react-hook-form';
-
-// ** Layout Import
-
-// ** Demo Imports
-
-// ** Custom Styled Component
 import CleaveWrapper from 'styles/libs/react-cleave';
-
-// ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
-
-// ** Styles
 import 'cleave.js/dist/addons/cleave-phone.us';
 import AuthIllustrationV1Wrapper from '../AuthIllustrationV1Wrapper';
-// assets
+
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({

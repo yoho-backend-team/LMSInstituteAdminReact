@@ -19,7 +19,7 @@ const CoursePdfInput = () => {
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     accept: {
-      'file/*': ['.pdf'] 
+      'file/*': ['.pdf']
     },
     onDrop: (acceptedFiles) => {
       setFiles(acceptedFiles.map((file) => Object.assign(file)));
@@ -29,15 +29,7 @@ const CoursePdfInput = () => {
   const renderMedia = () => {
     if (files.length) {
       // Assuming the files are videos
-      return files.map((file) => (
-        <iframe
-        title={file.name}
-        key={file.name}
-        src={URL.createObjectURL(file)}
-        width="100%"
-        height="500px"
-      />
-      ));
+      return files.map((file) => <iframe title={file.name} key={file.name} src={URL.createObjectURL(file)} width="100%" height="500px" />);
     }
 
     return (
@@ -78,7 +70,7 @@ const CoursePdfInput = () => {
 
   return (
     <Grid>
-      <Box {...getRootProps({ className: 'dropzone' })} sx={files.length ? { height: 450 } : {}}>
+      <Box {...getRootProps({ className: 'dropzone' })} sx={files.length ? { minHeight: 150 } : {}}>
         <input {...getInputProps()} />
         {renderMedia()}
       </Box>

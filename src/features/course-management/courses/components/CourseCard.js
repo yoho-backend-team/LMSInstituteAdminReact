@@ -75,7 +75,7 @@ const CourseCard = (props) => {
             </CardContent>
             <CardActions className="card-action-dense" sx={{ width: '100%', paddingTop: '15px' }}>
               <Box sx={{ display: 'flex' }}>
-              <IconButton component={Link} to='view' aria-label="capture screenshot" color="primary">
+              <IconButton component={Link} to='view ' aria-label="capture screenshot" color="primary">
                 <Icon icon="tabler:eye" />
               </IconButton>
                 <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
