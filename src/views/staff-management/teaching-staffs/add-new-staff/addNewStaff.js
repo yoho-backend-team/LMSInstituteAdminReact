@@ -492,7 +492,7 @@ const StepperLinearWithValidation = () => {
     switch (step) {
       case 0:
         return (
-          // <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
+          <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
@@ -846,7 +846,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
             </Grid>
           </form>
-          // </DatePickerWrapper>
+           </DatePickerWrapper>
         );
       case 1:
         return (
