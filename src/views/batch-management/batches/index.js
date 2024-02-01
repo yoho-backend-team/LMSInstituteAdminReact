@@ -2,8 +2,9 @@
 import { Grid, Typography, Box, Card, CardContent, IconButton } from '@mui/material';
 
 // ** React  Import
-import React from 'react';
-
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+  
 // ** Custom Components
 import Icon from 'components/icon';
 import BatchCardHeader from 'features/batch-management/batches/components/BatchCardHeader';
@@ -11,6 +12,8 @@ import CustomChip from 'components/mui/chip';
 import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
+import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
+import BatchDeleteModal from 'features/batch-management/batches/components/delete-Batch/BatchDeleteModal';
 
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -24,7 +27,23 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main
   }
 }));
-const GroupManagement = () => {
+const Batch = () => {
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const handleEditClose = () => {
+    setEditModalOpen(false);
+  };
+  const handleEdit = () => { 
+    setEditModalOpen(true);
+  };
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    // Implement delete logic here
+    setDeleteDialogOpen(true);
+    handleClose();
+  };
+
   const groups = [
     {
       extraMembers: 25,
@@ -260,10 +279,13 @@ const GroupManagement = () => {
                 <CustomChip rounded size="small" skin="light" color={'success'} label={'Active'} />
               </Box>
               <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                <IconButton aria-label="capture screenshot" color="error">
+                <IconButton onClick={() => handleDeleteClick()} aria-label="capture screenshot" color="error">
                   <Icon icon="tabler:archive-filled" />
                 </IconButton>
-                <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
+                <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
+                  <Icon icon="tabler:edit" />
+                </IconButton>
+                <IconButton component={Link} to="view" aria-label="capture screenshot" color="primary">
                   <Icon icon="tabler:eye-filled" />
                 </IconButton>
               </Box>
@@ -282,8 +304,11 @@ const GroupManagement = () => {
         <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
           {renderCards()}
         </Grid>
+        <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+
+        <BatchDeleteModal open={deleteDialogOpen} setOpen={setDeleteDialogOpen} />
       </Grid>
     </>
   );
 };
-export default GroupManagement;
+export default Batch;
