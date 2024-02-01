@@ -36,13 +36,14 @@ export default function ProductNewEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  
+  const { reset, watch, setValue, handleSubmit } = methods;
 
   const methods = useForm({
     resolver: yupResolver(NewProductSchema),
     defaultValues
   });
 
-  const { reset, watch, setValue, handleSubmit } = methods;
 
   const values = watch();
 

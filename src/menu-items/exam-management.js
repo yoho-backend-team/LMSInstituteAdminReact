@@ -1,6 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers } from '@tabler/icons';
-
+import { IconKey, IconShieldLock, IconUser, IconUsers, } from '@tabler/icons';
 // constant
 const icons = {
   IconKey,

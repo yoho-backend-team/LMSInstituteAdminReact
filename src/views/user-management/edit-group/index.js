@@ -1,34 +1,84 @@
-import React, { useState, useEffect } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Typography,
   Box,
-  FormControl,
-  TextField,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  FormControlLabel,
+  Icon,
   Table,
-  TableContainer,
+  TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableBody,
+  TextField,
   Tooltip,
-  Button,
-  Icon,
-  FormControlLabel,
-  Checkbox,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions
+  Typography
 } from '@mui/material';
+import { getAllPermissions, getPermissionsByRoleId } from 'features/user-management/groups/services/groupService';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { getAllPermissions, getPermissionsByRoleId, updateGroup } from 'features/user-management/groups/services/groupService';
+import * as yup from 'yup';
 
+const showErrors = (field, valueLen, min) => {
+  if (valueLen === 0) {
+    return `${field} field is required`;
+  } else if (valueLen > 0 && valueLen < min) {
+    return `${field} must be at least ${min} characters`;
+  } else {
+    return '';
+  }
+};
+const schema = yup.object().shape({
+  roleName: yup
+    .string()
+    .min(3, (obj) => showErrors('Role Name', obj.value.length, obj.min))
+    .required(),
+});
+
+const defaultValues = {
+  roleName: '',
+};
 const GroupEditDialog = () => {
+  const {
+    reset,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema)
+  });
+
+  const handleClose = () => {
+    setValue('roleName', '');
+    reset();
+  };
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
   const [permissionCount, setPermissionCount] = useState('');
-  const [groupName, setGroupName] = useState('');
+
+  const onSubmit = async (data) => {
+    try {
+      const result = await addGroup(data.roleName);
+
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     getPermissions();
@@ -127,21 +177,22 @@ const GroupEditDialog = () => {
     );
   };
 
-  const handleGroupEdit = async () => {
-    try {
-      const result = await updateGroup('1', groupName, selectedCheckbox);
+  // const handleGroupEdit = async () => {
+  //   try {
+  //     const result = await updateGroup('1', groupName, selectedCheckbox);
 
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     if (result.success) {
+  //       toast.success(result.message);
+  //     } else {
+  //       toast.error(result.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
     <Card fullWidth maxWidth="md" scroll="body">
+      <form onSubmit={handleSubmit(onSubmit)}>
       <CardHeader
         sx={{
           textAlign: 'center',
@@ -158,15 +209,23 @@ const GroupEditDialog = () => {
         }}
       >
         <Box sx={{ my: 4 }}>
-          <FormControl fullWidth>
-            <TextField
-              fullWidth
-              label="Role Name"
-              value={groupName}
-              onChange={(e) => setGroupName(e.target.value)}
-              placeholder="Enter Role Name"
-            />
-          </FormControl>
+          <Controller
+                name="roleName"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    // sx={{ mb: 4 }}
+                    label="Role Name"
+                    onChange={onChange}
+                    placeholder="John Doe"
+                    error={Boolean(errors.roleName)}
+                    {...(errors.roleName && { helperText: errors.roleName.message })}
+                  />
+                )}
+              />
         </Box>
         <Typography variant="h4">Group Permissions</Typography>
         <TableContainer>
@@ -222,11 +281,15 @@ const GroupEditDialog = () => {
         }}
       >
         <Box className="demo-space-x">
-          <Button type="submit" variant="contained" onClick={handleGroupEdit}>
-            Submit
-          </Button>
+        <Button type="submit" variant="contained">
+              Submit
+            </Button>
+            <Button variant="tonal" color="error" onClick={handleClose}>
+              Cancel
+            </Button>
         </Box>
       </CardActions>
+      </form>
     </Card>
   );
 };

@@ -20,7 +20,7 @@ const BranchDeleteModal = (props) => {
   const [userInput, setUserInput] = useState('yes');
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  
+
   const handleSecondDialogClose = () => setSecondDialogOpen(false);
 
   const handleConfirmation = (value) => {
@@ -52,7 +52,7 @@ const BranchDeleteModal = (props) => {
             <Typography variant="h4" sx={{ mb: 3, color: 'text.secondary' }}>
               Are you sure?
             </Typography>
-            <Typography>You wont be able to revert group!</Typography>
+            <Typography>You wont be able to revert branch!</Typography>
           </Box>
         </DialogContent>
         <DialogActions
@@ -66,11 +66,11 @@ const BranchDeleteModal = (props) => {
             variant="contained"
             sx={{ mr: 2 }}
             onClick={() => {
-              handleDeleteGroup();
               handleConfirmation('yes');
+              handleDeleteGroup();
             }}
           >
-            Yes, Delete Group!
+            Yes, Delete Branch!
           </Button>
           <Button variant="tonal" color="secondary" onClick={() => handleConfirmation('cancel')}>
             Cancel
@@ -104,7 +104,7 @@ const BranchDeleteModal = (props) => {
             <Typography variant="h4" sx={{ mb: 3 }}>
               {userInput === 'yes' ? 'Deleted!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? 'Group has been deleted.' : 'Cancelled group deletion :)'}</Typography>
+            <Typography>{userInput === 'yes' ? 'Branch has been deleted.' : 'Cancelled branch deletion :)'}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', mb: 3 }}>
