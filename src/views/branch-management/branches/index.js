@@ -2,14 +2,13 @@
 
 // project imports
 // import MainCard from 'components/cards/MainCard';
-import BatchCard from 'features/branch-management/branches/components/batchcard';
-
+import BranchCard from 'features/branch-management/branches/components/branchcard';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Branches = () => {
   return (
     <>
-      <BatchCard />
+      <BranchCard />
     </>
   );
 };
