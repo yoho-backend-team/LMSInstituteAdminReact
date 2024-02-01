@@ -7,112 +7,121 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 // import CardHeader from '@mui/material/CardHeader';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button } from '@mui/material';
-
-// ** React Router Import
-import { Link } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import Icon from 'components/icon';
 
 // ** Custom Components Imports
 import CustomChip from 'components/mui/chip';
-import CustomAvatar from 'components/mui/avatar';
-import UserAddDrawer from 'features/user-management/users/components/UserAddDrawer';
-import NotesHeader from 'features/content-management/course-contents/components/NotesTableHeader';
-
-import { getInitials } from 'utils/get-initials';
+import NotesHeader from './NotesTableHeader'
+import NotesAddDrawer from './NotesAddDrawer'
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { useDispatch } from 'react-redux';
 
 const userStatusObj = {
-  1: 'success',
-  0: 'error'
+  Active: 'success',
+  Inactive: 'error'
 };
 
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.profile_image) {
-    return <CustomAvatar src={row?.profile_image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <CustomAvatar
-        skin="light"
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
-      </CustomAvatar>
-    );
-  }
-};
-
-const RowOptions = ({ id }) => {
+const RowOptions = () => {
   return (
-    <>
-      <Link to={`${id}`} state={{ id: id }}>
-        <Button size="small" variant="outlined" color="secondary">
-          View
-        </Button>
-      </Link>
-    </>
+    <Box sx={{ gap: 1 }}>
+      <IconButton aria-label="capture screenshot" color="primary">
+        <Icon icon="tabler:eye" />
+      </IconButton>
+      <IconButton aria-label="capture screenshot" color="secondary">
+        <Icon icon="tabler:edit" />
+      </IconButton>
+      <IconButton aria-label="capture screenshot" color="error">
+        <Icon icon="mdi:delete-outline" />
+      </IconButton>
+    </Box>
   );
 };
 
 const StudyMaterial = () => {
   // ** State
 
-  const users = [
+  const studyMaterials = [
     {
       id: 1,
-      name: 'John Doe',
-      image: 'https://example.com/john_doe.jpg',
-      email: 'john.doe@example.com',
-      designation: 'Software Engineer',
-      role: 'Developer',
-      status: 1
+      title: 'Introduction to JavaScript',
+      description: 'Learn the basics of JavaScript programming language.',
+      course_name: 'JavaScript Fundamentals',
+      status: 'Active',
+      file: 'intro_to_js.pdf'
     },
     {
       id: 2,
-      name: 'Jane Smith',
-      image: 'https://example.com/jane_smith.jpg',
-      email: 'jane.smith@example.com',
-      designation: 'UX Designer',
-      role: 'Designer',
-      status: 1
+      title: 'Advanced JavaScript Concepts',
+      description: 'Explore advanced concepts such as closures, prototypes, and async programming.',
+      course_name: 'Advanced JavaScript',
+      status: 'Active',
+      file: 'advanced_js_notes.docx'
     },
     {
       id: 3,
-      name: 'Bob Johnson',
-      image: 'https://example.com/bob_johnson.jpg',
-      email: 'bob.johnson@example.com',
-      designation: 'Product Manager',
-      role: 'Manager',
-      status: 0
+      title: 'DOM Manipulation',
+      description: 'Study how to interact with the Document Object Model (DOM).',
+      course_name: 'Web Development with JavaScript',
+      status: 'Inactive',
+      file: 'dom_manipulation_video.mp4'
     },
     {
       id: 4,
-      name: 'Alice Williams',
-      image: 'https://example.com/alice_williams.jpg',
-      email: 'alice.williams@example.com',
-      designation: 'QA Engineer',
-      role: 'Tester',
-      status: 1
+      title: 'Node.js Basics',
+      description: 'Get started with server-side JavaScript using Node.js.',
+      course_name: 'Node.js Fundamentals',
+      status: 'Active',
+      file: 'nodejs_basics.txt'
     },
     {
       id: 5,
-      name: 'Charlie Brown',
-      image: 'https://example.com/charlie_brown.jpg',
-      email: 'charlie.brown@example.com',
-      designation: 'System Administrator',
-      role: 'Administrator',
-      status: 0
+      title: 'React.js Fundamentals',
+      description: 'Learn the basics of building user interfaces with React.js.',
+      course_name: 'React.js for Beginners',
+      status: 'Active',
+      file: 'react_fundamentals.pdf'
     },
     {
       id: 6,
-      name: 'Eva Green',
-      image: 'https://example.com/eva_green.jpg',
-      email: 'eva.green@example.com',
-      designation: 'Marketing Specialist',
-      role: 'Marketer',
-      status: 1
+      title: 'JavaScript Design Patterns',
+      description: 'Explore common design patterns used in JavaScript applications.',
+      course_name: 'Design Patterns in JS',
+      status: 'Active',
+      file: 'js_design_patterns.doc'
+    },
+    {
+      id: 7,
+      title: 'Testing in JavaScript',
+      description: 'Understand how to write tests for JavaScript code.',
+      course_name: 'JavaScript Testing',
+      status: 'Inactive',
+      file: 'testing_in_js_video.mkv'
+    },
+    {
+      id: 8,
+      title: 'ES6 Features',
+      description: 'Explore the features introduced in ECMAScript 6 (ES6).',
+      course_name: 'Modern JavaScript',
+      status: 'Active',
+      file: 'es6_features_cheatsheet.pdf'
+    },
+    {
+      id: 9,
+      title: 'Web Development Best Practices',
+      description: 'Learn best practices for building robust and maintainable web applications.',
+      course_name: 'Web Dev Best Practices',
+      status: 'Active',
+      file: 'web_dev_best_practices.docx'
+    },
+    {
+      id: 10,
+      title: 'Asynchronous Programming in JavaScript',
+      description: 'Understand how to work with asynchronous code in JavaScript.',
+      course_name: 'Async JS',
+      status: 'Inactive',
+      file: 'async_programming_guide.txt'
     }
   ];
 
@@ -145,8 +154,8 @@ const StudyMaterial = () => {
 
   const columns = [
     {
-      flex: 0.1,
-      minWidth: 120,
+      flex: 0.8,
+      // minWidth: 120,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -158,14 +167,13 @@ const StudyMaterial = () => {
       }
     },
     {
-      flex: 0.25,
-      minWidth: 280,
-      field: 'fullName',
-      headerName: 'User',
+      flex: 1.5,
+      // minWidth: 280,
+      field: 'title',
+      headerName: 'Title',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
@@ -177,10 +185,7 @@ const StudyMaterial = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
-              </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.email}
+                {row?.title}
               </Typography>
             </Box>
           </Box>
@@ -188,28 +193,28 @@ const StudyMaterial = () => {
       }
     },
     {
-      flex: 0.15,
-      minWidth: 190,
-      field: 'designation',
-      headerName: 'Designation',
+      flex: 1,
+      // minWidth: 190,
+      field: 'description',
+      headerName: 'Description',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.designation}
+            {row?.description}
           </Typography>
         );
       }
     },
     {
-      flex: 0.15,
-      field: 'role',
-      minWidth: 170,
-      headerName: 'Role',
+      flex: 1.5,
+      field: 'course',
+      // minWidth: 170,
+      headerName: 'course',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.role}
+              {row?.course_name}
             </Typography>
           </Box>
         );
@@ -217,8 +222,8 @@ const StudyMaterial = () => {
     },
 
     {
-      flex: 0.15,
-      minWidth: 110,
+      flex: 1,
+      // minWidth: 110,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -227,7 +232,7 @@ const StudyMaterial = () => {
             rounded
             skin="light"
             size="small"
-            label={row.status == '1' ? 'Active' : 'InActive'}
+            label={row.status}
             color={userStatusObj[row.status]}
             sx={{ textTransform: 'capitalize' }}
           />
@@ -235,8 +240,8 @@ const StudyMaterial = () => {
       }
     },
     {
-      flex: 0.1,
-      minWidth: 100,
+      flex: 1,
+      // minWidth: 100,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -249,14 +254,14 @@ const StudyMaterial = () => {
       <DataGrid
         autoHeight
         rowHeight={80}
-        rows={users}
+        rows={studyMaterials}
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[10, 25, 50]}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </>
   );
 };
