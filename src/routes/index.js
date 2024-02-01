@@ -53,7 +53,6 @@ const ExamContentsPage = Loadable(lazy(() => import('views/content-management/ex
 const CreateExamPaper = Loadable(lazy(() => import('views/content-management/exam-content/create-exam-paper/index')));
 const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
 
-
 // Course Management
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
 const CoursesPage = Loadable(lazy(() => import('views/course-management/courses')));
@@ -95,8 +94,6 @@ const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management
 const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs/view-profile')));
 const AddNewStaff = Loadable(lazy(() => import('views/staff-management/add-new-staff/addNewStaff')));
 
-
-
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/view-profile')));
@@ -106,7 +103,6 @@ const AddNewStudent = Loadable(lazy(() => import('views/student-management/stude
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
 const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
-
 
 //Calender
 const CalenderPage = Loadable(lazy(() => import('views/calender')));
@@ -190,11 +186,11 @@ const ApplicationRoutes = () => {
 
       <Route path="/content-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/content-management/class-contents" />} />
-        <Route path="class-contents" element={<ClassContentsPage />} />
+        <Route path="question-bank" element={<ClassContentsPage />} />
         <Route path="course-contents" element={<CourseContentsPage />} />
-        <Route path="exam-contents" element={<ExamContentsPage />} />
-        <Route path="exam-contents/create-exam-paper" element={<CreateExamPaper />} />
-        <Route path="exam-contents/create-exam-paper/create-question" element={<CreateQuestionPage />} />
+        <Route path="exam-papers" element={<ExamContentsPage />} />
+        <Route path="exam-papers/create-exam-paper" element={<CreateExamPaper />} />
+        <Route path="exam-papers/create-exam-paper/create-question" element={<CreateQuestionPage />} />
       </Route>
 
       <Route path="/course-management" element={<MainLayout />}>
@@ -250,16 +246,18 @@ const ApplicationRoutes = () => {
       <Route path="/staff-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
         <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
-        <Route path="view-profile" element={<ViewTeachingProfile/>} />
-        <Route path="add-new-staff" element={<AddNewStaff/>} />
+        <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
+        <Route path="non-teaching-staffs/:id" element={<ViewTeachingProfile />} />
+        <Route path="teaching-staffs/add" element={<AddNewStaff />} />
         <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
+        <Route path="non-teaching-staffs/add" element={<AddNewStaff />} />
       </Route>
 
       <Route path="/student-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/student-management/students" />} />
         <Route path="students" element={<StudentsPage />} />
-        <Route path="view-profile" element={<ViewStudentProfile />} />
-        <Route path="add-new-student" element={<AddNewStudent />} />
+        <Route path="students/:id" element={<ViewStudentProfile />} />
+        <Route path="students/add" element={<AddNewStudent />} />
       </Route>
 
       <Route element={<MinimalLayout />}>

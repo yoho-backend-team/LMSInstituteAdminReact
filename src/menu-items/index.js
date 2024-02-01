@@ -16,27 +16,25 @@ import IdCardManagement from './id-cards-management';
 import resultManagement from './result-management';
 import allNotifications from './notification-management';
 import helpCenter from './help-center';
-import calender from './calender'
+// import calender from './calender'
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
   items: [
     dashboard,
-    calender,
     branchManagement,
     userManagement,
-    batchManagement,
-    staffManagement,
-    studentManagement,
     courseManagement,
     contentManagement,
+    staffManagement,
+    studentManagement,
+    batchManagement,
     classManagement,
-    examManagement,
     attendanceManagement,
+    examManagement,
     resultManagement,
     paymentManagement,
     refundManagement,
-
     allNotifications,
     certificateManagement,
     IdCardManagement,

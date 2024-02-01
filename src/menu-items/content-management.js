@@ -35,21 +35,21 @@ const pages = {
           breadcrumbs: false
         },
         {
-          id: 'class-contents',
-          title: 'Class Contents',
+          id: 'question-bank',
+          title: 'Question Bank',
           icon: IconChalkboard,
           type: 'item',
-          url: '/content-management/class-contents',
+          url: '/content-management/question-bank',
           target: false,
 
           breadcrumbs: false
         },
         {
-          id: 'exam-contents',
-          title: 'Exam Contents',
+          id: 'exam-papers',
+          title: 'Exam Papers',
           icon: IconFilePencil,
           type: 'item',
-          url: '/content-management/exam-contents',
+          url: '/content-management/exam-papers',
           target: false,
 
           breadcrumbs: false
