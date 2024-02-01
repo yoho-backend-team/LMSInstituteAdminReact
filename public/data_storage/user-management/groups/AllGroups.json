@@ -2,6 +2,7 @@
   {
     "id": 1,
     "name": "Admin",
+    "status": true,
     "users": [
       {
         "id": 101,
@@ -20,6 +21,7 @@
   {
     "id": 2,
     "name": "Moderator",
+    "status": true,
     "users": [
       {
         "id": 201,
@@ -38,6 +40,7 @@
   {
     "id": 3,
     "name": "User",
+    "status": false,
     "users": [
       {
         "id": 301,
@@ -56,6 +59,7 @@
   {
     "id": 4,
     "name": "Guest",
+    "status": true,
     "users": [
       {
         "id": 401,
@@ -74,6 +78,7 @@
   {
     "id": 5,
     "name": "Editor",
+    "status": false,
     "users": [
       {
         "id": 501,
@@ -92,6 +97,7 @@
   {
     "id": 6,
     "name": "Subscriber",
+    "status": true,
     "users": [
       {
         "id": 601,
