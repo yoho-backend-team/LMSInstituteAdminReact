@@ -38,7 +38,7 @@ const schema = yup.object().shape({
     .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
     .required(),
   designation: yup.string().required(),
-  role: yup.number().required()
+  role: yup.string().required()
 });
 
 const defaultValues = {
