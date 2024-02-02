@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconNotes, IconNotebook, IconChalkboard, IconFilePencil } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconNotes, IconNotebook } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -32,26 +32,6 @@ const pages = {
           url: '/content-management/course-contents',
           icon: icons.IconNotebook,
           target: false,
-          breadcrumbs: false
-        },
-        {
-          id: 'question-bank',
-          title: 'Question Bank',
-          icon: IconChalkboard,
-          type: 'item',
-          url: '/content-management/question-bank',
-          target: false,
-
-          breadcrumbs: false
-        },
-        {
-          id: 'exam-papers',
-          title: 'Exam Papers',
-          icon: IconFilePencil,
-          type: 'item',
-          url: '/content-management/exam-papers',
-          target: false,
-
           breadcrumbs: false
         }
       ]

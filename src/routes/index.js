@@ -43,15 +43,15 @@ const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-ma
 
 // Class Management
 const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class')));
-const OnlineClassesPage = Loadable(lazy(() => import('views/class-management/online-class')));
+// const OnlineClassesPage = Loadable(lazy(() => import('views/class-management/online-class')));
 const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class')));
 
 // Content Management
-const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
 const CourseContentsPage = Loadable(lazy(() => import('views/content-management/course-content')));
-const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
-const CreateExamPaper = Loadable(lazy(() => import('views/content-management/exam-content/create-exam-paper/index')));
-const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
+// const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
+// const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
+// const CreateExamPaper = Loadable(lazy(() => import('views/content-management/exam-content/create-exam-paper/index')));
+// const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
 
 // Course Management
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
@@ -60,12 +60,12 @@ const AddCoursePage = Loadable(lazy(() => import('views/course-management/add-co
 const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-course')));
 
 // Exam Management
-const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
-const OnlineExamsPage = Loadable(lazy(() => import('views/exam-management/online-exam')));
+// const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
+// const OnlineExamsPage = Loadable(lazy(() => import('views/exam-management/online-exam')));
 
 // Result Management
-const OfflineExamResultPage = Loadable(lazy(() => import('views/result-management/offline-exams')));
-const OnlineExamResultPage = Loadable(lazy(() => import('views/result-management/online-exams')));
+// const OfflineExamResultPage = Loadable(lazy(() => import('views/result-management/offline-exams')));
+// const OnlineExamResultPage = Loadable(lazy(() => import('views/result-management/online-exams')));
 
 // Help Center
 const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support')));
@@ -182,16 +182,16 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/class-management/live-classes" />} />
         <Route path="live-classes" element={<LiveClassesPage />} />
         <Route path="offline-classes" element={<OfflineClassesPage />} />
-        <Route path="online-classes" element={<OnlineClassesPage />} />
+        {/* <Route path="online-classes" element={<OnlineClassesPage />} /> */}
       </Route>
 
       <Route path="/content-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/content-management/class-contents" />} />
-        <Route path="question-bank" element={<ClassContentsPage />} />
         <Route path="course-contents" element={<CourseContentsPage />} />
+        {/* <Route path="question-bank" element={<ClassContentsPage />} />
         <Route path="exam-papers" element={<ExamContentsPage />} />
         <Route path="exam-papers/create-exam-paper" element={<CreateExamPaper />} />
-        <Route path="exam-papers/create-exam-paper/create-question" element={<CreateQuestionPage />} />
+        <Route path="exam-papers/create-exam-paper/create-question" element={<CreateQuestionPage />} /> */}
       </Route>
 
       <Route path="/course-management" element={<MainLayout />}>
@@ -208,16 +208,16 @@ const ApplicationRoutes = () => {
         <Route path="technical-support" element={<TechnicalSupportPage />} />
       </Route>
 
-      <Route path="/exam-management" element={<MainLayout />}>
+      {/* <Route path="/exam-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/exam-management/online-exams" />} />
         <Route path="offline-exams" element={<OfflineExamsPage />} />
         <Route path="online-exams" element={<OnlineExamsPage />} />
-      </Route>
-      <Route path="/result-management" element={<MainLayout />}>
+      </Route> */}
+      {/* <Route path="/result-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/exam-management/online-exam-results" />} />
         <Route path="offline-exam-results" element={<OfflineExamResultPage />} />
         <Route path="online-exam-results" element={<OnlineExamResultPage />} />
-      </Route>
+      </Route> */}
 
       <Route path="/id-card-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />

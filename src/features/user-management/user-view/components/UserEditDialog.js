@@ -31,7 +31,6 @@ const schema = yup.object().shape({
     .min(3, (obj) => showErrors('User name', obj.value.length, obj.min))
     .required(),
   email: yup.string().email().required(),
-  status: yup.string().required(),
   contact: yup
     .number()
     .typeError('Contact Number field is required')
@@ -44,7 +43,6 @@ const schema = yup.object().shape({
 const defaultValues = {
   full_name: '',
   user_name: '',
-  status: '',
   email: '',
   contact: Number(''),
   designation: '',
@@ -66,7 +64,6 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
   const handleClose = () => {
     setValue('full_name', '');
     setValue('user_name', '');
-    setValue('status', '');
     setValue('email', '');
     setValue('contact', Number(''));
     setValue('designation', '');
@@ -264,29 +261,8 @@ const UserEditDialog = ({ openEdit, handleEditClose }) => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
-              <Controller
-                name="status"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    label="Status"
-                    id="validation-status-select"
-                    error={Boolean(errors.status)}
-                    aria-describedby="validation-status-select"
-                    {...(errors.status && { helperText: errors.status.message })}
-                    SelectProps={{ value: value, onChange: (e) => onChange(e) }}
-                  >
-                    <MenuItem value="Active">Active</MenuItem>
-                    <MenuItem value="Inactive">Inactive</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12}>
               <Controller
                 name="role"
                 control={control}

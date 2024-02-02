@@ -1,5 +1,4 @@
 import Card from '@mui/material/Card';
-import Rating from '@mui/material/Rating';
 import { Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -42,7 +41,7 @@ const Img = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }));
 const CourseCard = (props) => {
-  const { sx, title, chipColor, chipText, rating, reviews, image } = props;
+  const { sx, title, chipColor, chipText, image } = props;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -54,17 +53,17 @@ const CourseCard = (props) => {
     <Grid item xs={12} sm={12} lg={6}>
       <Card sx={{ ...sx }}>
         <Grid container>
-          <StyledGrid1 item xs={12} md={8}>
-            <CardContent style={{ paddingBottom: 0, paddingRight: '20px' }}>
+          <StyledGrid1 item xs={12} md={8} style={{padding:"10px"}}>
+            <CardContent style={{ paddingBottom: 0, paddingRight: '20px',width:"100%" }}>
               <Typography variant="h3" sx={{ mb: 2 }}>
                 {title}
               </Typography>
-              <Box sx={{ mb: 2.75, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+              {/* <Box sx={{ mb: 2.75, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
                 <Rating readOnly value={rating} name="read-only" sx={{ mr: 2 }} />
                 <Typography sx={{ color: 'text.secondary' }}>
                   {rating} star | {reviews} reviews
                 </Typography>
-              </Box>
+              </Box> */}
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                 <CustomChip rounded size="small" skin="light" color={chipColor} label={chipText} />
                 <Typography sx={{ color: 'text.secondary', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
