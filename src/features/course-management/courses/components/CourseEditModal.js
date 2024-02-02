@@ -10,29 +10,48 @@ import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
-
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
+import { Checkbox, TextField as CustomTextField} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CustomChip from 'components/mui/chip';
+import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
+// const showErrors = (field, valueLen, min) => {
+//   if (valueLen === 0) {
+//     return `${field} field is required`;
+//   } else if (valueLen > 0 && valueLen < min) {
+//     return `${field} must be at least ${min} characters`;
+//   } else {
+//     return '';
+//   }
+// };
 const schema = yup.object().shape({
-  course: yup
-    .string()
-    .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-    .required(),
-  status: yup.string().required()
+  Course_duration: yup.number().required(),
+  course_name: yup.string().required(),
+  Course_Price: yup.number().required(),
+  description: yup.string().required(),
+  course_overview: yup.string().required(),
+  //   language: yup.array().min(1).required()
+  Learning_Format: yup.array().min(1, 'Select at least one Learning Format').required(),
+  Course_Category: yup.string().required()
 });
 
 const defaultValues = {
-  course: '',
-  status: ''
+  Course_duration: '',
+  course_name: '',
+  Course_Price: '',
+  description: '',
+  course_overview: '',
+  Learning_Format: [],
+  Course_Category: ''
 };
+
+
+const groups = [
+  { id: '1', name: 'Offline Class' },
+  { id: '2', name: 'Online class' },
+  { id: '3', name: 'Hybrid' }
+];
 
 const CourseEditModal = ({ open, handleEditClose }) => {
   const image =
@@ -95,7 +114,7 @@ const CourseEditModal = ({ open, handleEditClose }) => {
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 1000 } }}
       >
         <DialogTitle
           id="user-view-edit"
@@ -116,6 +135,7 @@ const CourseEditModal = ({ open, handleEditClose }) => {
           }}
         >
           <form onSubmit={handleSubmit()}>
+           
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
                 <ImgStyled src={imgSrc} alt="Profile Pic" />
@@ -134,51 +154,192 @@ const CourseEditModal = ({ open, handleEditClose }) => {
                 </div>
               </Box>
             </Grid>
+            <Grid container spacing={2}> 
+            <Grid item xs={12} sm={6}>
+            <Controller
+                  name="course_name"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label="Course Name"
+                      onChange={onChange}
+                      placeholder="Leonard"
+                      error={Boolean(errors.course_name)}
+                      aria-describedby="stepper-linear-personal-course_name"
+                      {...(errors.course_name && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+            </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="Course_duration"
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="course"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 4 }}
-                    label="Course Name"
-                    onChange={onChange}
-                    placeholder="John Doe"
-                    error={Boolean(errors.course)}
-                    {...(errors.course && { helperText: errors.course.message })}
-                  />
-                )}
-              />
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label="Course Duration"
+                      type="number"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(errors.Course_duration)}
+                      {...(errors.Course_duration && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="Course_Price"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      type="number"
+                      value={value}
+                      label="Course Price"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(errors.Course_Price)}
+                      {...(errors.Course_Price && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="Course_Category"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      select
+                      fullWidth
+                      label="Course Category"
+                      id="validation-billing-select"
+                      error={Boolean(errors.Course_Category)}
+                      {...(errors.Course_Category && { helperText: 'This field is required' })}
+                      onChange={onChange}
+                      value={value}
+                    >
+                      <MenuItem value="price">Price</MenuItem>
+                      <MenuItem value="percentage">Percentage</MenuItem>
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="Learning_Format"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      multiple
+                      id="select-multiple-chip"
+                      options={groups}
+                      getOptionLabel={(option) => option.name}
+                      value={value}
+                      onChange={(e, newValue) => {
+                        if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                          onChange(groups.filter((option) => option.id !== 'selectAll'));
+                        } else {
+                          onChange(newValue);
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          label="Learning Format"
+                          error={Boolean(errors.Learning_Format)}
+                          {...(errors.Learning_Format && { helperText: errors.Learning_Format.message })}
+                        />
+                      )}
+                      renderOption={(props, option, { selected }) => (
+                        <li {...props}>
+                          <Checkbox
+                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                            checkedIcon={<CheckBoxIcon fontSize="small" />}
+                            style={{ marginRight: 8 }}
+                            checked={selected}
+                          />
+                          {option.name}
+                        </li>
+                      )}
+                      renderTags={(value) =>
+                        value.map((option, index) => (
+                          <CustomChip
+                            key={option.id}
+                            label={option.name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              onChange(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))
+                      }
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      selectAllText="Select All"
+                      SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="course_overview"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      multiline
+                      rows={3}
+                      label="Course Overview"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(errors.course_overview)}
+                      {...(errors.course_overview && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="description"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      multiline
+                      rows={3}
+                      label="Description"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(errors.description)}
+                      {...(errors.description && { helperText: 'This field is required' })}
+                    />
+                  )}
+                />
+              </Grid>
+              <CourseValidate />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="status"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    sx={{ mb: 4 }}
-                    label="Status"
-                    id="validation-status-select"
-                    error={Boolean(errors.status)}
-                    aria-describedby="validation-status-select"
-                    {...(errors.status && { helperText: errors.status.message })}
-                    SelectProps={{ value: value, onChange: (e) => onChange(e) }}
-                  >
-                    <MenuItem value="Active">Active</MenuItem>
-                    <MenuItem value="Inactive">Inactive</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid style={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid style={{ display: 'flex', justifyContent: 'center' ,marginTop:"30px"}}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                 Submit
               </Button>
