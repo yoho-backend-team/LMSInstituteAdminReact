@@ -37,12 +37,12 @@ export default function ProductNewEditForm() {
     []
   );
   
-  const { reset, watch, setValue, handleSubmit } = methods;
 
   const methods = useForm({
     resolver: yupResolver(NewProductSchema),
     defaultValues
   });
+  const { reset, watch, setValue, handleSubmit } = methods;
 
 
   const values = watch();

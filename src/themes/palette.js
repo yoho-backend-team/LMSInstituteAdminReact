@@ -99,7 +99,7 @@ const DefaultPalette = () => {
   const mainColor = mode === 'light' ? lightColor : darkColor;
 
   const primary = generatePrimaryObject('#C23373');
-  const secondary = generatePrimaryObject('#FE7BE5')
+  const secondary = generatePrimaryObject('#FE7BE5');
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor;
@@ -144,7 +144,7 @@ const DefaultPalette = () => {
     //   800: '#0d3c61',
     //   contrastText: whiteColor
     // },
-    secondary:secondary,
+    secondary: secondary,
 
     error: {
       light: '#ED6F70',
