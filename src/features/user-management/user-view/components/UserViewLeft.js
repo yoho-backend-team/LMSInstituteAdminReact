@@ -21,6 +21,7 @@ import { getInitials } from 'utils/get-initials';
 import { getUserById } from '../services/viewUserServices';
 
 import UserEditDialog from './UserEditDialog';
+import { MenuItem, TextField } from '@mui/material';
 
 const UserViewLeft = ({ id }) => {
   const statusColors = {
@@ -59,7 +60,7 @@ const UserViewLeft = ({ id }) => {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card>
-          <CardContent sx={{ pt: 13.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             {userData?.image ? (
               <CustomAvatar
                 src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${userData?.image}`}
@@ -72,7 +73,7 @@ const UserViewLeft = ({ id }) => {
                 {userData?.name ? getInitials(userData?.name) : 'U'}
               </CustomAvatar>
             )}
-            <Typography variant="h4" sx={{ mb: 3 }}>
+            <Typography variant="h4" sx={{ mb: 2 }}>
               {userData?.name}
             </Typography>
             <CustomChip
@@ -83,11 +84,15 @@ const UserViewLeft = ({ id }) => {
               // color={'success'}
               sx={{ textTransform: 'capitalize' }}
             />
+            <TextField select label="Status" id="validation-status-select" sx={{ mt: 2 }} aria-describedby="validation-status-select">
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+            </TextField>
           </CardContent>
 
           <Divider sx={{ my: '0 !important', mx: 6 }} />
 
-          <CardContent sx={{ pb: 4 }}>
+          <CardContent sx={{ pb: 1 }}>
             <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
               Details
             </Typography>
@@ -127,10 +132,7 @@ const UserViewLeft = ({ id }) => {
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-              Edit
-            </Button>
-            <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
-              Suspend
+              Edit Details
             </Button>
           </CardActions>
         </Card>

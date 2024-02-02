@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers,IconChalkboard } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconChalkboard } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -24,15 +24,6 @@ const pages = {
       icon: icons.IconChalkboard,
 
       children: [
-        {
-          id: 'online-classes',
-          title: 'Online Classes',
-          type: 'item',
-          url: '/class-management/online-classes',
-          icon: icons.IconUsers,
-          target: false,
-          breadcrumbs: false
-        },
         {
           id: 'offline-classes',
           title: 'Offline Classes',

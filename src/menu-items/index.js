@@ -6,14 +6,14 @@ import studentManagement from './student-management';
 import courseManagement from './course-management';
 import contentManagement from './content-management';
 import classManagement from './class-management';
-import examManagement from './exam-management';
+// import examManagement from './exam-management';
 import attendanceManagement from './attendance-management';
 import paymentManagement from './payment-management';
 import batchManagement from './batch-management';
 import refundManagement from './refund-management';
 import certificateManagement from './certificate-management';
 import IdCardManagement from './id-cards-management';
-import resultManagement from './result-management';
+// import resultManagement from './result-management';
 import allNotifications from './notification-management';
 import helpCenter from './help-center';
 // import calender from './calender'
@@ -31,8 +31,7 @@ const menuItems = {
     batchManagement,
     classManagement,
     attendanceManagement,
-    examManagement,
-    resultManagement,
+    // resultManagement,
     paymentManagement,
     refundManagement,
     allNotifications,
