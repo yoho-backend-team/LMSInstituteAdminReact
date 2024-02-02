@@ -6,6 +6,7 @@ import groupReducer from 'features/user-management/groups/redux/groupSlice';
 import userReducer from 'features/user-management/users/redux/userSlices';
 import batchReducer from 'features/batch-management/batches/redux/batchSlice';
 import calendar from 'features/calender/redux/reducers';
+import auth from 'features/authentication/authReducer';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -14,7 +15,8 @@ const store = configureStore({
     groups: groupReducer,
     users: userReducer,
     batches: batchReducer,
-    calendar: calendar
+    calendar: calendar,
+    auth: auth
   }
 });
 // configureStore(reducer);
