@@ -38,7 +38,7 @@ const NonTeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attend
 const NonTeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staffs/view-attendance')));
 
 // Certificate Management
-const StaffCertificatesPage = Loadable(lazy(() => import('views/certificate-management/staff')));
+// const StaffCertificatesPage = Loadable(lazy(() => import('views/certificate-management/staff')));
 const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-management/student')));
 
 // Class Management
@@ -175,7 +175,7 @@ const ApplicationRoutes = () => {
       <Route path="/certificate-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
         <Route path="student-certificates" element={<StudentCertificatesPage />} />
-        <Route path="staff-certificates" element={<StaffCertificatesPage />} />
+        {/* <Route path="staff-certificates" element={<StaffCertificatesPage />} /> */}
       </Route>
 
       <Route path="/class-management" element={<MainLayout />}>
