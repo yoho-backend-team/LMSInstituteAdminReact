@@ -218,7 +218,7 @@ const Teaching = () => (
                    <Typography sx={{ color: 'text.secondary' }}>Connections</Typography>
                  </Box>
                </Box> */}
-               <Box sx={{ display: 'flex', alignItems: 'center' }}>
+               <Box component={Link} to={item.id} sx={{ display: 'flex', alignItems: 'center',textDecoration:'none' }} >
                  <Button variant='tonal' sx={{px:4}}>
                   View Profile
                  </Button>
