@@ -11,7 +11,7 @@ import CardHeader from '@mui/material/CardHeader';
 
 // components
 // import { FormProvider, RHFUploadMultiFile } from '../../../components/hook-form';
-import { RHFUploadMultiFile, RHFUploadSingleFile } from 'components/upload/RHUpload';
+import {  RHFUploadSingleFile } from 'components/upload/RHUpload';
 import FormProvider from 'features/course-management/add-course/components/FormProvider';
 import CoursePdfInput from '../CoursePdfInput';
 // ----------------------------------------------------------------------
@@ -37,9 +37,9 @@ export default function CourseValidate() {
     defaultValues
   });
 
-  const { reset, watch, setValue, handleSubmit } = methods;
+  const { reset,  setValue, handleSubmit } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   const onSubmit = async () => {
     try {
@@ -75,36 +75,19 @@ export default function CourseValidate() {
     [setValue]
   );
 
-  const handleRemoveAll = () => {
-    setValue('images', []);
-  };
+  // const handleRemoveAll = () => {
+  //   setValue('images', []);
+  // };
 
-  const handleRemove = (file) => {
-    const filteredItems = values.images?.filter((_file) => _file !== file);
-    setValue('images', filteredItems);
-  };
+  // const handleRemove = (file) => {
+  //   const filteredItems = values.images?.filter((_file) => _file !== file);
+  //   setValue('images', filteredItems);
+  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <div>
-                <CardHeader title="Hiring Companies" />
-                <RHFUploadMultiFile
-                  name="images"
-                  showPreview
-                  accept="image/*"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleRemove}
-                  onRemoveAll={handleRemoveAll}
-                />
-              </div>
-            </Stack>
-          </Card>
-        </Grid>
+
         <Grid item xs={12} md={6}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
@@ -120,16 +103,6 @@ export default function CourseValidate() {
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Template" />
-                <RHFUploadSingleFile name="cover" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
-              </div>
-            </Stack>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <div>
-                <CardHeader title="Course Certification" />
                 <RHFUploadSingleFile name="cover" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
               </div>
             </Stack>

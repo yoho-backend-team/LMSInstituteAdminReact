@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment, useState } from 'react';
 // ** MUI Imports
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
@@ -14,29 +14,23 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import CustomizedInput from 'features/course-management/add-course/components/CustomizedInput';
 
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import FormProvider from 'features/course-management/add-course/components/FormProvider';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 // ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
-import { Checkbox, TextField as CustomTextField, Stack, TextField } from '@mui/material';
-import CardHeader from '@mui/material/CardHeader';
+import { Checkbox, TextField as CustomTextField, TextField } from '@mui/material';
 import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
 // ** Styled Components
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CustomChip from 'components/mui/chip';
-import { RHFUploadMultiFile } from 'components/upload/RHUpload';
-import CourseModule from 'features/course-management/add-course/components/CourseModule';
-import StepperWrapper from 'styles/mui/stepper';
-import * as Yup from 'yup';
 import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
+import StepperWrapper from 'styles/mui/stepper';
 
 const steps = [
   {
@@ -44,20 +38,12 @@ const steps = [
     subtitle: 'Setup Information'
   },
   {
-    title: 'Gallery Info',
-    subtitle: 'Add Logo, Image, Gallery Information'
-  },
-  {
     title: 'Social Links',
     subtitle: 'Add Social Links'
-  },
-  {
-    title: 'Account Details',
-    subtitle: 'Enter your Account Details'
   }
 ];
 
-const defaultAccountValues = {};
+// const defaultAccountValues = {};
 
 const defaultPersonalValues = {
   Course_duration: '',
@@ -70,18 +56,18 @@ const defaultPersonalValues = {
 };
 
 const defaultSocialValues = {
-  instagram: '',
-  twitter: '',
-  facebook: '',
-  linkedIn: '',
-  pinterest: ''
+  // instagram: '',
+  // twitter: '',
+  // facebook: '',
+  // linkedIn: '',
+  // pinterest: ''
 };
-const defaultGalleryValues = {
-  images: [],
-  cover: ''
-};
+// const defaultGalleryValues = {
+//   images: [],
+//   cover: ''
+// };
 
-const accountSchema = yup.object().shape({});
+// const accountSchema = yup.object().shape({});
 
 const personalSchema = yup.object().shape({
   Course_duration: yup.number().required(),
@@ -95,26 +81,17 @@ const personalSchema = yup.object().shape({
 });
 
 const socialSchema = yup.object().shape({});
-const gallerySchema = yup.object().shape({
-  images: Yup.array().min(1, 'Images is required')
-});
+// const gallerySchema = yup.object().shape({
+//   images: Yup.array().min(1, 'Images is required')
+// });
 
 const AddCoursePage = () => {
   // ** States
   const [activeStep, setActiveStep] = useState(0);
 
-  const [features, setFeatures] = useState([]);
+  // const [features, setFeatures] = useState([]);
 
   // ** Hooks
-  const {
-    reset: accountReset,
-    // control: accountControl,
-    handleSubmit: handleAccountSubmit,
-    formState: { errors: accountErrors }
-  } = useForm({
-    defaultValues: defaultAccountValues,
-    resolver: yupResolver(accountSchema)
-  });
 
   const {
     reset: personalReset,
@@ -135,10 +112,10 @@ const AddCoursePage = () => {
     defaultValues: defaultSocialValues,
     resolver: yupResolver(socialSchema)
   });
-  const methods = useForm({
-    defaultValues: defaultGalleryValues,
-    resolver: yupResolver(gallerySchema)
-  });
+  // const methods = useForm({
+  //   defaultValues: defaultGalleryValues,
+  //   resolver: yupResolver(gallerySchema)
+  // });
   // console.log(galleryControl);
   console.log(defaultPersonalValues);
   // Handle Stepper
@@ -167,9 +144,6 @@ const AddCoursePage = () => {
     { id: '2', name: 'Online class' },
     { id: '3', name: 'Hybrid' }
   ];
-  const { watch, setValue, handleSubmit } = methods;
-
-  const values = watch();
 
   // const onSubmit = async () => {
   //   try {
@@ -179,40 +153,6 @@ const AddCoursePage = () => {
   //     console.error(error);
   //   }
   // };
-
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      console.log(acceptedFiles);
-      setValue(
-        'images',
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
-      const file = acceptedFiles[0];
-
-      if (file) {
-        setValue(
-          'cover',
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        );
-      }
-    },
-    [setValue]
-  );
-
-  const handleRemoveAll = () => {
-    setValue('images', []);
-  };
-
-  const handleRemove = (file) => {
-    const filteredItems = values.images?.filter((_file) => _file !== file);
-    setValue('images', filteredItems);
-  };
 
   const onSubmit = async () => {
     // const accountData = accountControl?._formValues;
@@ -233,7 +173,6 @@ const AddCoursePage = () => {
       data.append('twitter', socialData?.twitter);
       data.append('logo', logo);
       data.append('image', courseImage);
-      data.append('gallery', galleryImages);
 
       let config = {
         method: 'post',
@@ -472,84 +411,6 @@ const AddCoursePage = () => {
         );
       case 1:
         return (
-          <FormProvider methods={methods} key={2} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={5}>
-              <Grid item xs={12} sm={6}>
-                <CustomizedInput
-                  placeholder={'Add New Prerequities'}
-                  data={features}
-                  setData={setFeatures}
-                  cardTitle={'Course prerequities'}
-                  buttonTitle={'Add Corse Prerequities'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomizedInput
-                  placeholder={'Add New Features'}
-                  data={features}
-                  setData={setFeatures}
-                  cardTitle={'Course Features'}
-                  buttonTitle={'Add Corse Feature'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomizedInput
-                  placeholder={'Add New Skills'}
-                  data={features}
-                  setData={setFeatures}
-                  cardTitle={'Course Skills'}
-                  buttonTitle={'Add Corse Skills'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomizedInput
-                  placeholder={'Add New Benefits'}
-                  data={features}
-                  setData={setFeatures}
-                  cardTitle={'Course Benefits'}
-                  buttonTitle={'Add Corse Benefits'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CustomizedInput
-                  placeholder={'Add New Eligibility'}
-                  data={features}
-                  setData={setFeatures}
-                  cardTitle={'Course Eligibility'}
-                  buttonTitle={'Add Corse Eligibility'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ p: 3 }}>
-                  <Stack spacing={3}>
-                    <div>
-                      <CardHeader title="Course Tools" />
-                      <RHFUploadMultiFile
-                        name="images"
-                        showPreview
-                        accept="image/*"
-                        maxSize={3145728}
-                        onDrop={handleDrop}
-                        onRemove={handleRemove}
-                        onRemoveAll={handleRemoveAll}
-                      />
-                    </div>
-                  </Stack>
-                </Card>
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-              <Button variant="tonal" color="secondary" onClick={handleBack}>
-                Back
-              </Button>
-              <Button type="submit" variant="contained">
-                Next
-              </Button>
-            </Grid>
-          </FormProvider>
-        );
-      case 2:
-        return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
             <CourseValidate />
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
@@ -559,22 +420,6 @@ const AddCoursePage = () => {
               <Button type="submit" variant="contained">
                 Next
               </Button>
-            </Grid>
-          </form>
-        );
-      case 3:
-        return (
-          <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
-            <Grid>
-              <CourseModule />
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Submit
-                </Button>
-              </Grid>
             </Grid>
           </form>
         );
@@ -610,7 +455,7 @@ const AddCoursePage = () => {
               if (index === activeStep) {
                 labelProps.error = false;
                 if (
-                  (accountErrors.email || accountErrors.username || accountErrors.password || accountErrors['confirm_password']) &&
+                  // (accountErrors.email || accountErrors.username || accountErrors.password || accountErrors['confirm_password']) &&
                   activeStep === 3
                 ) {
                   labelProps.error = true;
