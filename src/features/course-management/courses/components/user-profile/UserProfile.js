@@ -1,78 +1,64 @@
 // ** React Imports
-import { useState } from 'react';
 
 // ** MUI Components
-import TabContext from '@mui/lab/TabContext';
-import MuiTabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 // ** Demo Components
-import Modules from './modules';
-import Overview from './overview';
-import Projects from './projects';
-import SkillsAndTools from './skillsAndTools';
 
-const TabList = styled(MuiTabList)(({ theme }) => ({
-  borderBottom: '0 !important',
-  '&, & .MuiTabs-scroller': {
-    boxSizing: 'content-box',
-    padding: theme.spacing(1.25, 1.25, 2),
-    margin: `${theme.spacing(-1.25, -1.25, -2)} !important`
-  },
-  '& .MuiTabs-indicator': {
-    display: 'none'
-  },
-  '& .Mui-selected': {
-    boxShadow: theme.shadows[2],
-    backgroundColor: theme.palette.primary.main,
-    color: `${theme.palette.common.white} !important`
-  },
-  '& .MuiTab-root': {
-    minWidth: 65,
-    minHeight: 38,
-    lineHeight: 1,
-    borderRadius: theme.shape.borderRadius,
-    '&:hover': {
-      color: theme.palette.primary.main
-    },
-    [theme.breakpoints.up('sm')]: {
-      minWidth: 130
-    }
-  }
-}));
+// const TabList = styled(MuiTabList)(({ theme }) => ({
+//   borderBottom: '0 !important',
+//   '&, & .MuiTabs-scroller': {
+//     boxSizing: 'content-box',
+//     padding: theme.spacing(1.25, 1.25, 2),
+//     margin: `${theme.spacing(-1.25, -1.25, -2)} !important`
+//   },
+//   '& .MuiTabs-indicator': {
+//     display: 'none'
+//   },
+//   '& .Mui-selected': {
+//     boxShadow: theme.shadows[2],
+//     backgroundColor: theme.palette.primary.main,
+//     color: `${theme.palette.common.white} !important`
+//   },
+//   '& .MuiTab-root': {
+//     minWidth: 65,
+//     minHeight: 38,
+//     lineHeight: 1,
+//     borderRadius: theme.shape.borderRadius,
+//     '&:hover': {
+//       color: theme.palette.primary.main
+//     },
+//     [theme.breakpoints.up('sm')]: {
+//       minWidth: 130
+//     }
+//   }
+// }));
 
 const UserProfile = () => {
-  const tab = 'overview';
-  // ** State
-  const [activeTab, setActiveTab] = useState(tab);
-  const [isLoading] = useState(false);
+  // const tab = 'overview';
+  // // ** State
+  // const [activeTab, setActiveTab] = useState(tab);
+  // const [isLoading] = useState(false);
 
-  // ** Hooks
-  const hideText = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  // // ** Hooks
+  // const hideText = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
-  const handleChange = (e,value) => {
-    console.log(e);
-    setActiveTab(value);
-  };
+  // const handleChange = (e,value) => {
+  //   console.log(e);
+  //   setActiveTab(value);
+  // };
 
-  const tabContentList = {
-    overview: <Overview  />,
-    skillsAndTools: <SkillsAndTools />,
-    projects: <Projects  />,
-    modules: <Modules/>
-  };
+  // const tabContentList = {
+  //   overview: <Overview  />,
+  //   skillsAndTools: <SkillsAndTools />,
+  //   projects: <Projects  />,
+  //   modules: <Modules/>
+  // };
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <TabContext value={activeTab}>
+        {/* <TabContext value={activeTab}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <TabList variant="scrollable" scrollButtons="auto" onChange={handleChange} aria-label="customized tabs example">
@@ -123,7 +109,7 @@ const UserProfile = () => {
               )}
             </Grid>
           </Grid>
-        </TabContext>
+        </TabContext> */}
       </Grid>
     </Grid>
   );

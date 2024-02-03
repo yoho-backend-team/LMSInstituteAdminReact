@@ -1,32 +1,26 @@
 // ** React Imports
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 // import CardHeader from '@mui/material/CardHeader';
-import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
-import TableHeader from './ModuleTableHeader';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import MenuItem from '@mui/material/MenuItem';
+import CustomTextField from 'components/mui/text-field';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
+import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import ModuleAddDrawer from './ModuleAddDrawer';
 import ModuleEdit from './ModuleEdit';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import TableHeader from './ModuleTableHeader';
 import ModuleView from './ModuleView';
-
-const userStatusObj = {
-  Active: 'success',
-  Inactive: 'error'
-};
-
-
 
 const Module = () => {
   // ** State
@@ -129,23 +123,24 @@ const Module = () => {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const toggleEditUserDrawer = () => {setEditUserOpen(!editUserOpen)
-    console.log("toogle pressed");
-    };
-    const handleDeleteGroup = async () => {
-      try {
-        const result = await deleteGroup(selectedDeleteGroupId);
-  
-        if (result.success) {
-          toast.success(result.message);
-          dispatch(getAllGroups());
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.log(error);
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('toogle pressed');
+  };
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteGroupId);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const RowOptions = () => {
     return (
@@ -156,10 +151,14 @@ const Module = () => {
         <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
           <Icon icon="tabler:edit" />
         </IconButton>
-        <IconButton  onClick={() => {
-                    // setSelectedDeleteGroupId(item.id);
-                    setDeleteDialogOpen(true);
-                  }}  aria-label="capture screenshot" color="error">
+        <IconButton
+          onClick={() => {
+            // setSelectedDeleteGroupId(item.id);
+            setDeleteDialogOpen(true);
+          }}
+          aria-label="capture screenshot"
+          color="error"
+        >
           <Icon icon="mdi:delete-outline" />
         </IconButton>
       </Box>
@@ -256,7 +255,6 @@ const Module = () => {
         );
       }
     },
-
     {
       flex: 1,
       // minWidth: 110,
@@ -264,14 +262,12 @@ const Module = () => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <CustomChip
-            rounded
-            skin="light"
-            size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
-            sx={{ textTransform: 'capitalize' }}
-          />
+          <div>
+            <CustomTextField select defaultValue={row.status} onChange={(e) => handleStatusChange(e, row.id)}>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+            </CustomTextField>
+          </div>
         );
       }
     },
@@ -298,9 +294,9 @@ const Module = () => {
         onPaginationModelChange={setPaginationModel}
       />
       <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-   <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
-   <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
-  <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose}/>
+      <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />
     </>
   );
 };

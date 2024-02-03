@@ -117,48 +117,59 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
 import Icon from 'components/icon';
-import Button from '@mui/material/Button'
-import CardActions from '@mui/material/CardActions'
+import Button from '@mui/material/Button';
+import CardActions from '@mui/material/CardActions';
 import CustomChip from 'components/mui/chip';
+import { Link } from 'react-router-dom';
 
 
 const CourseCard = (props) => {
-  const { sx, image,personName,coursename,students} = props;
+  const { sx, image, personName, coursename, students ,price,chipColor = 'primary' ,chipText} = props;
 
   return (
-    <Grid item xs={12} sm={12} lg={3}>
-      <Card  sx={{ ...sx }}>
-        <CardContent sx={{pb:0}}>
-        <CardMedia sx={{ height: '12.5625rem' }} image={image} />
+    <Grid item xs={12} sm={12} lg={4}>
+      <Card sx={{ ...sx }}>
+        <CardContent sx={{ pb: 0 }}>
+          <CardMedia sx={{ height: '12.5625rem' ,borderRadius:"5px"}} image={image} />
         </CardContent>
         <CardContent>
           <Box>
-          <CustomChip  skin='light' label='Live' rounded color='secondary'  size='small' variant='outlined' />
+            <CustomChip skin="light" label="Live" rounded color="secondary" size="small" variant="outlined" />
           </Box>
-          <Box sx={{ mr: 2, mt:2, display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h3">{coursename}</Typography>
-            <Typography variant="body2" sx={{fontSize:"15px",pt:0.7,fontWeight:"400",opacity:0.9}}>{personName}</Typography>
+          <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
+            <Typography variant="h4">{coursename}</Typography>
+            <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
+              {personName}
+            </Typography>
           </Box>
           <Box
             sx={{
               mt: 2,
               display: 'flex',
+              flexDirection:"row",
+              justifyContent:"space-between",
               alignItems: 'center',
-              '& svg': { color: 'primary.main', mr: 0.5 }
             }}
           >
-            <Icon icon="ic:twotone-person" fontSize={20} />
-            <Typography sx={{ color: 'text.secondary' }}>{students}</Typography>
+            <Grid   sx={{
+              display: 'flex',
+              alignItems: 'center',
+              '& svg': { color: 'primary.main', mr: 0.5 }
+            }}>
+              <Icon icon="ic:twotone-person" fontSize={20} />
+              <Typography sx={{ color: 'text.secondary' }}>{students}</Typography>
+            </Grid>
+            <Grid>
+            <Typography sx={{ color: 'text.secondary' }}>{price}</Typography>
+            </Grid>
           </Box>
         </CardContent>
-        <CardActions className='demo-space-x'  sx={{pt:0}}>
-        <Button variant='contained' >
-        Join Now
-      </Button>
-      <Button variant='outlined' color='secondary' startIcon={<Icon icon='octicon:share-16' />}>
-        Share
-      </Button>
-      </CardActions>
+        <CardActions className="demo-space-x" sx={{ pt: 0 ,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <CustomChip rounded size="medium" skin="light" color={chipColor} label={chipText} />
+          <Button component={Link} to='view ' size='medium' variant="contained" color="primary">
+            View Details
+          </Button>
+        </CardActions>
       </Card>
     </Grid>
   );
