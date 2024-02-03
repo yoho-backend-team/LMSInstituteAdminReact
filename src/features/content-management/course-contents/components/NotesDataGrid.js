@@ -17,29 +17,18 @@ import NotesAddDrawer from './NotesAddDrawer'
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { useDispatch } from 'react-redux';
+import NotesEdit from './NotesEdit';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import NotesView from './NotesView';
 
 const userStatusObj = {
   Active: 'success',
   Inactive: 'error'
 };
 
-const RowOptions = () => {
-  return (
-    <Box sx={{ gap: 1 }}>
-      <IconButton aria-label="capture screenshot" color="primary">
-        <Icon icon="tabler:eye" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="secondary">
-        <Icon icon="tabler:edit" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="error">
-        <Icon icon="mdi:delete-outline" />
-      </IconButton>
-    </Box>
-  );
-};
 
-const StudyMaterial = () => {
+
+const NotesDataGrid = () => {
   // ** State
 
   const studyMaterials = [
@@ -128,11 +117,58 @@ const StudyMaterial = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+// const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
+const [isViewModalOpen, setViewModalOpen] = useState(false);
+const handleViewClose = () => {
+  setViewModalOpen(false);
+};
+const handleView = () => {
+  setViewModalOpen(true);
+};
 
+const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+const handleDeleteGroup = async () => {
+  try {
+    const result = await deleteGroup(selectedDeleteGroupId);
+
+    if (result.success) {
+      toast.success(result.message);
+      dispatch(getAllGroups());
+    } else {
+      toast.error(result.message);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
   // ** Hooks
   const dispatch = useDispatch();
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  const toggleEditUserDrawer = () => {setEditUserOpen(!editUserOpen)
+  console.log("toogle pressed");
+  };
+
+  const RowOptions = () => {
+
+    return (
+      <Box sx={{ gap: 1 }}>
+        <IconButton onClick={() => handleView()}  aria-label="capture screenshot" color="primary">
+          <Icon icon="tabler:eye" />
+        </IconButton>
+        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
+          <Icon icon="tabler:edit" />
+        </IconButton>
+        <IconButton onClick={() => {
+                    // setSelectedDeleteGroupId(item.id);
+                    setDeleteDialogOpen(true);
+                  }} aria-label="capture screenshot" color="error">
+          <Icon icon="mdi:delete-outline" />
+        </IconButton>
+      </Box>
+    );
+  };
 
   const handleFilter = useCallback(
     async (val) => {
@@ -262,8 +298,12 @@ const StudyMaterial = () => {
         onPaginationModelChange={setPaginationModel}
       />
       <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+   <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+   <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+  <NotesView open={isViewModalOpen} handleViewClose={handleViewClose}/>
+    
     </>
   );
 };
 
-export default StudyMaterial;
+export default NotesDataGrid;

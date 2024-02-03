@@ -26,7 +26,6 @@ import toast from 'react-hot-toast';
 
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -51,7 +50,8 @@ const schema = yup.object().shape({
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required()
+    .required(),
+    Videourl:yup.string().required()
 });
 
 const ITEM_HEIGHT = 48;
@@ -83,10 +83,11 @@ const defaultValues = {
   description: '',
   title: '',
   branch: '',
-  course: ''
+  course: '',
+  Videourl: ''
 };
 
-const NotesAddDrawer = (props) => {
+const ModuleEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
 
@@ -151,6 +152,7 @@ const NotesAddDrawer = (props) => {
     bodyFormData.append('c_password', data.confirm_password);
     bodyFormData.append('description', data.description);
     bodyFormData.append('course_id', data.course);
+    bodyFormData.append('Videourl', data.Videourl);
     console.log(bodyFormData);
 
     let config = {
@@ -196,10 +198,10 @@ const NotesAddDrawer = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 380 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Notes</Typography>
+        <Typography variant="h5">Add Module</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -218,10 +220,6 @@ const NotesAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
-          </Grid>
-
           <Grid item xs={12} sm={12}>
             <TextField
               sx={{ mb: 4 }}
@@ -304,6 +302,24 @@ const NotesAddDrawer = (props) => {
             )}
           />
 
+          <Controller
+            name="title"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Video URL"
+                onChange={onChange}
+                placeholder="Video URL"
+                error={Boolean(errors.Videourl)}
+                {...(errors.Videourl && { helperText: errors.Videourl.message })}
+              />
+            )}
+          />
+
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
               Submit
@@ -318,4 +334,4 @@ const NotesAddDrawer = (props) => {
   );
 };
 
-export default NotesAddDrawer;
+export default ModuleEdit;

@@ -17,27 +17,16 @@ import { searchUsers } from 'features/user-management/users/services/userService
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { useDispatch } from 'react-redux';
 import ModuleAddDrawer from './ModuleAddDrawer';
+import ModuleEdit from './ModuleEdit';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import ModuleView from './ModuleView';
 
 const userStatusObj = {
   Active: 'success',
   Inactive: 'error'
 };
 
-const RowOptions = () => {
-  return (
-    <Box sx={{ gap: 1 }}>
-      <IconButton aria-label="capture screenshot" color="primary">
-        <Icon icon="tabler:eye" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="secondary">
-        <Icon icon="tabler:edit" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="error">
-        <Icon icon="mdi:delete-outline" />
-      </IconButton>
-    </Box>
-  );
-};
+
 
 const Module = () => {
   // ** State
@@ -128,7 +117,54 @@ const Module = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  // const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
+  const [isViewModalOpen, setViewModalOpen] = useState(false);
+  const handleViewClose = () => {
+    setViewModalOpen(false);
+  };
+  const handleView = () => {
+    setViewModalOpen(true);
+  };
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const toggleEditUserDrawer = () => {setEditUserOpen(!editUserOpen)
+    console.log("toogle pressed");
+    };
+    const handleDeleteGroup = async () => {
+      try {
+        const result = await deleteGroup(selectedDeleteGroupId);
+  
+        if (result.success) {
+          toast.success(result.message);
+          dispatch(getAllGroups());
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+  const RowOptions = () => {
+    return (
+      <Box sx={{ gap: 1 }}>
+        <IconButton aria-label="capture screenshot" color="primary">
+          <Icon onClick={() => handleView()} icon="tabler:eye" />
+        </IconButton>
+        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
+          <Icon icon="tabler:edit" />
+        </IconButton>
+        <IconButton  onClick={() => {
+                    // setSelectedDeleteGroupId(item.id);
+                    setDeleteDialogOpen(true);
+                  }}  aria-label="capture screenshot" color="error">
+          <Icon icon="mdi:delete-outline" />
+        </IconButton>
+      </Box>
+    );
+  };
   // ** Hooks
   const dispatch = useDispatch();
 
@@ -262,6 +298,9 @@ const Module = () => {
         onPaginationModelChange={setPaginationModel}
       />
       <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+   <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+   <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+  <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose}/>
     </>
   );
 };

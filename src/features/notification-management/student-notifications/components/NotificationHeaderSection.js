@@ -1,20 +1,21 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import UserHeaderCard from 'features/user-management/users/components/UserHeaderCard';
+// import UserHeaderCard from 'features/user-management/users/components/UserHeaderCard';
+import NotificationHeaderCard from './NotificationHeaderCard';
 const NotificationHeaderSection = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Total Users'} stats={0} icon={'tabler:user'} />
+        <NotificationHeaderCard title={'Total Users'} stats={0} icon={'tabler:user'} />
       </Grid>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Total Groups'} stats={0} avatarColor={'error'} icon={'tabler:user-plus'} />
+        <NotificationHeaderCard title={'Total Groups'} stats={0} avatarColor={'error'} icon={'tabler:user-plus'} />
       </Grid>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Active Users'} stats={0} avatarColor={'success'} icon={'tabler:user-check'} />
+        <NotificationHeaderCard title={'Active Users'} stats={0} avatarColor={'success'} icon={'tabler:user-check'} />
       </Grid>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Blocked Users'} stats={0} avatarColor={'warning'} icon={'tabler:user-exclamation'} />
+        <NotificationHeaderCard title={'Blocked Users'} stats={1} avatarColor={'warning'} icon={'tabler:user-exclamation'} />
       </Grid>
     </Grid>
   );

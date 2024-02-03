@@ -86,7 +86,7 @@ const defaultValues = {
   course: ''
 };
 
-const NotesAddDrawer = (props) => {
+const NotesEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
 
@@ -199,7 +199,7 @@ const NotesAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Notes</Typography>
+        <Typography variant="h5">Add Study Material</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -318,4 +318,4 @@ const NotesAddDrawer = (props) => {
   );
 };
 
-export default NotesAddDrawer;
+export default NotesEdit;
