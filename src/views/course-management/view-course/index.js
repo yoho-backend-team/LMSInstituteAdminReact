@@ -1,10 +1,3 @@
-// import * as React from 'react';
-// import Box from '@mui/joy/Box';
-// import Card from '@mui/joy/Card';
-// import CardCover from '@mui/joy/CardCover';
-// import CardContent from '@mui/joy/CardContent';
-// import Typography from '@mui/joy/Typography';
-
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Card, Grid, List, ListItem, TextField, Typography } from '@mui/material';
@@ -134,7 +127,7 @@ const CourseViewPage = () => {
       <Grid container spacing={2} sx={{my:2}} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
         <Grid item xs={12} sm={4}>
           <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-            <MenuItem value="">Active</MenuItem>
+            <MenuItem value="Active">Active</MenuItem>
             <MenuItem value="Deactive">Deactive</MenuItem>
           </TextField>
         </Grid>
