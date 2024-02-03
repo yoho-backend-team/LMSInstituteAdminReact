@@ -34,15 +34,6 @@ const pages = {
           icon: icons.IconCertificate2,
           target: false,
           breadcrumbs: false
-        },
-        {
-          id: 'staff-certificates',
-          title: 'Staff Certificates',
-          type: 'item',
-          url: '/certificate-management/staff-certificates',
-          icon: icons.IconCertificate2,
-          target: false,
-          breadcrumbs: false
         }
       ]
     }
