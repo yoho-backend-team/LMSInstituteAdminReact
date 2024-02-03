@@ -1,20 +1,29 @@
-// material-ui
-import { Typography } from '@mui/material';
+// ** React Imports
+// import { useState } from 'react';
 
-// project imports
-import MainCard from 'components/cards/MainCard';
+// // ** MUI Imports
+// import Tab from '@mui/material/Tab';
+// import TabList from '@mui/lab/TabList';
+// import TabPanel from '@mui/lab/TabPanel';
+// import TabContext from '@mui/lab/TabContext';
+import Card from '@mui/material/Card';
+import StudyMaterial from 'features/content-management/course-contents/components/StudyMaterialDataGrid';
+// import Notes from 'features/content-management/course-contents/components/NotesDataGrid';
+// import CourseModule from 'features/course-management/add-course/components/CourseModule';
+const TabsFullWidth = () => {
+  // ** State
+  // const [value, setValue] = useState('1');
 
-// ==============================|| SAMPLE PAGE ||============================== //
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
 
-const StudentCerificate = () => (
-  <MainCard title="Student Certificates">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+  return (
+    <Card sx={{ minHeight: '100vh', p: 2 }}>
+          <StudyMaterial />
+      
+    </Card>
+  );
+};
 
-export default StudentCerificate;
+export default TabsFullWidth;
