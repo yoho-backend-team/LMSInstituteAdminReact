@@ -61,9 +61,9 @@ const TableHeader = (props) => {
                     <TextField
                       fullWidth
                       value={value}
-                      label="Search Notes"
+                      label="Search Modules"
                       sx={{}}
-                      placeholder="Search Notes"
+                      placeholder="Search Modules"
                       onChange={(e) => handleFilter(e.target.value)}
                     />
                   </Grid>
@@ -71,7 +71,7 @@ const TableHeader = (props) => {
                   <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
                     <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
-                      Add Notes
+                      Add Modules
                     </Button>
                   </Grid>
                 </Grid>
