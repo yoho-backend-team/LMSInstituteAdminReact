@@ -48,15 +48,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
-// ** Vars
-const invoiceStatusObj = {
-  Sent: { color: 'secondary', icon: 'tabler:circle-check' },
-  Paid: { color: 'success', icon: 'tabler:circle-half-2' },
-  Draft: { color: 'primary', icon: 'tabler:device-floppy' },
-  'Partial Payment': { color: 'warning', icon: 'tabler:chart-pie' },
-  'Past Due': { color: 'error', icon: 'tabler:alert-circle' },
-  Downloaded: { color: 'info', icon: 'tabler:arrow-down-circle' }
-};
 
 // ** renders client column
 const renderClient = (row) => {
@@ -75,6 +66,15 @@ const renderClient = (row) => {
   }
 };
 
+const statusObj = {
+  1: { title: 'current', color: 'primary' },
+  2: { title: 'professional', color: 'success' },
+  3: { title: 'rejected', color: 'error' },
+  4: { title: 'resigned', color: 'warning' },
+  5: { title: 'applied', color: 'info' }
+}
+
+
 const defaultColumns = [
   {
     flex: 0.1,
@@ -88,46 +88,19 @@ const defaultColumns = [
     )
   },
   {
-    flex: 0.1,
-    minWidth: 80,
-    field: 'invoiceStatus',
-    renderHeader: () => <Icon icon="tabler:trending-up" />,
-    renderCell: ({ row }) => {
-      const { dueDate, balance, invoiceStatus } = row;
-      const color = invoiceStatusObj[invoiceStatus] ? invoiceStatusObj[invoiceStatus].color : 'primary';
-
-      return (
-        <Tooltip
-          title={
-            <div>
-              <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-                {invoiceStatus}
-              </Typography>
-              <br />
-              <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-                Balance:
-              </Typography>{' '}
-              {balance}
-              <br />
-              <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-                Due Date:
-              </Typography>{' '}
-              {dueDate}
-            </div>
-          }
-        >
-          <Avatar skin="light" color={color} sx={{ width: '1.875rem', height: '1.875rem' }}>
-            <Icon icon={invoiceStatusObj[invoiceStatus]} />
-          </Avatar>
-        </Tooltip>
-      );
-    }
+    flex: 1.25,
+    minWidth: 180,
+    field: 'transactionId',
+    headerName: 'Transaction ID',
+    renderCell: ({ row }) => (
+      <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
+    )
   },
   {
-    flex: 0.25,
-    minWidth: 320,
+    flex: 1.25,
+    minWidth: 210,
     field: 'name',
-    headerName: 'Client',
+    headerName: 'Students',
     renderCell: ({ row }) => {
       const { name, companyEmail } = row;
 
@@ -147,32 +120,60 @@ const defaultColumns = [
     }
   },
   {
-    flex: 0.1,
-    minWidth: 100,
+    flex: 1.25,
+    minWidth: 180,
     field: 'total',
-    headerName: 'Total',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
+    headerName: 'Salary Amount',
+    renderCell: ({ row }) => (
+      <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
+    )
   },
   {
-    flex: 0.15,
-    minWidth: 140,
-    field: 'issuedDate',
-    headerName: 'Issued Date',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
+    flex: 1.25,
+    minWidth: 180,
+    field: 'PaymentDate',
+    headerName: 'Payment Date',
+    renderCell: ({ row }) => (
+      <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
+    )
   },
   {
-    flex: 0.1,
-    minWidth: 100,
+    flex: 1,
+    minWidth: 180,
     field: 'balance',
     headerName: 'Balance',
-    renderCell: ({ row }) =>
+    renderCell: ({ row }) => (
       row.balance !== 0 ? (
         <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
       ) : (
         <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
       )
-  }
+    )
+  },
+  {
+    flex: 1.25,
+    minWidth: 180,
+    field: 'status',
+    headerName: 'Status',
+    renderCell: ({ row }) => {
+      const status = statusObj[row.status];
+
+      return (
+        <CustomChip
+          rounded
+          size='small'
+          skin='light'
+          color={status ? status.color : 'primary'}
+          label={status ? status.title : 'current'}
+          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+        />
+      );
+    }
+  },
 ];
+
+
+
 
 /* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
@@ -259,63 +260,73 @@ const SalaryTable = () => {
     }
   ];
 
-  const store = [
+
+   const store = [
     {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
+        id: 1,
+        invoiceStatus: 'Sent',
+        name: 'John Doe',
+        companyEmail: 'john.doe@example.com',
+        total: 100,
+        PaymentDate: '2025-01-01',
+        balance: 55,
+        avatar: '',
+        avatarColor: 'primary',
+        transactionid:'5',
+      },
     {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
+        id: 2,
+        invoiceStatus: 'Sent',
+        name: 'John Doe',
+        companyEmail: 'arunbalaji.com',
+        total: 200,
+        PaymentDate: '2000-01-01',
+        balance: 50,
+        avatar: '',
+        avatarColor: 'primary',
+        transactionid:'12'
+      },
     {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
+        id: 3,
+        invoiceStatus: 'Sent',
+        name: 'John Doe',
+        companyEmail: 'john.doe@example.com',
+        total: 300,
+        PaymentDate: '25-01-01',
+        balance: 40,
+        avatar: '',
+        avatarColor: 'primary',
+        transactionid:'5'
+      },
     {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
+        id: 4,
+        invoiceStatus: 'Sent',
+        name: 'John Doe',
+        companyEmail: 'john.doe@example.com',
+        total: 40,
+        PaymentDate: '202-01-01',
+        balance: 30,
+        avatar: '',
+        avatarColor: 'primary',
+        transactionid:'25'
+      },
     {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
+        id: 5,
+        invoiceStatus: 'Sent',
+        name: 'John Doe',
+        companyEmail: 'john.doe@example.com',
+        total: 50,
+        PaymentDate: '20-01-01',
+        balance: 0,
+        avatar: '',
+        avatarColor: 'primary',
+        transactionid:'55'
+      },
+
+
+
+      ];
+  
 
   return (
     <DatePickerWrapper>
@@ -364,7 +375,7 @@ const SalaryTable = () => {
         <Grid item xs={12}>
           <Card>
             <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} />
-            <DataGrid
+             <DataGrid
               autoHeight
               pagination
               rowHeight={62}

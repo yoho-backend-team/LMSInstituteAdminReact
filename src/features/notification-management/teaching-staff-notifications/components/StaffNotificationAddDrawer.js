@@ -8,7 +8,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-// import axios from 'axios';
+import axios from 'axios';
 
 // ** Custom Component Import
 
@@ -39,7 +39,7 @@ const schema = yup.object().shape({
   branch: yup.array().required('Branch is required').min(1, 'Select at least one branch'),
   course: yup.array().required('Course is required').min(1, 'Select at least one course'),
   batch: yup.array().required('Batch is required').min(1, 'Select at least one batch'),
-  students: yup.array().required('Students is required').min(1, 'Select at least one student'),
+  staffs: yup.array().required('Students is required').min(1, 'Select at least one student'),
   title: yup.string().required('Title is required'),
   body: yup.string().required('Body is required')
 });
@@ -69,58 +69,9 @@ const names = [
   'Kelly Snyder'
 ];
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: 'Goodfellas', year: 1990 },
-  { title: 'The Matrix', year: 1999 },
-  { title: 'Seven Samurai', year: 1954 },
-  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-  { title: 'City of God', year: 2002 },
-  { title: 'Se7en', year: 1995 },
-  { title: 'The Silence of the Lambs', year: 1991 },
-  { title: 'Gladiator', year: 2000 },
-  { title: 'Memento', year: 2000 },
-  { title: 'The Prestige', year: 2006 },
-  { title: 'The Lion King', year: 1994 },
-  { title: 'Apocalypse Now', year: 1979 },
-  { title: 'Django Unchained', year: 2012 },
-  { title: 'The Shining', year: 1980 },
-  { title: 'WALL·E', year: 2008 },
-  { title: 'American Beauty', year: 1999 },
-  { title: 'The Dark Knight Rises', year: 2012 },
-  { title: 'Princess Mononoke', year: 1997 },
-  { title: 'Aliens', year: 1986 },
-  { title: 'Oldboy', year: 2003 },
-  { title: 'Once Upon a Time in America', year: 1984 },
-  { title: 'Witness for the Prosecution', year: 1957 },
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
 
-const batch = [
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
 
-const students = [
+const staffs = [
   { title: 'Das Boot', year: 1981 },
   { title: 'Citizen Kane', year: 1941 },
   { title: 'North by Northwest', year: 1959 },
@@ -139,7 +90,7 @@ const defaultValues = {
   contact: Number('')
 };
 
-const NotificationAddDrawer = (props) => {
+const StaffNotificationAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
 
@@ -156,38 +107,36 @@ const NotificationAddDrawer = (props) => {
   };
 
   useEffect(() => {
-    // getAllGroups(); // Commented out the axios fetch for demonstration purposes
+    getAllGroups();
   }, []);
 
-  // Commented out axios fetch for demonstration purposes
-  // const getAllGroups = async () => {
-  //   let config = {
-  //     method: 'get',
-  //     maxBodyLength: Infinity,
-  //     url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${localStorage.getItem('token')}`
-  //     }
-  //   };
+  const getAllGroups = async () => {
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    };
 
-  //   await axios
-  //     .request(config)
-  //     .then((response) => {
-  //       console.log('Groups : ', response.data);
-  //       setGroups(response.data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+    await axios
+      .request(config)
+      .then((response) => {
+        console.log('Groups : ', response.data);
+        setGroups(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const {
     handleSubmit,
     control,
     setValue,
-    formState: { errors },
-    reset
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -316,33 +265,23 @@ const NotificationAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Controller
-              name="course"
-              control={control}
-              render={({ field }) => (
-                <CustomAutocomplete
-                  {...field}
-                  sx={{ mb: 2 }}
-                  multiple
-                  limitTags={2}
-                  options={top100Films}
-                  id="autocomplete-limit-tags-course"
-                  getOptionLabel={(option) => (option && option.title) || ''}
-                  error={Boolean(errors.course)}
-                  helperText={errors.course?.message}
-                  defaultValue={top100Films.filter((film) => [13, 12, 11].includes(film.year))}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Course"
-                      placeholder="Favorites"
-                      error={Boolean(errors.course)}
-                      helperText={errors.course?.message}
-                    />
-                  )}
-                />
-              )}
-            />
+            <TextField
+              sx={{ mb: 2 }}
+              fullWidth
+              select
+              defaultValue=""
+              label="Type"
+              id="custom-select"
+              error={Boolean(errors.title)}
+              helperText={errors.title?.message}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </TextField>
           </Grid>
 
           <Grid item xs={12} sm={12}>
@@ -350,38 +289,17 @@ const NotificationAddDrawer = (props) => {
               sx={{ mb: 2 }}
               multiple
               limitTags={2}
-              options={batch}
-              id="autocomplete-limit-tags-batch"
-              getOptionLabel={(option) => (option && option.title) || ''}
-              defaultValue={batch.slice(0, 3)} // Adjust this based on your requirements
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Batch"
-                  placeholder="Favorites"
-                  error={Boolean(errors.batch)}
-                  helperText={errors.batch?.message}
-                />
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={12}>
-            <CustomAutocomplete
-              sx={{ mb: 2 }}
-              multiple
-              limitTags={2}
-              options={students}
+              options={staffs}
               id="autocomplete-limit-tags-students"
               getOptionLabel={(option) => (option && option.title) || ''}
-              defaultValue={students.slice(0, 3)} // Adjust this based on your requirements
+              defaultValue={staffs.slice(0, 3)} // Adjust this based on your requirements
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Students"
+                  label="staffs"
                   placeholder="Favorites"
-                  error={Boolean(errors.students)}
-                  helperText={errors.students?.message}
+                  error={Boolean(errors.staffs)}
+                  helperText={errors.staffs?.message}
                 />
               )}
             />
@@ -440,4 +358,4 @@ const NotificationAddDrawer = (props) => {
   );
 };
 
-export default NotificationAddDrawer;
+export default StaffNotificationAddDrawer;

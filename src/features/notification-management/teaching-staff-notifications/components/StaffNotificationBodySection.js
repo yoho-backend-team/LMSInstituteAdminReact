@@ -14,8 +14,9 @@ import { Link } from 'react-router-dom';
 
 // ** Custom Components Imports
 
-import NotificationTableHeader from './NotificationTableHeader';
-import NotificationAddDrawer from './NotificationAddDrawer';
+
+import StaffNotificationAddDrawer from './StaffNotificationAddDrawer';
+import StaffNotificationTableHeader from './StaffNotificationTableHeader';
 import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
@@ -51,7 +52,7 @@ const RowOptions = ({ id }) => {
   );
 };
 
-const NotificationBodySection = () => {
+const StaffNotificationBodySection = () => {
   // ** State
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -184,69 +185,66 @@ const NotificationBodySection = () => {
 
   const notification = [
     {
-        id: 1,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 100,
-        issuedDate: '2025-01-01',
-        balance: 55,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 1,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 100,
+      issuedDate: '2025-01-01',
+      balance: 55,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 2,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'arunbalaji.com',
-        total: 200,
-        issuedDate: '2000-01-01',
-        balance: 50,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 2,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'arunbalaji.com',
+      total: 200,
+      issuedDate: '2000-01-01',
+      balance: 50,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 3,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 300,
-        issuedDate: '25-01-01',
-        balance: 40,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 3,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 300,
+      issuedDate: '25-01-01',
+      balance: 40,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 4,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 40,
-        issuedDate: '202-01-01',
-        balance: 30,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 4,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 40,
+      issuedDate: '202-01-01',
+      balance: 30,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 5,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 50,
-        issuedDate: '20-01-01',
-        balance: 0,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 5,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 50,
+      issuedDate: '20-01-01',
+      balance: 0,
+      avatar: '',
+      avatarColor: 'primary'
+    }
+  ];
 
-
-
-      ];
-  
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-      <NotificationTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+      <StaffNotificationTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
       <DataGrid
         sx={{ p: 2 }}
         autoHeight
@@ -258,9 +256,9 @@ const NotificationBodySection = () => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <StaffNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </Card>
   );
 };
 
-export default NotificationBodySection;
+export default StaffNotificationBodySection;
