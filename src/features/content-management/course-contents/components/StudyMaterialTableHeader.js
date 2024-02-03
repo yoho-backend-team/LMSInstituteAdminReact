@@ -74,7 +74,7 @@ const TableHeader = (props) => {
                     <TextField
                       fullWidth
                       value={value}
-                      label="Search"
+                      label="Search Study Materials"
                       sx={{}}
                       placeholder="Search Study Materials"
                       onChange={(e) => handleFilter(e.target.value)}

@@ -32,7 +32,7 @@ const TabsFullWidth = () => {
         <TabPanel value="2" sx={{ p: 0 }}>
           <Notes />
         </TabPanel>
-        <TabPanel value="3">
+        <TabPanel value="3" sx={{ p: 0 }}>
           <Module />
         </TabPanel>
       </TabContext>
