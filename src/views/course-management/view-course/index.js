@@ -5,18 +5,32 @@
 // import CardContent from '@mui/joy/CardContent';
 // import Typography from '@mui/joy/Typography';
 
-import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, Typography, Grid, List, ListItem } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, Grid, List, ListItem, TextField, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Icon from 'components/icon';
+import CourseEditModal from 'features/course-management/courses/components/CourseEditModal';
+import { useState } from 'react';
 
 const CourseViewPage = () => {
   const [expanded, setExpanded] = useState(null);
+  const [statusValue, setStatusValue] = useState('');
 
+  const handleStatusValue = (e) => {
+    setStatusValue(e.target.value);
+  };
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const handleEditClose = () => {
+    setEditModalOpen(false);
+  };
+  const handleEdit = () => {
+    setEditModalOpen(true);
+  };
   const accordionData = [
     {
       id: 'panel1',
@@ -60,6 +74,7 @@ const CourseViewPage = () => {
         aria-controls={`customized-panel-content-${accordion.id}`}
       >
         <Typography variant="h3">{accordion.title}</Typography>
+
         {/* previewbox */}
         {expanded !== accordion.id && (
           <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', mr: 2 }}>
@@ -116,9 +131,25 @@ const CourseViewPage = () => {
           </video>
         </Card>
       </Box>
+      <Grid container spacing={2} sx={{my:2}} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
+        <Grid item xs={12} sm={4}>
+          <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
+            <MenuItem value="">Active</MenuItem>
+            <MenuItem value="Deactive">Deactive</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
+            <Button size='large' onClick={() => handleEdit()} variant="contained" color="primary" startIcon={<Icon icon="mdi:pencil" />}>
+               Edit
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
       <Grid spacing={2} sx={{ mt: 2 }}>
         {accordionData.map(createAccordion)}
       </Grid>
+      <CourseEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
     </div>
   );
 };
