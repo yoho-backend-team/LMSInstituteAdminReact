@@ -50,7 +50,8 @@ const schema = yup.object().shape({
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required()
+    .required(),
+    Videourl:yup.string().required()
 });
 
 const ITEM_HEIGHT = 48;
@@ -82,7 +83,8 @@ const defaultValues = {
   description: '',
   title: '',
   branch: '',
-  course: ''
+  course: '',
+  Videourl: ''
 };
 
 const ModuleAddDrawer = (props) => {
@@ -150,6 +152,7 @@ const ModuleAddDrawer = (props) => {
     bodyFormData.append('c_password', data.confirm_password);
     bodyFormData.append('description', data.description);
     bodyFormData.append('course_id', data.course);
+    bodyFormData.append('Videourl', data.Videourl);
     console.log(bodyFormData);
 
     let config = {
@@ -195,7 +198,7 @@ const ModuleAddDrawer = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 350 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 380 } } }}
     >
       <Header>
         <Typography variant="h5">Add Module</Typography>
@@ -295,6 +298,24 @@ const ModuleAddDrawer = (props) => {
                 placeholder="Business Development Executive"
                 error={Boolean(errors.description)}
                 {...(errors.description && { helperText: errors.description.message })}
+              />
+            )}
+          />
+
+          <Controller
+            name="title"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Video URL"
+                onChange={onChange}
+                placeholder="Video URL"
+                error={Boolean(errors.Videourl)}
+                {...(errors.Videourl && { helperText: errors.Videourl.message })}
               />
             )}
           />

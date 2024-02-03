@@ -1,43 +1,26 @@
 // ** React Imports
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 // import CardHeader from '@mui/material/CardHeader';
-import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
-import TableHeader from './ModuleTableHeader';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import MenuItem from '@mui/material/MenuItem';
+import CustomTextField from 'components/mui/text-field';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
+import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import ModuleAddDrawer from './ModuleAddDrawer';
-
-const userStatusObj = {
-  Active: 'success',
-  Inactive: 'error'
-};
-
-const RowOptions = () => {
-  return (
-    <Box sx={{ gap: 1 }}>
-      <IconButton aria-label="capture screenshot" color="primary">
-        <Icon icon="tabler:eye" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="secondary">
-        <Icon icon="tabler:edit" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="error">
-        <Icon icon="mdi:delete-outline" />
-      </IconButton>
-    </Box>
-  );
-};
+import ModuleEdit from './ModuleEdit';
+import TableHeader from './ModuleTableHeader';
+import ModuleView from './ModuleView';
 
 const Module = () => {
   // ** State
@@ -128,7 +111,59 @@ const Module = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  // const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
+  const [isViewModalOpen, setViewModalOpen] = useState(false);
+  const handleViewClose = () => {
+    setViewModalOpen(false);
+  };
+  const handleView = () => {
+    setViewModalOpen(true);
+  };
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('toogle pressed');
+  };
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteGroupId);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const RowOptions = () => {
+    return (
+      <Box sx={{ gap: 1 }}>
+        <IconButton aria-label="capture screenshot" color="primary">
+          <Icon onClick={() => handleView()} icon="tabler:eye" />
+        </IconButton>
+        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
+          <Icon icon="tabler:edit" />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            // setSelectedDeleteGroupId(item.id);
+            setDeleteDialogOpen(true);
+          }}
+          aria-label="capture screenshot"
+          color="error"
+        >
+          <Icon icon="mdi:delete-outline" />
+        </IconButton>
+      </Box>
+    );
+  };
   // ** Hooks
   const dispatch = useDispatch();
 
@@ -220,7 +255,6 @@ const Module = () => {
         );
       }
     },
-
     {
       flex: 1,
       // minWidth: 110,
@@ -228,14 +262,12 @@ const Module = () => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <CustomChip
-            rounded
-            skin="light"
-            size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
-            sx={{ textTransform: 'capitalize' }}
-          />
+          <div>
+            <CustomTextField select defaultValue={row.status} onChange={(e) => handleStatusChange(e, row.id)}>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+            </CustomTextField>
+          </div>
         );
       }
     },
@@ -262,6 +294,9 @@ const Module = () => {
         onPaginationModelChange={setPaginationModel}
       />
       <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />
     </>
   );
 };

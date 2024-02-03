@@ -1,46 +1,96 @@
 // ** React Imports
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 // import CardHeader from '@mui/material/CardHeader';
-import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
+import MenuItem from '@mui/material/MenuItem';
 import StudyMaterialHeader from 'features/content-management/course-contents/components/StudyMaterialTableHeader';
-import StudyMaterialAddDrawer from './StudyMaterialAddDrawer';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
+import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
+import StudyMaterialAddDrawer from './StudyMaterialAddDrawer';
+import StudyMaterialEdit from './StudyMaterialEdit';
+import StudyMaterialView from './StudyMaterialView';
+import CustomTextField from 'components/mui/text-field';
 
-const userStatusObj = {
-  Active: 'success',
-  Inactive: 'error'
-};
 
-const RowOptions = () => {
-  return (
-    <Box sx={{ gap: 1 }}>
-      <IconButton aria-label="capture screenshot" color="primary">
-        <Icon icon="tabler:eye" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="secondary">
-        <Icon icon="tabler:edit" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="error">
-        <Icon icon="mdi:delete-outline" />
-      </IconButton>
-    </Box>
-  );
-};
+// const userStatusObj = {
+//   Active: 'success',
+//   Inactive: 'error'
+// };
 
 const StudyMaterial = () => {
-  // ** State
+  const [value, setValue] = useState('');
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const [isViewModalOpen, setViewModalOpen] = useState(false);
+
+
+  // const handleChange = event => {
+  //   setValue(event.target.value)
+  // }
+
+  const handleViewClose = () => {
+    setViewModalOpen(false);
+  };
+  const handleView = () => {
+    setViewModalOpen(true);
+  };
+
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteGroupId);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('Toggle drawer');
+  };
+
+  const RowOptions = () => {
+    return (
+      <Box sx={{ gap: 1 }}>
+        <IconButton onClick={() => handleView()} aria-label="capture screenshot" color="primary">
+          <Icon icon="tabler:eye" />
+        </IconButton>
+        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
+          <Icon icon="tabler:edit" />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            // setSelectedDeleteGroupId(item.id);
+            setDeleteDialogOpen(true);
+          }}
+          aria-label="capture screenshot"
+          color="error"
+        >
+          <Icon icon="mdi:delete-outline" />
+        </IconButton>
+      </Box>
+    );
+  };
 
   const studyMaterials = [
     {
@@ -125,14 +175,8 @@ const StudyMaterial = () => {
     }
   ];
 
-  const [value, setValue] = useState('');
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-  const [addUserOpen, setAddUserOpen] = useState(false);
-
   // ** Hooks
   const dispatch = useDispatch();
-
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleFilter = useCallback(
     async (val) => {
@@ -226,16 +270,18 @@ const StudyMaterial = () => {
       // minWidth: 110,
       field: 'status',
       headerName: 'Status',
-      renderCell: ({ row }) => {
+      renderCell: ({row}) => {
         return (
-          <CustomChip
-            rounded
-            skin="light"
-            size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
-            sx={{ textTransform: 'capitalize' }}
-          />
+          <div>
+          <CustomTextField
+      select
+      defaultValue={row.status}
+      onChange={(e) => handleStatusChange(e, row.id)}
+        >
+         <MenuItem value='Active'>Active</MenuItem>
+          <MenuItem value='Inactive'>Inactive</MenuItem>
+        </CustomTextField>
+        </div>
         );
       }
     },
@@ -262,6 +308,9 @@ const StudyMaterial = () => {
         onPaginationModelChange={setPaginationModel}
       />
       <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
     </>
   );
 };

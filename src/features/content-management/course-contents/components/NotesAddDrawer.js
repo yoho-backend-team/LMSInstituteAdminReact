@@ -86,7 +86,7 @@ const defaultValues = {
   course: ''
 };
 
-const StudyMaterialAddDrawer = (props) => {
+const NotesAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
 
@@ -318,4 +318,4 @@ const StudyMaterialAddDrawer = (props) => {
   );
 };
 
-export default StudyMaterialAddDrawer;
+export default NotesAddDrawer;
