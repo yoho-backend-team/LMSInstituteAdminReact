@@ -86,10 +86,12 @@ const defaultValues = {
   course: ''
 };
 
-const NotesAddDrawer = (props) => {
+const ModuleEdit = (props) => {
+    
   // ** Props
   const { open, toggle } = props;
-
+  console.log("StudyMaterialEdit - open:", props.open);
+  console.log("StudyMaterialEdit - toggle:", props.toggle);
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
 
@@ -199,7 +201,7 @@ const NotesAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Notes</Typography>
+        <Typography variant="h5">Add Study Material</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -318,4 +320,4 @@ const NotesAddDrawer = (props) => {
   );
 };
 
-export default NotesAddDrawer;
+export default ModuleEdit;
