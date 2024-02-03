@@ -6,9 +6,6 @@ import Grid from '@mui/material/Grid';
 import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 
 // ** Components Imports
-
-// import UserHeaderSection from 'features/user-management/users/components/UserHeaderSection';
-// import UserBodySection from 'features/user-management/users/components/UserBodySection';
 import NotificationHeaderSection from 'features/notification-management/student-notifications/components/NotificationHeaderSection';
 import NotificationBodySection from 'features/notification-management/student-notifications/components/NotificationBodySection';
 
