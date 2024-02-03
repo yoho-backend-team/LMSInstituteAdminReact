@@ -126,9 +126,11 @@ const CourseCard = (props) => {
   const { sx, image,personName,coursename,students} = props;
 
   return (
-    <Grid item xs={12} sm={12} lg={4}>
+    <Grid item xs={12} sm={12} lg={3}>
       <Card  sx={{ ...sx }}>
-        <CardMedia sx={{ height: '10.5625rem' }} image={image} />
+        <CardContent sx={{pb:0}}>
+        <CardMedia sx={{ height: '12.5625rem' }} image={image} />
+        </CardContent>
         <CardContent>
           <Box>
           <CustomChip  skin='light' label='Live' rounded color='secondary'  size='small' variant='outlined' />
