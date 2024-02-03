@@ -24,8 +24,8 @@ const CourseViewPage = () => {
       content: [
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged',
         'Cupcake sesame snaps sweet tart dessert biscuit.',
-        'Topping soufflé tart sweet croissant.',
-      ],
+        'Topping soufflé tart sweet croissant.'
+      ]
     },
     {
       id: 'panel2',
@@ -33,8 +33,8 @@ const CourseViewPage = () => {
       content: [
         'Sugar plum sesame snaps caramels.',
         'Cake pie tart fruitcake sesame snaps donut cupcake macaroon.',
-        'Gingerbread pudding cheesecake pie ice cream.',
-      ],
+        'Gingerbread pudding cheesecake pie ice cream.'
+      ]
     },
     {
       id: 'panel3',
@@ -42,9 +42,9 @@ const CourseViewPage = () => {
       content: [
         'Gingerbread lemon drops bear claw gummi bears bonbon wafer jujubes tiramisu.',
         'Jelly pie cake.',
-        'Sweet roll dessert sweet pastry powder.',
-      ],
-    },
+        'Sweet roll dessert sweet pastry powder.'
+      ]
+    }
   ];
 
   const createAccordion = (accordion) => (
@@ -52,7 +52,7 @@ const CourseViewPage = () => {
       key={accordion.id}
       expanded={expanded === accordion.id}
       onChange={handleChange(accordion.id)}
-      sx={{ padding: 0, margin: "5px" }}
+      sx={{ padding: 0, margin: '5px' }}
     >
       <AccordionSummary
         id={`customized-panel-header-${accordion.id}`}
@@ -60,12 +60,15 @@ const CourseViewPage = () => {
         aria-controls={`customized-panel-content-${accordion.id}`}
       >
         <Typography variant="h3">{accordion.title}</Typography>
-        <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', mr: 2 }}>
-          <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
-          <Typography variant="h4" color="primary" sx={{ ml: 1 }}>
-            Preview
-          </Typography>
-        </Box>
+        {/* previewbox */}
+        {expanded !== accordion.id && (
+          <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', mr: 2 }}>
+            <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
+            <Typography variant="h4" color="primary" sx={{ ml: 1 }}>
+              Preview
+            </Typography>
+          </Box>
+        )}
       </AccordionSummary>
       <AccordionDetails>
         <Grid container spacing={2}>
@@ -113,7 +116,7 @@ const CourseViewPage = () => {
           </video>
         </Card>
       </Box>
-      <Grid  spacing={2} sx={{ mt: 2 }}>
+      <Grid spacing={2} sx={{ mt: 2 }}>
         {accordionData.map(createAccordion)}
       </Grid>
     </div>
