@@ -1,263 +1,120 @@
-import React from 'react';
-import Image from 'components/image';
-import { Grid, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import { Stack } from '@mui/system';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import UserProfile from 'features/course-management/courses/components/user-profile/UserProfile';
+// import * as React from 'react';
+// import Box from '@mui/joy/Box';
+// import Card from '@mui/joy/Card';
+// import CardCover from '@mui/joy/CardCover';
+// import CardContent from '@mui/joy/CardContent';
+// import Typography from '@mui/joy/Typography';
+
+import React, { useState } from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, Typography, Grid, List, ListItem } from '@mui/material';
 
 const CourseViewPage = () => {
+  const [expanded, setExpanded] = useState(null);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const accordionData = [
+    {
+      id: 'panel1',
+      title: 'Accordion 1',
+      content: [
+        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged',
+        'Cupcake sesame snaps sweet tart dessert biscuit.',
+        'Topping soufflé tart sweet croissant.',
+      ],
+    },
+    {
+      id: 'panel2',
+      title: 'Accordion 2',
+      content: [
+        'Sugar plum sesame snaps caramels.',
+        'Cake pie tart fruitcake sesame snaps donut cupcake macaroon.',
+        'Gingerbread pudding cheesecake pie ice cream.',
+      ],
+    },
+    {
+      id: 'panel3',
+      title: 'Accordion 3',
+      content: [
+        'Gingerbread lemon drops bear claw gummi bears bonbon wafer jujubes tiramisu.',
+        'Jelly pie cake.',
+        'Sweet roll dessert sweet pastry powder.',
+      ],
+    },
+  ];
+
+  const createAccordion = (accordion) => (
+    <Accordion
+      key={accordion.id}
+      expanded={expanded === accordion.id}
+      onChange={handleChange(accordion.id)}
+      sx={{ padding: 0, margin: "5px" }}
+    >
+      <AccordionSummary
+        id={`customized-panel-header-${accordion.id}`}
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls={`customized-panel-content-${accordion.id}`}
+      >
+        <Typography variant="h3">{accordion.title}</Typography>
+        <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', mr: 2 }}>
+          <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
+          <Typography variant="h4" color="primary" sx={{ ml: 1 }}>
+            Preview
+          </Typography>
+        </Box>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={10}>
+            <List>
+              {accordion.content.map((item, index) => (
+                <ListItem key={index}>
+                  <Typography variant="subtitle2" sx={{ fontSize: '16px' }}>
+                    {item}
+                  </Typography>
+                </ListItem>
+              ))}
+            </List>
+          </Grid>
+          <Grid item xs={12} md={2}>
+            <Grid container direction="column" alignItems="center">
+              <Grid item>
+                <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
+              </Grid>
+              <Grid item>
+                <Typography variant="h4" color="primary">
+                  Preview
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
+  );
+
   return (
     <div>
-      <Grid container padding={2}>
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{
-            position: 'relative',
-            p: 2
-          }}
-        >
-          <Typography variant="h1" style={{ fontSize: '43px', marginTop: '10px' }}>
-            Professional Certificate Course In AI And Machine Learning
-          </Typography>
-          <Typography style={{ fontSize: '20px', marginTop: '20px' }}>
-            This machine learning course will equip you with highly coveted skills in ML, deep learning, NLP, generative AI, prompt
-            engineering, ChatGPT, and much more. Through live classes by industry experts, masterclasses from IIT Kanpur faculty, and
-            hands-on projects, you will stay ahead in the field of AI.
-          </Typography>
-          <Stack spacing={2} direction="row" sx={{ mt: 5 }}>
-            <Button variant="contained" size="large">
-              Apply Now
-            </Button>
-            <Button variant="outlined" size="large">
-              Download Syllabus
-            </Button>
-          </Stack>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{
-            position: 'relative',
-            display: { xs: 'none', md: 'block' }
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(87.1deg, #7A3029 2.57%, #402B2A 71.55%)',
-              clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 20%)'
-            }}
-          ></div>
-          <Image
-            src="https://www.simplilearn.com/ice9/banners/IITkanpurblockhain.jpg"
-            alt="Insititue image"
-            style={{ objectFit: 'cover', width: '100%', height: '100%', padding: '40px', position: 'relative' }}
-          />
-        </Grid>
-      </Grid>
-      <Grid container paddingLeft={2} paddingRight={2}>
-        <Card sx={{ width: '100%', display: 'flex', padding: '25px' }}>
-          <Grid container>
-            <Grid item xs={12} md={4} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'}>
-              <Typography variant="subtitle1" style={{ fontSize: '16px' }}>
-                Next Cohort starts
-              </Typography>
-              <Typography variant="h3" pt={1}>
-                2 Feb, 2024
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'}>
-              <Typography variant="subtitle1" style={{ fontSize: '16px' }}>
-                Program Duration
-              </Typography>
-              <Typography variant="h3" pt={1}>
-                11 Months
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4} display="flex" justifyContent="center" alignItems="center" flexDirection={'column'}>
-              <Typography variant="subtitle1" style={{ fontSize: '16px' }}>
-                Learning Format
-              </Typography>
-              <Typography variant="h3" pt={1}>
-                Online Bootcamp
-              </Typography>
-            </Grid>
-          </Grid>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Card sx={{ minWidth: 200, flexGrow: 1 }}>
+          <video
+            controls
+            autoPlay
+            loop
+            muted
+            poster="https://assets.codepen.io/6093409/river.jpg"
+            style={{ width: '100%', aspectRatio: '10 / 4' }}
+          >
+            <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
+          </video>
         </Card>
-      </Grid>
-      <Grid container padding={2} marginTop={5}>
-        <Grid>
-          <Typography variant="h2">World’s #1 Online Bootcamp</Typography>
-        </Grid>
-
-        <Grid container marginTop={2}>
-          <Grid item xs={12} md={4} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-            <Typography variant="h2" pt={1}>
-              4.5
-            </Typography>
-            <Image
-              style={{ objectFit: 'cover', width: '150px', paddingLeft: '15px' }}
-              src="https://www.simplilearn.com/ice9/assets/pg-page/switchup.png"
-            />
-          </Grid>
-          <Grid item xs={12} md={4} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-            <Typography variant="h2" pt={1}>
-              4.3
-            </Typography>
-            <Image
-              style={{ objectFit: 'cover', width: '150px', paddingLeft: '15px' }}
-              src="https://www.simplilearn.com/ice9/assets/pg-page/course-report.png"
-            />
-          </Grid>
-          <Grid item xs={12} md={4} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-            <Typography variant="h2" pt={1}>
-              4.1
-            </Typography>
-            <Image
-              style={{ objectFit: 'cover', width: '150px', paddingLeft: '15px' }}
-              src="https://upload.wikimedia.org/wikipedia/commons/9/96/Zoho-logo.png?20190620054740"
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid container padding={2} marginTop={3}>
-        <Grid>
-          <Typography variant="h2">Why Join this Program</Typography>
-        </Grid>
-        <Grid container marginTop={3} spacing={2}>
-          <Grid item md={3}>
-            <Card style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardContent style={{ padding: '0px', display: 'flex', flexGrow: 1 }}>
-                <Typography style={{ backgroundColor: '#974EC3', width: '10px', height: '30px', marginTop: '20px' }}></Typography>
-                <CardContent style={{ borderBottom: '5px solid #974EC3', flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h3" component="div">
-                    IIT Kanpur’s Advantage
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Live classes by industry experts along with Masterclasses by distinguished IIT-Kanpur faculty
-                  </Typography>
-                </CardContent>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item md={3}>
-            <Card style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardContent style={{ padding: '0px', display: 'flex', flexGrow: 1 }}>
-                <Typography style={{ backgroundColor: '#974EC3', width: '10px', height: '30px', marginTop: '20px' }}></Typography>
-                <CardContent style={{ borderBottom: '5px solid #974EC3', flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h3" component="div">
-                    Exposure to Latest AI Trends
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Live online classes for generative AI, prompt engineering, explainable AI, ChatGPT, and much more
-                  </Typography>
-                </CardContent>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item md={3}>
-            <Card style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardContent style={{ padding: '0px', display: 'flex', flexGrow: 1 }}>
-                <Typography style={{ backgroundColor: '#974EC3', width: '10px', height: '30px', marginTop: '20px' }}></Typography>
-                <CardContent style={{ borderBottom: '5px solid #974EC3', flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h3" component="div">
-                    Hands-on Experience
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Gain experience through 25+ hands-on projects and 20+ tools with seamless access to integrated labs
-                  </Typography>
-                </CardContent>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item md={3}>
-            <Card style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardContent style={{ padding: '0px', display: 'flex', flexGrow: 1 }}>
-                <Typography style={{ backgroundColor: '#974EC3', width: '10px', height: '30px', marginTop: '20px' }}></Typography>
-                <CardContent style={{ borderBottom: '5px solid #974EC3', flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h3" component="div">
-                    Simplilearn Career Assistance
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Resume-building and profile-highlighting assistance with valuable insights from industry experts
-                  </Typography>
-                </CardContent>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Grid container padding={2} marginTop={3}>
-        <Grid>
-          <Typography variant="h2">Fast-track Your Career</Typography>
-        </Grid>
-        <Grid container marginTop={2}>
-          <Typography variant="body2" style={{ fontSize: '17px' }}>
-            After completing Simplilearn courses, learners have made successful career transitions, boosted career growth, and got salary
-            hikes.
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Grid container padding={2} marginTop={3}>
-        <Grid>
-          <Typography variant="h2">Our Alumni In Top Companies</Typography>
-        </Grid>
-        <Grid container marginTop={2} spacing={4}>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Amazon.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Microsoft.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Google.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/LinkedIn.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Adobe.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Deloitte.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Netflix.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://upload.wikimedia.org/wikipedia/commons/9/96/Zoho-logo.png?20190620054740" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/JPMorgan-Chase.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/HSBC.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Deutsche.png?w=200&dpr=1" />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <Image style={{ width: '120px' }} src="https://www.simplilearn.com/ice9/logos/Airbus.png?w=200&dpr=1" />
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Grid>
-        <UserProfile />
+      </Box>
+      <Grid  spacing={2} sx={{ mt: 2 }}>
+        {accordionData.map(createAccordion)}
       </Grid>
     </div>
   );

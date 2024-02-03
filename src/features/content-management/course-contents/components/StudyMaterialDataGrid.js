@@ -1,36 +1,44 @@
 // ** React Imports
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 // import CardHeader from '@mui/material/CardHeader';
-import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
+import MenuItem from '@mui/material/MenuItem';
 import StudyMaterialHeader from 'features/content-management/course-contents/components/StudyMaterialTableHeader';
-import StudyMaterialAddDrawer from './StudyMaterialAddDrawer';
-import { searchUsers } from 'features/user-management/users/services/userServices';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { useDispatch } from 'react-redux';
-import StudyMaterialEdit from './StudyMaterialEdit';
 import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import { setUsers } from 'features/user-management/users/redux/userSlices';
+import { searchUsers } from 'features/user-management/users/services/userServices';
+import { useDispatch } from 'react-redux';
+import StudyMaterialAddDrawer from './StudyMaterialAddDrawer';
+import StudyMaterialEdit from './StudyMaterialEdit';
 import StudyMaterialView from './StudyMaterialView';
+import CustomTextField from 'components/mui/text-field';
 
-const userStatusObj = {
-  Active: 'success',
-  Inactive: 'error'
-};
+
+// const userStatusObj = {
+//   Active: 'success',
+//   Inactive: 'error'
+// };
 
 const StudyMaterial = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
+
+
+  // const handleChange = event => {
+  //   setValue(event.target.value)
+  // }
+
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
@@ -262,16 +270,18 @@ const StudyMaterial = () => {
       // minWidth: 110,
       field: 'status',
       headerName: 'Status',
-      renderCell: ({ row }) => {
+      renderCell: ({row}) => {
         return (
-          <CustomChip
-            rounded
-            skin="light"
-            size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
-            sx={{ textTransform: 'capitalize' }}
-          />
+          <div>
+          <CustomTextField
+      select
+      defaultValue={row.status}
+      onChange={(e) => handleStatusChange(e, row.id)}
+        >
+         <MenuItem value='Active'>Active</MenuItem>
+          <MenuItem value='Inactive'>Inactive</MenuItem>
+        </CustomTextField>
+        </div>
         );
       }
     },
