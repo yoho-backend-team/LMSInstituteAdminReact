@@ -38,6 +38,7 @@ import OptionsMenu from 'components/option-menu';
 
 import FeesCardHeader from './FeesCardHeader';
 import FeesAddDrawer from './FeesAddDrawer';
+import FeesEditDrawer from './FeesEditDrawer';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -202,6 +203,13 @@ const FeesTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
+  const [editUserOpen, setEditUserOpen] = useState(false);
+
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('Toggle drawer');
+  };
+
   // ** Hooks
 
   const handleFilter = (val) => {
@@ -238,7 +246,7 @@ const FeesTable = () => {
           </Tooltip>
           <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon="tabler:eye" />
+              <Icon  icon="tabler:eye" />
             </IconButton>
           </Tooltip>
           <OptionsMenu
@@ -252,7 +260,7 @@ const FeesTable = () => {
               {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon="tabler:edit" fontSize={20} />
+                icon: <Icon onClick={toggleEditUserDrawer} icon="tabler:edit" fontSize={20} />
               },
               {
                 text: 'Duplicate',
@@ -399,6 +407,7 @@ const FeesTable = () => {
       </Grid>
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
 
     </DatePickerWrapper>
   );

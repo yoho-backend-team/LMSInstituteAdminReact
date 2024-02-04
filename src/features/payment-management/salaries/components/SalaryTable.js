@@ -40,6 +40,7 @@ import SalaryCardHeader from './SalaryCardHeader';
 import SalaryAddDrawer from './SalaryAddDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import SalaryEditDrawer from './SalaryEditDrawer';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -47,7 +48,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   color: `${theme.palette.primary.main} !important`
 }));
-
 
 // ** renders client column
 const renderClient = (row) => {
@@ -72,8 +72,7 @@ const statusObj = {
   3: { title: 'rejected', color: 'error' },
   4: { title: 'resigned', color: 'warning' },
   5: { title: 'applied', color: 'info' }
-}
-
+};
 
 const defaultColumns = [
   {
@@ -92,9 +91,7 @@ const defaultColumns = [
     minWidth: 180,
     field: 'transactionId',
     headerName: 'Transaction ID',
-    renderCell: ({ row }) => (
-      <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
-    )
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
   },
   {
     flex: 1.25,
@@ -124,31 +121,26 @@ const defaultColumns = [
     minWidth: 180,
     field: 'total',
     headerName: 'Salary Amount',
-    renderCell: ({ row }) => (
-      <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
-    )
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
   },
   {
     flex: 1.25,
     minWidth: 180,
     field: 'PaymentDate',
     headerName: 'Payment Date',
-    renderCell: ({ row }) => (
-      <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
-    )
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
   },
   {
     flex: 1,
     minWidth: 180,
     field: 'balance',
     headerName: 'Balance',
-    renderCell: ({ row }) => (
+    renderCell: ({ row }) =>
       row.balance !== 0 ? (
         <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
       ) : (
         <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
       )
-    )
   },
   {
     flex: 1.25,
@@ -161,19 +153,16 @@ const defaultColumns = [
       return (
         <CustomChip
           rounded
-          size='small'
-          skin='light'
+          size="small"
+          skin="light"
           color={status ? status.color : 'primary'}
           label={status ? status.title : 'current'}
           sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
         />
       );
     }
-  },
+  }
 ];
-
-
-
 
 /* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
@@ -197,9 +186,15 @@ const SalaryTable = () => {
   const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
-
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('Toggle drawer');
+  };
   // ** Hooks
 
   const handleFilter = (val) => {
@@ -250,7 +245,7 @@ const SalaryTable = () => {
               {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon="tabler:edit" fontSize={20} />
+                icon: <Icon onClick={toggleEditUserDrawer} icon="tabler:edit" fontSize={20} />
               },
               {
                 text: 'Duplicate',
@@ -263,73 +258,68 @@ const SalaryTable = () => {
     }
   ];
 
-
-   const store = [
+  const store = [
     {
-        id: 1,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 100,
-        PaymentDate: '2025-01-01',
-        balance: 55,
-        avatar: '',
-        avatarColor: 'primary',
-        transactionid:'5',
-      },
+      id: 1,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 100,
+      PaymentDate: '2025-01-01',
+      balance: 55,
+      avatar: '',
+      avatarColor: 'primary',
+      transactionid: '5'
+    },
     {
-        id: 2,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'arunbalaji.com',
-        total: 200,
-        PaymentDate: '2000-01-01',
-        balance: 50,
-        avatar: '',
-        avatarColor: 'primary',
-        transactionid:'12'
-      },
+      id: 2,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'arunbalaji.com',
+      total: 200,
+      PaymentDate: '2000-01-01',
+      balance: 50,
+      avatar: '',
+      avatarColor: 'primary',
+      transactionid: '12'
+    },
     {
-        id: 3,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 300,
-        PaymentDate: '25-01-01',
-        balance: 40,
-        avatar: '',
-        avatarColor: 'primary',
-        transactionid:'5'
-      },
+      id: 3,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 300,
+      PaymentDate: '25-01-01',
+      balance: 40,
+      avatar: '',
+      avatarColor: 'primary',
+      transactionid: '5'
+    },
     {
-        id: 4,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 40,
-        PaymentDate: '202-01-01',
-        balance: 30,
-        avatar: '',
-        avatarColor: 'primary',
-        transactionid:'25'
-      },
+      id: 4,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 40,
+      PaymentDate: '202-01-01',
+      balance: 30,
+      avatar: '',
+      avatarColor: 'primary',
+      transactionid: '25'
+    },
     {
-        id: 5,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 50,
-        PaymentDate: '20-01-01',
-        balance: 0,
-        avatar: '',
-        avatarColor: 'primary',
-        transactionid:'55'
-      },
-
-
-
-      ];
-  
+      id: 5,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 50,
+      PaymentDate: '20-01-01',
+      balance: 0,
+      avatar: '',
+      avatarColor: 'primary',
+      transactionid: '55'
+    }
+  ];
 
   return (
     <DatePickerWrapper>
@@ -377,8 +367,8 @@ const SalaryTable = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer}/>
-             <DataGrid
+            <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+            <DataGrid
               autoHeight
               pagination
               rowHeight={62}
@@ -395,7 +385,7 @@ const SalaryTable = () => {
         </Grid>
       </Grid>
       <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-
+      <SalaryEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
     </DatePickerWrapper>
   );
 };
