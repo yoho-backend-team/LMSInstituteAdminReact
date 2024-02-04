@@ -8,12 +8,8 @@ import { TextField } from '@mui/material';
 // import { useState } from 'react';
 
 const SalaryCardHeader = (props) => {
-  const { value, handleFilter } = props;
+  const { value, handleFilter,toggle} = props;
 
-  const handleAdd = (itemId) => {
-    console.log('Add clicked for item ID:', itemId);
-    setAddModalOpen(true);
-  };
 
   return (
     <>
@@ -39,7 +35,7 @@ const SalaryCardHeader = (props) => {
         />
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button onClick={toggle} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Salary
           </Button>
         </Box>

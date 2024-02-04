@@ -40,7 +40,7 @@ const schema = yup.object().shape({
   branch: yup.array().required('Branch is required').min(1, 'Select at least one branch'),
   course: yup.array().required('Course is required').min(1, 'Select at least one course'),
   batch: yup.array().required('Batch is required').min(1, 'Select at least one batch'),
-  students: yup.array().required('Students is required').min(1, 'Select at least one student'),
+  staffs: yup.array().required('staffs is required').min(1, 'Select at least one student'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
@@ -121,7 +121,7 @@ const batch = [
   { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
 ];
 
-const students = [
+const staffs = [
   { title: 'Das Boot', year: 1981 },
   { title: 'Citizen Kane', year: 1941 },
   { title: 'North by Northwest', year: 1959 },
@@ -140,7 +140,7 @@ const defaultValues = {
   contact: Number('')
 };
 
-const FeesAddDrawer = (props) => {
+const SalaryAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
 
@@ -350,17 +350,17 @@ const FeesAddDrawer = (props) => {
                 sx={{ mb: 2 }}
                 multiple
                 limitTags={2}
-                options={students}
-                id="autocomplete-limit-tags-students"
+                options={staffs}
+                id="autocomplete-limit-tags-staffs"
                 getOptionLabel={(option) => (option && option.title) || ''}
-                defaultValue={students.slice(0, 3)} // Adjust this based on your requirements
+                defaultValue={staffs.slice(0, 3)} // Adjust this based on your requirements
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Students"
+                    label="staffs"
                     placeholder="Favorites"
-                    error={Boolean(errors.students)}
-                    helperText={errors.students?.message}
+                    error={Boolean(errors.staffs)}
+                    helperText={errors.staffs?.message}
                   />
                 )}
               />
@@ -417,4 +417,4 @@ const FeesAddDrawer = (props) => {
   );
 };
 
-export default FeesAddDrawer;
+export default SalaryAddDrawer;

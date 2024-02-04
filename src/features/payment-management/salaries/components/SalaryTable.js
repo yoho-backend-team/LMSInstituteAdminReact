@@ -37,7 +37,7 @@ import { TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
 
 import SalaryCardHeader from './SalaryCardHeader';
-
+import SalaryAddDrawer from './SalaryAddDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -197,6 +197,9 @@ const SalaryTable = () => {
   const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
+
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   // ** Hooks
 
   const handleFilter = (val) => {
@@ -374,7 +377,7 @@ const SalaryTable = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} />
+            <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer}/>
              <DataGrid
               autoHeight
               pagination
@@ -391,6 +394,8 @@ const SalaryTable = () => {
           </Card>
         </Grid>
       </Grid>
+      <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+
     </DatePickerWrapper>
   );
 };
