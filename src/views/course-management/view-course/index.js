@@ -1,6 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, Grid, List, ListItem, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, List, ListItem, TextField, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
@@ -111,18 +111,18 @@ const CourseViewPage = () => {
   return (
     <div>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Card sx={{ minWidth: 200, flexGrow: 1 }}>
+        {/* <Card sx={{ minWidth: 200, flexGrow: 1 }}> */}
           <video
             controls
             autoPlay
             loop
             muted
             poster="https://assets.codepen.io/6093409/river.jpg"
-            style={{ width: '100%', aspectRatio: '12 / 5',objectFit:"cover" }}
+            style={{ width: '100%', aspectRatio: '12 / 5',objectFit:"cover",borderRadius:"10px" }}
           >
             <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
           </video>
-        </Card>
+        {/* </Card> */}
       </Box>
       <Grid container spacing={2} sx={{my:2}} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
         <Grid item xs={12} sm={4}>
