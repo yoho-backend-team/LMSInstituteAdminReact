@@ -5,7 +5,7 @@ import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import MainLayout from 'layout/MainLayout';
 import { Routes, Route, Navigate } from 'react-router-dom';
-
+// import { useSelector } from 'react-redux';
 // view imports
 
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -111,10 +111,16 @@ const CalenderPage = Loadable(lazy(() => import('views/calender')));
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // const Protected = () => {
-//   const { state } = useAppContext();
+//   // Access the isAuthenticated state from the Redux store
+//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-//   if (state?.user) return <Outlet />;
-//   return <Navigate to="/login" replace />;
+//   // If the user is authenticated, render the content
+//   if (isAuthenticated) {
+//     return <Outlet />;
+//   } else {
+//     // If not authenticated, redirect to the login page
+//     return <Navigate to="/login" replace />;
+//   }
 // };
 // const AdminRoute = () => {
 //   const { state } = useAppContext();
@@ -128,18 +134,17 @@ const CalenderPage = Loadable(lazy(() => import('views/calender')));
 const ApplicationRoutes = () => {
   return (
     <Routes>
+      {/* <Route element={<Protected />}> */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<DashboardDefault />} />
       </Route>
       <Route path="/calender" element={<MainLayout />}>
         <Route index element={<CalenderPage />} />
-        {/* <Route path="" element={} /> */}
       </Route>
 
       <Route path="/user-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/user-management/groups" />} />
-        {/* <Route element={<ProtectedRoute element={<GroupsPage />} screen={'Groups'} name={'Read'} />}> */}
         <Route path="groups" element={<GroupsPage />} />
         <Route path="groups/add" element={<AddGroupPage />} />
         <Route path="groups/view" element={<ViewGroupPage />} />
@@ -175,23 +180,17 @@ const ApplicationRoutes = () => {
       <Route path="/certificate-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
         <Route path="student-certificates" element={<StudentCertificatesPage />} />
-        {/* <Route path="staff-certificates" element={<StaffCertificatesPage />} /> */}
       </Route>
 
       <Route path="/class-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/class-management/live-classes" />} />
         <Route path="live-classes" element={<LiveClassesPage />} />
         <Route path="offline-classes" element={<OfflineClassesPage />} />
-        {/* <Route path="online-classes" element={<OnlineClassesPage />} /> */}
       </Route>
 
       <Route path="/content-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/content-management/class-contents" />} />
         <Route path="course-contents" element={<CourseContentsPage />} />
-        {/* <Route path="question-bank" element={<ClassContentsPage />} />
-        <Route path="exam-papers" element={<ExamContentsPage />} />
-        <Route path="exam-papers/create-exam-paper" element={<CreateExamPaper />} />
-        <Route path="exam-papers/create-exam-paper/create-question" element={<CreateQuestionPage />} /> */}
       </Route>
 
       <Route path="/course-management" element={<MainLayout />}>
@@ -207,17 +206,6 @@ const ApplicationRoutes = () => {
         <Route path="customer-support" element={<CustomerSupportPage />} />
         <Route path="technical-support" element={<TechnicalSupportPage />} />
       </Route>
-
-      {/* <Route path="/exam-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/exam-management/online-exams" />} />
-        <Route path="offline-exams" element={<OfflineExamsPage />} />
-        <Route path="online-exams" element={<OnlineExamsPage />} />
-      </Route> */}
-      {/* <Route path="/result-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/exam-management/online-exam-results" />} />
-        <Route path="offline-exam-results" element={<OfflineExamResultPage />} />
-        <Route path="online-exam-results" element={<OnlineExamResultPage />} />
-      </Route> */}
 
       <Route path="/id-card-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />
@@ -260,7 +248,13 @@ const ApplicationRoutes = () => {
         <Route path="students/:id" element={<ViewStudentProfile />} />
         <Route path="students/add" element={<AddNewStudent />} />
       </Route>
-
+      <Route element={<MinimalLayout />}>
+        <Route path="*" element={<Page404 />} />
+      </Route>
+      <Route element={<MinimalLayout />}>
+        <Route path="/server-error" element={<Page500 />} />
+      </Route>
+      {/* </Route> */}
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />
       </Route>
