@@ -12,6 +12,8 @@ import styled from '@emotion/styled';
 import Image from './image';
 import cssStyles from './cssStyles';
 import StudentFilter from '../view-profile/studentFilterCard';
+import Pagination from '@mui/material/Pagination';
+
 // import UserCard from './CardStyle/userCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
@@ -346,6 +348,13 @@ const Students = () => (
         </Card>
       </Grid>
     </Box>
+
+    <Grid container justifyContent="flex-end" mt={2}>
+        <div className="demo-space-y">
+          <Pagination count={10} color="primary" />
+        </div>
+      </Grid>
+
   </Container>
 );
 

@@ -330,7 +330,7 @@ const SalaryTable = () => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Filters" />
@@ -376,6 +376,7 @@ const SalaryTable = () => {
           <Card>
             <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
             <DataGrid
+              sx={{ p: 2 }}
               autoHeight
               pagination
               rowHeight={62}

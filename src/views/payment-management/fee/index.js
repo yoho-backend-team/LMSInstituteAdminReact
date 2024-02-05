@@ -22,7 +22,7 @@ const Fee = () => {
   return (
     <>
      <Grid>
-      <Grid spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+      <Grid spacing={1} className="match-height">
         {loading ? (
           // If data is still loading, display skeleton
           <FeesTableSkeleton />
@@ -32,6 +32,7 @@ const Fee = () => {
         )}
       </Grid>
     </Grid>
+
     </>
   );
 };
