@@ -7,17 +7,15 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { DataGrid } from '@mui/x-data-grid';
 
 // ** Icon Imports
-import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
 import CustomAvatar from 'components/mui/avatar';
+import CustomChip from 'components/mui/chip';
 
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
@@ -28,6 +26,11 @@ const userStatusObj = {
   active: 'success',
   pending: 'warning',
   inactive: 'secondary'
+};
+
+const userModeObj = {
+  Online: 'success',
+  Offline: 'secondary'
 };
 
 // ** renders client column
@@ -47,21 +50,24 @@ const renderClient = (row) => {
   }
 };
 
-const RowOptions = () => {
-  // ** Hooks
 
-  // ** State
-
-  return (
-    <>
-      <IconButton size="small"color='error' onClick={{}}>
-        <Icon icon="mdi:delete" />
-      </IconButton>
-    </>
-  );
-};
 
 const columns = [
+  {
+    flex: 0.15,
+    field: 'id',
+    minWidth: 170,
+    headerName: 'ID',
+    renderCell: ({ row }) => {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row.username.toUpperCase()}
+          </Typography>
+        </Box>
+      );
+    }
+  },
   {
     flex: 0.25,
     minWidth: 280,
@@ -95,21 +101,6 @@ const columns = [
       );
     }
   },
-  {
-    flex: 0.15,
-    field: 'id',
-    minWidth: 170,
-    headerName: 'ID',
-    renderCell: ({ row }) => {
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.username.toUpperCase()}
-          </Typography>
-        </Box>
-      );
-    }
-  },
   //   {
   //     flex: 0.15,
   //     minWidth: 120,
@@ -139,6 +130,24 @@ const columns = [
   {
     flex: 0.15,
     minWidth: 110,
+    field: 'mode',
+    headerName: 'Mode',
+    renderCell: ({ row }) => {
+      return (
+        <CustomChip
+          rounded
+          skin="light"
+          size="small"
+          label={row.mode}
+          color={userModeObj[row.mode]}
+          sx={{ textTransform: 'capitalize' }}
+        />
+      );
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 110,
     field: 'status',
     headerName: 'Status',
     renderCell: ({ row }) => {
@@ -154,14 +163,6 @@ const columns = [
       );
     }
   },
-  {
-    flex: 0.1,
-    minWidth: 100,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }) => <RowOptions id={row.id} />
-  }
 ];
 const BranchTableList = () => {
     const store = [
@@ -178,7 +179,8 @@ const BranchTableList = () => {
           currentPlan: 'enterprise',
           status: 'inactive',
           avatar: '',
-          avatarColor: 'primary'
+          avatarColor: 'primary',
+          mode : 'Online'
         },
         {
           id: 2,
@@ -192,7 +194,9 @@ const BranchTableList = () => {
           email: 'hredmore1@imgur.com',
           currentPlan: 'team',
           status: 'pending',
-          avatar: '/images/avatars/3.png'
+          avatar: '/images/avatars/3.png',
+          mode : 'Offline'
+
         },
         {
           id: 3,
@@ -206,7 +210,8 @@ const BranchTableList = () => {
           email: 'msicely2@who.int',
           currentPlan: 'enterprise',
           status: 'active',
-          avatar: '/images/avatars/1.png'
+          avatar: '/images/avatars/1.png',
+          mode : 'Online'
         },
         {
           id: 4,
@@ -220,7 +225,8 @@ const BranchTableList = () => {
           email: 'crisby3@wordpress.com',
           currentPlan: 'team',
           status: 'inactive',
-          avatar: '/images/avatars/3.png'
+          avatar: '/images/avatars/3.png',
+          mode : 'Online'
         },
         {
           id: 5,
@@ -234,7 +240,8 @@ const BranchTableList = () => {
           email: 'mhurran4@yahoo.co.jp',
           currentPlan: 'enterprise',
           status: 'pending',
-          avatar: '/images/avatars/1.png'
+          avatar: '/images/avatars/1.png',
+          mode : 'Offline'
         },
         {
           id: 6,
@@ -249,7 +256,8 @@ const BranchTableList = () => {
           currentPlan: 'company',
           status: 'active',
           avatar: '',
-          avatarColor: 'error'
+          avatarColor: 'error',
+          mode : 'Offline'
         }
       ];
     

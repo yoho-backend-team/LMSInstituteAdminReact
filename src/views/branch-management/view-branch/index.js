@@ -17,12 +17,11 @@ const ViewBranch = () => {
       <Grid item xs={12} sm={6}>
         <ProgressCard />
       </Grid>
-
-      <Grid item xs={12}>
-        <StudentTableList />
-      </Grid>
       <Grid item xs={12}>
         <BranchTableList />
+      </Grid>
+      <Grid item xs={12}>
+        <StudentTableList />
       </Grid>
     </Grid>
   );

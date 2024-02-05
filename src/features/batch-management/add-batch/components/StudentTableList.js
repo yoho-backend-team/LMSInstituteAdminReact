@@ -7,17 +7,15 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { DataGrid } from '@mui/x-data-grid';
 
 // ** Icon Imports
-import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
 import CustomAvatar from 'components/mui/avatar';
+import CustomChip from 'components/mui/chip';
 
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
@@ -28,6 +26,11 @@ const userStatusObj = {
   active: 'success',
   pending: 'warning',
   inactive: 'secondary'
+};
+
+const userRoleObj = {
+  Administrator: 'success',
+  Manager: 'secondary'
 };
 
 // ** renders client column
@@ -47,26 +50,29 @@ const renderClient = (row) => {
   }
 };
 
-const RowOptions = () => {
-  // ** Hooks
 
-  // ** State
-
-  return (
-    <>
-      <IconButton size="small"color='error' onClick={{}}>
-        <Icon icon="mdi:delete" />
-      </IconButton>
-    </>
-  );
-};
 
 const columns = [
+  {
+    flex: 0.15,
+    field: 'id',
+    minWidth: 170,
+    headerName: 'ID',
+    renderCell: ({ row }) => {
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row.username.toUpperCase()}
+          </Typography>
+        </Box>
+      );
+    }
+  },
   {
     flex: 0.25,
     minWidth: 280,
     field: 'fullName',
-    headerName: 'User',
+    headerName: 'User Admin',
     renderCell: ({ row }) => {
       const { fullName, email } = row;
 
@@ -95,21 +101,7 @@ const columns = [
       );
     }
   },
-  {
-    flex: 0.15,
-    field: 'id',
-    minWidth: 170,
-    headerName: 'ID',
-    renderCell: ({ row }) => {
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.username.toUpperCase()}
-          </Typography>
-        </Box>
-      );
-    }
-  },
+ 
   //   {
   //     flex: 0.15,
   //     minWidth: 120,
@@ -139,6 +131,24 @@ const columns = [
   {
     flex: 0.15,
     minWidth: 110,
+    field: 'role',
+    headerName: 'Role',
+    renderCell: ({ row }) => {
+      return (
+        <CustomChip
+          rounded
+          skin="light"
+          size="small"
+          label={row.role}
+          color={userRoleObj[row.role]}
+          sx={{ textTransform: 'capitalize' }}
+        />
+      );
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 110,
     field: 'status',
     headerName: 'Status',
     renderCell: ({ row }) => {
@@ -154,14 +164,6 @@ const columns = [
       );
     }
   },
-  {
-    flex: 0.1,
-    minWidth: 100,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }) => <RowOptions id={row.id} />
-  }
 ];
 
 const UserList = () => {
@@ -171,7 +173,7 @@ const UserList = () => {
       billing: 'Auto Debit',
       fullName: 'Galen Slixby',
       company: 'Yotz PVT LTD',
-      role: 'editor',
+      role: 'Administrator',
       username: 'gslixby0',
       country: 'El Salvador',
       contact: '(479) 232-9151',
@@ -179,14 +181,14 @@ const UserList = () => {
       currentPlan: 'enterprise',
       status: 'inactive',
       avatar: '',
-      avatarColor: 'primary'
+      avatarColor: 'primary',
     },
     {
       id: 2,
       billing: 'Manual - Paypal',
       fullName: 'Halsey Redmore',
       company: 'Skinder PVT LTD',
-      role: 'author',
+      role: 'Manager',
       username: 'hredmore1',
       country: 'Albania',
       contact: '(472) 607-9137',
@@ -200,7 +202,7 @@ const UserList = () => {
       billing: 'Manual - Cash',
       fullName: 'Marjory Sicely',
       company: 'Oozz PVT LTD',
-      role: 'maintainer',
+      role: 'Administrator',
       username: 'msicely2',
       country: 'Russia',
       contact: '(321) 264-4599',
@@ -214,7 +216,7 @@ const UserList = () => {
       billing: 'Auto Debit',
       fullName: 'Cyrill Risby',
       company: 'Oozz PVT LTD',
-      role: 'maintainer',
+      role: 'Administrator',
       username: 'crisby3',
       country: 'China',
       contact: '(923) 690-6806',
@@ -228,7 +230,7 @@ const UserList = () => {
       billing: 'Auto Debit',
       fullName: 'Maggy Hurran',
       company: 'Aimbo PVT LTD',
-      role: 'subscriber',
+      role: 'Manager',
       username: 'mhurran4',
       country: 'Pakistan',
       contact: '(669) 914-1078',
@@ -242,7 +244,7 @@ const UserList = () => {
       billing: 'Manual - Cash',
       fullName: 'Silvain Halstead',
       company: 'Jaxbean PVT LTD',
-      role: 'author',
+      role: 'Manager',
       username: 'shalstead5',
       country: 'China',
       contact: '(958) 973-3093',
