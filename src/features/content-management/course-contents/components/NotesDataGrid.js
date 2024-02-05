@@ -115,6 +115,7 @@ const NotesDataGrid = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const handleStatusChange = (event, row) => {
     setSelectedDeleteMaterial(row);
@@ -192,6 +193,11 @@ const NotesDataGrid = () => {
     [dispatch]
   );
 
+  const handleRowClick = (params) => {
+    setSelectedRow(params.row);
+    // toggleEditUserDrawer();
+  };
+  
   const columns = [
     {
       flex: 0.8,
@@ -298,9 +304,10 @@ const NotesDataGrid = () => {
         pageSizeOptions={[10, 25, 50]}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
+        onRowClick={handleRowClick}
       />
       <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer}  initialValues={selectedRow}/>
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
       <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
     </>

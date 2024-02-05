@@ -82,7 +82,8 @@ const CardStatsVertical = (props) => {
           </Grid>
         </CardContent>
       </Card>
-      <CategoryEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <CategoryEditModal  initialTitle={title}
+  initialStatus={statusValue} open={isEditModalOpen} handleEditClose={handleEditClose} />
       <GroupDeleteDialog
         open={deleteDialogOpen}
         setOpen={setDeleteDialogOpen}

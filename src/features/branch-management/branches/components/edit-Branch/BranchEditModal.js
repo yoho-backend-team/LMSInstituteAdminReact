@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-
+import { useEffect } from 'react';
 // ** Custom Component Import
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, TextField as CustomTextField } from '@mui/material';
@@ -25,12 +25,26 @@ const branchSchema = yup.object().shape({
   state: yup.string().required('State is required')
 });
 
-const BranchEditModal = ({ open, handleEditClose }) => {
+const BranchEditModal = ({ open, handleEditClose, selectedBranch }) => {
+  useEffect(() => {
+    if (selectedBranch) {
+      setValue('branchName', selectedBranch.title || '');
+      setValue('phone', selectedBranch.phone || '');
+      setValue('alternatePhone', selectedBranch.alternatePhone || '');
+      setValue('address', selectedBranch.location || ''); // Set default value to 'location'
+      setValue('pinCode', selectedBranch.pinCode || '');
+      setValue('landmark', selectedBranch.landmark || '');
+      setValue('city', selectedBranch.city || '');
+      setValue('state', selectedBranch.state || '');
+    }
+  }, [selectedBranch]);
+
   // ** States
   const {
     handleSubmit,
     control,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     resolver: yupResolver(branchSchema)
   });
@@ -78,6 +92,7 @@ const BranchEditModal = ({ open, handleEditClose }) => {
                   <Controller
                     name="branchName"
                     control={control}
+                    value={selectedBranch ? selectedBranch.title : ''}
                     render={({ field }) => (
                       <CustomTextField
                         {...field}
@@ -124,11 +139,12 @@ const BranchEditModal = ({ open, handleEditClose }) => {
                       />
                     )}
                   />
-                </Grid>
+                </Grid> 
                 <Grid item xs={12}>
                   <Controller
                     name="address"
                     control={control}
+                    value={selectedBranch ? selectedBranch.location : ''}
                     render={({ field }) => (
                       <CustomTextField
                         {...field}

@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import CustomTextField from 'components/mui/text-field';
+import { TextField } from '@mui/material';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const CourseFilter = () => {
@@ -20,11 +20,11 @@ const CourseFilter = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Filters" />
-            <CardContent>
+            <CardHeader title="Course" />
+            <CardContent sx={{pt:0}}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
-                  <CustomTextField
+                  <TextField
                     select
                     fullWidth
                     label="Status"
@@ -37,10 +37,10 @@ const CourseFilter = () => {
                     <MenuItem value="partial payment">Partial Payment</MenuItem>
                     <MenuItem value="past due">Past Due</MenuItem>
                     <MenuItem value="sent">Sent</MenuItem>
-                  </CustomTextField>
+                  </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <CustomTextField
+                  <TextField
                     select
                     fullWidth
                     label="Course"
@@ -53,7 +53,7 @@ const CourseFilter = () => {
                     <MenuItem value="partial payment">Partial Payment</MenuItem>
                     <MenuItem value="past due">Past Due</MenuItem>
                     <MenuItem value="sent">Sent</MenuItem>
-                  </CustomTextField>
+                  </TextField>
                 </Grid>
               </Grid>
             </CardContent>

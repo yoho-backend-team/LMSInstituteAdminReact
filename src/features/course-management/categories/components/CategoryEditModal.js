@@ -28,12 +28,12 @@ const schema = yup.object().shape({
   status: yup.string().required()
 });
 
-const defaultValues = {
-  course: '',
-  status: ''
-};
+// const defaultValues = {
+//   course: '',
+//   status: ''
+// };
 
-const CategoryEditModal = ({ open, handleEditClose }) => {
+const CategoryEditModal = ({ open, handleEditClose,initialTitle, initialStatus }) => {
   const image =
     'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
@@ -44,7 +44,6 @@ const CategoryEditModal = ({ open, handleEditClose }) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
@@ -143,8 +142,9 @@ const CategoryEditModal = ({ open, handleEditClose }) => {
                   <TextField
                     fullWidth
                     value={value}
+                    defaultValue={initialTitle}  
                     sx={{ mb: 4 }}
-                    label="Course Name"
+                    label="Category Name"
                     onChange={onChange}
                     placeholder="John Doe"
                     error={Boolean(errors.course)}
@@ -166,6 +166,7 @@ const CategoryEditModal = ({ open, handleEditClose }) => {
                     sx={{ mb: 4 }}
                     label="Status"
                     id="validation-status-select"
+                    defaultValue={initialStatus}
                     error={Boolean(errors.status)}
                     aria-describedby="validation-status-select"
                     {...(errors.status && { helperText: errors.status.message })}

@@ -21,7 +21,7 @@ import Icon from 'components/icon';
 import UserViewBilling from './class';
 import UserViewAccount from './UserViewAccount';
 import UserViewConnection from './UserViewConnection';
-import UserViewNotification from './attendance';
+import TeacherAttendance from './TeacherAttendance';
 import UserViewSecurity from './UserViewSecurity';
 
 // ** Styled Tab component
@@ -120,7 +120,7 @@ const UserViewRight = ({ tab, invoiceData }) => {
             <UserViewBilling />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="attendance">
-            <UserViewNotification />
+            <TeacherAttendance />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="activity">
             <UserViewConnection />

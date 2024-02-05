@@ -115,7 +115,11 @@ const Module = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
-
+  const [selectedRow, setSelectedRow] = useState(null);
+  const handleRowClick = (params) => {
+    setSelectedRow(params.row);
+    // toggleEditUserDrawer();
+  };
   
   const handleStatusChange = (event, row) => {
     setSelectedDeleteMaterial(row);
@@ -300,9 +304,10 @@ const Module = () => {
         pageSizeOptions={[10, 25, 50]}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
+        onRowClick={handleRowClick}
       />
       <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow}/>
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
       <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />
     </>
