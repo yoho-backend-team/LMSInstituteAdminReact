@@ -8,9 +8,20 @@ import BranchesCardHeader from './BrachesCardHeader';
 // import { useTheme } from '@mui/system';
 import BranchEditModal from './edit-Branch/BranchEditModal';
 import BranchDeleteModal from './delete-Branch/BranchDeleteModal';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { selectBranches } from '../redux/branchSelectors';
+import { getAllBranches } from '../redux/branchThunks';
+import { useEffect } from 'react';
 const BranchCard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const dispatch = useDispatch();
+  const branches = useSelector(selectBranches);
+  useEffect(() => {
+    dispatch(getAllBranches());
+  }, [dispatch]);
+
+  console.log(branches);
   // const theme = useTheme();
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);

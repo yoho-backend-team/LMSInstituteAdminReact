@@ -20,7 +20,8 @@ import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
 
 // project imports
 import Transitions from 'components/extended/Transitions';
-
+import { updateSelectedBranch } from 'features/authentication/authActions';
+import { useDispatch } from 'react-redux';
 // assets
 import {
   // IconAdjustmentsHorizontal,
@@ -28,6 +29,8 @@ import {
   // IconX
 } from '@tabler/icons';
 import { shouldForwardProp } from '@mui/system';
+
+import { useSelector } from 'react-redux';
 
 // styles
 const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
@@ -101,6 +104,10 @@ MobileSearch.propTypes = {
 const SearchSection = () => {
   const theme = useTheme();
   const [value, setValue] = useState('Keelkattalai');
+  // Inside your component
+  const branches = useSelector((state) => state.auth.branches);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -147,17 +154,21 @@ const SearchSection = () => {
       <Box sx={{ display: { xs: 'none', md: 'block' } }}>
         <OutlineInputStyle
           id="input-search-header"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={selectedBranchId}
+          onChange={(e) => {
+            dispatch(updateSelectedBranch(e.target.value));
+          }}
           placeholder="Search"
           aria-describedby="search-helper-text"
           inputProps={{ 'aria-label': 'weight' }}
           select
           label="Branch"
         >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Keelkattalai">Keelkattalai</MenuItem>
-          <MenuItem value="Egmore">Egmore</MenuItem>
+          {branches?.map((branch, index) => (
+            <MenuItem value={branch?.branch_id} key={index}>
+              {branch?.branch_name}
+            </MenuItem>
+          ))}
         </OutlineInputStyle>
       </Box>
     </>
