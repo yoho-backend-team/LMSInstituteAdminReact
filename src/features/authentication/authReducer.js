@@ -21,7 +21,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: false,
         token: null,
-        userId: null,
+        userData: null,
         errorMessage: action.payload
       };
     case 'LOGOUT':
