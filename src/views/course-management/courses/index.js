@@ -5,6 +5,9 @@ import { Grid } from '@mui/material';
 import CourseCard from 'features/course-management/courses/components/CourseCard';
 import CourseCardHeader from 'features/course-management/courses/components/CourseCardHeader';
 import CourseFilter from 'features/course-management/courses/components/CourseFilterCard';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import CourseSkeleton from 'components/cards/Skeleton/CourseSkeleton';
 
 const courseData = [
   {
@@ -49,7 +52,25 @@ const courseData = [
   }
 ];
 
-const Courses = () => (
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
+
+const Courses = () => {
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
+  return(
+    <>
+    {loading ? (
+      <CourseSkeleton />
+    ) : (
   <Grid>
     <Grid item xs={12} sm={12}>
       <CourseFilter />
@@ -70,6 +91,8 @@ const Courses = () => (
       ))}
     </Grid>
   </Grid>
-);
+  )}
+  </>
+)};
 
 export default Courses;
