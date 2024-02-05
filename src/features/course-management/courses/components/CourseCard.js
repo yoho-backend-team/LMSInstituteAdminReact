@@ -110,22 +110,49 @@
 
 // export default CourseCard;
 
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
-import Icon from 'components/icon';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
-
+import { useState } from 'react';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 
 const CourseCard = (props) => {
-  const { sx, image, personName, coursename, students ,price,chipColor = 'primary' ,chipText} = props;
+  const [statusValue, setStatusValue] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+  const { sx, image, personName, coursename, students ,price} = props;
 
+  const handleStatusValue = () => {
+    setSelectedDeleteMaterial(props.material);
+    setDeleteDialogOpen(true);
+    setStatusValue(event.target.value);
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteMaterial.id);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return (
     <Grid item xs={12} sm={12} lg={4}>
       <Card sx={{ ...sx }}>
@@ -165,12 +192,22 @@ const CourseCard = (props) => {
           </Box>
         </CardContent>
         <CardActions className="demo-space-x" sx={{ pt: 0 ,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <CustomChip rounded size="medium" skin="light" color={chipColor} label={chipText} />
+        <Grid sx={{mt:1}}>
+          <TextField size='small' select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
+            <MenuItem value="Active">Active</MenuItem>
+            <MenuItem value="Deactive">Deactive</MenuItem>
+          </TextField>
+          </Grid>
           <Button component={Link} to='view ' size='medium' variant="contained" color="primary">
             View Details
           </Button>
         </CardActions>
       </Card>
+      <GroupDeleteDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        handleDeleteGroup={handleDeleteGroup}
+      />
     </Grid>
   );
 };

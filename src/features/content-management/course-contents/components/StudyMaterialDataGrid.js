@@ -33,11 +33,16 @@ const StudyMaterial = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
 
-  // const handleChange = event => {
-  //   setValue(event.target.value)
-  // }
+  const handleStatusChange = (event, row) => {
+    setSelectedDeleteMaterial(row);
+    setDeleteDialogOpen(true);
+  };
 
   const handleViewClose = () => {
     setViewModalOpen(false);
@@ -46,12 +51,10 @@ const StudyMaterial = () => {
     setViewModalOpen(true);
   };
 
-  const [editUserOpen, setEditUserOpen] = useState(false);
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  
   const handleDeleteGroup = async () => {
     try {
-      const result = await deleteGroup(selectedDeleteGroupId);
+      const result = await deleteGroup(selectedDeleteMaterial.id);
 
       if (result.success) {
         toast.success(result.message);
@@ -80,7 +83,6 @@ const StudyMaterial = () => {
         </IconButton>
         <IconButton
           onClick={() => {
-            // setSelectedDeleteGroupId(item.id);
             setDeleteDialogOpen(true);
           }}
           aria-label="capture screenshot"
@@ -276,7 +278,7 @@ const StudyMaterial = () => {
           <CustomTextField
       select
       defaultValue={row.status}
-      onChange={(e) => handleStatusChange(e, row.id)}
+    onChange={(e) => handleStatusChange(e, row)}
         >
          <MenuItem value='Active'>Active</MenuItem>
           <MenuItem value='Inactive'>Inactive</MenuItem>
@@ -309,7 +311,11 @@ const StudyMaterial = () => {
       />
       <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
-      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <GroupDeleteDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        handleDeleteGroup={handleDeleteGroup}
+      />
       <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
     </>
   );
