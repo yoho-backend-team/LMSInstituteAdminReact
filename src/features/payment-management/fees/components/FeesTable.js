@@ -68,8 +68,6 @@ const renderClient = (row) => {
   }
 };
 
-
-
 /* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -168,7 +166,7 @@ const FeesTable = () => {
       headerName: 'Students',
       renderCell: ({ row }) => {
         const { name, companyEmail } = row;
-  
+
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
@@ -189,7 +187,7 @@ const FeesTable = () => {
       minWidth: 180,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary',ml:2 }}>{`$${row.total || 0}`}</Typography>
     },
     {
       flex: 1.25,
@@ -229,7 +227,7 @@ const FeesTable = () => {
       }
     }
   ];
-  
+
   const columns = [
     ...defaultColumns,
     {
@@ -331,12 +329,12 @@ const FeesTable = () => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Filters" />
             <CardContent>
-              <Grid container spacing={6}>
+              <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
@@ -377,6 +375,7 @@ const FeesTable = () => {
           <Card>
             <FeesCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
             <DataGrid
+              sx={{ p: 2 }}
               autoHeight
               pagination
               rowHeight={62}

@@ -13,6 +13,7 @@ import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
 import OnlineClassEditModal from './edit-OnlineClass/OnlineClassEditModal';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import TimerIcon from '@mui/icons-material/Timer';
 import Divider from '@mui/material/Divider';
 
@@ -106,6 +107,23 @@ const OnlineClassCard = () => {
   };
   const handleEdit = () => {
     setEditModalOpen(true);
+  };
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteMaterial.id);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCopyLink = (index) => {
@@ -251,7 +269,13 @@ const OnlineClassCard = () => {
                     <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
                       <Icon icon="tabler:edit" />
                     </IconButton>
-                    <IconButton aria-label="capture screenshot" color="error">
+                    <IconButton
+                      onClick={() => {
+                        setDeleteDialogOpen(true);
+                      }}
+                      aria-label="capture screenshot"
+                      color="error"
+                    >
                       <Icon icon="tabler:archive-filled" />
                     </IconButton>
                   </Box>
@@ -261,6 +285,7 @@ const OnlineClassCard = () => {
           </Grid>
         ))}
         <OnlineClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+        <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
       </Grid>
     </>
   );

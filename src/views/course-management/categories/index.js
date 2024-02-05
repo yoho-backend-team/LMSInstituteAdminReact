@@ -5,6 +5,8 @@ import CategoryCardHeader from 'features/course-management/categories/components
 import CategorySkeleton from 'components/cards/Skeleton/CategorySkeleton';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Pagination from '@mui/material/Pagination'
+
 
 const dummyCategories = [
   {
@@ -93,6 +95,9 @@ const Categories = () => {
         </Grid>
       </div>
       )}
+        <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
+      <Pagination count={10} color='primary' />
+      </Grid>
   </Grid>
   )
 };

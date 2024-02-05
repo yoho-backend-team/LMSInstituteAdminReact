@@ -8,7 +8,7 @@ const Refunds = () => {
   return (
     <>
       <Grid>
-        <Grid spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+        <Grid spacing={1} className="match-height">
           <RefundTable />
         </Grid>
       </Grid>

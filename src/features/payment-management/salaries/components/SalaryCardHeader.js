@@ -22,7 +22,9 @@ const SalaryCardHeader = (props) => {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+           p: 2
+
         }}
       >
         <TextField

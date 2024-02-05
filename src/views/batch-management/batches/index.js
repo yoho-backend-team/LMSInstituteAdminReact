@@ -16,6 +16,7 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
 import BatchDeleteModal from 'features/batch-management/batches/components/delete-Batch/BatchDeleteModal';
+import Pagination from '@mui/material/Pagination';
 
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -318,6 +319,13 @@ const Batch = () => {
         <BatchCardHeader />
         <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
           {renderCards()}
+        </Grid>
+        <Grid sx={{display:'flex',justifyContent:"flex-end",mt:2}}>
+
+        <div className="demo-space-y">
+          <Pagination count={10} color="primary" />
+        </div>
+
         </Grid>
         <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
 

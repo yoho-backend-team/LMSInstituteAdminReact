@@ -8,6 +8,7 @@ import CourseFilter from 'features/course-management/courses/components/CourseFi
 import { useState } from 'react';
 import { useEffect } from 'react';
 import CourseSkeleton from 'components/cards/Skeleton/CourseSkeleton';
+import Pagination from '@mui/material/Pagination'
 
 const courseData = [
   {
@@ -90,6 +91,9 @@ const Courses = () => {
         />
       ))}
     </Grid>
+    <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
+      <Pagination count={10} color='primary' />
+      </Grid>
   </Grid>
   )}
   </>
