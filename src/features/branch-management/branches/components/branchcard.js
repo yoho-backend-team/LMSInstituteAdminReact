@@ -7,7 +7,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BranchesCardHeader from './BrachesCardHeader';
 // import { useTheme } from '@mui/system';
 import BranchEditModal from './edit-Branch/BranchEditModal';
-import BranchDeleteModal from './delete-Branch/BranchDeleteModal';
 
 const BranchCard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,13 +37,6 @@ const BranchCard = () => {
     handleClose();
   };
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
-  const handleDeleteClick = () => {
-    // Implement delete logic here
-    setDeleteDialogOpen(true);
-    handleClose();
-  };
     
   const branchData = [
     {
@@ -108,9 +100,7 @@ const BranchCard = () => {
               <MenuItem onClick={() => handleEdit(branch)} sx={{ fontSize: 'small', padding: '8px' }}>
                 Edit
               </MenuItem>
-              <MenuItem onClick={() => handleDeleteClick()} sx={{ fontSize: 'small', padding: '8px' }}>
-                Delete
-              </MenuItem>
+             
             </Menu>
 
             <CardMedia
@@ -139,7 +129,6 @@ const BranchCard = () => {
         </Grid>
       ))}
       <BranchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} selectedBranch={selectedBranch} />
-      <BranchDeleteModal open={deleteDialogOpen} setOpen={setDeleteDialogOpen} />
     </Grid>
   );
 };
