@@ -96,16 +96,17 @@ export const deleteBranch = async (BranchId) => {
 };
 
 export const updateBranch = async (data) => {
+  console.log(data);
   try {
-    const response = await axios.put(`${BRANCH_API_ENDPOINT}/update`, data, {
+    const response = await axios.post(`${BRANCH_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
+    console.log(response);
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Branch updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Branch' };

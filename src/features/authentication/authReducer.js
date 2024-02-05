@@ -59,7 +59,12 @@ const authReducer = (state = initialState, action) => {
     case 'UPDATE_SELECTED_BRANCH':
       return {
         ...state,
-        selectedBranch: action.payload
+        selectedBranchId: action.payload
+      };
+    case 'UPDATE_BRANCH':
+      return {
+        ...state,
+        branches: action.payload
       };
     default:
       return state;

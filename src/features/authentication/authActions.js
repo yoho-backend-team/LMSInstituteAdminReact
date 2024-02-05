@@ -103,3 +103,7 @@ export const updateSelectedBranch = (newBranch) => ({
   type: 'UPDATE_SELECTED_BRANCH',
   payload: newBranch
 });
+export const updateAuthBranch = (newBranch) => ({
+  type: 'UPDATE_BRANCH',
+  payload: newBranch
+});
