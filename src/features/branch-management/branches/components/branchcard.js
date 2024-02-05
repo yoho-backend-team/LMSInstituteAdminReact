@@ -14,10 +14,14 @@ const BranchCard = () => {
   // const theme = useTheme();
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState(null);
+
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
-  const handleEdit = () => {
+
+  const handleEdit = (branchData) => {
+    setSelectedBranch(branchData);
     setEditModalOpen(true);
   };
 
@@ -41,41 +45,53 @@ const BranchCard = () => {
     setDeleteDialogOpen(true);
     handleClose();
   };
+    
+  const branchData = [
+    {
+      image: require('assets/images/avatar/map-pin.png'),
+      title: 'Branch 1',
+      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
+    },
+    {
+      image: require('assets/images/avatar/map-pin.png'),
+
+      title: 'Branch 2',
+      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
+    },
+    {
+      image: require('assets/images/avatar/map-pin.png'),
+
+      title: 'Branch 3',
+      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
+    },
+    {
+      image: require('assets/images/avatar/map-pin.png'),
+
+      title: 'Branch 4',
+      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
+    },
+    {
+      image: require('assets/images/avatar/map-pin.png'),
+
+      title: 'Branch 5',
+      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
+    }
+    // Add more objects for additional branches
+  ];
 
   return (
     <Grid container spacing={2}>
-      {/* <Grid item xs={12} sm={6} md={3}>
-        <Card sx={{ position: 'relative', height: '13.5625rem' }}>
-          <CardContent sx={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Avatar
-              sx={{
-                width: 100,
-                height: 100,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: 'auto'
-              }}
-              alt="jjj"
-              src={`https://cdn-icons-png.flaticon.com/512/992/992651.png`}
-            />
-            <Button sx={{ mx: 'auto', justifyContent: 'center', alignItems: 'center', display: 'flex',mt:3 }} variant="contained">
-              Add New Branch
-            </Button>
-          </CardContent>
-        </Card>
-      </Grid> */}
       <Grid item xs={12}>
         <BranchesCardHeader />
       </Grid>
-      {Array.from({ length: 5 }, (_, index) => (
+      {branchData.map((branch, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
           <Card sx={{ position: 'relative' }}>
             <IconButton
               aria-label="more"
               aria-controls={`menu-${index}`}
               aria-haspopup="true"
-              onClick={handleMenuClick}
+              onClick={(event) => handleMenuClick(event, branch)}
               sx={{
                 position: 'absolute',
                 top: 5,
@@ -89,7 +105,7 @@ const BranchCard = () => {
               <MenuItem onClick={handleViewClick} component={Link} to="view" sx={{ fontSize: 'small', padding: '8px' }}>
                 View
               </MenuItem>
-              <MenuItem onClick={() => handleEdit()} sx={{ fontSize: 'small', padding: '8px' }}>
+              <MenuItem onClick={() => handleEdit(branch)} sx={{ fontSize: 'small', padding: '8px' }}>
                 Edit
               </MenuItem>
               <MenuItem onClick={() => handleDeleteClick()} sx={{ fontSize: 'small', padding: '8px' }}>
@@ -107,20 +123,22 @@ const BranchCard = () => {
                 mt: 3,
                 mx: 'auto'
               }}
-              image={require('assets/images/avatar/map-pin.png')}
+              // image={require('assets/images/avatar/map-pin.png')}
+              image={branch.image}
             />
             <CardContent>
               <Typography variant="h4" sx={{ mb: 2 }}>
-                Location
+                {branch.title}
               </Typography>
               <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117
+                {branch.location}
+                {/* 29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117 */}
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       ))}
-      <BranchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <BranchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} selectedBranch={selectedBranch} />
       <BranchDeleteModal open={deleteDialogOpen} setOpen={setDeleteDialogOpen} />
     </Grid>
   );

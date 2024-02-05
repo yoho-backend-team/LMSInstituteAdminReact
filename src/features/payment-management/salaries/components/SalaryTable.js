@@ -39,6 +39,8 @@ import OptionsMenu from 'components/option-menu';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryEditDrawer from './SalaryEditDrawer';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -65,97 +67,6 @@ const renderClient = (row) => {
     );
   }
 };
-
-
-
-const defaultColumns = [
-  {
-    flex: 0.1,
-    minWidth: 100,
-    field: 'id',
-    headerName: 'ID',
-    renderCell: ({ row }) => (
-      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-        {`#${row.id}`}
-      </Typography>
-    )
-  },
-  {
-    flex: 1.25,
-    minWidth: 180,
-    field: 'transactionId',
-    headerName: 'Transaction ID',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
-  },
-  {
-    flex: 1.25,
-    minWidth: 210,
-    field: 'name',
-    headerName: 'Students',
-    renderCell: ({ row }) => {
-      const { name, companyEmail } = row;
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-              {name}
-            </Typography>
-            <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-              {companyEmail}
-            </Typography>
-          </Box>
-        </Box>
-      );
-    }
-  },
-  {
-    flex: 1.25,
-    minWidth: 180,
-    field: 'total',
-    headerName: 'Salary Amount',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
-  },
-  {
-    flex: 1.25,
-    minWidth: 180,
-    field: 'PaymentDate',
-    headerName: 'Payment Date',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
-  },
-  {
-    flex: 1,
-    minWidth: 180,
-    field: 'balance',
-    headerName: 'Balance',
-    renderCell: ({ row }) =>
-      row.balance !== 0 ? (
-        <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
-      ) : (
-        <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-      )
-  },
-  {
-    flex: 1.25,
-    minWidth: 180,
-    field: 'status',
-    headerName: 'Status',
-    renderCell: ({ row }) => {
-
-      return (
-        <TextField size='small' select defaultValue='' label='status' id='custom-select'>
-        <MenuItem value=''>
-          <em>None</em>
-        </MenuItem>
-        <MenuItem value={10}>{row.balance}</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
-      </TextField>
-      );
-    }
-  }
-];
 
 /* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
@@ -188,6 +99,28 @@ const SalaryTable = () => {
     console.log('Toggle drawer');
   };
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
+
+  const handleStatusChange = (event, row) => {
+    setSelectedDeleteMaterial(row);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteMaterial.id);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // ** Hooks
 
@@ -208,6 +141,94 @@ const SalaryTable = () => {
     setEndDateRange(end);
   };
 
+  const defaultColumns = [
+    {
+      flex: 0.1,
+      minWidth: 100,
+      field: 'id',
+      headerName: 'ID',
+      renderCell: ({ row }) => (
+        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
+          {`#${row.id}`}
+        </Typography>
+      )
+    },
+    {
+      flex: 1.25,
+      minWidth: 180,
+      field: 'transactionId',
+      headerName: 'Transaction ID',
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
+    },
+    {
+      flex: 1.25,
+      minWidth: 210,
+      field: 'name',
+      headerName: 'Students',
+      renderCell: ({ row }) => {
+        const { name, companyEmail } = row;
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {name}
+              </Typography>
+              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
+                {companyEmail}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      flex: 1.25,
+      minWidth: 180,
+      field: 'total',
+      headerName: 'Salary Amount',
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
+    },
+    {
+      flex: 1.25,
+      minWidth: 180,
+      field: 'PaymentDate',
+      headerName: 'Payment Date',
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
+    },
+    {
+      flex: 1,
+      minWidth: 180,
+      field: 'balance',
+      headerName: 'Balance',
+      renderCell: ({ row }) =>
+        row.balance !== 0 ? (
+          <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
+        ) : (
+          <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
+        )
+    },
+    {
+      flex: 1.25,
+      minWidth: 180,
+      field: 'status',
+      headerName: 'Status',
+      renderCell: ({ row }) => {
+        return (
+          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>{row.balance}</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </TextField>
+        );
+      }
+    }
+  ];
+
   const columns = [
     ...defaultColumns,
     {
@@ -218,7 +239,6 @@ const SalaryTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          
           <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
               <Icon icon="tabler:eye" />
@@ -237,8 +257,7 @@ const SalaryTable = () => {
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
                 menuItemProps: { onClick: toggleEditUserDrawer }
-              },
-             
+              }
             ]}
           />
         </Box>
@@ -373,6 +392,7 @@ const SalaryTable = () => {
       </Grid>
       <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       <SalaryEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
     </DatePickerWrapper>
   );
 };

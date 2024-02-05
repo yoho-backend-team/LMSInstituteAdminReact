@@ -20,7 +20,7 @@ import { Link } from 'react-router-dom';
 import CustomAvatar from 'components/mui/avatar';
 import UserAddDrawer from 'features/user-management/users/components/UserAddDrawer';
 import UserTableHeader from 'features/user-management/users/components/UserTableHeader';
-
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users/redux/userThunks';
 import { FilterUsersByRole, FilterUsersByStatus, searchUsers } from 'features/user-management/users/services/userServices';
@@ -130,6 +130,30 @@ const UserBodySection = ({ groups, users }) => {
     },
     [dispatch]
   );
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
+
+  const handleStatus = (event, row) => {
+    setSelectedDeleteMaterial(row);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteMaterial.id);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const columns = [
     {
       flex: 0.1,
@@ -229,11 +253,13 @@ const UserBodySection = ({ groups, users }) => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <TextField size='small' select defaultValue="" label="status" id="custom-select">
+          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatus(e, row)}>
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            <MenuItem  color={userStatusObj[row.status]} value={10}>{row.status}</MenuItem>
+            <MenuItem color={userStatusObj[row.status]} value={10}>
+              {row.status}
+            </MenuItem>
             <MenuItem value={20}>Twenty</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
           </TextField>
@@ -306,6 +332,7 @@ const UserBodySection = ({ groups, users }) => {
         onPaginationModelChange={setPaginationModel}
       />
       <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
     </Card>
   );
 };
