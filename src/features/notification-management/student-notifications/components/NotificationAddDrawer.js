@@ -8,7 +8,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
+// import axios from 'axios';
 
 // ** Custom Component Import
 
@@ -156,36 +156,38 @@ const NotificationAddDrawer = (props) => {
   };
 
   useEffect(() => {
-    getAllGroups();
+    // getAllGroups(); // Commented out the axios fetch for demonstration purposes
   }, []);
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
+  // Commented out axios fetch for demonstration purposes
+  // const getAllGroups = async () => {
+  //   let config = {
+  //     method: 'get',
+  //     maxBodyLength: Infinity,
+  //     url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `Bearer ${localStorage.getItem('token')}`
+  //     }
+  //   };
 
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  //   await axios
+  //     .request(config)
+  //     .then((response) => {
+  //       console.log('Groups : ', response.data);
+  //       setGroups(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -325,29 +327,41 @@ const NotificationAddDrawer = (props) => {
                   limitTags={2}
                   options={top100Films}
                   id="autocomplete-limit-tags-course"
-                  getOptionLabel={(option) => option.title || ''}
+                  getOptionLabel={(option) => (option && option.title) || ''}
                   error={Boolean(errors.course)}
                   helperText={errors.course?.message}
-                  defaultValue={[top100Films[13], top100Films[12], top100Films[11]]}
+                  defaultValue={top100Films.filter((film) => [13, 12, 11].includes(film.year))}
                   renderInput={(params) => (
-                    <TextField {...params} label="Course" placeholder="Favorites" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                    <TextField
+                      {...params}
+                      label="Course"
+                      placeholder="Favorites"
+                      error={Boolean(errors.course)}
+                      helperText={errors.course?.message}
+                    />
                   )}
                 />
               )}
             />
           </Grid>
 
-         <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={12}>
             <CustomAutocomplete
               sx={{ mb: 2 }}
               multiple
               limitTags={2}
               options={batch}
-              id="autocomplete-limit-tags"
-              getOptionLabel={(option) => option.title || ''}
-              defaultValue={[batch[13], batch[12], batch[11]]}
+              id="autocomplete-limit-tags-batch"
+              getOptionLabel={(option) => (option && option.title) || ''}
+              defaultValue={batch.slice(0, 3)} // Adjust this based on your requirements
               renderInput={(params) => (
-                <TextField {...params} label="Batch" placeholder="Favorites" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                <TextField
+                  {...params}
+                  label="Batch"
+                  placeholder="Favorites"
+                  error={Boolean(errors.batch)}
+                  helperText={errors.batch?.message}
+                />
               )}
             />
           </Grid>
@@ -358,15 +372,21 @@ const NotificationAddDrawer = (props) => {
               multiple
               limitTags={2}
               options={students}
-              id="autocomplete-limit-tags"
-              getOptionLabel={(option) => option.title || ''}
-              defaultValue={[students[13], students[12], students[11]]}
+              id="autocomplete-limit-tags-students"
+              getOptionLabel={(option) => (option && option.title) || ''}
+              defaultValue={students.slice(0, 3)} // Adjust this based on your requirements
               renderInput={(params) => (
-                <TextField {...params} label="Students" placeholder="Favorites" error={Boolean(errors.students)} helperText={errors.students?.message} />
+                <TextField
+                  {...params}
+                  label="Students"
+                  placeholder="Favorites"
+                  error={Boolean(errors.students)}
+                  helperText={errors.students?.message}
+                />
               )}
             />
           </Grid>
-          
+
           <Grid item xs={12} sm={12}>
             <TextField
               sx={{ mb: 2 }}

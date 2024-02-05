@@ -13,11 +13,9 @@ import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
 
 // ** Custom Components Imports
-// import CustomAvatar from 'components/mui/avatar';
-// import UserAddDrawer from 'features/user-management/users/components/UserAddDrawer';
-// import UserTableHeader from 'features/user-management/users/components/UserTableHeader';
-import NotificationAddDrawer from './NotificationAddDrawer';
+
 import NotificationTableHeader from './NotificationTableHeader';
+import NotificationAddDrawer from './NotificationAddDrawer';
 import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';

@@ -37,6 +37,8 @@ import { TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
 
 import FeesCardHeader from './FeesCardHeader';
+import FeesAddDrawer from './FeesAddDrawer';
+import FeesEditDrawer from './FeesEditDrawer';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -48,15 +50,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
-// ** Vars
-const invoiceStatusObj = {
-  Sent: { color: 'secondary', icon: 'tabler:circle-check' },
-  Paid: { color: 'success', icon: 'tabler:circle-half-2' },
-  Draft: { color: 'primary', icon: 'tabler:device-floppy' },
-  'Partial Payment': { color: 'warning', icon: 'tabler:chart-pie' },
-  'Past Due': { color: 'error', icon: 'tabler:alert-circle' },
-  Downloaded: { color: 'info', icon: 'tabler:arrow-down-circle' }
-};
 
 // ** renders client column
 const renderClient = (row) => {
@@ -75,110 +68,113 @@ const renderClient = (row) => {
   }
 };
 
+const statusObj = {
+  1: { title: 'current', color: 'primary' },
+  2: { title: 'professional', color: 'success' },
+  3: { title: 'rejected', color: 'error' },
+  4: { title: 'resigned', color: 'warning' },
+  5: { title: 'applied', color: 'info' }
+}
+
 
 const defaultColumns = [
-    {
-      flex: 0.1,
-      minWidth: 100,
-      field: 'id',
-      headerName: 'ID',
-      renderCell: ({ row }) => (
-        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-          {`#${row.id}`}
-        </Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 80,
-      field: 'invoiceStatus',
-      renderHeader: () => <Icon icon="tabler:trending-up" />,
-      renderCell: ({ row }) => {
-        const { dueDate, balance, invoiceStatus } = row;
-        const color = invoiceStatusObj[invoiceStatus] ? invoiceStatusObj[invoiceStatus].color : 'primary';
-  
-        return (
-          <Tooltip
-            title={
-              <div>
-                <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-                  {invoiceStatus}
-                </Typography>
-                <br />
-                <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-                  Balance:
-                </Typography>{' '}
-                {balance}
-                <br />
-                <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-                  Due Date:
-                </Typography>{' '}
-                {dueDate}
-              </div>
-            }
-          >
-            <Avatar skin="light" color={color} sx={{ width: '1.875rem', height: '1.875rem' }}>
-              <Icon icon={invoiceStatusObj[invoiceStatus]} />
-            </Avatar>
-          </Tooltip>
-        );
-      }
-    },
-    {
-      flex: 0.25,
-      minWidth: 320,
-      field: 'name',
-      headerName: 'Client',
-      renderCell: ({ row }) => {
-        const { name, companyEmail } = row;
-  
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {name}
-              </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {companyEmail}
-              </Typography>
-            </Box>
+  {
+    flex: 0.1,
+    minWidth: 100,
+    field: 'id',
+    headerName: 'ID',
+    renderCell: ({ row }) => (
+      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
+        {`#${row.id}`}
+      </Typography>
+    )
+  },
+  {
+    flex: 1.25,
+    minWidth: 180,
+    field: 'transactionId',
+    headerName: 'Transaction ID',
+    renderCell: ({ row }) => (
+      <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
+    )
+  },
+  {
+    flex: 1.25,
+    minWidth: 210,
+    field: 'name',
+    headerName: 'Students',
+    renderCell: ({ row }) => {
+      const { name, companyEmail } = row;
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {renderClient(row)}
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              {name}
+            </Typography>
+            <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
+              {companyEmail}
+            </Typography>
           </Box>
-        );
-      }
-    },
-    {
-      flex: 0.1,
-      minWidth: 100,
-      field: 'total',
-      headerName: 'Total',
-      renderCell: ({ row }) => (
-        <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
-      )
-    },
-    {
-      flex: 0.15,
-      minWidth: 140,
-      field: 'issuedDate',
-      headerName: 'Issued Date',
-      renderCell: ({ row }) => (
-        <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
-      )
-    },
-    {
-      flex: 0.1,
-      minWidth: 100,
-      field: 'balance',
-      headerName: 'Balance',
-      renderCell: ({ row }) => (
-        row.balance !== 0 ? (
-          <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
-        ) : (
-          <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-        )
-      )
+        </Box>
+      );
     }
-  ];
+  },
+  {
+    flex: 1.25,
+    minWidth: 180,
+    field: 'total',
+    headerName: 'Amount Paid',
+    renderCell: ({ row }) => (
+      <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
+    )
+  },
+  {
+    flex: 1.25,
+    minWidth: 180,
+    field: 'issuedDate',
+    headerName: 'Issued Date',
+    renderCell: ({ row }) => (
+      <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
+    )
+  },
+  {
+    flex: 1,
+    minWidth: 180,
+    field: 'balance',
+    headerName: 'Balance',
+    renderCell: ({ row }) => (
+      row.balance !== 0 ? (
+        <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
+      ) : (
+        <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
+      )
+    )
+  },
+  {
+    flex: 1.25,
+    minWidth: 180,
+    field: 'status',
+    headerName: 'Status',
+    renderCell: ({ row }) => {
+      const status = statusObj[row.status];
+
+      return (
+        <CustomChip
+          rounded
+          size='small'
+          skin='light'
+          color={status ? status.color : 'primary'}
+          label={status ? status.title : 'current'}
+          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+        />
+      );
+    }
+  },
+];
+
+
 
 
 /* eslint-disable */
@@ -202,6 +198,17 @@ const FeesTable = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+
+
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+  const [editUserOpen, setEditUserOpen] = useState(false);
+
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('Toggle drawer');
+  };
 
   // ** Hooks
 
@@ -239,7 +246,7 @@ const FeesTable = () => {
           </Tooltip>
           <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon="tabler:eye" />
+              <Icon  icon="tabler:eye" />
             </IconButton>
           </Tooltip>
           <OptionsMenu
@@ -253,7 +260,7 @@ const FeesTable = () => {
               {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon="tabler:edit" fontSize={20} />
+                icon: <Icon onClick={toggleEditUserDrawer} icon="tabler:edit" fontSize={20} />
               },
               {
                 text: 'Duplicate',
@@ -277,7 +284,8 @@ const FeesTable = () => {
         issuedDate: '2025-01-01',
         balance: 55,
         avatar: '',
-        avatarColor: 'primary'
+        avatarColor: 'primary',
+        transactionid:'5',
       },
     {
         id: 2,
@@ -288,7 +296,8 @@ const FeesTable = () => {
         issuedDate: '2000-01-01',
         balance: 50,
         avatar: '',
-        avatarColor: 'primary'
+        avatarColor: 'primary',
+        transactionid:'12'
       },
     {
         id: 3,
@@ -299,7 +308,8 @@ const FeesTable = () => {
         issuedDate: '25-01-01',
         balance: 40,
         avatar: '',
-        avatarColor: 'primary'
+        avatarColor: 'primary',
+        transactionid:'5'
       },
     {
         id: 4,
@@ -310,7 +320,8 @@ const FeesTable = () => {
         issuedDate: '202-01-01',
         balance: 30,
         avatar: '',
-        avatarColor: 'primary'
+        avatarColor: 'primary',
+        transactionid:'25'
       },
     {
         id: 5,
@@ -321,7 +332,8 @@ const FeesTable = () => {
         issuedDate: '20-01-01',
         balance: 0,
         avatar: '',
-        avatarColor: 'primary'
+        avatarColor: 'primary',
+        transactionid:'55'
       },
 
 
@@ -330,11 +342,12 @@ const FeesTable = () => {
   
 
   return (
+    
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Filters" />
+            <CardHeader title="Filters"  />
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
@@ -375,7 +388,7 @@ const FeesTable = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <FeesCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} />
+            <FeesCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter}   toggle={toggleAddUserDrawer}/>
              <DataGrid
               autoHeight
               pagination
@@ -392,6 +405,10 @@ const FeesTable = () => {
           </Card>
         </Grid>
       </Grid>
+
+      <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+
     </DatePickerWrapper>
   );
 };

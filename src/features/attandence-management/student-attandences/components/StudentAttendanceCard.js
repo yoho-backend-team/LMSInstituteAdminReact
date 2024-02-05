@@ -1,21 +1,19 @@
-import React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 // import CardMedia from '@mui/material/CardMedia';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
+import TimerIcon from '@mui/icons-material/Timer';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
-import Button from '@mui/material/Button';
 import CardContent from '@mui/material/CardContent';
-import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-import Icon from 'components/icon';
-// ** React Router Import
-import { Link } from 'react-router-dom';
-// import { useState } from 'react';
+import Button from '@mui/material/Button';
+// import { Link } from 'react-router-dom';
 
+// ** React Router Import
+// import { useState } from 'react';
 
 const StudentAttendanceCard = () => {
   // const [copiedIndex, setCopiedIndex] = useState(null);
@@ -101,20 +99,16 @@ const StudentAttendanceCard = () => {
     // Add more card data as needed
   ];
 
-
-
-  const handleCopyLink = (index) => {
-    // You can implement the logic to copy the link here
-    // For simplicity, let's just log the index to the console
-    console.log(`Link copied for card at index ${index}`);
-    // setCopiedIndex(index);
-  };
-
   return (
     <Grid container spacing={2}>
       {cardData.map((card, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
-          <Card sx={{ position: 'relative' }}>
+          <Card
+            sx={{
+              position: 'relative',
+              borderTop: card.status === 'active' ? '4px solid green' : '4px solid #7cf2e1'
+            }}
+          >
             {/* <CardMedia sx={{ height: '12.625rem' }} image={card.image} />
             <Avatar
               alt={card.classname}
@@ -131,7 +125,7 @@ const StudentAttendanceCard = () => {
             <CardContent>
               <Box
                 sx={{
-                  mt: 2.75,
+                  mt: 2.55,
                   mb: 1.85,
                   display: 'flex',
                   flexWrap: 'wrap',
@@ -142,14 +136,49 @@ const StudentAttendanceCard = () => {
                   <Typography variant="h3">{card.classname}</Typography>
                   <Typography variant="body2">{card.location}</Typography>
                 </Box>
-                <Box>
-                  <Button variant="contained">{card.duration}</Button>
+
+                <Box
+                  sx={{
+                    borderRadius: '10%', // Make it round
+                    border: '1px solid grey', // Add border
+                    padding: '3px 9px', // Adjust padding as needed
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    '& .MuiTypography-body2': {
+                      margin: 0 // Remove default margin on Typography
+                    }
+                  }}
+                >
+                  <Typography variant="body2">{card.duration}</Typography>
                 </Box>
               </Box>
 
-              <Box sx={{ mb: 2.55 }}>
+              <Box sx={{ mb: 2.55, display: 'flex', alignItems: 'center' }}>
+                <TimerIcon sx={{ marginRight: 1 }} />
                 <Typography variant="body2">{card.dateandtime}</Typography>
               </Box>
+              {/* <Box
+                  sx={{
+                    gap: 2,
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <AvatarGroup max={4} sx={{}}>
+                    {card.friends.map((friend, friendIndex) => (
+                      <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
+                    ))}
+                  </AvatarGroup>
+
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
+                  </Box>
+                </Box> */}
+
               <Box
                 sx={{
                   gap: 2,
@@ -159,39 +188,36 @@ const StudentAttendanceCard = () => {
                   alignItems: 'center'
                 }}
               >
-                <AvatarGroup max={4}>
+                <AvatarGroup max={4} sx={{ width: 40, height: 40, '& .MuiAvatar-root': { width: 32, height: 32 } }}>
                   {card.friends.map((friend, friendIndex) => (
                     <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
                   ))}
                 </AvatarGroup>
+                {/* {card.friends.length > 4 && (
+                  <Avatar
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      backgroundColor: 'primary.main',
+                      color: 'common.white',
+                      fontSize: 14,
+                      fontWeight: 'bold',
+                      marginLeft: -8
+                    }}
+                  >
+                    +{card.friends.length - 4}
+                  </Avatar>
+                )} */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
                 </Box>
               </Box>
+              <Divider sx={{ my: 2 }} />
 
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ mt: 1.75, alignItems: 'center' }}>
-                  <input
-                    type="text"
-                    value={`Your Link Here - ${index}`} // Replace this with your actual link
-                    readOnly
-                    style={{ border: 'none', outline: 'none', backgroundColor: 'transparent' }}
-                  />
-                  <IconButton
-                    onClick={() => handleCopyLink(index)}
-                    sx={{ marginLeft: 'auto', color: 'primary.main' }}
-                    aria-label="copy-link"
-                  >
-                    <FileCopyIcon />
-                  </IconButton>
-                </Box>
-
-                <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
-                 
-                  <IconButton component={Link} to={'view'} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
-                  <Icon icon="tabler:eye-filled" />
-                </IconButton>
-                </Box>
+              <Box  sx={{ display: 'flex', justifyContent:'flex-end', alignItems: 'flex-end', textDecoration: 'none' }}>
+                <Button variant="tonal" sx={{ px: 2 }}>
+                  View Attendance
+                </Button>
               </Box>
             </CardContent>
           </Card>

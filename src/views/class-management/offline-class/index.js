@@ -15,7 +15,7 @@ const OfflineClass = () => {
         <OfflineClassFilterCard />
         <OfflineClassCardHeader />
         <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
-          <OfflineClassCard />
+          <OfflineClassCard /> 
         </Grid>
       </Grid>
     </>
