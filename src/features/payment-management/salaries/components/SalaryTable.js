@@ -38,9 +38,9 @@ import OptionsMenu from 'components/option-menu';
 
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryAddDrawer from './SalaryAddDrawer';
+import SalaryEditDrawer from './SalaryEditDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import SalaryEditDrawer from './SalaryEditDrawer';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -66,13 +66,7 @@ const renderClient = (row) => {
   }
 };
 
-const statusObj = {
-  1: { title: 'current', color: 'primary' },
-  2: { title: 'professional', color: 'success' },
-  3: { title: 'rejected', color: 'error' },
-  4: { title: 'resigned', color: 'warning' },
-  5: { title: 'applied', color: 'info' }
-};
+
 
 const defaultColumns = [
   {
@@ -148,17 +142,16 @@ const defaultColumns = [
     field: 'status',
     headerName: 'Status',
     renderCell: ({ row }) => {
-      const status = statusObj[row.status];
 
       return (
-        <CustomChip
-          rounded
-          size="small"
-          skin="light"
-          color={status ? status.color : 'primary'}
-          label={status ? status.title : 'current'}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
+        <TextField size='small' select defaultValue='' label='status' id='custom-select'>
+        <MenuItem value=''>
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value={10}>{row.balance}</MenuItem>
+        <MenuItem value={20}>Twenty</MenuItem>
+        <MenuItem value={30}>Thirty</MenuItem>
+      </TextField>
       );
     }
   }
@@ -189,12 +182,13 @@ const SalaryTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-
   const [editUserOpen, setEditUserOpen] = useState(false);
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
   };
+
+
   // ** Hooks
 
   const handleFilter = (val) => {
@@ -224,11 +218,7 @@ const SalaryTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="Delete Invoice">
-            <IconButton size="small" sx={{ color: 'text.secondary' }}>
-              <Icon icon="tabler:trash" />
-            </IconButton>
-          </Tooltip>
+          
           <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
               <Icon icon="tabler:eye" />
@@ -245,12 +235,10 @@ const SalaryTable = () => {
               {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon onClick={toggleEditUserDrawer} icon="tabler:edit" fontSize={20} />
+                icon: <Icon icon="tabler:edit" fontSize={20} />,
+                menuItemProps: { onClick: toggleEditUserDrawer }
               },
-              {
-                text: 'Duplicate',
-                icon: <Icon icon="tabler:copy" fontSize={20} />
-              }
+             
             ]}
           />
         </Box>
@@ -374,7 +362,6 @@ const SalaryTable = () => {
               rowHeight={62}
               rows={store}
               columns={columns}
-              checkboxSelection
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}
               paginationModel={paginationModel}

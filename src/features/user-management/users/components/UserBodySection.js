@@ -1,32 +1,31 @@
 // ** React Imports
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // ** MUI Imports
+import { Button, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, TextField } from '@mui/material';
 
 // ** React Router Import
 import { Link } from 'react-router-dom';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
 import CustomAvatar from 'components/mui/avatar';
-import UserTableHeader from 'features/user-management/users/components/UserTableHeader';
 import UserAddDrawer from 'features/user-management/users/components/UserAddDrawer';
+import UserTableHeader from 'features/user-management/users/components/UserTableHeader';
 
-import { getInitials } from 'utils/get-initials';
-import { searchUsers, FilterUsersByRole, FilterUsersByStatus } from 'features/user-management/users/services/userServices';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users/redux/userThunks';
+import { FilterUsersByRole, FilterUsersByStatus, searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
+import { getInitials } from 'utils/get-initials';
 
 const userStatusObj = {
   1: 'success',
@@ -204,21 +203,40 @@ const UserBodySection = ({ groups, users }) => {
       }
     },
 
+    // {
+    //   flex: 0.15,
+    //   minWidth: 110,
+    //   field: 'status',
+    //   headerName: 'Status',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <CustomChip
+    //         rounded
+    //         skin="light"
+    //         size="small"
+    //         label={row.status == '1' ? 'Active' : 'InActive'}
+    //         color={userStatusObj[row.status]}
+    //         sx={{ textTransform: 'capitalize' }}
+    //       />
+    //     );
+    //   }
+    // },
+
     {
-      flex: 0.15,
-      minWidth: 110,
+      flex: 1.25,
+      minWidth: 180,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <CustomChip
-            rounded
-            skin="light"
-            size="small"
-            label={row.status == '1' ? 'Active' : 'InActive'}
-            color={userStatusObj[row.status]}
-            sx={{ textTransform: 'capitalize' }}
-          />
+          <TextField size='small' select defaultValue="" label="status" id="custom-select">
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem  color={userStatusObj[row.status]} value={10}>{row.status}</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </TextField>
         );
       }
     },
