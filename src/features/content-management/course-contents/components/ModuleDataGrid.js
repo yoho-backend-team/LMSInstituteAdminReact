@@ -111,9 +111,17 @@ const Module = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
-  const [editUserOpen, setEditUserOpen] = useState(false);
-  // const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
   const [isViewModalOpen, setViewModalOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+
+  
+  const handleStatusChange = (event, row) => {
+    setSelectedDeleteMaterial(row);
+    setDeleteDialogOpen(true);
+  };
+
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
@@ -121,15 +129,15 @@ const Module = () => {
     setViewModalOpen(true);
   };
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('toogle pressed');
   };
-  const handleDeleteGroup = async () => {
+   const handleDeleteGroup = async () => {
     try {
-      const result = await deleteGroup(selectedDeleteGroupId);
+      const result = await deleteGroup(selectedDeleteMaterial.id);
 
       if (result.success) {
         toast.success(result.message);

@@ -11,13 +11,15 @@ import { useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 
 const CardStatsVertical = (props) => {
   // ** Props
   const { sx, title, subtitle, image } = props;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
@@ -25,8 +27,26 @@ const CardStatsVertical = (props) => {
     setEditModalOpen(true);
   };
 
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
+  
+  const handleStatusValue = () => {
+    setSelectedDeleteMaterial(props.material);
+    setDeleteDialogOpen(true);
+    setStatusValue(event.target.value);
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteMaterial.id);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -41,7 +61,9 @@ const CardStatsVertical = (props) => {
               <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
                 <Icon icon="tabler:edit" />
               </IconButton>
-              <IconButton aria-label="capture screenshot" color="error">
+              <IconButton  onClick={() => {
+            setDeleteDialogOpen(true);
+          }} aria-label="capture screenshot" color="error">
                 <Icon icon="tabler:archive-filled" />
               </IconButton>
             </Box>
@@ -61,6 +83,11 @@ const CardStatsVertical = (props) => {
         </CardContent>
       </Card>
       <CategoryEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <GroupDeleteDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        handleDeleteGroup={handleDeleteGroup}
+      />
     </Grid>
   );
 };

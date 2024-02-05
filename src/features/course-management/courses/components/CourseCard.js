@@ -124,15 +124,35 @@ import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 
 const CourseCard = (props) => {
   const [statusValue, setStatusValue] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
   const { sx, image, personName, coursename, students ,price} = props;
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
+
+  const handleStatusValue = () => {
+    setSelectedDeleteMaterial(props.material);
+    setDeleteDialogOpen(true);
+    setStatusValue(event.target.value);
   };
 
+  const handleDeleteGroup = async () => {
+    try {
+      const result = await deleteGroup(selectedDeleteMaterial.id);
+
+      if (result.success) {
+        toast.success(result.message);
+        dispatch(getAllGroups());
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return (
     <Grid item xs={12} sm={12} lg={4}>
       <Card sx={{ ...sx }}>
@@ -183,6 +203,11 @@ const CourseCard = (props) => {
           </Button>
         </CardActions>
       </Card>
+      <GroupDeleteDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        handleDeleteGroup={handleDeleteGroup}
+      />
     </Grid>
   );
 };
