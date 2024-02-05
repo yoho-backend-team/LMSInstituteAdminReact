@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import { Grid } from '@mui/material';
+// import { Grid } from '@mui/material';
 
 // ** Third Party Imports
 // import axios from 'axios';
@@ -34,8 +34,8 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 const UserViewLeft = () => {
 
 // const designationIcon = data?.designationIcon || 'tabler:briefcase';
-<Grid item xs={12}>
-<Card>
+return(
+  <Card>
     <CardMedia
       component="img"
       alt="profile-header"
@@ -54,7 +54,7 @@ const UserViewLeft = () => {
         justifyContent: { xs: 'center', md: 'flex-start' }
       }}
     >
-      <ProfilePicture src='https://www.pngitem.com/pimgs/m/348-3481514_circle-profile-girl-hd-png-download.png' alt="profile-picture" />
+      <ProfilePicture src='https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg' alt="profile-picture" />
       <Box
         sx={{
           width: '100%',
@@ -66,16 +66,18 @@ const UserViewLeft = () => {
         }}
       >
         <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
-          <Typography variant="h5" sx={{ mb: 2.5 }}>
-           Name
-          </Typography>
+          
           <Box
             sx={{
               display: 'flex',
               flexWrap: 'wrap',
-              justifyContent: ['center', 'flex-start']
+              justifyContent: ['center', 'flex-start'],
+              alignItems:'center'
             }}
           >
+            <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
+           Lara Carlson
+          </Typography>
             <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
               <Icon fontSize="1.25rem" icon='tabler:briefcase' />
               <Typography sx={{ color: 'text.secondary' }}>ReactJs</Typography>
@@ -92,12 +94,15 @@ const UserViewLeft = () => {
         </Box>
         <Button variant="contained" sx={{ '& svg': { mr: 2 } }}>
           <Icon icon="tabler:check" fontSize="1.125rem" />
-          Connected
+          Active
         </Button>
       </Box>
     </CardContent>
-  </Card>;
-</Grid>
+  </Card>
+
+)
+
+
   
 };
 
