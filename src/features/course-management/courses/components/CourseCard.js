@@ -110,21 +110,28 @@
 
 // export default CourseCard;
 
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
-import Icon from 'components/icon';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 
 const CourseCard = (props) => {
-  const { sx, image, personName, coursename, students ,price,chipColor = 'primary' ,chipText} = props;
+  const [statusValue, setStatusValue] = useState('');
+  const { sx, image, personName, coursename, students ,price} = props;
+  const handleStatusValue = (e) => {
+    setStatusValue(e.target.value);
+  };
 
   return (
     <Grid item xs={12} sm={12} lg={4}>
@@ -165,7 +172,12 @@ const CourseCard = (props) => {
           </Box>
         </CardContent>
         <CardActions className="demo-space-x" sx={{ pt: 0 ,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <CustomChip rounded size="medium" skin="light" color={chipColor} label={chipText} />
+        <Grid sx={{mt:1}}>
+          <TextField size='small' select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
+            <MenuItem value="Active">Active</MenuItem>
+            <MenuItem value="Deactive">Deactive</MenuItem>
+          </TextField>
+          </Grid>
           <Button component={Link} to='view ' size='medium' variant="contained" color="primary">
             View Details
           </Button>

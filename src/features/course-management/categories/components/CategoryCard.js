@@ -7,20 +7,28 @@ import Typography from '@mui/material/Typography';
 // ** Custom Component Import
 import Grid from '@mui/material/Grid';
 import Icon from 'components/icon';
-import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 const CardStatsVertical = (props) => {
   // ** Props
-  const { sx, title, chipText, subtitle, image, chipColor = 'primary' } = props;
+  const { sx, title, subtitle, image } = props;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
+
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
   const handleEdit = () => {
     setEditModalOpen(true);
   };
+
+  const handleStatusValue = (e) => {
+    setStatusValue(e.target.value);
+  };
+
   return (
     <Grid item xs={12} sm={6} lg={4}>
       <Card sx={{ ...sx }}>
@@ -44,7 +52,12 @@ const CardStatsVertical = (props) => {
           <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
             {subtitle}
           </Typography>
-          <CustomChip rounded size="small" skin="light" color={chipColor} label={chipText} sx={{ mt: 2 }} />
+          <Grid sx={{mt:1}}>
+          <TextField size='small' select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
+            <MenuItem value="Active">Active</MenuItem>
+            <MenuItem value="Deactive">Deactive</MenuItem>
+          </TextField>
+          </Grid>
         </CardContent>
       </Card>
       <CategoryEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />

@@ -4,9 +4,11 @@ import { Grid, Typography, Box, Card, CardContent, IconButton } from '@mui/mater
 // ** React  Import
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-  
+
 // ** Custom Components
 import Icon from 'components/icon';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import BatchCardHeader from 'features/batch-management/batches/components/BatchCardHeader';
 import CustomChip from 'components/mui/chip';
 import { styled } from '@mui/material/styles';
@@ -29,10 +31,14 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 const Batch = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
+  const handleStatusValue = (e) => {
+    setStatusValue(e.target.value);
+  };
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
-  const handleEdit = () => { 
+  const handleEdit = () => {
     setEditModalOpen(true);
   };
 
@@ -276,7 +282,16 @@ const Batch = () => {
             <BorderLinearProgress variant="determinate" value={70} />
             <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CustomChip rounded size="small" skin="light" color={'success'} label={'Active'} />
+                <TextField
+                  size="small"
+                  select
+                  fullWidth
+                  label="Status"
+                  SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+                >
+                  <MenuItem value="Active">Active</MenuItem>
+                  <MenuItem value="Deactive">Deactive</MenuItem>
+                </TextField>
               </Box>
               <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
                 <IconButton onClick={() => handleDeleteClick()} aria-label="capture screenshot" color="error">
