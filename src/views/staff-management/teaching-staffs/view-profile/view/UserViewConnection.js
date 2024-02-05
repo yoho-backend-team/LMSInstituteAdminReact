@@ -1,182 +1,191 @@
-// ** Next Import
-import { Link } from 'react-router-dom'
-
-// ** MUI Imports
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
-import Switch from '@mui/material/Switch'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Grid'
+import Avatar from '@mui/material/Avatar'
+import { styled } from '@mui/material/styles'
+import TimelineDot from '@mui/lab/TimelineDot'
+import TimelineItem from '@mui/lab/TimelineItem'
 import CardHeader from '@mui/material/CardHeader'
+import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import TimelineContent from '@mui/lab/TimelineContent'
+import TimelineSeparator from '@mui/lab/TimelineSeparator'
+import TimelineConnector from '@mui/lab/TimelineConnector'
+import MuiTimeline from '@mui/lab/Timeline'
 
 // ** Icon Imports
 import Icon from 'components/icon'
 
-const connectedAccountsArr = [
-  {
-    checked: true,
-    title: 'Google',
-    logo: '/images/logos/google.png',
-    subtitle: 'Calendar and Contacts'
-  },
-  {
-    checked: false,
-    title: 'Slack',
-    logo: '/images/logos/slack.png',
-    subtitle: 'Communications'
-  },
-  {
-    checked: true,
-    title: 'Github',
-    logo: '/images/logos/github.png',
-    subtitle: 'Manage your Git repositories'
-  },
-  {
-    checked: true,
-    title: 'Mailchimp',
-    subtitle: 'Email marketing service',
-    logo: '/images/logos/mail-chimp.png'
-  },
-  {
-    title: 'Asana',
-    checked: false,
-    subtitle: 'Communication',
-    logo: '/images/logos/asana.png'
-  }
-]
+// ** Demo Component Imports
+// import UsersInvoiceListTable from 'src/views/apps/user/view/UsersInvoiceListTable'
+// import UsersProjectListTable from 'src/views/apps/user/view/UsersProjectListTable'
+// import UsersInvoiceListTable from './UsersInvoiceListTable'
+// import UsersProjectListTable from './UsersProjectListTable'
 
-const socialAccountsArr = [
-  {
-    title: 'Facebook',
-    isConnected: false,
-    logo: '/images/logos/facebook.png'
-  },
-  {
-    title: 'Twitter',
-    isConnected: true,
-    username: '@Pixinvent',
-    logo: '/images/logos/twitter.png'
-  },
-  {
-    title: 'Instagram',
-    isConnected: true,
-    username: '@Pixinvent',
-    logo: '/images/logos/instagram.png'
-  },
-  {
-    title: 'Dribbble',
-    isConnected: false,
-    logo: '/images/logos/dribbble.png'
-  },
-  {
-    title: 'Behance',
-    isConnected: false,
-    logo: '/images/logos/behance.png'
+// ** Custom Components Imports
+import OptionsMenu from 'components/option-menu'
+
+// Styled Timeline component
+const Timeline = styled(MuiTimeline)({
+  '& .MuiTimelineItem-root:before': {
+    display: 'none'
   }
-]
+})
+
 
 const UserViewConnection = () => {
-  return (
-    <Grid container spacing={6}>
-      {/* Connected Accounts Cards */}
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Connected Accounts' sx={{ pb: 1.5 }} />
-          <CardContent>
-            <Typography sx={{ mb: 6, color: 'text.secondary' }}>
-              Display content from your connected accounts on your site
-            </Typography>
-
-            {connectedAccountsArr.map(account => {
-              return (
-                <Box
-                  key={account.title}
-                  sx={{
-                    gap: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    '&:not(:last-of-type)': { mb: 4 }
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box sx={{ mr: 4, display: 'flex', justifyContent: 'center' }}>
-                      <img src={account.logo} alt={account.title} height='38' width='38' />
-                    </Box>
-                    <div>
-                      <Typography variant='h6'>{account.title}</Typography>
-                      <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                        {account.subtitle}
+  
+    return (
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          {/* <UsersProjectListTable /> */}
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader
+              title='User Activity Timeline'
+              action={
+                <OptionsMenu
+                  options={['Share timeline', 'Suggest edits', 'Report bug']}
+                  iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
+                />
+              }
+            />
+            <CardContent>
+              <Timeline>
+                <TimelineItem>
+                  <TimelineSeparator>
+                    <TimelineDot color='warning' />
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ mb: theme => `${theme.spacing(3)} !important` }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Typography variant='h6' sx={{ mr: 2 }}>
+                        Client Meeting
                       </Typography>
-                    </div>
-                  </Box>
-                  <Switch defaultChecked={account.checked} />
-                </Box>
-              )
-            })}
-          </CardContent>
-        </Card>
+                      <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                        Today
+                      </Typography>
+                    </Box>
+                    <Typography variant='body2' sx={{ mb: 3 }}>
+                      Project meeting with john @10:15am
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Avatar alt='Avatar' src='/images/avatars/3.png' sx={{ width: 38, height: 38, mr: 3 }} />
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Typography variant='body2' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                          Leona Watkins (Client)
+                        </Typography>
+                        <Typography variant='caption'>CEO of Infibeam</Typography>
+                      </Box>
+                    </Box>
+                  </TimelineContent>
+                </TimelineItem>
+                <TimelineItem>
+                  <TimelineSeparator>
+                    <TimelineDot color='primary' />
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ mb: theme => `${theme.spacing(3)} !important` }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Typography variant='h6' sx={{ mr: 2 }}>
+                        Create a new project for client
+                      </Typography>
+                      <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                        2 Days Ago
+                      </Typography>
+                    </Box>
+                    <Typography variant='body2'>Add files to new design folder</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+                <TimelineItem>
+                  <TimelineSeparator>
+                    <TimelineDot color='info' />
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ mb: theme => `${theme.spacing(3)} !important` }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Typography variant='h6' sx={{ mr: 2 }}>
+                        Shared 2 New Project Files
+                      </Typography>
+                      <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                        6 Days Ago
+                      </Typography>
+                    </Box>
+                    <Typography variant='body2' sx={{ mb: 3 }}>
+                      Sent by Mollie Dixon
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 2 } }}>
+                      <Box sx={{ mr: 3, display: 'flex', alignItems: 'center', color: 'warning.main' }}>
+                        <Icon fontSize='1.25rem' icon='tabler:file-text' />
+                        <Typography variant='body2' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                          App Guidelines
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', color: 'success.main' }}>
+                        <Icon fontSize='1.25rem' icon='tabler:table' />
+                        <Typography variant='body2' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                          Testing Results
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TimelineContent>
+                </TimelineItem>
+                <TimelineItem>
+                  <TimelineSeparator>
+                    <TimelineDot color='secondary' />
+                  </TimelineSeparator>
+                  <TimelineContent>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <Typography variant='h6' sx={{ mr: 2 }}>
+                        Project status updated
+                      </Typography>
+                      <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                        10 Days Ago
+                      </Typography>
+                    </Box>
+                    <Typography variant='body2'>WooCommerce iOS App Completed</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </Timeline>
+            </CardContent>
+          </Card>
+        </Grid>
+  
+        <Grid item xs={12}>
+          {/* <UsersInvoiceListTable invoiceData={invoiceData} /> */}
+        </Grid>
       </Grid>
-      {/* Social Accounts Cards */}
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Social Accounts' sx={{ pb: 1.5 }} />
-          <CardContent>
-            <Typography sx={{ mb: 6, color: 'text.secondary' }}>
-              Display content from social accounts on your site
-            </Typography>
+    )
 
-            {socialAccountsArr.map(account => {
-              return (
-                <Box
-                  key={account.title}
-                  sx={{
-                    gap: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    '&:not(:last-of-type)': { mb: 4 }
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Box sx={{ mr: 4, minWidth: 57, display: 'flex', justifyContent: 'center' }}>
-                      <img src={account.logo} alt={account.title} height='38' />
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant='h6'>{account.title}</Typography>
-                      {account.isConnected ? (
-                        <Typography
-                          to='/'
-                          component={Link}
-                          onClick={e => e.preventDefault()}
-                          sx={{ color: 'primary.main', textDecoration: 'none' }}
-                        >
-                          {account.username}
-                        </Typography>
-                      ) : (
-                        <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                          Not Connected
-                        </Typography>
-                      )}
-                    </Box>
-                  </Box>
-                  <Button
-                    variant='tonal'
-                    sx={{ p: 2, minWidth: 38 }}
-                    color={account.isConnected ? 'error' : 'secondary'}
-                  >
-                    <Icon icon={account.isConnected ? 'tabler:trash' : 'tabler:link'} />
-                  </Button>
-                </Box>
-              )
-            })}
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
-  )
 }
 
 export default UserViewConnection
