@@ -11,7 +11,19 @@ import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 // ** Third Party Imports
+import { addBranch } from 'features/branch-management/branches/services/branchServices';
+import toast from 'react-hot-toast';
 
+const initialValues = {
+  branchName: '',
+  phone: Number(''),
+  alternatePhone: Number(''),
+  address: '',
+  pinCode: Number(''),
+  landmark: '',
+  city: '',
+  state: ''
+};
 const branchSchema = yup.object().shape({
   branchName: yup.string().required('Branch Name is required'),
   phone: yup.number().required('Phone No. is required'),
@@ -22,29 +34,50 @@ const branchSchema = yup.object().shape({
   city: yup.string().required('City is required'),
   state: yup.string().required('State is required')
 });
- 
+
 const AddBranchForms = () => {
   // ** States
   const navigate = useNavigate();
-
 
   const {
     handleSubmit,
     control,
     formState: { errors }
   } = useForm({
+    initialState: initialValues,
     resolver: yupResolver(branchSchema)
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Handle form submission
     console.log(data);
+    const dummyData = {
+      branch_name: data.branchName,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      pin_code: data.pinCode,
+      landmark: data.landmark,
+      phone_number: data.phone,
+      alternate_number: data.alternatePhone
+    };
+
+    try {
+      const result = await addBranch(dummyData);
+
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1)
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <Card>
-      {/* <CardHeader title="Multi Column with Form Separator" />
-       <Divider sx={{ m: '0 !important' }} /> */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent>
           <Grid container spacing={4}>
@@ -116,7 +149,6 @@ const AddBranchForms = () => {
                   />
                 )}
               />
-           
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
