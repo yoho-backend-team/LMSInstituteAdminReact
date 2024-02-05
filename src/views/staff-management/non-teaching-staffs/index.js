@@ -16,6 +16,8 @@ import Grid from '@mui/material/Grid';
 import TeacherFilter from './TeacherFilterCard';
 import { Link } from 'react-router-dom';
 import OptionsMenu from 'components/option-menu';
+import Pagination from '@mui/material/Pagination'
+
 // import { Link } from 'react-router-dom';
 
 // Styled Grid component
@@ -231,6 +233,9 @@ const Teaching = () => (
       ))}
     </Grid>
   </Grid>
+  <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
+      <Pagination count={10} color='primary' />
+      </Grid>
   </Grid>
 );
 

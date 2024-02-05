@@ -16,9 +16,11 @@ import { gridSpacing } from 'store/constant';
 
 const Dashboard = () => {
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     setLoading(false);
   }, []);
+
 
   return (
     <Grid container spacing={gridSpacing}>

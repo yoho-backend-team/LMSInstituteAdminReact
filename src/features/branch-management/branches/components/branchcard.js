@@ -7,9 +7,23 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BranchesCardHeader from './BrachesCardHeader';
 // import { useTheme } from '@mui/system';
 import BranchEditModal from './edit-Branch/BranchEditModal';
+// import BranchDeleteModal from './delete-Branch/BranchDeleteModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectBranches } from '../redux/branchSelectors';
+import { getAllBranches } from '../redux/branchThunks';
+import { useEffect } from 'react';
 
 const BranchCard = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const dispatch = useDispatch();
+  const branches = useSelector(selectBranches);
+
+  useEffect(() => {
+    dispatch(getAllBranches());
+  }, [dispatch]);
+
+  console.log(branches);
   // const theme = useTheme();
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -33,50 +47,15 @@ const BranchCard = () => {
   };
 
   const handleViewClick = () => {
-    // Implement view logic here
     handleClose();
   };
-
-    
-  const branchData = [
-    {
-      image: require('assets/images/avatar/map-pin.png'),
-      title: 'Branch 1',
-      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
-    },
-    {
-      image: require('assets/images/avatar/map-pin.png'),
-
-      title: 'Branch 2',
-      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
-    },
-    {
-      image: require('assets/images/avatar/map-pin.png'),
-
-      title: 'Branch 3',
-      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
-    },
-    {
-      image: require('assets/images/avatar/map-pin.png'),
-
-      title: 'Branch 4',
-      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
-    },
-    {
-      image: require('assets/images/avatar/map-pin.png'),
-
-      title: 'Branch 5',
-      location: '29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117'
-    }
-    // Add more objects for additional branches
-  ];
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <BranchesCardHeader />
       </Grid>
-      {branchData.map((branch, index) => (
+      {branches?.map((branch, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
           <Card sx={{ position: 'relative' }}>
             <IconButton
@@ -100,7 +79,6 @@ const BranchCard = () => {
               <MenuItem onClick={() => handleEdit(branch)} sx={{ fontSize: 'small', padding: '8px' }}>
                 Edit
               </MenuItem>
-             
             </Menu>
 
             <CardMedia
@@ -113,16 +91,14 @@ const BranchCard = () => {
                 mt: 3,
                 mx: 'auto'
               }}
-              // image={require('assets/images/avatar/map-pin.png')}
-              image={branch.image}
+              image={require('assets/images/avatar/map-pin.png')}
             />
             <CardContent>
               <Typography variant="h4" sx={{ mb: 2 }}>
-                {branch.title}
+                {branch?.branch_name}
               </Typography>
               <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-                {branch.location}
-                {/* 29/1, Ambal Nagar, 1st Main Road, Echankadu, Kovilambakam, Chennai, TamilNadu- 600117 */}
+                {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
               </Typography>
             </CardContent>
           </Card>

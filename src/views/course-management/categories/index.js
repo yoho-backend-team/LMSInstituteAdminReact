@@ -2,9 +2,11 @@ import { Grid } from '@mui/material';
 import CategoryCard from 'features/course-management/categories/components/CategoryCard';
 import CategoryFilter from 'features/course-management/categories/components/CategoryFilterCard';
 import CategoryCardHeader from 'features/course-management/categories/components/CategoryCardHeader';
-// import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
-// import { useSelector } from 'react-redux';
-// import { selectLoading as selectGroupLoading } from 'features/user-management/groups/redux/groupSelectors';
+import CategorySkeleton from 'components/cards/Skeleton/CategorySkeleton';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Pagination from '@mui/material/Pagination'
+
 
 const dummyCategories = [
   {
@@ -52,13 +54,26 @@ const dummyCategories = [
       'https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.webp?b=1&s=170667a&w=0&k=20&c=ahypUC_KTc95VOsBkzLFZiCQ0VJwewfrSV43BOrLETM='
   }
 ];
+
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 const Categories = () => {
-  // const groupLoading = useSelector(selectGroupLoading);
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
+
   return (
   <Grid>
-    {/* {groupLoading ? (
-      <GroupSkeleton />
-    ) : ( */}
+ {loading ? (
+        <CategorySkeleton />
+      ) : (
       <div>
         <Grid item xs={12} sm={12}>
           <CategoryFilter />
@@ -79,7 +94,10 @@ const Categories = () => {
           ))}
         </Grid>
       </div>
-    {/* )} */}
+      )}
+        <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
+      <Pagination count={10} color='primary' />
+      </Grid>
   </Grid>
   )
 };
