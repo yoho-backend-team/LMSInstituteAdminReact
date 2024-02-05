@@ -7,7 +7,6 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import Switch from '@mui/material/Switch'
-import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 // import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
@@ -23,17 +22,17 @@ import DialogContentText from '@mui/material/DialogContentText'
 
 // ** Icon Imports
 // import Icon from 'components/icon'
-import Icon from 'components/icon'
+// import Icon from 'components/icon'
 
 // ** Custom Components
 import CustomChip from 'components/mui/chip'
-import CustomAvatar from 'components/mui/avatar'
+// import CustomAvatar from 'components/mui/avatar'
 import CustomTextField from 'components/mui/text-field'
 import UserSuspendDialog from './UserSubscriptionDialog'
 import UserSubscriptionDialog from './UserSubscriptionDialog'
 
 // ** Utils Import
-import { getInitials } from 'utils/get-initials'
+// import { getInitials } from 'utils/get-initials'
 
 const data = {
   id: 1,
@@ -51,13 +50,13 @@ const data = {
   avatar: '/images/avatars/14.png'
 }
 
-const roleColors = {
-  admin: 'error',
-  editor: 'info',
-  author: 'warning',
-  maintainer: 'success',
-  subscriber: 'primary'
-}
+// const roleColors = {
+//   admin: 'error',
+//   editor: 'info',
+//   author: 'warning',
+//   maintainer: 'success',
+//   subscriber: 'primary'
+// }
 
 const statusColors = {
   active: 'success',
@@ -85,7 +84,7 @@ if (data) {
     <Grid container spacing={6}>
       <Grid item xs={12} >
         <Card>
-          <CardContent sx={{ pt: 13.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          {/* <CardContent sx={{ pt: 13.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             {data.avatar ? (
               <CustomAvatar
                 src={data.avatar}
@@ -137,11 +136,10 @@ if (data) {
                 </div>
               </Box>
             </Box>
-          </CardContent>
+          </CardContent> */}
 
-          <Divider sx={{ my: '0 !important', mx: 6 }} />
 
-          <CardContent sx={{ pb: 4 }}>
+          <CardContent sx={{ pb: 4,}}>
             <Typography variant='body2' sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
               Details
             </Typography>
@@ -190,7 +188,7 @@ if (data) {
             </Box>
           </CardContent>
 
-          <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CardActions sx={{ display: 'flex', justifyContent: '' }}>
             <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
               Edit
             </Button>

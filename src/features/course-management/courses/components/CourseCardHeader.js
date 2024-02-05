@@ -28,7 +28,7 @@ const CourseCardHeader = (props) => {
           sx={{
             width: 400
           }}
-          placeholder="Search Batch"
+          placeholder="Search Course"
           onChange={(e) => handleFilter(e.target.value)}
         />
         <Box
