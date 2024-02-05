@@ -129,8 +129,8 @@ import GroupDeleteDialog from 'features/user-management/groups/components/GroupD
 const CourseCard = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
-  const { sx, image, personName, coursename, students ,price} = props;
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
+  const { sx, image, personName, coursename, students, price } = props;
 
   const handleStatusValue = () => {
     setSelectedDeleteMaterial(props.material);
@@ -152,12 +152,12 @@ const CourseCard = (props) => {
       console.log(error);
     }
   };
-  
+
   return (
     <Grid item xs={12} sm={12} lg={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
-          <CardMedia sx={{ height: '12.5625rem' ,borderRadius:"5px"}} image={image} />
+          <CardMedia sx={{ height: '12.5625rem', borderRadius: '5px' }} image={image} />
         </CardContent>
         <CardContent>
           <Box>
@@ -173,41 +173,46 @@ const CourseCard = (props) => {
             sx={{
               mt: 2,
               display: 'flex',
-              flexDirection:"row",
-              justifyContent:"space-between",
-              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center'
             }}
           >
-            <Grid   sx={{
-              display: 'flex',
-              alignItems: 'center',
-              '& svg': { color: 'primary.main', mr: 0.5 }
-            }}>
+            <Grid
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                '& svg': { color: 'primary.main', mr: 0.5 }
+              }}
+            >
               <Icon icon="ic:twotone-person" fontSize={20} />
               <Typography sx={{ color: 'text.secondary' }}>{students}</Typography>
             </Grid>
             <Grid>
-            <Typography sx={{ color: 'text.secondary' }}>{price}</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{price}</Typography>
             </Grid>
           </Box>
         </CardContent>
-        <CardActions className="demo-space-x" sx={{ pt: 0 ,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <Grid sx={{mt:1}}>
-          <TextField size='small' select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Deactive">Deactive</MenuItem>
-          </TextField>
+        <CardActions className="demo-space-x" sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Grid sx={{ mt: 1 }}>
+            <TextField
+              size="small"
+              select
+              fullWidth
+              label="Status"
+              SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+            >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Deactive">Deactive</MenuItem>
+            </TextField>
           </Grid>
-          <Button component={Link} to='view ' size='medium' variant="contained" color="primary">
+          <Button component={Link} to="view " size="medium" variant="contained" color="primary">
             View Details
           </Button>
         </CardActions>
       </Card>
-      <GroupDeleteDialog
-        open={deleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        handleDeleteGroup={handleDeleteGroup}
-      />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      
     </Grid>
   );
 };
