@@ -118,7 +118,7 @@ const CourseViewPage = () => {
             loop
             muted
             poster="https://assets.codepen.io/6093409/river.jpg"
-            style={{ width: '100%', aspectRatio: '10 / 4' }}
+            style={{ width: '100%', aspectRatio: '12 / 5',objectFit:"cover" }}
           >
             <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
           </video>
