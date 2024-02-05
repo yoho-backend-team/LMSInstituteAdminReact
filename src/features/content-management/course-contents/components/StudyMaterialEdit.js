@@ -128,7 +128,6 @@ const StudyMaterialEdit = (props) => {
 
   console.log(groups);
 
-  // ** Hooks
   const {
     reset,
     control,
@@ -137,10 +136,18 @@ const StudyMaterialEdit = (props) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues,
+    defaultValues: props.initialValues || defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+ 
+console.log(defaultValues);
+
+  useEffect(() => {
+    if (open) {
+      reset(props.initialValues || defaultValues);
+    }
+  }, [open, reset, props.initialValues]);
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
