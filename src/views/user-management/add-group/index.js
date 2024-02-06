@@ -39,6 +39,10 @@ import toast from 'react-hot-toast';
 // ** Api Services Import
 import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
 import { useSelector } from 'react-redux';
+import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
+import { useState } from 'react';
+
+
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`;
@@ -61,7 +65,22 @@ const defaultValues = {
   branch: []
 };
 
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
+
+
 const GroupAddPage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
+
   const {
     reset,
     control,
@@ -219,6 +238,10 @@ const GroupAddPage = () => {
     { id: '3', name: 'Hybrid' }
   ];
   return (
+    <>
+    {loading ? (
+        <AddGroupSkeleton />
+      ) : (
     <Card fullWidth maxWidth="md" scroll="body">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader
@@ -375,13 +398,15 @@ const GroupAddPage = () => {
             <Button type="submit" variant="contained">
               Submit
             </Button>
-            <Button variant="tonal" color="error" onClick={handleClose}>
+            <Button variant="tonal" sx={{ml:5}} color="error" onClick={handleClose}>
               Cancel
             </Button>
           </Box>
         </CardActions>
       </form>
     </Card>
+      )}
+    </>
   );
 };
 
