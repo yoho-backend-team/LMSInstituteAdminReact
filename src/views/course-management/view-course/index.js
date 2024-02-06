@@ -1,19 +1,14 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, List, ListItem, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, List, ListItem, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
 import CourseEditModal from 'features/course-management/courses/components/CourseEditModal';
 import { useState } from 'react';
 
 const CourseViewPage = () => {
   const [expanded, setExpanded] = useState(null);
-  const [statusValue, setStatusValue] = useState('');
 
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
-  };
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -112,29 +107,23 @@ const CourseViewPage = () => {
     <div>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         {/* <Card sx={{ minWidth: 200, flexGrow: 1 }}> */}
-          <video
-            controls
-            autoPlay
-            loop
-            muted
-            poster="https://assets.codepen.io/6093409/river.jpg"
-            style={{ width: '100%', aspectRatio: '12 / 5',objectFit:"cover",borderRadius:"10px" }}
-          >
-            <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
-          </video>
+        <video
+          controls
+          autoPlay
+          loop
+          muted
+          poster="https://assets.codepen.io/6093409/river.jpg"
+          style={{ width: '100%', aspectRatio: '12 / 5', objectFit: 'cover', borderRadius: '10px' }}
+        >
+          <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
+        </video>
         {/* </Card> */}
       </Box>
-      <Grid container spacing={2} sx={{my:2}} display={"flex"} justifyContent={"flex-end"} alignItems={"center"}>
-        <Grid item xs={12} sm={4}>
-          <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Deactive">Deactive</MenuItem>
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={2}>
+      <Grid container spacing={2} sx={{ my: 2 }} display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+        <Grid item xs={12} sm={2} display={"flex"} justifyContent={'flex-end'} sx={{mr:1}}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-            <Button size='large' onClick={() => handleEdit()} variant="contained" color="primary" startIcon={<Icon icon="mdi:pencil" />}>
-               Edit
+            <Button size="large" onClick={() => handleEdit()} variant="contained" color="primary" startIcon={<Icon icon="mdi:pencil" />}>
+              Edit
             </Button>
           </Box>
         </Grid>
