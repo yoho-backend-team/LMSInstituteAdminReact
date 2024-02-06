@@ -4,6 +4,7 @@ import { useState,useEffect } from 'react';
 // project imports
 import FeesTable from 'features/payment-management/fees/components/FeesTable';
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
+
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Fee = () => {
