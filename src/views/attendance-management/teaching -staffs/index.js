@@ -35,7 +35,7 @@ const TeachingStaff = () => {
     <Grid>
       <TeachingStaffFilterCard />
       <TeachingStaffCardHeader />
-      <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+      <Grid container spacing={1} className="match-height">
         <TeachingStaffCard />
       </Grid>
       <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >

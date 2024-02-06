@@ -33,7 +33,7 @@ const NonTeachingStaffs = () => {
     <Grid>
       <NonTeachingStaffFilterCard />
       <NonTeachingStaffCardHeader />
-      <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
+      <Grid container spacing={1} className="match-height" >
         <NonTeachingStaffCard />
       </Grid>
       <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
