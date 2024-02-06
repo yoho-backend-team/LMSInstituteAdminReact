@@ -17,19 +17,23 @@ import { selectUsers, selectLoading as selectUserLoading } from 'features/user-m
 import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
 
 import { selectGroups } from 'features/user-management/groups/redux/groupSelectors';
+import { useState } from 'react';
 const UserList = () => {
   const dispatch = useDispatch();
   const users = useSelector(selectUsers);
   const userLoading = useSelector(selectUserLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const groups = useSelector(selectGroups);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     dispatch(getAllGroups(selectedBranchId));
   }, [selectedBranchId]);
 
   useEffect(() => {
     dispatch(getAllUsers(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId, loading]);
+
+  console.log(users);
 
   return (
     <>
@@ -38,10 +42,10 @@ const UserList = () => {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <UserHeaderSection users={users} groups={groups} />
+            <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
           </Grid>
           <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users} />
+            <UserBodySection groups={groups} users={users} setLoading={setLoading} />
           </Grid>
         </Grid>
       )}

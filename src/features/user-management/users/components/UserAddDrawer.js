@@ -26,16 +26,7 @@ import toast from 'react-hot-toast';
 
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import { addUser } from '../services/userServices';
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
+import { addUser, checkUserName } from '../services/userServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -43,31 +34,6 @@ const Header = styled(Box)(({ theme }) => ({
   padding: theme.spacing(6),
   justifyContent: 'space-between'
 }));
-
-const schema = yup.object().shape({
-  password: yup.string().required(),
-  designation: yup.string().required(),
-  email: yup.string().email().required(),
-  role: yup.number().required(),
-  contact: yup
-    .number()
-    .typeError('Contact Number field is required')
-    .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
-    .required(),
-  fullName: yup
-    .string()
-    .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
-    .required(),
-  userName: yup
-    .string()
-    .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
-    .required(),
-  confirm_password: yup
-    .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Password confirmation is required'),
-  branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
-});
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -108,11 +74,10 @@ const defaultValues = {
 
 const SidebarAddUser = (props) => {
   // ** Props
-  const { open, toggle, groups } = props;
+  const { open, toggle, groups, setLoading } = props;
   const branches = useSelector((state) => state.auth.branches);
 
   // ** State
-  const [selectedBranches, setSelectedBranches] = useState([]);
 
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
@@ -121,11 +86,40 @@ const SidebarAddUser = (props) => {
   // const handleBranchChange = (event) => {
   //   setSelectedBranches(event.target.value);
   // };
-console.log(setSelectedBranches);
-  const filteredBranches = branches?.filter((branch) => selectedBranches?.includes(branch.branch_name));
-  const branchIds = filteredBranches?.map((branch) => branch.branch_id);
 
-  console.log(branchIds);
+  const showErrors = (field, valueLen, min) => {
+    if (valueLen === 0) {
+      return `${field} field is required`;
+    } else if (valueLen > 0 && valueLen < min) {
+      return `${field} must be at least ${min} characters`;
+    } else {
+      return '';
+    }
+  };
+  const schema = yup.object().shape({
+    password: yup.string().required(),
+    designation: yup.string().required(),
+    email: yup.string().email().required(),
+    role: yup.number().required(),
+    contact: yup
+      .number()
+      .typeError('Contact Number field is required')
+      .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
+      .required(),
+    fullName: yup
+      .string()
+      .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
+      .required(),
+    userName: yup
+      .string()
+      .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
+      .required(),
+    confirm_password: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'Passwords must match')
+      .required('Password confirmation is required'),
+    branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
+  });
   // ** Hooks
   const {
     reset,
@@ -141,7 +135,13 @@ console.log(setSelectedBranches);
   });
 
   const onSubmit = async (data) => {
+    const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_name));
+
     var bodyFormData = new FormData();
+
+    filteredBranches.forEach((branch) => {
+      bodyFormData.append('branch_ids[]', branch.branch_id);
+    });
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('name', data.fullName);
     bodyFormData.append('email', data.email);
@@ -151,46 +151,29 @@ console.log(setSelectedBranches);
     bodyFormData.append('c_password', data.confirm_password);
     bodyFormData.append('designation', data.designation);
     bodyFormData.append('role_id', data.role);
-    bodyFormData.append('branch_id', branchIds);
-    console.log(bodyFormData);
 
-    const result = await addUser(bodyFormData);
+    const isUserNameTaken = await checkUserName(data.userName);
 
-    if (result.success) {
-      setError('');
-      toggle();
-      reset();
-      toast.success('User created successfully');
-    } else {
-      console.log(result.message);
+    if (!isUserNameTaken.success) {
+      // Set an error for the userName field
+      setError('userName', {
+        type: 'manual',
+        message: 'Username is already taken'
+      });
+    } else if (isUserNameTaken.success) {
+      const result = await addUser(bodyFormData);
+
+      if (result.success) {
+        setLoading((loading) => !loading);
+        setError('');
+        toggle();
+        reset();
+        toast.success('User created successfully');
+      } else {
+        // toast.error(result.message);
+      }
     }
-    // let config = {
-    //   method: 'post',
-    //   maxBodyLength: Infinity,
-    //   url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
-    //   headers: {
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
-    //   },
-    //   data: bodyFormData
-    // };
 
-    // await axios
-    //   .request(config)
-    //   .then((response) => {
-    //     if (response.data.status) {
-    //       setError('');
-    //       toggle();
-    //       reset();
-    //       toast.success('User created successfully');
-    //     }
-    //     if (!response.data.status) {
-    //       toast.error('Failed to create user');
-    //     }
-    //     console.log(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     //   //   dispatch(addUser({ ...data, role, currentPlan: plan }));
   };
 
@@ -280,14 +263,13 @@ console.log(setSelectedBranches);
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
-                sx={{ mb: 4 }}
+                  sx={{ mb: 4 }}
                   select
                   fullWidth
                   label="Branch"
                   id="select-multiple-checkbox"
                   value={value}
                   onChange={onChange}
-
                   SelectProps={{
                     MenuProps,
                     multiple: true,
@@ -406,13 +388,28 @@ console.log(setSelectedBranches);
             name="userName"
             control={control}
             rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
+            render={({ field: { value } }) => (
               <TextField
                 fullWidth
                 value={value}
                 sx={{ mb: 4 }}
                 label="UserName"
-                onChange={onChange}
+                onChange={async (e) => {
+                  setValue('userName', e.target.value);
+                  const result = await checkUserName(e.target.value);
+
+                  if (result.success) {
+                    setError('userName', {
+                      type: 'manual',
+                      message: ''
+                    });
+                  } else {
+                    setError('userName', {
+                      type: 'manual',
+                      message: 'Username is already taken'
+                    });
+                  }
+                }}
                 placeholder="John Doe"
                 error={Boolean(errors.userName)}
                 {...(errors.userName && { helperText: errors.userName.message })}

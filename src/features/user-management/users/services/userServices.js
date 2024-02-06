@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
+const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
 export const getAllUsers = async (selectedBranchId) => {
   try {
@@ -41,7 +42,7 @@ export const addUser = async (data) => {
     if (response.data.status) {
       return { success: true, message: 'User created successfully' };
     } else {
-      return { success: false, message: 'Failed to create User' };
+      return { success: false, message: response.data.message };
     }
   } catch (error) {
     console.error('Error in addUser:', error);
@@ -63,6 +64,30 @@ export const searchUsers = async (searchQuery) => {
       return { success: true, data: response.data };
     } else {
       return { success: false, message: 'Failed to fetch search results' };
+    }
+  } catch (error) {
+    console.error('Error in searchUsers:', error);
+    throw error;
+  }
+};
+export const checkUserName = async (userName) => {
+  try {
+    const response = await axios.post(
+      `${USER_API_USER_NAME_CHECK_ENDPOINT}`,
+      { username: userName },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        // params: { username: userName }
+      }
+    );
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'UserName valid' };
+    } else {
+      return { success: false, message: 'UserName Invalid' };
     }
   } catch (error) {
     console.error('Error in searchUsers:', error);
