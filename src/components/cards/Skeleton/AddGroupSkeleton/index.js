@@ -1,21 +1,30 @@
-import { Box, Card, CardContent, Checkbox, Grid, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CardHeader } from '@mui/material';
+import { Box, Card, CardContent, CardHeader, Checkbox, Grid, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 const AddGroupSkeleton = () => (
     <>
       <Card fullWidth maxWidth="md" scroll="body" sx={{ height: "100vh" }}>
-        <CardHeader
-          sx={{
-            pb:"0",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center",
-            textAlign: 'center',
-            px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
-          }}
-          title={<Skeleton variant="text" width={200} />}
-          subheader={<Skeleton variant="text" width={200} />}
-        />
+      <CardHeader
+  sx={{
+    pb: "0",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: 'center',
+    px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
+    pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
+  }}
+  title={
+    <Box sx={{ textAlign: 'center',display:"flex",justifyContent:"center",alignItems:"center"}}>
+      <Skeleton variant="text" width={200} />
+    </Box>
+  }
+  subheader={
+    <Box sx={{ textAlign: 'center',display:"flex",justifyContent:"center",alignItems:"center"}}>
+      <Skeleton variant="text" width={200} />
+    </Box>
+  }
+/>
+
         <CardContent>
           <Grid sx={{ my: 2, gap: 2 }} container>
             <Grid xs={12} sm={5.9}>
@@ -25,7 +34,7 @@ const AddGroupSkeleton = () => (
               <Skeleton variant="text" height={56} />
             </Grid>
           </Grid>
-          <Typography variant="h4">Group Permissions</Typography>
+          {/* <Typography variant="h4">Group Permissions</Typography> */}
           <TableContainer>
             <Table size="small">
               <TableHead>
