@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer';
@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+// import axios from 'axios';
 import { Button, Grid, Typography } from '@mui/material';
 
 // ** Custom Component Import
@@ -16,7 +16,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
-
+import { useSelector } from 'react-redux';
 // ** Icon Imports
 import Icon from 'components/icon';
 
@@ -26,7 +26,7 @@ import toast from 'react-hot-toast';
 
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-
+import { addUser } from '../services/userServices';
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`;
@@ -80,18 +80,18 @@ const MenuProps = {
   }
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
+// const names = [
+//   'Oliver Hansen',
+//   'Van Henry',
+//   'April Tucker',
+//   'Ralph Hubbard',
+//   'Omar Alexander',
+//   'Carlos Abbott',
+//   'Miriam Wagner',
+//   'Bradley Wilkerson',
+//   'Virginia Andrews',
+//   'Kelly Snyder'
+// ];
 
 const defaultValues = {
   email: '',
@@ -106,7 +106,8 @@ const defaultValues = {
 
 const SidebarAddUser = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, groups } = props;
+  const branches = useSelector((state) => state.auth.branches);
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
@@ -115,38 +116,14 @@ const SidebarAddUser = (props) => {
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  const [groups, setGroups] = useState([]);
-
   const handleBranchChange = (event) => {
     setSelectedBranches(event.target.value);
   };
 
-  useEffect(() => {
-    getAllGroups();
-  }, []);
+  const filteredBranches = branches?.filter((branch) => selectedBranches?.includes(branch.branch_name));
+  const branchIds = filteredBranches?.map((branch) => branch.branch_id);
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
+  console.log(branchIds);
   // ** Hooks
   const {
     reset,
@@ -172,35 +149,46 @@ const SidebarAddUser = (props) => {
     bodyFormData.append('c_password', data.confirm_password);
     bodyFormData.append('designation', data.designation);
     bodyFormData.append('role_id', data.role);
+    bodyFormData.append('branch_id', branchIds);
     console.log(bodyFormData);
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: bodyFormData
-    };
+    const result = await addUser(bodyFormData);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        if (response.data.status) {
-          setError('');
-          toggle();
-          reset();
-          toast.success('User created successfully');
-        }
-        if (!response.data.status) {
-          toast.error('Failed to create user');
-        }
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (result.success) {
+      setError('');
+      toggle();
+      reset();
+      toast.success('User created successfully');
+    } else {
+      console.log(result.message);
+    }
+    // let config = {
+    //   method: 'post',
+    //   maxBodyLength: Infinity,
+    //   url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
+    //   headers: {
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   },
+    //   data: bodyFormData
+    // };
+
+    // await axios
+    //   .request(config)
+    //   .then((response) => {
+    //     if (response.data.status) {
+    //       setError('');
+    //       toggle();
+    //       reset();
+    //       toast.success('User created successfully');
+    //     }
+    //     if (!response.data.status) {
+    //       toast.error('Failed to create user');
+    //     }
+    //     console.log(response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     //   //   dispatch(addUser({ ...data, role, currentPlan: plan }));
   };
 
@@ -298,10 +286,10 @@ const SidebarAddUser = (props) => {
                 renderValue: (selected) => selected.join(', ')
               }}
             >
-              {names.map((name) => (
-                <MenuItem key={name} value={name}>
-                  <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                  <ListItemText primary={name} />
+              {branches?.map((item, index) => (
+                <MenuItem key={index} value={item?.branch_name}>
+                  <Checkbox checked={selectedBranches.indexOf(item.branch_name) > -1} />
+                  <ListItemText primary={item.branch_name} />
                 </MenuItem>
               ))}
             </TextField>
