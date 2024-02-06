@@ -10,7 +10,7 @@ import Card from '@mui/material/Card';
 import StudyMaterial from 'features/content-management/course-contents/components/StudyMaterialDataGrid';
 import Notes from 'features/content-management/course-contents/components/NotesDataGrid';
 import Module from 'features/content-management/course-contents/components/ModuleDataGrid';
-import UserSkeleton from 'components/cards/Skeleton/UserSkeleton';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -31,7 +31,6 @@ const TabsFullWidth = () => {
   
   const dataLoaded = true; 
 
-
   useTimeout(() => {
     setLoading(false); 
   }, 1000);
@@ -39,7 +38,7 @@ const TabsFullWidth = () => {
   return (
     <div>
       {loading ? (
-        <UserSkeleton />
+        <ContentSkeleton/>
       ) : (
         <Card sx={{ minHeight: '100vh', p: 2 }}>
           <TabContext value={value}>
