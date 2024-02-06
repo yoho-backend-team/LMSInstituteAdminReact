@@ -65,7 +65,8 @@ const schema = yup.object().shape({
   confirm_password: yup
     .string()
     .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Password confirmation is required')
+    .required('Password confirmation is required'),
+  branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
 });
 
 const ITEM_HEIGHT = 48;
@@ -101,7 +102,8 @@ const defaultValues = {
   fullName: '',
   userName: '',
   role: '',
-  contact: Number('')
+  contact: Number(''),
+  branch: []
 };
 
 const SidebarAddUser = (props) => {
@@ -116,10 +118,10 @@ const SidebarAddUser = (props) => {
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
-
+  // const handleBranchChange = (event) => {
+  //   setSelectedBranches(event.target.value);
+  // };
+console.log(setSelectedBranches);
   const filteredBranches = branches?.filter((branch) => selectedBranches?.includes(branch.branch_name));
   const branchIds = filteredBranches?.map((branch) => branch.branch_id);
 
@@ -272,27 +274,37 @@ const SidebarAddUser = (props) => {
           </Box>
 
           <Grid item xs={12} sm={12}>
-            <TextField
-              sx={{ mb: 4 }}
-              select
-              fullWidth
-              label="Branch"
-              id="select-multiple-checkbox"
-              SelectProps={{
-                MenuProps,
-                multiple: true,
-                value: selectedBranches,
-                onChange: (e) => handleBranchChange(e),
-                renderValue: (selected) => selected.join(', ')
-              }}
-            >
-              {branches?.map((item, index) => (
-                <MenuItem key={index} value={item?.branch_name}>
-                  <Checkbox checked={selectedBranches.indexOf(item.branch_name) > -1} />
-                  <ListItemText primary={item.branch_name} />
-                </MenuItem>
-              ))}
-            </TextField>
+            <Controller
+              name="branch"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                sx={{ mb: 4 }}
+                  select
+                  fullWidth
+                  label="Branch"
+                  id="select-multiple-checkbox"
+                  value={value}
+                  onChange={onChange}
+
+                  SelectProps={{
+                    MenuProps,
+                    multiple: true,
+                    renderValue: (selected) => selected.join(', ')
+                  }}
+                  error={Boolean(errors.branch)}
+                  helperText={errors.branch?.message}
+                >
+                  {branches?.map((item, index) => (
+                    <MenuItem key={index} value={item?.branch_name}>
+                      <Checkbox checked={value.includes(item.branch_name)} />
+                      <ListItemText primary={item.branch_name} />
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
           </Grid>
 
           <Controller
