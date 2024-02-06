@@ -1,4 +1,3 @@
-
 // material-ui
 import { Card, CardContent, CardHeader, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -6,30 +5,30 @@ import Skeleton from '@mui/material/Skeleton';
 // ==============================|| SKELETON - EARNING CARD ||============================== //
 
 const TeachingStaffSkeleton = () => {
-    const skeletonData = Array.from({ length: 10 });
-    return (
-        <>
-        <Grid container spacing={6}>
-       <Grid item xs={12}>
-         <Card>
-           <CardHeader title={<Skeleton height={25} width={200} />} />
-           <CardContent sx={{ pt: 0 }}>
-             <Grid container spacing={4}>
-               <Grid item xs={12} sm={4}>
-                 <Skeleton variant="rectangular" height={56} animation="wave" />
-               </Grid>
-               <Grid item xs={12} sm={4}>
-                 <Skeleton variant="rectangular" height={56} animation="wave" />
-               </Grid>
-               <Grid item xs={12} sm={4}>
-                 <Skeleton variant="rectangular" height={56} animation="wave" />
-               </Grid>
-             </Grid>
-           </CardContent>
-         </Card>
-       </Grid>
-     </Grid>
-     <Grid container spacing={2} mt={2}>
+  const skeletonData = Array.from({ length: 10 });
+  return (
+    <>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title={<Skeleton height={25} width={200} />} />
+            <CardContent sx={{ pt: 0 }}>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={4}>
+                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} mt={2}>
         {skeletonData.map((_, i) => (
           <Grid key={i} item xs={12} sm={6} md={4}>
             <Card sx={{ position: 'relative' }}>
@@ -37,7 +36,7 @@ const TeachingStaffSkeleton = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                   <Skeleton variant="circular" width={100} height={100} />
 
-                  <Box sx={{ mb: 5,pt:1 }}>
+                  <Box sx={{ mb: 5, pt: 1 }}>
                     <Skeleton variant="rectangular" height={32} width={80} />
                   </Box>
                   <Box
@@ -51,7 +50,7 @@ const TeachingStaffSkeleton = () => {
                       justifyContent: 'space-around'
                     }}
                   >
-                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Skeleton variant="rectangular" height={32} width={80} />
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -70,9 +69,8 @@ const TeachingStaffSkeleton = () => {
           </Grid>
         ))}
       </Grid>
-     </>
-    )
-}
-   
+    </>
+  );
+};
 
 export default TeachingStaffSkeleton;
