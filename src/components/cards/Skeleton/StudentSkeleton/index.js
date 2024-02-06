@@ -94,6 +94,7 @@ const StudentSkeleton = () => {
                   <Skeleton variant="rounded" width={30} height={30} />
                 </Box>
               </Box>
+
             </Card>
           </Grid>
         ))}
