@@ -17,13 +17,13 @@ const IdCardSkeleton = () => {
             <CardContent>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                  <Skeleton variant="rectangular" height={50} animation="wave" />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                  <Skeleton variant="rectangular" height={50} animation="wave" />
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                  <Skeleton variant="rectangular" height={50} animation="wave" />
                 </Grid>
               </Grid>
             </CardContent>

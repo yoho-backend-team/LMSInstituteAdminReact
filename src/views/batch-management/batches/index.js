@@ -2,7 +2,7 @@
 import { Grid, Typography, Box, Card, CardContent, IconButton } from '@mui/material';
 
 // ** React  Import
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 // ** Custom Components
@@ -17,6 +17,7 @@ import BatchFilterCard from 'features/batch-management/batches/components/BatchF
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
 import BatchDeleteModal from 'features/batch-management/batches/components/delete-Batch/BatchDeleteModal';
 import Pagination from '@mui/material/Pagination';
+import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -312,24 +313,42 @@ const Batch = () => {
     ));
   };
 
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading delay with useEffect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <Grid>
-        <BatchFilterCard />
-        <BatchCardHeader />
-        <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-          {renderCards()}
+        <Grid spacing={1} className="match-height">
+          {loading ? (
+            // If data is still loading, display skeleton
+            <BatchSkeleton />
+          ) : (
+            <Grid>
+              <BatchFilterCard />
+              <BatchCardHeader />
+              <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+                {renderCards()}
+              </Grid>
+              <Grid sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <div className="demo-space-y">
+                  <Pagination count={10} color="primary" />
+                </div>
+              </Grid>
+              <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+
+              <BatchDeleteModal open={deleteDialogOpen} setOpen={setDeleteDialogOpen} />
+            </Grid>
+          )}
         </Grid>
-        <Grid sx={{display:'flex',justifyContent:"flex-end",mt:2}}>
-
-        <div className="demo-space-y">
-          <Pagination count={10} color="primary" />
-        </div>
-
-        </Grid>
-        <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
-
-        <BatchDeleteModal open={deleteDialogOpen} setOpen={setDeleteDialogOpen} />
       </Grid>
     </>
   );
