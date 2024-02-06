@@ -7,54 +7,20 @@ import Card from '@mui/material/Card';
 // import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 // import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 // import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
-import TeacherFilter from './TeacherFilterCard';
 import { Link } from 'react-router-dom';
+import TeacherFilter from './TeacherFilterCard';
 // import { Link } from 'react-router-dom';
-import OptionsMenu from 'components/option-menu';
-import Avatar from 'components/mui/avatar';
 import { Chip as CustomChip } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
-
-// Styled Grid component
-// const StyledGrid1 = styled(Grid)(({ theme }) => ({
-//   display: 'flex',
-//   flexDirection: 'column',
-//   alignItems: 'flex-start',
-//   [theme.breakpoints.down('md')]: {
-//     paddingTop: '0 !important'
-//   },
-//   '& .MuiCardContent-root': {
-//     padding: theme.spacing(3, 3.75),
-//     [theme.breakpoints.down('md')]: {
-//       paddingTop: 0
-//     }
-//   }
-// }));
-
-// Styled Grid component
-// const StyledGrid2 = styled(Grid)(({ theme }) => ({
-//   display: 'flex',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-//   objectFit: 'cover',
-//   [theme.breakpoints.up('md')]: {
-//     paddingLeft: '0 !important'
-//   },
-//   [theme.breakpoints.down('md')]: {
-//     order: -1
-//   }
-// }));
-
-// Styled component for the image
-// const Img = styled('img')(({ theme }) => ({
-//   height: '7rem',
-//   borderRadius: theme.shape.borderRadius,
-//   objectFit: 'cover'
-// }));
+import Avatar from 'components/mui/avatar';
+import OptionsMenu from 'components/option-menu';
+import StaffManagement from 'components/cards/Skeleton/StaffManagement';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const data = [
   {
@@ -150,53 +116,70 @@ const data = [
 ];
 
 // ==============================|| SAMPLE PAGE ||============================== //
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
 
-const Teaching = () => (
-  <Grid>
-    <TeacherFilter />
-    <Grid container xs={12} spacing={2} mt={2}>
-      {data.map((item, i) => (
-        <Grid key={i} item xs={12} sm={6} md={3}>
-          <Card sx={{ position: 'relative' }}>
-            <OptionsMenu
-              iconButtonProps={{
-                size: 'small',
-                sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
-              }}
-              options={[
-                'Share Connection',
-                'Block Connection',
-                { divider: true },
-                { text: 'Delete', menuItemProps: { sx: { color: 'error.main' } } }
-              ]}
-            />
-            <CardContent sx={{ pt: 2.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
-                <Typography variant="h4" sx={{ mb: 2 }}>
-                  {item.name}
-                </Typography>
-                <Typography variant="h6">{item.email}</Typography>
-                {/* <Typography sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}>{item.designation}</Typography> */}
-                <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-                  {item.chips &&
-                    item.chips.map((chip, index) => (
-                      <Box
-                        href="/"
-                        key={index}
-                        component={Link}
-                        onClick={(e) => e.preventDefault()}
-                        sx={{
-                          textDecoration: 'none',
-                          '&:not(:last-of-type)': { mr: 2.5 },
-                          '& .MuiChip-root': { cursor: 'pointer' }
-                        }}
-                      >
-                        <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
+
+const Teaching = () => {
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
+  return (
+    <>
+      {loading ? (
+        <StaffManagement />
+      ) : (
+        <Grid>
+          <TeacherFilter />
+          <Grid container xs={12} spacing={2} mt={2}>
+            {data.map((item, i) => (
+              <Grid key={i} item xs={12} sm={6} md={3}>
+                <Card sx={{ position: 'relative' }}>
+                  <OptionsMenu
+                    iconButtonProps={{
+                      size: 'small',
+                      sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
+                    }}
+                    options={[
+                      'Share Connection',
+                      'Block Connection',
+                      { divider: true },
+                      { text: 'Delete', menuItemProps: { sx: { color: 'error.main' } } }
+                    ]}
+                  />
+                  <CardContent sx={{ pt: 2.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                      <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
+                      <Typography variant="h4" sx={{ mb: 2 }}>
+                        {item.name}
+                      </Typography>
+                      <Typography variant="h6">{item.email}</Typography>
+                      {/* <Typography sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}>{item.designation}</Typography> */}
+                      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
+                        {item.chips &&
+                          item.chips.map((chip, index) => (
+                            <Box
+                              href="/"
+                              key={index}
+                              component={Link}
+                              onClick={(e) => e.preventDefault()}
+                              sx={{
+                                textDecoration: 'none',
+                                '&:not(:last-of-type)': { mr: 2.5 },
+                                '& .MuiChip-root': { cursor: 'pointer' }
+                              }}
+                            >
+                              <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
+                            </Box>
+                          ))}
                       </Box>
-                    ))}
-                </Box>
-                {/* <Box
+                      {/* <Box
                  sx={{
                    mb: 5,
                    gap: 2,
@@ -220,21 +203,24 @@ const Teaching = () => (
                    <Typography sx={{ color: 'text.secondary' }}>Connections</Typography>
                  </Box>
                </Box> */}
-                <Box component={Link} to={item.id} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                  <Button variant="tonal" sx={{ px: 4 }}>
-                    View Profile
-                  </Button>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
+                      <Box component={Link} to={item.id} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                        <Button variant="tonal" sx={{ px: 4 }}>
+                          View Profile
+                        </Button>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination count={10} color="primary" />
+          </Grid>
         </Grid>
-      ))}
-    </Grid>
-    <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-      <Pagination count={10} color="primary" />
-    </Grid>
-  </Grid>
-);
+      )}
+    </>
+  );
+};
 
 export default Teaching;

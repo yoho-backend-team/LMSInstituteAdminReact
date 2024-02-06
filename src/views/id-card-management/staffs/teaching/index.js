@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -12,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
 import StaffFilterCard from 'features/id-card-management/staff-id-cards/components/StaffFilterCard';
 import Pagination from '@mui/material/Pagination';
+import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
 
 // import { Icon } from '@mui/material';
 // import Chip from '@mui/material/Chip';
@@ -54,96 +56,115 @@ const TeachingIdCard = () => {
     setFlippedIndex(index);
     setFlipped(!flipped);
   };
-  return (
-    <Grid>
-      <Grid item xs={12} sm={12}>
-        <StaffFilterCard />
-      </Grid>
-      <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-        {array.map((i, index) => (
-          <Grid
-            key={index}
-            item
-            xs={12}
-            sm={3}
-            sx={{
-              position: 'relative',
-              width: '100%',
-              height: 410,
-              display: 'block'
-            }}
-          >
-            <Grid
-              onMouseEnter={() => flip(index)}
-              onMouseLeave={() => flip(null)}
-              className={`${index === flippedIndex ? 'flipped' : ''}`}
-              sx={{
-                position: 'relative',
-                '&.flipped': {
-                  '.front': {
-                    transform: 'rotateY(180deg)'
-                  },
-                  '.back': {
-                    transform: 'rotateY(0deg)'
-                  }
-                },
-                '.front, .back': {
-                  // boxSizing: 'border-box',
-                  // display: 'block',
-                  position: 'absolute',
-                  backfaceVisibility: 'hidden',
-                  transition: 'transform ease 500ms'
-                  // zIndex: 2
-                },
-                '.front': {
-                  transform: 'rotateY(0deg)'
-                },
-                '.back': {
-                  transform: 'rotateY(-180deg)'
-                }
-              }}
-            >
-              <Card className="front" sx={{ width: '100%' }}>
-                <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  {data.avatar ? (
-                    <CustomAvatar
-                      src={data.avatar}
-                      alt={data.fullName}
-                      variant="light"
-                      sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
-                    />
-                  ) : (
-                    <CustomAvatar
-                      skin="light"
-                      // variant="rounded"
-                      color={statusColors.active}
-                      sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
-                    >
-                      {getInitials(data.fullName)}
-                    </CustomAvatar>
-                  )}
-                  <Typography variant="h4" sx={{ mb: 2 }}>
-                    {data.fullName}
-                  </Typography>
-                  <CustomChip
-                    rounded
-                    skin="light"
-                    size="small"
-                    label={`@ ${data.username}`}
-                    color={statusColors.active}
-                    // sx={{ textTransform: 'capitalize' }}
-                  />
-                  <Box mt={3}>
-                    <img
-                      style={{ borderRadius: '10px' }}
-                      height={100}
-                      src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
-                      alt="qrCode"
-                    />
-                  </Box>
-                </CardContent>
 
-                {/* <CardContent sx={{ pt: (theme) => `${theme.spacing(0)} !important` }}>
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading delay with useEffect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      <Grid>
+        <Grid spacing={1} className="match-height">
+          {loading ? (
+            // If data is still loading, display skeleton
+            <IdCardSkeleton />
+          ) : (
+            <Grid>
+              <Grid item xs={12} sm={12}>
+                <StaffFilterCard />
+              </Grid>
+              <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+                {array.map((i, index) => (
+                  <Grid
+                    key={index}
+                    item
+                    xs={12}
+                    sm={3}
+                    sx={{
+                      position: 'relative',
+                      width: '100%',
+                      height: 410,
+                      display: 'block'
+                    }}
+                  >
+                    <Grid
+                      onMouseEnter={() => flip(index)}
+                      onMouseLeave={() => flip(null)}
+                      className={`${index === flippedIndex ? 'flipped' : ''}`}
+                      sx={{
+                        position: 'relative',
+                        '&.flipped': {
+                          '.front': {
+                            transform: 'rotateY(180deg)'
+                          },
+                          '.back': {
+                            transform: 'rotateY(0deg)'
+                          }
+                        },
+                        '.front, .back': {
+                          // boxSizing: 'border-box',
+                          // display: 'block',
+                          position: 'absolute',
+                          backfaceVisibility: 'hidden',
+                          transition: 'transform ease 500ms'
+                          // zIndex: 2
+                        },
+                        '.front': {
+                          transform: 'rotateY(0deg)'
+                        },
+                        '.back': {
+                          transform: 'rotateY(-180deg)'
+                        }
+                      }}
+                    >
+                      <Card className="front" sx={{ width: '100%' }}>
+                        <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                          {data.avatar ? (
+                            <CustomAvatar
+                              src={data.avatar}
+                              alt={data.fullName}
+                              variant="light"
+                              sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
+                            />
+                          ) : (
+                            <CustomAvatar
+                              skin="light"
+                              // variant="rounded"
+                              color={statusColors.active}
+                              sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
+                            >
+                              {getInitials(data.fullName)}
+                            </CustomAvatar>
+                          )}
+                          <Typography variant="h4" sx={{ mb: 2 }}>
+                            {data.fullName}
+                          </Typography>
+                          <CustomChip
+                            rounded
+                            skin="light"
+                            size="small"
+                            label={`@ ${data.username}`}
+                            color={statusColors.active}
+                            // sx={{ textTransform: 'capitalize' }}
+                          />
+                          <Box mt={3}>
+                            <img
+                              style={{ borderRadius: '10px' }}
+                              height={100}
+                              src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
+                              alt="qrCode"
+                            />
+                          </Box>
+                        </CardContent>
+
+                        {/* <CardContent sx={{ pt: (theme) => `${theme.spacing(0)} !important` }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Box sx={{ mr: 4, alignItems: 'center' }}>
                     <CustomChip
@@ -181,22 +202,22 @@ const TeachingIdCard = () => {
                   </Box>
                 </Box>
               </CardContent> */}
-              </Card>
-              <Card className="back" sx={{ width: '100%' }}>
-                <CardContent sx={{ pb: 3 }}>
-                  <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
-                    Details
-                  </Typography>
-                  <Box sx={{ pt: 4 }}>
-                    <Box sx={{ display: 'flex', mb: 3, flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
-                    </Box>
-                    {/* <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
+                      </Card>
+                      <Card className="back" sx={{ width: '100%' }}>
+                        <CardContent sx={{ pb: 3 }}>
+                          <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+                            Details
+                          </Typography>
+                          <Box sx={{ pt: 4 }}>
+                            <Box sx={{ display: 'flex', mb: 3, flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
+                            </Box>
+                            {/* <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
                     <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
                     <CustomChip
                       rounded
@@ -209,41 +230,41 @@ const TeachingIdCard = () => {
                       }}
                     />
                   </Box> */}
-                    <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                      <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>Tax-8894</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>English</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                      <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
-                    </Box>
-                  </Box>
+                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
+                              <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>Tax-8894</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>English</Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
+                            </Box>
+                          </Box>
 
-                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                    <TextField size="small" select defaultValue="" label="Status" id="custom-select">
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </TextField>
-                  </Box>
-                </CardContent>
+                          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                            <TextField size="small" select defaultValue="" label="Status" id="custom-select">
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value={10}>Ten</MenuItem>
+                              <MenuItem value={20}>Twenty</MenuItem>
+                              <MenuItem value={30}>Thirty</MenuItem>
+                            </TextField>
+                          </Box>
+                        </CardContent>
 
-                {/* <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
+                        {/* <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
                 <Button
                   variant="contained"
                   sx={{ mr: 2 }}
@@ -255,18 +276,21 @@ const TeachingIdCard = () => {
                   Suspend
                 </Button>
               </CardActions> */}
-              </Card>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container justifyContent="flex-end" mt={2}>
+                <div className="demo-space-y">
+                  <Pagination count={10} color="primary" />
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        ))}
+          )}
+        </Grid>
       </Grid>
-      <Grid container justifyContent="flex-end" mt={2}>
-        <div className="demo-space-y">
-          <Pagination count={10} color="primary" />
-        </div>
-      </Grid>
-
-    </Grid>
+    </>
   );
 };
 

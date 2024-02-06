@@ -7,11 +7,29 @@ import NonTeachingStaffCard from 'features/attandence-management/non-teaching-st
 import NonTeachingStaffCardHeader from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCardHeader';
 import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
 import Pagination from '@mui/material/Pagination'
-
+import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
+import { useState } from 'react';
+import { useEffect } from 'react';
 // ==============================|| SAMPLE PAGE ||============================== //
 
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 const NonTeachingStaffs = () => {
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
   return (
+    <>
+    {loading ? (
+      <TeachingStaffSkeleton />
+    ) : (
     <Grid>
       <NonTeachingStaffFilterCard />
       <NonTeachingStaffCardHeader />
@@ -22,6 +40,8 @@ const NonTeachingStaffs = () => {
       <Pagination count={10} color='primary' />
       </Grid>
     </Grid>
+       )}
+       </>
   );
 };
 
