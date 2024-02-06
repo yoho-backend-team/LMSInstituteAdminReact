@@ -1,21 +1,23 @@
 // groupService.js
 import axios from 'axios';
 
-const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role`;
+const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group`;
 const PERMISSION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/permission`;
 // const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/role-search`;
 
-export const getAllGroups = async () => {
+export const getAllGroups = async (selectedBranchId) => {
+  console.log(selectedBranchId);
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -51,20 +53,15 @@ export const searchGroups = async (searchQuery) => {
   }
 };
 
-export const addGroup = async (groupName, selectedCheckbox) => {
+export const addGroup = async (data) => {
   try {
-    const data = {
-      name: groupName,
-      permissions: selectedCheckbox
-    };
-
     const response = await axios.post(`${GROUP_API_ENDPOINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Group created successfully' };
     } else {
@@ -97,14 +94,8 @@ export const deleteGroup = async (groupId) => {
   }
 };
 
-export const updateGroup = async (groupId, groupName, selectedCheckbox) => {
+export const updateGroup = async (data) => {
   try {
-    const data = {
-      id: groupId,
-      name: groupName,
-      permission_id: selectedCheckbox
-    };
-
     const response = await axios.put(`${GROUP_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
@@ -112,8 +103,8 @@ export const updateGroup = async (groupId, groupName, selectedCheckbox) => {
       }
     });
 
+    console.log(response);
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Group updated successfully' };
     } else {
       return { success: false, message: 'Failed to update group' };
@@ -147,7 +138,7 @@ export const getAllPermissionsByRoleId = async (roleId) => {
 
 export const getAllPermissions = async () => {
   try {
-    const response = await axios.get(`/data_storage/user-management/permissions/AllPermissions.json`, {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all-permissions`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -155,7 +146,7 @@ export const getAllPermissions = async () => {
     });
 
     if (response.data) {
-      return { success: true, data: response.data, permissionsCount: response.data?.length };
+      return { success: true, data: response?.data?.data, permissionsCount: response.data?.data?.length };
     } else {
       return { success: false, message: 'Failed to fetch permissions' };
     }

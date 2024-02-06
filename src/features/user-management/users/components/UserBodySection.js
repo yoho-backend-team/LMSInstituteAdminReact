@@ -293,8 +293,8 @@ const UserBodySection = ({ groups, users }) => {
             >
               <MenuItem value="">Select Role</MenuItem>
               {groups?.map((group, index) => (
-                <MenuItem key={index} value={group?.id}>
-                  {group?.name}
+                <MenuItem key={index} value={group?.role?.id}>
+                  {group?.role?.name}
                 </MenuItem>
               ))}
             </TextField>
@@ -331,7 +331,7 @@ const UserBodySection = ({ groups, users }) => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups}/>
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
     </Card>
   );

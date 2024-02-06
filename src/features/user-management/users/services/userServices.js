@@ -1,19 +1,20 @@
 // userService.js
 import axios from 'axios';
 
-// const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/role-search`;
+const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/users/AllUsers.json', {
+    const response = await axios.get(`${USER_API_ENDPOINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -24,6 +25,26 @@ export const getAllUsers = async () => {
     console.error('Error in getAllUsers:', error);
 
     // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+export const addUser = async (data) => {
+  try {
+    const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User created successfully' };
+    } else {
+      return { success: false, message: 'Failed to create User' };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
     throw error;
   }
 };

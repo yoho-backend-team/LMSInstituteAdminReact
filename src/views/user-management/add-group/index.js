@@ -1,5 +1,5 @@
 // ** React Components
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 // ** Mui Components
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -29,7 +29,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
+import { useNavigate } from 'react-router';
 // ** Custom Components
 import Icon from 'components/icon';
 
@@ -38,6 +38,10 @@ import toast from 'react-hot-toast';
 
 // ** Api Services Import
 import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
+import { useSelector } from 'react-redux';
+import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
+import { useState } from 'react';
+
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -61,7 +65,22 @@ const defaultValues = {
   branch: []
 };
 
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
+
+
 const GroupAddPage = () => {
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
+
   const {
     reset,
     control,
@@ -85,13 +104,21 @@ const GroupAddPage = () => {
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const navigate = useNavigate();
   // const [personNameNative, setPersonNameNative] = useState([]);
 
   const onSubmit = async (data) => {
     try {
-      const result = await addGroup(data.groupName, selectedCheckbox);
+      const inputData = {
+        branch_id: selectedBranchId,
+        name: data.groupName,
+        permissions: selectedCheckbox
+      };
+      const result = await addGroup(inputData);
 
       if (result.success) {
+        navigate(-1);
         toast.success(result.message);
       } else {
         toast.error(result.message);
@@ -100,7 +127,7 @@ const GroupAddPage = () => {
       console.log(error);
     }
   };
- 
+
   // ** useEffects
   useEffect(() => {
     if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
@@ -205,14 +232,16 @@ const GroupAddPage = () => {
     );
   };
 
-
-
   const groups = [
     { id: '1', name: 'Offline Class' },
     { id: '2', name: 'Online class' },
     { id: '3', name: 'Hybrid' }
   ];
   return (
+    <>
+    {loading ? (
+        <AddGroupSkeleton />
+      ) : (
     <Card fullWidth maxWidth="md" scroll="body">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader
@@ -366,16 +395,18 @@ const GroupAddPage = () => {
           }}
         >
           <Box className="demo-space-x">
-          <Button type="submit" variant="contained">
+            <Button type="submit" variant="contained">
               Submit
             </Button>
-            <Button variant="tonal" color="error" onClick={handleClose}>
+            <Button variant="tonal" sx={{ml:5}} color="error" onClick={handleClose}>
               Cancel
             </Button>
           </Box>
         </CardActions>
       </form>
     </Card>
+      )}
+    </>
   );
 };
 
