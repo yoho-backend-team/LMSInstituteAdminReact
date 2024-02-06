@@ -23,10 +23,15 @@ import UserTableHeader from 'features/user-management/users/components/UserTable
 import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users/redux/userThunks';
-import { FilterUsersByRole, FilterUsersByStatus, searchUsers } from 'features/user-management/users/services/userServices';
+import {
+  FilterUsersByRole,
+  FilterUsersByStatus,
+  searchUsers,
+  updateUserStatus
+} from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-
+import toast from 'react-hot-toast';
 const userStatusObj = {
   1: 'success',
   0: 'error'
@@ -138,14 +143,18 @@ const UserBodySection = ({ groups, users, setLoading }) => {
     setSelectedDeleteMaterial(row);
     setDeleteDialogOpen(true);
   };
-
-  const handleDeleteGroup = async () => {
+  console.log(selectedDeleteMaterial);
+  const handleChangeStatus = async () => {
     try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
+      const data = {
+        id: selectedDeleteMaterial.id,
+        status: selectedDeleteMaterial?.is_active === '1' ? '0' : '1'
+      };
+      const result = await updateUserStatus(data);
 
       if (result.success) {
+        setLoading((reload) => !reload);
         toast.success(result.message);
-        dispatch(getAllGroups());
       } else {
         toast.error(result.message);
       }
@@ -342,7 +351,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
         onPaginationModelChange={setPaginationModel}
       />
       <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} setLoading={setLoading} />
-      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleChangeStatus} />
     </Card>
   );
 };

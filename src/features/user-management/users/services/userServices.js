@@ -30,6 +30,26 @@ export const getAllUsers = async (selectedBranchId) => {
   }
 };
 
+export const updateUserStatus = async (data) => {
+  try {
+    const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User status updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
+    throw error;
+  }
+};
 export const addUser = async (data) => {
   try {
     const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
