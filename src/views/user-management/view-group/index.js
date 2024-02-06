@@ -14,18 +14,20 @@ import {
   CardContent
 } from '@mui/material';
 
-import { getAllPermissions } from 'features/user-management/groups/services/groupService';
-
+import { getAllPermissionsByRoleId } from 'features/user-management/groups/services/groupService';
+import { useLocation } from 'react-router';
 const GroupViewPage = () => {
   const [permissions, setPermissions] = useState([]);
-
+  const location = useLocation();
+  const group = location?.state?.group?.role;
   useEffect(() => {
     getPermissions();
-  }, []);
+  }, [group?.id]);
+  console.log(location);
 
   const getPermissions = async () => {
     try {
-      const result = await getAllPermissions();
+      const result = await getAllPermissionsByRoleId(group?.id);
       if (result.success) {
         setPermissions(result.data);
         console.log(result.data);
@@ -73,7 +75,7 @@ const GroupViewPage = () => {
           px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
           pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
         }}
-        title="Admin"
+        title={group?.name}
       ></CardHeader>
       <CardContent
         sx={{

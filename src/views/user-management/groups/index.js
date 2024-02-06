@@ -38,11 +38,13 @@ const GroupManagement = () => {
   const dispatch = useDispatch();
   const groups = useSelector(selectGroups);
   const groupLoading = useSelector(selectGroupLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const navigate = useNavigate();
 
+  console.log(groups);
   useEffect(() => {
-    dispatch(getAllGroups());
-  }, [dispatch]);
+    dispatch(getAllGroups(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
 
   // ** Add Role Image
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
@@ -97,26 +99,27 @@ const GroupManagement = () => {
                 }}
               >
                 {item?.users?.map((user, index) => (
-                  <Avatar key={index} alt={item?.name} src={user?.name} />
+                  <Avatar key={index} alt={item?.name} src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${user?.name}`} />
                 ))}
               </AvatarGroup>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
                 <Typography variant="h4" sx={{ mb: 1 }}>
-                  {item?.name}
+                  {item?.role?.name}
                 </Typography>
 
                 <Typography
                   component={Link}
-                  to={`edit/${item.id}`}
+                  to={`edit/${item.role.id}`}
+                  state={{ id: item.role.id, name: item.role.name }}
                   sx={{ color: 'primary.main', textDecoration: 'none', boxShadow: 'none' }}
                 >
                   Edit Role
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex' }}>
-                <Box component={Link} to={'view'}>
+                <Box component={Link} to={'view'} state={{ group: item }}>
                   <IconButton size="small" sx={{ color: 'dark.dark' }}>
                     <Icon icon="tabler:eye-filled" />
                   </IconButton>
@@ -177,10 +180,8 @@ const GroupManagement = () => {
                 </Grid>
               </Card>
             </Grid>
-
             {renderCards()}
           </Grid>
-
           <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
         </Grid>
       )}
