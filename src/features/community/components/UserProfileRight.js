@@ -2,18 +2,19 @@
 import { Fragment } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import List from '@mui/material/List'
-import Badge from '@mui/material/Badge'
 import MuiAvatar from '@mui/material/Avatar'
-import ListItem from '@mui/material/ListItem'
+import Badge from '@mui/material/Badge'
+import Box from '@mui/material/Box'
 import FormGroup from '@mui/material/FormGroup'
 import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import ListItemButton from '@mui/material/ListItemButton'
-
+import Typography from '@mui/material/Typography'
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import { useState ,useEffect} from 'react'
 // ** Icon Imports
 import Icon from 'components/icon'
 
@@ -21,19 +22,56 @@ import Icon from 'components/icon'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 // ** Custom Component Imports
-import Sidebar from 'components/sidebar'
 import CustomAvatar from 'components/mui/avatar'
+import Sidebar from 'components/sidebar'
 
 const UserProfileRight = props => {
   const {
     store,
     hidden,
     statusObj,
+    // dispatch,
     getInitials,
+    // removeSelectedChat,
     sidebarWidth,
     userProfileRightOpen,
     handleUserProfileRightSidebarToggle
   } = props
+  const [query, setQuery] = useState('');
+  const [active, setActive] = useState(null);
+
+console.log(setQuery);
+
+useEffect(() => {
+  if (store && store.chats) {
+    if (active !== null) {
+      if (active.type === 'contact' && active.id === store.chats[0].id) {
+        setActive({ type: 'chat', id: active.id });
+      }
+    }
+  }
+}, [store, active]);
+
+useEffect(() => {
+  // router.events.on('routeChangeComplete', () => {
+  setActive(null);
+  // dispatch(removeSelectedChat());
+  // })
+
+  return () => {
+    setActive(null);
+    // dispatch(removeSelectedChat());
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+
+const hasActiveId = (id) => {
+  if (store.chats !== null) {
+    const arr = store.chats.filter((i) => i.id === id);
+
+    return !!arr.length;
+  }
+};
 
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
@@ -42,6 +80,89 @@ const UserProfileRight = props => {
       return <PerfectScrollbar options={{ wheelPropagation: false }}>{children}</PerfectScrollbar>
     }
   }
+ 
+  const renderContacts = () => {
+    if (store && store.contacts && store.contacts.length) {
+      if (query.length && !filteredContacts.length) {
+        return (
+          <ListItem>
+            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
+          </ListItem>
+        );
+      } else {
+        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+
+        return arrToMap !== null
+          ? arrToMap.map((contact, index) => {
+              const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+
+              return (
+                <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+                  <ListItemButton
+                    disableRipple
+                    onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                    sx={{
+                      py: 2,
+                      px: 3,
+                      width: '100%',
+                      borderRadius: 1,
+                      '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                      ...(activeCondition && {
+                        background: (theme) =>
+                          `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                            theme.palette.primary.main,
+                            0.7
+                          )} 76.47%) !important`
+                      })
+                    }}
+                  >
+                    <ListItemAvatar sx={{ m: 0 }}>
+                      {contact.avatar ? (
+                        <MuiAvatar
+                          alt={contact.fullName}
+                          src={contact.avatar}
+                          sx={{
+                            width: 38,
+                            height: 38,
+                            outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                          }}
+                        />
+                      ) : (
+                        <CustomAvatar
+                          color={contact.avatarColor}
+                          skin={activeCondition ? 'light-static' : 'light'}
+                          sx={{
+                            width: 38,
+                            height: 38,
+                            fontSize: (theme) => theme.typography.body1.fontSize,
+                            outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                          }}
+                        >
+                          {getInitials(contact.fullName)}
+                        </CustomAvatar>
+                      )}
+                    </ListItemAvatar>
+                    <ListItemText
+                      sx={{
+                        my: 0,
+                        ml: 3,
+                        ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                      }}
+                      primary={<Typography variant="h6">{contact.fullName}</Typography>}
+                      secondary={
+                        <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
+                          {contact.about}
+                        </Typography>
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })
+          : null;
+      }
+    }
+  };
 
   return (
     <Sidebar
@@ -120,7 +241,7 @@ const UserProfileRight = props => {
 
           <Box sx={{ height: 'calc(100% - 13.3125rem)' }}>
             <ScrollWrapper>
-              <Box sx={{ p: 4 }}>
+              <Box sx={{ p: 3}}>
                 <FormGroup sx={{ mb: 6.5 }}>
                   <Typography
                     variant='body2'
@@ -164,67 +285,18 @@ const UserProfileRight = props => {
                   </List>
                 </Box>
 
-                <div>
-                  <Typography
-                    variant='body2'
-                    sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}
-                  >
-                    Options
-                  </Typography>
-                  <List
-                    dense
-                    sx={{
-                      p: 0,
-                      '& .MuiListItemButton-root:hover': {
-                        backgroundColor: 'action.hover',
-                        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-                          color: 'inherit'
-                        }
-                      }
-                    }}
-                  >
-                    <ListItem disablePadding>
-                      <ListItemButton sx={{ px: 2 }}>
-                        <ListItemIcon sx={{ mr: 2 }}>
-                          <Icon icon='tabler:badge' fontSize='1.5rem' />
-                        </ListItemIcon>
-                        <ListItemText primary='Add Tag' primaryTypographyProps={{ variant: 'body1' }} />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton sx={{ px: 2 }}>
-                        <ListItemIcon sx={{ mr: 2 }}>
-                          <Icon icon='tabler:star' fontSize='1.5rem' />
-                        </ListItemIcon>
-                        <ListItemText primary='Important Contact' primaryTypographyProps={{ variant: 'body1' }} />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton sx={{ px: 2 }}>
-                        <ListItemIcon sx={{ mr: 2 }}>
-                          <Icon icon='tabler:photo' fontSize='1.5rem' />
-                        </ListItemIcon>
-                        <ListItemText primary='Shared Media' primaryTypographyProps={{ variant: 'body1' }} />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton sx={{ px: 2 }}>
-                        <ListItemIcon sx={{ mr: 2 }}>
-                          <Icon icon='tabler:trash' fontSize='1.5rem' />
-                        </ListItemIcon>
-                        <ListItemText primary='Delete Contact' primaryTypographyProps={{ variant: 'body1' }} />
-                      </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                      <ListItemButton sx={{ px: 2 }}>
-                        <ListItemIcon sx={{ mr: 2 }}>
-                          <Icon icon='tabler:ban' fontSize='1.5rem' />
-                        </ListItemIcon>
-                        <ListItemText primary='Block Contact' primaryTypographyProps={{ variant: 'body1' }} />
-                      </ListItemButton>
-                    </ListItem>
-                  </List>
-                </div>
+                <Box >
+            <Box >
+              {/* <Typography variant='h5' sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
+                Chats
+              </Typography> */}
+              {/* <List sx={{ mb: 5, p: 0 }}>{renderChats()}</List> */}
+              <Typography variant="h4" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
+                Students
+              </Typography>
+              <List sx={{ p: 0 }}>{renderContacts()}</List>
+            </Box>
+        </Box>
               </Box>
             </ScrollWrapper>
           </Box>
