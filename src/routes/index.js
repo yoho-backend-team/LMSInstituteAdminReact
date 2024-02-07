@@ -109,7 +109,7 @@ const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 const CalenderPage = Loadable(lazy(() => import('views/calender')));
 
 // Community
-const Community = Loadable(lazy(() => import('views/community')));
+const Community = Loadable(lazy(() => import('views/community/index.js')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -141,6 +141,10 @@ const ApplicationRoutes = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<DashboardDefault />} />
+        </Route>
+        <Route path="/community-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/community" />} />
+          <Route path="community" element={<Community />} />
         </Route>
         <Route path="/calender" element={<MainLayout />}>
           <Route index element={<CalenderPage />} />
@@ -261,11 +265,6 @@ const ApplicationRoutes = () => {
         {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
-      </Route>
-
-      <Route path="/community" element={<MainLayout />}>
-        <Route index element={<Navigate to="/community" />} />
-        <Route path="community" element={<Community />} />
       </Route>
 
       <Route element={<MinimalLayout />}>

@@ -1,5 +1,5 @@
 // assets
-import { IconBuildingCommunity } from "@tabler/icons";
+import { IconBuildingCommunity } from '@tabler/icons';
 
 // constant
 const icons = { IconBuildingCommunity };
@@ -7,15 +7,15 @@ const icons = { IconBuildingCommunity };
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const community = {
-  id: 'community',
+  id: 'communities',
   title: '',
   type: 'group',
   children: [
     {
-      id: 'community',
+      id: 'communities',
       title: 'Community',
       type: 'item',
-      url: '/community',
+      url: '/community-management/community',
       icon: icons.IconBuildingCommunity,
       breadcrumbs: false
     }
