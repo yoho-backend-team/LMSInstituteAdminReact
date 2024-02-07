@@ -137,11 +137,15 @@ const ModuleEdit = (props) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues,
+    defaultValues: props.initialValues || defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-
+  useEffect(() => {
+    if (open) {
+      reset(props.initialValues || defaultValues);
+    }
+  }, [open, reset, props.initialValues]);
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('name', data.title);

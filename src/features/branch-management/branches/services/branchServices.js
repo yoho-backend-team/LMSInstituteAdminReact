@@ -1,19 +1,24 @@
 // groupService.js
 import axios from 'axios';
 
-const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/Branch-management/Branch`;
+const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-management/institute-branches`;
 
 export const getAllBranches = async () => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    // let data = {
+    //   search: ''
+    // };
+    const response = await axios.get(`${BRANCH_API_ENDPOINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
+    console.log(response);
+
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -91,16 +96,17 @@ export const deleteBranch = async (BranchId) => {
 };
 
 export const updateBranch = async (data) => {
+  console.log(data);
   try {
-    const response = await axios.put(`${BRANCH_API_ENDPOINT}/update`, data, {
+    const response = await axios.post(`${BRANCH_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
+    console.log(response);
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Branch updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Branch' };

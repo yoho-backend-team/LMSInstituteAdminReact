@@ -36,6 +36,11 @@ const StudyMaterial = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+  const [selectedRow, setSelectedRow] = useState(null);
+  const handleRowClick = (params) => {
+    setSelectedRow(params.row);
+    // toggleEditUserDrawer();
+  };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
 
@@ -83,6 +88,7 @@ const StudyMaterial = () => {
         </IconButton>
         <IconButton
           onClick={() => {
+            // setSelectedDeleteGroupId(item.id);
             setDeleteDialogOpen(true);
           }}
           aria-label="capture screenshot"
@@ -198,6 +204,9 @@ const StudyMaterial = () => {
     [dispatch]
   );
 
+
+    
+
   const columns = [
     {
       flex: 0.8,
@@ -308,9 +317,10 @@ const StudyMaterial = () => {
         pageSizeOptions={[10, 25, 50]}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
+        onRowClick={handleRowClick}
       />
       <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer}  initialValues={selectedRow}/>
       <GroupDeleteDialog
         open={deleteDialogOpen}
         setOpen={setDeleteDialogOpen}

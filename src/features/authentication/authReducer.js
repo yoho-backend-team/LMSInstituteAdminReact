@@ -1,8 +1,12 @@
 // authReducer.js
+const branches = JSON.parse(localStorage.getItem('branches'));
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem('isAuthenticated') || false,
   token: localStorage.getItem('token') || null,
-  userId: localStorage.getItem('userData') || null,
+  userData: JSON.parse(localStorage.getItem('userData')) || null,
+  permissions: JSON.parse(localStorage.getItem('userData')) || null,
+  branches: JSON.parse(localStorage.getItem('branches')) || null,
+  selectedBranchId: branches ? branches[0]?.branch_id : null,
   errorMessage: ''
 };
 
@@ -14,6 +18,9 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: true,
         token: action.payload.token,
         userData: action.payload.userData,
+        permissions: action.payload.permissions,
+        branches: action.payload.branches,
+        selectedBranchId: action.payload.branches[0]?.branch_id,
         errorMessage: ''
       };
     case 'LOGIN_FAILURE':
@@ -22,6 +29,9 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: false,
         token: null,
         userData: null,
+        permissions: null,
+        branches: null,
+        selectedBranchId: null,
         errorMessage: action.payload
       };
     case 'LOGOUT':
@@ -30,6 +40,9 @@ const authReducer = (state = initialState, action) => {
         isAuthenticated: false,
         token: null,
         userData: null,
+        permissions: null,
+        branches: null,
+        selectedBranchId: null,
         errorMessage: ''
       };
     case 'LOGOUT_FAILURE':
@@ -37,8 +50,21 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: true,
         token: localStorage.getItem('token') || null,
-        userId: localStorage.getItem('userData') || null,
+        userData: JSON.parse(localStorage.getItem('userData')) || null,
+        permissions: JSON.parse(localStorage.getItem('userData')) || null,
+        branches: JSON.parse(localStorage.getItem('branches')) || null,
+        selectedBranchId: JSON.parse(localStorage.getItem('branches'))[0]?.branchId || null,
         errorMessage: action.payload
+      };
+    case 'UPDATE_SELECTED_BRANCH':
+      return {
+        ...state,
+        selectedBranchId: action.payload
+      };
+    case 'UPDATE_BRANCH':
+      return {
+        ...state,
+        branches: action.payload
       };
     default:
       return state;

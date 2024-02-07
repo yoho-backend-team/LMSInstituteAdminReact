@@ -14,18 +14,35 @@ import {
   CardContent
 } from '@mui/material';
 
-import { getAllPermissions } from 'features/user-management/groups/services/groupService';
+import { getAllPermissionsByRoleId } from 'features/user-management/groups/services/groupService';
+import { useLocation } from 'react-router';
+import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 const GroupViewPage = () => {
   const [permissions, setPermissions] = useState([]);
+  const location = useLocation();
+  const group = location?.state?.group?.role;
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
 
   useEffect(() => {
     getPermissions();
-  }, []);
+  }, [group?.id]);
+  console.log(location);
 
   const getPermissions = async () => {
     try {
-      const result = await getAllPermissions();
+      const result = await getAllPermissionsByRoleId(group?.id);
       if (result.success) {
         setPermissions(result.data);
         console.log(result.data);
@@ -65,33 +82,40 @@ const GroupViewPage = () => {
   };
 
   return (
-    <Card fullWidth maxWidth="md" scroll="body">
-      <CardHeader
-        component="div"
-        sx={{
-          textAlign: 'center',
-          px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-          pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-        }}
-        title="Admin"
-      ></CardHeader>
-      <CardContent
-        sx={{
-          pb: (theme) => `${theme.spacing(3)} !important`,
-          px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-        }}
-      >
-        <Typography variant="h4" sx={{ pb: 3 }}>
-          Group Permissions
-        </Typography>
-        <TableContainer>
-          <Table size="small">
-            <TableHead></TableHead>
-            <TableBody>{renderPermissions()}</TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
+    <>
+     {loading ? (
+        <AddGroupSkeleton />
+      ) : (
+        <Card fullWidth maxWidth="md" scroll="body">
+        <CardHeader
+          component="div"
+          sx={{
+            textAlign: 'center',
+            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+            pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+          }}
+          title={group?.name}
+        ></CardHeader>
+        <CardContent
+          sx={{
+            pb: (theme) => `${theme.spacing(3)} !important`,
+            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+          }}
+        >
+          <Typography variant="h4" sx={{ pb: 3 }}>
+            Group Permissions
+          </Typography>
+          <TableContainer>
+            <Table size="small">
+              <TableHead></TableHead>
+              <TableBody>{renderPermissions()}</TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
+      )}
+    </>
+   
   );
 };
 

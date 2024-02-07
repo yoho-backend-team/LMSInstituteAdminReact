@@ -16,12 +16,14 @@ import IdCardManagement from './id-cards-management';
 // import resultManagement from './result-management';
 import allNotifications from './notification-management';
 import helpCenter from './help-center';
+import community from './community';
 // import calender from './calender'
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
   items: [
     dashboard,
+    community,
     branchManagement,
     userManagement,
     courseManagement,

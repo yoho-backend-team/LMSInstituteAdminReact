@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-
+import { useEffect } from 'react';
 // ** Custom Component Import
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, TextField as CustomTextField } from '@mui/material';
@@ -10,6 +10,8 @@ import { Controller, useForm } from 'react-hook-form';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { updateBranch } from '../../services/branchServices';
+import toast from 'react-hot-toast';
 
 // ** Third Party Imports
 import * as yup from 'yup';
@@ -25,22 +27,60 @@ const branchSchema = yup.object().shape({
   state: yup.string().required('State is required')
 });
 
-const BranchEditModal = ({ open, handleEditClose }) => {
+const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch }) => {
+  useEffect(() => {
+    if (selectedBranch) {
+      setValue('branchName', selectedBranch.branch_name || '');
+      setValue('phone', selectedBranch.phone_number || '');
+      setValue('alternatePhone', selectedBranch.alternate_number || '');
+      setValue('address', selectedBranch.address || ''); // Set default value to 'location'
+      setValue('pinCode', selectedBranch.pin_code || '');
+      setValue('landmark', selectedBranch.landmark || '');
+      setValue('city', selectedBranch.city || '');
+      setValue('state', selectedBranch.state || '');
+    }
+  }, [selectedBranch]);
+
   // ** States
   const {
     handleSubmit,
     control,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     resolver: yupResolver(branchSchema)
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Handle form submission
+    const dummyData = {
+      branch_name: data.branchName,
+      id: selectedBranch.id,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      pin_code: data.pinCode,
+      landmark: data.landmark,
+      phone_number: data.phone,
+      alternate_number: data.alternatePhone
+    };
     console.log(data);
+    try {
+      const result = await updateBranch(dummyData);
+
+      if (result.success) {
+        toast.success(result.message);
+        handleClose();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleClose = () => {
     handleEditClose();
+    setSelectedBranch(null);
     reset();
   };
 
@@ -78,6 +118,7 @@ const BranchEditModal = ({ open, handleEditClose }) => {
                   <Controller
                     name="branchName"
                     control={control}
+                    defaultValue={selectedBranch ? selectedBranch.branch_name : ''}
                     render={({ field }) => (
                       <CustomTextField
                         {...field}
@@ -129,6 +170,7 @@ const BranchEditModal = ({ open, handleEditClose }) => {
                   <Controller
                     name="address"
                     control={control}
+                    value={selectedBranch ? selectedBranch.address : ''}
                     render={({ field }) => (
                       <CustomTextField
                         {...field}

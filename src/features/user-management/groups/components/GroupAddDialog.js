@@ -239,11 +239,11 @@ const GroupAddDialog = (props) => {
           pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
         }}
       >
-        <Box className="demo-space-x">
+        <Box className="demo-space-x" >
           <Button type="submit" variant="contained" onClick={handleAddGroup}>
             Submit
           </Button>
-          <Button color="secondary" variant="tonal" onClick={handleAddDialogClose}>
+          <Button  color="secondary" variant="tonal" onClick={handleAddDialogClose}>
             Cancel
           </Button>
         </Box>

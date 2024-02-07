@@ -1,19 +1,21 @@
 // userService.js
 import axios from 'axios';
 
-// const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/role-search`;
+const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
+const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/users/AllUsers.json', {
+    const response = await axios.get(`${USER_API_ENDPOINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -24,6 +26,46 @@ export const getAllUsers = async () => {
     console.error('Error in getAllUsers:', error);
 
     // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+export const updateUserStatus = async (data) => {
+  try {
+    const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User status updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
+    throw error;
+  }
+};
+export const addUser = async (data) => {
+  try {
+    const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User created successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
     throw error;
   }
 };
@@ -42,6 +84,30 @@ export const searchUsers = async (searchQuery) => {
       return { success: true, data: response.data };
     } else {
       return { success: false, message: 'Failed to fetch search results' };
+    }
+  } catch (error) {
+    console.error('Error in searchUsers:', error);
+    throw error;
+  }
+};
+export const checkUserName = async (userName) => {
+  try {
+    const response = await axios.post(
+      `${USER_API_USER_NAME_CHECK_ENDPOINT}`,
+      { username: userName },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+        // params: { username: userName }
+      }
+    );
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'UserName valid' };
+    } else {
+      return { success: false, message: 'UserName Invalid' };
     }
   } catch (error) {
     console.error('Error in searchUsers:', error);

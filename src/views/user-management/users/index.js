@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import Grid from '@mui/material/Grid';
 
@@ -13,39 +13,27 @@ import UserBodySection from 'features/user-management/users/components/UserBodyS
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from 'features/user-management/users/redux/userThunks';
 import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users/redux/userSelectors';
-import { getAllActiveGroups } from 'features/user-management/users/services/userServices';
+// import { getAllActiveGroups } from 'features/user-management/users/services/userServices';
+import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
 
+import { selectGroups } from 'features/user-management/groups/redux/groupSelectors';
+import { useState } from 'react';
 const UserList = () => {
   const dispatch = useDispatch();
   const users = useSelector(selectUsers);
   const userLoading = useSelector(selectUserLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const groups = useSelector(selectGroups);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    dispatch(getAllGroups(selectedBranchId));
+  }, [selectedBranchId]);
 
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    dispatch(getAllUsers(selectedBranchId));
+  }, [dispatch, selectedBranchId, loading]);
 
-  const getAllGroups = async () => {
-    try {
-      // Set loading to true while fetching data
-      const result = await getAllActiveGroups();
-
-      if (result.success) {
-        console.log('Search results:', result.data);
-        // Update the Redux state using the setGroups action
-        setGroups(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
-
-  const [groups, setGroups] = useState([]);
+  console.log(users);
 
   return (
     <>
@@ -54,10 +42,10 @@ const UserList = () => {
       ) : (
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <UserHeaderSection users={users} groups={groups} />
+            <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
           </Grid>
           <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users} />
+            <UserBodySection groups={groups} users={users} setLoading={setLoading} />
           </Grid>
         </Grid>
       )}
