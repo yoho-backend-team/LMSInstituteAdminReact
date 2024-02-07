@@ -36,11 +36,14 @@ import staffIdCardsReducer from 'features/id-card-management/staff-id-cards/redu
 
 import customerSupportsReducer from 'features/help-center/customer-support/redux/customerSupportSlice';
 import technicalSupportsReducer from 'features/help-center/technical-support/redux/technicalSupportSlice';
+
+import chats from 'features/chat/redux/chatSlicees';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
   reducer: {
     customization: customizationReducer,
+    chats: chats,
     groups: groupReducer,
     users: userReducer,
     batches: batchReducer,

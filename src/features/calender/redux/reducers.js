@@ -6,13 +6,6 @@ import axios from 'axios';
 
 // ** Fetch Events
 export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () => {
-  // const response = await axios.get('/apps/calendar/events', {
-  //   // params: {
-  //   //   calendars
-  //   // }
-  // });
-  // console.log(response)
-
   return [
     {
       id: 1,
