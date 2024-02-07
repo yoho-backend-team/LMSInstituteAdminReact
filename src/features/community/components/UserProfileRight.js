@@ -81,6 +81,91 @@ const hasActiveId = (id) => {
     }
   }
  
+    // using slice to render only two contacts
+    const renderStaff = () => {
+      if (store && store.contacts && store.contacts.length) {
+        if (query.length && !filteredContacts.length) {
+          return (
+            <ListItem>
+              <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
+            </ListItem>
+          );
+        } else {
+          const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+    
+          return arrToMap !== null
+            ? arrToMap.slice(0, 2).map((contact, index) => { // Limiting to only the first two contacts
+                const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+    
+                return (
+                  <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+                    <ListItemButton
+                      disableRipple
+                      onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                      sx={{
+                        py: 2,
+                        px: 3,
+                        width: '100%',
+                        borderRadius: 1,
+                        '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                        ...(activeCondition && {
+                          background: (theme) =>
+                            `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                              theme.palette.primary.main,
+                              0.7
+                            )} 76.47%) !important`
+                        })
+                      }}
+                    >
+                      <ListItemAvatar sx={{ m: 0 }}>
+                        {contact.avatar ? (
+                          <MuiAvatar
+                            alt={contact.fullName}
+                            src={contact.avatar}
+                            sx={{
+                              width: 38,
+                              height: 38,
+                              outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                            }}
+                          />
+                        ) : (
+                          <CustomAvatar
+                            color={contact.avatarColor}
+                            skin={activeCondition ? 'light-static' : 'light'}
+                            sx={{
+                              width: 38,
+                              height: 38,
+                              fontSize: (theme) => theme.typography.body1.fontSize,
+                              outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                            }}
+                          >
+                            {getInitials(contact.fullName)}
+                          </CustomAvatar>
+                        )}
+                      </ListItemAvatar>
+                      <ListItemText
+                        sx={{
+                          my: 0,
+                          ml: 3,
+                          ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                        }}
+                        primary={<Typography variant="h6">{contact.fullName}</Typography>}
+                        secondary={
+                          <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
+                            {contact.about}
+                          </Typography>
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })
+            : null;
+        }
+      }
+    };
+    
+  
   const renderContacts = () => {
     if (store && store.contacts && store.contacts.length) {
       if (query.length && !filteredContacts.length) {
@@ -287,10 +372,10 @@ const hasActiveId = (id) => {
 
                 <Box >
             <Box >
-              {/* <Typography variant='h5' sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
-                Chats
-              </Typography> */}
-              {/* <List sx={{ mb: 5, p: 0 }}>{renderChats()}</List> */}
+              <Typography variant='h5' sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
+                Staff
+              </Typography>
+              <List sx={{ mb: 5, p: 0 }}>{renderStaff()}</List>
               <Typography variant="h4" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
                 Students
               </Typography>
