@@ -1,20 +1,107 @@
-// material-ui
-import { Typography } from '@mui/material';
+// ** React Imports
+import { useEffect, useState } from 'react'
 
-// project imports
-import MainCard from 'components/cards/MainCard';
+// ** MUI Imports
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
-// ==============================|| SAMPLE PAGE ||============================== //
+// ** Store & Actions Imports
+import { useDispatch, useSelector } from 'react-redux'
+import { selectChat, fetchUserProfile, removeSelectedChat,sendMsg} from 'features/community/components/AppChat'
 
-const SamplePage = () => (
-  <MainCard title="Sample Card">
-    <Typography variant="body2">
-      Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-      minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in reprehended
-      in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui officiate
-      descent molls anim id est labours.
-    </Typography>
-  </MainCard>
-);
+// ** Utils Imports
+import { getInitials } from 'utils/get-initials'
+import { formatDateToMonthShort } from 'utils/format'
 
-export default SamplePage;
+// ** Chat App Components Imports
+import SidebarLeft from 'features/community/components/SidebarLeft'
+import ChatContent from 'features/community/components/ChatContent'
+
+const Community = () => {
+  // ** States
+  const [userStatus, setUserStatus] = useState('online')
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)
+  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false)
+  const [userProfileRightOpen, setUserProfileRightOpen] = useState(false)
+
+  // ** Hooks
+  const theme = useTheme()
+  const dispatch = useDispatch()
+  const hidden = useMediaQuery(theme.breakpoints.down('lg'))
+  const store = useSelector(state => state.chat)
+
+  // ** Vars
+  const  skin  = "default"
+  const smAbove = useMediaQuery(theme.breakpoints.up('sm'))
+  const sidebarWidth = smAbove ? 360 : 300
+  const mdAbove = useMediaQuery(theme.breakpoints.up('md'))
+
+  const statusObj = {
+    busy: 'error',
+    away: 'warning',
+    online: 'success',
+    offline: 'secondary'
+  }
+  useEffect(() => {
+    dispatch(fetchUserProfile())
+    // dispatch(fetchChatsContacts())
+  }, [dispatch])
+  const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
+  const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen)
+  const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen)
+  console.log(selectChat)
+  return (
+    <Box
+      className='app-chat'
+      sx={{
+        width: '100%',
+        display: 'flex',
+        height:'82vh',
+        flexDirection: 'row',
+        borderRadius: 1,
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor: 'background.paper',
+        boxShadow: skin === 'bordered' ? 0 : 6,
+        ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
+      }}
+    >
+      <SidebarLeft
+        store={store}
+        hidden={hidden}
+        mdAbove={mdAbove}
+        dispatch={dispatch}
+        statusObj={statusObj}
+        userStatus={userStatus}
+        selectChat={selectChat}
+        getInitials={getInitials}
+        sidebarWidth={sidebarWidth}
+        setUserStatus={setUserStatus}
+        leftSidebarOpen={leftSidebarOpen}
+        removeSelectedChat={removeSelectedChat}
+        userProfileLeftOpen={userProfileLeftOpen}
+        formatDateToMonthShort={formatDateToMonthShort}
+        handleLeftSidebarToggle={handleLeftSidebarToggle}
+        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+      />
+      <ChatContent
+        store={store}
+        hidden={hidden}
+        sendMsg={sendMsg}
+        mdAbove={mdAbove}
+        dispatch={dispatch}
+        statusObj={statusObj}
+        getInitials={getInitials}
+        sidebarWidth={sidebarWidth}
+        userProfileRightOpen={userProfileRightOpen}
+        handleLeftSidebarToggle={handleLeftSidebarToggle}
+        handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+      />
+    </Box>
+  )
+}
+Community.contentHeightFixed = true
+
+export default Community
+
