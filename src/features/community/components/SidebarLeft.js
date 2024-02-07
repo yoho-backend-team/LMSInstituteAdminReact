@@ -379,7 +379,7 @@ const SidebarLeft = props => {
       >
         <Box
           sx={{
-            py: 2,
+            py: 2.5,
             px: 3,
             display: 'flex',
             alignItems: 'center',
