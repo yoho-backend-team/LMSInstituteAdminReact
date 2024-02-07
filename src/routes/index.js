@@ -108,6 +108,9 @@ const Page500 = Loadable(lazy(() => import('views/error-pages/500-page')));
 //Calender
 const CalenderPage = Loadable(lazy(() => import('views/calender')));
 
+// Community
+const Community = Loadable(lazy(() => import('views/community')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 const Protected = () => {
@@ -259,6 +262,12 @@ const ApplicationRoutes = () => {
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
       </Route>
+
+      <Route path="/community" element={<MainLayout />}>
+        <Route index element={<Navigate to="/community" />} />
+        <Route path="community" element={<Community />} />
+      </Route>
+
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />
       </Route>
