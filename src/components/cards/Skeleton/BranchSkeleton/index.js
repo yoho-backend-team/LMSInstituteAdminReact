@@ -1,6 +1,6 @@
 import { Box, Card, CardHeader, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import CustomAvatar from 'components/mui/avatar';
-import ReactApexCharts from 'react-apexcharts';
+// import ReactApexCharts from 'react-apexcharts';
 import { gridSpacing } from 'store/constant';
 
 const BranchSkeleton = () => {
@@ -69,9 +69,9 @@ const BranchSkeleton = () => {
       {/* Second Card */}
 
       <Grid item xs={12} sm={6}>
-        <Card sx={{ p: 1 }}>
-          <Grid container display={'flex'} justifyContent={'space-between'}>
-            <Box>
+        <Card sx={{ pt: 1,pb:4}}>
+          <Grid container display={'flex'} justifyContent={'space-around'} >
+            <Box sx={{mt:2}}>
               <Typography variant="h1">
                 <Skeleton animation="wave" height={40} width={100} />
               </Typography>
@@ -100,8 +100,10 @@ const BranchSkeleton = () => {
                 </Box>
               ))}
             </Box>
-            <Box>
-              <ReactApexCharts type="radialBar" height={250} options={{}} series={[85]} />
+            <Box sx={{mt:2}}>
+              {/* <ReactApexCharts type="radialBar" height={250} options={{}} series={[85]} /> */}
+            <Skeleton variant="rectangular" width={150} height={160} animation="wave" sx={{ mb: 4 }} />
+
             </Box>
           </Grid>
         </Card>
