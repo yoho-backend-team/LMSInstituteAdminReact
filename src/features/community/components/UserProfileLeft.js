@@ -80,7 +80,7 @@ const UserProfileLeft = props => {
             <Icon icon='tabler:x' />
           </IconButton>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', p: theme => theme.spacing(11.25, 6, 4.5) }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column',p: theme => theme.spacing(7, 6, 2) }}>
             <Box sx={{ mb: 3.5, display: 'flex', justifyContent: 'center' }}>
               <Badge
                 overlap='circular'
@@ -119,7 +119,7 @@ const UserProfileLeft = props => {
 
           <Box sx={{ height: 'calc(100% - 13.3125rem)' }}>
             <ScrollWrapper>
-              <Box sx={{ p: 6 }}>
+              <Box sx={{ p: 4 }}>
                 <Typography
                   variant='body2'
                   sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}

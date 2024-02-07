@@ -1,23 +1,22 @@
 // ** React Imports
-import { Fragment } from 'react'
 
 // ** MUI Imports
-import Badge from '@mui/material/Badge'
 import MuiAvatar from '@mui/material/Avatar'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
+import Badge from '@mui/material/Badge'
 import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'components/icon'
 
 
 // ** Custom Components Import
-import ChatLog from './ChatLog'
-import SendMsgForm from './SendMsgForm'
 import CustomAvatar from 'components/mui/avatar'
 import OptionsMenu from 'components/option-menu'
+import ChatLog from './ChatLog'
+import SendMsgForm from './SendMsgForm'
 import UserProfileRight from './UserProfileRight'
 
 
@@ -109,7 +108,7 @@ const ChatContent = props => {
             <Box
               sx={{
                 px: 5,
-                py: 2.5,
+                py: 2,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -172,7 +171,7 @@ const ChatContent = props => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {mdAbove ? (
+                {/* {mdAbove ? (
                   <Fragment>
                     <IconButton size='small' sx={{ color: 'text.secondary' }}>
                       <Icon icon='tabler:phone-call' />
@@ -184,7 +183,7 @@ const ChatContent = props => {
                       <Icon icon='tabler:search' />
                     </IconButton>
                   </Fragment>
-                ) : null}
+                ) : null} */}
 
                 <OptionsMenu
                   menuProps={{ sx: { mt: 2 } }}

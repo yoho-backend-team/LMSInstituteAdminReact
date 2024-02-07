@@ -43,44 +43,45 @@ const ChatLog = props => {
   }
 
   // ** Formats chat data based on sender
-  const formattedChatData = () => {
-    let chatLog = []
-    if (data.chat) {
-      chatLog = data.chat
-    }
-    const formattedChatLog = []
-    let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : 11
-
-    let msgGroup = {
-      senderId: chatMessageSenderId,
-      messages: []
-    }
-    chatLog.forEach((msg, index) => {
-      if (chatMessageSenderId === msg.senderId) {
-        msgGroup.messages.push({
-          time: msg.time,
-          msg: msg.message,
-          feedback: msg.feedback
-        })
-      } else {
-        chatMessageSenderId = msg.senderId
-        formattedChatLog.push(msgGroup)
-        msgGroup = {
-          senderId: msg.senderId,
-          messages: [
-            {
-              time: msg.time,
-              msg: msg.message,
-              feedback: msg.feedback
-            }
-          ]
-        }
-      }
-      if (index === chatLog.length - 1) formattedChatLog.push(msgGroup)
-    })
-
-    return formattedChatLog
+ const formattedChatData = () => {
+  let chatLog = [];
+  if (Array.isArray(data.chat)) {
+    chatLog = data.chat;
   }
+  const formattedChatLog = [];
+  let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : 11;
+
+  let msgGroup = {
+    senderId: chatMessageSenderId,
+    messages: []
+  };
+  chatLog.forEach((msg, index) => {
+    if (chatMessageSenderId === msg.senderId) {
+      msgGroup.messages.push({
+        time: msg.time,
+        msg: msg.message,
+        feedback: msg.feedback
+      });
+    } else {
+      chatMessageSenderId = msg.senderId;
+      formattedChatLog.push(msgGroup);
+      msgGroup = {
+        senderId: msg.senderId,
+        messages: [
+          {
+            time: msg.time,
+            msg: msg.message,
+            feedback: msg.feedback
+          }
+        ]
+      };
+    }
+    if (index === chatLog.length - 1) formattedChatLog.push(msgGroup);
+  });
+
+  return formattedChatLog;
+};
+
 
   const renderMsgFeedback = (isSender, feedback) => {
     if (isSender) {
