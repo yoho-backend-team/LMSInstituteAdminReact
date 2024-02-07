@@ -43,7 +43,7 @@ import chats from 'features/chat/redux/chatSlicees';
 const store = configureStore({
   reducer: {
     customization: customizationReducer,
-    chats: chats,
+    chat: chats,
     groups: groupReducer,
     users: userReducer,
     batches: batchReducer,
