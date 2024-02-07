@@ -329,6 +329,14 @@ export const appChatSlice = createSlice({
       id: 1,
       userId: 1,
       unseenMsgs: 1,
+      contact: {
+        id: 1,
+        fullName: 'Felecia Rower',
+        role: 'Frontend Developer',
+        about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
+        avatar: '/images/avatars/2.png',
+        status: 'offline'
+      },
       chat: [
         {
           message: "How can we help? We're here for you!",
