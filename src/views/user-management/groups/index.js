@@ -87,7 +87,7 @@ const GroupManagement = () => {
   const renderCards = () => {
     return groups?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
-        <Card>
+        <Card sx={{ minHeight: 140 }}>
           <CardContent>
             <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography sx={{ color: 'text.secondary' }}>{`Total ${item.users?.length} users`}</Typography>

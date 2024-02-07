@@ -122,14 +122,14 @@ const Protected = () => {
     return <Navigate to="/login" replace />;
   }
 };
-// const AdminRoute = () => {
-//   const { state } = useAppContext();
+const AdminRoute = () => {
+  const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
 
-//   if (state?.is_admin) {
-//     return <Outlet />;
-//   }
-//   return <Navigate to="/login" />;
-// };
+  if (isAdmin === '1') {
+    return <Outlet />;
+  }
+  return <Navigate to="/un-authorized" />;
+};
 
 const ApplicationRoutes = () => {
   return (
@@ -142,15 +142,16 @@ const ApplicationRoutes = () => {
         <Route path="/calender" element={<MainLayout />}>
           <Route index element={<CalenderPage />} />
         </Route>
-
-        <Route path="/user-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/user-management/groups" />} />
-          <Route path="groups" element={<GroupsPage />} />
-          <Route path="groups/add" element={<AddGroupPage />} />
-          <Route path="groups/view" element={<ViewGroupPage />} />
-          <Route path="groups/edit/:id" element={<EditGroupPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="users/:id" element={<ViewUserPage />} />
+        <Route element={<AdminRoute />}>
+          <Route path="/user-management" element={<MainLayout />}>
+            <Route index element={<Navigate to="/user-management/groups" />} />
+            <Route path="groups" element={<GroupsPage />} />
+            <Route path="groups/add" element={<AddGroupPage />} />
+            <Route path="groups/view" element={<ViewGroupPage />} />
+            <Route path="groups/edit/:id" element={<EditGroupPage />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="users/:id" element={<ViewUserPage />} />
+          </Route>
         </Route>
 
         <Route path="/attendance-management" element={<MainLayout />}>
@@ -169,14 +170,14 @@ const ApplicationRoutes = () => {
           <Route path="batches/add" element={<AddBatchPage />} />
           <Route path="batches/:id" element={<ViewBatchPage />} />
         </Route>
-
-        <Route path="/branch-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/branch-management/branches" />} />
-          <Route path="branches" element={<BranchesPage />} />
-          <Route path="branches/add" element={<AddBranchPage />} />
-          <Route path="branches/:id" element={<ViewBranchPage />} />
+        <Route element={<AdminRoute />}>
+          <Route path="/branch-management" element={<MainLayout />}>
+            <Route index element={<Navigate to="/branch-management/branches" />} />
+            <Route path="branches" element={<BranchesPage />} />
+            <Route path="branches/add" element={<AddBranchPage />} />
+            <Route path="branches/:id" element={<ViewBranchPage />} />
+          </Route>
         </Route>
-
         <Route path="/certificate-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
           <Route path="student-certificates" element={<StudentCertificatesPage />} />

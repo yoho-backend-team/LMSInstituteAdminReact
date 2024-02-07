@@ -42,7 +42,6 @@ import { useSelector } from 'react-redux';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import { useState } from 'react';
 
-
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`;
@@ -72,7 +71,6 @@ const useTimeout = (callback, delay) => {
     return () => clearTimeout(timeoutId);
   }, [callback, delay]);
 };
-
 
 const GroupAddPage = () => {
   const [loading, setLoading] = useState(true);
@@ -104,14 +102,23 @@ const GroupAddPage = () => {
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const branches = useSelector((state) => state.auth.branches);
   const navigate = useNavigate();
   // const [personNameNative, setPersonNameNative] = useState([]);
 
+  // const filteredBranches = branches?.filter((branch) => selectedBranches?.includes(branch.branch_name));
+  // const branchIds = filteredBranches?.map((branch) => branch.branch_id);
+
+  // console.log(branchIds);
+
   const onSubmit = async (data) => {
     try {
+      // const brn = data.branch;
+
+      const branchIds = data?.branch?.map((branch) => branch.branch_id);
+      console.log(branchIds);
       const inputData = {
-        branch_id: selectedBranchId,
+        branch_ids: branchIds,
         name: data.groupName,
         permissions: selectedCheckbox
       };
@@ -232,179 +239,174 @@ const GroupAddPage = () => {
     );
   };
 
-  const groups = [
-    { id: '1', name: 'Offline Class' },
-    { id: '2', name: 'Online class' },
-    { id: '3', name: 'Hybrid' }
-  ];
   return (
     <>
-    {loading ? (
+      {loading ? (
         <AddGroupSkeleton />
       ) : (
-    <Card fullWidth maxWidth="md" scroll="body">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardHeader
-          sx={{
-            textAlign: 'center',
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`],
-            pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-          }}
-          title="Add New Group"
-          subheader="Set Group Permissions"
-        ></CardHeader>
-        <CardContent
-          sx={{
-            pb: (theme) => `${theme.spacing(5)} !important`,
-            px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
-          }}
-        >
-          <Grid sx={{ my: 4, gap: 2 }} container>
-            <Grid xs={12} sm={5.9}>
-              <Controller
-                name="groupName"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    // sx={{ mb: 4 }}
-                    label="Group Name"
-                    onChange={onChange}
-                    placeholder="John Doe"
-                    error={Boolean(errors.groupName)}
-                    {...(errors.groupName && { helperText: errors.groupName.message })}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid xs={12} sm={5.9}>
-              <Controller
-                name="branch"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    multiple
-                    id="select-multiple-chip"
-                    options={groups}
-                    getOptionLabel={(option) => option.name}
-                    value={value}
-                    onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                        onChange(groups.filter((option) => option.id !== 'selectAll'));
-                      } else {
-                        onChange(newValue);
-                      }
-                    }}
-                    renderInput={(params) => (
+        <Card fullWidth maxWidth="md" scroll="body">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardHeader
+              sx={{
+                textAlign: 'center',
+                px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`],
+                pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+              }}
+              title="Add New Group"
+              subheader="Set Group Permissions"
+            ></CardHeader>
+            <CardContent
+              sx={{
+                pb: (theme) => `${theme.spacing(5)} !important`,
+                px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
+              }}
+            >
+              <Grid sx={{ my: 4, gap: 2 }} container>
+                <Grid xs={12} sm={5.9}>
+                  <Controller
+                    name="groupName"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
                       <TextField
-                        {...params}
                         fullWidth
-                        label="Branch"
-                        error={Boolean(errors.branch)}
-                        {...(errors.branch && { helperText: errors.branch.message })}
+                        value={value}
+                        // sx={{ mb: 4 }}
+                        label="Group Name"
+                        onChange={onChange}
+                        placeholder="John Doe"
+                        error={Boolean(errors.groupName)}
+                        {...(errors.groupName && { helperText: errors.groupName.message })}
                       />
                     )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.name}
-                      </li>
-                    )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.id}
-                          label={option.name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            onChange(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
-                )}
-              />
-            </Grid>
-          </Grid>
-          <Typography variant="h4">Group Permissions</Typography>
-          <TableContainer>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ pl: '0 !important' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        whiteSpace: 'nowrap',
-                        alignItems: 'center',
-                        textTransform: 'capitalize',
-                        '& svg': { ml: 1, cursor: 'pointer' },
-                        color: (theme) => theme.palette.text.secondary,
-                        fontSize: (theme) => theme.typography.h6.fontSize
-                      }}
-                    >
-                      Administrator Access
-                      <Tooltip placement="top" title="Allows a full access to the system">
-                        <Box sx={{ display: 'flex' }}>
-                          <Icon icon="tabler:info-circle" fontSize="1.25rem" />
+                </Grid>
+                <Grid xs={12} sm={5.9}>
+                  <Controller
+                    name="branch"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => (
+                      <Autocomplete
+                        multiple
+                        id="select-multiple-chip"
+                        options={branches}
+                        getOptionLabel={(option) => option.branch_name}
+                        value={value}
+                        onChange={(e, newValue) => {
+                          if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
+                            onChange(branches.filter((option) => option.branch_id !== 'selectAll'));
+                          } else {
+                            onChange(newValue);
+                          }
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            fullWidth
+                            label="Branch"
+                            error={Boolean(errors.branch)}
+                            {...(errors.branch && { helperText: errors.branch.message })}
+                          />
+                        )}
+                        renderOption={(props, option, { selected }) => (
+                          <li {...props}>
+                            <Checkbox
+                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                              checkedIcon={<CheckBoxIcon fontSize="small" />}
+                              style={{ marginRight: 8 }}
+                              checked={selected}
+                            />
+                            {option.branch_name}
+                          </li>
+                        )}
+                        renderTags={(value) =>
+                          value.map((option, index) => (
+                            <CustomChip
+                              key={option.branch_id}
+                              label={option.branch_name}
+                              onDelete={() => {
+                                const updatedValue = [...value];
+                                updatedValue.splice(index, 1);
+                                onChange(updatedValue);
+                              }}
+                              color="primary"
+                              sx={{ m: 0.75 }}
+                            />
+                          ))
+                        }
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        selectAllText="Select All"
+                        SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Typography variant="h4">Group Permissions</Typography>
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ pl: '0 !important' }}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            whiteSpace: 'nowrap',
+                            alignItems: 'center',
+                            textTransform: 'capitalize',
+                            '& svg': { ml: 1, cursor: 'pointer' },
+                            color: (theme) => theme.palette.text.secondary,
+                            fontSize: (theme) => theme.typography.h6.fontSize
+                          }}
+                        >
+                          Administrator Access
+                          <Tooltip placement="top" title="Allows a full access to the system">
+                            <Box sx={{ display: 'flex' }}>
+                              <Icon icon="tabler:info-circle" fontSize="1.25rem" />
+                            </Box>
+                          </Tooltip>
                         </Box>
-                      </Tooltip>
-                    </Box>
-                  </TableCell>
-                  <TableCell colSpan={3}>
-                    <FormControlLabel
-                      label="Select All"
-                      sx={{ '& .MuiTypography-root': { textTransform: 'capitalize', color: 'text.secondary' } }}
-                      control={
-                        <Checkbox
-                          size="small"
-                          onChange={handleSelectAllCheckbox}
-                          indeterminate={isIndeterminateCheckbox}
-                          checked={selectedCheckbox.length === permissions.length}
+                      </TableCell>
+                      <TableCell colSpan={3}>
+                        <FormControlLabel
+                          label="Select All"
+                          sx={{ '& .MuiTypography-root': { textTransform: 'capitalize', color: 'text.secondary' } }}
+                          control={
+                            <Checkbox
+                              size="small"
+                              onChange={handleSelectAllCheckbox}
+                              indeterminate={isIndeterminateCheckbox}
+                              checked={selectedCheckbox.length === permissions.length}
+                            />
+                          }
                         />
-                      }
-                    />
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{renderPermissions()}</TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-        <CardActions
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(8)} !important`],
-            pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-          }}
-        >
-          <Box className="demo-space-x">
-            <Button type="submit" variant="contained">
-              Submit
-            </Button>
-            <Button variant="tonal" sx={{ml:5}} color="error" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
-        </CardActions>
-      </form>
-    </Card>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{renderPermissions()}</TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+            <CardActions
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(8)} !important`],
+                pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+              }}
+            >
+              <Box className="demo-space-x">
+                <Button type="submit" variant="contained">
+                  Submit
+                </Button>
+                <Button variant="tonal" sx={{ ml: 5 }} color="error" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Box>
+            </CardActions>
+          </form>
+        </Card>
       )}
     </>
   );

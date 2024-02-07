@@ -23,10 +23,15 @@ import UserTableHeader from 'features/user-management/users/components/UserTable
 import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users/redux/userThunks';
-import { FilterUsersByRole, FilterUsersByStatus, searchUsers } from 'features/user-management/users/services/userServices';
+import {
+  FilterUsersByRole,
+  FilterUsersByStatus,
+  searchUsers,
+  updateUserStatus
+} from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-
+import toast from 'react-hot-toast';
 const userStatusObj = {
   1: 'success',
   0: 'error'
@@ -60,7 +65,7 @@ const RowOptions = ({ id }) => {
   );
 };
 
-const UserBodySection = ({ groups, users }) => {
+const UserBodySection = ({ groups, users, setLoading }) => {
   // ** State
   const [role, setRole] = useState('');
   const [value, setValue] = useState('');
@@ -138,14 +143,18 @@ const UserBodySection = ({ groups, users }) => {
     setSelectedDeleteMaterial(row);
     setDeleteDialogOpen(true);
   };
-
-  const handleDeleteGroup = async () => {
+  console.log(selectedDeleteMaterial);
+  const handleChangeStatus = async () => {
     try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
+      const data = {
+        id: selectedDeleteMaterial.id,
+        status: selectedDeleteMaterial?.is_active === '1' ? '0' : '1'
+      };
+      const result = await updateUserStatus(data);
 
       if (result.success) {
+        setLoading((reload) => !reload);
         toast.success(result.message);
-        dispatch(getAllGroups());
       } else {
         toast.error(result.message);
       }
@@ -191,7 +200,7 @@ const UserBodySection = ({ groups, users }) => {
                 {row?.name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.email}
+                {row?.institution_users?.email}
               </Typography>
             </Box>
           </Box>
@@ -201,12 +210,12 @@ const UserBodySection = ({ groups, users }) => {
     {
       flex: 0.15,
       minWidth: 190,
-      field: 'designation',
-      headerName: 'Designation',
+      field: 'mobile',
+      headerName: 'Mobile',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.designation}
+            {row?.institution_users?.mobile}
           </Typography>
         );
       }
@@ -220,7 +229,7 @@ const UserBodySection = ({ groups, users }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.role}
+              {row?.role_group?.role?.name}
             </Typography>
           </Box>
         );
@@ -253,15 +262,25 @@ const UserBodySection = ({ groups, users }) => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatus(e, row)}>
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem color={userStatusObj[row.status]} value={10}>
-              {row.status}
-            </MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
+          <TextField
+            size="small"
+            select
+            value={row.is_active}
+            label="status"
+            id="custom-select"
+            sx={{
+              color: userStatusObj[row.is_active]
+            }}
+            onChange={(e) => handleStatus(e, row)}
+            SelectProps={{
+              sx: {
+                borderColor: row.is_active === '1' ? 'success' : 'error',
+                color: userStatusObj[row.is_active]
+              }
+            }}
+          >
+            <MenuItem value={1}>Active</MenuItem>
+            <MenuItem value={0}>Inactive</MenuItem>
           </TextField>
         );
       }
@@ -331,8 +350,8 @@ const UserBodySection = ({ groups, users }) => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups}/>
-      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} setLoading={setLoading} />
+      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleChangeStatus} />
     </Card>
   );
 };
