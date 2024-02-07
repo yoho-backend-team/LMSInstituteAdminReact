@@ -109,7 +109,7 @@ const ChatContent = props => {
             <Box
               sx={{
                 px: 5,
-                py: 2.5,
+                py: 2,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',

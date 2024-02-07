@@ -57,7 +57,7 @@ const Community = () => {
       sx={{
         width: '100%',
         display: 'flex',
-        height:'82vh',
+        height:'81vh',
         flexDirection: 'row',
         borderRadius: 1,
         overflow: 'hidden',

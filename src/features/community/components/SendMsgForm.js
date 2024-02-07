@@ -17,7 +17,7 @@ import Icon from 'components/icon'
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2.5),
+  padding: theme.spacing(0.6),
   boxShadow: theme.shadows[1],
   justifyContent: 'space-between',
   borderRadius: theme.shape.borderRadius,
@@ -25,7 +25,7 @@ const ChatFormWrapper = styled(Box)(({ theme }) => ({
 }))
 
 const Form = styled('form')(({ theme }) => ({
-  padding: theme.spacing(0, 5, 5)
+  padding: theme.spacing(0,2, 2, 2)
 }))
 
 const SendMsgForm = props => {
