@@ -81,7 +81,7 @@ const DefaultPalette = () => {
     return {
       light: color.lighten(20).toHexString(),
       main: primaryColor,
-      dark: color.darken(20).toHexString(),
+      dark: color.darken(40).toHexString(),
       800: color.darken(40).toHexString(),
       200: color.lighten(60).toHexString(),
       contrastText: '#FFF'
