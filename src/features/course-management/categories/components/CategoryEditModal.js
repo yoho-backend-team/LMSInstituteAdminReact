@@ -86,6 +86,12 @@ const CategoryEditModal = ({ open, handleEditClose,initialTitle, initialStatus }
     }
   }));
 
+  const onSubmit =(data)=>(
+    console.log(data)
+  )
+
+console.log(onSubmit);
+
   return (
     <div>
       <Dialog
@@ -113,7 +119,7 @@ const CategoryEditModal = ({ open, handleEditClose,initialTitle, initialStatus }
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}
         >
-          <form onSubmit={handleSubmit()}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
                 <ImgStyled src={imgSrc} alt="Profile Pic" />

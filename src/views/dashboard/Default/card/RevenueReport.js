@@ -1,13 +1,13 @@
 // ** React Imports
 
 // ** MUI Imports
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import { useTheme } from '@mui/material/styles'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import { useTheme } from '@mui/material/styles';
 
 // ** Custom Components Import
-import ReactApexChart from 'react-apexcharts'
+import ReactApexChart from 'react-apexcharts';
 
 // ** Util Import
 
@@ -32,21 +32,15 @@ const tabData = [
     avatarIcon: 'tabler:chart-pie-2',
     series: [{ data: [5, 9, 12, 18, 20, 25, 30, 36, 48] }]
   }
-]
-
-
-
-
+];
 
 const RevenueReport = () => {
   // ** State
- 
 
   // ** Hook
-  const theme = useTheme()
- 
- 
-  const colors = Array(9).fill(theme.palette.primary.main)
+  const theme = useTheme();
+
+  const colors = Array(9).fill(theme.palette.primary.main);
 
   const options = {
     chart: {
@@ -66,7 +60,7 @@ const RevenueReport = () => {
     tooltip: { enabled: false },
     dataLabels: {
       offsetY: -15,
-      formatter: val => `${val}k`,
+      formatter: (val) => `${val}k`,
       style: {
         fontWeight: 500,
         colors: [theme.palette.text.secondary],
@@ -106,7 +100,7 @@ const RevenueReport = () => {
     yaxis: {
       labels: {
         offsetX: -15,
-        formatter: val => `$${val}k`,
+        formatter: (val) => `$${val}k`,
         style: {
           colors: theme.palette.text.disabled,
           fontFamily: theme.typography.fontFamily,
@@ -127,19 +121,19 @@ const RevenueReport = () => {
         }
       }
     ]
-  }
+  };
 
   return (
-    <Card>
+    <Card sx={{ minHeight: 400 }}>
       <CardHeader
-        title='Earning Reports'
-        subheader='Yearly Earnings Overview'
+        title="Revenue"
+        // subheader='Yearly Earnings Overview'
       />
       <CardContent>
-        <ReactApexChart type='bar' height={263} options={options} series={tabData.find(tab => tab.type === 'sales')?.series || []} />
+        <ReactApexChart type="bar" options={options} series={tabData.find((tab) => tab.type === 'sales')?.series || []} />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default RevenueReport
+export default RevenueReport;

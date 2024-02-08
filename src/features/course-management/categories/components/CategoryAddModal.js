@@ -31,7 +31,8 @@ const defaultValues = {
 };
 
 const CategoryAddModal = ({ open, handleAddClose }) => {
-  const image ='https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+  const image =
+    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
   const {
     reset,
@@ -48,6 +49,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+
   console.log(selectedImage);
   const handleClose = () => {
     setValue('course', '');
@@ -82,6 +84,18 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     }
   }));
 
+<<<<<<< HEAD
+  const onSubmit =(data)=>(
+    console.log(data)
+  )
+
+console.log(onSubmit);
+=======
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+>>>>>>> 567174a5620537e0fadde2fa81aef511ffbe6139
+
   return (
     <div>
       <Dialog
@@ -109,7 +123,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}
         >
-          <form onSubmit={handleSubmit()}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
                 <ImgStyled src={imgSrc} alt="Profile Pic" />

@@ -114,18 +114,18 @@ const CardSupportTracker = () => {
   };
 
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ minHeight: 320 }}>
+      <CardContent sx={{ pt: 5 }}>
         <Grid container spacing={6}>
-        <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ReactApexCharts type="radialBar" height={250} options={options} series={[85]} />
+          <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ReactApexCharts type="radialBar" height={230} options={options} series={[85]} />
           </Grid>
           <Grid item xs={12} sm={5}>
             <Typography variant="h1">164</Typography>
-            <Typography sx={{ mb: 6, color: 'text.secondary' }}>Total Course</Typography>
+            <Typography sx={{ mb: 3, color: 'text.secondary' }}>Total Course</Typography>
             {data.map((item, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: index !== data.length - 1 ? 4 : undefined }}>
-                <CustomAvatar skin="light" variant="rounded" color={item.avatarColor} sx={{ mr: 4, width: 34, height: 34 }}>
+                <CustomAvatar skin="light" variant="rounded" color={item.avatarColor} sx={{ mr: 2, width: 34, height: 34 }}>
                   <Icon icon={item.avatarIcon} />
                 </CustomAvatar>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>

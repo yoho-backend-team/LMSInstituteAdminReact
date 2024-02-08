@@ -98,6 +98,7 @@ const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management
 const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs/view-profile')));
 const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
 const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
+const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/view-profile')));
 
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
@@ -254,7 +255,7 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
           <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
           <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
-          <Route path="non-teaching-staffs/:id" element={<ViewTeachingProfile />} />
+          <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
           <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
           <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
           <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
