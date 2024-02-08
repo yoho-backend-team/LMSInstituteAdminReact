@@ -71,6 +71,10 @@ const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-
 const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support')));
 const TechnicalSupportPage = Loadable(lazy(() => import('views/help-center/technical-support')));
 
+// Ticket Management
+const StaffTicketPage = Loadable(lazy(() => import('views/ticket-management/staff-ticket')));
+const StudentTicketPage = Loadable(lazy(() => import('views/ticket-management/student-ticket')));
+
 // Id Card Management
 const StaffIdCardsPage = Loadable(lazy(() => import('views/id-card-management/staffs/teaching')));
 const StudentIdCardsPage = Loadable(lazy(() => import('views/id-card-management/students')));
@@ -213,6 +217,12 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/help-center/customer-support" />} />
           <Route path="customer-support" element={<CustomerSupportPage />} />
           <Route path="technical-support" element={<TechnicalSupportPage />} />
+        </Route>
+
+        <Route path="/ticket-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/ticket-management/staff-ticket" />} />
+          <Route path="staff-ticket" element={<StaffTicketPage />} />
+          <Route path="student-ticket" element={<StudentTicketPage />} />
         </Route>
 
         <Route path="/id-card-management" element={<MainLayout />}>
