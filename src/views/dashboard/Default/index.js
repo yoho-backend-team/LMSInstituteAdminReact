@@ -64,16 +64,17 @@ import { Grid } from '@mui/material';
 
 // project imports
 import { gridSpacing } from 'store/constant';
-import CardStatsVertical from './card/CardStatsVertical';
+import AllActivity from './card/Allactivity';
 import CardData from './card/CardData';
-import RevenueReport from './component/RevenueReport';
 import CardPopularCourse from './card/CardPopularCourse';
 import CardProjectStatus from './card/CardProjectStatus';
+import CardStatsVertical from './card/CardStatsVertical';
 import CardSupportTracker from './card/CardSupportTracker';
-import AllActivity from './card/Allactivity';
+import RevenueReport from './card/RevenueReport';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
+  
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={9}>
@@ -128,10 +129,10 @@ const Dashboard = () => {
 
         <Grid item xs={12} sx={{ mt: 2 }}>
           <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={7}>
               <RevenueReport />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={5}>
               <CardPopularCourse />
             </Grid>
           </Grid>
@@ -220,14 +221,14 @@ const Dashboard = () => {
         </Grid>
       </Grid>
 
-      <Grid item xs={3}>
+      <Grid item xs={3}  >
         <Grid container>
         <Grid  item xs={12}>
         <AllActivity />
         </Grid>
-        <Grid item sx={{mt:2}} xs={12}>
+        {/* <Grid item sx={{mt:2}} xs={12}>
         <AllActivity/>
-        </Grid>
+        </Grid> */}
         </Grid>
       </Grid>
     </Grid>

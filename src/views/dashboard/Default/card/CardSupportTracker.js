@@ -135,7 +135,7 @@ const CardSupportTracker = () => {
       />
       <CardContent>
         <Grid container spacing={6}>
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={4}>
             <Typography variant='h1'>164</Typography>
             <Typography sx={{ mb: 6, color: 'text.secondary' }}>Total Tickets</Typography>
             {data.map((item, index) => (
@@ -160,8 +160,8 @@ const CardSupportTracker = () => {
               </Box>
             ))}
           </Grid>
-          <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ReactApexChart type='radialBar' height={325} options={options} series={[85]} />
+          <Grid item xs={12} sm={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ReactApexChart type='radialBar' height={205} options={options} series={[85]} />
           </Grid>
         </Grid>
       </CardContent>
