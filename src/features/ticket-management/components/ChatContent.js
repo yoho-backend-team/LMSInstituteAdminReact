@@ -1,19 +1,27 @@
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-// import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
 import CustomChip from 'components/mui/chip';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
-
-
+import UserProfileRight from './UserProfileRight';
 
 const ChatContent = (props) => {
-  const { mdAbove, handleLeftSidebarToggle, handleUserProfileRightSidebarToggle } = props;
-
- 
+  const {
+    mdAbove,
+    handleLeftSidebarToggle,
+    handleUserProfileRightSidebarToggle,
+    store,
+    hidden,
+    userProfileRightOpen,
+    getInitials,
+    sidebarWidth,
+    statusObj,
+    dispatch,
+    sendMsg
+  } = props;
 
   const renderContent = () => {
     const selectedChat = {
@@ -23,7 +31,11 @@ const ChatContent = (props) => {
         status: 'online'
       },
       chat: [
-        { time: new Date(), message: 'Please let me know if there are any specific procedures or paperwork I need to complete for this leave request. I am more than willing to fulfill any requirements necessary.' },
+        {
+          time: new Date(),
+          message:
+            'Please let me know if there are any specific procedures or paperwork I need to complete for this leave request. I am more than willing to fulfill any requirements necessary.'
+        },
         { time: new Date(), message: ' Thank you!' }
       ]
     };
@@ -65,7 +77,19 @@ const ChatContent = (props) => {
           </Box>
         </Box>
         <ChatLog hidden={false} data={{ ...selectedChat, userContact: {} }} />
-        <SendMsgForm store={{}} dispatch={() => {}} sendMsg={() => {}} />
+        
+        <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
+
+        {/* Render the UserProfileRight component */}
+        <UserProfileRight
+          store={store}
+          hidden={hidden}
+          statusObj={statusObj}
+          getInitials={getInitials}
+          sidebarWidth={sidebarWidth}
+          userProfileRightOpen={userProfileRightOpen}
+          handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+        />
       </Box>
     );
   };
