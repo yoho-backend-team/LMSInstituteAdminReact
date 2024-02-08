@@ -31,7 +31,8 @@ const defaultValues = {
 };
 
 const CategoryAddModal = ({ open, handleAddClose }) => {
-  const image ='https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+  const image =
+    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
   const {
     reset,
@@ -82,6 +83,10 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     }
   }));
 
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   return (
     <div>
       <Dialog
@@ -109,7 +114,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}
         >
-          <form onSubmit={handleSubmit()}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
                 <ImgStyled src={imgSrc} alt="Profile Pic" />

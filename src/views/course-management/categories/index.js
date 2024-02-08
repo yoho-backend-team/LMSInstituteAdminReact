@@ -5,8 +5,7 @@ import CategoryCardHeader from 'features/course-management/categories/components
 import CategorySkeleton from 'components/cards/Skeleton/CategorySkeleton';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import Pagination from '@mui/material/Pagination'
-
+import Pagination from '@mui/material/Pagination';
 
 const dummyCategories = [
   {
@@ -70,36 +69,36 @@ const Categories = () => {
   }, 1000);
 
   return (
-  <Grid>
- {loading ? (
+    <Grid>
+      {loading ? (
         <CategorySkeleton />
       ) : (
-      <div>
-        <Grid item xs={12} sm={12}>
-          <CategoryFilter />
-          <CategoryCardHeader />
-        </Grid>
-        <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-          {dummyCategories.map((category, index) => (
-            <CategoryCard
-              key={index}
-              chipText={category.chipText}
-              chipColor={category.chipColor}
-              avatarColor={category.avatarColor}
-              title={category.title}
-              subtitle={category.subtitle}
-              avatarIcon={category.avatarIcon}
-              image={category.image}
-            />
-          ))}
-        </Grid>
-      </div>
+        <div>
+          <Grid item xs={12} sm={12}>
+            <CategoryFilter />
+            <CategoryCardHeader />
+          </Grid>
+          <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+            {dummyCategories.map((category, index) => (
+              <CategoryCard
+                key={index}
+                chipText={category.chipText}
+                chipColor={category.chipColor}
+                avatarColor={category.avatarColor}
+                title={category.title}
+                subtitle={category.subtitle}
+                avatarIcon={category.avatarIcon}
+                image={category.image}
+              />
+            ))}
+          </Grid>
+        </div>
       )}
-        <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
-      <Pagination count={10} color='primary' />
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
-  </Grid>
-  )
+    </Grid>
+  );
 };
 
 export default Categories;
