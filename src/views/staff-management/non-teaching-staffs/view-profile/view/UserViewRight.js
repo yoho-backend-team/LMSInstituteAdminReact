@@ -1,28 +1,25 @@
 // ** React Imports
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 // ** Next Import
 // import { useRoutes } from 'react-router'
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import TabPanel from '@mui/lab/TabPanel'
-import TabContext from '@mui/lab/TabContext'
-import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box';
+import TabPanel from '@mui/lab/TabPanel';
+import TabContext from '@mui/lab/TabContext';
+import { styled } from '@mui/material/styles';
 // import Typography from '@mui/material/Typography'
-import MuiTab from '@mui/material/Tab'
-import MuiTabList from '@mui/lab/TabList'
+import MuiTab from '@mui/material/Tab';
+import MuiTabList from '@mui/lab/TabList';
 // import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Icon Imports
-import Icon from 'components/icon'
+import Icon from 'components/icon';
 
 // ** Demo Components Imports
-// import UserViewBilling from 'src/views/apps/user/view/UserViewBilling'
-import UserViewBilling from './UserViewBilling'
-import UserViewAccount from './UserViewAccount'
-import UserViewConnection from './UserViewConnection'
-import UserViewNotification from './UserViewNotification'
-import UserViewSecurity from './UserViewSecurity'
+import UserViewAccount from './UserViewAccount';
+import TeacherAttendance from './TeacherAttendance';
+
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
@@ -31,7 +28,7 @@ const Tab = styled(MuiTab)(({ theme }) => ({
     marginBottom: '0 !important',
     marginRight: theme.spacing(1.5)
   }
-}))
+}));
 
 const TabList = styled(MuiTabList)(({ theme }) => ({
   borderBottom: '0 !important',
@@ -55,16 +52,11 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
       color: theme.palette.primary.main
     }
   }
-}))
+}));
 
-const UserViewRight = ({
-  tab,
-   invoiceData
-   }) => {
-
-
+const UserViewRight = ({ tab, invoiceData }) => {
   // ** State
-  const [activeTab, setActiveTab] = useState(tab)
+  const [activeTab, setActiveTab] = useState('account');
   // const [isLoading, setIsLoading] = useState(true)
 
   // ** Hooks
@@ -72,19 +64,19 @@ const UserViewRight = ({
 
   const handleChange = (event, value) => {
     // setIsLoading(true)
-    setActiveTab(value)
+    setActiveTab(value);
     // router
     //   .push({
     //     pathname: `/apps/user/view/${value.toLowerCase()}`
     //   })
     //   .then(() => setIsLoading(false))
-  }
+  };
   useEffect(() => {
     if (tab && tab !== activeTab) {
-      setActiveTab(tab)
+      setActiveTab(tab);
     }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab])
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
   // useEffect(() => {
   //   if (invoiceData) {
   //     setIsLoading(false)
@@ -92,55 +84,29 @@ const UserViewRight = ({
   // }, [invoiceData])
 
   return (
-    <TabContext 
-    value={activeTab}
-    >
+    <TabContext value={activeTab}>
       <TabList
-        variant='scrollable'
-        scrollButtons='auto'
+        variant="scrollable"
+        scrollButtons="auto"
         onChange={handleChange}
-        aria-label='forced scroll tabs example'
-        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+        aria-label="forced scroll tabs example"
+        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='account' label='Account' icon={<Icon fontSize='1.125rem' icon='tabler:user-check' />} />
-        <Tab value='security' label='Security' icon={<Icon fontSize='1.125rem' icon='tabler:lock' />} />
-        <Tab
-          value='billing-plan'
-          label='Billing & Plan'
-          icon={<Icon fontSize='1.125rem' icon='tabler:currency-dollar' />}
-        />
-        <Tab value='notification' label='Notification' icon={<Icon fontSize='1.125rem' icon='tabler:bell' />} />
-        <Tab value='connection' label='Connection' icon={<Icon fontSize='1.125rem' icon='tabler:link' />} />
+        <Tab value="account" label="Account" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
+        <Tab value="attendance" label="Attendance" icon={<Icon fontSize="1.125rem" icon="tabler:calendar-plus" />} />
       </TabList>
       <Box sx={{ mt: 4 }}>
-        {/* {isLoading ?
-         (
-          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
-          </Box>
-        ) : ( */}
-          <>
-            <TabPanel sx={{ p: 0 }} value='account'>
-              <UserViewAccount invoiceData={invoiceData} />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='security'>
-              <UserViewSecurity />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='billing-plan'>
-              <UserViewBilling />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='notification'>
-              <UserViewNotification />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='connection'>
-              <UserViewConnection />
-            </TabPanel>
-          </>
-        {/* )} */}
+        <>
+          <TabPanel sx={{ p: 0 }} value="account">
+            <UserViewAccount invoiceData={invoiceData} />
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value="attendance">
+            <TeacherAttendance />
+          </TabPanel>
+        </>
       </Box>
     </TabContext>
-  )
-}
+  );
+};
 
-export default UserViewRight
+export default UserViewRight;

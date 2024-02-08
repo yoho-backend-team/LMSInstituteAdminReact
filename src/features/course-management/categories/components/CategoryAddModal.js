@@ -49,6 +49,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+
   console.log(selectedImage);
   const handleClose = () => {
     setValue('course', '');
@@ -83,9 +84,11 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     }
   }));
 
+
   const onSubmit = (data) => {
     console.log(data);
   };
+  console.log(onSubmit);
 
   return (
     <div>

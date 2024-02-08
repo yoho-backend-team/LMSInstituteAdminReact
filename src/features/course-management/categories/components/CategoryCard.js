@@ -11,43 +11,38 @@ import { useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import DeleteDialog from 'components/modal/DeleteModel';
 
 const CardStatsVertical = (props) => {
   // ** Props
   const { sx, title, subtitle, image } = props;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState(null);
+  
+  console.log(deletingItemId);
+  
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
+
   const handleEdit = () => {
     setEditModalOpen(true);
   };
 
-  
-  const handleStatusValue = () => {
-    setSelectedDeleteMaterial(props.material);
-    setDeleteDialogOpen(true);
+  const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
   };
+  
 
-  const handleDeleteGroup = async () => {
-    try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
-
-      if (result.success) {
-        toast.success(result.message);
-        dispatch(getAllGroups());
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleDelete = (itemId) => {
+    console.log('Delete clicked for item ID:', itemId);
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
   };
+
+
 
   return (
     <Grid item xs={12} sm={6} lg={4}>
@@ -61,9 +56,11 @@ const CardStatsVertical = (props) => {
               <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
                 <Icon icon="tabler:edit" />
               </IconButton>
-              <IconButton  onClick={() => {
-            setDeleteDialogOpen(true);
-          }} aria-label="capture screenshot" color="error">
+              <IconButton
+               onClick={() => handleDelete()}
+                aria-label="capture screenshot"
+                color="error"
+              >
                 <Icon icon="tabler:archive-filled" />
               </IconButton>
             </Box>
@@ -74,21 +71,28 @@ const CardStatsVertical = (props) => {
           <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
             {subtitle}
           </Typography>
-          <Grid sx={{mt:1}}>
-          <TextField size='small' select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Deactive">Deactive</MenuItem>
-          </TextField>
+          <Grid sx={{ mt: 1 }}>
+            <TextField
+              size="small"
+              select
+              fullWidth
+              label="Status"
+              SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+            >
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Deactive">Deactive</MenuItem>
+            </TextField>
           </Grid>
         </CardContent>
       </Card>
-      <CategoryEditModal  initialTitle={title}
-  initialStatus={statusValue} open={isEditModalOpen} handleEditClose={handleEditClose} />
-      <GroupDeleteDialog
-        open={deleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        handleDeleteGroup={handleDeleteGroup}
-      />
+      <CategoryEditModal initialTitle={title} initialStatus={statusValue} open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          // handleSubmit={handleDeleteConfirm}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
     </Grid>
   );
 };
