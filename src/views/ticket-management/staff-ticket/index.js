@@ -8,15 +8,15 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 // ** Store & Actions Imports
 import { useDispatch, useSelector } from 'react-redux';
-import { selectChat, fetchUserProfile, removeSelectedChat, sendMsg } from 'features/ticket-management/components/AppChat';
+import { selectChat, fetchUserProfile, removeSelectedChat, sendMsg } from 'features/ticket-management/staff/components/AppChat';
 
 // ** Utils Imports
 import { getInitials } from 'utils/get-initials';
 import { formatDateToMonthShort } from 'utils/format';
 
 // ** Chat App Components Imports
-import SidebarLeft from 'features/ticket-management/components/SidebarLeft';
-import ChatContent from 'features/ticket-management/components/ChatContent';
+import SidebarLeft from 'features/ticket-management/staff/components/SidebarLeft';
+import ChatContent from 'features/ticket-management/staff/components/ChatContent';
 
 const StaffTicket = () => {
   // ** States
