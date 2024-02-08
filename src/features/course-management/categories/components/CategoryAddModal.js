@@ -84,17 +84,11 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     }
   }));
 
-<<<<<<< HEAD
-  const onSubmit =(data)=>(
-    console.log(data)
-  )
 
-console.log(onSubmit);
-=======
   const onSubmit = (data) => {
     console.log(data);
   };
->>>>>>> 567174a5620537e0fadde2fa81aef511ffbe6139
+  console.log(onSubmit);
 
   return (
     <div>
