@@ -95,6 +95,9 @@ const AllActivity = () => {
     <Card  sx={{backgroundColor:theme.palette.primary.dark}}>
       <CardHeader
         title="All Activity"
+        titleTypographyProps={{
+          sx:{color:"white"}
+        }}
       />
       <CardContent sx={{ pt: 2 }}>
         {data.map((item, index) => {
@@ -110,7 +113,7 @@ const AllActivity = () => {
               <img width={34} src={item.imgSrc} alt={item.subtitle} />
               <Box sx={{ marginLeft: 2 }}>
                 <Typography variant="h6" sx={{color:"white"}}>{item.title}</Typography>
-                <Typography variant="body2" sx={{ color: 'gray' }}>
+                <Typography variant="body2" sx={{ color: 'lightgray' }}>
                   {item.subtitle}
                 </Typography>
               </Box>
