@@ -81,7 +81,7 @@ const Dashboard = () => {
           <Grid container spacing={2}>
             <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
-                stats="56000 k"
+                stats="₹56,000"
                 chipText="-12.2%"
                 chipColor="default"
                 avatarColor="error"
@@ -92,7 +92,7 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
-                stats="9,6419 k"
+                stats="₹96,419"
                 chipText="+25.2%"
                 avatarColor="info"
                 chipColor="default"
@@ -103,10 +103,10 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
-                stats="1.28k"
+                stats="1,000"
                 chipText="-12.2%"
                 chipColor="default"
-                avatarColor="error"
+                avatarColor="success"
                 title="Instructor"
                 subtitle="Last week"
                 avatarIcon="ic:baseline-money"
@@ -114,9 +114,9 @@ const Dashboard = () => {
             </Grid>
             <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
-                stats="24.67k"
+                stats="24,000"
                 chipText="+25.2%"
-                avatarColor="info"
+                avatarColor="primary"
                 chipColor="default"
                 title="Students"
                 subtitle="Last week"

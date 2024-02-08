@@ -20,7 +20,7 @@ const CardStatsVertical = (props) => {
         <Typography variant="h2" sx={{ mb: 1, color: 'text.primary' }}>
           {stats}
         </Typography>
-        <Typography variant="h5" sx={{ color: 'text.disabled' }}>
+        <Typography variant="h6" sx={{ color: 'text.disabled', fontWeight: '600' }}>
           {title}
         </Typography>
       </CardContent>

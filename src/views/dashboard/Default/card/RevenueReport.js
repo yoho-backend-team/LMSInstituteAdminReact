@@ -1,6 +1,7 @@
 // ** React Imports
 
 // ** MUI Imports
+import { Box } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -124,15 +125,25 @@ const RevenueReport = () => {
   };
 
   return (
-    <Card sx={{ minHeight: 400 }}>
-      <CardHeader
-        title="Revenue"
+    <Box>
+      <Box component={'h2'} sx={{ fontSize: 16, mb: 2.5 }}>
+        Revenue
+      </Box>
+      <Card sx={{ minHeight: 365 }}>
+        <CardHeader
+        // title="Revenue"
+        // titleTypographyProps={{
+        //   sx: {
+        //     fontWeight: 'bold'
+        //   }
+        // }}
         // subheader='Yearly Earnings Overview'
-      />
-      <CardContent>
-        <ReactApexChart type="bar" options={options} series={tabData.find((tab) => tab.type === 'sales')?.series || []} />
-      </CardContent>
-    </Card>
+        />
+        <CardContent>
+          <ReactApexChart type="bar" options={options} series={tabData.find((tab) => tab.type === 'sales')?.series || []} />
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 

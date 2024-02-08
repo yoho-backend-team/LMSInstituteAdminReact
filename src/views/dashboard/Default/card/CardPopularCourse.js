@@ -1,8 +1,7 @@
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
+// import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
 // ** Custom Components Imports
@@ -57,59 +56,67 @@ const CardPopularCourse = () => {
   };
   const limitedData = data.slice(0, 3);
   return (
-    <Card>
-      <CardHeader
-        title="Popular Course"
-        // sx={{pt:4}}
-        // titleTypographyProps={{
-        //   sx: { pt: 2 }
-        // }}
-        action={
-          <Select label="Sort By" variant="standard" defaultValue="best_seller" onChange={handleSortChange} sx={{ minWidth: 120 }}>
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+        <Box component={'h2'} sx={{ fontSize: 16 }}>
+          Popular Course
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Typography sx={{ mr: 2, fontSize: 12 }}>Sort By:</Typography>
+          <Select
+            label="Sort By"
+            variant="standard"
+            defaultValue="best_seller"
+            onChange={handleSortChange}
+            sx={{ maxWidth: 80, border: 0, fontSize: 12, fontWeight: 'bold' }}
+          >
             <MenuItem value="price_low_to_high">Price - Low to High</MenuItem>
             <MenuItem value="price_high_to_low">Price - High to Low</MenuItem>
-            <MenuItem value="best_seller">Best Seller</MenuItem>
+            <MenuItem value="best_seller">Trending</MenuItem>
           </Select>
-        }
-      />
-      <CardContent sx={{ pt: 1 }}>
-        {limitedData.map((item, index) => (
-          <Box
-            key={item.title}
-            sx={{
-              display: 'flex',
-              '& img': { mr: 2 },
-              alignItems: 'center',
-              mb: index !== limitedData.length - 1 ? 3.5 : undefined
-            }}
-          >
-            <img width={46} src={item.imgSrc} alt={item.title} />
-
-            <Box
+        </Box>
+      </Box>
+      <Box>
+        <Box sx={{}}>
+          {limitedData.map((item, index) => (
+            <Card
+              key={item.title}
               sx={{
-                rowGap: 1,
-                columnGap: 4,
-                width: '100%',
                 display: 'flex',
-                flexWrap: 'wrap',
+                '& img': { mr: 2 },
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                mb: index !== limitedData.length - 1 ? 1.2 : undefined,
+                padding: 2
               }}
             >
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                  {item.title}
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 500, fontSize: '13px' }}>
-                  {item.subtitle}
-                </Typography>
+              <img width={75} height={75} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.title} />
+
+              <Box
+                sx={{
+                  rowGap: 1,
+                  columnGap: 4,
+                  width: '100%',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <Typography variant="p" sx={{ color: 'text.disabled', fontSize: 12, fontWeight: 'bold' }}>
+                    {item.title}
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: '13px', mt: 1 }}>
+                    {item.subtitle}
+                  </Typography>
+                </Box>
+                <Typography sx={{ color: 'text.secondary', fontSize: 12 }}>{item.amount}</Typography>
               </Box>
-              <Typography sx={{ color: 'text.secondary' }}>{item.amount}</Typography>
-            </Box>
-          </Box>
-        ))}
-      </CardContent>
-    </Card>
+            </Card>
+          ))}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
