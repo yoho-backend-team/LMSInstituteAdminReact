@@ -223,7 +223,7 @@ const OfflineClassCard = () => {
                     sx={{
                       width: 32,
                       height: 32,
-                      backgroundColor: 'primary.main',
+                      backgroundColor: '.main',
                       color: 'common.white',
                       fontSize: 14,
                       fontWeight: 'bold',
