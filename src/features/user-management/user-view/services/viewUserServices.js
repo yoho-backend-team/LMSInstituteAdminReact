@@ -1,11 +1,11 @@
 // userService.js
 import axios from 'axios';
 
-// const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/role-search`;
+const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
 
 export const getUserById = async (id) => {
   try {
-    const response = await axios.get('/data_storage/user-management/users/SingleUser.json', {
+    const response = await axios.get(`${USER_API_ENDPOINT}/query-by-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -13,13 +13,32 @@ export const getUserById = async (id) => {
       params: { id: id }
     });
 
-    if (response.data) {
-      return { success: true, data: response.data };
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
     } else {
       return { success: false, message: 'Failed to fetch search results' };
     }
   } catch (error) {
     console.error('Error in searchUsers:', error);
+    throw error;
+  }
+};
+export const userChangePassword = async (data) => {
+  try {
+    const response = await axios.put(`${USER_API_ENDPOINT}/password-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (response.data.status) {
+      return { success: true, message: 'Password changed successfully' };
+    } else {
+      return { success: false, message: 'Failed to update User' };
+    }
+  } catch (error) {
+    console.error('Error in updateUsers:', error);
     throw error;
   }
 };

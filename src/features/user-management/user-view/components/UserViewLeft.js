@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
@@ -18,12 +18,12 @@ import CustomAvatar from 'components/mui/avatar';
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 
-import { getUserById } from '../services/viewUserServices';
+// import { getUserById } from '../services/viewUserServices';
 
 import UserEditDialog from './UserEditDialog';
-import { MenuItem, TextField } from '@mui/material';
+// import { MenuItem, TextField } from '@mui/material';
 
-const UserViewLeft = ({ id }) => {
+const UserViewLeft = ({ userData, id }) => {
   const statusColors = {
     1: 'success',
     pending: 'warning',
@@ -32,29 +32,10 @@ const UserViewLeft = ({ id }) => {
 
   // ** States
   const [openEdit, setOpenEdit] = useState(false);
-  const [userData, setUserData] = useState([]);
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true);
   const handleEditClose = () => setOpenEdit(false);
-
-  useEffect(() => {
-    getUserData();
-  }, [id]);
-
-  const getUserData = async () => {
-    try {
-      const result = await getUserById(id);
-      if (result.success) {
-        console.log('User Data:', result.data);
-        setUserData(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <Grid container spacing={3}>
@@ -80,14 +61,10 @@ const UserViewLeft = ({ id }) => {
               rounded
               skin="light"
               size="small"
-              label={userData?.designation}
+              label={userData?.institution_users?.designation}
               // color={'success'}
               sx={{ textTransform: 'capitalize' }}
             />
-            <TextField select label="Status" id="validation-status-select" sx={{ mt: 2 }} aria-describedby="validation-status-select">
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Inactive">Inactive</MenuItem>
-            </TextField>
           </CardContent>
 
           <Divider sx={{ my: '0 !important', mx: 6 }} />
@@ -103,7 +80,7 @@ const UserViewLeft = ({ id }) => {
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.email}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
@@ -120,7 +97,7 @@ const UserViewLeft = ({ id }) => {
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{userData?.role}</Typography>
+                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{userData?.role_group?.role?.name}</Typography>
               </Box>
 
               <Box sx={{ display: 'flex' }}>

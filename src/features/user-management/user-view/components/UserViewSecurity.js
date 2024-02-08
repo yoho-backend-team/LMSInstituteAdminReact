@@ -18,8 +18,8 @@ import Icon from 'components/icon';
 import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
 import toast from 'react-hot-toast';
-import axios from 'axios';
-
+// import axios from 'axios';
+import { userChangePassword } from '../services/viewUserServices';
 const UserViewSecurity = ({ id }) => {
   const [values, setValues] = useState({
     newPassword: '',
@@ -53,41 +53,23 @@ const UserViewSecurity = ({ id }) => {
     if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !== '') {
       try {
         let data = {
-          id: id,
-          password: values.confirmNewPassword
+          user_id: id,
+          password: values.confirmNewPassword,
+          c_password: values.newPassword
         };
-        let config = {
-          method: 'put',
-          maxBodyLength: Infinity,
-          url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/reset-password`,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          },
-          data: data
-        };
-
-        await axios
-          .request(config)
-          .then((response) => {
-            console.log(response.data);
-            if (response.data.status) {
-              toast.success('Password changed successfully');
-            } else {
-              toast.error('Failed to change passwords');
-            }
-          })
-          .catch((error) => {
-            console.log(error);
+        const result = await userChangePassword(data);
+        if (result.success) {
+          toast.success(result.message);
+          setValues({
+            newPassword: '',
+            confirmNewPassword: '',
+            showNewPassword: false,
+            showConfirmNewPassword: false
           });
-
-        setValues({
-          newPassword: '',
-          confirmNewPassword: '',
-          showNewPassword: false,
-          showConfirmNewPassword: false
-        });
-        setPasswordsMatch(true);
+          setPasswordsMatch(true);
+        } else {
+          toast.error(result.message);
+        }
       } catch (error) {
         console.error('Error:', error);
       }

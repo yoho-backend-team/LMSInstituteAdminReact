@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import { Link } from 'react-router-dom';
-import { Card, CardContent, Typography, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, IconButton, Box } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -13,6 +13,7 @@ import { selectBranches } from '../redux/branchSelectors';
 import { getAllBranches } from '../redux/branchThunks';
 import { useEffect } from 'react';
 import Icon from 'components/icon';
+import { Link } from 'react-router-dom';
 const BranchCard = () => {
   // const [anchorEl, setAnchorEl] = useState(null);
 
@@ -22,12 +23,10 @@ const BranchCard = () => {
   const [selectedBranch, setSelectedBranch] = useState(null);
   useEffect(() => {
     dispatch(getAllBranches());
-  }, [dispatch,isEditModalOpen]);
+  }, [dispatch, isEditModalOpen]);
 
   console.log(branches);
   // const theme = useTheme();
-
-  
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -64,9 +63,11 @@ const BranchCard = () => {
               >
                 <Icon icon="tabler:edit" />
               </IconButton>
-              <IconButton aria-label="capture screenshot" color="primary">
-                <Icon icon="tabler:eye" />
-              </IconButton>
+              <Box component={Link} to={`${branch.branch_id}`}>
+                <IconButton aria-label="capture screenshot" color="primary">
+                  <Icon icon="tabler:eye" />
+                </IconButton>
+              </Box>
             </Grid>
 
             <CardMedia
