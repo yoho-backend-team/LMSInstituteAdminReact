@@ -49,36 +49,30 @@ const data = [
 ];
 
 const CardPopularCourse = () => {
-    // Handler for sorting change
-    const handleSortChange = (event) => {
-      const selectedSortOption = event.target.value;
-      // Implement your sorting logic here
-      console.log('Selected sort option:', selectedSortOption);
-    };
+  // Handler for sorting change
+  const handleSortChange = (event) => {
+    const selectedSortOption = event.target.value;
+    // Implement your sorting logic here
+    console.log('Selected sort option:', selectedSortOption);
+  };
   const limitedData = data.slice(0, 3);
   return (
     <Card>
-       <CardHeader
+      <CardHeader
         title="Popular Course"
-        sx={{pt:4}}
+        // sx={{pt:4}}
         // titleTypographyProps={{
         //   sx: { pt: 2 }
         // }}
         action={
-          <Select
-            label="Sort By"
-            variant="standard"
-            defaultValue="best_seller"
-            onChange={handleSortChange}
-            sx={{ minWidth: 120 }}
-          >
+          <Select label="Sort By" variant="standard" defaultValue="best_seller" onChange={handleSortChange} sx={{ minWidth: 120 }}>
             <MenuItem value="price_low_to_high">Price - Low to High</MenuItem>
             <MenuItem value="price_high_to_low">Price - High to Low</MenuItem>
             <MenuItem value="best_seller">Best Seller</MenuItem>
           </Select>
         }
       />
-      <CardContent sx={{pt:2}}>
+      <CardContent sx={{ pt: 1 }}>
         {limitedData.map((item, index) => (
           <Box
             key={item.title}
@@ -103,8 +97,10 @@ const CardPopularCourse = () => {
               }}
             >
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                <Typography variant="body2" sx={{ color: 'text.disabled'}}>{item.title}</Typography>
-                <Typography variant="h4" sx={{ fontWeight: 500,fontSize:"13px" }}>
+                <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                  {item.title}
+                </Typography>
+                <Typography variant="h4" sx={{ fontWeight: 500, fontSize: '13px' }}>
                   {item.subtitle}
                 </Typography>
               </Box>

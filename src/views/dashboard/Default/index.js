@@ -63,7 +63,7 @@
 import { Grid } from '@mui/material';
 
 // project imports
-import { gridSpacing } from 'store/constant';
+// import { gridSpacing } from 'store/constant';
 import AllActivity from './card/Allactivity';
 import CardData from './card/CardData';
 import CardPopularCourse from './card/CardPopularCourse';
@@ -74,13 +74,12 @@ import CardSupportTracker from './card/CardSupportTracker';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
-  
   return (
-    <Grid container spacing={gridSpacing}>
-      <Grid item xs={9}>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={8.5}>
         <Grid item xs={12}>
-          <Grid container spacing={gridSpacing}>
-            <Grid item xs={6} sm={4} lg={3}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
                 stats="56000 k"
                 chipText="-12.2%"
@@ -91,7 +90,7 @@ const Dashboard = () => {
                 avatarIcon="healthicons:money-bag"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={3}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
                 stats="9,6419 k"
                 chipText="+25.2%"
@@ -102,7 +101,7 @@ const Dashboard = () => {
                 avatarIcon="mingcute:wallet-fill"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={3}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
                 stats="1.28k"
                 chipText="-12.2%"
@@ -113,7 +112,7 @@ const Dashboard = () => {
                 avatarIcon="ic:baseline-money"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={3}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardStatsVertical
                 stats="24.67k"
                 chipText="+25.2%"
@@ -128,7 +127,7 @@ const Dashboard = () => {
         </Grid>
 
         <Grid item xs={12} sx={{ mt: 2 }}>
-          <Grid container spacing={gridSpacing}>
+          <Grid container spacing={2}>
             <Grid item xs={12} md={7}>
               <RevenueReport />
             </Grid>
@@ -140,7 +139,7 @@ const Dashboard = () => {
 
         <Grid item xs={12} sx={{ mt: 2 }}>
           <Grid container spacing={1}>
-            <Grid item xs={6} sm={4} lg={2}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardData
                 stats="8000"
                 chipText="-12.2%"
@@ -151,7 +150,7 @@ const Dashboard = () => {
                 avatarIcon="healthicons:money-bag"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={2}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardData
                 stats="2333"
                 chipText="+25.2%"
@@ -162,7 +161,7 @@ const Dashboard = () => {
                 avatarIcon="mingcute:wallet-fill"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={2}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardData
                 stats="4400"
                 chipText="-12.2%"
@@ -173,7 +172,7 @@ const Dashboard = () => {
                 avatarIcon="ic:baseline-money"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={2}>
+            <Grid item xs={6} sm={6} lg={3}>
               <CardData
                 stats="4321"
                 chipText="+25.2%"
@@ -184,49 +183,27 @@ const Dashboard = () => {
                 avatarIcon="ph:student"
               />
             </Grid>
-            <Grid item xs={6} sm={4} lg={2}>
-              <CardData
-                stats="2221"
-                chipText="+25.2%"
-                avatarColor="info"
-                chipColor="default"
-                title="Language"
-                subtitle="Last week"
-                avatarIcon="ph:student"
-              />
-            </Grid>
-            <Grid item xs={6} sm={4} lg={2}>
-              <CardData
-                stats="6491"
-                chipText="+25.2%"
-                avatarColor="info"
-                chipColor="default"
-                title="Support Request"
-                subtitle="Last week"
-                avatarIcon="ph:student"
-              />
-            </Grid>
           </Grid>
         </Grid>
 
         <Grid item xs={12} sx={{ mt: 2 }}>
-          <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} md={5}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
               <CardProjectStatus />
             </Grid>
-            <Grid item xs={12} md={7}>
-              <CardSupportTracker/>
+            <Grid item xs={12} md={6}>
+              <CardSupportTracker />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
 
-      <Grid item xs={3}  >
+      <Grid item xs={12} md={3.5}>
         <Grid container>
-        <Grid  item xs={12}>
-        <AllActivity />
-        </Grid>
-        {/* <Grid item sx={{mt:2}} xs={12}>
+          <Grid item xs={12}>
+            <AllActivity />
+          </Grid>
+          {/* <Grid item sx={{mt:2}} xs={12}>
         <AllActivity/>
         </Grid> */}
         </Grid>

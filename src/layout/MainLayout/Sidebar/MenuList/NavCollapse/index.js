@@ -31,9 +31,10 @@ const NavCollapse = ({ menu, level }) => {
     }
   };
   const theme = useTheme();
-  // console.log(theme);
+  console.log(selected);
 
   const { pathname } = useLocation();
+  console.log(pathname);
   const checkOpenForParent = (child, id) => {
     child.forEach((item) => {
       if (item.url === pathname) {
@@ -121,9 +122,9 @@ const NavCollapse = ({ menu, level }) => {
           }
         />
         {open ? (
-          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: -20 }} />
         ) : (
-          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: -20 }} />
         )}
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
