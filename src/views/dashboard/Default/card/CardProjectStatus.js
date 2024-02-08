@@ -15,19 +15,6 @@ const series = [
   { data: [2000, 2000, 4000, 4000, 3050, 3050, 2050, 2050, 3050, 3050, 4700, 4700, 2750, 2750, 5700, 5700] }
 ]
 
-const data = [
-  {
-    title: 'Donates',
-    trend: 'negative',
-    amount: '$756.26',
-    trendDiff: 139.34
-  },
-  {
-    title: 'Podcasts',
-    trendDiff: 576.24,
-    amount: '$2,207.03'
-  }
-]
 
 const CardProjectStatus = () => {
   // ** Hook
@@ -129,28 +116,6 @@ const CardProjectStatus = () => {
           </Box>
         </Box>
         <ReactApexChart type='area' height={254} series={series} options={options} />
-        {data.map((item, index) => (
-          <Box
-            key={index}
-            sx={{
-              rowGap: 1,
-              columnGap: 4,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              mb: index !== data.length - 1 ? 4 : undefined
-            }}
-          >
-            <Typography variant='h6'>{item.title}</Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography sx={{ mr: 4, color: 'text.secondary' }}>{item.amount}</Typography>
-              <Typography sx={{ fontWeight: 500, color: `${item.trend === 'negative' ? 'error' : 'success'}.main` }}>
-                {`${item.trend === 'negative' ? '-' : '+'}${item.trendDiff}`}
-              </Typography>
-            </Box>
-          </Box>
-        ))}
       </CardContent>
     </Card>
   )

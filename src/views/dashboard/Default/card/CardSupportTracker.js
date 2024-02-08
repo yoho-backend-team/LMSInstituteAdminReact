@@ -1,44 +1,36 @@
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Grid from '@mui/material/Grid'
-import { useTheme } from '@mui/material/styles'
-import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
 
 // ** Custom Components Imports
-import Icon from 'components/icon'
-import OptionsMenu from 'components/option-menu'
-import CustomAvatar from 'components/mui/avatar'
-import ReactApexChart from 'react-apexcharts'
+import Icon from 'components/icon';
+import CustomAvatar from 'components/mui/avatar';
+import ReactApexCharts from 'react-apexcharts';
 
 // ** Util Import
-import { hexToRGBA } from 'utils/hex-to-rgba'
+import { hexToRGBA } from 'utils/hex-to-rgba';
 
 const data = [
   {
     subtitle: '142',
-    title: 'New Tickets',
+    title: 'Total Classes',
     avatarIcon: 'tabler:ticket'
   },
   {
     subtitle: '28',
     avatarColor: 'info',
-    title: 'Open Tickets',
+    title: 'Total Exams',
     avatarIcon: 'tabler:circle-check'
-  },
-  {
-    subtitle: '1 Day',
-    title: 'Response Time',
-    avatarColor: 'warning',
-    avatarIcon: 'tabler:clock'
   }
-]
+];
 
 const CardSupportTracker = () => {
   // ** Hook
-  const theme = useTheme()
+  const theme = useTheme();
 
   const options = {
     chart: {
@@ -83,7 +75,7 @@ const CardSupportTracker = () => {
           value: {
             offsetY: 15,
             fontWeight: 500,
-            formatter: value => `${value}%`,
+            formatter: (value) => `${value}%`,
             color: theme.palette.text.primary,
             fontFamily: theme.typography.fontFamily,
             fontSize: theme.typography.h1.fontSize
@@ -119,54 +111,36 @@ const CardSupportTracker = () => {
         }
       }
     ]
-  }
+  };
 
   return (
     <Card>
-      <CardHeader
-        title='Support Tracker'
-        subheader='Last 7 Days'
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Edit', 'Share']}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-          />
-        }
-      />
       <CardContent>
         <Grid container spacing={6}>
-          <Grid item xs={12} sm={4}>
-            <Typography variant='h1'>164</Typography>
-            <Typography sx={{ mb: 6, color: 'text.secondary' }}>Total Tickets</Typography>
+        <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ReactApexCharts type="radialBar" height={250} options={options} series={[85]} />
+          </Grid>
+          <Grid item xs={12} sm={5}>
+            <Typography variant="h1">164</Typography>
+            <Typography sx={{ mb: 6, color: 'text.secondary' }}>Total Course</Typography>
             {data.map((item, index) => (
-              <Box
-                key={index}
-                sx={{ display: 'flex', alignItems: 'center', mb: index !== data.length - 1 ? 4 : undefined }}
-              >
-                <CustomAvatar
-                  skin='light'
-                  variant='rounded'
-                  color={item.avatarColor}
-                  sx={{ mr: 4, width: 34, height: 34 }}
-                >
+              <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: index !== data.length - 1 ? 4 : undefined }}>
+                <CustomAvatar skin="light" variant="rounded" color={item.avatarColor} sx={{ mr: 4, width: 34, height: 34 }}>
                   <Icon icon={item.avatarIcon} />
                 </CustomAvatar>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <Typography variant='h6'>{item.title}</Typography>
-                  <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                  <Typography variant="h6">{item.title}</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                     {item.subtitle}
                   </Typography>
                 </Box>
               </Box>
             ))}
           </Grid>
-          <Grid item xs={12} sm={8} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ReactApexChart type='radialBar' height={205} options={options} series={[85]} />
-          </Grid>
         </Grid>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CardSupportTracker
+export default CardSupportTracker;
