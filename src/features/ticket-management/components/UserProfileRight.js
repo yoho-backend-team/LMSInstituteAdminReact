@@ -10,11 +10,12 @@ import ListItemText from '@mui/material/ListItemText';
 
 // ** Custom Component Imports
 import Sidebar from 'components/sidebar';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const UserProfileRight = (props) => {
   const {
     store,
-    // hidden,
+    hidden,
     // statusObj,
     // getInitials,
     sidebarWidth,
@@ -36,7 +37,16 @@ const UserProfileRight = (props) => {
     browser: 'Chrome'
   };
 
+  const ScrollWrapper = ({ children }) => {
+    if (hidden) {
+      return <Box sx={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>{children}</Box>;
+    } else {
+      return <PerfectScrollbar options={{ wheelPropagation: false }}>{children}</PerfectScrollbar>;
+    }
+  };
+
   return (
+    // Side bar
     <Sidebar
       direction="right"
       show={userProfileRightOpen}
@@ -65,123 +75,125 @@ const UserProfileRight = (props) => {
             </Box>
           </Box>
 
-          {/* Visitor details */}
+          {/* Visitor Details */}
+
           <Box sx={{ height: 'calc(100% - 13.3125rem)', px: 4 }}>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
-                Basic Details
-              </Typography>
-              {/* Flexbox layout for basic details */}
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Name</Typography>
+            <ScrollWrapper>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
+                  Basic Details
+                </Typography>
+                {/* Flexbox layout for basic details */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Name</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.fullName} />
+                    </ListItem>
+                  </Box>
                 </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.fullName} />
-                  </ListItem>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Email</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.email} />
+                    </ListItem>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Phone</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.phoneNumber} />
+                    </ListItem>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Location</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.location} />
+                    </ListItem>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Location Time</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.locationTime} />
+                    </ListItem>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Language</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.language} />
+                    </ListItem>
+                  </Box>
                 </Box>
               </Box>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Email</Typography>
+              {/* Divider */}
+              <Box sx={{ borderBottom: '1px solid #E0E0E0', mb: 3 }} />
+
+              {/* Device Details */}
+              <Box>
+                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
+                  Device Details
+                </Typography>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>IP Address</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.ipAddress} />
+                    </ListItem>
+                  </Box>
                 </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.email} />
-                  </ListItem>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Operating System</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.os} />
+                    </ListItem>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box>
+                    <Typography>Browser</Typography>
+                  </Box>
+                  <Box>
+                    <ListItem disablePadding>
+                      <ListItemText primary={visitorInfo.browser} />
+                    </ListItem>
+                  </Box>
                 </Box>
               </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Phone</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.phoneNumber} />
-                  </ListItem>
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Location</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.location} />
-                  </ListItem>
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Location Time</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.locationTime} />
-                  </ListItem>
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Language</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.language} />
-                  </ListItem>
-                </Box>
-              </Box>
-            </Box>
-
-            {/* Divider */}
-            <Box sx={{ borderBottom: '1px solid #E0E0E0', mb: 3 }} />
-
-            {/* Device details */}
-
-            <Box>
-              <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
-                Device Details
-              </Typography>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>IP Address</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.ipAddress} />
-                  </ListItem>
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Operating System</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.os} />
-                  </ListItem>
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box>
-                  <Typography>Browser</Typography>
-                </Box>
-                <Box>
-                  <ListItem disablePadding>
-                    <ListItemText primary={visitorInfo.browser} />
-                  </ListItem>
-                </Box>
-              </Box>
-            </Box>
+            </ScrollWrapper>
           </Box>
         </Fragment>
       ) : null}

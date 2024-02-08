@@ -5,13 +5,13 @@ import Typography from '@mui/material/Typography';
 import CustomAvatar from 'components/mui/avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
 
-import PerfectScrollbarComponent from 'react-perfect-scrollbar';
+// import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 
-const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
-  padding: theme.spacing(5)
-}));
+// const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
+//   padding: theme.spacing(5)
+// }));
 
 const ChatLog = (props) => {
   const { data, hidden } = props;
@@ -34,9 +34,9 @@ const ChatLog = (props) => {
   }, [data]);
 
   return (
-    <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
-      <Box>
-        <Card sx={{ maxWidth: 800, margin: 'auto' }}>
+    // <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
+      <Box sx={{pt:3,pb:3}}>
+        <Card sx={{ maxWidth: 800, margin: 'auto', }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <CustomAvatar
@@ -74,7 +74,7 @@ const ChatLog = (props) => {
           </CardContent>
         </Card>
       </Box>
-    </PerfectScrollbar>
+ 
   );
 };
 
