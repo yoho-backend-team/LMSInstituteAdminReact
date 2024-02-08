@@ -112,8 +112,8 @@ const AllActivity = () => {
             >
               <img width={34} src={item.imgSrc} alt={item.subtitle} />
               <Box sx={{ marginLeft: 2 }}>
-                <Typography variant="h6" sx={{color:"white"}}>{item.title}</Typography>
-                <Typography variant="body2" sx={{ color: 'lightgray' }}>
+                <Typography variant="h4" sx={{color:"white"}}>{item.title}</Typography>
+                <Typography variant="body2" sx={{ color: 'lightgray',fontSize:"13px" }}>
                   {item.subtitle}
                 </Typography>
               </Box>
