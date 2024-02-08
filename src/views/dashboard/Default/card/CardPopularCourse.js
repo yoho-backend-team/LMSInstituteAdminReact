@@ -60,6 +60,10 @@ const CardPopularCourse = () => {
     <Card>
        <CardHeader
         title="Popular Course"
+        sx={{pt:4}}
+        // titleTypographyProps={{
+        //   sx: { pt: 2 }
+        // }}
         action={
           <Select
             label="Sort By"
@@ -74,7 +78,7 @@ const CardPopularCourse = () => {
           </Select>
         }
       />
-      <CardContent sx={{pt:0.5}}>
+      <CardContent sx={{pt:2}}>
         {limitedData.map((item, index) => (
           <Box
             key={item.title}
@@ -82,7 +86,7 @@ const CardPopularCourse = () => {
               display: 'flex',
               '& img': { mr: 2 },
               alignItems: 'center',
-              mb: index !== limitedData.length - 1 ? 2.875 : undefined
+              mb: index !== limitedData.length - 1 ? 3.5 : undefined
             }}
           >
             <img width={46} src={item.imgSrc} alt={item.title} />

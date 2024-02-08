@@ -69,8 +69,8 @@ import CardData from './card/CardData';
 import CardPopularCourse from './card/CardPopularCourse';
 import CardProjectStatus from './card/CardProjectStatus';
 import CardStatsVertical from './card/CardStatsVertical';
-import CardSupportTracker from './card/CardSupportTracker';
 import RevenueReport from './card/RevenueReport';
+import CardSupportTracker from './card/CardSupportTracker';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
@@ -211,11 +211,11 @@ const Dashboard = () => {
 
         <Grid item xs={12} sx={{ mt: 2 }}>
           <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <CardProjectStatus />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <CardSupportTracker />
+            <Grid item xs={12} md={7}>
+              <CardSupportTracker/>
             </Grid>
           </Grid>
         </Grid>
