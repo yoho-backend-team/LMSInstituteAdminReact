@@ -1,20 +1,22 @@
 // ** React Imports
-import { useState, forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
-import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-import Checkbox from '@mui/material/Checkbox'
-import ListItemText from '@mui/material/ListItemText'
+import CardHeader from '@mui/material/CardHeader';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 // ** Third Party Imports
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 // ** Custom Components Imports
-import CustomTextField from 'components/mui/text-field';
-
+// import CustomTextField from 'components/mui/text-field';
+import Autocomplete from '@mui/material/Autocomplete';
+import CustomChip from 'components/mui/chip';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -26,12 +28,11 @@ const CustomInput = forwardRef((props, ref) => {
   props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
   const updatedProps = { ...props };
   delete updatedProps.setDates;
-  return <CustomTextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
+  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
-
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 
 const MenuProps = {
   PaperProps: {
@@ -40,7 +41,7 @@ const MenuProps = {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
     }
   }
-}
+};
 
 const names = [
   'Oliver Hansen',
@@ -53,7 +54,13 @@ const names = [
   'Bradley Wilkerson',
   'Virginia Andrews',
   'Kelly Snyder'
-]
+];
+
+const courses = [
+  { course_id: '1', course_name: 'Course 1' },
+  { course_id: '2', course_name: 'Course 2' },
+  { course_id: '3', course_name: 'Course 3' },
+];
 /* eslint-enable */
 const InvoiceList = () => {
   // ** State
@@ -61,11 +68,9 @@ const InvoiceList = () => {
   const [statusValue, setStatusValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [startDateRange, setStartDateRange] = useState(null);
-  const [personName, setPersonName] = useState([])
 
-  const handleChange = event => {
-    setPersonName(event.target.value)
-  }
+
+
   const handleStatusValue = (e) => {
     setStatusValue(e.target.value);
   };
@@ -79,6 +84,17 @@ const InvoiceList = () => {
     setEndDateRange(end);
   };
 
+  
+  const [selectedCourses, setSelectedCourses] = useState([]);
+
+  const handleCourseChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+    } else {
+      setSelectedCourses(newValue);
+    }
+  };
+
   return (
     <DatePickerWrapper>
       <Grid container spacing={6}>
@@ -88,7 +104,7 @@ const InvoiceList = () => {
             <CardContent>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={3}>
-                  <CustomTextField
+                  <TextField
                     select
                     fullWidth
                     label="Status"
@@ -101,30 +117,49 @@ const InvoiceList = () => {
                     <MenuItem value="partial payment">Partial Payment</MenuItem>
                     <MenuItem value="past due">Past Due</MenuItem>
                     <MenuItem value="sent">Sent</MenuItem>
-                  </CustomTextField>
+                  </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <CustomTextField
-                    select
-                    fullWidth
-                    label="Course"
-                    id="select-multiple-checkbox"
-                    SelectProps={{
-                      MenuProps,
-                      multiple: true,
-                      value: personName,
-                      onChange: (e) => handleChange(e),
-                      renderValue: (selected) => selected.join(', ')
-                    }}
-                  >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={personName.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
-                  </CustomTextField>
+                <Autocomplete
+                  multiple
+                  id="select-multiple-chip"
+                  options={courses}
+                  getOptionLabel={(option) => option.course_name}
+                  value={selectedCourses}
+                  onChange={(event, newValue) => handleCourseChange(newValue)}
+                  renderInput={(params) => <TextField {...params} fullWidth label="Courses" />}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.course_name}
+                    </li>
+                  )}
+                  renderTags={(value) =>
+                    value.map((option, index) => (
+                      <CustomChip
+                        key={option.course_id}
+                        label={option.course_name}
+                        onDelete={() => {
+                          const updatedValue = [...value];
+                          updatedValue.splice(index, 1);
+                          setSelectedCourses(updatedValue);
+                        }}
+                        color="primary"
+                        sx={{ m: 0.75 }}
+                      />
+                    ))
+                  }
+                  isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <DatePicker
                     isClearable
@@ -137,7 +172,7 @@ const InvoiceList = () => {
                     id="date-range-picker-months"
                     onChange={handleOnChangeRange}
                     customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Batch Date" end={endDateRange} start={startDateRange} />
+                      <CustomInput  dates={dates}  setDates={setDates} label="Batch Date" end={endDateRange} start={startDateRange} />
                     }
                   />
                 </Grid>
