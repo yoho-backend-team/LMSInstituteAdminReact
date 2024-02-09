@@ -127,7 +127,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, height: '72%', maxHeight: 750 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, } }}
       >
         <DialogTitle
           id="user-view-edit"
