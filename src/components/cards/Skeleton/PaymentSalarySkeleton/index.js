@@ -5,7 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import { gridSpacing } from 'store/constant';
 
-const PaymentSkeleton = () => {
+const PaymentSalarySkeleton = () => {
   return (
     <>
       <Grid container spacing={6}>
@@ -14,15 +14,13 @@ const PaymentSkeleton = () => {
             <CardHeader title={<Skeleton height={25} width={200} />} />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <Skeleton variant="rectangular" height={56} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <Skeleton variant="rectangular" height={56} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Skeleton variant="rectangular" height={56} animation="wave" />
-                </Grid>
+              
               </Grid>
             </CardContent>
           </Card>
@@ -185,4 +183,4 @@ const PaymentSkeleton = () => {
   );
 };
 
-export default PaymentSkeleton;
+export default PaymentSalarySkeleton;

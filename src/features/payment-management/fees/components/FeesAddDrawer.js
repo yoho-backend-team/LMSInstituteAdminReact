@@ -273,8 +273,8 @@ const FeesAddDrawer = (props) => {
                     fullWidth
                     label="Branch"
                     id="select-multiple-checkbox"
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
+                    error={Boolean(errors.branch) && !selectedBranches.length} // Render error if field is empty
+                    helperText={!selectedBranches.length && errors.branch?.message} // Display error message only if field is empty
                     SelectProps={{
                       MenuProps,
                       multiple: true,

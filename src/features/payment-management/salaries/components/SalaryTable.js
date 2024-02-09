@@ -21,7 +21,6 @@ import Icon from 'components/icon';
 
 // ** Third Party Imports
 import format from 'date-fns/format';
-import DatePicker from 'react-datepicker';
 
 // ** Store & Actions Imports
 
@@ -32,14 +31,16 @@ import { getInitials } from 'utils/get-initials';
 import Avatar from '@mui/material/Avatar';
 import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
-
-import SalaryCardHeader from './SalaryCardHeader';
-import SalaryAddDrawer from './SalaryAddDrawer';
-import SalaryEditDrawer from './SalaryEditDrawer';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Checkbox from '@mui/material/Checkbox';
+import Autocomplete from '@mui/material/Autocomplete';
 import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import SalaryAddDrawer from './SalaryAddDrawer';
+import SalaryCardHeader from './SalaryCardHeader';
+import SalaryEditDrawer from './SalaryEditDrawer';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -82,12 +83,9 @@ const CustomInput = forwardRef((props, ref) => {
 /* eslint-enable */
 const SalaryTable = () => {
   // ** State
-  const [dates, setDates] = useState([]);
   const [value, setValue] = useState('');
-  const [statusValue, setStatusValue] = useState('');
-  const [endDateRange, setEndDateRange] = useState(null);
+  // const [statusValue, setStatusValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
-  const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -128,18 +126,27 @@ const SalaryTable = () => {
     setValue(val);
   };
 
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
+  // const handleStatusValue = (e) => {
+  //   setStatusValue(e.target.value);
+  // };
+
+
+  const staff = [
+    { staff_id: '1', staff_name: 'staff 1' },
+    { staff_id: '2', staff_name: 'staff 2' },
+    { staff_id: '3', staff_name: 'staff 3' }
+  ];
+
+  const [selectedstaff, setSelectedstaff] = useState([]);
+
+  const handlestaffChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+      setSelectedbranches(staff.filter((option) => option.staff_id !== 'selectAll'));
+    } else {
+      setSelectedstaff(newValue);
+    }
   };
 
-  const handleOnChangeRange = (dates) => {
-    const [start, end] = dates;
-    if (start !== null && end !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-    setEndDateRange(end);
-  };
 
   const defaultColumns = [
     {
@@ -337,35 +344,53 @@ const SalaryTable = () => {
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Invoice Status"
-                    SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
+                  <TextField fullWidth select defaultValue="" label="Staff Type" id="custom-select">
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    isClearable
-                    selectsRange
-                    monthsShown={2}
-                    endDate={endDateRange}
-                    selected={startDateRange}
-                    startDate={startDateRange}
-                    shouldCloseOnSelect={false}
-                    id="date-range-picker-months"
-                    onChange={handleOnChangeRange}
-                    customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Invoice Date" end={endDateRange} start={startDateRange} />
+                <Autocomplete
+                    multiple
+                    id="select-multiple-chip"
+                    options={staff}
+                    getOptionLabel={(option) => option.staff_name}
+                    value={selectedstaff}
+                    onChange={(event, newValue) => handlestaffChange(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth label="Staff" />}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.staff_name}
+                      </li>
+                    )}
+                    renderTags={(value) =>
+                      value.map((option, index) => (
+                        <CustomChip
+                          key={option.staff_id}
+                          label={option.staff_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedstaff(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))
                     }
+                    isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
               </Grid>
