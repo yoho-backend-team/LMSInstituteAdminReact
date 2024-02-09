@@ -24,7 +24,10 @@ const ClassSkeleton = () => {
                 <Grid item xs={12} sm={3}>
                   <Skeleton variant="rounded" height={50} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={3}>
+                  <Skeleton variant="rounded" height={50} animation="wave" />
+                </Grid>
+                <Grid item xs={12} sm={3}>
                   <Skeleton variant="rounded" height={50} animation="wave" />
                 </Grid>
               </Grid>

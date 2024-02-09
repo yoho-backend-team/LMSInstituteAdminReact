@@ -167,7 +167,7 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, height: '80%', maxHeight: 550 } }}
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, } }}
     >
       <DialogTitle
         id="user-view-edit"

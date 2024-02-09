@@ -14,7 +14,7 @@ import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import DeleteDialog from 'components/modal/DeleteModel';
 import Pagination from '@mui/material/Pagination';
 
 const OfflineClassCard = () => {
@@ -106,22 +106,13 @@ const OfflineClassCard = () => {
   const handleEdit = () => {
     setEditModalOpen(true);
   };
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const handleDeleteGroup = async () => {
-    try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-      if (result.success) {
-        toast.success(result.message);
-        dispatch(getAllGroups());
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleStatusValue = () => {
+  //   setDeleteDialogOpen(true);
+  //   setStatusValue(event.target.value);
+  // };
 
   return (
     <>
@@ -276,7 +267,13 @@ const OfflineClassCard = () => {
         ))}
 
         <OfflineClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
-        <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          // handleSubmit={handleDeleteConfirm}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
       </Grid>
       <Grid container justifyContent="flex-end" mt={2}>
         <div className="demo-space-y">
