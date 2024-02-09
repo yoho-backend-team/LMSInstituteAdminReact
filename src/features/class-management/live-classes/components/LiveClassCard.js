@@ -14,7 +14,7 @@ import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
 import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import DeleteDialog from 'components/modal/DeleteModel';
 import Pagination from '@mui/material/Pagination';
 
 const LiveClassCard = () => {
@@ -109,22 +109,7 @@ const LiveClassCard = () => {
     setEditModalOpen(true);
   };
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
-  const handleDeleteGroup = async () => {
-    try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
-
-      if (result.success) {
-        toast.success(result.message);
-        dispatch(getAllGroups());
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleCopyLink = (index) => {
     // You can implement the logic to copy the link here
@@ -285,7 +270,13 @@ const LiveClassCard = () => {
           </Grid>
         ))}
         <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
-        <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          // handleSubmit={handleDeleteConfirm}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
       </Grid>
       <Grid container justifyContent="flex-end" mt={2}>
         <div className="demo-space-y">
