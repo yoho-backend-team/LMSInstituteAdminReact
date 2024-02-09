@@ -10,18 +10,19 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Checkbox from '@mui/material/Checkbox';
+import Autocomplete from '@mui/material/Autocomplete';
 // ** Icon Imports
 import Icon from 'components/icon';
 
 // ** Third Party Imports
 import format from 'date-fns/format';
-import DatePicker from 'react-datepicker';
 
 // ** Store & Actions Imports
 
@@ -37,6 +38,9 @@ import { TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
 
 import RefundCardHeader from './RefundCardHeader';
+import RefundAddDrawer from './RefundAddDrawer';
+import RefundEditDrawer from './RefundEditDrawer';
+import DeleteDialog from 'components/modal/DeleteModel';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -188,31 +192,26 @@ const CustomInput = forwardRef((props, ref) => {
 /* eslint-enable */
 const RefundTable = () => {
   // ** State
-  const [dates, setDates] = useState([]);
   const [value, setValue] = useState('');
-  const [statusValue, setStatusValue] = useState('');
-  const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+  const [editUserOpen, setEditUserOpen] = useState(false);
+
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('Toggle drawer');
+  };
+
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // ** Hooks
 
   const handleFilter = (val) => {
     setValue(val);
-  };
-
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
-  };
-
-  const handleOnChangeRange = (dates) => {
-    const [start, end] = dates;
-    if (start !== null && end !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-    setEndDateRange(end);
   };
 
   const columns = [
@@ -226,7 +225,13 @@ const RefundTable = () => {
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title="Delete Invoice">
-            <IconButton size="small" sx={{ color: 'text.secondary' }}>
+            <IconButton
+              onClick={() => {
+                setDeleteDialogOpen(true);
+              }}
+              size="small"
+              sx={{ color: 'text.secondary' }}
+            >
               <Icon icon="tabler:trash" />
             </IconButton>
           </Tooltip>
@@ -246,7 +251,8 @@ const RefundTable = () => {
               {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon="tabler:edit" fontSize={20} />
+                icon: <Icon icon="tabler:edit" fontSize={20} />,
+                menuItemProps: { onClick: toggleEditUserDrawer }
               },
               {
                 text: 'Duplicate',
@@ -317,6 +323,38 @@ const RefundTable = () => {
     }
   ];
 
+  const batch = [
+    { batch_id: '1', batch_name: 'batch 1' },
+    { batch_id: '2', batch_name: 'batch 2' },
+    { batch_id: '3', batch_name: 'batch 3' }
+  ];
+
+  const [selectedbatch, setSelectedbatch] = useState([]);
+
+  const handlebatchChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
+      setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
+    } else {
+      setSelectedbatch(newValue);
+    }
+  };
+
+  const students = [
+    { students_id: '1', students_name: 'students 1' },
+    { students_id: '2', students_name: 'students 2' },
+    { students_id: '3', students_name: 'students 3' }
+  ];
+
+  const [selectedstudents, setSelectedstudents] = useState([]);
+
+  const handlestudentsChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.students_id === 'selectAll')) {
+      setSelectedstudents(students.filter((option) => option.students_id !== 'selectAll'));
+    } else {
+      setSelectedstudents(newValue);
+    }
+  };
+
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -326,35 +364,84 @@ const RefundTable = () => {
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Invoice Status"
-                    SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    isClearable
-                    selectsRange
-                    monthsShown={2}
-                    endDate={endDateRange}
-                    selected={startDateRange}
-                    startDate={startDateRange}
-                    shouldCloseOnSelect={false}
-                    id="date-range-picker-months"
-                    onChange={handleOnChangeRange}
-                    customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Invoice Date" end={endDateRange} start={startDateRange} />
+                  <Autocomplete
+                    multiple
+                    id="select-multiple-chip"
+                    options={batch}
+                    getOptionLabel={(option) => option.batch_name}
+                    value={selectedbatch}
+                    onChange={(event, newValue) => handlebatchChange(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth label="Batch" />}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.batch_name}
+                      </li>
+                    )}
+                    renderTags={(value) =>
+                      value.map((option, index) => (
+                        <CustomChip
+                          key={option.batch_id}
+                          label={option.batch_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedbatch(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))
                     }
+                    isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <Autocomplete
+                    multiple
+                    id="select-multiple-chip"
+                    options={students}
+                    getOptionLabel={(option) => option.students_name}
+                    value={selectedstudents}
+                    onChange={(event, newValue) => handlestudentsChange(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth label="Students" />}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.students_name}
+                      </li>
+                    )}
+                    renderTags={(value) =>
+                      value.map((option, index) => (
+                        <CustomChip
+                          key={option.students_id}
+                          label={option.students_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedstudents(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))
+                    }
+                    isOptionEqualToValue={(option, value) => option.students_id === value.students_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
               </Grid>
@@ -363,9 +450,9 @@ const RefundTable = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <RefundCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} />
+            <RefundCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
             <DataGrid
-              sx={{p:2}}
+              sx={{ p: 2 }}
               autoHeight
               pagination
               rowHeight={62}
@@ -378,6 +465,16 @@ const RefundTable = () => {
               onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
             />
           </Card>
+          <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <RefundEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+
+          <DeleteDialog
+            open={isDeleteDialogOpen}
+            setOpen={setDeleteDialogOpen}
+            // handleSubmit={handleDeleteConfirm}
+            description="Are you sure you want to delete this item?"
+            title="Delete"
+          />
         </Grid>
       </Grid>
     </DatePickerWrapper>

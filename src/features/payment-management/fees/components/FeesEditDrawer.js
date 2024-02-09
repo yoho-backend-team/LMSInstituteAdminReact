@@ -209,7 +209,6 @@ const FeesEditDrawer = (props) => {
   };
 
   const handleClose = () => {
-    console.log('Closing drawer');
     setValue('contact', Number(''));
     toggle();
     reset();
@@ -226,7 +225,7 @@ const FeesEditDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
       >
         <Header>
-          <Typography variant="h5">Edit Fees</Typography>
+          <Typography variant="h5">Add Fees</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -274,8 +273,8 @@ const FeesEditDrawer = (props) => {
                     fullWidth
                     label="Branch"
                     id="select-multiple-checkbox"
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
+                    error={Boolean(errors.branch) && !selectedBranches.length} // Render error if field is empty
+                    helperText={!selectedBranches.length && errors.branch?.message} // Display error message only if field is empty
                     SelectProps={{
                       MenuProps,
                       multiple: true,
