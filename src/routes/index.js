@@ -47,7 +47,10 @@ const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-
 const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class')));
 
 // Content Management
-const CourseContentsPage = Loadable(lazy(() => import('views/content-management/course-content')));
+const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/study-materials')));
+const NotesPage = Loadable(lazy(() => import('views/content-management/notes')));
+const ModulesPage = Loadable(lazy(() => import('views/content-management/modules')));
+
 // const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
 // const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
 // const CreateExamPaper = Loadable(lazy(() => import('views/content-management/exam-content/create-exam-paper/index')));
@@ -202,8 +205,10 @@ const ApplicationRoutes = () => {
         </Route>
 
         <Route path="/content-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/content-management/class-contents" />} />
-          <Route path="course-contents" element={<CourseContentsPage />} />
+          <Route index element={<Navigate to="/content-management/study-materials" />} />
+          <Route path="study-materials" element={<StudyMaterialsPage />} />
+          <Route path="notes" element={<NotesPage />} />
+          <Route path="modules" element={<ModulesPage />} />
         </Route>
 
         <Route path="/course-management" element={<MainLayout />}>

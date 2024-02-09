@@ -43,7 +43,7 @@ const CategoryFilter = () => {
                   <TextField
                     select
                     fullWidth
-                    label="Categories"
+                    label="Course"
                     SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
                   >
                     <MenuItem value="">None</MenuItem>

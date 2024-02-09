@@ -1,13 +1,15 @@
 // ** MUI Imports
 import { Grid, TextField } from '@mui/material';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import Header from 'components/Header';
-import Icon from 'components/icon';
 import { useState } from 'react';
+// ** Icon Imports
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Icon from 'components/icon';
 
-const TableHeader = (props) => {
+const NotesHeader = (props) => {
   const { handleFilter, toggle, value } = props;
   const [statusValue, setStatusValue] = useState('');
 
@@ -15,23 +17,13 @@ const TableHeader = (props) => {
     setStatusValue(e.target.value);
   };
   return (
-    <Grid>
-      {/* <DatePickerWrapper>
-        <Grid container spacing={6}></Grid>
-      </DatePickerWrapper> */}
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}
-      >
-        <Grid sx={{my:3}}>
-      <Header title="Notes"  />
-      </Grid>
-        <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
-          <Grid item xs={12} sx={{mb:3}}>
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Card>
+          <CardHeader title="Notes" />
+          <CardContent sx={{ pt: 0, pb: 0 }}>
+            <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
+              <Grid item xs={12} sx={{ mb: 3 }}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={3}>
                     <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
@@ -73,11 +65,13 @@ const TableHeader = (props) => {
                     </Button>
                   </Grid>
                 </Grid>
-          </Grid>
-        </Grid>
-      </Box>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
     </Grid>
   );
 };
 
-export default TableHeader;
+export default NotesHeader;

@@ -1,7 +1,6 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
+
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
@@ -12,39 +11,42 @@ import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import CustomTextField from 'components/mui/text-field';
+import StudyMaterialAddDrawer from 'features/content-management/course-contents/components/StudyMaterialAddDrawer';
+import StudyMaterialEdit from 'features/content-management/course-contents/components/StudyMaterialEdit';
 import StudyMaterialHeader from 'features/content-management/course-contents/components/StudyMaterialTableHeader';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import StudyMaterialView from 'features/content-management/course-contents/components/StudyMaterialView';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
-import StudyMaterialAddDrawer from './StudyMaterialAddDrawer';
-import StudyMaterialEdit from './StudyMaterialEdit';
-import StudyMaterialView from './StudyMaterialView';
-import CustomTextField from 'components/mui/text-field';
-
+import DeleteDialog from 'components/modal/DeleteModel';
 // const userStatusObj = {
 //   Active: 'success',
 //   Inactive: 'error'
 // };
 
-const StudyMaterial = () => {
+const StudyMaterials = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState(null);
+  
+  console.log(deletingItemId);
+
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
     // toggleEditUserDrawer();
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  const handleStatusChange = (event, row) => {
-    setSelectedDeleteMaterial(row);
+  const handleStatusChange = () => {
     setDeleteDialogOpen(true);
   };
 
@@ -55,19 +57,10 @@ const StudyMaterial = () => {
     setViewModalOpen(true);
   };
 
-  const handleDeleteGroup = async () => {
-    try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
-
-      if (result.success) {
-        toast.success(result.message);
-        dispatch(getAllGroups());
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  const handleDelete = (itemId) => {
+    console.log('Delete clicked for item ID:', itemId);
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
   };
 
   const toggleEditUserDrawer = () => {
@@ -85,10 +78,7 @@ const StudyMaterial = () => {
           <Icon icon="tabler:edit" />
         </IconButton>
         <IconButton
-          onClick={() => {
-            // setSelectedDeleteGroupId(item.id);
-            setDeleteDialogOpen(true);
-          }}
+           onClick={() => handleDelete()}
           aria-label="capture screenshot"
           color="error"
         >
@@ -298,12 +288,11 @@ const StudyMaterial = () => {
   ];
   return (
     <>
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
         </Grid>
-
-        <Grid item xs={12} sx={{mt:2}}>
+        <Grid item xs={12}>
           <Card>
             <DataGrid
               autoHeight
@@ -318,14 +307,19 @@ const StudyMaterial = () => {
             />
           </Card>
         </Grid>
-
         <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
         <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-        <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          // handleSubmit={handleDeleteConfirm}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
         <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
     </>
   );
 };
 
-export default StudyMaterial;
+export default StudyMaterials;
