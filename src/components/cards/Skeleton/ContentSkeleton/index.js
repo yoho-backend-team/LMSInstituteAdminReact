@@ -42,6 +42,7 @@ const ContentSkeleton = () => {
                   </Grid>
                 </Box>
               </Grid>
+              
               <Grid container md={12} spacing={gridSpacing}>
                 <Grid item xs={12}>
                   <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>

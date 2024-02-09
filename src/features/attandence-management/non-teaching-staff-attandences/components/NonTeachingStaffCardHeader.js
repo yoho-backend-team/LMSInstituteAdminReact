@@ -45,7 +45,7 @@ const NonTeachingStaffCardHeader = (props) => {
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
-            Add
+            Add Attendance
           </Button>
         </Box>
       </Box>
