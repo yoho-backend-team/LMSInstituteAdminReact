@@ -13,7 +13,7 @@ import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 
 // ** Custom Components Imports
-import CustomTextField from 'components/mui/text-field';
+import  TextField  from '@mui/material/TextField';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -26,7 +26,7 @@ const CustomInput = forwardRef((props, ref) => {
   props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
   const updatedProps = { ...props };
   delete updatedProps.setDates;
-  return <CustomTextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
+  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
 /* eslint-enable */
@@ -55,11 +55,11 @@ const NonTeachingStaffFilterCard = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Filters" />
+            <CardHeader title="Non-Teaching Staff Attendance" />
             <CardContent>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={3}>
-                  <CustomTextField
+                  <TextField
                     select
                     fullWidth
                     label="Status"
@@ -72,10 +72,10 @@ const NonTeachingStaffFilterCard = () => {
                     <MenuItem value="partial payment">Partial Payment</MenuItem>
                     <MenuItem value="past due">Past Due</MenuItem>
                     <MenuItem value="sent">Sent</MenuItem>
-                  </CustomTextField>
+                  </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <CustomTextField
+                  <TextField
                     select
                     fullWidth
                     label="Course"
@@ -88,7 +88,7 @@ const NonTeachingStaffFilterCard = () => {
                     <MenuItem value="partial payment">Partial Payment</MenuItem>
                     <MenuItem value="past due">Past Due</MenuItem>
                     <MenuItem value="sent">Sent</MenuItem>
-                  </CustomTextField>
+                  </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <DatePicker
