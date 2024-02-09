@@ -6,7 +6,8 @@ import Card from '@mui/material/Card';
 import MenuItem from '@mui/material/MenuItem';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-
+import Checkbox from '@mui/material/Checkbox'
+import ListItemText from '@mui/material/ListItemText'
 // ** Third Party Imports
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
@@ -28,6 +29,31 @@ const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
+
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+}
+
+const names = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder'
+]
 /* eslint-enable */
 const InvoiceList = () => {
   // ** State
@@ -35,7 +61,11 @@ const InvoiceList = () => {
   const [statusValue, setStatusValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [startDateRange, setStartDateRange] = useState(null);
+  const [personName, setPersonName] = useState([])
 
+  const handleChange = event => {
+    setPersonName(event.target.value)
+  }
   const handleStatusValue = (e) => {
     setStatusValue(e.target.value);
   };
@@ -78,15 +108,21 @@ const InvoiceList = () => {
                     select
                     fullWidth
                     label="Course"
-                    SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+                    id="select-multiple-checkbox"
+                    SelectProps={{
+                      MenuProps,
+                      multiple: true,
+                      value: personName,
+                      onChange: (e) => handleChange(e),
+                      renderValue: (selected) => selected.join(', ')
+                    }}
                   >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
+                    {names.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        <Checkbox checked={personName.indexOf(name) > -1} />
+                        <ListItemText primary={name} />
+                      </MenuItem>
+                    ))}
                   </CustomTextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
