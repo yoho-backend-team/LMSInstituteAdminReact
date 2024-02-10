@@ -71,19 +71,19 @@ const LiveClassFilterCard = () => {
     }
   };
 
-  const branches = [
-    { branches_id: '1', branches_name: 'branches 1' },
-    { branches_id: '2', branches_name: 'branches 2' },
-    { branches_id: '3', branches_name: 'branches 3' }
+  const batch = [
+    { batch_id: '1', batch_name: 'batch 1' },
+    { batch_id: '2', batch_name: 'batch 2' },
+    { batch_id: '3', batch_name: 'batch 3' }
   ];
 
-  const [selectedbranches, setSelectedbranches] = useState([]);
+  const [selectedbatch, setSelectedbatch] = useState([]);
 
-  const handlebranchesChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.branches_id === 'selectAll')) {
-      setSelectedbranches(branches.filter((option) => option.branches_id !== 'selectAll'));
+  const handlebatchChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
+      setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
     } else {
-      setSelectedbranches(newValue);
+      setSelectedbatch(newValue);
     }
   };
 
@@ -151,11 +151,11 @@ const LiveClassFilterCard = () => {
                   <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={branches}
-                    getOptionLabel={(option) => option.branches_name}
-                    value={selectedbranches}
-                    onChange={(event, newValue) => handlebranchesChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Branches" />}
+                    options={batch}
+                    getOptionLabel={(option) => option.batch_name}
+                    value={selectedbatch}
+                    onChange={(event, newValue) => handlebatchChange(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth label="Batch" />}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -164,25 +164,25 @@ const LiveClassFilterCard = () => {
                           style={{ marginRight: 8 }}
                           checked={selected}
                         />
-                        {option.branches_name}
+                        {option.batch_name}
                       </li>
                     )}
                     renderTags={(value) =>
                       value.map((option, index) => (
                         <CustomChip
-                          key={option.branches_id}
-                          label={option.branches_name}
+                          key={option.batch_id}
+                          label={option.batch_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
-                            setSelectedbranches(updatedValue);
+                            setSelectedbatch(updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
                         />
                       ))
                     }
-                    isOptionEqualToValue={(option, value) => option.branches_id === value.branches_id}
+                    isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
