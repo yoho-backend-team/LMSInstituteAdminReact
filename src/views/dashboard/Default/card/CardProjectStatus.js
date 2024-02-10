@@ -41,7 +41,7 @@ const CardProjectStatus = () => {
             {
               offset: 0,
               opacity: 0.4,
-              color: theme.palette.warning.main
+              color: theme.palette.primary.main
             },
             {
               offset: 100,
@@ -57,7 +57,7 @@ const CardProjectStatus = () => {
         enabled: true,
         shadeTo: 'light',
         shadeIntensity: 1,
-        color: theme.palette.warning.main
+        color: theme.palette.primary.main
       }
     },
     grid: {
