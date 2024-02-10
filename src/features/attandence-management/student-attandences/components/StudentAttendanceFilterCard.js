@@ -32,7 +32,7 @@ const StudentAttendanceFilterCard = () => {
   // const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
   
-  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedstudent, setSelectedstudent] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
@@ -60,20 +60,7 @@ const StudentAttendanceFilterCard = () => {
   //   setEndDateRange(end);
   // };
 
-  const handleCourseChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-    } else {
-      setSelectedCourses(newValue);
-    }
-  };
-  const handleStudentChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.student_id === 'selectAll')) {
-      setSelectedStudents(students.filter((option) => option.student_id !== 'selectAll'));
-    } else {
-      setSelectedStudents(newValue);
-    }
-  };
+ 
   return (
     <DatePickerWrapper>
       <Grid container spacing={6}>
@@ -94,14 +81,30 @@ const StudentAttendanceFilterCard = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Autocomplete
+                <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={courses}
+                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                     getOptionLabel={(option) => option.course_name}
                     value={selectedCourses}
-                    onChange={(event, newValue) => handleCourseChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Courses" />}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                      } else {
+                        setSelectedCourses(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Courses"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -113,82 +116,88 @@ const StudentAttendanceFilterCard = () => {
                         {option.course_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.course_id}
-                          label={option.course_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedCourses(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.course_id}
+                            label={option.course_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedCourses(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={4}>
                 <Autocomplete
-                  multiple
-                  id="select-multiple-chip"
-                  options={students}
-                  getOptionLabel={(option) => option.student_name}
-                  value={selectedStudents}
-                  onChange={(event, newValue) => handleStudentChange(newValue)}
-                  renderInput={(params) => <TextField {...params} fullWidth label="Students" />}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.student_name}
-                    </li>
-                  )}
-                  renderTags={(value) =>
-                    value.map((option, index) => (
-                      <CustomChip
-                        key={option.student_id}
-                        label={option.student_name}
-                        onDelete={() => {
-                          const updatedValue = [...value];
-                          updatedValue.splice(index, 1);
-                          setSelectedStudents(updatedValue);
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ student_id: 'selectAll', student_name: 'Select All' }, ...students]}
+                    getOptionLabel={(option) => option.student_name}
+                    value={selectedstudent}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.student_id === 'selectAll')) {
+                        setSelectedstudent(students.filter((option) => option.student_id !== 'selectAll'));
+                      } else {
+                        setSelectedstudent(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Student"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                         }}
-                        color="primary"
-                        sx={{ m: 0.75 }}
                       />
-                    ))
-                  }
-                  isOptionEqualToValue={(option, value) => option.student_id === value.student_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                />
-              </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    isClearable
-                    selectsRange
-                    monthsShown={2}
-                    endDate={endDateRange}
-                    selected={startDateRange}
-                    startDate={startDateRange}
-                    shouldCloseOnSelect={false}
-                    id="date-range-picker-months"
-                    onChange={handleOnChangeRange}
-                    customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Class Date" end={endDateRange} start={startDateRange} />
-                    }
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.student_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.student_id}
+                            label={option.student_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedstudent(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.student_id === value.student_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
-                </Grid> */}
+              </Grid>
+              
               </Grid>
             </CardContent>
           </Card>

@@ -35,7 +35,7 @@ const TeachingStaffFilterCard = () => {
   // const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [selectedStaff, setSelectedStaff] = useState([]);
+  const [selectedstaff, setSelectedstaff] = useState([]);
 
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
@@ -49,14 +49,6 @@ const TeachingStaffFilterCard = () => {
     { staff_id: '3', staff_name: 'Staff 3' }
   ];
 
-  const handleStaffChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-      setSelectedStaff(staff.filter((option) => option.staff_id !== 'selectAll'));
-    } else {
-      setSelectedStaff(newValue);
-    }
-  };
-
   // const [endDateRange, setEndDateRange] = useState(null);
   // const [startDateRange, setStartDateRange] = useState(null);
 
@@ -64,13 +56,6 @@ const TeachingStaffFilterCard = () => {
     setStatusValue(e.target.value);
   };
 
-  const handleCourseChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-    } else {
-      setSelectedCourses(newValue);
-    }
-  };
 
   // const handleOnChangeRange = (dates) => {
   //   const [start, end] = dates;
@@ -101,14 +86,30 @@ const TeachingStaffFilterCard = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                  <Autocomplete
+                <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={courses}
+                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                     getOptionLabel={(option) => option.course_name}
                     value={selectedCourses}
-                    onChange={(event, newValue) => handleCourseChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Courses" />}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                      } else {
+                        setSelectedCourses(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Courses"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -120,21 +121,23 @@ const TeachingStaffFilterCard = () => {
                         {option.course_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.course_id}
-                          label={option.course_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedCourses(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.course_id}
+                            label={option.course_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedCourses(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
@@ -157,14 +160,30 @@ const TeachingStaffFilterCard = () => {
                   />
                 </Grid> */}
                 <Grid item xs={12} sm={4}>
-                  <Autocomplete
+                <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={staff}
+                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...staff]}
                     getOptionLabel={(option) => option.staff_name}
-                    value={selectedStaff}
-                    onChange={(event, newValue) => handleStaffChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Staff" />}
+                    value={selectedstaff}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                        setSelectedstaff(staff.filter((option) => option.staff_id !== 'selectAll'));
+                      } else {
+                        setSelectedstaff(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Staffs"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -176,21 +195,23 @@ const TeachingStaffFilterCard = () => {
                         {option.staff_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedStaff(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.staff_id}
+                            label={option.staff_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedstaff(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
