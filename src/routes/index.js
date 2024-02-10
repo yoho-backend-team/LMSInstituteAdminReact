@@ -158,8 +158,8 @@ const ApplicationRoutes = () => {
         <Route path="community" element={<Community />} />
       </Route>
       <Route path="/profile-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/accountsettings" />} />
-        <Route path="accountsettings" element={<AccountSettings />} />
+        <Route index element={<Navigate to="/account-settings" />} />
+        <Route path="account-settings" element={<AccountSettings />} />
       </Route>
       <Route path="/calender" element={<MainLayout />}>
         <Route index element={<CalenderPage />} />
