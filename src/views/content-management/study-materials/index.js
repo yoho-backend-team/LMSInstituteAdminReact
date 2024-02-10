@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import { IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
-
+import { useEffect } from 'react';
 // ** Custom Components Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -23,10 +23,19 @@ import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import DeleteDialog from 'components/modal/DeleteModel';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 // const userStatusObj = {
 //   Active: 'success',
 //   Inactive: 'error'
 // };
+
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 
 const StudyMaterials = () => {
   const [value, setValue] = useState('');
@@ -286,8 +295,18 @@ const StudyMaterials = () => {
       renderCell: ({ row }) => <RowOptions id={row?.id} />
     }
   ];
+
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false); 
+  }, 1000);
+
   return (
     <>
+    {loading ? (
+        <ContentSkeleton/>
+      ) : (
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
@@ -318,6 +337,7 @@ const StudyMaterials = () => {
         />
         <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
+       )}
     </>
   );
 };

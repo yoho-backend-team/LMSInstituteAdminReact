@@ -23,6 +23,16 @@ import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import DeleteDialog from 'components/modal/DeleteModel';
+import { useEffect } from 'react';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 
 const Notes = () => {
   // ** State
@@ -279,8 +289,18 @@ const Notes = () => {
       renderCell: ({ row }) => <RowOptions id={row?.id} />
     }
   ];
+
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false); 
+  }, 1000);
+
   return (
     <>
+     {loading ? (
+        <ContentSkeleton/>
+      ) : (
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
@@ -311,6 +331,7 @@ const Notes = () => {
         />
         <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
+      )}
     </>
   );
 };
