@@ -1,97 +1,313 @@
+// import Box from '@mui/material/Box';
+// import IconButton from '@mui/material/IconButton';
+// import Typography from '@mui/material/Typography';
+// import Icon from 'components/icon';
+// import CustomAvatar from 'components/mui/avatar';
+// import CustomChip from 'components/mui/chip';
+// import ChatLog from './ChatLog';
+// import SendMsgForm from './SendMsgForm';
+// import UserProfileRight from './UserProfileRight';
+
+// const ChatContent = (props) => {
+//   const {
+//     mdAbove,
+//     handleLeftSidebarToggle,
+//     handleUserProfileRightSidebarToggle,
+//     store,
+//     hidden,
+//     userProfileRightOpen,
+//     getInitials,
+//     sidebarWidth,
+//     statusObj,
+//     dispatch,
+//     sendMsg
+//   } = props;
+
+//   const renderContent = () => {
+//     const selectedChat = {
+//       contact: {
+//         fullName: 'John Doe',
+//         avatar: 'https://via.placeholder.com/150',
+//         status: 'online'
+//       },
+//       chat: [
+//         {
+//           time: new Date(),
+//           message:
+//             'Please let me know if there are any specific procedures or paperwork I need to complete for this leave request. I am more than willing to fulfill any requirements necessary.'
+//         },
+//         { time: new Date(), message: ' Thank you!' }
+//       ]
+//     };
+
+//     return (
+//       <Box sx={{ width: 0, flexGrow: 1, height: '100%', backgroundColor: 'action.hover' }}>
+//         <Box
+//           sx={{
+//             px: 5,
+//             py: 2.5,
+//             alignItems: 'center',
+//             justifyContent: 'space-between',
+//             backgroundColor: 'background.paper',
+//             borderBottom: (theme) => `1px solid ${theme.palette.divider}`
+//           }}
+//         >
+//           <Box sx={{ alignItems: 'center' }}>
+//             {mdAbove ? null : (
+//               <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
+//                 <Icon icon="tabler:menu-2" />
+//               </IconButton>
+//             )}
+//             <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+//               <CustomAvatar
+//                 skin="light"
+//                 sx={{ width: 38, height: 38, mr: 2 }}
+//                 src={selectedChat.contact.avatar}
+//                 alt={selectedChat.contact.fullName}
+//               />
+//               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+//                 <Typography variant="h4">{selectedChat.contact.fullName}</Typography>
+//               </Box>
+//             </Box>
+//           </Box>
+//           <Box sx={{ display: 'flex', mt: 2, gap: 3 }}>
+//             <CustomChip circle size="small" skin="light" color={'primary'} label={'BATP'} />
+//             <CustomChip circle size="small" skin="light" color={'secondary'} label={'BA'} />
+//             <CustomChip circle size="small" skin="light" color={'secondary'} label={'BATP'} />
+//           </Box>
+//         </Box>
+//         <ChatLog hidden={false} data={{ ...selectedChat, userContact: {} }} />
+
+//         <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
+
+//         {/* Render the UserProfileRight component */}
+//         <UserProfileRight
+//           store={store}
+//           hidden={hidden}
+//           statusObj={statusObj}
+//           getInitials={getInitials}
+//           sidebarWidth={sidebarWidth}
+//           userProfileRightOpen={userProfileRightOpen}
+//           handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+//         />
+//       </Box>
+//     );
+//   };
+
+//   return renderContent();
+// };
+
+// export default ChatContent;
+
+
+
+
+
+
+// ** MUI Imports
+import MuiAvatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+
+// ** Icon Imports
 import Icon from 'components/icon';
+
+// ** Custom Components Import
 import CustomAvatar from 'components/mui/avatar';
-import CustomChip from 'components/mui/chip';
+import OptionsMenu from 'components/option-menu';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
 import UserProfileRight from './UserProfileRight';
 
+// ** Styled Components
+const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  height: '100%',
+  display: 'flex',
+  borderRadius: 1,
+  alignItems: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  backgroundColor: theme.palette.action.hover
+}));
+
 const ChatContent = (props) => {
+  // ** Props
   const {
-    mdAbove,
-    handleLeftSidebarToggle,
-    handleUserProfileRightSidebarToggle,
     store,
     hidden,
-    userProfileRightOpen,
+    sendMsg,
+    dispatch,
+    mdAbove,
+    statusObj,
     getInitials,
     sidebarWidth,
-    statusObj,
-    dispatch,
-    sendMsg
+    userProfileRightOpen,
+    handleLeftSidebarToggle,
+    handleUserProfileRightSidebarToggle
   } = props;
 
-  const renderContent = () => {
-    const selectedChat = {
-      contact: {
-        fullName: 'John Doe',
-        avatar: 'https://via.placeholder.com/150',
-        status: 'online'
-      },
-      chat: [
-        {
-          time: new Date(),
-          message:
-            'Please let me know if there are any specific procedures or paperwork I need to complete for this leave request. I am more than willing to fulfill any requirements necessary.'
-        },
-        { time: new Date(), message: ' Thank you!' }
-      ]
-    };
+  const handleStartConversation = () => {
+    if (!mdAbove) {
+      handleLeftSidebarToggle();
+    }
+  };
 
-    return (
-      <Box sx={{ width: 0, flexGrow: 1, height: '100%', backgroundColor: 'action.hover' }}>
-        <Box
-          sx={{
-            px: 5,
-            py: 2.5,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: 'background.paper',
-            borderBottom: (theme) => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <Box sx={{ alignItems: 'center' }}>
-            {mdAbove ? null : (
-              <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
-                <Icon icon="tabler:menu-2" />
-              </IconButton>
-            )}
-            <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-              <CustomAvatar
-                skin="light"
-                sx={{ width: 38, height: 38, mr: 2 }}
-                src={selectedChat.contact.avatar}
-                alt={selectedChat.contact.fullName}
-              />
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h4">{selectedChat.contact.fullName}</Typography>
+  const renderContent = () => {
+    if (store) {
+      const selectedChat = store.selectedChat;
+      if (!selectedChat) {
+        return (
+          <ChatWrapperStartChat
+            sx={{
+              ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
+            }}
+          >
+            <MuiAvatar
+              sx={{
+                mb: 6,
+                pt: 8,
+                pb: 7,
+                px: 7.5,
+                width: 110,
+                height: 110,
+                boxShadow: 3,
+                backgroundColor: 'background.paper'
+              }}
+            >
+              <Icon icon="tabler:message" fontSize="3.125rem" />
+            </MuiAvatar>
+            <Box
+              onClick={handleStartConversation}
+              sx={{
+                py: 2,
+                px: 6,
+                boxShadow: 3,
+                borderRadius: 5,
+                backgroundColor: 'background.paper',
+                cursor: mdAbove ? 'default' : 'pointer'
+              }}
+            >
+              <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
+            </Box>
+          </ChatWrapperStartChat>
+        );
+      } else {
+        return (
+          <Box
+            sx={{
+              width: 0,
+              flexGrow: 1,
+              height: '100%',
+              backgroundColor: 'action.hover'
+            }}
+          >
+            <Box
+              sx={{
+                px: 5,
+                py: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: 'background.paper',
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {mdAbove ? null : (
+                  <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
+                    <Icon icon="tabler:menu-2" />
+                  </IconButton>
+                )}
+                <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <Badge
+                    overlap="circular"
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right'
+                    }}
+                    sx={{ mr: 3 }}
+                    badgeContent={
+                      <Box
+                        component="span"
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: '50%',
+                          color: `${statusObj[selectedChat.contact?.status]}.main`,
+                          boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
+                          backgroundColor: `${statusObj[selectedChat.contact?.status]}.main`
+                        }}
+                      />
+                    }
+                  >
+                    {selectedChat.contact.avatar ? (
+                      <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
+                    ) : (
+                      <CustomAvatar
+                        skin="light"
+                        color={selectedChat.contact.avatarColor}
+                        sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
+                      >
+                        {getInitials(selectedChat.contact.fullName)}
+                      </CustomAvatar>
+                    )}
+                  </Badge>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="h6">{selectedChat.contact.fullName}</Typography>
+                    <Typography sx={{ color: 'text.disabled' }}>{selectedChat.contact.role}</Typography>
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {/* {mdAbove ? (
+                  <Fragment>
+                    <IconButton size='small' sx={{ color: 'text.secondary' }}>
+                      <Icon icon='tabler:phone-call' />
+                    </IconButton>
+                    <IconButton size='small' sx={{ color: 'text.secondary' }}>
+                      <Icon icon='tabler:video' />
+                    </IconButton>
+                    <IconButton size='small' sx={{ color: 'text.secondary' }}>
+                      <Icon icon='tabler:search' />
+                    </IconButton>
+                  </Fragment>
+                ) : null} */}
+
+                <OptionsMenu
+                  menuProps={{ sx: { mt: 2 } }}
+                  icon={<Icon icon="tabler:dots-vertical" />}
+                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                  options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
+                />
               </Box>
             </Box>
-          </Box>
-          <Box sx={{ display: 'flex', mt: 2, gap: 3 }}>
-            <CustomChip circle size="small" skin="light" color={'primary'} label={'BATP'} />
-            <CustomChip circle size="small" skin="light" color={'secondary'} label={'BA'} />
-            <CustomChip circle size="small" skin="light" color={'secondary'} label={'BATP'} />
-          </Box>
-        </Box>
-        <ChatLog hidden={false} data={{ ...selectedChat, userContact: {} }} />
-        
-        <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
 
-        {/* Render the UserProfileRight component */}
-        <UserProfileRight
-          store={store}
-          hidden={hidden}
-          statusObj={statusObj}
-          getInitials={getInitials}
-          sidebarWidth={sidebarWidth}
-          userProfileRightOpen={userProfileRightOpen}
-          handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
-        />
-      </Box>
-    );
+            {selectedChat && store.userProfile ? (
+              <ChatLog hidden={hidden} data={{ ...selectedChat, userContact: store.userProfile }} />
+            ) : null}
+
+            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
+
+            <UserProfileRight
+              store={store}
+              hidden={hidden}
+              statusObj={statusObj}
+              getInitials={getInitials}
+              sidebarWidth={sidebarWidth}
+              userProfileRightOpen={userProfileRightOpen}
+              handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+            />
+          </Box>
+        );
+      }
+    } else {
+      return null;
+    }
   };
 
   return renderContent();

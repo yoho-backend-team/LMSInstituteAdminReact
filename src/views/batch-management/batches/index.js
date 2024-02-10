@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
-import BatchDeleteModal from 'features/batch-management/batches/components/delete-Batch/BatchDeleteModal';
+import DeleteDialog from 'components/modal/DeleteModel';
 import Pagination from '@mui/material/Pagination';
 import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 
@@ -34,8 +34,9 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 const Batch = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
+  
+  const handleStatusValue = (event) => {
+    setStatusValue(event.target.value);
   };
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -44,12 +45,14 @@ const Batch = () => {
     setEditModalOpen(true);
   };
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState(null);
+  console.log(deletingItemId);
 
-  const handleDeleteClick = () => {
-    // Implement delete logic here
+  const handleDelete = (itemId) => {
+    console.log('Delete clicked for item ID:', itemId);
+    setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
-    handleClose();
   };
 
   const groups = [
@@ -296,7 +299,7 @@ const Batch = () => {
                 </TextField>
               </Box>
               <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                <IconButton onClick={() => handleDeleteClick()} aria-label="capture screenshot" color="error">
+                <IconButton  onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
                   <Icon icon="tabler:archive-filled" />
                 </IconButton>
                 <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
@@ -345,7 +348,13 @@ const Batch = () => {
               </Grid>
               <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
 
-              <BatchDeleteModal open={deleteDialogOpen} setOpen={setDeleteDialogOpen} />
+              <DeleteDialog
+                open={isDeleteDialogOpen}
+                setOpen={setDeleteDialogOpen}
+                // handleSubmit={handleDeleteConfirm}
+                description="Are you sure you want to delete this item?"
+                title="Delete"
+              />
             </Grid>
           )}
         </Grid>

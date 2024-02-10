@@ -104,12 +104,6 @@ const GroupAddPage = () => {
   const [permissions, setPermissions] = React.useState([]);
   const branches = useSelector((state) => state.auth.branches);
   const navigate = useNavigate();
-  // const [personNameNative, setPersonNameNative] = useState([]);
-
-  // const filteredBranches = branches?.filter((branch) => selectedBranches?.includes(branch.branch_name));
-  // const branchIds = filteredBranches?.map((branch) => branch.branch_id);
-
-  // console.log(branchIds);
 
   const onSubmit = async (data) => {
     try {
@@ -286,60 +280,71 @@ const GroupAddPage = () => {
                     name="branch"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
-                      <Autocomplete
-                        multiple
-                        id="select-multiple-chip"
-                        options={branches}
-                        getOptionLabel={(option) => option.branch_name}
-                        value={value}
-                        onChange={(e, newValue) => {
-                          if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
-                            onChange(branches.filter((option) => option.branch_id !== 'selectAll'));
-                          } else {
-                            onChange(newValue);
-                          }
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            fullWidth
-                            label="Branch"
-                            error={Boolean(errors.branch)}
-                            {...(errors.branch && { helperText: errors.branch.message })}
-                          />
-                        )}
-                        renderOption={(props, option, { selected }) => (
-                          <li {...props}>
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              style={{ marginRight: 8 }}
-                              checked={selected}
-                            />
-                            {option.branch_name}
-                          </li>
-                        )}
-                        renderTags={(value) =>
-                          value.map((option, index) => (
-                            <CustomChip
-                              key={option.branch_id}
-                              label={option.branch_name}
-                              onDelete={() => {
-                                const updatedValue = [...value];
-                                updatedValue.splice(index, 1);
-                                onChange(updatedValue);
+                    render={({ field: { value, onChange } }) => {
+                      const branchesWithSelectAll = [{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches];
+
+                      return (
+                        <Autocomplete
+                          multiple
+                          id="select-multiple-chip"
+                          options={branchesWithSelectAll}
+                          getOptionLabel={(option) => option.branch_name}
+                          value={value}
+                          onChange={(e, newValue) => {
+                            if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
+                              onChange(branches.filter((option) => option.branch_id !== 'selectAll'));
+                            } else {
+                              onChange(newValue);
+                            }
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              fullWidth
+                              label="Branch"
+                              error={Boolean(errors.branch)}
+                              {...(errors.branch && { helperText: errors.branch.message })}
+                              InputProps={{
+                                ...params.InputProps,
+                                style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' } //
                               }}
-                              color="primary"
-                              sx={{ m: 0.75 }}
                             />
-                          ))
-                        }
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        selectAllText="Select All"
-                        SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                      />
-                    )}
+                          )}
+                          renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                              <Checkbox
+                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                style={{ marginRight: 8 }}
+                                checked={selected}
+                              />
+                              {option.branch_name}
+                            </li>
+                          )}
+                          renderTags={(value) => (
+                            <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                              {value.map((option, index) => (
+                                <CustomChip
+                                  key={option.branch_id}
+                                  label={option.branch_name}
+                                  onDelete={() => {
+                                    const updatedValue = [...value];
+                                    updatedValue.splice(index, 1);
+                                    onChange(updatedValue);
+                                  }}
+                                  color="primary"
+                                  // {...getTagProps({ index })}
+                                  sx={{ m: 0.75 }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                          isOptionEqualToValue={(option, value) => option.id === value.id}
+                          selectAllText="Select All"
+                          SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                        />
+                      );
+                    }}
                   />
                 </Grid>
               </Grid>

@@ -4,8 +4,7 @@ import { useState,useEffect } from 'react';
 
 // project imports
 import SalaryTable from 'features/payment-management/salaries/components/SalaryTable';
-import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
-
+import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Salary = () => {
@@ -27,7 +26,7 @@ const Salary = () => {
       <Grid spacing={1} className="match-height">
         {loading ? (
           // If data is still loading, display skeleton
-          <FeesTableSkeleton />
+          <PaymentSalarySkeleton />
         ) : (
           // Once data is loaded, display actual FeesTable component
           <SalaryTable />

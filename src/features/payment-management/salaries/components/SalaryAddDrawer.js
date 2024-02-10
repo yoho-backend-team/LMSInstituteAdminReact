@@ -21,11 +21,13 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import CustomAutocomplete from 'components/mui/autocomplete';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Checkbox from '@mui/material/Checkbox';
+import Autocomplete from '@mui/material/Autocomplete';
+import CustomChip from 'components/mui/chip';
 // import toast from 'react-hot-toast';
 
-import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -40,9 +42,10 @@ const schema = yup.object().shape({
   branch: yup.array().required('Branch is required').min(1, 'Select at least one branch'),
   course: yup.array().required('Course is required').min(1, 'Select at least one course'),
   batch: yup.array().required('Batch is required').min(1, 'Select at least one batch'),
-  staffs: yup.array().required('staffs is required').min(1, 'Select at least one student'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required'),
+  type: yup.string().required('Type is required'),
+  staff: yup.string().required('Staff is required')
 });
 
 const ITEM_HEIGHT = 48;
@@ -70,64 +73,13 @@ const names = [
   'Kelly Snyder'
 ];
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: 'Goodfellas', year: 1990 },
-  { title: 'The Matrix', year: 1999 },
-  { title: 'Seven Samurai', year: 1954 },
-  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-  { title: 'City of God', year: 2002 },
-  { title: 'Se7en', year: 1995 },
-  { title: 'The Silence of the Lambs', year: 1991 },
-  { title: 'Gladiator', year: 2000 },
-  { title: 'Memento', year: 2000 },
-  { title: 'The Prestige', year: 2006 },
-  { title: 'The Lion King', year: 1994 },
-  { title: 'Apocalypse Now', year: 1979 },
-  { title: 'Django Unchained', year: 2012 },
-  { title: 'The Shining', year: 1980 },
-  { title: 'WALL·E', year: 2008 },
-  { title: 'American Beauty', year: 1999 },
-  { title: 'The Dark Knight Rises', year: 2012 },
-  { title: 'Princess Mononoke', year: 1997 },
-  { title: 'Aliens', year: 1986 },
-  { title: 'Oldboy', year: 2003 },
-  { title: 'Once Upon a Time in America', year: 1984 },
-  { title: 'Witness for the Prosecution', year: 1957 },
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
-
-const batch = [
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
-
-const staffs = [
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
+// const batch = [
+//   { title: 'Das Boot', year: 1981 },
+//   { title: 'Citizen Kane', year: 1941 },
+//   { title: 'North by Northwest', year: 1959 },
+//   { title: 'Vertigo', year: 1958 },
+//   { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
+// ];
 
 const defaultValues = {
   email: '',
@@ -146,7 +98,6 @@ const SalaryAddDrawer = (props) => {
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
-
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
@@ -214,6 +165,22 @@ const SalaryAddDrawer = (props) => {
     reset();
   };
 
+  const courses = [
+    { course_id: '1', course_name: 'Course 1' },
+    { course_id: '2', course_name: 'Course 2' },
+    { course_id: '3', course_name: 'Course 3' }
+  ];
+
+  const [selectedCourses, setSelectedCourses] = useState([]);
+
+  const handleCourseChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+    } else {
+      setSelectedCourses(newValue);
+    }
+  };
+
   return (
     <DatePickerWrapper>
       <Drawer
@@ -273,8 +240,8 @@ const SalaryAddDrawer = (props) => {
                     fullWidth
                     label="Branch"
                     id="select-multiple-checkbox"
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
+                    error={Boolean(errors.branch) && !selectedBranches.length} // Render error if field is empty
+                    helperText={!selectedBranches.length && errors.branch?.message} // Display error message only if field is empty
                     SelectProps={{
                       MenuProps,
                       multiple: true,
@@ -299,69 +266,100 @@ const SalaryAddDrawer = (props) => {
                 name="course"
                 control={control}
                 render={({ field }) => (
-                  <CustomAutocomplete
+                  <Autocomplete
                     {...field}
                     sx={{ mb: 2 }}
                     multiple
-                    limitTags={2}
-                    options={top100Films}
-                    id="autocomplete-limit-tags-course"
-                    getOptionLabel={(option) => (option && option.title) || ''}
-                    error={Boolean(errors.course)}
-                    helperText={errors.course?.message}
-                    defaultValue={top100Films.filter((film) => [13, 12, 11].includes(film.year))}
+                    id="select-multiple-chip"
+                    options={courses}
+                    getOptionLabel={(option) => option.course_name}
+                    value={selectedCourses}
+                    onChange={(event, newValue) => handleCourseChange(newValue)}
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Course"
-                        placeholder="Favorites"
-                        error={Boolean(errors.course)}
-                        helperText={errors.course?.message}
+                        fullWidth
+                        label="Courses"
+                        error={Boolean(errors.course) && !selectedCourses.length}
+                        helperText={!selectedCourses.length && errors.course?.message}
                       />
                     )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.course_name}
+                      </li>
+                    )}
+                    renderTags={(value) =>
+                      value.map((option, index) => (
+                        <CustomChip
+                          key={option.course_id}
+                          label={option.course_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedCourses(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))
+                    }
+                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 )}
               />
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <CustomAutocomplete
-                sx={{ mb: 2 }}
-                multiple
-                limitTags={2}
-                options={batch}
-                id="autocomplete-limit-tags-batch"
-                getOptionLabel={(option) => (option && option.title) || ''}
-                defaultValue={batch.slice(0, 3)} // Adjust this based on your requirements
-                renderInput={(params) => (
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
                   <TextField
-                    {...params}
-                    label="Batch"
-                    placeholder="Favorites"
-                    error={Boolean(errors.batch)}
-                    helperText={errors.batch?.message}
-                  />
+                    sx={{ mb: 2 }}
+                    {...field}
+                    fullWidth
+                    select
+                    label="Type"
+                    error={Boolean(errors.type)}
+                    helperText={errors.type?.message}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="Ten">Ten</MenuItem>
+                    <MenuItem value="Twenty">Twenty</MenuItem>
+                    <MenuItem value="Thirty">Thirty</MenuItem>
+                  </TextField>
                 )}
               />
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <CustomAutocomplete
-                sx={{ mb: 2 }}
-                multiple
-                limitTags={2}
-                options={staffs}
-                id="autocomplete-limit-tags-staffs"
-                getOptionLabel={(option) => (option && option.title) || ''}
-                defaultValue={staffs.slice(0, 3)} // Adjust this based on your requirements
-                renderInput={(params) => (
+              <Controller
+                name="staff"
+                control={control}
+                render={({ field }) => (
                   <TextField
-                    {...params}
-                    label="staffs"
-                    placeholder="Favorites"
-                    error={Boolean(errors.staffs)}
-                    helperText={errors.staffs?.message}
-                  />
+                    sx={{ mb: 2 }}
+                    {...field}
+                    fullWidth
+                    select
+                    label="Staff"
+                    error={Boolean(errors.staff)}
+                    helperText={errors.staff?.message}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value="Ten">Ten</MenuItem>
+                    <MenuItem value="Twenty">Twenty</MenuItem>
+                    <MenuItem value="Thirty">Thirty</MenuItem>
+                  </TextField>
                 )}
               />
             </Grid>

@@ -14,10 +14,13 @@ const PaymentSkeleton = () => {
             <CardHeader title={<Skeleton height={25} width={200} />} />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <Skeleton variant="rectangular" height={56} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
+                  <Skeleton variant="rectangular" height={56} animation="wave" />
+                </Grid>
+                <Grid item xs={12} sm={4}>
                   <Skeleton variant="rectangular" height={56} animation="wave" />
                 </Grid>
               </Grid>

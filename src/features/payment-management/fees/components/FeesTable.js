@@ -35,7 +35,10 @@ import { Link } from 'react-router-dom';
 
 import { TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Checkbox from '@mui/material/Checkbox';
+import Autocomplete from '@mui/material/Autocomplete';
 import FeesCardHeader from './FeesCardHeader';
 import FeesAddDrawer from './FeesAddDrawer';
 import FeesEditDrawer from './FeesEditDrawer';
@@ -84,7 +87,6 @@ const FeesTable = () => {
   // ** State
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('');
-  const [statusValue, setStatusValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -127,10 +129,6 @@ const FeesTable = () => {
     setValue(val);
   };
 
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
-  };
-
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
@@ -139,6 +137,24 @@ const FeesTable = () => {
     setStartDateRange(start);
     setEndDateRange(end);
   };
+
+
+  const students = [
+    { students_id: '1', students_name: 'students 1' },
+    { students_id: '2', students_name: 'students 2' },
+    { students_id: '3', students_name: 'students 3' }
+  ];
+
+  const [selectedstudents, setSelectedstudents] = useState([]);
+  const [selectedbatch, setSelectedbatch] = useState([]);
+
+  const batch = [
+    { batch_id: '1', batch_name: 'batch 1' },
+    { batch_id: '2', batch_name: 'batch 2' },
+    { batch_id: '3', batch_name: 'batch 3' }
+  ];
+
+
 
   const defaultColumns = [
     {
@@ -187,7 +203,7 @@ const FeesTable = () => {
       minWidth: 180,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary',ml:2 }}>{`$${row.total || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.total || 0}`}</Typography>
     },
     {
       flex: 1.25,
@@ -335,23 +351,125 @@ const FeesTable = () => {
             <CardHeader title="Filters" />
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Invoice Status"
-                    SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
-                  </TextField>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
+                    getOptionLabel={(option) => option.batch_name}
+                    value={selectedbatch}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
+                        setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
+                      } else {
+                        setSelectedbatch(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Batch"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.batch_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.batch_id}
+                            label={option.batch_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedbatch(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+
+                <Grid item xs={12} sm={4}>
+                <Autocomplete
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ students_id: 'selectAll', students_name: 'Select All' }, ...students]}
+                    getOptionLabel={(option) => option.students_name}
+                    value={selectedstudents}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.students_id === 'selectAll')) {
+                        setSelectedstudents(students.filter((option) => option.students_id !== 'selectAll'));
+                      } else {
+                        setSelectedstudents(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Students"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.students_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.students_id}
+                            label={option.students_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedstudents(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.students_id === value.students_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
                   <DatePicker
                     isClearable
                     selectsRange
@@ -363,7 +481,13 @@ const FeesTable = () => {
                     id="date-range-picker-months"
                     onChange={handleOnChangeRange}
                     customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Invoice Date" end={endDateRange} start={startDateRange} />
+                      <CustomInput
+                        dates={dates}
+                        setDates={setDates}
+                        label="Start date End date"
+                        end={endDateRange}
+                        start={startDateRange}
+                      />
                     }
                   />
                 </Grid>

@@ -1,29 +1,24 @@
-import React from 'react';
 // ** MUI Imports
 import { Box } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-// import CardMedia from '@mui/material/CardMedia';
-// import Avatar from '@mui/material/Avatar';
-import { Link } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-
-// import MainCard from 'components/cards/MainCard';
-// import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-// import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import Avatar from 'components/mui/avatar';
-// import { Chip as CustomChip } from '@mui/material';
-import CustomChip from 'components/mui/chip';
-// import CardActions from '@mui/material/CardActions';
-// import TeacherFilter from './TeacherFilterCard';
 import OptionsMenu from 'components/option-menu';
-// import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const TeachingStaffCard = () => {
   // Dummy data array
+  const [statusValue, setStatusValue] = useState('');
 
+  const handleStatusValue = (e) => {
+    setStatusValue(e.target.value);
+  };
   const data = [
     {
       id: '1',
@@ -152,7 +147,7 @@ const TeachingStaffCard = () => {
         <Grid container xs={12} spacing={2} mt={2}>
           {data.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
-              <Card sx={{ position: 'relative' }}>
+              <Card sx={{ position: 'relative' ,p:1.5}}>
                 <OptionsMenu
                   iconButtonProps={{
                     size: 'small',
@@ -167,33 +162,16 @@ const TeachingStaffCard = () => {
                 />
                 <CardContent sx={{ pt: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                    <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
+                    <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
                     <Typography variant="h4" sx={{ mb: 2 }}>
                       {item.name}
                     </Typography>
                     <Typography variant="h6">{item.email}</Typography>
-                    {/* <Typography sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}>{item.designation}</Typography> */}
-                    <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-                      {item.chips &&
-                        item.chips.map((chip, index) => (
-                          <Box
-                            href="/"
-                            key={index}
-                            component={Link}
-                            onClick={(e) => e.preventDefault()}
-                            sx={{
-                              textDecoration: 'none',
-                              '&:not(:last-of-type)': { mr: 2.5 },
-                              '& .MuiChip-root': { cursor: 'pointer' }
-                            }}
-                          >
-                            <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
-                          </Box>
-                        ))}
-                    </Box>
+
                     <Box
                       sx={{
-                        mb: 5,
+                        mt:3,
+                        mb: 3,
                         gap: 2,
                         width: '100%',
                         display: 'flex',
@@ -210,21 +188,25 @@ const TeachingStaffCard = () => {
                         <Typography variant="h4">{item.Absent}</Typography>
                         <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                       </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <CustomChip rounded size="medium" 
-                        variant='outlined'
-                        skin='light'
-                         label={item.status} 
-                       color={item.status === 'Active' ? 'success' : 'error'}
-                        
-                        />
-                        {/* <Typography sx={{ color: 'text.secondary' }}>Connections</Typography> */}
-                      </Box>
                     </Box>
-                    <Box component={Link} to={item.id} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                      <Button  variant="tonal" sx={{ px: 4 }}>
+                    <Box  sx={{  display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none'}}>
+                    <Grid>
+                        <TextField
+                          size="small"
+                          select
+                          fullWidth
+                          label="Status"
+                          SelectProps={{ value: statusValue, onChange: handleStatusValue }}
+                        >
+                          <MenuItem value="Active">Active</MenuItem>
+                          <MenuItem value="Deactive">Deactive</MenuItem>
+                        </TextField>
+                      </Grid>
+                      <Grid>
+                      <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
                         View Profile
                       </Button>
+                      </Grid>
                     </Box>
                   </Box>
                 </CardContent>

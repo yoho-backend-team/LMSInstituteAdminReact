@@ -1,5 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, styled } from '@mui/material';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Checkbox, TextField as CustomTextField, Grid, styled } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -7,15 +10,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import CustomChip from 'components/mui/chip';
+import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { Checkbox, TextField as CustomTextField} from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CustomChip from 'components/mui/chip';
-import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
 // const showErrors = (field, valueLen, min) => {
 //   if (valueLen === 0) {
 //     return `${field} field is required`;
@@ -106,6 +105,10 @@ const CourseEditModal = ({ open, handleEditClose }) => {
       textAlign: 'center'
     }
   }));
+const onSubmit =(data)=>{
+  console.log(data)
+}
+console.log(onSubmit);
 
   return (
     <div>
@@ -134,7 +137,7 @@ const CourseEditModal = ({ open, handleEditClose }) => {
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}
         >
-          <form onSubmit={handleSubmit()}>
+          <form onSubmit={handleSubmit(onSubmit)}>
            
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>

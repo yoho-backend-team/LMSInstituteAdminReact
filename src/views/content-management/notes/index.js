@@ -1,45 +1,40 @@
 // ** React Imports
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 // import CardHeader from '@mui/material/CardHeader';
-import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomChip from 'components/mui/chip';
-import NotesHeader from './NotesTableHeader'
-import NotesAddDrawer from './NotesAddDrawer'
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import CustomTextField from 'components/mui/text-field';
+import NotesAddDrawer from 'features/content-management/course-contents/components/NotesAddDrawer';
+import NotesEdit from 'features/content-management/course-contents/components/NotesEdit';
+import NotesHeader from 'features/content-management/course-contents/components/NotesTableHeader';
+import NotesView from 'features/content-management/course-contents/components/NotesView';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
+import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
+import DeleteDialog from 'components/modal/DeleteModel';
+import { useEffect } from 'react';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 
-const userStatusObj = {
-  Active: 'success',
-  Inactive: 'error'
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
 };
 
-const RowOptions = () => {
-  return (
-    <Box sx={{ gap: 1 }}>
-      <IconButton aria-label="capture screenshot" color="primary">
-        <Icon icon="tabler:eye" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="secondary">
-        <Icon icon="tabler:edit" />
-      </IconButton>
-      <IconButton aria-label="capture screenshot" color="error">
-        <Icon icon="mdi:delete-outline" />
-      </IconButton>
-    </Box>
-  );
-};
-
-const StudyMaterial = () => {
+const Notes = () => {
   // ** State
 
   const studyMaterials = [
@@ -128,11 +123,54 @@ const StudyMaterial = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [isViewModalOpen, setViewModalOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState(null);
 
+  console.log(deletingItemId);
+
+  const handleStatusChange = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleViewClose = () => {
+    setViewModalOpen(false);
+  };
+  const handleView = () => {
+    setViewModalOpen(true);
+  };
+
+  const handleDelete = (itemId) => {
+    console.log('Delete clicked for item ID:', itemId);
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
+  };
   // ** Hooks
   const dispatch = useDispatch();
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+    console.log('toogle pressed');
+  };
+
+  const RowOptions = () => {
+    return (
+      <Box sx={{ gap: 1 }}>
+        <IconButton onClick={() => handleView()} aria-label="capture screenshot" color="primary">
+          <Icon icon="tabler:eye" />
+        </IconButton>
+        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
+          <Icon icon="tabler:edit" />
+        </IconButton>
+        <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
+          <Icon icon="mdi:delete-outline" />
+        </IconButton>
+      </Box>
+    );
+  };
 
   const handleFilter = useCallback(
     async (val) => {
@@ -151,6 +189,11 @@ const StudyMaterial = () => {
     },
     [dispatch]
   );
+
+  const handleRowClick = (params) => {
+    setSelectedRow(params.row);
+    // toggleEditUserDrawer();
+  };
 
   const columns = [
     {
@@ -228,14 +271,12 @@ const StudyMaterial = () => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <CustomChip
-            rounded
-            skin="light"
-            size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
-            sx={{ textTransform: 'capitalize' }}
-          />
+          <div>
+            <CustomTextField select defaultValue={row.status} onChange={(e) => handleStatusChange(e, row.id)}>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+            </CustomTextField>
+          </div>
         );
       }
     },
@@ -248,22 +289,51 @@ const StudyMaterial = () => {
       renderCell: ({ row }) => <RowOptions id={row?.id} />
     }
   ];
+
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false); 
+  }, 1000);
+
   return (
     <>
-      <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-      <DataGrid
-        autoHeight
-        rowHeight={80}
-        rows={studyMaterials}
-        columns={columns}
-        disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-      />
-      <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+     {loading ? (
+        <ContentSkeleton/>
+      ) : (
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <DataGrid
+              autoHeight
+              rowHeight={80}
+              rows={studyMaterials}
+              columns={columns}
+              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              onRowClick={handleRowClick}
+            />
+          </Card>
+        </Grid>
+        <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          // handleSubmit={handleDeleteConfirm}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
+        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
+      )}
     </>
   );
 };
 
-export default StudyMaterial;
+export default Notes;

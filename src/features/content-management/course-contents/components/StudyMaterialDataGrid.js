@@ -1,6 +1,7 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 // import Card from '@mui/material/Card';
@@ -22,7 +23,6 @@ import StudyMaterialEdit from './StudyMaterialEdit';
 import StudyMaterialView from './StudyMaterialView';
 import CustomTextField from 'components/mui/text-field';
 
-
 // const userStatusObj = {
 //   Active: 'success',
 //   Inactive: 'error'
@@ -35,14 +35,13 @@ const StudyMaterial = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null); 
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
     // toggleEditUserDrawer();
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
 
   const handleStatusChange = (event, row) => {
     setSelectedDeleteMaterial(row);
@@ -56,7 +55,6 @@ const StudyMaterial = () => {
     setViewModalOpen(true);
   };
 
-  
   const handleDeleteGroup = async () => {
     try {
       const result = await deleteGroup(selectedDeleteMaterial.id);
@@ -204,9 +202,6 @@ const StudyMaterial = () => {
     [dispatch]
   );
 
-
-    
-
   const columns = [
     {
       flex: 0.8,
@@ -281,18 +276,14 @@ const StudyMaterial = () => {
       // minWidth: 110,
       field: 'status',
       headerName: 'Status',
-      renderCell: ({row}) => {
+      renderCell: ({ row }) => {
         return (
           <div>
-          <CustomTextField
-      select
-      defaultValue={row.status}
-    onChange={(e) => handleStatusChange(e, row)}
-        >
-         <MenuItem value='Active'>Active</MenuItem>
-          <MenuItem value='Inactive'>Inactive</MenuItem>
-        </CustomTextField>
-        </div>
+            <CustomTextField select defaultValue={row.status} onChange={(e) => handleStatusChange(e, row)}>
+              <MenuItem value="Active">Active</MenuItem>
+              <MenuItem value="Inactive">Inactive</MenuItem>
+            </CustomTextField>
+          </div>
         );
       }
     },
@@ -307,26 +298,32 @@ const StudyMaterial = () => {
   ];
   return (
     <>
-      <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-      <DataGrid
-        autoHeight
-        rowHeight={80}
-        rows={studyMaterials}
-        columns={columns}
-        disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        onRowClick={handleRowClick}
-      />
-      <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer}  initialValues={selectedRow}/>
-      <GroupDeleteDialog
-        open={deleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        handleDeleteGroup={handleDeleteGroup}
-      />
-      <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      <Grid container spacing={1}>
+        <Grid item xs={12}>
+          <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+
+        <Grid item xs={12} sx={{mt:2}}>
+          <Card>
+            <DataGrid
+              autoHeight
+              rowHeight={80}
+              rows={studyMaterials}
+              columns={columns}
+              disableRowSelectionOnClick
+              pageSizeOptions={[10, 25, 50]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              onRowClick={handleRowClick}
+            />
+          </Card>
+        </Grid>
+
+        <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
     </>
   );
 };
