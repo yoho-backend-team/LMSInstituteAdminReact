@@ -23,13 +23,7 @@ const NotesHeader = (props) => {
     { course_id: '2', course_name: 'Course 2' },
     { course_id: '3', course_name: 'Course 3' },
   ];
-  const handleCourseChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-    } else {
-      setSelectedCourses(newValue);
-    }
-  };
+
   const handleStatusValue = (e) => {
     setStatusValue(e.target.value);
   };
@@ -42,7 +36,7 @@ const NotesHeader = (props) => {
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12} sx={{ mb: 3 }}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
                       <MenuItem value="">None</MenuItem>
                       <MenuItem value="downloaded">Downloaded</MenuItem>
@@ -53,45 +47,63 @@ const NotesHeader = (props) => {
                       <MenuItem value="sent">Sent</MenuItem>
                     </TextField>
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                   <Autocomplete
-                  multiple
-                  id="select-multiple-chip"
-                  options={courses}
-                  getOptionLabel={(option) => option.course_name}
-                  value={selectedCourses}
-                  onChange={(event, newValue) => handleCourseChange(newValue)}
-                  renderInput={(params) => <TextField {...params} fullWidth label="Courses" />}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.course_name}
-                    </li>
-                  )}
-                  renderTags={(value) =>
-                    value.map((option, index) => (
-                      <CustomChip
-                        key={option.course_id}
-                        label={option.course_name}
-                        onDelete={() => {
-                          const updatedValue = [...value];
-                          updatedValue.splice(index, 1);
-                          setSelectedCourses(updatedValue);
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
+                    getOptionLabel={(option) => option.course_name}
+                    value={selectedCourses}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                      } else {
+                        setSelectedCourses(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Courses"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                         }}
-                        color="primary"
-                        sx={{ m: 0.75 }}
                       />
-                    ))
-                  }
-                  isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                />
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.course_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.course_id}
+                            label={option.course_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedCourses(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
                   </Grid>
                   <Grid item sm={3} xs={12}>
                     <TextField
