@@ -67,7 +67,7 @@ const Students = () => {
               </Grid>
 
               {dummyData.map((student, index) => (
-                <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
+                <Grid key={index} item xs={12} sm={6} md={3} lg={3}>
                   <Card sx={{ textAlign: 'center', height: '100%' }}>
                     <Box sx={{ position: 'relative' }}>
                       <SvgIconStyle
