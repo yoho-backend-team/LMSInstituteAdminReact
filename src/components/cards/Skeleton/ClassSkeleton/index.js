@@ -18,16 +18,16 @@ const ClassSkeleton = () => {
             <CardHeader title={<Skeleton height={25} width={200} />} />
             <CardContent>
               <Grid container spacing={4}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <Skeleton variant="rounded" height={50} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <Skeleton variant="rounded" height={50} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <Skeleton variant="rounded" height={50} animation="wave" />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <Skeleton variant="rounded" height={50} animation="wave" />
                 </Grid>
               </Grid>
