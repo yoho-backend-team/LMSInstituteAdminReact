@@ -86,10 +86,11 @@ const defaultValues = {
   course: ''
 };
 
-const StudyMaterialAddDrawer = (props) => {
+const StudyMaterialEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
-
+  console.log("StudyMaterialEdit - open:", props.open);
+  console.log("StudyMaterialEdit - toggle:", props.toggle);
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
 
@@ -127,7 +128,6 @@ const StudyMaterialAddDrawer = (props) => {
 
   console.log(groups);
 
-  // ** Hooks
   const {
     reset,
     control,
@@ -136,10 +136,18 @@ const StudyMaterialAddDrawer = (props) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues,
+    defaultValues: props.initialValues || defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+ 
+console.log(defaultValues);
+
+  useEffect(() => {
+    if (open) {
+      reset(props.initialValues || defaultValues);
+    }
+  }, [open, reset, props.initialValues]);
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
@@ -199,7 +207,7 @@ const StudyMaterialAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Notes</Typography>
+        <Typography variant="h5">Add Study Material</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -318,4 +326,4 @@ const StudyMaterialAddDrawer = (props) => {
   );
 };
 
-export default StudyMaterialAddDrawer;
+export default StudyMaterialEdit;

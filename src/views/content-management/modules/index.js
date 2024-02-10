@@ -22,6 +22,16 @@ import ModuleEdit from 'features/content-management/course-contents/components/M
 import ModuleHeader from 'features/content-management/course-contents/components/ModuleTableHeader';
 import DeleteDialog from 'components/modal/DeleteModel';
 import ModuleView from 'features/content-management/course-contents/components/ModuleView';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import { useEffect } from 'react';
+
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 
 const Modules = () => {
   // ** State
@@ -284,8 +294,17 @@ const Modules = () => {
       renderCell: ({ row }) => <RowOptions id={row?.id} />
     }
   ];
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false); 
+  }, 1000);
+
   return (
     <>
+    {loading ? (
+        <ContentSkeleton/>
+      ) : (
     <Grid container spacing={2}>
         <Grid item xs={12}>
       <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
@@ -316,7 +335,7 @@ const Modules = () => {
         />
       <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
-  
+  )}
     </>
   );
 };
