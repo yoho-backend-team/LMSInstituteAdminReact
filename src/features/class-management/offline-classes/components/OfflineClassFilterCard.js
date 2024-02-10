@@ -63,39 +63,39 @@ const OfflineClassFilterCard = () => {
 
   const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const handleCourseChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-    } else {
-      setSelectedCourses(newValue);
-    }
-  };
+  // const handleCourseChange = (newValue) => {
+  //   if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+  //     setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+  //   } else {
+  //     setSelectedCourses(newValue);
+  //   }
+  // };
 
-  const branches = [
-    { branches_id: '1', branches_name: 'branches 1' },
-    { branches_id: '2', branches_name: 'branches 2' },
-    { branches_id: '3', branches_name: 'branches 3' }
+  const batch = [
+    { batch_id: '1', batch_name: 'batch 1' },
+    { batch_id: '2', batch_name: 'batch 2' },
+    { batch_id: '3', batch_name: 'batch 3' }
   ];
 
-  const [selectedbranches, setSelectedbranches] = useState([]);
+  const [selectedbatch, setSelectedbatch] = useState([]);
 
-  const handlebranchesChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.branches_id === 'selectAll')) {
-      setSelectedbranches(branches.filter((option) => option.branches_id !== 'selectAll'));
+  const handlebatchChange = (newValue) => {
+    if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
+      setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
     } else {
-      setSelectedbranches(newValue);
+      setSelectedbatch(newValue);
     }
   };
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Filters" />
             <CardContent>
-              <Grid container spacing={4}>
-                <Grid item xs={12} sm={3}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
                     <MenuItem value="">None</MenuItem>
                     <MenuItem value="downloaded">Downloaded</MenuItem>
@@ -106,15 +106,31 @@ const OfflineClassFilterCard = () => {
                     <MenuItem value="sent">Sent</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Autocomplete
+                <Grid item xs={12} sm={6}>
+                <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={courses}
+                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                     getOptionLabel={(option) => option.course_name}
                     value={selectedCourses}
-                    onChange={(event, newValue) => handleCourseChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Courses" />}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                      } else {
+                        setSelectedCourses(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Courses"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -126,36 +142,38 @@ const OfflineClassFilterCard = () => {
                         {option.course_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.course_id}
-                          label={option.course_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedCourses(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.course_id}
+                            label={option.course_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedCourses(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={branches}
-                    getOptionLabel={(option) => option.branches_name}
-                    value={selectedbranches}
-                    onChange={(event, newValue) => handlebranchesChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Branches" />}
+                    options={batch}
+                    getOptionLabel={(option) => option.batch_name}
+                    value={selectedbatch}
+                    onChange={(event, newValue) => handlebatchChange(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth label="Batch" />}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -164,30 +182,30 @@ const OfflineClassFilterCard = () => {
                           style={{ marginRight: 8 }}
                           checked={selected}
                         />
-                        {option.branches_name}
+                        {option.batch_name}
                       </li>
                     )}
                     renderTags={(value) =>
                       value.map((option, index) => (
                         <CustomChip
-                          key={option.branches_id}
-                          label={option.branches_name}
+                          key={option.batch_id}
+                          label={option.batch_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
-                            setSelectedbranches(updatedValue);
+                            setSelectedbatch(updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
                         />
                       ))
                     }
-                    isOptionEqualToValue={(option, value) => option.branches_id === value.branches_id}
+                    isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={6}>
                   <DatePicker
                     isClearable
                     selectsRange
