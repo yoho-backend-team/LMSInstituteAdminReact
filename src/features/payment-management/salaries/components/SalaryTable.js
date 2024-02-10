@@ -139,13 +139,7 @@ const SalaryTable = () => {
 
   const [selectedstaff, setSelectedstaff] = useState([]);
 
-  const handlestaffChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-      setSelectedbranches(staff.filter((option) => option.staff_id !== 'selectAll'));
-    } else {
-      setSelectedstaff(newValue);
-    }
-  };
+
 
 
   const defaultColumns = [
@@ -357,11 +351,27 @@ const SalaryTable = () => {
                 <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={staff}
+                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...staff]}
                     getOptionLabel={(option) => option.staff_name}
                     value={selectedstaff}
-                    onChange={(event, newValue) => handlestaffChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Staff" />}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                        setSelectedstaff(staff.filter((option) => option.staff_id !== 'selectAll'));
+                      } else {
+                        setSelectedstaff(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Staffs"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -373,21 +383,23 @@ const SalaryTable = () => {
                         {option.staff_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedstaff(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.staff_id}
+                            label={option.staff_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedstaff(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
