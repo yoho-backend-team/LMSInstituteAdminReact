@@ -121,18 +121,18 @@ const Community = Loadable(lazy(() => import('views/community/index.js')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
-const Protected = () => {
-  // Access the isAuthenticated state from the Redux store
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+// const Protected = () => {
+//   // Access the isAuthenticated state from the Redux store
+//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  // If the user is authenticated, render the content
-  if (isAuthenticated) {
-    return <Outlet />;
-  } else {
-    // If not authenticated, redirect to the login page
-    return <Navigate to="/login" replace />;
-  }
-};
+//   // If the user is authenticated, render the content
+//   if (isAuthenticated) {
+//     return <Outlet />;
+//   } else {
+//     // If not authenticated, redirect to the login page
+//     return <Navigate to="/login" replace />;
+//   }
+// };
 const AdminRoute = () => {
   const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
 
@@ -145,7 +145,7 @@ const AdminRoute = () => {
 const ApplicationRoutes = () => {
   return (
     <Routes>
-      <Route element={<Protected />}>
+      {/* <Route element={<Protected />}> */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<DashboardDefault />} />
@@ -281,7 +281,7 @@ const ApplicationRoutes = () => {
         {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
-      </Route>
+      {/* </Route> */}
 
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />
