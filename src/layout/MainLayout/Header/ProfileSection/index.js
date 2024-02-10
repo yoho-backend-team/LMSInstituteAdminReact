@@ -35,7 +35,7 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
-
+import { Link } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
@@ -257,7 +257,7 @@ const ProfileSection = () => {
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                          <ListItemText  component={Link} primary={<Typography variant="body2">Account Settings</Typography>} />
                         </ListItemButton>
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
