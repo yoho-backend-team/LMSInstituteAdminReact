@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-
-import Card from '@mui/material/Card';
-import StudentCertificates from 'features/certificate-management/student-certificates/components/StudyMaterialDataGrid'
-
-const TabsFullWidth = () => {
-
-  return (
-    <Card sx={{ minHeight: '100vh', p: 2 }}>
-          <StudentCertificates />
-    </Card>
-=======
 // ** React Imports
 import { useCallback, useState } from 'react';
 
@@ -344,7 +332,6 @@ const StudenrCertificate = () => {
         </Grid>
       )}
     </>
->>>>>>> 530cd2b809ec7eefafd8683338a18b6bba5a749a
   );
 };
 

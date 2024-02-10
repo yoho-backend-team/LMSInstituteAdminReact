@@ -41,7 +41,7 @@ const StudyMaterialHeader = (props) => {
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12} sx={{ mb: 3 }}>
                 <Grid container spacing={4}>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <Autocomplete
                       multiple
                       id="select-multiple-chip"
@@ -99,7 +99,7 @@ const StudyMaterialHeader = (props) => {
                       SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={6}>
                     <Autocomplete
                       multiple
                       id="select-multiple-chip"
@@ -157,7 +157,7 @@ const StudyMaterialHeader = (props) => {
                       SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                     />
                   </Grid>
-                  <Grid item sm={3} xs={12}>
+                  <Grid item sm={6} xs={12}>
                     <TextField
                       fullWidth
                       value={value}
@@ -168,7 +168,7 @@ const StudyMaterialHeader = (props) => {
                     />
                   </Grid>
 
-                  <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
+                  <Grid item sm={6} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
                     <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Study Material
