@@ -7,6 +7,7 @@ import MainLayout from 'layout/MainLayout';
 import { Routes, Route, Navigate,
   //  Outlet
    } from 'react-router-dom';
+
 // import { useSelector } from 'react-redux';
 // view imports
 
@@ -104,7 +105,6 @@ const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/t
 const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
 const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
 const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/view-profile')));
-
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/view-profile')));
@@ -120,6 +120,7 @@ const CalenderPage = Loadable(lazy(() => import('views/calender')));
 
 // Community
 const Community = Loadable(lazy(() => import('views/community/index.js')));
+const AccountSettings =Loadable(lazy(() => import('layout/MainLayout/Header/ProfileSection/AccountSettings')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -155,6 +156,10 @@ const ApplicationRoutes = () => {
       <Route path="/community-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/community" />} />
         <Route path="community" element={<Community />} />
+      </Route>
+      <Route path="/profile-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/account-settings" />} />
+        <Route path="account-settings" element={<AccountSettings />} />
       </Route>
       <Route path="/calender" element={<MainLayout />}>
         <Route index element={<CalenderPage />} />
