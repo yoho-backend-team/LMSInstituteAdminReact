@@ -12,7 +12,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
 
-
 const StudentFilterCard = () => {
   const [statusValue, setStatusValue] = useState('');
 
@@ -28,13 +27,7 @@ const StudentFilterCard = () => {
 
   const [selectedbatch, setSelectedbatch] = useState([]);
 
-  const handlebatchChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
-      setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
-    } else {
-      setSelectedbatch(newValue);
-    }
-  };
+ 
 
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
@@ -43,15 +36,6 @@ const StudentFilterCard = () => {
   ];
 
   const [selectedCourses, setSelectedCourses] = useState([]);
-
-  const handleCourseChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-    } else {
-      setSelectedCourses(newValue);
-    }
-  };
-
 
   return (
     <DatePickerWrapper>
@@ -65,11 +49,27 @@ const StudentFilterCard = () => {
                 <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={batch}
+                    options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
                     getOptionLabel={(option) => option.batch_name}
                     value={selectedbatch}
-                    onChange={(event, newValue) => handlebatchChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Batch" />}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
+                        setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
+                      } else {
+                        setSelectedbatch(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Batch"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -81,21 +81,23 @@ const StudentFilterCard = () => {
                         {option.batch_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.batch_id}
-                          label={option.batch_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedbatch(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.batch_id}
+                            label={option.batch_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedbatch(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
@@ -115,14 +117,30 @@ const StudentFilterCard = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
-                    options={courses}
+                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                     getOptionLabel={(option) => option.course_name}
                     value={selectedCourses}
-                    onChange={(event, newValue) => handleCourseChange(newValue)}
-                    renderInput={(params) => <TextField {...params} fullWidth label="Courses" />}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                      } else {
+                        setSelectedCourses(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Courses"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
                     renderOption={(props, option, { selected }) => (
                       <li {...props}>
                         <Checkbox
@@ -134,21 +152,23 @@ const StudentFilterCard = () => {
                         {option.course_name}
                       </li>
                     )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.course_id}
-                          label={option.course_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedCourses(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.course_id}
+                            label={option.course_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedCourses(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
                     isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
