@@ -104,12 +104,6 @@ const GroupAddPage = () => {
   const [permissions, setPermissions] = React.useState([]);
   const branches = useSelector((state) => state.auth.branches);
   const navigate = useNavigate();
-  // const [personNameNative, setPersonNameNative] = useState([]);
-
-  // const filteredBranches = branches?.filter((branch) => selectedBranches?.includes(branch.branch_name));
-  // const branchIds = filteredBranches?.map((branch) => branch.branch_id);
-
-  // console.log(branchIds);
 
   const onSubmit = async (data) => {
     try {

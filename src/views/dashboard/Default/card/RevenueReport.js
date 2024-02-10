@@ -1,11 +1,12 @@
 // ** React Imports
 
 // ** MUI Imports
-import { Box } from '@mui/material';
+import { Box, MenuItem, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { useTheme } from '@mui/material/styles';
+import CustomTextField from 'components/mui/text-field';
 
 // ** Custom Components Import
 import ReactApexChart from 'react-apexcharts';
@@ -129,15 +130,18 @@ const RevenueReport = () => {
       <Box component={'h2'} sx={{ fontSize: 16, mb: 2.5 }}>
         Revenue
       </Box>
-      <Card sx={{ minHeight: 365 }}>
+      <Card>
         <CardHeader
-        // title="Revenue"
-        // titleTypographyProps={{
-        //   sx: {
-        //     fontWeight: 'bold'
-        //   }
-        // }}
-        // subheader='Yearly Earnings Overview'
+          action={
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Typography sx={{ mr: 2, fontSize: 12 }}>Sort By:</Typography>
+              <CustomTextField select defaultValue={10} id="custom-select">
+                <MenuItem value={10}>Month</MenuItem>
+                <MenuItem value={20}>Year</MenuItem>
+              </CustomTextField>
+            </Box>
+          }
+          sx={{ pb: 0 }}
         />
         <CardContent>
           <ReactApexChart type="bar" options={options} series={tabData.find((tab) => tab.type === 'sales')?.series || []} />
