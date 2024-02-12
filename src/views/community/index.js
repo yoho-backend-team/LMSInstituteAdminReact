@@ -7,17 +7,25 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 // ** Store & Actions Imports
+import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/community/components/AppChat'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectChat, fetchUserProfile, removeSelectedChat,sendMsg} from 'features/community/components/AppChat'
 
 // ** Utils Imports
-import { getInitials } from 'utils/get-initials'
 import { formatDateToMonthShort } from 'utils/format'
+import { getInitials } from 'utils/get-initials'
 
 // ** Chat App Components Imports
-import SidebarLeft from 'features/community/components/SidebarLeft'
+import CommunitySkeleton from 'components/cards/Skeleton/CommunitySkeleton'
 import ChatContent from 'features/community/components/ChatContent'
+import SidebarLeft from 'features/community/components/SidebarLeft'
 
+const useTimeout = (callback, delay) => {
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
 const Community = () => {
   // ** States
   const [userStatus, setUserStatus] = useState('online')
@@ -51,7 +59,16 @@ const Community = () => {
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen)
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen)
   console.log(selectChat)
+  const [loading, setLoading] = useState(true);
+
+  useTimeout(() => {
+    setLoading(false);
+  }, 1000);
   return (
+    <>
+      {loading ? (
+        <CommunitySkeleton/>
+      ) : (
     <Box
       className='app-chat'
       sx={{
@@ -99,6 +116,8 @@ const Community = () => {
         handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
       />
     </Box>
+    )}
+    </>
   )
 }
 Community.contentHeightFixed = true

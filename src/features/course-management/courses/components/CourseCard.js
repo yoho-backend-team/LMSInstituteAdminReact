@@ -127,7 +127,7 @@ import { Link } from 'react-router-dom';
 import DeleteDialog from 'components/modal/DeleteModel';
 
 const CourseCard = (props) => {
-  const { sx, image, personName, course } = props;
+  const { sx, personName, course } = props;
   // const [statusValue, setStatusValue] = useState(course?.is_active);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -140,13 +140,13 @@ const CourseCard = (props) => {
     <Grid item xs={12} sm={12} lg={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
-          <CardMedia sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px' }} image={image}>
+          <CardMedia sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }} image={'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d'}>
             <CustomChip
               sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
               skin="light"
-              label={course?.course_categories?.course_category_name}
+              label={course?.learning_format}
               rounded
-              color="secondary"
+              color="primary"
               size="small"
               variant="outlined"
             />
@@ -189,7 +189,7 @@ const CourseCard = (props) => {
               <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
             </Grid>
             <Grid>
-              <Typography sx={{ color: 'text.secondary' }}>{course?.course_price}</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
             </Grid>
           </Box>
         </CardContent>
