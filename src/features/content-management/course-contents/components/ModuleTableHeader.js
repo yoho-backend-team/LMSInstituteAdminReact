@@ -34,8 +34,8 @@ const ModuleHeader = (props) => {
           <CardHeader title="Modules" />
           <CardContent sx={{ pt: 0, pb: 0 }}>
         <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
-          <Grid item xs={12} sx={{ mb: 3 }}>
-            <Grid container spacing={4}>
+          <Grid item xs={12} >
+            <Grid container spacing={4} sx={{display:"flex",justifyContent:"flex-end"}}>
               <Grid item xs={12} sm={6}>
                 <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
                   <MenuItem value="">None</MenuItem>
