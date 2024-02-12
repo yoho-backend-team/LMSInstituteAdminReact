@@ -53,17 +53,17 @@ const TicketSkeleton = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <Skeleton variant="circular" width={48} height={48} />
                   <Box sx={{ ml: 2 }}>
-                    <Skeleton variant="text" width={100} />
+                    <Skeleton variant="text" width={60} />
                   </Box>
                 </Box>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="80%" />
+                  <Skeleton variant="text" width="60%" />
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="80%" />
+                  <Skeleton variant="text" width="70%" />
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="80%" />
+                  <Skeleton variant="text" width="50%" />
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
                   <Skeleton variant="text" width="80%" />
@@ -80,7 +80,7 @@ const TicketSkeleton = () => {
           {mails.map((mail, index) => (
             <Card key={index} sx={{  mb: 2 }}>
               <CardContent>
-                <Typography variant="h5"> <Skeleton variant="text" width="80%" /></Typography>
+                <Typography variant="h5"> <Skeleton variant="text" width="70%" /></Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
                 <Skeleton variant="text" width="50%" />
                 </Typography>
