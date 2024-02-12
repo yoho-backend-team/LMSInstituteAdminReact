@@ -9,7 +9,9 @@ import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
+import { addCourseCategory } from '../services/courseCategoryServices';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`;
@@ -49,6 +51,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(selectedImage);
   const handleClose = () => {
@@ -84,11 +87,23 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     }
   }));
 
+  const onSubmit = async (data) => {
+    var bodyFormData = new FormData();
+    bodyFormData.append('logo', selectedImage);
+    bodyFormData.append('course_category_name', data.course);
+    bodyFormData.append('branch_id', selectedBranchId);
 
-  const onSubmit = (data) => {
-    console.log(data);
+    const result = await addCourseCategory(bodyFormData);
+
+    if (result.success) {
+      reset();
+      handleAddClose();
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+      // toast.error(result.message);
+    }
   };
-  console.log(onSubmit);
 
   return (
     <div>

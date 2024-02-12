@@ -1,19 +1,20 @@
 // groupService.js
 import axios from 'axios';
 
-const COURSE_CATEGORY_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/CourseCategory-management/CourseCategory`;
+const COURSE_CATEGORY_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses`;
 
-export const getAllCourses = async () => {
+export const getAllCourses = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${COURSE_CATEGORY_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -21,7 +22,7 @@ export const getAllCourses = async () => {
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllCourses:', error);
+    console.error('Error in getAllCourseCategories:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
@@ -92,15 +93,15 @@ export const deleteCourse = async (courseId) => {
 
 export const updateCourse = async (data) => {
   try {
-    const response = await axios.put(`${COURSE_CATEGORY_END_POINT}/update`, data, {
+    const response = await axios.post(`${COURSE_CATEGORY_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
+    console.log(response);
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Course updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Course' };

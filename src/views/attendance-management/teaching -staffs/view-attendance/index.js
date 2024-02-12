@@ -30,11 +30,9 @@ import {
 
 // ** CalendarColors
 const calendarsColor = {
-  Personal: 'error',
-  Business: 'primary',
-  Family: 'warning',
-  Holiday: 'success',
-  ETC: 'info'
+  Present: 'success',
+  Absent: 'error',
+ 
 };
 
 const ViewAttendance = () => {

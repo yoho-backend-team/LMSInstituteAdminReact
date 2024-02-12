@@ -1,19 +1,22 @@
 // groupService.js
 import axios from 'axios';
 
-const COURSE_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/CourseCategory-management/CourseCategory`;
+const COURSE_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/course-categories`;
 
-export const getAllCourseCategories = async () => {
+export const getAllCourseCategories = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
+    console.log(response);
+
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -57,6 +60,7 @@ export const addCourseCategory = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'CourseCategory created successfully' };
@@ -92,7 +96,7 @@ export const deleteCourseCategory = async (courseCategoryId) => {
 
 export const updateCourseCategory = async (data) => {
   try {
-    const response = await axios.put(`${COURSE_CATEGORY_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

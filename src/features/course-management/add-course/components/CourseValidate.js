@@ -11,22 +11,22 @@ import CardHeader from '@mui/material/CardHeader';
 
 // components
 // import { FormProvider, RHFUploadMultiFile } from '../../../components/hook-form';
-import {  RHFUploadSingleFile } from 'components/upload/RHUpload';
+import { RHFUploadSingleFile } from 'components/upload/RHUpload';
 import FormProvider from 'features/course-management/add-course/components/FormProvider';
 import CoursePdfInput from '../CoursePdfInput';
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
-export default function CourseValidate() {
+export default function CourseValidate({ setCourseLogo, setCourseTemplate }) {
   const NewProductSchema = Yup.object().shape({
     images: Yup.array().min(1, 'Images is required')
   });
 
   const defaultValues = useMemo(
     () => ({
-      images: [],
-      cover: ''
+      course_logo: [],
+      course_template: ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -37,9 +37,11 @@ export default function CourseValidate() {
     defaultValues
   });
 
-  const { reset,  setValue, handleSubmit } = methods;
+  const { reset, setValue, handleSubmit, watch } = methods;
 
-  // const values = watch();
+  const values = watch();
+
+  console.log(values);
 
   const onSubmit = async () => {
     try {
@@ -50,26 +52,34 @@ export default function CourseValidate() {
     }
   };
 
-  const handleDrop = useCallback(
+  const handleDropCourseLogo = useCallback(
     (acceptedFiles) => {
-      console.log(acceptedFiles);
-      setValue(
-        'images',
-        acceptedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file)
-          })
-        )
-      );
       const file = acceptedFiles[0];
 
       if (file) {
         setValue(
-          'cover',
+          'course_logo',
           Object.assign(file, {
             preview: URL.createObjectURL(file)
           })
         );
+        setCourseTemplate(file);
+      }
+    },
+    [setValue]
+  );
+  const handleDropCourseTemplate = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      if (file) {
+        setValue(
+          'course_template',
+          Object.assign(file, {
+            preview: URL.createObjectURL(file)
+          })
+        );
+        setCourseLogo(file);
       }
     },
     [setValue]
@@ -87,13 +97,12 @@ export default function CourseValidate() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-
         <Grid item xs={12} md={6}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Logo" />
-                <RHFUploadSingleFile name="cover" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
+                <RHFUploadSingleFile name="course_logo" accept="image/*" maxSize={3145728} onDrop={handleDropCourseLogo} />
               </div>
             </Stack>
           </Card>
@@ -103,7 +112,7 @@ export default function CourseValidate() {
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Template" />
-                <RHFUploadSingleFile name="cover" accept="image/*" maxSize={3145728} onDrop={handleDrop} />
+                <RHFUploadSingleFile name="course_template" accept="image/*" maxSize={3145728} onDrop={handleDropCourseTemplate} />
               </div>
             </Stack>
           </Card>
@@ -113,7 +122,7 @@ export default function CourseValidate() {
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Syllabus" />
-                <CoursePdfInput/>
+                <CoursePdfInput />
               </div>
             </Stack>
           </Card>

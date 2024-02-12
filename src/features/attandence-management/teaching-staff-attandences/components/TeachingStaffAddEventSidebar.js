@@ -4,17 +4,17 @@ import { useState, useEffect, forwardRef, useCallback, Fragment } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
+// import Switch from '@mui/material/Switch';
+// import FormControl from '@mui/material/FormControl';
+// import FormControlLabel from '@mui/material/FormControlLabel';
 
 // ** Custom Component Import
-import CustomTextField from 'components/mui/text-field';
 
+import { TextField } from '@mui/material';
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
 import { useForm, Controller } from 'react-hook-form';
@@ -28,14 +28,9 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 const capitalize = (string) => string && string[0].toUpperCase() + string.slice(1);
 
 const defaultState = {
-  url: '',
-  title: '',
-  guests: [],
-  allDay: true,
-  description: '',
-  endDate: new Date(),
-  calendar: 'Business',
-  startDate: new Date()
+  staff_name: '',
+  attendance: 'Present',
+  attendance_date: new Date()
 };
 
 const TeachingStaffAddEventSidebar = (props) => {
@@ -46,7 +41,7 @@ const TeachingStaffAddEventSidebar = (props) => {
     addEvent,
     updateEvent,
     drawerWidth,
-    calendarApi,
+    attendanceApi,
     deleteEvent,
     handleSelectEvent,
     addEventSidebarOpen,
@@ -62,7 +57,7 @@ const TeachingStaffAddEventSidebar = (props) => {
     clearErrors,
     handleSubmit,
     formState: { errors }
-  } = useForm({ defaultValues: { title: '' } });
+  } = useForm({ defaultValues: { staff_name: '' } });
 
   const handleSidebarClose = async () => {
     setValues(defaultState);
@@ -75,22 +70,22 @@ const TeachingStaffAddEventSidebar = (props) => {
     const modifiedEvent = {
       url: values?.url,
       display: 'block',
-      title: data?.title,
+      staff_name: data?.staff_name,
       end: values.endDate,
       allDay: values.allDay,
       start: values.startDate,
       extendedProps: {
-        calendar: capitalize(values.calendar),
+        attendance: capitalize(values.attendance),
         guests: values.guests && values.guests.length ? values.guests : undefined,
         description: values.description.length ? values.description : undefined
       }
     };
-    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.title?.length)) {
+    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.staff_name?.length)) {
       dispatch(addEvent(modifiedEvent));
     } else {
       dispatch(updateEvent({ id: store?.selectedEvent?.id, ...modifiedEvent }));
     }
-    calendarApi.refetchEvents();
+    attendanceApi.refetchEvents();
     handleSidebarClose();
   };
 
@@ -99,35 +94,30 @@ const TeachingStaffAddEventSidebar = (props) => {
       dispatch(deleteEvent(store?.selectedEvent?.id));
     }
 
-    // calendarApi.getEventById(store?.selectedEvent?.id).remove()
+    // attendanceApi.getEventById(store?.selectedEvent?.id).remove()
     handleSidebarClose();
   };
 
   const handleStartDate = (date) => {
-    if (date > values.endDate) {
-      setValues({ ...values, startDate: new Date(date), endDate: new Date(date) });
+    if (date) {
+      setValues({ ...values, attendance_date: new Date(date) });
     }
   };
 
   const resetToStoredValues = useCallback(() => {
     if (store?.selectedEvent !== null) {
       const event = store?.selectedEvent;
-      setValue('title', event?.title || '');
+      setValue('staff_name', event?.staff_name || '');
       setValues({
-        url: event?.url || '',
-        title: event?.title || '',
-        allDay: event?.allDay,
-        guests: event?.extendedProps.guests || [],
-        description: event?.extendedProps.description || '',
-        calendar: event?.extendedProps.calendar || 'Business',
-        endDate: event?.end !== null ? event?.end : event?.start,
-        startDate: event?.start !== null ? event?.start : new Date()
+        staff_name: event?.staff_name || '',
+        attendance: event?.extendedProps.attendance || 'Present',
+        attendance_date: event?.start !== null ? event?.start : new Date()
       });
     }
   }, [setValue, store?.selectedEvent]);
 
   const resetToEmptyValues = useCallback(() => {
-    setValue('title', '');
+    setValue('staff_name', '');
     setValues(defaultState);
   }, [setValue]);
   useEffect(() => {
@@ -139,11 +129,11 @@ const TeachingStaffAddEventSidebar = (props) => {
   }, [addEventSidebarOpen, resetToStoredValues, resetToEmptyValues, store?.selectedEvent]);
 
   const PickersComponent = forwardRef(({ ...props }, ref) => {
-    return <CustomTextField inputRef={ref} fullWidth {...props} label={props.label || ''} sx={{ width: '100%' }} error={props.error} />;
+    return <TextField inputRef={ref} fullWidth {...props} label={props.label || ''} sx={{ width: '100%' }} error={props.error} />;
   });
 
   const RenderSidebarFooter = () => {
-    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.title?.length)) {
+    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.staff_name?.length)) {
       return (
         <Fragment>
           <Button type="submit" variant="contained" sx={{ mr: 4 }}>
@@ -185,10 +175,10 @@ const TeachingStaffAddEventSidebar = (props) => {
         }}
       >
         <Typography variant="h5">
-          {store?.selectedEvent !== null && store?.selectedEvent?.title?.length ? 'Update Event' : 'Add Event'}
+          {store?.selectedEvent !== null && store?.selectedEvent?.staff_name?.length ? 'Update Attendance' : 'Add Attendance'}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {store?.selectedEvent !== null && store?.selectedEvent?.title?.length ? (
+          {store?.selectedEvent !== null && store?.selectedEvent?.staff_name?.length ? (
             <IconButton size="small" onClick={handleDeleteEvent} sx={{ color: 'text.primary', mr: store?.selectedEvent !== null ? 1 : 0 }}>
               <Icon icon="tabler:trash" fontSize="1.25rem" />
             </IconButton>
@@ -214,110 +204,50 @@ const TeachingStaffAddEventSidebar = (props) => {
         <DatePickerWrapper>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <Controller
-              name="title"
+              name="staff_name"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <CustomTextField
+                <TextField
                   fullWidth
-                  label="Title"
+                  label="Staff Name"
                   value={value}
                   sx={{ mb: 4 }}
                   onChange={onChange}
-                  placeholder="Event Title"
-                  error={Boolean(errors?.title)}
-                  {...(errors?.title && { helperText: 'This field is required' })}
+                  placeholder="Mohammed Thasthakir"
+                  error={Boolean(errors?.staff_name)}
+                  {...(errors?.staff_name && { helperText: 'This field is required' })}
                 />
               )}
             />
-            <CustomTextField
+            <TextField
               select
               fullWidth
               sx={{ mb: 4 }}
-              label="Calendar"
+              label="Attendance"
               SelectProps={{
-                value: values.calendar,
-                onChange: (e) => setValues({ ...values, calendar: e.target.value })
+                value: values.attendance,
+                onChange: (e) => setValues({ ...values, attendance: e.target.value })
               }}
             >
-              <MenuItem value="Personal">Personal</MenuItem>
-              <MenuItem value="Business">Business</MenuItem>
-              <MenuItem value="Family">Family</MenuItem>
-              <MenuItem value="Holiday">Holiday</MenuItem>
-              <MenuItem value="ETC">ETC</MenuItem>
-            </CustomTextField>
+              <MenuItem value="Present">Present</MenuItem>
+              <MenuItem value="Absent">Absent</MenuItem>
+            </TextField>
             <Box sx={{ mb: 4 }}>
               <DatePicker
                 selectsStart
                 id="event-start-date"
-                endDate={values.endDate}
-                selected={values.startDate}
-                startDate={values.startDate}
-                showTimeSelect={!values.allDay}
-                dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                customInput={<PickersComponent label="Start Date" registername="startDate" />}
-                onChange={(date) => setValues({ ...values, startDate: new Date(date) })}
+                // endDate={values.endDate}
+                selected={values.attendance_date}
+                startDate={values.attendance_date}
+                // showTimeSelect={!values.allDay}
+                dateFormat={'yyyy-MM-dd'}
+                customInput={<PickersComponent label="Attendance Date" registername="attendance_date" />}
+                onChange={(date) => setValues({ ...values, attendance_date: new Date(date) })}
                 onSelect={handleStartDate}
               />
             </Box>
-            <Box sx={{ mb: 4 }}>
-              <DatePicker
-                selectsEnd
-                id="event-end-date"
-                endDate={values.endDate}
-                selected={values.endDate}
-                minDate={values.startDate}
-                startDate={values.startDate}
-                showTimeSelect={!values.allDay}
-                dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                customInput={<PickersComponent label="End Date" registername="endDate" />}
-                onChange={(date) => setValues({ ...values, endDate: new Date(date) })}
-              />
-            </Box>
-            <FormControl sx={{ mb: 4 }}>
-              <FormControlLabel
-                label="All Day"
-                control={<Switch checked={values.allDay} onChange={(e) => setValues({ ...values, allDay: e.target.checked })} />}
-              />
-            </FormControl>
-            <CustomTextField
-              fullWidth
-              type="url"
-              id="event-url"
-              sx={{ mb: 4 }}
-              label="Event URL"
-              value={values?.url}
-              placeholder="https://www.google.com"
-              onChange={(e) => setValues({ ...values, url: e.target.value })}
-            />
 
-            <CustomTextField
-              select
-              fullWidth
-              label="Guests"
-              sx={{ mb: 4 }}
-              SelectProps={{
-                multiple: true,
-                value: values.guests,
-                onChange: (e) => setValues({ ...values, guests: e.target.value })
-              }}
-            >
-              <MenuItem value="bruce">Bruce</MenuItem>
-              <MenuItem value="clark">Clark</MenuItem>
-              <MenuItem value="diana">Diana</MenuItem>
-              <MenuItem value="john">John</MenuItem>
-              <MenuItem value="barry">Barry</MenuItem>
-            </CustomTextField>
-            <CustomTextField
-              rows={4}
-              multiline
-              fullWidth
-              sx={{ mb: 6.5 }}
-              label="Description"
-              id="event-description"
-              value={values.description}
-              onChange={(e) => setValues({ ...values, description: e.target.value })}
-            />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RenderSidebarFooter />
             </Box>
