@@ -129,7 +129,7 @@ const SidebarLeft = (props) => {
                       <Avatar
                         alt={contact.fullName}
                         src={contact.avatar ? contact.avatar : undefined}
-                        sx={{ width: 30, height: 30, bgcolor: contact.avatarColor }}
+                        sx={{ width: 40, height: 40, bgcolor: contact.avatarColor }}
                       >
                         {!contact.avatar && getInitials(contact.fullName)}
                       </Avatar>
@@ -146,10 +146,10 @@ const SidebarLeft = (props) => {
 
                     <Box style={{ ml: 2, mt: 2 }}>
                       <Typography
-                        variant="body2"
+                        variant="h6"
                         color="text.secondary"
                         noWrap
-                        sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                        sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', }}
                       >
                         {contact.about}
                       </Typography>
@@ -158,10 +158,9 @@ const SidebarLeft = (props) => {
                         {contact.status} 
                       </Typography> */}
 
-                      <Box sx={{ display: 'flex',justifyContent:'space-between', mt: 2 }}>
-                        <CustomChip circle size="small" skin="light" color={'secondary'} label={'BATP'} />
-                        <CustomChip circle size="small" skin="light" color={'secondary'} label={'BA'} />
-                        <CustomChip circle size="small" skin="light" color={'secondary'} label={'BATP'} />
+                      <Box sx={{ display: 'flex', mt: 2,gap:2 }}>
+                        <CustomChip rounded size="small" skin="light" color={'info'}  label={'Open'} />
+                        <CustomChip rounded size="small" skin="light" color={'error'} label={'• High Priority'} />
                       </Box>
                     </Box>
                   </CardContent>

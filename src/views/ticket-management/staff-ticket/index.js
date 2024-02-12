@@ -36,7 +36,7 @@ const StaffTicket = () => {
   // ** Vars
   const skin = 'default';
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
-  const sidebarWidth = smAbove ? 360 : 300;
+  const sidebarWidth = smAbove ? 400 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
 
   const statusObj = {
