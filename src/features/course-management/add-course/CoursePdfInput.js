@@ -21,7 +21,7 @@ const CoursePdfInput = () => {
     accept: {
       'file/*': ['.pdf']
     },
-    onDrop: (acceptedFiles) => {
+    onDrop: (acceptedFiles) => { 
       setFiles(acceptedFiles.map((file) => Object.assign(file)));
     }
   });

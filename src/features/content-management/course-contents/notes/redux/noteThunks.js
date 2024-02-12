@@ -2,11 +2,11 @@
 import { getAllCourseNotes as fetchAllCourseNotes } from '../services/noteServices'; // Replace with your service file
 import { setCourseNotes, setLoading } from './noteSlice';
 
-export const getAllCourseNotes = () => async (dispatch) => {
+export const getAllCourseNotes = (selectedBranchId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllCourseNotes(); // Implement this function in your services
-    dispatch(setCourseNotes(response?.data));
+    const response = await fetchAllCourseNotes(selectedBranchId); // Implement this function in your services
+    dispatch(setCourseNotes(response?.data?.data));
   } catch (error) {
     console.error(error);
   } finally {

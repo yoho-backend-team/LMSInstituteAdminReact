@@ -15,26 +15,22 @@ import DeleteDialog from 'components/modal/DeleteModel';
 
 const CardStatsVertical = (props) => {
   // ** Props
-  const { sx, title, subtitle, image } = props;
+  const { sx, category } = props;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [statusValue, setStatusValue] = useState('');
+  const [statusValue, setStatusValue] = useState(category?.is_active);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
-  
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   console.log(deletingItemId);
-  
+
   const handleEditClose = () => {
     setEditModalOpen(false);
-  };
-
-  const handleEdit = () => {
-    setEditModalOpen(true);
   };
 
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
   };
-  
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
@@ -42,34 +38,35 @@ const CardStatsVertical = (props) => {
     setDeleteDialogOpen(true);
   };
 
-
-
   return (
     <Grid item xs={12} sm={6} lg={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Avatar alt="Remy Sharp" src={image} sx={{ width: 56, height: 56 }} />
+              <Avatar alt="Remy Sharp" src={category?.logo} sx={{ width: 56, height: 56 }} />
             </Box>
             <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
+              <IconButton
+                onClick={() => {
+                  setSelectedCategory(category);
+                  setEditModalOpen(true);
+                }}
+                aria-label="capture screenshot"
+                color="primary"
+              >
                 <Icon icon="tabler:edit" />
               </IconButton>
-              <IconButton
-               onClick={() => handleDelete()}
-                aria-label="capture screenshot"
-                color="error"
-              >
+              <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
                 <Icon icon="tabler:archive-filled" />
               </IconButton>
             </Box>
           </Box>
           <Typography variant="h3" sx={{ mb: 1, mt: 2 }}>
-            {title}
+            {category?.course_category_name}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
-            {subtitle}
+            {category?.course?.length} Courses
           </Typography>
           <Grid sx={{ mt: 1 }}>
             <TextField
@@ -79,20 +76,20 @@ const CardStatsVertical = (props) => {
               label="Status"
               SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
             >
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Deactive">Deactive</MenuItem>
+              <MenuItem value="1">Active</MenuItem>
+              <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Grid>
         </CardContent>
       </Card>
-      <CategoryEditModal initialTitle={title} initialStatus={statusValue} open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <CategoryEditModal category={selectedCategory} open={isEditModalOpen} handleEditClose={handleEditClose} />
       <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          // handleSubmit={handleDeleteConfirm}
-          description="Are you sure you want to delete this item?"
-          title="Delete"
-        />
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        // handleSubmit={handleDeleteConfirm}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+      />
     </Grid>
   );
 };

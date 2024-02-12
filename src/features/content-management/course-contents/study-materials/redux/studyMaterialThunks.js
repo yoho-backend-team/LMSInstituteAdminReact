@@ -2,11 +2,11 @@
 import { getAllCourseStudyMaterials as fetchAllCourseStudyMaterials } from '../services/studyMaterialServices'; // Replace with your service file
 import { setCourseStudyMaterials, setLoading } from './studyMaterialSlice';
 
-export const getAllCourseStudyMaterials = () => async (dispatch) => {
+export const getAllCourseStudyMaterials = (selectedBranchId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllCourseStudyMaterials(); // Implement this function in your services
-    dispatch(setCourseStudyMaterials(response?.data));
+    const response = await fetchAllCourseStudyMaterials(selectedBranchId); // Implement this function in your services
+    dispatch(setCourseStudyMaterials(response?.data?.data));
   } catch (error) {
     console.error(error);
   } finally {

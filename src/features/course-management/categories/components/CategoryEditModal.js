@@ -5,11 +5,12 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { updateCourseCategory } from '../services/courseCategoryServices';
+import toast from 'react-hot-toast';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -21,11 +22,10 @@ const showErrors = (field, valueLen, min) => {
   }
 };
 const schema = yup.object().shape({
-  course: yup
+  category_name: yup
     .string()
-    .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-    .required(),
-  status: yup.string().required()
+    .min(3, (obj) => showErrors('Category Name', obj.value.length, obj.min))
+    .required()
 });
 
 // const defaultValues = {
@@ -33,7 +33,7 @@ const schema = yup.object().shape({
 //   status: ''
 // };
 
-const CategoryEditModal = ({ open, handleEditClose,initialTitle, initialStatus }) => {
+const CategoryEditModal = ({ open, handleEditClose, category }) => {
   const image =
     'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
@@ -51,7 +51,7 @@ const CategoryEditModal = ({ open, handleEditClose,initialTitle, initialStatus }
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  console.log(selectedImage);
+  console.log('selected', selectedImage);
   const handleClose = () => {
     setValue('course', '');
     setValue('status', '');
@@ -86,11 +86,24 @@ const CategoryEditModal = ({ open, handleEditClose,initialTitle, initialStatus }
     }
   }));
 
-  const onSubmit =(data)=>(
-    console.log(data)
-  )
+  const onSubmit = async (data) => {
+    console.log(data);
+    const inputData = new FormData();
+    inputData.append('id', category?.id);
+    inputData.append('logo', selectedImage);
+    inputData.append('course_category_name', data?.category_name);
 
-console.log(onSubmit);
+    try {
+      const result = await updateCourseCategory(inputData);
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -137,60 +150,35 @@ console.log(onSubmit);
                   </ButtonStyled>
                 </div>
               </Box>
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="category_name"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      fullWidth
+                      value={value}
+                      defaultValue={category?.course_category_name}
+                      sx={{ mb: 4 }}
+                      label="Category Name"
+                      onChange={onChange}
+                      placeholder="John Doe"
+                      error={Boolean(errors.course)}
+                      {...(errors.course && { helperText: errors.course.message })}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="course"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    defaultValue={initialTitle}  
-                    sx={{ mb: 4 }}
-                    label="Category Name"
-                    onChange={onChange}
-                    placeholder="John Doe"
-                    error={Boolean(errors.course)}
-                    {...(errors.course && { helperText: errors.course.message })}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="status"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    sx={{ mb: 4 }}
-                    label="Status"
-                    id="validation-status-select"
-                    defaultValue={initialStatus}
-                    error={Boolean(errors.status)}
-                    aria-describedby="validation-status-select"
-                    {...(errors.status && { helperText: errors.status.message })}
-                    SelectProps={{ value: value, onChange: (e) => onChange(e) }}
-                  >
-                    <MenuItem value="Active">Active</MenuItem>
-                    <MenuItem value="Inactive">Inactive</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="error" onClick={handleClose}>
-                Cancel
-              </Button>
+              <Grid style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+                  Submit
+                </Button>
+                <Button variant="tonal" color="error" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Grid>
             </Grid>
           </form>
         </DialogContent>

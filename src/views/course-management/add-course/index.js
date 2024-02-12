@@ -55,19 +55,7 @@ const defaultPersonalValues = {
   Course_Category: ''
 };
 
-const defaultSocialValues = {
-  // instagram: '',
-  // twitter: '',
-  // facebook: '',
-  // linkedIn: '',
-  // pinterest: ''
-};
-// const defaultGalleryValues = {
-//   images: [],
-//   cover: ''
-// };
-
-// const accountSchema = yup.object().shape({});
+const defaultSocialValues = {};
 
 const personalSchema = yup.object().shape({
   Course_duration: yup.number().required(),
@@ -75,7 +63,6 @@ const personalSchema = yup.object().shape({
   Course_Price: yup.number().required(),
   description: yup.string().required(),
   course_overview: yup.string().required(),
-  //   language: yup.array().min(1).required()
   Learning_Format: yup.array().min(1, 'Select at least one Learning Format').required(),
   Course_Category: yup.string().required()
 });
@@ -87,7 +74,10 @@ const socialSchema = yup.object().shape({});
 
 const AddCoursePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
+  const [courseLogo, setCourseLogo] = useState('');
+  const [courseTemplate, setCourseTemplate] = useState('');
+  const [courseSyllabus, setCourseSyallbus] = useState('');
 
   // const [features, setFeatures] = useState([]);
 
@@ -171,8 +161,9 @@ const AddCoursePage = () => {
       data.append('linkedin', socialData?.linkedIn);
       data.append('instagram', socialData?.instagram);
       data.append('twitter', socialData?.twitter);
-      data.append('logo', logo);
-      data.append('image', courseImage);
+      data.append('logo', courseLogo);
+      data.append('image', courseTemplate);
+      data.append('image', courseSyllabus);
 
       let config = {
         method: 'post',
@@ -412,7 +403,7 @@ const AddCoursePage = () => {
       case 1:
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
-            <CourseValidate />
+            <CourseValidate setCourseLogo={setCourseLogo} setCourseSyallbus={setCourseSyallbus} setCourseTemplate={setCourseTemplate} />
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
               <Button variant="tonal" color="secondary" onClick={handleBack}>
                 Back

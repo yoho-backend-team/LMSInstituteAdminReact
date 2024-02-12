@@ -39,7 +39,7 @@ const TeacherFilter = (props) => {
           <CardHeader title="Teaching Staff" />
 
           <CardContent>
-            <Grid container spacing={3}>
+            <Grid container spacing={3} sx={{display:"flex",justifyContent:"flex-end"}}>
               <Grid item xs={12} sm={6}>
               <Autocomplete
                     multiple
