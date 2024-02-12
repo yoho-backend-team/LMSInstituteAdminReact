@@ -18,9 +18,9 @@ const TicketSkeleton = () => {
     <>
       <Grid container spacing={2}>
         {/* Left Side Card */}
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={4}>
           {cards.map((cardIndex) => (
-            <Card key={cardIndex} sx={{ mb: 2 }}>
+            <Card key={cardIndex} sx={{ mb: 2,py:2 }}>
               <CardContent sx={{}}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Skeleton variant="circular" width={30} height={30} />
@@ -35,10 +35,10 @@ const TicketSkeleton = () => {
 
                 <Box style={{ ml: 2, mt: 2 }}>
                   <Skeleton variant="text" width="80%" />
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                    <Skeleton variant="rectangular" width={50} height={20} />
-                    <Skeleton variant="rectangular" width={50} height={20} />
-                    <Skeleton variant="rectangular" width={50} height={20} />
+                  <Box sx={{ display: 'flex', gap:2, mt: 2 }}>
+                    <Skeleton variant="rectangular" width={60} height={25} />
+                    <Skeleton variant="rectangular" width={80} height={25} />
+                  
                   </Box>
                 </Box>
               </CardContent>
@@ -47,7 +47,7 @@ const TicketSkeleton = () => {
         </Grid>
 
         {/* Chat Content */}
-        <Grid item xs={12} sm={9}>
+        <Grid item xs={12} sm={8}>
             <Card sx={{ mb: 2 }}>
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>

@@ -40,22 +40,15 @@ const DashboardSkeleton = () => {
                 <Box component={'h2'} sx={{ fontSize: 16, mb: 2.5 }}>
                   <Skeleton animation="wave" height={24} width={100} />
                 </Box>
-                <Card>
-                  <CardHeader
-                    action={
-                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography sx={{ mr: 2, fontSize: 12 }}>
-                          <Skeleton animation="wave" height={16} width={60} />
-                        </Typography>
-                        <Skeleton animation="wave" height={32} width={100} />
-                      </Box>
-                    }
-                    sx={{ pb: 0 }}
-                  />
-                  <CardContent>
-                    <Skeleton animation="wave" height={200} />
-                  </CardContent>
-                </Card>
+
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Typography sx={{ mr: 2, fontSize: 12 }}>
+                    <Skeleton animation="wave" height={16} width={60} />
+                  </Typography>
+                  <Skeleton animation="wave" height={32} width={100} />
+                </Box>
+
+                <Skeleton animation="wave" height={200} />
               </Box>
             </Grid>
 
@@ -76,7 +69,7 @@ const DashboardSkeleton = () => {
                 <Box>
                   <Box sx={{}}>
                     {limitedData.map((_, index) => (
-                      <Box key={index} sx={{ padding: 2,display: 'flex', }}>
+                      <Box key={index} sx={{ padding: 2, display: 'flex' }}>
                         <Skeleton variant="rectangular" width={75} height={68} style={{ borderRadius: 15 }} />
                         <Box
                           sx={{
@@ -90,11 +83,11 @@ const DashboardSkeleton = () => {
                             marginTop: 1
                           }}
                         >
-                          <Box sx={{ display: 'flex',ml:2, flexDirection: 'column', alignItems: 'flex-start' }}>
+                          <Box sx={{ display: 'flex', ml: 2, flexDirection: 'column', alignItems: 'flex-start' }}>
                             <Skeleton animation="wave" height={16} width={150} />
                             <Skeleton animation="wave" height={20} width={110} />
                           </Box>
-                          <Skeleton animation="wave" height={16} width={60} sx={{ml:2}} />
+                          <Skeleton animation="wave" height={16} width={60} sx={{ ml: 2 }} />
                         </Box>
                       </Box>
                     ))}
@@ -193,7 +186,7 @@ const DashboardSkeleton = () => {
                   <Skeleton variant="text" width="50%" height={20} animation="wave" />
                 </Typography>
                 <Card sx={{ mt: 2, opacity: 0.8 }}>
-                  {[1, 2,3].map((_, index) => (
+                  {[1, 2, 3].map((_, index) => (
                     <Box key={index}>
                       <Box
                         sx={{
@@ -221,7 +214,7 @@ const DashboardSkeleton = () => {
               </Box>
               <Box>
                 <Card sx={{ mt: 4, opacity: 0.8 }}>
-                  {[1, 2,3].map((_, index) => (
+                  {[1, 2, 3].map((_, index) => (
                     <Box key={index}>
                       <Box
                         sx={{
