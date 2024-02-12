@@ -126,7 +126,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DeleteDialog from 'components/modal/DeleteModel';
 
-
 const CourseCard = (props) => {
   const { sx, image, personName, course } = props;
   // const [statusValue, setStatusValue] = useState(course?.is_active);
@@ -137,17 +136,32 @@ const CourseCard = (props) => {
     // setStatusValue(event.target.value);
   };
 
-
-
   return (
     <Grid item xs={12} sm={12} lg={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
-          <CardMedia sx={{ height: '12.5625rem', borderRadius: '5px' }} image={image} />
+          <CardMedia sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px' }} image={image}>
+            <CustomChip
+              sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
+              skin="light"
+              label={course?.course_categories?.course_category_name}
+              rounded
+              color="secondary"
+              size="small"
+              variant="outlined"
+            />
+          </CardMedia>
         </CardContent>
         <CardContent>
           <Box>
-            <CustomChip skin="light" label={course?.course_categories?.course_category_name} rounded color="secondary" size="small" variant="outlined" />
+            <CustomChip
+              skin="light"
+              label={course?.course_categories?.course_category_name}
+              rounded
+              color="secondary"
+              size="small"
+              variant="outlined"
+            />
           </Box>
           <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h4">{course?.course_name}</Typography>
@@ -204,7 +218,6 @@ const CourseCard = (props) => {
         description="Are you sure you want to delete this item?"
         title="Delete"
       />
-
     </Grid>
   );
 };
