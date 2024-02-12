@@ -39,13 +39,7 @@ const Courses = () => {
             {courses.map((course, index) => (
               <CourseCard
                 key={index}
-                price={course.price}
-                chipText={course.chipText}
-                chipColor={course.chipColor}
-                personName={course.personName}
-                students={course.students}
-                coursename={course.coursename}
-                image={course.image}
+                course={course}
               />
             ))}
           </Grid>
