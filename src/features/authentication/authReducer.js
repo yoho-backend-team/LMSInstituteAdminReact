@@ -4,14 +4,14 @@ const selectedBranchId = localStorage.getItem('selectedBranchId');
 const haveBranchId = () => {
   if (branches) {
     if (selectedBranchId) {
-      return selectedBranchId
+      return selectedBranchId;
     } else {
-      return branches[0]?.branch_id
+      return branches[0]?.branch_id;
     }
   } else {
-    return null
+    return null;
   }
-}
+};
 
 const initialState = {
   isAuthenticated: localStorage.getItem('isAuthenticated') || false,
@@ -19,7 +19,7 @@ const initialState = {
   userData: JSON.parse(localStorage.getItem('userData')) || null,
   permissions: JSON.parse(localStorage.getItem('userData')) || null,
   branches: JSON.parse(localStorage.getItem('branches')) || null,
-  selectedBranchId: haveBranchId,
+  selectedBranchId: haveBranchId(),
   errorMessage: ''
 };
 
