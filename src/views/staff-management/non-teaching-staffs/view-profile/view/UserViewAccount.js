@@ -81,7 +81,7 @@ const handleEditClose = () => setOpenEdit(false)
 // const handlePlansClose = () => setOpenPlans(false)
 if (data) {
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={4}>
       <Grid item xs={12} >
         <Card>
           {/* <CardContent sx={{ pt: 13.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>

@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 // ** Redux Imports
 import { useDispatch, useSelector } from 'react-redux';
-
+import { Grid } from '@mui/material';
 // ** Hooks
 
 // ** FullCalendar & App Components Imports
@@ -62,6 +62,8 @@ const AppCalendar = () => {
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
 
   return (
+    <Grid container spacing={1}>
+      <Grid xs={12}>
     <CalendarWrapper
       className="app-calendar"
       sx={{
@@ -120,6 +122,8 @@ const AppCalendar = () => {
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
       /> */}
     </CalendarWrapper>
+    </Grid>
+    </Grid>
   );
 };
 

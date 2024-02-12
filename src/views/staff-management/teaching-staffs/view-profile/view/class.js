@@ -120,8 +120,8 @@ const LiveClassCard = () => {
   };
 
   return (
-    <Grid container >
-         <Grid container spacing={2}>
+
+       <Grid container spacing={6}>
       {cardData.map((card, index) => (
         <Grid item xs={12} sm={6} md={6} key={index}>
           <Card sx={{ position: 'relative' }}>
@@ -211,7 +211,7 @@ const LiveClassCard = () => {
       ))}
       {/* <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} /> */}
 
-    </Grid>
+
     </Grid>
   )
 }
