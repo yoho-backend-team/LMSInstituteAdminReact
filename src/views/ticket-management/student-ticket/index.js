@@ -1,4 +1,5 @@
 // ** React Imports
+import { Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 // ** MUI Imports
@@ -18,6 +19,7 @@ import { formatDateToMonthShort } from 'utils/format';
 
 import SidebarLeft from 'features/ticket-management/student/components/SidebarLeft';
 import ChatContent from 'features/ticket-management/student/components/ChatContent';
+import TicketSkeleton from 'components/cards/Skeleton/TicketSkeleton';
 
 const StudentTicket = () => {
   // ** States
@@ -52,8 +54,28 @@ const StudentTicket = () => {
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
   console.log(selectChat);
+
+  
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading delay with useEffect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
   return (
     <>
+      <Grid>
+        <Grid spacing={1} className="match-height">
+          {loading ? (
+            // If data is still loading, display skeleton
+            <TicketSkeleton />
+          ) : (
       <Box
         className="app-chat"
         sx={{
@@ -101,7 +123,10 @@ const StudentTicket = () => {
           handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
         />
       </Box>
-    </>
+     )}
+     </Grid>
+   </Grid>
+ </>
   );
 };
 StudentTicket.contentHeightFixed = true;
