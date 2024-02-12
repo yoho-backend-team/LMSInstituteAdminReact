@@ -5,36 +5,35 @@ import CardHeader from '@mui/material/CardHeader';
 const StudentSkeleton = () => {
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title={<Skeleton height={25} width={200} />} />
-            <CardContent sx={{ pt: 0 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
-                  <Skeleton variant="rectangular" height={50} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Skeleton variant="rectangular" height={50} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Skeleton variant="rectangular" height={50} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Skeleton variant="rectangular" height={50} animation="wave" />
-                </Grid>
-                <Grid item xs={12}>
-                  <Grid container justifyContent="flex-end">
-                    <Grid item xs={12} sm={3}>
-                      <Skeleton variant="rectangular" height={40}  animation="wave" />
-                    </Grid>
-                  </Grid>
-                </Grid>
+   <Grid container spacing={4}>
+      <Grid item xs={12}>
+        <Card>
+          <CardHeader title={<Skeleton height={25} width={200} />} />
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <Skeleton variant="rectangular" height={55} animation="wave" />
               </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+              <Grid item xs={12} sm={6}>
+                <Skeleton variant="rectangular" height={55} animation="wave" />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Skeleton variant="rectangular" height={55} animation="wave" />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Skeleton variant="rectangular" height={55} animation="wave" />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Skeleton variant="rectangular" height={55} animation="wave" />
+              </Grid>
+              <Grid item sm={3} xs={12}>
+                <Skeleton variant="rectangular" height={55} animation="wave" />
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
       </Grid>
+    </Grid>
 
       <Grid container spacing={2} sx={{ mt: 1 }}>
         {[...Array(6)].map((_, index) => (
