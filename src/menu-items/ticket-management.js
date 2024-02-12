@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconHelp } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconHelp,IconTicket } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -8,7 +8,8 @@ const icons = {
   IconUser,
   IconUsers,
   IconCash,
-  IconHelp
+  IconHelp,
+  IconTicket
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
@@ -22,7 +23,7 @@ const pages = {
       id: 'authentication',
       title: 'Ticket Management',
       type: 'collapse',
-      icon: icons.IconHelp,
+      icon: icons.IconTicket,
 
       children: [
         {
@@ -30,7 +31,7 @@ const pages = {
           title: 'Staff-Ticket',
           type: 'item',
           url: '/ticket-management/staff-ticket',
-          icon: icons.IconHelp,
+          icon: icons.IconTicket,
           target: false,
           breadcrumbs: false
         },
@@ -39,7 +40,7 @@ const pages = {
           title: 'Student-Ticket',
           type: 'item',
           url: '/ticket-management/student-ticket',
-          icon: icons.IconHelp,
+          icon: icons.IconTicket,
           target: false,
           breadcrumbs: false
         }
