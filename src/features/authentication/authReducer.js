@@ -1,12 +1,13 @@
 // authReducer.js
 const branches = JSON.parse(localStorage.getItem('branches'));
+const selectedBranchId = localStorage.getItem('selectedBranchId');
 const initialState = {
   isAuthenticated: localStorage.getItem('isAuthenticated') || false,
   token: localStorage.getItem('token') || null,
   userData: JSON.parse(localStorage.getItem('userData')) || null,
   permissions: JSON.parse(localStorage.getItem('userData')) || null,
   branches: JSON.parse(localStorage.getItem('branches')) || null,
-  selectedBranchId: branches ? branches[0]?.branch_id : null,
+  selectedBranchId: selectedBranchId ? selectedBranchId : branches[0]?.branch_id,
   errorMessage: ''
 };
 

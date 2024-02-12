@@ -147,7 +147,7 @@ const NonTeachingStaffCard = () => {
         <Grid container xs={12} spacing={2} mt={2}>
           {data.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
-              <Card sx={{ position: 'relative' ,p:1.5}}>
+              <Card sx={{ position: 'relative', p: 1.5 }}>
                 <OptionsMenu
                   iconButtonProps={{
                     size: 'small',
@@ -163,14 +163,14 @@ const NonTeachingStaffCard = () => {
                 <CardContent sx={{ pt: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
-                    <Typography variant="h4" sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ mb: 1 }}>
                       {item.name}
                     </Typography>
                     <Typography variant="h6">{item.email}</Typography>
 
                     <Box
                       sx={{
-                        mt:3,
+                        mt: 3,
                         mb: 3,
                         gap: 2,
                         width: '100%',
@@ -189,8 +189,8 @@ const NonTeachingStaffCard = () => {
                         <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                       </Box>
                     </Box>
-                    <Box  sx={{  display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none'}}>
-                    <Grid>
+                    <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none' }}>
+                      <Grid>
                         <TextField
                           size="small"
                           select
@@ -203,9 +203,9 @@ const NonTeachingStaffCard = () => {
                         </TextField>
                       </Grid>
                       <Grid>
-                      <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
-                        View Profile
-                      </Button>
+                        <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
+                          View Profile
+                        </Button>
                       </Grid>
                     </Box>
                   </Box>
