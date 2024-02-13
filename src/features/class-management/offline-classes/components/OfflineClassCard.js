@@ -246,8 +246,11 @@ const OfflineClassCard = () => {
                   />
                 </Box> */}
 
-                  <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 1 }}>
-                    <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
+                  <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
+                      <Icon icon="tabler:eye" />
+                    </IconButton>
+                    <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="secondary" sx={{ ml: 1 }}>
                       <Icon icon="tabler:edit" />
                     </IconButton>
                     <IconButton
