@@ -37,10 +37,10 @@ import OptionsMenu from 'components/option-menu';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Checkbox from '@mui/material/Checkbox';
 import Autocomplete from '@mui/material/Autocomplete';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
+import DeleteDialog from 'components/modal/DeleteModel';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -97,27 +97,10 @@ const SalaryTable = () => {
     console.log('Toggle drawer');
   };
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const handleStatusChange = (event, row) => {
-    setSelectedDeleteMaterial(row);
+  const handleStatusChange = () => {
     setDeleteDialogOpen(true);
-  };
-
-  const handleDeleteGroup = async () => {
-    try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
-
-      if (result.success) {
-        toast.success(result.message);
-        dispatch(getAllGroups());
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   // ** Hooks
@@ -130,7 +113,6 @@ const SalaryTable = () => {
   //   setStatusValue(e.target.value);
   // };
 
-
   const staff = [
     { staff_id: '1', staff_name: 'staff 1' },
     { staff_id: '2', staff_name: 'staff 2' },
@@ -138,9 +120,6 @@ const SalaryTable = () => {
   ];
 
   const [selectedstaff, setSelectedstaff] = useState([]);
-
-
-
 
   const defaultColumns = [
     {
@@ -348,7 +327,7 @@ const SalaryTable = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...staff]}
@@ -430,8 +409,14 @@ const SalaryTable = () => {
       </Grid>
       <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       <SalaryEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
-      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
-    </DatePickerWrapper>
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        // handleSubmit={handleDeleteConfirm}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+      />
+    </DatePickerWrapper> 
   );
 };
 
