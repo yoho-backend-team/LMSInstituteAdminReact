@@ -1,7 +1,7 @@
 // NotesService.js
 import axios from 'axios';
 
-const COURSE_NOTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/CourseNote-management/CourseNote`;
+const COURSE_NOTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-notes`;
 
 export const getAllCourseNotes = async (selectedBranchId) => {
   try {

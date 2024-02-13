@@ -1,19 +1,20 @@
 // groupService.js
 import axios from 'axios';
 
-const OFFLINE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/OfflineClass-management/OfflineClass`;
+const OFFLINE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/class`;
 
-export const getAllOfflineClasses = async () => {
+export const getAllOfflineClasses = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${OFFLINE_CLASS_API_END_POINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error

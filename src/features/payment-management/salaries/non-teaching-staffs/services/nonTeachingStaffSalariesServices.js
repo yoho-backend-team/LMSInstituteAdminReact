@@ -1,27 +1,28 @@
 // groupService.js
 import axios from 'axios';
 
-const NON_TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/NonTeachingStaffSalary-management/NonTeachingStaffSalary`;
+const NON_TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/non-teaching-staff-salaries`;
 
-export const getAllNonTeachingStaffSalaries = async () => {
+export const getAllNonTeachingStaffSalaries = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch NonTeachingStaffSalaries. Status: ${response.status}`);
+      throw new Error(`Failed to fetch TeachingStaffSalaries. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllNonTeachingStaffSalaries:', error);
+    console.error('Error in getAllTeachingStaffSalaries:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;

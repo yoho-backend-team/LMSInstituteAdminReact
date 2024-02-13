@@ -1,3 +1,3 @@
 // teachingStaffsSelectors.js
-export const selectTeachingStaffs = (state) => state.TeachingStaffs.data;
-export const selectLoading = (state) => state.TeachingStaffs.loading;
+export const selectTeachingStaffs = (state) => state.teachingStaffs.data;
+export const selectLoading = (state) => state.teachingStaffs.loading;

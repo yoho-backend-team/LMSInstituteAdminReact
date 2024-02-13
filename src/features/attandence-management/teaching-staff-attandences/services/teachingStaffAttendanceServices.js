@@ -1,19 +1,20 @@
 // groupService.js
 import axios from 'axios';
 
-const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/TeachingStaffAttendance-management/TeachingStaffAttendance`;
+const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/attendance-management/teaching-staff`;
 
-export const getAllTeachingStaffAttendances = async () => {
+export const getAllTeachingStaffAttendances = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
