@@ -26,7 +26,8 @@ import toast from 'react-hot-toast';
 
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
+// import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
+import CoursePdfInput from './PdfInput';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -92,7 +93,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
-
+  const [studymaterialPdf, setstudymaterialPdf] = useState('');
   const [groups, setGroups] = useState([]);
 
   const handleBranchChange = (event) => {
@@ -102,6 +103,8 @@ const StudyMaterialAddDrawer = (props) => {
   useEffect(() => {
     getAllGroups();
   }, []);
+
+  console.log(studymaterialPdf);
 
   const getAllGroups = async () => {
     let config = {
@@ -183,6 +186,10 @@ const StudyMaterialAddDrawer = (props) => {
     //   //   dispatch(addUser({ ...data, course, currentPlan: plan }));
   };
 
+  const handleSetPdf = (data) => {
+    setstudymaterialPdf(data)
+  }
+
   const handleClose = () => {
     setValue('contact', Number(''));
     toggle();
@@ -219,7 +226,7 @@ const StudyMaterialAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} />
           </Grid>
 
           <Grid item xs={12} sm={12}>
