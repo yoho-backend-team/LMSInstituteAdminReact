@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,7 +12,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
+
 
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -27,7 +27,8 @@ import StepperCustomDot from 'features/course-management/add-course/components/S
 // ** Styled Components
 import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
 import StepperWrapper from 'styles/mui/stepper';
-
+import { useSelector } from 'react-redux';
+import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses/services/courseServices';
 const steps = [
   {
     title: 'Personal Info',
@@ -59,7 +60,7 @@ const personalSchema = yup.object().shape({
   Course_Price: yup.number().required(),
   description: yup.string().required(),
   course_overview: yup.string().required(),
-  Learning_Format: yup.array().required(),
+  Learning_Format: yup.string().required(),
   Course_Category: yup.string().required()
 });
 
@@ -70,13 +71,27 @@ const socialSchema = yup.object().shape({});
 
 const AddCoursePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   const [courseLogo, setCourseLogo] = useState('');
   const [courseTemplate, setCourseTemplate] = useState('');
   const [courseSyllabus, setCourseSyllabus] = useState('');
+  const [activeCategories, setActiveCategories] = useState([]);
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(courseSyllabus);
 
+  useEffect(() => {
+    getAllCategories()
+  }, [selectedBranchId]);
+
+  const getAllCategories = async () => {
+    const result = await getAllActiveCourseCategories(selectedBranchId)
+    // console.log('result', result?.data)
+    if (result.success) {
+      setActiveCategories(result?.data);
+    }
+  }
   // const [features, setFeatures] = useState([]);
 
   // ** Hooks
@@ -150,29 +165,19 @@ const AddCoursePage = () => {
       data.append('course_duration', personalData?.Course_duration);
       data.append('course_category', personalData?.Course_Category);
       data.append('course_price', personalData?.Course_Price);
+      data.append('learning_format', personalData?.Learning_Format);
       data.append('logo', courseLogo);
       data.append('image', courseTemplate);
       data.append('image', courseSyllabus);
+      data.append('branch_id', selectedBranchId);
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/course-management/courses/create`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-        data: data
-      };
+      const result = await addCourse(data);
 
-      await axios
-        .request(config)
-        .then((response) => {
-          console.log(response.data);
-          toast.success('Form Submitted');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
     }
   };
 
@@ -267,8 +272,11 @@ const AddCoursePage = () => {
                       onChange={onChange}
                       value={value}
                     >
-                      <MenuItem value="price">Price</MenuItem>
-                      <MenuItem value="percentage">Percentage</MenuItem>
+                      {
+                        activeCategories?.map((category) => (
+                          <MenuItem key={category?.id} value={category.id} > {category?.course_category_name}</MenuItem>
+                        ))
+                      }
                     </TextField>
                   )}
                 />
@@ -290,8 +298,8 @@ const AddCoursePage = () => {
                       onChange={onChange}
                       value={value}
                     >
-                      <MenuItem value="0">Online Mode</MenuItem>
-                      <MenuItem value="1">Offline Mode</MenuItem>
+                      <MenuItem value="online">Online Mode</MenuItem>
+                      <MenuItem value="offline">Offline Mode</MenuItem>
                     </TextField>
                   )}
                 />
@@ -348,7 +356,7 @@ const AddCoursePage = () => {
                 </Button>
               </Grid>
             </Grid>
-          </form>
+          </form >
           // </DatePickerWrapper>
         );
       case 1:
