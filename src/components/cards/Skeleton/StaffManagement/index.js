@@ -1,5 +1,5 @@
 // material-ui
-import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 
@@ -21,12 +21,12 @@ const StaffManagement = () => {
                 <Grid item xs={12} sm={6}>
                   <Skeleton variant="rounded" height={55} animation="wave" />
                 </Grid>
-                  <Grid item sm={3} xs={12}>
-                    <Skeleton variant="rounded" height={55} animation="wave" />
-                  </Grid>
-                  <Grid item sm={3} xs={12}>
-                    <Skeleton variant="rounded" height={55} animation="wave" />
-                  </Grid>
+                <Grid item sm={3} xs={12}>
+                  <Skeleton variant="rounded" height={55} animation="wave" />
+                </Grid>
+                <Grid item sm={3} xs={12}>
+                  <Skeleton variant="rounded" height={55} animation="wave" />
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
@@ -53,10 +53,13 @@ const StaffManagement = () => {
                     <Skeleton variant="circular" width={100} height={100} sx={{ mb: 1, width: 100, height: 100 }} />
                     <Skeleton variant="text" width={100} height={20} sx={{ mb: 1 }} />
                     <Skeleton variant="text" width={100} height={20} sx={{ mb: 2 }} />
-                    <Box sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                      <Button variant="tonal" sx={{ px: 4 }}>
-                        <Skeleton variant="text" width={100} height={20} />
-                      </Button>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', textDecoration: 'none' }}>
+                    <Box>
+                      <Skeleton variant="text" width={100} height={50} />
+                    </Box>
+                    <Box>
+                      <Skeleton variant="text" width={100} height={50} />
                     </Box>
                   </Box>
                 </CardContent>
