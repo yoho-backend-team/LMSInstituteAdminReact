@@ -42,7 +42,7 @@ const LiveClassFilterCard = () => {
   const [endDateRange, setEndDateRange] = useState(null);
   const [startDateRange, setStartDateRange] = useState(null);
 
-  const handleStatusValue = (e) => {
+  const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
   };
 
@@ -96,14 +96,9 @@ const LiveClassFilterCard = () => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                    <MenuItem value="0">Active</MenuItem>
+                    <MenuItem value="1">Deactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>

@@ -126,6 +126,7 @@ const ClassSkeleton = () => {
                   <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 1, gap: 2 }}>
                     <Skeleton variant="rectangular" width={40} height={40} sx={{ marginRight: 1 }} />
                     <Skeleton variant="rectangular" width={40} height={40} sx={{ marginRight: 1 }} />
+                    <Skeleton variant="rectangular" width={40} height={40} sx={{ marginRight: 1 }} />
                   </Box>
                 </Box>
               </CardContent>
