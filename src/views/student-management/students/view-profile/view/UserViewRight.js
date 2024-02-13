@@ -18,10 +18,8 @@ import Icon from 'components/icon';
 
 // ** Demo Components Imports
 // import UserViewBilling from 'src/views/apps/user/view/UserViewBilling'
-import UserViewBilling from './UserViewBilling';
+import UserViewClasses from './UserViewBilling';
 import UserViewAccount from './UserViewAccount';
-import UserViewConnection from './UserViewConnection';
-import UserViewNotification from './UserViewNotification';
 import UserViewSecurity from './UserViewSecurity';
 
 // ** Styled Tab component
@@ -97,9 +95,7 @@ const UserViewRight = ({ tab, invoiceData }) => {
       >
         <Tab value="account" label="Account" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
         <Tab value="security" label="Security" icon={<Icon fontSize="1.125rem" icon="tabler:lock" />} />
-        <Tab value="billing-plan" label="Billing & Plan" icon={<Icon fontSize="1.125rem" icon="tabler:currency-dollar" />} />
-        <Tab value="notification" label="Notification" icon={<Icon fontSize="1.125rem" icon="tabler:bell" />} />
-        <Tab value="connection" label="Connection" icon={<Icon fontSize="1.125rem" icon="tabler:link" />} />
+        <Tab value="classes" label="Classes" icon={<Icon fontSize="1.125rem" icon="tabler:currency-dollar" />} />
       </TabList>
       <Box sx={{ mt: 4 }}>
         {/* {isLoading ?
@@ -116,14 +112,8 @@ const UserViewRight = ({ tab, invoiceData }) => {
           <TabPanel sx={{ p: 0 }} value="security">
             <UserViewSecurity />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="billing-plan">
-            <UserViewBilling />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="notification">
-            <UserViewNotification />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="connection">
-            <UserViewConnection />
+          <TabPanel sx={{ p: 0 }} value="classes">
+            <UserViewClasses />
           </TabPanel>
         </>
         {/* )} */}
