@@ -70,10 +70,12 @@ const socialSchema = yup.object().shape({});
 
 const AddCoursePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
   const [courseLogo, setCourseLogo] = useState('');
   const [courseTemplate, setCourseTemplate] = useState('');
   const [courseSyllabus, setCourseSyllabus] = useState('');
+
+  console.log(courseSyllabus);
 
   // const [features, setFeatures] = useState([]);
 
@@ -272,7 +274,7 @@ const AddCoursePage = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                 <Controller
+                <Controller
                   name="Learning_Format"
                   control={personalControl}
                   rules={{ required: true }}

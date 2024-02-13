@@ -5,7 +5,7 @@ const COURSE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes
 
 export const getAllCourses = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/read`, {
+    const response = await axios.get(`${COURSE_END_POINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
