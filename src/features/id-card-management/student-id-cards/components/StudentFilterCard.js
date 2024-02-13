@@ -12,10 +12,13 @@ import Checkbox from '@mui/material/Checkbox';
 import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
 
-const StudentFilterCard = () => {
+
+const StudentFilterCard = (props) => {
+  const { handleSearchFilter, value } = props;
+
   const [statusValue, setStatusValue] = useState('');
 
-  const handleStatusValue = (e) => {
+  const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
   };
 
@@ -26,8 +29,6 @@ const StudentFilterCard = () => {
   ];
 
   const [selectedbatch, setSelectedbatch] = useState([]);
-
- 
 
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
@@ -46,7 +47,7 @@ const StudentFilterCard = () => {
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
@@ -105,14 +106,9 @@ const StudentFilterCard = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                    <MenuItem value="0">Active</MenuItem>
+                    <MenuItem value="1">Deactive</MenuItem>
                   </TextField>
                 </Grid>
 
@@ -138,7 +134,7 @@ const StudentFilterCard = () => {
                         InputProps={{
                           ...params.InputProps,
                           style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
+                        }} 
                       />
                     )}
                     renderOption={(props, option, { selected }) => (
@@ -172,6 +168,17 @@ const StudentFilterCard = () => {
                     isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
+                </Grid>
+
+                <Grid item sm={4} xs={12}>
+                  <TextField
+                    fullWidth
+                    value={value}
+                    label="Search Student"
+                    sx={{}}
+                    placeholder="Search Student"
+                    onChange={(e) => handleSearchFilter(e.target.value)}
                   />
                 </Grid>
               </Grid>
