@@ -42,7 +42,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FeesCardHeader from './FeesCardHeader';
 import FeesAddDrawer from './FeesAddDrawer';
 import FeesEditDrawer from './FeesEditDrawer';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import DeleteDialog from 'components/modal/DeleteModel';
 
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -96,33 +96,17 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const [editUserOpen, setEditUserOpen] = useState(false);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
   };
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
 
-  const handleStatusChange = (event, row) => {
-    setSelectedDeleteMaterial(row);
+  const handleStatusChange = () => {
     setDeleteDialogOpen(true);
   };
 
-  const handleDeleteGroup = async () => {
-    try {
-      const result = await deleteGroup(selectedDeleteMaterial.id);
-
-      if (result.success) {
-        toast.success(result.message);
-        dispatch(getAllGroups());
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   // ** Hooks
 
   const handleFilter = (val) => {
@@ -138,7 +122,6 @@ const FeesTable = () => {
     setEndDateRange(end);
   };
 
-
   const students = [
     { students_id: '1', students_name: 'students 1' },
     { students_id: '2', students_name: 'students 2' },
@@ -153,8 +136,6 @@ const FeesTable = () => {
     { batch_id: '2', batch_name: 'batch 2' },
     { batch_id: '3', batch_name: 'batch 3' }
   ];
-
-
 
   const defaultColumns = [
     {
@@ -351,8 +332,8 @@ const FeesTable = () => {
             <CardHeader title="Filters" />
             <CardContent>
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
+                <Grid item xs={12} sm={4}>
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
@@ -411,7 +392,7 @@ const FeesTable = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ students_id: 'selectAll', students_name: 'Select All' }, ...students]}
@@ -518,7 +499,13 @@ const FeesTable = () => {
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
       {/* Delete Modal */}
-      <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        // handleSubmit={handleDeleteConfirm}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+      />
     </DatePickerWrapper>
   );
 };

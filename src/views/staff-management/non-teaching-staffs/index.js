@@ -207,7 +207,6 @@ const NonTeaching = () => {
                             label="Status"
                             SelectProps={{ value: "", onChange: (e) => handleStatusChange(e) }}
                           >
-                            <MenuItem value="">Select Status</MenuItem>
                             <MenuItem value="1">Active</MenuItem>
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
