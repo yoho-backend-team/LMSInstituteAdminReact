@@ -93,7 +93,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
-  const [notesPdf, setNotesPdf] = useState('');
+  const [studymaterialPdf, setstudymaterialPdf] = useState('');
   const [groups, setGroups] = useState([]);
 
   const handleBranchChange = (event) => {
@@ -104,7 +104,7 @@ const StudyMaterialAddDrawer = (props) => {
     getAllGroups();
   }, []);
 
-  console.log(notesPdf);
+  console.log(studymaterialPdf);
 
   const getAllGroups = async () => {
     let config = {
@@ -187,7 +187,7 @@ const StudyMaterialAddDrawer = (props) => {
   };
 
   const handleSetPdf = (data) => {
-    setNotesPdf(data)
+    setstudymaterialPdf(data)
   }
 
   const handleClose = () => {

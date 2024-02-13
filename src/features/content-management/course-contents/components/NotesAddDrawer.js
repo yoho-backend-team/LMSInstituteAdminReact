@@ -92,9 +92,12 @@ const NotesAddDrawer = (props) => {
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
-
+  const [notesPdf, setNotesPdf] = useState('');
   const [groups, setGroups] = useState([]);
-
+  console.log(notesPdf);
+  const handleSetPdf = (data) => {
+    setNotesPdf(data)
+  }
   const handleBranchChange = (event) => {
     setSelectedBranches(event.target.value);
   };
@@ -219,7 +222,7 @@ const NotesAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf}/>
           </Grid>
 
           <Grid item xs={12} sm={12}>
