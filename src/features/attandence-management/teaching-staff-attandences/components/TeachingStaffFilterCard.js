@@ -1,13 +1,11 @@
 // ** React Imports
 import { useState } from 'react';
 
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import Icon from 'components/icon';
 // ** Third Party Imports
 // import format from 'date-fns/format';
 // import DatePicker from 'react-datepicker';
@@ -77,13 +75,13 @@ const TeachingStaffFilterCard = (props) => {
             <CardHeader title="Teaching Staff Attendance" />
             <CardContent>
               <Grid container spacing={4} sx={{display:"flex", justifyContent:"flex-end"}}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="0">Active</MenuItem>
                     <MenuItem value="1">Inactive</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <Autocomplete
                     multiple
                     id="select-multiple-chip"
@@ -157,7 +155,7 @@ const TeachingStaffFilterCard = (props) => {
                     }
                   />
                 </Grid> */}
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <Autocomplete
                     multiple
                     id="select-multiple-chip"
@@ -215,7 +213,7 @@ const TeachingStaffFilterCard = (props) => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     value={value}
                     sx={{
@@ -225,11 +223,11 @@ const TeachingStaffFilterCard = (props) => {
                     onChange={(e) => handleFilter(e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={2} sx={{mt:1}}>
+                {/* <Grid item xs={12} sm={2} sx={{mt:1}}>
                     <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
                       Add Attendance
                     </Button>
-                </Grid>
+                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

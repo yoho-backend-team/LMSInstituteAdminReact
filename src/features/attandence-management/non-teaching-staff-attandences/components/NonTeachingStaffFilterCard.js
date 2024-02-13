@@ -1,25 +1,22 @@
-import React from 'react';
 // ** React Imports
-import { useState, forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
-import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 
 // ** Third Party Imports
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 
 // ** Custom Components Imports
-import  TextField  from '@mui/material/TextField';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Checkbox } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import Icon from 'components/icon';
-import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import CustomChip from 'components/mui/chip';
 // ** Styled Components
@@ -142,7 +139,7 @@ const NonTeachingStaffFilterCard = (props) => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={3}>
                   <DatePicker
                     isClearable
                     selectsRange
@@ -158,7 +155,7 @@ const NonTeachingStaffFilterCard = (props) => {
                     }
                   />
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                   <TextField
                     value={value}
                     sx={{
@@ -168,11 +165,11 @@ const NonTeachingStaffFilterCard = (props) => {
                     onChange={(e) => handleFilter(e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={2} sx={{mt:1}}>
+                {/* <Grid item xs={12} sm={2} sx={{mt:1}}>
                     <Button  onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
                       Add Attendance
                     </Button>
-                </Grid>
+                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

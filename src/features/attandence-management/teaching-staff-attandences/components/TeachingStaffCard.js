@@ -188,7 +188,7 @@ const TeachingStaffCard = () => {
                       </Grid> */}
                       <Grid>
                         <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
-                          View Profile
+                          View Attendance
                         </Button>
                       </Grid>
                     </Box>
