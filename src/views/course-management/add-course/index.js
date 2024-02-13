@@ -1,7 +1,6 @@
 // ** React Imports
 import { Fragment, useState } from 'react';
 // ** MUI Imports
-import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -23,12 +22,9 @@ import * as yup from 'yup';
 // ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
-import { Checkbox, TextField as CustomTextField, TextField } from '@mui/material';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
 // ** Styled Components
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CustomChip from 'components/mui/chip';
 import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
 import StepperWrapper from 'styles/mui/stepper';
 
@@ -51,7 +47,7 @@ const defaultPersonalValues = {
   Course_Price: '',
   description: '',
   course_overview: '',
-  Learning_Format: [],
+  Learning_Format: '',
   Course_Category: ''
 };
 
@@ -63,7 +59,7 @@ const personalSchema = yup.object().shape({
   Course_Price: yup.number().required(),
   description: yup.string().required(),
   course_overview: yup.string().required(),
-  Learning_Format: yup.array().min(1, 'Select at least one Learning Format').required(),
+  Learning_Format: yup.array().required(),
   Course_Category: yup.string().required()
 });
 
@@ -124,16 +120,11 @@ const AddCoursePage = () => {
       Course_Price: Number(''),
       description: '',
       course_overview: '',
-      Learning_Format: [],
+      Learning_Format: '',
       Course_Category: ''
     });
   };
 
-  const groups = [
-    { id: '1', name: 'Offline Class' },
-    { id: '2', name: 'Online class' },
-    { id: '3', name: 'Hybrid' }
-  ];
 
   // const onSubmit = async () => {
   //   try {
@@ -281,63 +272,25 @@ const AddCoursePage = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Controller
+                 <Controller
                   name="Learning_Format"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      multiple
-                      id="select-multiple-chip"
-                      options={groups}
-                      getOptionLabel={(option) => option.name}
+                    <TextField
+                      select
+                      fullWidth
+                      label="Learning Format"
+                      id="validation-billing-select"
+                      aria-describedby="validation-billing-select"
+                      error={Boolean(personalErrors['Learning_Format'])}
+                      {...(personalErrors['Learning_Format'] && { helperText: 'This field is required' })}
+                      onChange={onChange}
                       value={value}
-                      onChange={(e, newValue) => {
-                        if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                          onChange(groups.filter((option) => option.id !== 'selectAll'));
-                        } else {
-                          onChange(newValue);
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          label="Learning Format"
-                          error={Boolean(personalErrors['Learning_Format'])}
-                          {...(personalErrors['Learning_Format'] && { helperText: 'This field is required' })}
-                        />
-                      )}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                            checkedIcon={<CheckBoxIcon fontSize="small" />}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                          {option.name}
-                        </li>
-                      )}
-                      renderTags={(value) =>
-                        value.map((option, index) => (
-                          <CustomChip
-                            key={option.id}
-                            label={option.name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              onChange(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))
-                      }
-                      isOptionEqualToValue={(option, value) => option.id === value.id}
-                      selectAllText="Select All"
-                      SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                    />
+                    >
+                      <MenuItem value="0">Online Mode</MenuItem>
+                      <MenuItem value="1">Offline Mode</MenuItem>
+                    </TextField>
                   )}
                 />
               </Grid>

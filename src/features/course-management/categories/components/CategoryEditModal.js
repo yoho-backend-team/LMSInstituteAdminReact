@@ -112,7 +112,7 @@ const CategoryEditModal = ({ open, handleEditClose, category }) => {
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 600 } }}
       >
         <DialogTitle
           id="user-view-edit"
