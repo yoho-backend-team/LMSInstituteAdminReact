@@ -18,7 +18,7 @@ import CoursePdfInput from '../CoursePdfInput';
 
 // ----------------------------------------------------------------------
 
-export default function CourseValidate({ setCourseLogo, setCourseTemplate }) {
+export default function CourseValidate({ setCourseLogo, setCourseTemplate ,setCourseSyllabus}) {
   const NewProductSchema = Yup.object().shape({
     images: Yup.array().min(1, 'Images is required')
   });
@@ -122,7 +122,7 @@ export default function CourseValidate({ setCourseLogo, setCourseTemplate }) {
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Syllabus" />
-                <CoursePdfInput />
+                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
               </div>
             </Stack>
           </Card>

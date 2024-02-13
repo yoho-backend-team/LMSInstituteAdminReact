@@ -74,10 +74,10 @@ const socialSchema = yup.object().shape({});
 
 const AddCoursePage = () => {
   // ** States
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   const [courseLogo, setCourseLogo] = useState('');
   const [courseTemplate, setCourseTemplate] = useState('');
-  const [courseSyllabus, setCourseSyallbus] = useState('');
+  const [courseSyllabus, setCourseSyllabus] = useState('');
 
   // const [features, setFeatures] = useState([]);
 
@@ -95,7 +95,7 @@ const AddCoursePage = () => {
 
   const {
     reset: socialReset,
-    control: socialControl,
+    // control: socialControl,
     handleSubmit: handleSocialSubmit,
     formState: { errors: socialErrors }
   } = useForm({
@@ -147,20 +147,16 @@ const AddCoursePage = () => {
   const onSubmit = async () => {
     // const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
-    const socialData = socialControl?._formValues;
+    // const socialData = socialControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
-      data.append('coursename', personalData?.course_name);
+      data.append('course_name', personalData?.course_name);
       data.append('description', personalData?.description);
       data.append('course_overview', personalData?.course_overview);
-      data.append('Course_duration', personalData?.Course_duration);
-      data.append('Course_Category', personalData?.Course_Category);
-      data.append('Course_Price', personalData?.Course_Price);
-      data.append('facebook', socialData?.facebook);
-      data.append('linkedin', socialData?.linkedIn);
-      data.append('instagram', socialData?.instagram);
-      data.append('twitter', socialData?.twitter);
+      data.append('course_duration', personalData?.Course_duration);
+      data.append('course_category', personalData?.Course_Category);
+      data.append('course_price', personalData?.Course_Price);
       data.append('logo', courseLogo);
       data.append('image', courseTemplate);
       data.append('image', courseSyllabus);
@@ -403,7 +399,7 @@ const AddCoursePage = () => {
       case 1:
         return (
           <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
-            <CourseValidate setCourseLogo={setCourseLogo} setCourseSyallbus={setCourseSyallbus} setCourseTemplate={setCourseTemplate} />
+            <CourseValidate setCourseLogo={setCourseLogo} setCourseSyllabus={setCourseSyllabus} setCourseTemplate={setCourseTemplate} />
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
               <Button variant="tonal" color="secondary" onClick={handleBack}>
                 Back

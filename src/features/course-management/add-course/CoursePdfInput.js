@@ -11,7 +11,7 @@ import Icon from 'components/icon';
 import Grid from '@mui/material/Grid';
 import { useDropzone } from 'react-dropzone';
 
-const CoursePdfInput = () => {
+const CoursePdfInput = ({ setCourseSyllabus }) => {
   // ** State
   const [files, setFiles] = useState([]);
 
@@ -21,13 +21,15 @@ const CoursePdfInput = () => {
     accept: {
       'file/*': ['.pdf']
     },
-    onDrop: (acceptedFiles) => { 
+    onDrop: (acceptedFiles) => {
       setFiles(acceptedFiles.map((file) => Object.assign(file)));
+      setCourseSyllabus(acceptedFiles[0]);
     }
   });
 
   const renderMedia = () => {
     if (files.length) {
+
       // Assuming the files are videos
       return files.map((file) => <iframe title={file.name} key={file.name} src={URL.createObjectURL(file)} width="100%" height="500px" />);
     }
