@@ -21,7 +21,7 @@ import Icon from 'components/icon';
 import UserViewClasses from './UserViewBilling';
 import UserViewAccount from './UserViewAccount';
 import UserViewSecurity from './UserViewSecurity';
-
+import StudentAttendance from './StudentAttendance';
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
@@ -96,6 +96,8 @@ const UserViewRight = ({ tab, invoiceData }) => {
         <Tab value="account" label="Account" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
         <Tab value="security" label="Security" icon={<Icon fontSize="1.125rem" icon="tabler:lock" />} />
         <Tab value="classes" label="Classes" icon={<Icon fontSize="1.125rem" icon="tabler:currency-dollar" />} />
+        <Tab value="attendance" label="Attendance" icon={<Icon fontSize="1.125rem" icon="tabler:calendar-plus" />} />
+  
       </TabList>
       <Box sx={{ mt: 4 }}>
         {/* {isLoading ?
@@ -114,6 +116,9 @@ const UserViewRight = ({ tab, invoiceData }) => {
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="classes">
             <UserViewClasses />
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value="attendance">
+            <StudentAttendance />
           </TabPanel>
         </>
         {/* )} */}

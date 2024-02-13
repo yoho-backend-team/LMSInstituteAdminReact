@@ -28,6 +28,31 @@ export const getAllCourses = async (selectedBranchId) => {
     throw error;
   }
 };
+export const getAllActiveCourseCategories = async (selectedBranchId) => {
+  try {
+    const response = await axios.get(`${COURSE_END_POINT}/active-categories`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: { branch_id: selectedBranchId }
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Courses. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllCourseCategories:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
 
 export const searchCourses = async (searchQuery) => {
   try {
@@ -52,12 +77,13 @@ export const searchCourses = async (searchQuery) => {
 
 export const addCourse = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_END_POINT}/create`, data, {
+    const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response)
 
     if (response.data.status) {
       return { success: true, message: 'Course created successfully' };
