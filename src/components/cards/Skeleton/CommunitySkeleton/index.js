@@ -4,23 +4,23 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 
 const CommunitySkeleton = () => {
-  const cards = Array.from({ length: 7 }, (_, index) => index + 1);
+  const cards = Array.from({ length: 6 }, (_, index) => index + 1);
 
   return (
     <>
       <Grid container spacing={2}>
         {/* Left Side Card */}
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={4}>
           {cards.map((cardIndex) => (
             <Card key={cardIndex} sx={{ mb: 2 }}>
               <CardContent sx={{}}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Box>
-                    <Skeleton variant="circular" width={40} height={40} />
+                    <Skeleton variant="circular" width={45} height={45} />
                   </Box>
                   <Box sx={{ ml: 1 }}>
                     <Skeleton variant="text" width={110} />
-                    <Skeleton variant="text" width={160} />
+                    <Skeleton variant="text" width={165} />
                   </Box>
                   <Box sx={{ flexGrow: 1 }} />
                 </Box>
@@ -30,7 +30,7 @@ const CommunitySkeleton = () => {
         </Grid>
 
         {/* Chat Content */}
-        <Grid item xs={12} sm={9}>
+        <Grid item xs={12} sm={8}>
           <Card sx={{ mb: 2, height: '80vh' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>

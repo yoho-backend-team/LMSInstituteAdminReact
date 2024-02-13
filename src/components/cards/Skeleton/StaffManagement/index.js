@@ -10,31 +10,31 @@ const StaffManagement = () => {
   return (
     <>
       <Grid container spacing={4}>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title={<Skeleton height={25} width={200} />} />
-          <CardContent>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={55} animation="wave" />
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title={<Skeleton height={25} width={200} />} />
+            <CardContent>
+              <Grid container spacing={3} justifyContent="flex-end">
+                <Grid item xs={12} sm={6}>
+                  <Skeleton variant="rounded" height={55} animation="wave" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Skeleton variant="rounded" height={55} animation="wave" />
+                </Grid>
+                  <Grid item sm={3} xs={12}>
+                    <Skeleton variant="rounded" height={55} animation="wave" />
+                  </Grid>
+                  <Grid item sm={3} xs={12}>
+                    <Skeleton variant="rounded" height={55} animation="wave" />
+                  </Grid>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={55} animation="wave" />
-              </Grid>
-              <Grid item sm={3} xs={12}>
-                <Skeleton variant="rectangular" height={55} animation="wave" />
-              </Grid>
-              <Grid item sm={3} xs={12}>
-                <Skeleton variant="rectangular" height={55} animation="wave" />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
 
         <Grid container xs={12} p={2} mt={2} ml={2}>
           {Array.from({ length: 6 }).map((_, i) => (
-            <Grid key={i} item xs={12} sm={6} md={3} p={1}>
+            <Grid key={i} item xs={12} sm={6} md={4} p={1}>
               <Card sx={{ position: 'relative', p: 2 }}>
                 {/* <OptionsMenu
               iconButtonProps={{
