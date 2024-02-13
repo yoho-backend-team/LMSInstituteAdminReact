@@ -135,8 +135,7 @@ const Modules = () => {
     // toggleEditUserDrawer();
   };
   
-  const handleStatusChange = (event, row) => {
-    setSelectedDeleteMaterial(row);
+  const handleStatusChange = () => {
     setDeleteDialogOpen(true);
   };
 
