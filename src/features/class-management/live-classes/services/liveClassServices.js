@@ -1,19 +1,20 @@
 // liveClassService.js
 import axios from 'axios';
 
-const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/LiveClass-management/LiveClass`;
+const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/class`;
 
-export const getAllLiveClasses = async () => {
+export const getAllLiveClasses = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error

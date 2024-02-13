@@ -6,7 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Avatar from 'components/mui/avatar';
-import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 
 const NonTeachingStaffCard = () => {
@@ -141,18 +140,7 @@ const NonTeachingStaffCard = () => {
           {data.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
               <Card sx={{ position: 'relative', p: 1.5 }}>
-                <OptionsMenu
-                  iconButtonProps={{
-                    size: 'small',
-                    sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
-                  }}
-                  options={[
-                    'Share Connection',
-                    'Block Connection',
-                    { divider: true },
-                    { text: 'Delete', menuItemProps: { sx: { color: 'error.main' } } }
-                  ]}
-                />
+           
                 <CardContent sx={{ pt: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />

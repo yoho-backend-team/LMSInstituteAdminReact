@@ -1,19 +1,20 @@
 // groupService.js
 import axios from 'axios';
 
-const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/batch-management/batch`;
+const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/batch-management/institute-batches`;
 
-export const getAllBatches = async () => {
+export const getAllBatches = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${BATCH_API_ENDPOINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
 
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
