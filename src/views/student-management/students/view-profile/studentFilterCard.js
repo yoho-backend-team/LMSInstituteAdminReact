@@ -36,7 +36,7 @@ const StudentFilter = (props) => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title="Non-Teaching Staff" />
+          <CardHeader title="Students" />
 
           <CardContent>
             <Grid container spacing={3}>

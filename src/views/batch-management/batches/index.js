@@ -1,23 +1,22 @@
 // ** Mui Components
-import { Grid, Typography, Box, Card, CardContent, IconButton } from '@mui/material';
+import { Box, Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
 
 // ** React  Import
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // ** Custom Components
-import Icon from 'components/icon';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import BatchCardHeader from 'features/batch-management/batches/components/BatchCardHeader';
-import CustomChip from 'components/mui/chip';
-import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
+import Icon from 'components/icon';
+import DeleteDialog from 'components/modal/DeleteModel';
+import CustomChip from 'components/mui/chip';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
-import DeleteDialog from 'components/modal/DeleteModel';
-import Pagination from '@mui/material/Pagination';
-import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -37,7 +36,10 @@ const Batch = () => {
   
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
+    // If the status is changed, open the delete dialog
+    setDeleteDialogOpen(true);
   };
+  
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
@@ -337,7 +339,6 @@ const Batch = () => {
           ) : (
             <Grid>
               <BatchFilterCard />
-              <BatchCardHeader />
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {renderCards()}
               </Grid>
