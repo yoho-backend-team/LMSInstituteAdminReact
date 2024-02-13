@@ -4,21 +4,14 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Avatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const NonTeachingStaffCard = () => {
   // Dummy data array
-  const [statusValue, setStatusValue] = useState('');
 
-  const handleStatusValue = (e) => {
-    setStatusValue(e.target.value);
-  };
   const data = [
     {
       id: '1',
@@ -144,7 +137,7 @@ const NonTeachingStaffCard = () => {
   return (
     <>
       <Grid>
-        <Grid container xs={12} spacing={2} mt={2}>
+        <Grid container xs={12} spacing={2} mt={2} sx={{display:"flex",justifyContent:"center"}}>
           {data.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
               <Card sx={{ position: 'relative', p: 1.5 }}>
@@ -189,8 +182,8 @@ const NonTeachingStaffCard = () => {
                         <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                       </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between', textDecoration: 'none' }}>
-                      <Grid>
+                    <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' ,mt:1}}>
+                      {/* <Grid>
                         <TextField
                           size="small"
                           select
@@ -201,7 +194,7 @@ const NonTeachingStaffCard = () => {
                           <MenuItem value="Active">Active</MenuItem>
                           <MenuItem value="Deactive">Deactive</MenuItem>
                         </TextField>
-                      </Grid>
+                      </Grid> */}
                       <Grid>
                         <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
                           View Profile

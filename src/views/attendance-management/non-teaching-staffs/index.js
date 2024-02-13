@@ -3,13 +3,11 @@ import { Grid } from '@mui/material';
 
 // project imports
 
-import NonTeachingStaffCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCard';
-import NonTeachingStaffCardHeader from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCardHeader';
-import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
-import Pagination from '@mui/material/Pagination'
+import Pagination from '@mui/material/Pagination';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import NonTeachingStaffCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCard';
+import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
+import { useEffect, useState } from 'react';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const useTimeout = (callback, delay) => {
@@ -32,10 +30,10 @@ const NonTeachingStaffs = () => {
     ) : (
     <Grid>
       <NonTeachingStaffFilterCard />
-      <NonTeachingStaffCardHeader />
-      <Grid container spacing={1} className="match-height" >
+      {/* <NonTeachingStaffCardHeader /> */}
+    
         <NonTeachingStaffCard />
-      </Grid>
+
       <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
       <Pagination count={10} color='primary' />
       </Grid>
