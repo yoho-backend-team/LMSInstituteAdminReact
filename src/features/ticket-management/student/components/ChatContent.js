@@ -186,7 +186,7 @@ const ChatContent = (props) => {
               <ChatLog hidden={hidden} data={{ ...selectedChat, userContact: store.userProfile }} />
             ) : null}
 
-              <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
+            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
 
             <UserProfileRight
               store={store}

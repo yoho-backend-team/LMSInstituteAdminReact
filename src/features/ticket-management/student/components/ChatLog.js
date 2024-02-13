@@ -17,7 +17,7 @@ import CustomAvatar from 'components/mui/avatar';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
-  padding: theme.spacing(5)
+  padding: theme.spacing(3)
 }));
 
 const ChatLog = props => {
@@ -47,13 +47,6 @@ const ChatLog = props => {
       from: 'employee@example.com',
       date: Date.now(),
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
-    },
-    {
-      subject: 'Regarding Meeting Schedule',
-      to: 'team@example.com',
-      from: 'manager@example.com',
-      date: Date.now(),
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
     }
   ];
 
@@ -62,7 +55,7 @@ const ChatLog = props => {
     return (
       <>
         {/* First Mail Card */}
-        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 4 }}>
+        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 2 }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <CustomAvatar
@@ -71,9 +64,9 @@ const ChatLog = props => {
                 sx={{ width: 48, height: 48, mr: 2 }}
                 {...(data.contact.avatar
                   ? {
-                      src: data.contact.avatar,
-                      alt: data.contact.fullName
-                    }
+                    src: data.contact.avatar,
+                    alt: data.contact.fullName
+                  }
                   : {})}
               />
               <Typography variant="h5">{data.contact.fullName}</Typography>
@@ -149,7 +142,7 @@ const ChatLog = props => {
     <Box sx={{ height: 'calc(100% - 8.875rem)' }}>
       <ScrollWrapper>{renderChats()}</ScrollWrapper>
     </Box>
-    
+
   );
 };
 

@@ -55,7 +55,7 @@ const StudentTicket = () => {
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
   console.log(selectChat);
 
-  
+
   const [loading, setLoading] = useState(true);
 
   // Simulate loading delay with useEffect
@@ -76,57 +76,57 @@ const StudentTicket = () => {
             // If data is still loading, display skeleton
             <TicketSkeleton />
           ) : (
-      <Box
-        className="app-chat"
-        sx={{
-          width: '100%',
-          display: 'flex',
-          height: '82vh',
-          flexDirection: 'row',
-          borderRadius: 1,
-          overflow: 'hidden',
-          position: 'relative',
-          backgroundColor: 'background.paper',
-          boxShadow: skin === 'bordered' ? 0 : 6,
-          ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
-        }}
-      >
-        <SidebarLeft
-          store={store}
-          hidden={hidden}
-          mdAbove={mdAbove}
-          dispatch={dispatch}
-          statusObj={statusObj}
-          userStatus={userStatus}
-          selectChat={selectChat}
-          getInitials={getInitials}
-          sidebarWidth={sidebarWidth}
-          setUserStatus={setUserStatus}
-          leftSidebarOpen={leftSidebarOpen}
-          removeSelectedChat={removeSelectedChat}
-          userProfileLeftOpen={userProfileLeftOpen}
-          formatDateToMonthShort={formatDateToMonthShort}
-          handleLeftSidebarToggle={handleLeftSidebarToggle}
-          handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-        />
-        <ChatContent
-          store={store}
-          hidden={hidden}
-          sendMsg={sendMsg}
-          mdAbove={mdAbove}
-          dispatch={dispatch}
-          statusObj={statusObj}
-          getInitials={getInitials}
-          sidebarWidth={sidebarWidth}
-          userProfileRightOpen={userProfileRightOpen}
-          handleLeftSidebarToggle={handleLeftSidebarToggle}
-          handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
-        />
-      </Box>
-     )}
-     </Grid>
-   </Grid>
- </>
+            <Box
+              className="app-chat"
+              sx={{
+                width: '100%',
+                display: 'flex',
+                height: '82vh',
+                flexDirection: 'row',
+                borderRadius: 1,
+                overflow: 'hidden',
+                position: 'relative',
+                backgroundColor: 'background.paper',
+                boxShadow: skin === 'bordered' ? 0 : 6,
+                ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
+              }}
+            >
+              <SidebarLeft
+                store={store}
+                hidden={hidden}
+                mdAbove={mdAbove}
+                dispatch={dispatch}
+                statusObj={statusObj}
+                userStatus={userStatus}
+                selectChat={selectChat}
+                getInitials={getInitials}
+                sidebarWidth={sidebarWidth}
+                setUserStatus={setUserStatus}
+                leftSidebarOpen={leftSidebarOpen}
+                removeSelectedChat={removeSelectedChat}
+                userProfileLeftOpen={userProfileLeftOpen}
+                formatDateToMonthShort={formatDateToMonthShort}
+                handleLeftSidebarToggle={handleLeftSidebarToggle}
+                handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+              />
+              <ChatContent
+                store={store}
+                hidden={hidden}
+                sendMsg={sendMsg}
+                mdAbove={mdAbove}
+                dispatch={dispatch}
+                statusObj={statusObj}
+                getInitials={getInitials}
+                sidebarWidth={sidebarWidth}
+                userProfileRightOpen={userProfileRightOpen}
+                handleLeftSidebarToggle={handleLeftSidebarToggle}
+                handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+              />
+            </Box>
+          )}
+        </Grid>
+      </Grid>
+    </>
   );
 };
 StudentTicket.contentHeightFixed = true;
