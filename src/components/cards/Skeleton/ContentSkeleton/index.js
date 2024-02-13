@@ -15,18 +15,18 @@ const ContentSkeleton = () => {
                   <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
                     <Grid item xs={12} sx={{ mb: 3 }}>
                       <Grid container spacing={4}>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={6}>
                           <Skeleton variant="rectangular" height={56} />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={6}>
                           <Skeleton variant="rectangular" height={56} />
                         </Grid>
-                        <Grid item sm={3} xs={12}>
+                        <Grid item sm={6} xs={12}>
                           <Skeleton variant="rectangular" height={56} />
                         </Grid>
 
-                        <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
-                          <Skeleton variant="rectangular" height={40}  />
+                        <Grid item sm={6} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
+                          <Skeleton variant="rectangular" height={36}  />
                         </Grid>
                       </Grid>
                     </Grid>

@@ -2,22 +2,21 @@
 import { useState } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import IconButton from '@mui/material/IconButton'
-import Box from '@mui/material/Box'
 
 // ** Custom Component Import
 import CustomTextField from 'components/mui/text-field'
 
 // ** Icon Imports
-import Icon from 'components/icon'
 
 // ** Styled Components
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2.5),
+  padding: theme.spacing(0.6),
+  paddingRight: 20,
   boxShadow: theme.shadows[1],
   justifyContent: 'space-between',
   borderRadius: theme.shape.borderRadius,
@@ -25,7 +24,7 @@ const ChatFormWrapper = styled(Box)(({ theme }) => ({
 }))
 
 const Form = styled('form')(({ theme }) => ({
-  padding: theme.spacing(0, 5, 5)
+  padding: theme.spacing(0, 2, 2, 2)
 }))
 
 const SendMsgForm = props => {
@@ -62,13 +61,13 @@ const SendMsgForm = props => {
           />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton size='small' sx={{ color: 'text.primary' }}>
+          {/* <IconButton size='small' sx={{ color: 'text.primary' }}>
             <Icon icon='tabler:microphone' />
-          </IconButton>
-          <IconButton size='small' component='label' htmlFor='upload-img' sx={{ mr: 3, color: 'text.primary' }}>
+          </IconButton> */}
+          {/* <IconButton size='small' component='label' htmlFor='upload-img' sx={{ mr: 3, color: 'text.primary' }}>
             <Icon icon='tabler:photo' />
             <input hidden type='file' id='upload-img' />
-          </IconButton>
+          </IconButton> */}
           <Button type='submit' variant='contained'>
             Send
           </Button>

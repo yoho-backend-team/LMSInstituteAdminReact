@@ -127,29 +127,44 @@ import { Link } from 'react-router-dom';
 import DeleteDialog from 'components/modal/DeleteModel';
 
 const CourseCard = (props) => {
-  const [statusValue, setStatusValue] = useState('');
-  const { sx, image, personName, coursename, students, price } = props;
+  const { sx, personName, course } = props;
+  // const [statusValue, setStatusValue] = useState(course?.is_active);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleStatusValue = () => {
     setDeleteDialogOpen(true);
-    setStatusValue(event.target.value);
+    // setStatusValue(event.target.value);
   };
-
- 
 
   return (
     <Grid item xs={12} sm={12} lg={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
-          <CardMedia sx={{ height: '12.5625rem', borderRadius: '5px' }} image={image} />
+          <CardMedia sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }} image={'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d'}>
+            <CustomChip
+              sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
+              skin="light"
+              label={course?.learning_format}
+              rounded
+              color="primary"
+              size="small"
+              variant="outlined"
+            />
+          </CardMedia>
         </CardContent>
         <CardContent>
           <Box>
-            <CustomChip skin="light" label="Live" rounded color="secondary" size="small" variant="outlined" />
+            <CustomChip
+              skin="light"
+              label={course?.course_categories?.course_category_name}
+              rounded
+              color="secondary"
+              size="small"
+              variant="outlined"
+            />
           </Box>
           <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h4">{coursename}</Typography>
+            <Typography variant="h4">{course?.course_name}</Typography>
             <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
               {personName}
             </Typography>
@@ -171,10 +186,10 @@ const CourseCard = (props) => {
               }}
             >
               <Icon icon="ic:twotone-person" fontSize={20} />
-              <Typography sx={{ color: 'text.secondary' }}>{students}</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
             </Grid>
             <Grid>
-              <Typography sx={{ color: 'text.secondary' }}>{price}</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
             </Grid>
           </Box>
         </CardContent>
@@ -185,10 +200,10 @@ const CourseCard = (props) => {
               select
               fullWidth
               label="Status"
-              SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+              SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e) }}
             >
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Deactive">Deactive</MenuItem>
+              <MenuItem value="1">Active</MenuItem>
+              <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Grid>
           <Button component={Link} to="view " size="medium" variant="contained" color="primary">
@@ -197,13 +212,12 @@ const CourseCard = (props) => {
         </CardActions>
       </Card>
       <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          // handleSubmit={handleDeleteConfirm}
-          description="Are you sure you want to delete this item?"
-          title="Delete"
-        />
-      
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        // handleSubmit={handleDeleteConfirm}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+      />
     </Grid>
   );
 };

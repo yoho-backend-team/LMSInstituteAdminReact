@@ -15,7 +15,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2024-01-25T07:28:04.206Z',
       allDay: false,
       extendedProps: {
-        calendar: 'Business'
+        calendar: 'Absent'
       }
     },
     {
@@ -26,7 +26,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2024-01-21T00:00:00.000Z',
       allDay: true,
       extendedProps: {
-        calendar: 'Business'
+        calendar: 'Absent'
       }
     },
     {
@@ -48,7 +48,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2024-01-21T00:00:00.000Z',
       allDay: true,
       extendedProps: {
-        calendar: 'Personal'
+        calendar: 'Present'
       }
     },
     {
@@ -59,7 +59,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2024-01-19T00:00:00.000Z',
       allDay: true,
       extendedProps: {
-        calendar: 'Personal'
+        calendar: 'Present'
       }
     },
     {
@@ -70,7 +70,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2024-01-19T00:00:00.000Z',
       allDay: true,
       extendedProps: {
-        calendar: 'Business'
+        calendar: 'Absent'
       }
     },
     {
@@ -81,7 +81,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2024-02-01T00:00:00.000Z',
       allDay: true,
       extendedProps: {
-        calendar: 'Business'
+        calendar: 'Absent'
       }
     },
     {
@@ -92,7 +92,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async () 
       end: '2023-12-01T00:00:00.000Z',
       allDay: true,
       extendedProps: {
-        calendar: 'Personal'
+        calendar: 'Present'
       }
     }
   ];
@@ -105,7 +105,7 @@ export const addEvent = createAsyncThunk('appCalendar/addEvent', async (event, {
       event
     }
   });
-  await dispatch(fetchEvents(['Personal', 'Business', 'Family', 'Holiday', 'ETC']));
+  await dispatch(fetchEvents(['Present', 'Absent', 'Family', 'Holiday', 'ETC']));
 
   return response.data.event;
 });
@@ -117,7 +117,7 @@ export const updateEvent = createAsyncThunk('appCalendar/updateEvent', async (ev
       event
     }
   });
-  await dispatch(fetchEvents(['Personal', 'Business', 'Family', 'Holiday', 'ETC']));
+  await dispatch(fetchEvents(['Present', 'Absent', 'Family', 'Holiday', 'ETC']));
 
   return response.data.event;
 });
@@ -127,7 +127,7 @@ export const deleteEvent = createAsyncThunk('appCalendar/deleteEvent', async (id
   const response = await axios.delete('/apps/calendar/remove-event', {
     params: { id }
   });
-  await dispatch(fetchEvents(['Personal', 'Business', 'Family', 'Holiday', 'ETC']));
+  await dispatch(fetchEvents(['Present', 'Absent', 'Family', 'Holiday', 'ETC']));
 
   return response.data;
 });
@@ -137,7 +137,7 @@ export const appCalendarSlice = createSlice({
   initialState: {
     events: [],
     selectedEvent: null,
-    selectedCalendars: ['Personal', 'Business', 'Family', 'Holiday', 'ETC']
+    selectedCalendars: ['Present', 'Absent']
   },
   reducers: {
     handleSelectEvent: (state, action) => {
@@ -157,7 +157,7 @@ export const appCalendarSlice = createSlice({
     handleAllCalendars: (state, action) => {
       const value = action.payload;
       if (value === true) {
-        state.selectedCalendars = ['Personal', 'Business', 'Family', 'Holiday', 'ETC'];
+        state.selectedCalendars = ['Present', 'Absent'];
       } else {
         state.selectedCalendars = [];
       }

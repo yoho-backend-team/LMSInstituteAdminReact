@@ -1,324 +1,156 @@
-// import { useEffect, useRef } from 'react';
-// import Box from '@mui/material/Box';
-// // import { styled } from '@mui/material/styles';
-// import Typography from '@mui/material/Typography';
-// import CustomAvatar from 'components/mui/avatar';
-// import Card from '@mui/material/Card';
-// import CardContent from '@mui/material/CardContent';
-// // import { styled } from '@mui/material/styles';
-
-// // import PerfectScrollbarComponent from 'react-perfect-scrollbar';
-
-// // const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
-// //   padding: theme.spacing(5)
-// // }));
-
-// const ChatLog = (props) => {
-//   const { data, hidden } = props;
-//   const chatArea = useRef(null);
-
-//   const scrollToBottom = () => {
-//     if (chatArea.current) {
-//       if (hidden) {
-//         chatArea.current.scrollTop = chatArea.current.scrollHeight;
-//       } else {
-//         chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight;
-//       }
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (data && data.chat && data.chat.length) {
-//       scrollToBottom();
-//     }
-//   }, [data]);
-
-//   return (
-//     // <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
-//       <Box sx={{pt:3,pb:3}}>
-//         <Card sx={{ maxWidth: 800, margin: 'auto', }}>
-//           <CardContent>
-//             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-//               <CustomAvatar
-//                 skin="light"
-//                 color={data.contact.avatarColor ? data.contact.avatarColor : undefined}
-//                 sx={{ width: 48, height: 48, mr: 2 }}
-//                 {...(data.contact.avatar
-//                   ? {
-//                       src: data.contact.avatar,
-//                       alt: data.contact.fullName
-//                     }
-//                   : {})}
-//               />
-//               <Typography variant="h5">{data.contact.fullName}</Typography>
-//             </Box>
-//             <Box sx={{ ml: 7 }}>
-//               <Typography variant="body1" sx={{ mb: 2 }}>
-//                 To: {data.contact.email}
-//               </Typography>
-//               <Typography variant="body1" sx={{ mb: 2 }}>
-//                 Subject: {data.subject}
-//               </Typography>
-//               <Typography variant="body1" sx={{ mb: 2 }}>
-//                 Date: {new Date().toLocaleDateString()}
-//               </Typography>
-//               {data.chat.map((chat, index) => (
-//                 <Box key={index} sx={{ mb: 2 }}>
-//                   <Typography variant="body1">{chat.message}</Typography>
-//                   <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-//                     {new Date(chat.time).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-//                   </Typography>
-//                 </Box>
-//               ))}
-//             </Box>
-//           </CardContent>
-//         </Card>
-//       </Box>
- 
-//   );
-// };
-
-// export default ChatLog;
-
-
-
-
-
-
-
-
 // ** React Imports
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react';
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-
-// ** Icon Imports
-import Icon from 'components/icon'
-
-// ** Third Party Components
-import PerfectScrollbarComponent from 'react-perfect-scrollbar'
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+// import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomAvatar from 'components/mui/avatar'
+import CustomAvatar from 'components/mui/avatar';
 
 // ** Utils Imports
-import { getInitials } from 'utils/get-initials';
+// import { getInitials } from 'utils/get-initials';
+import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
   padding: theme.spacing(5)
-}))
+}));
 
 const ChatLog = props => {
   // ** Props
-  const { data, hidden } = props
+  const { data, hidden } = props;
 
   // ** Ref
-  const chatArea = useRef(null)
+  const chatArea = useRef(null);
 
   // ** Scroll to chat bottom
   const scrollToBottom = () => {
     if (chatArea.current) {
       if (hidden) {
         // @ts-ignore
-        chatArea.current.scrollTop = chatArea.current.scrollHeight
+        chatArea.current.scrollTop = chatArea.current.scrollHeight;
       } else {
         // @ts-ignore
-        chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight
+        chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight;
       }
     }
-  }
-
-  // ** Formats chat data based on sender
- const formattedChatData = () => {
-  let chatLog = [];
-  if (Array.isArray(data.chat)) {
-    chatLog = data.chat;
-  }
-  const formattedChatLog = [];
-  let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : 11;
-
-  let msgGroup = {
-    senderId: chatMessageSenderId,
-    messages: []
   };
-  chatLog.forEach((msg, index) => {
-    if (chatMessageSenderId === msg.senderId) {
-      msgGroup.messages.push({
-        time: msg.time,
-        msg: msg.message,
-        feedback: msg.feedback
-      });
-    } else {
-      chatMessageSenderId = msg.senderId;
-      formattedChatLog.push(msgGroup);
-      msgGroup = {
-        senderId: msg.senderId,
-        messages: [
-          {
-            time: msg.time,
-            msg: msg.message,
-            feedback: msg.feedback
-          }
-        ]
-      };
+
+  const mails = [
+    {
+      subject: 'Regarding Leave Approval',
+      to: 'hr@example.com',
+      from: 'employee@example.com',
+      date: Date.now(),
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
+    },
+    {
+      subject: 'Regarding Meeting Schedule',
+      to: 'team@example.com',
+      from: 'manager@example.com',
+      date: Date.now(),
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
     }
-    if (index === chatLog.length - 1) formattedChatLog.push(msgGroup);
-  });
+  ];
 
-  return formattedChatLog;
-};
+  // ** Renders leave request details
+  const renderChats = () => {
+    return (
+      <>
+        {/* First Mail Card */}
+        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 4 }}>
+          <CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <CustomAvatar
+                skin="light"
+                color={data.contact.avatarColor ? data.contact.avatarColor : undefined}
+                sx={{ width: 48, height: 48, mr: 2 }}
+                {...(data.contact.avatar
+                  ? {
+                      src: data.contact.avatar,
+                      alt: data.contact.fullName
+                    }
+                  : {})}
+              />
+              <Typography variant="h5">{data.contact.fullName}</Typography>
+            </Box>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Subject: {data.subject}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              To: {data.contact.email}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Leave Type: {data.leaveType}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Start Date: {new Date(data.startDate).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              End Date: {new Date(data.endDate).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Reason: {data.reason}
+            </Typography>
+          </CardContent>
+        </Card>
 
+        {/* Second Mail Card with Mapping */}
+        {mails.map((mail, index) => (
+          <Card key={index} sx={{ maxWidth: 800, margin: 'auto', mb: 4 }}>
+            <CardContent>
+              <Typography variant="h5">{mail.subject}</Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                To: {mail.to}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                From: {mail.from}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                Date: {new Date(mail.date).toLocaleDateString()}
+              </Typography>
+              <Typography variant="body1">{mail.content}</Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </>
+    );
+  };
 
-  const renderMsgFeedback = (isSender, feedback) => {
-    if (isSender) {
-      if (feedback.isSent && !feedback.isDelivered) {
-        return (
-          <Box component='span' sx={{ display: 'flex', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-            <Icon icon='tabler:check' fontSize='1.125rem' />
-          </Box>
-        )
-      } else if (feedback.isSent && feedback.isDelivered) {
-        return (
-          <Box
-            component='span'
-            sx={{
-              display: 'flex',
-              '& svg': { mr: 1.5, color: feedback.isSeen ? 'success.main' : 'text.secondary' }
-            }}
-          >
-            <Icon icon='tabler:checks' fontSize='1.125rem' />
-          </Box>
-        )
-      } else {
-        return null
-      }
-    }
-  }
   useEffect(() => {
     if (data && data.chat && data.chat.length) {
-      scrollToBottom()
+      scrollToBottom();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+  }, [data]);
 
-  // ** Renders user chat
-  const renderChats = () => {
-    return formattedChatData().map((item, index) => {
-      const isSender = item.senderId === data.userContact.id
-
-      return (
-        <Box
-          key={index}
-          sx={{
-            display: 'flex',
-            flexDirection: !isSender ? 'row' : 'row-reverse',
-            mb: index !== formattedChatData().length - 1 ? 4 : undefined
-          }}
-        >
-          <div>
-            <CustomAvatar
-              skin='light'
-              color={data.contact.avatarColor ? data.contact.avatarColor : undefined}
-              sx={{
-                width: 32,
-                height: 32,
-                ml: isSender ? 3 : undefined,
-                mr: !isSender ? 3 : undefined,
-                fontSize: theme => theme.typography.body1.fontSize
-              }}
-              {...(data.contact.avatar && !isSender
-                ? {
-                    src: data.contact.avatar,
-                    alt: data.contact.fullName
-                  }
-                : {})}
-              {...(isSender
-                ? {
-                    src: data.userContact.avatar,
-                    alt: data.userContact.fullName
-                  }
-                : {})}
-            >
-              {data.contact.avatarColor ? getInitials(data.contact.fullName) : null}
-            </CustomAvatar>
-          </div>
-
-          <Box className='chat-body' sx={{ maxWidth: ['calc(100% - 5.75rem)', '75%', '65%'] }}>
-            {item.messages.map((chat, index, { length }) => {
-              const time = new Date(chat.time)
-
-              return (
-                <Box key={index} sx={{ '&:not(:last-of-type)': { mb: 3 } }}>
-                  <div>
-                    <Typography
-                      sx={{
-                        boxShadow: 1,
-                        borderRadius: 1,
-                        maxWidth: '100%',
-                        width: 'fit-content',
-                        wordWrap: 'break-word',
-                        p: theme => theme.spacing(2.25, 4),
-                        ml: isSender ? 'auto' : undefined,
-                        borderTopLeftRadius: !isSender ? 0 : undefined,
-                        borderTopRightRadius: isSender ? 0 : undefined,
-                        color: isSender ? 'common.white' : 'text.primary',
-                        backgroundColor: isSender ? 'primary.main' : 'background.paper'
-                      }}
-                    >
-                      {chat.msg}
-                    </Typography>
-                  </div>
-                  {index + 1 === length ? (
-                    <Box
-                      sx={{
-                        mt: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: isSender ? 'flex-end' : 'flex-start'
-                      }}
-                    >
-                      {renderMsgFeedback(isSender, chat.feedback)}
-                      <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                        {time
-                          ? new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-                          : null}
-                      </Typography>
-                    </Box>
-                  ) : null}
-                </Box>
-              )
-            })}
-          </Box>
-        </Box>
-      )
-    })
-  }
-
+  // ** Renders scrollbar wrapper conditionally
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
       return (
         <Box ref={chatArea} sx={{ p: 5, height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
           {children}
         </Box>
-      )
+      );
     } else {
       return (
         <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
           {children}
         </PerfectScrollbar>
-      )
+      );
     }
-  }
+  };
 
   return (
     <Box sx={{ height: 'calc(100% - 8.875rem)' }}>
       <ScrollWrapper>{renderChats()}</ScrollWrapper>
     </Box>
-  )
-}
+    
+  );
+};
 
-export default ChatLog
-
+export default ChatLog;

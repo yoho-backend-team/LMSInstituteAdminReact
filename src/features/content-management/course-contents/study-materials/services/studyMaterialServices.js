@@ -1,23 +1,24 @@
 // groupService.js
 import axios from 'axios';
 
-const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/CourseStudyMaterial-management/CourseStudyMaterial`;
+const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-study-materials`;
 
-export const getAllCourseStudyMaterials = async () => {
+export const getAllStudyMaterials = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${COURSE_STUDY_MATERIALS_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch CourseStudyMaterials. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Courses Study Materials. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes

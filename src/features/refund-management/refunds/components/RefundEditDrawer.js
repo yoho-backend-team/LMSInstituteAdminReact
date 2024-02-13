@@ -127,7 +127,7 @@ const RefundEditDrawer = (props) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '80%', sm: 500 } } }}
       >
         <Header>
           <Typography variant="h5">Edit Fees</Typography>

@@ -57,8 +57,8 @@ const FirebaseLogin = ({ ...others }) => {
   return (
     <Formik
       initialValues={{
-        email: 'mdthasthakir',
-        password: 'kVgfd3fk',
+        email: 'igmoojef JSsdcnjdwc',
+        password: 'DZ6p0d1W', //kVgfd3fk
         submit: null
       }}
       validationSchema={Yup.object().shape({

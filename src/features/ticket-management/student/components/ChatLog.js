@@ -1,42 +1,61 @@
-import { useEffect, useRef } from 'react';
+// ** React Imports
+import { useRef, useEffect } from 'react';
+
+// ** MUI Imports
 import Box from '@mui/material/Box';
-// import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import CustomAvatar from 'components/mui/avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-// import { styled } from '@mui/material/styles';
+// import Icon from 'components/icon';
 
-// import PerfectScrollbarComponent from 'react-perfect-scrollbar';
+// ** Custom Components Imports
+import CustomAvatar from 'components/mui/avatar';
 
-// const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
-//   padding: theme.spacing(5)
-// }));
+// ** Utils Imports
+// import { getInitials } from 'utils/get-initials';
+import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 
-const ChatLog = (props) => {
+const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
+  padding: theme.spacing(3)
+}));
+
+const ChatLog = props => {
+  // ** Props
   const { data, hidden } = props;
+
+  // ** Ref
   const chatArea = useRef(null);
 
+  // ** Scroll to chat bottom
   const scrollToBottom = () => {
     if (chatArea.current) {
       if (hidden) {
+        // @ts-ignore
         chatArea.current.scrollTop = chatArea.current.scrollHeight;
       } else {
+        // @ts-ignore
         chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight;
       }
     }
   };
 
-  useEffect(() => {
-    if (data && data.chat && data.chat.length) {
-      scrollToBottom();
+  const mails = [
+    {
+      subject: 'Regarding Leave Approval',
+      to: 'hr@example.com',
+      from: 'employee@example.com',
+      date: Date.now(),
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
     }
-  }, [data]);
+  ];
 
-  return (
-    // <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
-      <Box sx={{pt:3,pb:3}}>
-        <Card sx={{ maxWidth: 800, margin: 'auto', }}>
+  // ** Renders leave request details
+  const renderChats = () => {
+    return (
+      <>
+        {/* First Mail Card */}
+        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 2 }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <CustomAvatar
@@ -45,36 +64,85 @@ const ChatLog = (props) => {
                 sx={{ width: 48, height: 48, mr: 2 }}
                 {...(data.contact.avatar
                   ? {
-                      src: data.contact.avatar,
-                      alt: data.contact.fullName
-                    }
+                    src: data.contact.avatar,
+                    alt: data.contact.fullName
+                  }
                   : {})}
               />
               <Typography variant="h5">{data.contact.fullName}</Typography>
             </Box>
-            <Box sx={{ ml: 7 }}>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                To: {data.contact.email}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                Subject: {data.subject}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                Date: {new Date().toLocaleDateString()}
-              </Typography>
-              {data.chat.map((chat, index) => (
-                <Box key={index} sx={{ mb: 2 }}>
-                  <Typography variant="body1">{chat.message}</Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {new Date(chat.time).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Subject: {data.subject}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              To: {data.contact.email}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Leave Type: {data.leaveType}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Start Date: {new Date(data.startDate).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              End Date: {new Date(data.endDate).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              Reason: {data.reason}
+            </Typography>
           </CardContent>
         </Card>
-      </Box>
- 
+
+        {/* Second Mail Card with Mapping */}
+        {mails.map((mail, index) => (
+          <Card key={index} sx={{ maxWidth: 800, margin: 'auto', mb: 4 }}>
+            <CardContent>
+              <Typography variant="h5">{mail.subject}</Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                To: {mail.to}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                From: {mail.from}
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                Date: {new Date(mail.date).toLocaleDateString()}
+              </Typography>
+              <Typography variant="body1">{mail.content}</Typography>
+            </CardContent>
+          </Card>
+        ))}
+      </>
+    );
+  };
+
+  useEffect(() => {
+    if (data && data.chat && data.chat.length) {
+      scrollToBottom();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  // ** Renders scrollbar wrapper conditionally
+  const ScrollWrapper = ({ children }) => {
+    if (hidden) {
+      return (
+        <Box ref={chatArea} sx={{ p: 5, height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
+          {children}
+        </Box>
+      );
+    } else {
+      return (
+        <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
+          {children}
+        </PerfectScrollbar>
+      );
+    }
+  };
+
+  return (
+    <Box sx={{ height: 'calc(100% - 8.875rem)' }}>
+      <ScrollWrapper>{renderChats()}</ScrollWrapper>
+    </Box>
+
   );
 };
 

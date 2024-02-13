@@ -103,7 +103,7 @@ const DeleteDialog = (props) => {
             <Typography variant="h4" sx={{ mb: 3 }}>
               {userInput === 'yes' ? 'Rejected!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ?  successDescription  : `${failureDescription} :)`}</Typography>
+            <Typography>{userInput === 'yes' ? successDescription : `${failureDescription} :)`}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', mb: 3 }}>

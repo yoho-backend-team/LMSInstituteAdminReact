@@ -38,10 +38,7 @@ const Timeline = styled(MuiTimeline)({
 const UserViewAccount = () => {
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        {/* <UsersProjectListTable /> */}
-      </Grid>
+    <Grid container spacing={4}>
       <Grid item xs={12}>
         <Card>
           <CardHeader

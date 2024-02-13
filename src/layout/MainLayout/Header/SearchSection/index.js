@@ -76,22 +76,22 @@ const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => (
 // ==============================|| SEARCH INPUT - MOBILE||============================== //
 
 const MobileSearch = () =>
-  // { value, setValue, popupState }
-  {
-    // const theme = useTheme();
+// { value, setValue, popupState }
+{
+  // const theme = useTheme();
 
-    return (
-      <OutlineInputStyle
-        id="input-search-header"
-        select
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Branch"
-        aria-describedby="search-helper-text"
-        inputProps={{ 'aria-label': 'weight' }}
-      />
-    );
-  };
+  return (
+    <OutlineInputStyle
+      id="input-search-header"
+      select
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Branch"
+      aria-describedby="search-helper-text"
+      inputProps={{ 'aria-label': 'weight' }}
+    />
+  );
+};
 
 MobileSearch.propTypes = {
   value: PropTypes.string,
@@ -156,7 +156,9 @@ const SearchSection = () => {
           id="input-search-header"
           value={selectedBranchId}
           onChange={(e) => {
+
             dispatch(updateSelectedBranch(e.target.value));
+            localStorage.setItem('selectedBranchId', e.target.value)
           }}
           placeholder="Search"
           aria-describedby="search-helper-text"
