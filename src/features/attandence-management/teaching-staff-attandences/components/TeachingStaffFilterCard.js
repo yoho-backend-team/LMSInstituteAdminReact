@@ -1,11 +1,13 @@
 // ** React Imports
 import { useState } from 'react';
 
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Icon from 'components/icon';
 // ** Third Party Imports
 // import format from 'date-fns/format';
 // import DatePicker from 'react-datepicker';
@@ -30,7 +32,9 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 // });
 
 /* eslint-enable */
-const TeachingStaffFilterCard = () => {
+const TeachingStaffFilterCard = (props) => {
+  const { value, handleFilter } = props;
+
   // ** State
   // const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
@@ -52,10 +56,9 @@ const TeachingStaffFilterCard = () => {
   // const [endDateRange, setEndDateRange] = useState(null);
   // const [startDateRange, setStartDateRange] = useState(null);
 
-  const handleStatusValue = (e) => {
+  const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
   };
-
 
   // const handleOnChangeRange = (dates) => {
   //   const [start, end] = dates;
@@ -68,25 +71,20 @@ const TeachingStaffFilterCard = () => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6}>
+      <Grid container spacing={6} >
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Teaching Staff Attendance" />
             <CardContent>
-              <Grid container spacing={4}>
+              <Grid container spacing={4} sx={{display:"flex", justifyContent:"flex-end"}}>
                 <Grid item xs={12} sm={4}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                    <MenuItem value="0">Active</MenuItem>
+                    <MenuItem value="1">Inactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
@@ -160,7 +158,7 @@ const TeachingStaffFilterCard = () => {
                   />
                 </Grid> */}
                 <Grid item xs={12} sm={4}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...staff]}
@@ -216,6 +214,21 @@ const TeachingStaffFilterCard = () => {
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    value={value}
+                    sx={{
+                      width: "100%"
+                    }}
+                    placeholder="Search Class"
+                    onChange={(e) => handleFilter(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2} sx={{mt:1}}>
+                    <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+                      Add Attendance
+                    </Button>
                 </Grid>
               </Grid>
             </CardContent>
