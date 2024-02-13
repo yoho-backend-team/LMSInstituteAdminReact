@@ -18,6 +18,9 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Checkbox } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
+import Icon from 'components/icon';
+import Button from '@mui/material/Button';
+
 import CustomChip from 'components/mui/chip';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -34,15 +37,16 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 /* eslint-enable */
-const NonTeachingStaffFilterCard = () => {
+const NonTeachingStaffFilterCard = (props) => {
   // ** State
   const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [startDateRange, setStartDateRange] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const { value, handleFilter } = props;
 
-  const handleStatusValue = (e) => {
+  const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
   };
 
@@ -63,26 +67,21 @@ const NonTeachingStaffFilterCard = () => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
+      <Grid container spacing={6} >
+        <Grid item xs={12} >
           <Card>
             <CardHeader title="Non-Teaching Staff Attendance" />
             <CardContent>
-              <Grid container spacing={4}>
+              <Grid container spacing={4} sx={{display:"flex",justifyContent:"flex-end"}}>
                 <Grid item xs={12} sm={3}>
                   <TextField
                     select
                     fullWidth
                     label="Status"
-                    SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+                    SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
+                    <MenuItem value="0">Active</MenuItem>
+                    <MenuItem value="1">Deactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
@@ -158,6 +157,21 @@ const NonTeachingStaffFilterCard = () => {
                       <CustomInput dates={dates} setDates={setDates} label="Class Date" end={endDateRange} start={startDateRange} />
                     }
                   />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    value={value}
+                    sx={{
+                      width: "100%"
+                    }}
+                    placeholder="Search Class"
+                    onChange={(e) => handleFilter(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2} sx={{mt:1}}>
+                    <Button  onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+                      Add Attendance
+                    </Button>
                 </Grid>
               </Grid>
             </CardContent>

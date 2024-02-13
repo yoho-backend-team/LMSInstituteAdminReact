@@ -1,25 +1,29 @@
 // material-ui
 
-// project imports
 // import MainCard from 'components/cards/MainCard';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 // import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 // import { styled } from '@mui/material/styles';
-import Avatar from 'components/mui/avatar';
-import { Chip as CustomChip } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 // import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
-import TeacherFilter from './TeacherFilterCard';
 import { Link } from 'react-router-dom';
-import OptionsMenu from 'components/option-menu';
+import TeacherFilter from './TeacherFilterCard';
+// import { Link } from 'react-router-dom';
+import { Chip as CustomChip } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
+import Avatar from 'components/mui/avatar';
+// import OptionsMenu from 'components/option-menu';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import { TextField } from '@mui/material';
+
+import DeleteDialog from 'components/modal/DeleteModel';
 
 const data = [
   {
@@ -123,12 +127,20 @@ const useTimeout = (callback, delay) => {
   }, [callback, delay]);
 };
 
-const Teaching = () => {
+const NonTeaching = () => {
   const [loading, setLoading] = useState(true);
+  // const [statusValue, setStatusValue] = useState('');
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
 
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+
+  const handleStatusChange = () => {
+    setDeleteDialogOpen(true);
+  };
+
   return (
     <>
       {loading ? (
@@ -136,92 +148,96 @@ const Teaching = () => {
       ) : (
         <Grid>
           <TeacherFilter />
-          <Grid>
-            <Grid container xs={12} spacing={2} mt={2}>
-              {data.map((item, i) => (
-                <Grid key={i} item xs={12} sm={6} md={3}>
-                  <Card sx={{ position: 'relative' }}>
-                    <OptionsMenu
-                      iconButtonProps={{
-                        size: 'small',
-                        sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
-                      }}
-                      options={[
-                        'Share Connection',
-                        'Block Connection',
-                        { divider: true },
-                        { text: 'Delete', menuItemProps: { sx: { color: 'error.main' } } }
-                      ]}
-                    />
-                    <CardContent sx={{ pt: 2.5 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
-                        <Typography variant="h4" sx={{ mb: 2 }}>
-                          {item.name}
-                        </Typography>
-                        <Typography variant="h6">{item.email}</Typography>
-                        {/* <Typography sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}>{item.designation}</Typography> */}
-                        <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-                          {item.chips &&
-                            item.chips.map((chip, index) => (
-                              <Box
-                                href="/"
-                                key={index}
-                                component={Link}
-                                onClick={(e) => e.preventDefault()}
-                                sx={{
-                                  textDecoration: 'none',
-                                  '&:not(:last-of-type)': { mr: 2.5 },
-                                  '& .MuiChip-root': { cursor: 'pointer' }
-                                }}
-                              >
-                                <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
-                              </Box>
-                            ))}
-                        </Box>
-                        {/* <Box
-                   sx={{
-                     mb: 5,
-                     gap: 2,
-                     width: '100%',
-                     display: 'flex',
-                     flexWrap: 'wrap',
-                     alignItems: 'center',
-                     justifyContent: 'space-around'
-                   }}
-                 >
-                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                     <Typography variant='h4'>{item.projects}</Typography>
-                     <Typography sx={{ color: 'text.secondary' }}>Projects</Typography>
-                   </Box>
-                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                     <Typography variant='h4'>{item.tasks}</Typography>
-                     <Typography sx={{ color: 'text.secondary' }}>Tasks</Typography>
-                   </Box>
-                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                     <Typography variant='h4'>{item.connections}</Typography>
-                     <Typography sx={{ color: 'text.secondary' }}>Connections</Typography>
-                   </Box>
-                 </Box> */}
-                        <Box component={Link} to={item.id} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                          <Button variant="tonal" sx={{ px: 4 }}>
+          <Grid container xs={12} spacing={2} mt={2}>
+            {data.map((item, i) => (
+              <Grid key={i} item xs={12} sm={6} md={4}>
+                <Card sx={{ position: 'relative' }}>
+                  {/* <OptionsMenu
+                    iconButtonProps={{
+                      size: 'small',
+                      sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
+                    }}
+                    options={[
+                      'Share Connection',
+                      'Block Connection',
+                      { divider: true },
+                      { text: 'Delete', menuItemProps: { sx: { color: 'error.main' } } }
+                    ]}
+                  /> */}
+                  <CardContent sx={{ pt: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                      <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
+                      <Typography variant="h4" sx={{ mb: 2 }}>
+                        {item.name}
+                      </Typography>
+                      <Typography variant="h6">{item.email}</Typography>
+                      {/* <Typography sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}>{item.designation}</Typography> */}
+                      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
+                        {item.chips &&
+                          item.chips.map((chip, index) => (
+                            <Box
+                              href="/"
+                              key={index}
+                              component={Link}
+                              onClick={(e) => e.preventDefault()}
+                              sx={{
+                                textDecoration: 'none',
+                                '&:not(:last-of-type)': { mr: 2.5 },
+                                '& .MuiChip-root': { cursor: 'pointer' }
+                              }}
+                            >
+                              <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
+                            </Box>
+                          ))}
+                      </Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          width: '100%',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          textDecoration: 'none'
+                        }}
+                      >
+                        <Grid>
+                          <TextField
+                            size="small"
+                            select
+                            fullWidth
+                            label="Status"
+                            SelectProps={{ value: "", onChange: (e) => handleStatusChange(e) }}
+                          >
+                            <MenuItem value="">Select Status</MenuItem>
+                            <MenuItem value="1">Active</MenuItem>
+                            <MenuItem value="0">Inactive</MenuItem>
+                          </TextField>
+                        </Grid>
+                        <Grid>
+                          <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
                             View Profile
                           </Button>
-                        </Box>
+                        </Grid>
                       </Box>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination count={10} color="primary" />
           </Grid>
         </Grid>
       )}
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        // handleSubmit={handleDeleteConfirm}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+      />
     </>
   );
 };
 
-export default Teaching;
+export default NonTeaching;

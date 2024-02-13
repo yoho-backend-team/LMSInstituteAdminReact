@@ -27,7 +27,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 // });
 
 /* eslint-enable */
-const StudentAttendanceFilterCard = () => {
+const StudentAttendanceFilterCard = (props) => {
   // ** State
   // const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
@@ -47,7 +47,7 @@ const StudentAttendanceFilterCard = () => {
   // const [endDateRange, setEndDateRange] = useState(null);
   // const [startDateRange, setStartDateRange] = useState(null);
 
-  const handleStatusValue = (e) => {
+  const handleFilterByBatch = (e) => {
     setStatusValue(e.target.value);
   };
 
@@ -60,6 +60,7 @@ const StudentAttendanceFilterCard = () => {
   //   setEndDateRange(end);
   // };
 
+  const { value, handleFilter } = props;
  
   return (
     <DatePickerWrapper>
@@ -68,9 +69,9 @@ const StudentAttendanceFilterCard = () => {
           <Card>
             <CardHeader title="Student Attendance" />
             <CardContent>
-              <Grid container spacing={4}>
-                <Grid item xs={12} sm={4}>
-                  <TextField select fullWidth label="Batch" SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={3}>
+                  <TextField select fullWidth label="Batch" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByBatch(e) }}>
                     <MenuItem value="">None</MenuItem>
                     <MenuItem value="downloaded">Downloaded</MenuItem>
                     <MenuItem value="draft">Draft</MenuItem>
@@ -80,7 +81,7 @@ const StudentAttendanceFilterCard = () => {
                     <MenuItem value="sent">Sent</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                 <Autocomplete
                     multiple
                     id="select-multiple-chip"
@@ -139,7 +140,7 @@ const StudentAttendanceFilterCard = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={3}>
                 <Autocomplete
                     multiple
                     id="select-multiple-chip"
@@ -197,7 +198,16 @@ const StudentAttendanceFilterCard = () => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
               </Grid>
-              
+              <Grid item xs={12} sm={3}> 
+              <TextField
+          value={value}
+          sx={{
+            width: "100%"
+          }}
+          placeholder="Search Student"
+          onChange={(e) => handleFilter(e.target.value)}
+        />
+              </Grid>
               </Grid>
             </CardContent>
           </Card>
