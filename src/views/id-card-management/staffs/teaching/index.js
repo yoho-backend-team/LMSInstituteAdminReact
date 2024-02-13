@@ -14,6 +14,7 @@ import { TextField } from '@mui/material';
 import StaffFilterCard from 'features/id-card-management/staff-id-cards/components/StaffFilterCard';
 import Pagination from '@mui/material/Pagination';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
+import DeleteDialog from 'components/modal/DeleteModel';
 
 // import { Icon } from '@mui/material';
 // import Chip from '@mui/material/Chip';
@@ -58,6 +59,8 @@ const TeachingIdCard = () => {
   };
 
   const [loading, setLoading] = useState(true);
+  const [statusValue, setStatusValue] = useState('');
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Simulate loading delay with useEffect
   useEffect(() => {
@@ -67,6 +70,11 @@ const TeachingIdCard = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleFilterByStatus = (e) => {
+    setStatusValue(e.target.value);
+    setDeleteDialogOpen(true);
+  };
 
   return (
     <>
@@ -253,13 +261,14 @@ const TeachingIdCard = () => {
                           </Box>
 
                           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                            <TextField size="small" select defaultValue="" label="Status" id="custom-select">
-                              <MenuItem value="">
-                                <em>None</em>
-                              </MenuItem>
-                              <MenuItem value={10}>Ten</MenuItem>
-                              <MenuItem value={20}>Twenty</MenuItem>
-                              <MenuItem value={30}>Thirty</MenuItem>
+                          <TextField
+                              select
+                              fullWidth
+                              label="Status"
+                              SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                            >
+                              <MenuItem value="0">Active</MenuItem>
+                              <MenuItem value="1">Deactive</MenuItem>
                             </TextField>
                           </Box>
                         </CardContent>
@@ -290,6 +299,13 @@ const TeachingIdCard = () => {
           )}
         </Grid>
       </Grid>
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        // handleSubmit={handleDeleteConfirm}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+      />
     </>
   );
 };
