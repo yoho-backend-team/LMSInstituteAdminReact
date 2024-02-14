@@ -21,7 +21,7 @@ import * as yup from 'yup';
 // ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
-import { TextField as CustomTextField, TextField,Checkbox, } from '@mui/material';
+import { TextField as CustomTextField, TextField, Checkbox, } from '@mui/material';
 import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
 // ** Styled Components
 import CustomChip from 'components/mui/chip';
@@ -32,6 +32,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import StepperWrapper from 'styles/mui/stepper';
 import { useSelector } from 'react-redux';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses/services/courseServices';
+
+
+
 const steps = [
   {
     title: 'Personal Info',
@@ -52,7 +55,7 @@ const defaultPersonalValues = {
   description: '',
   course_overview: '',
   Learning_Format: '',
-  Course_Category: ''
+  Course_Category: []
 };
 
 const defaultSocialValues = {};
@@ -64,7 +67,7 @@ const personalSchema = yup.object().shape({
   description: yup.string().required(),
   course_overview: yup.string().required(),
   Learning_Format: yup.string().required(),
-  Course_Category: yup.string().required()
+  Course_Category: yup.array().min(1, 'Select at least one CourseCategory').required()
 });
 
 const socialSchema = yup.object().shape({});
@@ -129,6 +132,7 @@ const AddCoursePage = () => {
   // });
   // console.log(galleryControl);
   console.log(defaultPersonalValues);
+  console.log(activeCategories);
   // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -263,33 +267,6 @@ const AddCoursePage = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Controller
-                  name="Course_Category"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <TextField
-                      select
-                      fullWidth
-                      label="Course Category"
-                      id="validation-billing-select"
-                      aria-describedby="validation-billing-select"
-                      error={Boolean(personalErrors['Course_Category'])}
-                      {...(personalErrors['Course_Category'] && { helperText: 'This field is required' })}
-                      onChange={onChange}
-                      value={value}
-                    >
-                      {activeCategories?.map((category) => (
-                        <MenuItem key={category?.id} value={category.id}>
-                          {' '}
-                          {category?.course_category_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
                   id="select-multiple-chip"
@@ -347,6 +324,80 @@ const AddCoursePage = () => {
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+
+                <Controller
+                  name="Course_Category"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => {
+                    const branchesWithSelectAll = [{ id: 'selectAll', course_category_name: 'Select All' }, ...activeCategories];
+
+                    return (
+                      <Autocomplete
+                        multiple
+                        id="select-multiple-chip"
+                        options={branchesWithSelectAll}
+                        getOptionLabel={(option) => option.course_category_name}
+                        value={value}
+                        onChange={(e, newValue) => {
+                          if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                            onChange(activeCategories?.filter((option) => option.id !== 'selectAll'));
+                          } else {
+                            onChange(newValue);
+                          }
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            fullWidth
+                            label="Course Category"
+                            error={Boolean(personalErrors.Course_Category)}
+                            {...(personalErrors.Course_Category && { helperText: personalErrors.Course_Category.message })}
+                            InputProps={{
+                              ...params.InputProps,
+                              style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' } //
+                            }}
+                          />
+                        )}
+                        renderOption={(props, option, { selected }) => (
+                          <li {...props}>
+                            <Checkbox
+                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                              checkedIcon={<CheckBoxIcon fontSize="small" />}
+                              style={{ marginRight: 8 }}
+                              checked={selected}
+                            />
+                            {option.course_category_name}
+                          </li>
+                        )}
+                        renderTags={(value) => (
+                          <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                            {value.map((option, index) => (
+                              <CustomChip
+                                key={option.id}
+                                label={option.course_category_name}
+                                onDelete={() => {
+                                  const updatedValue = [...value];
+                                  updatedValue.splice(index, 1);
+                                  onChange(updatedValue);
+                                }}
+                                color="primary"
+                                // {...getTagProps({ index })}
+                                sx={{ m: 0.75 }}
+                              />
+                            ))}
+                          </div>
+                        )}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        selectAllText="Select All"
+                        SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                      />
+                    );
+                  }}
+                />
+              </Grid>
+             
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="Learning_Format"

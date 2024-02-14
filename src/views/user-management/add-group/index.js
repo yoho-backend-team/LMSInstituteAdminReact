@@ -276,7 +276,7 @@ const GroupAddPage = () => {
                   />
                 </Grid>
                 <Grid xs={12} sm={5.9}>
-                  <Controller
+                <Controller
                     name="branch"
                     control={control}
                     rules={{ required: true }}
