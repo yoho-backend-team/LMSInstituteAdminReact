@@ -1,17 +1,12 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-
-// ** Custom Components Imports
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
 import ReactApexCharts from 'react-apexcharts';
-
-// ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
 
 const data = [
@@ -29,9 +24,7 @@ const data = [
 ];
 
 const CardSupportTracker = () => {
-  // ** Hook
   const theme = useTheme();
-
   const options = {
     chart: {
       sparkline: { enabled: true }

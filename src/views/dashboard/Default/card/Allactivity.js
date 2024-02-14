@@ -1,13 +1,7 @@
-// ** MUI Imports
+import { Divider, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-// import CardContent from '@mui/material/CardContent';
-// import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import { Divider, useTheme } from '@mui/material';
-// ** Icon Imports
-
-// ** Custom Components Imports
 
 const data = [
   {
@@ -86,7 +80,7 @@ const AllActivity = () => {
         </Card>
       </Box>
       <Box>
-        <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8, }}>
+        <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
           {data.map((item, index) => {
             return (
               <Box key={index}>

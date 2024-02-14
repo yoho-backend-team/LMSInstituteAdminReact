@@ -279,9 +279,15 @@ const SidebarLeft = (props) => {
                 Chats
               </Typography> */}
               {/* <List sx={{ mb: 5, p: 0 }}>{renderChats()}</List> */}
+              <Box sx={{display:"flex",justifyContent:"space-between"}}>
               <Typography variant="h5" sx={{ ml: 1, mb: 3.5, color: 'primary.main' }}>
-                My Open tickets ( )
+                My Open tickets (6)
               </Typography>
+              <Box>
+              <Icon icon="mingcute:down-fill" color="primary.main" />
+              </Box>
+              </Box>
+        
               <List sx={{ p: 0 }}>{renderContacts()}</List>
             </Box>
           </ScrollWrapper>

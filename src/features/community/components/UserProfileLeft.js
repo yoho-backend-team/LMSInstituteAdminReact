@@ -1,58 +1,39 @@
-// ** React Imports
-import { Fragment } from 'react'
+import { Fragment } from 'react';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import Badge from '@mui/material/Badge';
+import Radio from '@mui/material/Radio';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import ListItem from '@mui/material/ListItem';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import RadioGroup from '@mui/material/RadioGroup';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import CustomTextField from 'components/mui/text-field';
+import Icon from 'components/icon';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import Sidebar from 'components/sidebar';
 
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import List from '@mui/material/List'
-import Badge from '@mui/material/Badge'
-import Radio from '@mui/material/Radio'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import Switch from '@mui/material/Switch'
-import ListItem from '@mui/material/ListItem'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import RadioGroup from '@mui/material/RadioGroup'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemButton from '@mui/material/ListItemButton'
-import FormControlLabel from '@mui/material/FormControlLabel'
+const UserProfileLeft = (props) => {
+  const { store, hidden, statusObj, userStatus, sidebarWidth, setUserStatus, userProfileLeftOpen, handleUserProfileLeftSidebarToggle } =
+    props;
 
-// ** Custom Component Import
-import CustomTextField from 'components/mui/text-field'
-
-// ** Icon Imports
-import Icon from 'components/icon'
-
-// ** Third Party Components
-import PerfectScrollbar from 'react-perfect-scrollbar'
-
-// ** Custom Component Imports
-import Sidebar from 'components/sidebar'
-
-const UserProfileLeft = props => {
-  const {
-    store,
-    hidden,
-    statusObj,
-    userStatus,
-    sidebarWidth,
-    setUserStatus,
-    userProfileLeftOpen,
-    handleUserProfileLeftSidebarToggle
-  } = props
-
-  const handleUserStatus = e => {
-    setUserStatus(e.target.value)
-  }
+  const handleUserStatus = (e) => {
+    setUserStatus(e.target.value);
+  };
 
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
-      return <Box sx={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>{children}</Box>
+      return <Box sx={{ height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>{children}</Box>;
     } else {
-      return <PerfectScrollbar options={{ wheelPropagation: false }}>{children}</PerfectScrollbar>
+      return <PerfectScrollbar options={{ wheelPropagation: false }}>{children}</PerfectScrollbar>;
     }
-  }
+  };
 
   return (
     <Sidebar
@@ -62,8 +43,8 @@ const UserProfileLeft = props => {
         zIndex: 9,
         height: '100%',
         width: sidebarWidth,
-        borderTopLeftRadius: theme => theme.shape.borderRadius,
-        borderBottomLeftRadius: theme => theme.shape.borderRadius,
+        borderTopLeftRadius: (theme) => theme.shape.borderRadius,
+        borderBottomLeftRadius: (theme) => theme.shape.borderRadius,
         '& + .MuiBackdrop-root': {
           zIndex: 8,
           borderRadius: 1
@@ -73,43 +54,39 @@ const UserProfileLeft = props => {
       {store && store.userProfile ? (
         <Fragment>
           <IconButton
-            size='small'
+            size="small"
             onClick={handleUserProfileLeftSidebarToggle}
             sx={{ top: '0.5rem', right: '0.5rem', position: 'absolute', color: 'text.disabled' }}
           >
-            <Icon icon='tabler:x' />
+            <Icon icon="tabler:x" />
           </IconButton>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column',p: theme => theme.spacing(7, 6, 2) }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', p: (theme) => theme.spacing(7, 6, 2) }}>
             <Box sx={{ mb: 3.5, display: 'flex', justifyContent: 'center' }}>
               <Badge
-                overlap='circular'
+                overlap="circular"
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'right'
                 }}
                 badgeContent={
                   <Box
-                    component='span'
+                    component="span"
                     sx={{
                       width: 10,
                       height: 10,
                       borderRadius: '50%',
                       color: `${statusObj[userStatus]}.main`,
                       backgroundColor: `${statusObj[userStatus]}.main`,
-                      boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`
+                      boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`
                     }}
                   />
                 }
               >
-                <Avatar
-                  sx={{ width: 80, height: 80 }}
-                  src={store.userProfile.avatar}
-                  alt={store.userProfile.fullName}
-                />
+                <Avatar sx={{ width: 80, height: 80 }} src={store.userProfile.avatar} alt={store.userProfile.fullName} />
               </Badge>
             </Box>
-            <Typography variant='h5' sx={{ textAlign: 'center' }}>
+            <Typography variant="h5" sx={{ textAlign: 'center' }}>
               {store.userProfile.fullName}
             </Typography>
             <Typography sx={{ textAlign: 'center', color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -120,55 +97,28 @@ const UserProfileLeft = props => {
           <Box sx={{ height: 'calc(100% - 13.3125rem)' }}>
             <ScrollWrapper>
               <Box sx={{ p: 4 }}>
-                <Typography
-                  variant='body2'
-                  sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}
-                >
+                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   About
                 </Typography>
-                <CustomTextField
-                  multiline
-                  fullWidth
-                  minRows={4}
-                  sx={{ mb: 6 }}
-                  defaultValue={store.userProfile.about}
-                />
-                <Typography
-                  variant='body2'
-                  sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}
-                >
+                <CustomTextField multiline fullWidth minRows={4} sx={{ mb: 6 }} defaultValue={store.userProfile.about} />
+                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Status
                 </Typography>
                 <RadioGroup value={userStatus} sx={{ mb: 6, ml: 0.8 }} onChange={handleUserStatus}>
                   <div>
-                    <FormControlLabel
-                      value='online'
-                      label='Online'
-                      control={<Radio color='success' sx={{ p: 1.5 }} />}
-                    />
+                    <FormControlLabel value="online" label="Online" control={<Radio color="success" sx={{ p: 1.5 }} />} />
                   </div>
                   <div>
-                    <FormControlLabel value='away' label='Away' control={<Radio color='warning' sx={{ p: 1.5 }} />} />
+                    <FormControlLabel value="away" label="Away" control={<Radio color="warning" sx={{ p: 1.5 }} />} />
                   </div>
                   <div>
-                    <FormControlLabel
-                      value='busy'
-                      label='Do not Disturb'
-                      control={<Radio color='error' sx={{ p: 1.5 }} />}
-                    />
+                    <FormControlLabel value="busy" label="Do not Disturb" control={<Radio color="error" sx={{ p: 1.5 }} />} />
                   </div>
                   <div>
-                    <FormControlLabel
-                      value='offline'
-                      label='Offline'
-                      control={<Radio color='secondary' sx={{ p: 1.5 }} />}
-                    />
+                    <FormControlLabel value="offline" label="Offline" control={<Radio color="secondary" sx={{ p: 1.5 }} />} />
                   </div>
                 </RadioGroup>
-                <Typography
-                  variant='body2'
-                  sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}
-                >
+                <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Settings
                 </Typography>
                 <List
@@ -187,44 +137,44 @@ const UserProfileLeft = props => {
                   <ListItem disablePadding secondaryAction={<Switch />}>
                     <ListItemButton sx={{ px: 2 }}>
                       <ListItemIcon sx={{ mr: 2, color: 'text.primary' }}>
-                        <Icon icon='tabler:message-dots' />
+                        <Icon icon="tabler:message-dots" />
                       </ListItemIcon>
-                      <ListItemText primary='Two-step Verification' primaryTypographyProps={{ variant: 'body1' }} />
+                      <ListItemText primary="Two-step Verification" primaryTypographyProps={{ variant: 'body1' }} />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding secondaryAction={<Switch defaultChecked />}>
                     <ListItemButton sx={{ px: 2 }}>
                       <ListItemIcon sx={{ mr: 2, color: 'text.primary' }}>
-                        <Icon icon='tabler:bell' />
+                        <Icon icon="tabler:bell" />
                       </ListItemIcon>
-                      <ListItemText primary='Notification' primaryTypographyProps={{ variant: 'body1' }} />
+                      <ListItemText primary="Notification" primaryTypographyProps={{ variant: 'body1' }} />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
                     <ListItemButton sx={{ px: 2 }}>
                       <ListItemIcon sx={{ mr: 2, color: 'text.primary' }}>
-                        <Icon icon='tabler:user-plus' />
+                        <Icon icon="tabler:user-plus" />
                       </ListItemIcon>
-                      <ListItemText primary='Invite Friends' primaryTypographyProps={{ variant: 'body1' }} />
+                      <ListItemText primary="Invite Friends" primaryTypographyProps={{ variant: 'body1' }} />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
                     <ListItemButton sx={{ px: 2 }}>
                       <ListItemIcon sx={{ mr: 2, color: 'text.primary' }}>
-                        <Icon icon='tabler:trash' />
+                        <Icon icon="tabler:trash" />
                       </ListItemIcon>
-                      <ListItemText primary='Delete Account' primaryTypographyProps={{ variant: 'body1' }} />
+                      <ListItemText primary="Delete Account" primaryTypographyProps={{ variant: 'body1' }} />
                     </ListItemButton>
                   </ListItem>
                 </List>
-                <Button variant='contained'>Logout</Button>
+                <Button variant="contained">Logout</Button>
               </Box>
             </ScrollWrapper>
           </Box>
         </Fragment>
       ) : null}
     </Sidebar>
-  )
-}
+  );
+};
 
-export default UserProfileLeft
+export default UserProfileLeft;

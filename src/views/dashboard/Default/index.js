@@ -1,70 +1,5 @@
-// import { useEffect, useState } from 'react';
-
-// // material-ui
-// import { Grid } from '@mui/material';
-
-// // project imports
-// import EarningCard from './EarningCard';
-// import PopularCard from './PopularCard';
-// import TotalOrderLineChartCard from './TotalOrderLineChartCard';
-// import TotalIncomeDarkCard from './TotalIncomeDarkCard';
-// import TotalIncomeLightCard from './TotalIncomeLightCard';
-// import TotalGrowthBarChart from './TotalGrowthBarChart';
-// import { gridSpacing } from 'store/constant';
-
-// // ==============================|| DEFAULT DASHBOARD ||============================== //
-
-// const Dashboard = () => {
-//   const [isLoading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     setLoading(false);
-//   }, []);
-
-//   return (
-//     <Grid container spacing={gridSpacing}>
-//       <Grid item xs={12}>
-//         <Grid container spacing={gridSpacing}>
-//           <Grid item lg={4} md={6} sm={6} xs={12}>
-//             <EarningCard isLoading={isLoading} />
-//           </Grid>
-//           <Grid item lg={4} md={6} sm={6} xs={12}>
-//             <TotalOrderLineChartCard isLoading={isLoading} />
-//           </Grid>
-//           <Grid item lg={4} md={12} sm={12} xs={12}>
-//             <Grid container spacing={gridSpacing}>
-//               <Grid item sm={6} xs={12} md={6} lg={12}>
-//                 <TotalIncomeDarkCard isLoading={isLoading} />
-//               </Grid>
-//               <Grid item sm={6} xs={12} md={6} lg={12}>
-//                 <TotalIncomeLightCard isLoading={isLoading} />
-//               </Grid>
-//             </Grid>
-//           </Grid>
-//         </Grid>
-//       </Grid>
-//       <Grid item xs={12}>
-//         <Grid container spacing={gridSpacing}>
-//           <Grid item xs={12} md={8}>
-//             <TotalGrowthBarChart isLoading={isLoading} />
-//           </Grid>
-//           <Grid item xs={12} md={4}>
-//             <PopularCard isLoading={isLoading} />
-//           </Grid>
-//         </Grid>
-//       </Grid>
-//     </Grid>
-//   );
-// };
-
-// export default Dashboard;
-
-// material-ui
 import { Grid } from '@mui/material';
-import { useState,useEffect } from 'react';
-
-// project imports
-// import { gridSpacing } from 'store/constant';
+import { useState, useEffect } from 'react';
 import AllActivity from './card/Allactivity';
 import CardData from './card/CardData';
 import CardPopularCourse from './card/CardPopularCourse';
@@ -73,12 +8,9 @@ import CardStatsVertical from './card/CardStatsVertical';
 import RevenueReport from './card/RevenueReport';
 import CardSupportTracker from './card/CardSupportTracker';
 import DashboardSkeleton from 'components/cards/Skeleton/DashboardSkeleton';
-// ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
-
-  // Simulate loading delay with useEffect
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -92,7 +24,6 @@ const Dashboard = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <DashboardSkeleton />
           ) : (
             <Grid container spacing={2}>
@@ -223,9 +154,6 @@ const Dashboard = () => {
                   <Grid item xs={12}>
                     <AllActivity />
                   </Grid>
-                  {/* <Grid item sx={{mt:2}} xs={12}>
-        <AllActivity/>
-        </Grid> */}
                 </Grid>
               </Grid>
             </Grid>

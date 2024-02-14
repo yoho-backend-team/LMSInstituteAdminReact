@@ -207,7 +207,7 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 150,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -326,7 +326,7 @@ const FeesTable = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Filters" />
+            <CardHeader title="Fee" />
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>

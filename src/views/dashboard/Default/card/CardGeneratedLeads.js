@@ -1,25 +1,16 @@
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import { useTheme } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import CardContent from '@mui/material/CardContent';
+import Icon from 'components/icon';
+import ReactApexChart from 'react-apexcharts';
+import { hexToRGBA } from 'utils/hex-to-rgba';
 
-// ** Icons Imports
-import Icon from 'components/icon'
-
-// ** Custom Components Imports
-import ReactApexChart from 'react-apexcharts'
-
-// ** Util Import
-import { hexToRGBA } from 'utils/hex-to-rgba'
-
-const series = [32, 41, 41, 70]
+const series = [32, 41, 41, 70];
 
 const CardGeneratedLeads = () => {
-  // ** Hook
-  const theme = useTheme()
-
+  const theme = useTheme();
   const options = {
     colors: [
       theme.palette.success.main,
@@ -62,7 +53,7 @@ const CardGeneratedLeads = () => {
             value: {
               offsetY: -17,
               fontWeight: 500,
-              formatter: val => `${val}`,
+              formatter: (val) => `${val}`,
               color: theme.palette.text.primary,
               fontFamily: theme.typography.fontFamily,
               fontSize: theme.typography.h2.fontSize
@@ -92,34 +83,33 @@ const CardGeneratedLeads = () => {
         }
       }
     ]
-  }
-
+  };
   return (
     <Card>
       <CardContent>
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'stretch', justifyContent: 'space-between' }}>
           <Box sx={{ gap: 1.75, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
-              <Typography variant='h5' sx={{ mb: 0.5 }}>
+              <Typography variant="h5" sx={{ mb: 0.5 }}>
                 Generated Leads
               </Typography>
-              <Typography variant='body2'>Monthly Report</Typography>
+              <Typography variant="body2">Monthly Report</Typography>
             </div>
             <div>
-              <Typography variant='h3'>4,350</Typography>
+              <Typography variant="h3">4,350</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'success.main' } }}>
-                <Icon icon='tabler:chevron-up' fontSize='1.25rem' />
-                <Typography variant='h6' sx={{ color: 'success.main' }}>
+                <Icon icon="tabler:chevron-up" fontSize="1.25rem" />
+                <Typography variant="h6" sx={{ color: 'success.main' }}>
                   15.8%
                 </Typography>
               </Box>
             </div>
           </Box>
-          <ReactApexChart type='donut' width={150} height={165} series={series} options={options} />
+          <ReactApexChart type="donut" width={150} height={165} series={series} options={options} />
         </Box>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default CardGeneratedLeads
+export default CardGeneratedLeads;

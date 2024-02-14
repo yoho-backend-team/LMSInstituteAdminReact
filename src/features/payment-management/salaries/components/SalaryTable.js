@@ -135,7 +135,7 @@ const SalaryTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
@@ -165,21 +165,21 @@ const SalaryTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 120,
       field: 'total',
       headerName: 'Salary Amount',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 150,
       field: 'PaymentDate',
       headerName: 'Payment Date',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
     },
     {
       flex: 1,
-      minWidth: 180,
+      minWidth: 130,
       field: 'balance',
       headerName: 'Balance',
       renderCell: ({ row }) =>
@@ -191,7 +191,7 @@ const SalaryTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 150,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -213,7 +213,7 @@ const SalaryTable = () => {
     ...defaultColumns,
     {
       flex: 0.1,
-      minWidth: 140,
+      minWidth: 120,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -313,7 +313,7 @@ const SalaryTable = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Filters" />
+            <CardHeader title="Salary" />
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>

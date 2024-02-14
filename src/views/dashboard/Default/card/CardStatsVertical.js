@@ -1,16 +1,11 @@
-// ** MUI Imports
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-
-// ** Custom Component Import
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
 
 const CardStatsVertical = (props) => {
-  // ** Props
   const { sx, stats, title, avatarIcon, avatarSize = 44, iconSize = '1.75rem', avatarColor = 'primary' } = props;
-
   return (
     <Card sx={{ ...sx }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>

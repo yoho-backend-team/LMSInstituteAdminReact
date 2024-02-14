@@ -1,124 +1,102 @@
-// ** React Imports
-import { useRef, useEffect } from 'react'
-
-// ** MUI Imports
-import Box from '@mui/material/Box'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-
-// ** Icon Imports
-import Icon from 'components/icon'
-
-// ** Third Party Components
-import PerfectScrollbarComponent from 'react-perfect-scrollbar'
-
-// ** Custom Components Imports
-import CustomAvatar from 'components/mui/avatar'
-
-// ** Utils Imports
+import { useRef, useEffect } from 'react';
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import Icon from 'components/icon';
+import PerfectScrollbarComponent from 'react-perfect-scrollbar';
+import CustomAvatar from 'components/mui/avatar';
 import { getInitials } from 'utils/get-initials';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
   padding: theme.spacing(5)
-}))
+}));
 
-const ChatLog = props => {
-  // ** Props
-  const { data, hidden } = props
-
-  // ** Ref
-  const chatArea = useRef(null)
-
-  // ** Scroll to chat bottom
+const ChatLog = (props) => {
+  const { data, hidden } = props;
+  const chatArea = useRef(null);
   const scrollToBottom = () => {
     if (chatArea.current) {
       if (hidden) {
-        // @ts-ignore
-        chatArea.current.scrollTop = chatArea.current.scrollHeight
+        chatArea.current.scrollTop = chatArea.current.scrollHeight;
       } else {
-        // @ts-ignore
-        chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight
+        chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight;
       }
     }
-  }
-
-  // ** Formats chat data based on sender
- const formattedChatData = () => {
-  let chatLog = [];
-  if (Array.isArray(data.chat)) {
-    chatLog = data.chat;
-  }
-  const formattedChatLog = [];
-  let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : 11;
-
-  let msgGroup = {
-    senderId: chatMessageSenderId,
-    messages: []
   };
-  chatLog.forEach((msg, index) => {
-    if (chatMessageSenderId === msg.senderId) {
-      msgGroup.messages.push({
-        time: msg.time,
-        msg: msg.message,
-        feedback: msg.feedback
-      });
-    } else {
-      chatMessageSenderId = msg.senderId;
-      formattedChatLog.push(msgGroup);
-      msgGroup = {
-        senderId: msg.senderId,
-        messages: [
-          {
-            time: msg.time,
-            msg: msg.message,
-            feedback: msg.feedback
-          }
-        ]
-      };
+
+  const formattedChatData = () => {
+    let chatLog = [];
+    if (Array.isArray(data.chat)) {
+      chatLog = data.chat;
     }
-    if (index === chatLog.length - 1) formattedChatLog.push(msgGroup);
-  });
+    const formattedChatLog = [];
+    let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : 11;
 
-  return formattedChatLog;
-};
+    let msgGroup = {
+      senderId: chatMessageSenderId,
+      messages: []
+    };
+    chatLog.forEach((msg, index) => {
+      if (chatMessageSenderId === msg.senderId) {
+        msgGroup.messages.push({
+          time: msg.time,
+          msg: msg.message,
+          feedback: msg.feedback
+        });
+      } else {
+        chatMessageSenderId = msg.senderId;
+        formattedChatLog.push(msgGroup);
+        msgGroup = {
+          senderId: msg.senderId,
+          messages: [
+            {
+              time: msg.time,
+              msg: msg.message,
+              feedback: msg.feedback
+            }
+          ]
+        };
+      }
+      if (index === chatLog.length - 1) formattedChatLog.push(msgGroup);
+    });
 
+    return formattedChatLog;
+  };
 
   const renderMsgFeedback = (isSender, feedback) => {
     if (isSender) {
       if (feedback.isSent && !feedback.isDelivered) {
         return (
-          <Box component='span' sx={{ display: 'flex', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-            <Icon icon='tabler:check' fontSize='1.125rem' />
+          <Box component="span" sx={{ display: 'flex', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
+            <Icon icon="tabler:check" fontSize="1.125rem" />
           </Box>
-        )
+        );
       } else if (feedback.isSent && feedback.isDelivered) {
         return (
           <Box
-            component='span'
+            component="span"
             sx={{
               display: 'flex',
               '& svg': { mr: 1.5, color: feedback.isSeen ? 'success.main' : 'text.secondary' }
             }}
           >
-            <Icon icon='tabler:checks' fontSize='1.125rem' />
+            <Icon icon="tabler:checks" fontSize="1.125rem" />
           </Box>
-        )
+        );
       } else {
-        return null
+        return null;
       }
     }
-  }
+  };
   useEffect(() => {
     if (data && data.chat && data.chat.length) {
-      scrollToBottom()
+      scrollToBottom();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+  }, [data]);
 
-  // ** Renders user chat
   const renderChats = () => {
     return formattedChatData().map((item, index) => {
-      const isSender = item.senderId === data.userContact.id
+      const isSender = item.senderId === data.userContact.id;
 
       return (
         <Box
@@ -131,14 +109,14 @@ const ChatLog = props => {
         >
           <div>
             <CustomAvatar
-              skin='light'
+              skin="light"
               color={data.contact.avatarColor ? data.contact.avatarColor : undefined}
               sx={{
                 width: 32,
                 height: 32,
                 ml: isSender ? 3 : undefined,
                 mr: !isSender ? 3 : undefined,
-                fontSize: theme => theme.typography.body1.fontSize
+                fontSize: (theme) => theme.typography.body1.fontSize
               }}
               {...(data.contact.avatar && !isSender
                 ? {
@@ -157,9 +135,9 @@ const ChatLog = props => {
             </CustomAvatar>
           </div>
 
-          <Box className='chat-body' sx={{ maxWidth: ['calc(100% - 5.75rem)', '75%', '65%'] }}>
+          <Box className="chat-body" sx={{ maxWidth: ['calc(100% - 5.75rem)', '75%', '65%'] }}>
             {item.messages.map((chat, index, { length }) => {
-              const time = new Date(chat.time)
+              const time = new Date(chat.time);
 
               return (
                 <Box key={index} sx={{ '&:not(:last-of-type)': { mb: 3 } }}>
@@ -171,7 +149,7 @@ const ChatLog = props => {
                         maxWidth: '100%',
                         width: 'fit-content',
                         wordWrap: 'break-word',
-                        p: theme => theme.spacing(2.25, 4),
+                        p: (theme) => theme.spacing(2.25, 4),
                         ml: isSender ? 'auto' : undefined,
                         borderTopLeftRadius: !isSender ? 0 : undefined,
                         borderTopRightRadius: isSender ? 0 : undefined,
@@ -192,21 +170,19 @@ const ChatLog = props => {
                       }}
                     >
                       {renderMsgFeedback(isSender, chat.feedback)}
-                      <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                        {time
-                          ? new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-                          : null}
+                      <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                        {time ? new Date(time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) : null}
                       </Typography>
                     </Box>
                   ) : null}
                 </Box>
-              )
+              );
             })}
           </Box>
         </Box>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
@@ -214,21 +190,21 @@ const ChatLog = props => {
         <Box ref={chatArea} sx={{ p: 5, height: '100%', overflowY: 'auto', overflowX: 'hidden' }}>
           {children}
         </Box>
-      )
+      );
     } else {
       return (
         <PerfectScrollbar ref={chatArea} options={{ wheelPropagation: false }}>
           {children}
         </PerfectScrollbar>
-      )
+      );
     }
-  }
+  };
 
   return (
     <Box sx={{ height: 'calc(100% - 8.875rem)' }}>
       <ScrollWrapper>{renderChats()}</ScrollWrapper>
     </Box>
-  )
-}
+  );
+};
 
-export default ChatLog
+export default ChatLog;
