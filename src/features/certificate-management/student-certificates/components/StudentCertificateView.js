@@ -6,7 +6,7 @@ import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput
 import Button from '@mui/material/Button';
 
 
-const StudyMaterialView = ({ open, handleViewClose }) => {
+const StudentCertificateView = ({ open, handleViewClose }) => {
   return (
     <div>
       <Dialog
@@ -25,7 +25,7 @@ const StudyMaterialView = ({ open, handleViewClose }) => {
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          View StudyMaterial Information
+          View Certificate Information
         </DialogTitle>
         <DialogContent
           sx={{
@@ -51,4 +51,4 @@ const StudyMaterialView = ({ open, handleViewClose }) => {
   );
 };
 
-export default StudyMaterialView;
+export default StudentCertificateView;

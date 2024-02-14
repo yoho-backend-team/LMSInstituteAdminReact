@@ -1,6 +1,4 @@
-import React from 'react';
-import { Grid, Skeleton } from '@mui/material';
-import { Box, Card, CardHeader, CardContent, Typography, Divider } from '@mui/material';
+import { Box, Card, Divider, Grid, Skeleton, Typography } from '@mui/material';
 
 const DashboardSkeleton = () => {
   const limitedData = Array.from({ length: 3 }, (_, index) => ({
@@ -115,24 +113,19 @@ const DashboardSkeleton = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               {/* <CardProjectStatus /> */}
-              <Card>
-                <CardHeader
-                  title={<Skeleton variant="text" width={150} />}
-                  action={
+               
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Skeleton variant="text" width={50} height={24} />
                       <Skeleton variant="text" width={50} height={24} sx={{ ml: 1 }} />
                       <Skeleton variant="text" width={50} height={24} sx={{ ml: 1 }} />
                     </Box>
-                  }
-                />
+                
                 <Skeleton variant="rectangular" width="100%" height={300} />
-              </Card>
             </Grid>
+
+
             <Grid item xs={12} md={6}>
               {/* <CardSupportTracker /> */}
-              <Card sx={{ minHeight: 320 }}>
-                <CardContent sx={{ pt: 5 }}>
                   <Grid container spacing={6}>
                     <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {/* Skeleton for ReactApexCharts */}
@@ -169,8 +162,6 @@ const DashboardSkeleton = () => {
                       ))}
                     </Grid>
                   </Grid>
-                </CardContent>
-              </Card>
             </Grid>
           </Grid>
         </Grid>

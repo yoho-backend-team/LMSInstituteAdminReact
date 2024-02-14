@@ -13,7 +13,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 
-const StudyMaterialHeader = (props) => {
+const StudentCertificateTableHeader = (props) => {
   // ** Props
   const { handleFilter, toggle, value } = props;
 
@@ -36,7 +36,7 @@ const StudyMaterialHeader = (props) => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title="Study materials" />
+          <CardHeader title="Student Certificates" />
           <CardContent sx={{ pt: 0, pb: 0 }}>
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12} sx={{ mb: 3 }}>
@@ -161,9 +161,9 @@ const StudyMaterialHeader = (props) => {
                     <TextField
                       fullWidth
                       value={value}
-                      label="Search Study Materials"
+                      label="Search Certificate"
                       sx={{}}
-                      placeholder="Search Study Materials"
+                      placeholder="Search"
                       onChange={(e) => handleFilter(e.target.value)}
                     />
                   </Grid>
@@ -171,7 +171,7 @@ const StudyMaterialHeader = (props) => {
                   <Grid item sm={6} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
                     <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
-                      Add Study Material
+                      Add Student Certificate
                     </Button>
                   </Grid>
                 </Grid>
@@ -184,4 +184,4 @@ const StudyMaterialHeader = (props) => {
   );
 };
 
-export default StudyMaterialHeader;
+export default StudentCertificateTableHeader;

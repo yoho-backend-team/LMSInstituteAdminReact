@@ -48,6 +48,8 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   description: yup.string().required(),
   course: yup.string().required(),
+  batch: yup.string().required(),
+  student: yup.string().required(),
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
@@ -83,14 +85,15 @@ const defaultValues = {
   description: '',
   title: '',
   branch: '',
-  course: ''
+  course: '',
+  batch:'',
+  student:'',
 };
 
-const StudyMaterialEdit = (props) => {
+const StudentCertificateAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
-  console.log("StudyMaterialEdit - open:", props.open);
-  console.log("StudyMaterialEdit - toggle:", props.toggle);
+
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
 
@@ -128,6 +131,7 @@ const StudyMaterialEdit = (props) => {
 
   console.log(groups);
 
+  // ** Hooks
   const {
     reset,
     control,
@@ -136,18 +140,10 @@ const StudyMaterialEdit = (props) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues: props.initialValues || defaultValues,
+    defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
- 
-console.log(defaultValues);
-
-  useEffect(() => {
-    if (open) {
-      reset(props.initialValues || defaultValues);
-    }
-  }, [open, reset, props.initialValues]);
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
@@ -207,7 +203,7 @@ console.log(defaultValues);
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Study Material</Typography>
+        <Typography variant="h5">Add Student Certificate</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -254,6 +250,48 @@ console.log(defaultValues);
             </TextField>
           </Grid>
 
+          <Controller
+            name="student"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                select
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Select Student"
+                onChange={onChange}
+                SelectProps={{ value: value, onChange: onChange }}
+                error={Boolean(errors.student)}
+                {...(errors.student && { helperText: errors.student.message })}
+              >
+                <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                <MenuItem value={'Android Development'}>Android Development</MenuItem>
+              </TextField>
+            )}
+          />
+          <Controller
+            name="batch"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                select
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Select Batch"
+                onChange={onChange}
+                SelectProps={{ value: value, onChange: onChange }}
+                error={Boolean(errors.batch)}
+                {...(errors.batch && { helperText: errors.batch.message })}
+              >
+                <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                <MenuItem value={'Android Development'}>Android Development</MenuItem>
+              </TextField>
+            )}
+          />
           <Controller
             name="course"
             control={control}
@@ -326,4 +364,4 @@ console.log(defaultValues);
   );
 };
 
-export default StudyMaterialEdit;
+export default StudentCertificateAddDrawer;
