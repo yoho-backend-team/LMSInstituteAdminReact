@@ -81,13 +81,16 @@ const names = [
   'Kelly Snyder'
 ];
 
+
+
+
 const defaultValues = {
   description: '',
   title: '',
   branch: '',
   course: '',
-  batch:'',
-  student:'',
+  batch: '',
+  student: ''
 };
 
 const StudentCertificateAddDrawer = (props) => {
