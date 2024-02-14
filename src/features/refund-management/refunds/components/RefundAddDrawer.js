@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
@@ -36,7 +36,8 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   batch: yup.string().required('Batch is required'),
   students: yup.string().required('Student is required'),
-  amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required'),
+  course: yup.string().required('Course is required')
 });
 
 const defaultValues = {
@@ -55,11 +56,6 @@ const RefundAddDrawer = (props) => {
   const { open, toggle } = props;
 
   // ** State
-
-  const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
-  const [imgSrc, setImgSrc] = useState(image);
-  const [selectedImage, setSelectedImage] = useState('');
 
   useEffect(() => {
     // getAllGroups(); // Commented out the axios fetch for demonstration purposes
@@ -86,32 +82,9 @@ const RefundAddDrawer = (props) => {
     console.log(bodyFormData);
   };
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
-  };
+
 
   const handleClose = () => {
     setValue('contact', Number(''));
@@ -147,24 +120,33 @@ const RefundAddDrawer = (props) => {
             <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Header>
-        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+        <Box sx={{ p: (theme) => theme.spacing(6, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-              <ImgStyled src={imgSrc} alt="Profile Pic" />
-              <div>
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                  Upload
-                  <input
-                    hidden
-                    type="file"
-                    value={inputValue}
-                    accept="image/png, image/jpeg"
-                    onChange={handleInputImageChange}
-                    id="account-settings-upload-image"
-                  />
-                </ButtonStyled>
-              </div>
-            </Box>
+          
+
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="course"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    sx={{ mb: 2 }}
+                    select
+                    fullWidth
+                    label="Course"
+                    id="course-select"
+                    defaultValue=""
+                    error={Boolean(errors.course)}
+                    helperText={errors.course?.message}
+                  >
+                    <MenuItem value="USA">USA</MenuItem>
+                    <MenuItem value="Australia">Australia</MenuItem>
+                    <MenuItem value="Germany">Germany</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid> 
 
             <Grid item xs={12} sm={12}>
               <Controller
