@@ -1,4 +1,3 @@
-
 // ** MUI Imports
 import MuiAvatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -30,7 +29,6 @@ const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
 }));
 
 const ChatContent = (props) => {
-  // ** Props
   const {
     store,
     hidden,
@@ -159,20 +157,6 @@ const ChatContent = (props) => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {/* {mdAbove ? (
-                  <Fragment>
-                    <IconButton size='small' sx={{ color: 'text.secondary' }}>
-                      <Icon icon='tabler:phone-call' />
-                    </IconButton>
-                    <IconButton size='small' sx={{ color: 'text.secondary' }}>
-                      <Icon icon='tabler:video' />
-                    </IconButton>
-                    <IconButton size='small' sx={{ color: 'text.secondary' }}>
-                      <Icon icon='tabler:search' />
-                    </IconButton>
-                  </Fragment>
-                ) : null} */}
-
                 <OptionsMenu
                   menuProps={{ sx: { mt: 2 } }}
                   icon={<Icon icon="tabler:dots-vertical" />}

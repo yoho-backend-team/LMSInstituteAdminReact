@@ -13,14 +13,14 @@ import Icon from 'components/icon';
 
 // ** Custom Components Imports
 import MenuItem from '@mui/material/MenuItem';
-import StudyMaterialHeader from 'features/content-management/course-contents/components/StudyMaterialTableHeader';
+import StudentCertificateTableHeader from './StudentCertificateTableHeader';
 import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
-import StudyMaterialAddDrawer from './StudyMaterialAddDrawer';
-import StudyMaterialEdit from './StudyMaterialEdit';
-import StudyMaterialView from './StudyMaterialView';
+import StudyMaterialAddDrawer from './StudentCertificateAddDrawer';
+import StudyMaterialEdit from './StudentCertificateEdit';
+import StudyMaterialView from './StudentCertificateView';
 import CustomTextField from 'components/mui/text-field';
 
 // const userStatusObj = {
@@ -28,7 +28,7 @@ import CustomTextField from 'components/mui/text-field';
 //   Inactive: 'error'
 // };
 
-const StudyMaterial = () => {
+const StudentCertificateDataGrid = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -98,7 +98,7 @@ const StudyMaterial = () => {
     );
   };
 
-  const studyMaterials = [
+  const studentcertificates = [
     {
       id: 1,
       title: 'Introduction to JavaScript',
@@ -300,17 +300,17 @@ const StudyMaterial = () => {
     <>
       <Grid container spacing={1}>
         <Grid item xs={12}>
-          <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <StudentCertificateTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
         </Grid>
 
         <Grid item xs={12} sx={{mt:2}}>
           <Card>
-            <DataGrid
+            <DataGrid 
               autoHeight
               rowHeight={80}
-              rows={studyMaterials}
+              rows={studentcertificates}
               columns={columns}
-              disableRowSelectionOnClick
+              disableRowSelectionOnClick 
               pageSizeOptions={[10, 25, 50]}
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
@@ -328,4 +328,4 @@ const StudyMaterial = () => {
   );
 };
 
-export default StudyMaterial;
+export default StudentCertificateDataGrid;

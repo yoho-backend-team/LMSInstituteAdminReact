@@ -3,10 +3,9 @@ import { Fragment } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-// import ListItemButton from '@mui/material/ListItemButton'
+import Typography from '@mui/material/Typography';
 
 // ** Custom Component Imports
 import Sidebar from 'components/sidebar';
@@ -16,8 +15,7 @@ const UserProfileRight = (props) => {
   const {
     store,
     hidden,
-    // statusObj,
-    // getInitials,
+
     sidebarWidth,
     userProfileRightOpen,
     handleUserProfileRightSidebarToggle
@@ -46,7 +44,6 @@ const UserProfileRight = (props) => {
   };
 
   return (
-    // Side bar
     <Sidebar
       direction="right"
       show={userProfileRightOpen}
@@ -66,7 +63,6 @@ const UserProfileRight = (props) => {
       {store && store.selectedChat ? (
         <Fragment>
           <Box sx={{ position: 'relative' }}>
-            {/* Content header */}
             <Box sx={{ display: 'flex', flexDirection: 'column', p: (theme) => theme.spacing(6, 6) }}>
               <Typography variant="h5" sx={{ textAlign: 'center' }}>
                 {visitorInfo.fullName}
@@ -75,15 +71,12 @@ const UserProfileRight = (props) => {
             </Box>
           </Box>
 
-          {/* Visitor Details */}
-
           <Box sx={{ height: 'calc(100% - 13.3125rem)', px: 4 }}>
             <ScrollWrapper>
               <Box sx={{ mb: 3 }}>
                 <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Basic Details
                 </Typography>
-                {/* Flexbox layout for basic details */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
                     <Typography>Name</Typography>
@@ -151,7 +144,6 @@ const UserProfileRight = (props) => {
                 </Box>
               </Box>
 
-              {/* Divider */}
               <Box sx={{ borderBottom: '1px solid #E0E0E0', mb: 3 }} />
 
               {/* Device Details */}

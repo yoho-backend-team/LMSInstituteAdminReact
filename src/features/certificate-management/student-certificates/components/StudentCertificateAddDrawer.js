@@ -48,6 +48,8 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   description: yup.string().required(),
   course: yup.string().required(),
+  batch: yup.string().required(),
+  student: yup.string().required(),
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
@@ -79,14 +81,19 @@ const names = [
   'Kelly Snyder'
 ];
 
+
+
+
 const defaultValues = {
   description: '',
   title: '',
   branch: '',
-  course: ''
+  course: '',
+  batch: '',
+  student: ''
 };
 
-const StudyMaterialAddDrawer = (props) => {
+const StudentCertificateAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
 
@@ -199,7 +206,7 @@ const StudyMaterialAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Study Material</Typography>
+        <Typography variant="h5">Add Student Certificate</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -246,6 +253,48 @@ const StudyMaterialAddDrawer = (props) => {
             </TextField>
           </Grid>
 
+          <Controller
+            name="student"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                select
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Select Student"
+                onChange={onChange}
+                SelectProps={{ value: value, onChange: onChange }}
+                error={Boolean(errors.student)}
+                {...(errors.student && { helperText: errors.student.message })}
+              >
+                <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                <MenuItem value={'Android Development'}>Android Development</MenuItem>
+              </TextField>
+            )}
+          />
+          <Controller
+            name="batch"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                select
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Select Batch"
+                onChange={onChange}
+                SelectProps={{ value: value, onChange: onChange }}
+                error={Boolean(errors.batch)}
+                {...(errors.batch && { helperText: errors.batch.message })}
+              >
+                <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                <MenuItem value={'Android Development'}>Android Development</MenuItem>
+              </TextField>
+            )}
+          />
           <Controller
             name="course"
             control={control}
@@ -318,4 +367,4 @@ const StudyMaterialAddDrawer = (props) => {
   );
 };
 
-export default StudyMaterialAddDrawer;
+export default StudentCertificateAddDrawer;

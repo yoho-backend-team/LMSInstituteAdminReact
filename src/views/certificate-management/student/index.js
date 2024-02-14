@@ -20,11 +20,10 @@ import { searchUsers } from 'features/user-management/users/services/userService
 import { useDispatch } from 'react-redux';
 import DeleteDialog from 'components/modal/DeleteModel';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-
-import StudyMaterialAddDrawer from 'features/certificate-management/student-certificates/components/StudyMaterialAddDrawer';
-import StudyMaterialEdit from 'features/certificate-management/student-certificates/components/StudyMaterialEdit';
-import StudyMaterialHeader from 'features/certificate-management/student-certificates/components/StudyMaterialTableHeader';
-import StudyMaterialView from 'features/certificate-management/student-certificates/components/StudyMaterialView';
+import StudentCertificateAddDrawer from 'features/certificate-management/student-certificates/components/StudentCertificateAddDrawer';
+import StudentCertificateEdit from 'features/certificate-management/student-certificates/components/StudentCertificateEdit';
+import StudentCertificateTableHeader from 'features/certificate-management/student-certificates/components/StudentCertificateTableHeader';
+import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -90,7 +89,7 @@ const StudenrCertificate = () => {
     );
   };
 
-  const studyMaterials = [
+  const studentCertificates = [
     {
       id: 1,
       title: 'Introduction to JavaScript',
@@ -260,7 +259,7 @@ const StudenrCertificate = () => {
             </Typography>
           </Box>
         );
-      }
+      } 
     },
 
     {
@@ -302,14 +301,14 @@ const StudenrCertificate = () => {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+            <StudentCertificateTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
           </Grid>
           <Grid item xs={12}>
             <Card>
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studyMaterials}
+                rows={studentCertificates}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
@@ -319,8 +318,8 @@ const StudenrCertificate = () => {
               />
             </Card>
           </Grid>
-          <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-          <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+          <StudentCertificateAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <StudentCertificateEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
           <DeleteDialog
             open={isDeleteDialogOpen}
             setOpen={setDeleteDialogOpen}
@@ -328,7 +327,7 @@ const StudenrCertificate = () => {
             description="Are you sure you want to delete this item?"
             title="Delete"
           />
-          <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
+          <StudentCertificateView open={isViewModalOpen} handleViewClose={handleViewClose} />
         </Grid>
       )}
     </>

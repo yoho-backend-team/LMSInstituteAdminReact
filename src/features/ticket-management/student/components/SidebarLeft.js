@@ -1,9 +1,6 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
 
-// ** Next Import
-// import { useRouter } from 'next/router'
-
 // ** MUI Imports
 import MuiAvatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
@@ -20,13 +17,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // ** Icon Imports
 import Icon from 'components/icon';
 
-// ** Util Import
-
 // ** Custom Components Import
 import { Card, CardContent, IconButton, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import CustomTextField from 'components/mui/text-field';
-// ** Chat App Components Imports
 import UserProfileLeft from './UserProfileLeft';
 
 const ScrollWrapper = ({ children, hidden }) => {
@@ -38,7 +32,6 @@ const ScrollWrapper = ({ children, hidden }) => {
 };
 
 const SidebarLeft = (props) => {
-  // ** Props
   const {
     store,
     hidden,
@@ -46,36 +39,21 @@ const SidebarLeft = (props) => {
     dispatch,
     statusObj,
     userStatus,
-    // selectChat,
     getInitials,
     sidebarWidth,
     setUserStatus,
     leftSidebarOpen,
     removeSelectedChat,
     userProfileLeftOpen,
-    // formatDateToMonthShort,
     handleLeftSidebarToggle,
     handleUserProfileLeftSidebarToggle
   } = props;
 
   // ** States
   const [query, setQuery] = useState('');
-  // const [filteredChat, setFilteredChat] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [active, setActive] = useState(null);
   console.log(store);
-
-  // ** Hooks
-  // const router = useRouter()
-
-  // const handleChatClick = (type, id) => {
-  //   dispatch(selectChat(id));
-  //   setActive({ type, id });
-  //   if (!mdAbove) {
-  //     handleLeftSidebarToggle();
-  //   }
-  // };
-
 
   useEffect(() => {
     if (store && store.chats) {
@@ -87,7 +65,6 @@ const SidebarLeft = (props) => {
     }
   }, [store, active]);
   useEffect(() => {
-    // router.events.on('routeChangeComplete', () => {
     setActive(null);
     dispatch(removeSelectedChat());
     // })
@@ -96,18 +73,7 @@ const SidebarLeft = (props) => {
       setActive(null);
       dispatch(removeSelectedChat());
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // const hasActiveId = (id) => {
-  //   if (store.chats !== null) {
-  //     const arr = store.chats.filter((i) => i.id === id);
-
-  //     return !!arr.length;
-  //   }
-  // };
-
-
 
   const renderContacts = () => {
     if (store && store.contacts && store.contacts.length) {
@@ -149,17 +115,13 @@ const SidebarLeft = (props) => {
                         variant="h6"
                         color="text.secondary"
                         noWrap
-                        sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', }}
+                        sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                       >
                         {contact.about}
                       </Typography>
 
-                      {/* <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                        {contact.status} 
-                      </Typography> */}
-
-                      <Box sx={{ display: 'flex', mt: 2,gap:2 }}>
-                        <CustomChip rounded size="small" skin="light" color={'info'}  label={'Open'} />
+                      <Box sx={{ display: 'flex', mt: 2, gap: 2 }}>
+                        <CustomChip rounded size="small" skin="light" color={'info'} label={'Open'} />
                         <CustomChip rounded size="small" skin="light" color={'error'} label={'• High Priority'} />
                       </Box>
                     </Box>
@@ -191,7 +153,7 @@ const SidebarLeft = (props) => {
         variant={mdAbove ? 'permanent' : 'temporary'}
         ModalProps={{
           disablePortal: true,
-          keepMounted: true // Better open performance on mobile.
+          keepMounted: true
         }}
         sx={{
           zIndex: 7,
@@ -272,7 +234,7 @@ const SidebarLeft = (props) => {
           ) : null}
         </Box>
 
-        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: " hidden", }}>
+        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden' }}>
           <ScrollWrapper hidden={hidden}>
             <Box sx={{ p: (theme) => theme.spacing(5, 3, 3) }}>
               {/* <Typography variant="h5" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
