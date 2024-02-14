@@ -1,12 +1,12 @@
-import { Grid } from '@mui/material';
+import { Grid, IconButton } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
-import Button from '@mui/material/Button';
-
+import CloseIcon from '@mui/icons-material/Close';
 
 const StudyMaterialView = ({ open, handleViewClose }) => {
+  const savedPdfUrl = require('assets/pdf.pdf');
+
   return (
     <div>
       <Dialog
@@ -22,10 +22,16 @@ const StudyMaterialView = ({ open, handleViewClose }) => {
             textAlign: 'center',
             fontSize: '1.5rem !important',
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
-            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
+            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`],
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
           }}
         >
           View StudyMaterial Information
+          <IconButton onClick={handleViewClose}>
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent
           sx={{
@@ -35,16 +41,8 @@ const StudyMaterialView = ({ open, handleViewClose }) => {
           }}
         >
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
+            <iframe title="PDF Viewer" src={savedPdfUrl} width="100%" height="500px" />
           </Grid>
-          <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="error" onClick={handleViewClose}>
-                Cancel
-              </Button>
-            </Grid>
         </DialogContent>
       </Dialog>
     </div>
