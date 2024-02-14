@@ -30,6 +30,7 @@ const CardStatsVertical = (props) => {
 
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
+    setDeleteDialogOpen(true);
   };
 
   const handleDelete = (itemId) => {
