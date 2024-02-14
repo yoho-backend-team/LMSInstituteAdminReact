@@ -279,7 +279,7 @@ const AddCoursePage = () => {
                       }
                     </TextField>
                   )}
-                />
+                />  
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
