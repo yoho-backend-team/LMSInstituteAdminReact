@@ -170,7 +170,6 @@ const CategoryEditModal = ({ open, handleEditClose, category }) => {
                   )}
                 />
               </Grid>
-
               <Grid style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                   Submit

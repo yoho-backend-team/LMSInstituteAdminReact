@@ -13,7 +13,6 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -22,10 +21,14 @@ import * as yup from 'yup';
 // ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
+import { TextField as CustomTextField, TextField,Checkbox, } from '@mui/material';
 import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
 // ** Styled Components
+import CustomChip from 'components/mui/chip';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
+import Autocomplete from '@mui/material/Autocomplete';
 import StepperWrapper from 'styles/mui/stepper';
 import { useSelector } from 'react-redux';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses/services/courseServices';
@@ -78,20 +81,25 @@ const AddCoursePage = () => {
   const [activeCategories, setActiveCategories] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
+  const [selectedBranches, setSelectedBranches] = useState([]);
+  const branches = [
+    { branch_id: '1', branch_name: 'Branch 1' },
+    { branch_id: '2', branch_name: 'Branch 2' },
+    { branch_id: '3', branch_name: 'Branch 3' },
+  ];
   console.log(courseSyllabus);
 
   useEffect(() => {
-    getAllCategories()
+    getAllCategories();
   }, [selectedBranchId]);
 
   const getAllCategories = async () => {
-    const result = await getAllActiveCourseCategories(selectedBranchId)
+    const result = await getAllActiveCourseCategories(selectedBranchId);
     // console.log('result', result?.data)
     if (result.success) {
       setActiveCategories(result?.data);
     }
-  }
+  };
   // const [features, setFeatures] = useState([]);
 
   // ** Hooks
@@ -141,7 +149,6 @@ const AddCoursePage = () => {
       Course_Category: ''
     });
   };
-
 
   // const onSubmit = async () => {
   //   try {
@@ -272,13 +279,72 @@ const AddCoursePage = () => {
                       onChange={onChange}
                       value={value}
                     >
-                      {
-                        activeCategories?.map((category) => (
-                          <MenuItem key={category?.id} value={category.id} > {category?.course_category_name}</MenuItem>
-                        ))
-                      }
+                      {activeCategories?.map((category) => (
+                        <MenuItem key={category?.id} value={category.id}>
+                          {' '}
+                          {category?.course_category_name}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  multiple
+                  id="select-multiple-chip"
+                  options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
+                  getOptionLabel={(option) => option.branch_name}
+                  value={selectedBranches}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
+                      setSelectedBranches(branches.filter((option) => option.branch_id !== 'selectAll'));
+                    } else {
+                      setSelectedBranches(newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="Branches"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.branch_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value.map((option, index) => (
+                        <CustomChip
+                          key={option.branch_id}
+                          label={option.branch_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedBranches(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -289,8 +355,8 @@ const AddCoursePage = () => {
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       select
-                      fullWidth
                       label="Learning Format"
+                      fullWidth
                       id="validation-billing-select"
                       aria-describedby="validation-billing-select"
                       error={Boolean(personalErrors['Learning_Format'])}
@@ -300,6 +366,7 @@ const AddCoursePage = () => {
                     >
                       <MenuItem value="online">Online Mode</MenuItem>
                       <MenuItem value="offline">Offline Mode</MenuItem>
+                      <MenuItem value="Hybrid">Hybrid Mode</MenuItem>
                     </TextField>
                   )}
                 />
@@ -356,7 +423,7 @@ const AddCoursePage = () => {
                 </Button>
               </Grid>
             </Grid>
-          </form >
+          </form>
           // </DatePickerWrapper>
         );
       case 1:
