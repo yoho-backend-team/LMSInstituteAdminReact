@@ -44,10 +44,13 @@ const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-ma
 
 // Class Management
 const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class')));
+const ViewLiveClass = Loadable(lazy(() => import('views/class-management/live-class/view-class')));
 // const OnlineClassesPage = Loadable(lazy(() => import('views/class-management/online-class')));
 const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class')));
+const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offline-class/view-class')));
 
 // Content Management
+
 const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/study-materials')));
 const NotesPage = Loadable(lazy(() => import('views/content-management/notes')));
 const ModulesPage = Loadable(lazy(() => import('views/content-management/modules')));
@@ -206,7 +209,9 @@ const ApplicationRoutes = () => {
         <Route path="/class-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/class-management/live-classes" />} />
           <Route path="live-classes" element={<LiveClassesPage />} />
+          <Route path="live-classes/view" element={<ViewLiveClass />} />
           <Route path="offline-classes" element={<OfflineClassesPage />} />
+          <Route path="offline-classes/view" element={<ViewOfflineClass />} />
         </Route>
 
         <Route path="/content-management" element={<MainLayout />}>

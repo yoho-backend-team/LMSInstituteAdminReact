@@ -16,7 +16,7 @@ import { useState } from 'react';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 import DeleteDialog from 'components/modal/DeleteModel';
 import Pagination from '@mui/material/Pagination';
-
+import { Link } from 'react-router-dom';
 const OfflineClassCard = () => {
   const cardData = [
     // Add your card data here
@@ -247,9 +247,12 @@ const OfflineClassCard = () => {
                 </Box> */}
 
                   <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <Link to='view'>
                     <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
                       <Icon icon="tabler:eye" />
                     </IconButton>
+                    </Link>
+                   
                     <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="secondary" sx={{ ml: 1 }}>
                       <Icon icon="tabler:edit" />
                     </IconButton>

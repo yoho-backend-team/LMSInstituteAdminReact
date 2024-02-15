@@ -1,24 +1,22 @@
 // ** React Imports
 
 // ** MUI Imports
-import MuiAvatar from '@mui/material/Avatar'
-import Badge from '@mui/material/Badge'
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import { styled } from '@mui/material/styles'
+import MuiAvatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 // ** Icon Imports
-import Icon from 'components/icon'
-
+import Icon from 'components/icon';
 
 // ** Custom Components Import
-import CustomAvatar from 'components/mui/avatar'
-import OptionsMenu from 'components/option-menu'
-import ChatLog from './ChatLog'
-import SendMsgForm from './SendMsgForm'
-import UserProfileRight from './UserProfileRight'
-
+import CustomAvatar from 'components/mui/avatar';
+import OptionsMenu from 'components/option-menu';
+import ChatLog from './ChatLog';
+import SendMsgForm from './SendMsgForm';
+import UserProfileRight from './UserProfileRight';
 
 // ** Styled Components
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
@@ -30,9 +28,9 @@ const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   backgroundColor: theme.palette.action.hover
-}))
+}));
 
-const ChatContent = props => {
+const ChatContent = (props) => {
   // ** Props
   const {
     store,
@@ -46,17 +44,17 @@ const ChatContent = props => {
     userProfileRightOpen,
     handleLeftSidebarToggle,
     handleUserProfileRightSidebarToggle
-  } = props
+  } = props;
 
   const handleStartConversation = () => {
     if (!mdAbove) {
-      handleLeftSidebarToggle()
+      handleLeftSidebarToggle();
     }
-  }
+  };
 
   const renderContent = () => {
     if (store) {
-      const selectedChat = store.selectedChat
+      const selectedChat = store.selectedChat;
       if (!selectedChat) {
         return (
           <ChatWrapperStartChat
@@ -76,7 +74,7 @@ const ChatContent = props => {
                 backgroundColor: 'background.paper'
               }}
             >
-              <Icon icon='tabler:message' fontSize='3.125rem' />
+              <Icon icon="tabler:message" fontSize="3.125rem" />
             </MuiAvatar>
             <Box
               onClick={handleStartConversation}
@@ -89,12 +87,10 @@ const ChatContent = props => {
                 cursor: mdAbove ? 'default' : 'pointer'
               }}
             >
-              <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>
-                Start Conversation
-              </Typography>
+              <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
             </Box>
           </ChatWrapperStartChat>
-        )
+        );
       } else {
         return (
           <Box
@@ -113,21 +109,18 @@ const ChatContent = props => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 backgroundColor: 'background.paper',
-                borderBottom: theme => `1px solid ${theme.palette.divider}`
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {mdAbove ? null : (
                   <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
-                    <Icon icon='tabler:menu-2' />
+                    <Icon icon="tabler:menu-2" />
                   </IconButton>
                 )}
-                <Box
-                  onClick={handleUserProfileRightSidebarToggle}
-                  sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                >
+                <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                   <Badge
-                    overlap='circular'
+                    overlap="circular"
                     anchorOrigin={{
                       vertical: 'bottom',
                       horizontal: 'right'
@@ -135,36 +128,32 @@ const ChatContent = props => {
                     sx={{ mr: 3 }}
                     badgeContent={
                       <Box
-                        component='span'
+                        component="span"
                         sx={{
                           width: 8,
                           height: 8,
                           borderRadius: '50%',
                           color: `${statusObj[selectedChat.contact?.status]}.main`,
-                          boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}`,
+                          boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
                           backgroundColor: `${statusObj[selectedChat.contact?.status]}.main`
                         }}
                       />
                     }
                   >
                     {selectedChat.contact.avatar ? (
-                      <MuiAvatar
-                        sx={{ width: 38, height: 38 }}
-                        src={selectedChat.contact.avatar}
-                        alt={selectedChat.contact.fullName}
-                      />
+                      <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
                     ) : (
                       <CustomAvatar
-                        skin='light'
+                        skin="light"
                         color={selectedChat.contact.avatarColor}
-                        sx={{ width: 38, height: 38, fontSize: theme => theme.typography.body1.fontSize }}
+                        sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                       >
                         {getInitials(selectedChat.contact.fullName)}
                       </CustomAvatar>
                     )}
                   </Badge>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant='h6'>{selectedChat.contact.fullName}</Typography>
+                    <Typography variant="h6">{selectedChat.contact.fullName}</Typography>
                     <Typography sx={{ color: 'text.disabled' }}>{selectedChat.contact.role}</Typography>
                   </Box>
                 </Box>
@@ -187,7 +176,7 @@ const ChatContent = props => {
 
                 <OptionsMenu
                   menuProps={{ sx: { mt: 2 } }}
-                  icon={<Icon icon='tabler:dots-vertical' />}
+                  icon={<Icon icon="tabler:dots-vertical" />}
                   iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
                   options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
                 />
@@ -210,14 +199,14 @@ const ChatContent = props => {
               handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
             />
           </Box>
-        )
+        );
       }
     } else {
-      return null
+      return null;
     }
-  }
+  };
 
-  return renderContent()
-}
+  return renderContent();
+};
 
-export default ChatContent
+export default ChatContent;
