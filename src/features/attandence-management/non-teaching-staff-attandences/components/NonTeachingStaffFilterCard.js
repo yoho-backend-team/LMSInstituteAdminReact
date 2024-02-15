@@ -1,23 +1,19 @@
 // ** React Imports
-import { forwardRef, useState } from 'react';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-
+import { forwardRef, useState } from 'react';
 // ** Third Party Imports
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
-
 // ** Custom Components Imports
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Checkbox } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-
 import CustomChip from 'components/mui/chip';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -64,25 +60,20 @@ const NonTeachingStaffFilterCard = (props) => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6} >
-        <Grid item xs={12} >
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
           <Card>
             <CardHeader title="Non-Teaching Staff Attendance" />
             <CardContent>
-              <Grid container spacing={4} sx={{display:"flex",justifyContent:"flex-end"}}>
+              <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Status"
-                    SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
-                  >
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="0">Active</MenuItem>
                     <MenuItem value="1">Deactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
@@ -159,17 +150,12 @@ const NonTeachingStaffFilterCard = (props) => {
                   <TextField
                     value={value}
                     sx={{
-                      width: "100%"
+                      width: '100%'
                     }}
                     placeholder="Search Class"
                     onChange={(e) => handleFilter(e.target.value)}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={2} sx={{mt:1}}>
-                    <Button  onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
-                      Add Attendance
-                    </Button>
-                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

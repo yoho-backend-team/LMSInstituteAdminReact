@@ -1,4 +1,3 @@
-import React from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,7 +10,6 @@ import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
 const LiveClassCardHeader = (props) => {
   const { value, handleFilter } = props;
   const [isAddModalOpen, setAddModalOpen] = useState(false);
-
   const handleAddClose = () => {
     setAddModalOpen(false);
   };
@@ -24,7 +22,6 @@ const LiveClassCardHeader = (props) => {
     <>
       <Box
         sx={{
-          // p: 5,
           pb: 1,
           pt: 3,
           width: '100%',

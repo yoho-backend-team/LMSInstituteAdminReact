@@ -1,13 +1,10 @@
 // material-ui
 import { Grid } from '@mui/material';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import BatchViewSkeleton from 'components/cards/Skeleton/BatchViewSkeleton';
 import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
 import HeaderCard from 'features/batch-management/view-batch/components/ViewBatchHeaderCard';
 import ProgressCard from 'features/batch-management/view-batch/components/ViewBatchProgressCard';
-import BatchViewSkeleton from 'components/cards/Skeleton/BatchViewSkeleton';
-// ==============================|| SAMPLE PAGE ||============================== //
-
+import { useEffect, useState } from 'react';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {

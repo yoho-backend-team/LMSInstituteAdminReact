@@ -1,10 +1,7 @@
 // material-ui
 import { ClosedCaption, EmojiPeople, LibraryBooks, People, Public, VideoLibrary } from '@mui/icons-material';
-import { Typography, Grid, Box, Divider, Card, Avatar } from '@mui/material';
+import { Avatar, Box, Card, CardMedia, Divider, Grid, Typography } from '@mui/material';
 import CustomChip from 'components/mui/chip';
-import { CardMedia } from '@mui/material';
-
-// ==============================|| SAMPLE PAGE ||============================== //
 
 const ViewOfflineClass = () => (
   <Card sx={{ p: 3, alignItems: 'center' }}>
@@ -71,7 +68,6 @@ const ViewOfflineClass = () => (
             <Grid item sx={12} sm={12}>
               <Box display="flex" alignItems="center" gap={3} sx={{ borderRadius: '10px', overflow: 'hidden' }}>
                 <Avatar alt="Remy Sharp" src="https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_0.jpg" />
-
                 <Typography variant="h4">Devonne Wallbridge</Typography>
               </Box>
             </Grid>
@@ -91,7 +87,6 @@ const ViewOfflineClass = () => (
             <Grid item sx={12} sm={12}>
               <Box display="flex" alignItems="center" gap={3} sx={{ borderRadius: '10rem', overflow: 'hidden' }}>
                 <Avatar alt="Remy Sharp" src="https://i.pinimg.com/originals/14/3e/65/143e656d09e4848f85289b6a602d75ec.jpg" />
-
                 <Typography variant="h4">Jessica Moni</Typography>
               </Box>
             </Grid>
@@ -116,7 +111,6 @@ const ViewOfflineClass = () => (
             <Typography mb={2}>Language: English</Typography>
             <Typography mb={4}>Level: Beginner</Typography>
           </Box>
-
           <Box alignItems="center" display="flex" gap={2}>
             <CustomChip label="React" skin="light" color="primary" />
             <CustomChip label="material UI" skin="light" color="success" />

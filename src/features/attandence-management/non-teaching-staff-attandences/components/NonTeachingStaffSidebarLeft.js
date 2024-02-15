@@ -1,18 +1,15 @@
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
+import Typography from '@mui/material/Typography';
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
-
 // ** Icons Imports
 import Icon from 'components/icon';
-
 // ** Styled Component
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -66,7 +63,7 @@ const NonTeachingStaffSidebarLeft = (props) => {
           disablePortal: true,
           disableAutoFocus: true,
           disableScrollLock: true,
-          keepMounted: true // Better open performance on mobile.
+          keepMounted: true
         }}
         sx={{
           zIndex: 3,

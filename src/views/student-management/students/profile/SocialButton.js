@@ -1,11 +1,8 @@
-import PropTypes from 'prop-types';
-// @mui
+import { Button, IconButton, Stack, Tooltip } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { Stack, Button, Tooltip, IconButton } from '@mui/material';
-// import Iconify from './Iconify';
-import Iconify from '../../../../components/icon';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-// ----------------------------------------------------------------------
+import Iconify from '../../../../components/icon';
 
 SocialsButton.propTypes = {
   initialColor: PropTypes.bool,

@@ -1,44 +1,42 @@
 // ** React Imports
-import { Fragment, useState, forwardRef } from 'react';
-import MenuItem from '@mui/material/MenuItem';
-import CustomRadioIcons from 'components/custom-radio/icons';
 import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
+import CustomRadioIcons from 'components/custom-radio/icons';
+import { Fragment, forwardRef, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Step from '@mui/material/Step';
-import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Stepper from '@mui/material/Stepper';
-// import MenuItem from '@mui/material/MenuItem';
-import StepLabel from '@mui/material/StepLabel';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import Gallery from './gallery';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import Gallery from './gallery';
 // ** Third Party Imports
 import * as yup from 'yup';
 // import toast from 'react-hot-toast';
-import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// import DatePickerWrapper from '@core/styles/libs/react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 // ** Icon Imports
 import Icon from 'components/icon';
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
-import StepperCustomDot from './StepperCustomDot';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import StepperCustomDot from './StepperCustomDot';
 // ** Styled Components
-import StepperWrapper from 'styles/mui/stepper';
-import DatePicker from 'react-datepicker';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import DatePicker from 'react-datepicker';
+import StepperWrapper from 'styles/mui/stepper';
 
 const steps = [
   {
@@ -100,11 +98,9 @@ const defaultPersonalValues = {
   address_line_one: '',
   address_line_two: '',
   date_of_birth: '',
-  // institute_name: '',
   First_name: '',
   Last_name: '',
   gender: '',
-  // official_website: '',
   phone: '',
   alt_phone: '',
   description: ''
@@ -139,7 +135,6 @@ const personalSchema = yup.object().shape({
   address_line_one: yup.string().required(),
   address_line_two: yup.string().required(),
   date_of_birth: yup.string().required(),
-  // institute_name: yup.string().required(),
   phone: yup.number().required(),
   alt_phone: yup.number().required(),
   description: yup.string().required(),
@@ -147,10 +142,8 @@ const personalSchema = yup.object().shape({
   gender: yup.string().required(),
   First_name: yup.string().required(),
   Last_name: yup.string().required()
-  //   language: yup.array().min(1).required()
 });
 
-// const socialSchema = yup.object().shape({});
 const gallerySchema = yup.object().shape({});
 const data = [
   {
@@ -317,7 +310,6 @@ const StepperLinearWithValidation = () => {
 
   const handleReset = () => {
     setActiveStep(0);
-    // socialReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
     galleryReset({ logo: '', image: '', gallery: [] });
     accountReset({ email: '', username: '', password: '', confirm_password: '', name: '', contact: '' });
     personalReset({
@@ -343,7 +335,7 @@ const StepperLinearWithValidation = () => {
 
     // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
 
     // Form the yyyy-mm-dd date string
@@ -355,7 +347,6 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
-    // const socialData = socialControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
@@ -442,15 +433,10 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  // const [instituteImage, setInstituteImage] = useState('');
   const [galleryImages, setGalleryImages] = useState([]);
-  // const [date] = useState(new Date());
   const [logoSrc, setLogoSrc] = useState(
     'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
   );
-  // const [instituteSrc, setInstituteSrc] = useState(
-  //   'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-  // );
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -458,42 +444,18 @@ const StepperLinearWithValidation = () => {
       reader.onload = () => setLogoSrc(reader.result);
       reader.readAsDataURL(files[0]);
       setLogo(files[0]);
-      // if (reader.result !== null) {
-      // }
     }
   };
-
-  // const handleInstituteImageChange = (file) => {
-  //   const reader = new FileReader();
-  //   const { files } = file.target;
-  //   if (files && files.length !== 0) {
-  //     reader.onload = () => setInstituteSrc(reader.result);
-  //     reader.readAsDataURL(files[0]);
-  //     setInstituteImage(files[0]);
-  //     // if (reader.result !== null) {
-  //     // }
-  //   }
-  // };
-
-  // const personalData = personalControl?._formValues;
-
-  // console.log('Gallery : ', galleryImages, 'Institute Image :', instituteImage, 'logo :', logo);
-  // console.log(personalData);
 
   const handleInputImageReset = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
-  // const handleInstituteImageReset = () => {
-  // setInstituteImage('');
-  //   setInstituteSrc('/images/avatars/15.png');
-  // };
 
   const getStepContent = (step) => {
     switch (step) {
       case 0:
         return (
-          // <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
@@ -578,7 +540,6 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       onChange={onChange}
                       label="Gender"
-                      // SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
                       aria-describedby="stepper-linear-personal-gender"
@@ -602,7 +563,6 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="State"
                       onChange={onChange}
-                      // id="stepper-linear-personal-state"
                       error={Boolean(personalErrors.state)}
                       aria-describedby="stepper-linear-personal-state-helper"
                       {...(personalErrors.state && { helperText: 'This field is required' })}
@@ -621,7 +581,6 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="City"
                       onChange={onChange}
-                      // id="stepper-linear-personal-city"
                       error={Boolean(personalErrors.city)}
                       aria-describedby="stepper-linear-personal-city-helper"
                       {...(personalErrors.city && { helperText: 'This field is required' })}
@@ -747,25 +706,6 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
-              {/* <Grid item xs={12} sm={6}>
-                <Controller
-                  name="official_website"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Official Website"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['official_website'])}
-                      aria-describedby="stepper-linear-personal-official_website"
-                      {...(personalErrors['official_website'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="description"
@@ -798,7 +738,6 @@ const StepperLinearWithValidation = () => {
               </Grid>
             </Grid>
           </form>
-          // </DatePickerWrapper>
         );
       case 1:
         return (
@@ -827,7 +766,6 @@ const StepperLinearWithValidation = () => {
                       <input
                         hidden
                         type="file"
-                        // value={logo}
                         accept="image/png, image/jpeg"
                         onChange={handleInputImageChange}
                         id="account-settings-upload-image"
@@ -840,34 +778,6 @@ const StepperLinearWithValidation = () => {
                   </div>
                 </Box>
               </Grid>
-              {/* <Grid item xs={12} sm={6}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Institute Image
-                </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload Image here
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <ImgStyled src={instituteSrc} alt="Profile Pic" />
-                  <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-institute-image">
-                      Upload your image
-                      <input
-                        hidden
-                        type="file"
-                        // value={instituteImage}
-                        accept="image/png, image/jpeg"
-                        onChange={handleInstituteImageChange}
-                        id="account-settings-institute-image"
-                      />
-                    </ButtonStyled>
-                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInstituteImageReset}>
-                      Reset
-                    </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
-                  </div>
-                </Box>
-              </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Typography color="dark" sx={{ fontWeight: 600 }}>
                   Upload Documents
@@ -901,48 +811,47 @@ const StepperLinearWithValidation = () => {
                 </Typography>
               </Grid>
 
-              
-                <Grid container spacing={4} sx={{mt:1}}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      sx={{ ml: 3 }}
-                      select
-                      fullWidth
-                      label="Course"
-                      id="select-multiple-default"
-                      SelectProps={{ MenuProps, multiple: true, value: personName, onChange: (e) => handleChange(e) }}
-                    >
-                      {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      select
-                      fullWidth
-                      label="Branch"
-                      id="select-multiple-checkbox"
-                      SelectProps={{
-                        MenuProps,
-                        multiple: true,
-                        value: selectedBranches,
-                        onChange: (e) => handleBranchChange(e),
-                        renderValue: (selected) => selected.join(', ')
-                      }}
-                    >
-                      {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                          <ListItemText primary={name} />
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
+              <Grid container spacing={4} sx={{ mt: 1 }}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    sx={{ ml: 3 }}
+                    select
+                    fullWidth
+                    label="Course"
+                    id="select-multiple-default"
+                    SelectProps={{ MenuProps, multiple: true, value: personName, onChange: (e) => handleChange(e) }}
+                  >
+                    {names.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Branch"
+                    id="select-multiple-checkbox"
+                    SelectProps={{
+                      MenuProps,
+                      multiple: true,
+                      value: selectedBranches,
+                      onChange: (e) => handleBranchChange(e),
+                      renderValue: (selected) => selected.join(', ')
+                    }}
+                  >
+                    {names.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        <Checkbox checked={selectedBranches.indexOf(name) > -1} />
+                        <ListItemText primary={name} />
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
 
               <Grid item xs={12} sm={12}>
                 <Box sx={{ mb: 6 }}>
@@ -1027,22 +936,6 @@ const StepperLinearWithValidation = () => {
                       }}
                     />
                   </Grid>
-                  {/* <Grid item xs={12} sx={{ pt: (theme) => `${theme.spacing(6)} !important` }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Button
-                      color="secondary"
-                      variant="tonal"
-                      // onClick={handlePrev}
-                      sx={{ '& svg': { mr: 2 } }}
-                    >
-                      <Icon fontSize="1.125rem" icon="tabler:arrow-left" />
-                      Previous
-                    </Button>
-                    <Button color="success" variant="contained" onClick={() => alert('Submitted..!!')}>
-                      Submit
-                    </Button>
-                  </Box>
-                </Grid> */}
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -1069,66 +962,6 @@ const StepperLinearWithValidation = () => {
                   {steps[3].subtitle}
                 </Typography>
               </Grid>
-              {/* <Grid item xs={12} sm={6}>
-                <Controller
-                  name="name"
-                  control={accountControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Name"
-                      onChange={onChange}
-                      placeholder="carterLeonard"
-                      error={Boolean(accountErrors.name)}
-                      aria-describedby="stepper-linear-account-name"
-                      {...(accountErrors.name && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid> */}
-
-              {/* <Grid item xs={12} sm={6}>
-                <Controller
-                  name="email"
-                  control={accountControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      type="email"
-                      value={value}
-                      label="Email"
-                      onChange={onChange}
-                      error={Boolean(accountErrors.email)}
-                      placeholder="carterleonard@gmail.com"
-                      aria-describedby="stepper-linear-account-email"
-                      {...(accountErrors.email && { helperText: accountErrors.email.message })}
-                    />
-                  )}
-                />
-              </Grid> */}
-              {/* <Grid item xs={12} sm={6}>
-                <Controller
-                  name="contact"
-                  control={accountControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      type="number"
-                      value={value}
-                      label="Contact Number"
-                      onChange={onChange}
-                      error={Boolean(accountErrors.contact)}
-                      placeholder="6368393954"
-                      aria-describedby="stepper-linear-account-contact"
-                      {...(accountErrors.contact && { helperText: accountErrors.contact.message })}
-                    />
-                  )}
-                />
-              </Grid> */}
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="username"

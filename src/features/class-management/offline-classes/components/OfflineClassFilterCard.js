@@ -1,25 +1,19 @@
-import React from 'react';
-
 // ** React Imports
-import { useState, forwardRef } from 'react';
-
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
-import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
-
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import { forwardRef, useState } from 'react';
 // ** Third Party Imports
-import format from 'date-fns/format';
-import DatePicker from 'react-datepicker';
-import TextField from '@mui/material/TextField';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
 import Autocomplete from '@mui/material/Autocomplete';
+import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
-// ** Custom Components Imports
-
+import format from 'date-fns/format';
+import DatePicker from 'react-datepicker';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -62,14 +56,6 @@ const OfflineClassFilterCard = () => {
   ];
 
   const [selectedCourses, setSelectedCourses] = useState([]);
-
-  // const handleCourseChange = (newValue) => {
-  //   if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-  //     setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-  //   } else {
-  //     setSelectedCourses(newValue);
-  //   }
-  // };
 
   const batch = [
     { batch_id: '1', batch_name: 'batch 1' },

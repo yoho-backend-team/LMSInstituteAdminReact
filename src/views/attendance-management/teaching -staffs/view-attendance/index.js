@@ -1,38 +1,30 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
 // ** Redux Imports
 import { useDispatch, useSelector } from 'react-redux';
-
-// ** Hooks
-
 // ** FullCalendar & App Components Imports
-
-import TeachingStaffCalendar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCalendar';
-import CalendarWrapper from 'styles/libs/fullcalendar';
-import TeachingStaffSidebarLeft from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffSidebarLeft';
 import TeachingStaffAddEventSidebar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffAddEventSidebar';
-
+import TeachingStaffCalendar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCalendar';
+import TeachingStaffSidebarLeft from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffSidebarLeft';
+import CalendarWrapper from 'styles/libs/fullcalendar';
 // ** Actions
 import {
   addEvent,
-  fetchEvents,
   deleteEvent,
-  updateEvent,
-  handleSelectEvent,
+  fetchEvents,
   handleAllCalendars,
-  handleCalendarsUpdate
+  handleCalendarsUpdate,
+  handleSelectEvent,
+  updateEvent
 } from 'features/calender/redux/reducers';
 
 // ** CalendarColors
 const calendarsColor = {
   Present: 'success',
-  Absent: 'error',
- 
+  Absent: 'error'
 };
 
 const ViewAttendance = () => {
@@ -42,7 +34,6 @@ const ViewAttendance = () => {
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false);
 
   // ** Hooks
-
   const dispatch = useDispatch();
   const store = useSelector((state) => state.calendar);
 

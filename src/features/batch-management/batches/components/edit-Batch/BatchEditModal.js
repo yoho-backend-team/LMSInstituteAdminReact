@@ -6,12 +6,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
-// ==============================|| SAMPLE PAGE ||============================== //
 // ** React Imports
 import { forwardRef, useState } from 'react';
-     
 // ** MUI Imports
-
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,7 +16,6 @@ import MenuItem from '@mui/material/MenuItem';
 import { TextField as CustomTextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomChip from 'components/mui/chip';
@@ -109,7 +105,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
 
   const onSubmit = (data) => {
     // Handle form submission
-    console.log(errors); // Log validation errors
+    console.log(errors);
     console.log(data);
   };
   const handleStartDateChange = (date) => {
@@ -127,7 +123,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-edit"

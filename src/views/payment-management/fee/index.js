@@ -1,16 +1,12 @@
 // material-ui
 import { Grid } from '@mui/material';
-import { useState,useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // project imports
-import FeesTable from 'features/payment-management/fees/components/FeesTable';
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
-
-// ==============================|| SAMPLE PAGE ||============================== //
+import FeesTable from 'features/payment-management/fees/components/FeesTable';
 
 const Fee = () => {
-
   const [loading, setLoading] = useState(true);
-
   // Simulate loading delay with useEffect
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,18 +18,11 @@ const Fee = () => {
 
   return (
     <>
-     <Grid>
-      <Grid spacing={1} className="match-height">
-        {loading ? (
-          // If data is still loading, display skeleton
-          <FeesTableSkeleton />
-        ) : (
-          // Once data is loaded, display actual FeesTable component
-          <FeesTable />
-        )}
+      <Grid>
+        <Grid spacing={1} className="match-height">
+          {loading ? <FeesTableSkeleton /> : <FeesTable />}
+        </Grid>
       </Grid>
-    </Grid>
-
     </>
   );
 };

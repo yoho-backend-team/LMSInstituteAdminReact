@@ -1,10 +1,7 @@
 // material-ui
 import { ClosedCaption, EmojiPeople, LibraryBooks, People, Public, VideoLibrary } from '@mui/icons-material';
-import { Typography, Grid, Box, Divider, Card, Avatar } from '@mui/material';
+import { Avatar, Box, Card, CardMedia, Divider, Grid, Typography } from '@mui/material';
 import CustomChip from 'components/mui/chip';
-import { CardMedia } from '@mui/material';
-
-// ==============================|| SAMPLE PAGE ||============================== //
 
 const ViewLiveClass = () => (
   <Card sx={{ p: 3, alignItems: 'center' }}>

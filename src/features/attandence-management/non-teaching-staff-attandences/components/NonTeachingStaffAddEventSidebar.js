@@ -1,27 +1,22 @@
 // ** React Imports
-import { useState, useEffect, forwardRef, useCallback, Fragment } from 'react';
-
+import { Fragment, forwardRef, useCallback, useEffect, useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import Drawer from '@mui/material/Drawer';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
 // ** Custom Component Import
 import CustomTextField from 'components/mui/text-field';
-
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -98,7 +93,6 @@ const NonTeachingStaffAddEventSidebar = (props) => {
     if (store?.selectedEvent) {
       dispatch(deleteEvent(store?.selectedEvent?.id));
     }
-
     // calendarApi.getEventById(store?.selectedEvent?.id).remove()
     handleSidebarClose();
   };

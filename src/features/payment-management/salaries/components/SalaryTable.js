@@ -1,8 +1,5 @@
 // ** React Imports
 import { forwardRef, useState } from 'react';
-
-// ** Next Import
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -15,33 +12,26 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Third Party Imports
 import format from 'date-fns/format';
-
-// ** Store & Actions Imports
-
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
 // ** Custom Components Imports
-import Avatar from '@mui/material/Avatar';
-import CustomChip from 'components/mui/chip';
-import { Link } from 'react-router-dom';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { TextField } from '@mui/material';
-import OptionsMenu from 'components/option-menu';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
+import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
+import Avatar from '@mui/material/Avatar';
+import Checkbox from '@mui/material/Checkbox';
+import DeleteDialog from 'components/modal/DeleteModel';
+import CustomChip from 'components/mui/chip';
+import OptionsMenu from 'components/option-menu';
+import { Link } from 'react-router-dom';
 import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
-import DeleteDialog from 'components/modal/DeleteModel';
-
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -84,14 +74,12 @@ const CustomInput = forwardRef((props, ref) => {
 const SalaryTable = () => {
   // ** State
   const [value, setValue] = useState('');
-  // const [statusValue, setStatusValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
   const [editUserOpen, setEditUserOpen] = useState(false);
+
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
@@ -103,15 +91,9 @@ const SalaryTable = () => {
     setDeleteDialogOpen(true);
   };
 
-  // ** Hooks
-
   const handleFilter = (val) => {
     setValue(val);
   };
-
-  // const handleStatusValue = (e) => {
-  //   setStatusValue(e.target.value);
-  // };
 
   const staff = [
     { staff_id: '1', staff_name: 'staff 1' },
@@ -412,7 +394,6 @@ const SalaryTable = () => {
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
-        // handleSubmit={handleDeleteConfirm}
         description="Are you sure you want to delete this item?"
         title="Delete"
       />

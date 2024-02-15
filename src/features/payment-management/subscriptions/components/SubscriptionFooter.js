@@ -1,12 +1,11 @@
 // ** React Imports
 import { useState } from 'react';
-
 // ** MUI Imports
-import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
-import Typography from '@mui/material/Typography';
-import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 const SubscriptionFooter = (props) => {
   // ** Props
@@ -24,11 +23,11 @@ const SubscriptionFooter = (props) => {
       console.log('No FAQ data');
       return null;
     }
-  
+
     console.log('FAQ data:', data.faq);
-  
+
     return data.faq.map((item) => {
-      console.log('Accordion item:', item); // Move the log inside the map function
+      console.log('Accordion item:', item);
       return (
         <Accordion key={item.id} elevation={0} expanded={expanded === item.id} onChange={handleChange(item.id)}>
           <AccordionSummary

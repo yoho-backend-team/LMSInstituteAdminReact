@@ -1,10 +1,9 @@
 // ** MUI Imports
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 // ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
 
@@ -58,7 +57,10 @@ const SubscriptionCTA = () => {
           <Button variant="contained">Start 14-day FREE trial</Button>
         </Grid>
         <GridStyled item xs={12} md={4}>
-          <Img alt="pricing-cta-avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH8HOkQ94yPtduBfektExhdqmiSXkPNucR_A&usqp=CAU" />
+          <Img
+            alt="pricing-cta-avatar"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQH8HOkQ94yPtduBfektExhdqmiSXkPNucR_A&usqp=CAU"
+          />
         </GridStyled>
       </Grid>
     </BoxWrapper>

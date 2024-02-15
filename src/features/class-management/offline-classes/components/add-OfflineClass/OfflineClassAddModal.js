@@ -1,6 +1,6 @@
 import { useState, forwardRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid ,Checkbox} from '@mui/material';
+import { Grid, Checkbox } from '@mui/material';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
@@ -17,7 +17,6 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Autocomplete from '@mui/material/Autocomplete';
-// import { register } from 'react-hook-form';
 
 /* eslint-disable */
 const DateCustomInput = forwardRef((props, ref) => {
@@ -278,7 +277,6 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                       }
                       dateFormat="MM/dd/yyyy"
                       placeholderText="Select Class Date"
-                      // Add the error styling
                       className={`form-control ${errors.classDate ? 'is-invalid' : ''}`}
                     />
                   )}
@@ -310,7 +308,6 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                         }
                         dateFormat="h:mm aa"
                         placeholderText="Select Start Time"
-                        // Add the error styling
                         className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
                       />
                     )}
@@ -337,7 +334,6 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                         }
                         dateFormat="h:mm aa"
                         placeholderText="Select End Time"
-                        // Add the error styling
                         className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
                       />
                     )}

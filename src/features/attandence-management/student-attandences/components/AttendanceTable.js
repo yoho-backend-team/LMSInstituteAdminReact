@@ -1,41 +1,24 @@
 // ** React Imports
 import { forwardRef, useState } from 'react';
-
-// ** Next Import
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
-// import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
-// import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-
-// ** Icon Imports
-// import Icon from 'components/icon';
-
 // ** Third Party Imports
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
-
-// ** Store & Actions Imports
-
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
 // ** Custom Components Imports
-import Avatar from '@mui/material/Avatar';
-// import CustomChip from 'components/mui/chip';
-import { Link } from 'react-router-dom';
-
 import { TextField } from '@mui/material';
-// import OptionsMenu from 'components/option-menu';
-
+import Avatar from '@mui/material/Avatar';
+import { Link } from 'react-router-dom';
 import FeesCardHeader from './AttendanceHeader';
 
 // ** Styled Components
@@ -47,16 +30,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   color: `${theme.palette.primary.main} !important`
 }));
-
-// ** Vars
-// const invoiceStatusObj = {
-//   Sent: { color: 'secondary', icon: 'tabler:circle-check' },
-//   Paid: { color: 'success', icon: 'tabler:circle-half-2' },
-//   Draft: { color: 'primary', icon: 'tabler:device-floppy' },
-//   'Partial Payment': { color: 'warning', icon: 'tabler:chart-pie' },
-//   'Past Due': { color: 'error', icon: 'tabler:alert-circle' },
-//   Downloaded: { color: 'info', icon: 'tabler:arrow-down-circle' }
-// };
 
 // ** renders client column
 const renderClient = (row) => {
@@ -87,44 +60,7 @@ const defaultColumns = [
       </Typography>
     )
   },
-  // {
-  //   flex: 0.1,
-  //   minWidth: 80,
-  //   field: 'invoiceStatus',
-  //   renderHeader: () => <Icon icon="tabler:trending-up" />,
-  //   renderCell: ({ row }) => {
-  //     const { dueDate, balance, invoiceStatus } = row;
-  //     // const color = invoiceStatusObj[invoiceStatus] ? invoiceStatusObj[invoiceStatus].color : 'primary';
-
-  //     return (
-  //       <Tooltip
-  //         title={
-  //           <div>
-  //             <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-  //               {invoiceStatus}
-  //             </Typography>
-  //             <br />
-  //             <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-  //               Balance:
-  //             </Typography>{' '}
-  //             {balance}
-  //             <br />
-  //             <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-  //               Due Date:
-  //             </Typography>{' '}
-  //             {dueDate}
-  //           </div>
-  //         }
-  //       >
-  //         {/* <Avatar skin="light" color={color} sx={{ width: '1.875rem', height: '1.875rem' }}>
-  //           <Icon icon={invoiceStatusObj[invoiceStatus]} />
-  //         </Avatar> */}
-  //       </Tooltip>
-  //     );
-  //   }
-  // },
   {
-    // flex: 0.25,
     minWidth: 400,
     field: 'name',
     headerName: 'Name',
@@ -148,60 +84,46 @@ const defaultColumns = [
   },
 
   {
-    // flex: 0.25,
     minWidth: 300,
     field: 'status',
     headerName: 'Status',
     renderCell: ({ row }) =>
       row.Status !== 1 ? (
-      
-                  <TextField
-                 
-                    select
-                    fullWidth
-                    defaultValue='1'
-                    size='small'
-                    sx={{
-                      '& .MuiSelect-select': {
-                      //  backgroundColor:'#00d32433'
-                      border:'2px solid #65B741',
-                      color:'#65B741',
-                      borderRadius:1  
-                      },
-                    }}
-                    // label="Invoice Status"
-                    // SelectProps={{ value: row.Status: (e) => handleStatusValue(e) }}
-                  >
-                    <MenuItem value='1'>Present</MenuItem>
-                    <MenuItem value='0'>Absent</MenuItem>
-
-                    {/* <MenuItem Value='1'>mmmm</MenuItem> */}
-                   
-                  </TextField>
-                
+        <TextField
+          select
+          fullWidth
+          defaultValue="1"
+          size="small"
+          sx={{
+            '& .MuiSelect-select': {
+              //  backgroundColor:'#00d32433'
+              border: '2px solid #65B741',
+              color: '#65B741',
+              borderRadius: 1
+            }
+          }}
+        >
+          <MenuItem value="1">Present</MenuItem>
+          <MenuItem value="0">Absent</MenuItem>
+        </TextField>
       ) : (
         <TextField
-        select
-        fullWidth
-        defaultValue='0'
-        size='small'
-        sx={{
-          '& .MuiSelect-select': {
-          //  backgroundColor:'#ff686847'
-          border:'2px solid #FF6868',
-          color:'#FF6868',
-          borderRadius:1
-          },
-        }}
-        // label="Invoice Status"
-        // SelectProps={{ value: row.Status: (e) => handleStatusValue(e) }}
-      >
-        <MenuItem value='1'>Present</MenuItem>
-        <MenuItem value='0'>Absent</MenuItem>
-
-        {/* <MenuItem Value='1'>mmmm</MenuItem> */}
-       
-      </TextField>
+          select
+          fullWidth
+          defaultValue="0"
+          size="small"
+          sx={{
+            '& .MuiSelect-select': {
+              //  backgroundColor:'#ff686847'
+              border: '2px solid #FF6868',
+              color: '#FF6868',
+              borderRadius: 1
+            }
+          }}
+        >
+          <MenuItem value="1">Present</MenuItem>
+          <MenuItem value="0">Absent</MenuItem>
+        </TextField>
       )
   }
 ];
@@ -227,9 +149,7 @@ const AttendanceTable = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
   // ** Hooks
-
   const handleFilter = (val) => {
     setValue(val);
   };
@@ -247,54 +167,12 @@ const AttendanceTable = () => {
     setEndDateRange(end);
   };
 
-  const columns = [
-    ...defaultColumns,
-    // {
-    //   flex: 0,
-    //   minWidth: 140,
-    //   sortable: false,
-    //   field: 'actions',
-    //   headerName: 'Actions',
-    //   renderCell: ({ row }) => (
-    //     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-    //       {/* <Tooltip title="Delete Invoice">
-    //         <IconButton size="small" sx={{ color: 'text.secondary' }}>
-    //           <Icon icon="tabler:trash" />
-    //         </IconButton>
-    //       </Tooltip> */}
-    //       <Tooltip title="View">
-    //         <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/edit/${row.id}`}>
-    //           <Icon icon="tabler:edit" />
-    //         </IconButton>
-    //       </Tooltip>
-    //       {/* <OptionsMenu
-    //         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-    //         iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-    //         options={[
-    //           {
-    //             text: 'Download',
-    //             icon: <Icon icon="tabler:download" fontSize={20} />
-    //           },
-    //           {
-    //             text: 'Edit',
-    //             to: `/apps/invoice/edit/${row.id}`,
-    //             icon: <Icon icon="tabler:edit" fontSize={20} />
-    //           },
-    //           {
-    //             text: 'Duplicate',
-    //             icon: <Icon icon="tabler:copy" fontSize={20} />
-    //           }
-    //         ]}
-    //       /> */}
-    //     </Box>
-    //   )
-    // }
-  ];
+  const columns = [...defaultColumns];
 
   const store = [
     {
       id: 1,
-      Status:0,
+      Status: 0,
       name: 'Anish',
       Email: 'anish.yohotechnologies.com',
       avatar: '',
@@ -302,7 +180,7 @@ const AttendanceTable = () => {
     },
     {
       id: 2,
-      Status:1,
+      Status: 1,
       name: 'Mohammed Thasthakir',
       Email: 'mohammedthasthakir.yohotechnologies.com',
       avatar: '',
@@ -310,7 +188,7 @@ const AttendanceTable = () => {
     },
     {
       id: 3,
-      Status:0,
+      Status: 0,
       name: 'TDeeban',
       Email: 'deeban.yohotechnologies.com',
       avatar: '',
@@ -318,7 +196,7 @@ const AttendanceTable = () => {
     },
     {
       id: 4,
-      Status:0,
+      Status: 0,
       name: 'Midhin Sundar',
       Email: 'midhinsundar.yohotechnologies.com',
       avatar: '',
@@ -326,7 +204,7 @@ const AttendanceTable = () => {
     },
     {
       id: 5,
-      Status:1,
+      Status: 1,
       name: 'Divya Bharathi',
       Email: 'divyabharathi.yohotechnologies.com',
       avatar: '',
@@ -334,7 +212,7 @@ const AttendanceTable = () => {
     },
     {
       id: 6,
-      Status:0,
+      Status: 0,
       name: 'Sanjay',
       Email: 'sanjay.yohotechnologies.com',
       avatar: '',
@@ -342,7 +220,7 @@ const AttendanceTable = () => {
     },
     {
       id: 7,
-      Status:1,
+      Status: 1,
       name: 'Thulasi Ram',
       Email: 'thulasiram.yohotechnologies.com',
       avatar: '',

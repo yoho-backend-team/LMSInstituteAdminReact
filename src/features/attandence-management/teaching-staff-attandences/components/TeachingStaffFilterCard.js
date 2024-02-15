@@ -1,15 +1,11 @@
 // ** React Imports
-import { useState } from 'react';
-
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import { useState } from 'react';
 // ** Third Party Imports
-// import format from 'date-fns/format';
-// import DatePicker from 'react-datepicker';
-
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Checkbox } from '@mui/material';
@@ -18,23 +14,10 @@ import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
-/* eslint-disable */
-// const CustomInput = forwardRef((props, ref) => {
-//   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-//   const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
-//   const value = `${startDate}${endDate !== null ? endDate : ''}`;
-//   props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-//   const updatedProps = { ...props };
-//   delete updatedProps.setDates;
-//   return <CustomTextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-// });
-
 /* eslint-enable */
 const TeachingStaffFilterCard = (props) => {
   const { value, handleFilter } = props;
-
   // ** State
-  // const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedstaff, setSelectedstaff] = useState([]);
@@ -51,30 +34,18 @@ const TeachingStaffFilterCard = (props) => {
     { staff_id: '3', staff_name: 'Staff 3' }
   ];
 
-  // const [endDateRange, setEndDateRange] = useState(null);
-  // const [startDateRange, setStartDateRange] = useState(null);
-
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
   };
 
-  // const handleOnChangeRange = (dates) => {
-  //   const [start, end] = dates;
-  //   if (start !== null && end !== null) {
-  //     setDates(dates);
-  //   }
-  //   setStartDateRange(start);
-  //   setEndDateRange(end);
-  // };
-
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6} >
+      <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
             <CardHeader title="Teaching Staff Attendance" />
             <CardContent>
-              <Grid container spacing={4} sx={{display:"flex", justifyContent:"flex-end"}}>
+              <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Grid item xs={12} sm={3}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="0">Active</MenuItem>
@@ -139,22 +110,6 @@ const TeachingStaffFilterCard = (props) => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <DatePicker
-                    isClearable
-                    selectsRange
-                    monthsShown={2}
-                    endDate={endDateRange}
-                    selected={startDateRange}
-                    startDate={startDateRange}
-                    shouldCloseOnSelect={false}
-                    id="date-range-picker-months"
-                    onChange={handleOnChangeRange}
-                    customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Class Date" end={endDateRange} start={startDateRange} />
-                    }
-                  />
-                </Grid> */}
                 <Grid item xs={12} sm={3}>
                   <Autocomplete
                     multiple
@@ -217,17 +172,12 @@ const TeachingStaffFilterCard = (props) => {
                   <TextField
                     value={value}
                     sx={{
-                      width: "100%"
+                      width: '100%'
                     }}
                     placeholder="Search Class"
                     onChange={(e) => handleFilter(e.target.value)}
                   />
                 </Grid>
-                {/* <Grid item xs={12} sm={2} sx={{mt:1}}>
-                    <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
-                      Add Attendance
-                    </Button>
-                </Grid> */}
               </Grid>
             </CardContent>
           </Card>

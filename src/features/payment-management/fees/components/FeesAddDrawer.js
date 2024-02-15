@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
-
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -8,22 +7,13 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-// import axios from 'axios';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
-
 import * as yup from 'yup';
-
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-
-// import toast from 'react-hot-toast';
-
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -55,17 +45,13 @@ const defaultValues = {
 const FeesAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
-
   // ** State
-
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
-  useEffect(() => {
-    // getAllGroups(); // Commented out the axios fetch for demonstration purposes
-  }, []);
+  useEffect(() => {}, []);
 
   const {
     handleSubmit,
@@ -80,9 +66,7 @@ const FeesAddDrawer = (props) => {
   });
 
   const onSubmit = (data) => {
-    // Handle form submission with validated data
     console.log(data);
-
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);

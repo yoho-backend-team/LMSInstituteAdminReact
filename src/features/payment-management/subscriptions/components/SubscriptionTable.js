@@ -1,28 +1,21 @@
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import TableRow from '@mui/material/TableRow';
-import TableHead from '@mui/material/TableHead';
+import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
-
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Custom Components Imports
+import CustomAvatar from 'components/mui/avatar';
 import CustomChip from 'components/mui/chip';
 
-import CustomAvatar from 'components/mui/avatar';
-
-
-
-
 const SubscriptionTable = ({ data }) => {
-console.log(data);
-    
+  console.log(data);
   const renderTableCell = (row) => {
     if (typeof row.pro === 'boolean') {
       return (
@@ -59,7 +52,7 @@ console.log(data);
           <Table>
             <TableHead>
               <TableRow>
-              {data.header.map((head, index) => (
+                {data.header.map((head, index) => (
                   <TableCell key={index}>
                     <Box
                       sx={{
@@ -102,7 +95,7 @@ console.log(data);
               </TableRow>
             </TableHead>
             <TableBody>
-            {data.rows.map((row, index) => (
+              {data.rows.map((row, index) => (
                 <TableRow key={index} sx={{ '& .MuiTableCell-root': { py: (theme) => `${theme.spacing(3)} !important` } }}>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>
                     <Typography sx={{ color: 'text.secondary' }}>{row.feature}</Typography>

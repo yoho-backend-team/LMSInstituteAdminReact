@@ -1,15 +1,12 @@
 // ** MUI Imports
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
-
 // ** Custom Components Imports
 import CustomChip from 'components/mui/chip';
 
@@ -29,12 +26,9 @@ const BoxFeature = styled(Box)(({ theme }) => ({
   }
 }));
 
-
-
 const SubscriptionDetails = (props) => {
   // ** Props
   const { plan, data } = props;
-
   const renderFeatures = () => {
     return data?.planBenefits.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>

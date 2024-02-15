@@ -3,13 +3,10 @@ import { Grid } from '@mui/material';
 import { useState } from 'react';
 import { useEffect } from 'react';
 // project imports
-
 import LiveClassCard from 'features/class-management/live-classes/components/LiveClassCard';
 import LiveClassCardHeader from 'features/class-management/live-classes/components/LiveClassCardHeader';
 import LiveClassFilterCard from 'features/class-management/live-classes/components/LiveClassFilterCard';
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
-
-// ==============================|| SAMPLE PAGE ||============================== //
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -21,7 +18,6 @@ const useTimeout = (callback, delay) => {
 
 const LiveClass = () => {
   const [loading, setLoading] = useState(true);
-
   useTimeout(() => {
     setLoading(false);
   }, 1000);

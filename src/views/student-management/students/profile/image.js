@@ -1,15 +1,11 @@
-import PropTypes from 'prop-types';
-// import { LazyLoadImage } from 'react-lazy-load-image-component';
-// @mui
 import { Box } from '@mui/material';
-
-// ----------------------------------------------------------------------
+import PropTypes from 'prop-types';
 
 Image.propTypes = {
   disabledEffect: PropTypes.bool,
   effect: PropTypes.string,
   ratio: PropTypes.oneOf(['4/3', '3/4', '6/4', '4/6', '16/9', '9/16', '21/9', '9/21', '1/1']),
-  sx: PropTypes.object,
+  sx: PropTypes.object
 };
 
 export default function Image({ ratio, disabledEffect = false, effect = 'blur', sx, ...other }) {
@@ -31,13 +27,12 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
             bottom: 0,
             lineHeight: 0,
             position: 'absolute',
-            backgroundSize: 'cover !important',
+            backgroundSize: 'cover !important'
           },
-          ...sx,
+          ...sx
         }}
       >
         <Box
-        //   component={LazyLoadImage}
           wrapperClassName="wrapper"
           effect={disabledEffect ? undefined : effect}
           placeholderSrc="https://zone-assets-api.vercel.app/assets/img_placeholder.svg"
@@ -56,11 +51,10 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
         display: 'block',
         overflow: 'hidden',
         '& .wrapper': { width: 1, height: 1, backgroundSize: 'cover !important' },
-        ...sx,
+        ...sx
       }}
     >
       <Box
-        // component={LazyLoadImage}
         wrapperClassName="wrapper"
         effect={disabledEffect ? undefined : effect}
         placeholderSrc="https://zone-assets-api.vercel.app/assets/img_placeholder.svg"
@@ -71,7 +65,6 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
   );
 }
 
-// ----------------------------------------------------------------------
 
 function getRatio(ratio = '1/1') {
   return {
@@ -83,6 +76,6 @@ function getRatio(ratio = '1/1') {
     '9/16': 'calc(100% / 9 * 16)',
     '21/9': 'calc(100% / 21 * 9)',
     '9/21': 'calc(100% / 9 * 21)',
-    '1/1': '100%',
+    '1/1': '100%'
   }[ratio];
 }

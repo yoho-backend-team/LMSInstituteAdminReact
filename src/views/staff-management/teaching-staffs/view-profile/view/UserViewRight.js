@@ -1,28 +1,20 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
-
-// ** Next Import
-// import { useRoutes } from 'react-router'
+import { useEffect, useState } from 'react';
 // ** MUI Imports
-import Box from '@mui/material/Box';
-import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
-import { styled } from '@mui/material/styles';
-// import Typography from '@mui/material/Typography'
-import MuiTab from '@mui/material/Tab';
 import MuiTabList from '@mui/lab/TabList';
-// import CircularProgress from '@mui/material/CircularProgress'
-
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
+import MuiTab from '@mui/material/Tab';
+import { styled } from '@mui/material/styles';
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Demo Components Imports
-// import UserViewBilling from 'src/views/apps/user/view/UserViewBilling'
-import UserViewBilling from './class';
+import TeacherAttendance from './TeacherAttendance';
 import UserViewAccount from './UserViewAccount';
 import UserViewConnection from './UserViewConnection';
-import TeacherAttendance from './TeacherAttendance';
 import UserViewSecurity from './UserViewSecurity';
+import UserViewBilling from './class';
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
@@ -60,31 +52,14 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 const UserViewRight = ({ tab, invoiceData }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
-  // const [isLoading, setIsLoading] = useState(true)
-
-  // ** Hooks
-  // const router = useRoutes()
-
   const handleChange = (event, value) => {
-    // setIsLoading(true)
     setActiveTab(value);
-    // router
-    //   .push({
-    //     pathname: `/apps/user/view/${value.toLowerCase()}`
-    //   })
-    //   .then(() => setIsLoading(false))
   };
   useEffect(() => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab);
     }
-    //   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
-  // useEffect(() => {
-  //   if (invoiceData) {
-  //     setIsLoading(false)
-  //   }
-  // }, [invoiceData])
 
   return (
     <TabContext value={activeTab}>
@@ -102,13 +77,6 @@ const UserViewRight = ({ tab, invoiceData }) => {
         <Tab value="activity" label="Activity" icon={<Icon fontSize="1.125rem" icon="tabler:link" />} />
       </TabList>
       <Box sx={{ mt: 4 }}>
-        {/* {isLoading ?
-         (
-          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
-          </Box>
-        ) : ( */}
         <>
           <TabPanel sx={{ p: 0 }} value="account">
             <UserViewAccount invoiceData={invoiceData} />
@@ -126,7 +94,6 @@ const UserViewRight = ({ tab, invoiceData }) => {
             <UserViewConnection />
           </TabPanel>
         </>
-        {/* )} */}
       </Box>
     </TabContext>
   );

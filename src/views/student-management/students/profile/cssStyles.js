@@ -1,17 +1,13 @@
 import { alpha } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
 function getDirection(value = 'bottom') {
   return {
     top: 'to top',
     right: 'to right',
     bottom: 'to bottom',
-    left: 'to left',
+    left: 'to left'
   }[value];
 }
-
-// ----------------------------------------------------------------------
 
 export default function cssStyles(theme) {
   return {
@@ -24,7 +20,7 @@ export default function cssStyles(theme) {
       return {
         backdropFilter: `blur(${blur}px)`,
         WebkitBackdropFilter: `blur(${blur}px)`, // Fix on Mobile
-        backgroundColor: alpha(color, opacity),
+        backgroundColor: alpha(color, opacity)
       };
     },
     bgGradient: (props) => {
@@ -33,7 +29,7 @@ export default function cssStyles(theme) {
       const endColor = props?.endColor || '#000000 75%';
 
       return {
-        background: `linear-gradient(${direction}, ${startColor}, ${endColor});`,
+        background: `linear-gradient(${direction}, ${startColor}, ${endColor});`
       };
     },
     bgImage: (props) => {
@@ -46,8 +42,8 @@ export default function cssStyles(theme) {
         background: `linear-gradient(${direction}, ${startColor}, ${endColor}), url(${url})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center center',
+        backgroundPosition: 'center center'
       };
-    },
+    }
   };
 }

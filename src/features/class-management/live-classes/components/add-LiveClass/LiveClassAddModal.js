@@ -1,23 +1,22 @@
-import { useState, forwardRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid ,Checkbox} from '@mui/material';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Checkbox, Grid } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import CustomChip from 'components/mui/chip';
-import DatePicker from 'react-datepicker';
 import format from 'date-fns/format';
+import { forwardRef, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Autocomplete from '@mui/material/Autocomplete';
-// import { register } from 'react-hook-form';
+import * as yup from 'yup';
 
 /* eslint-disable */
 const DateCustomInput = forwardRef((props, ref) => {
@@ -166,16 +165,16 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800, } }}
-      >
-        <DialogTitle
-          id="user-view-edit"
-          sx={{
-            textAlign: 'center',
-            fontSize: '1.5rem !important',
-            px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
-          }}
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+    >
+      <DialogTitle
+        id="user-view-edit"
+        sx={{
+          textAlign: 'center',
+          fontSize: '1.5rem !important',
+          px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
+          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
+        }}
       >
         Add Live Class
       </DialogTitle>
@@ -277,7 +276,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                       }
                       dateFormat="MM/dd/yyyy"
                       placeholderText="Select Class Date"
-                      // Add the error styling
                       className={`form-control ${errors.classDate ? 'is-invalid' : ''}`}
                     />
                   )}
@@ -309,7 +307,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                         }
                         dateFormat="h:mm aa"
                         placeholderText="Select Start Time"
-                        // Add the error styling
                         className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
                       />
                     )}
@@ -336,7 +333,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                         }
                         dateFormat="h:mm aa"
                         placeholderText="Select End Time"
-                        // Add the error styling
                         className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
                       />
                     )}

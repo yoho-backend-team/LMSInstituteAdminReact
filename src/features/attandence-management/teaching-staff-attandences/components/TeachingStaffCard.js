@@ -9,12 +9,6 @@ import Avatar from 'components/mui/avatar';
 import { Link } from 'react-router-dom';
 
 const TeachingStaffCard = () => {
-  // Dummy data array
-  // const [statusValue, setStatusValue] = useState('');
-
-  // const handleStatusValue = (e) => {
-  //   setStatusValue(e.target.value);
-  // };
   const data = [
     {
       id: '1',
@@ -173,19 +167,9 @@ const TeachingStaffCard = () => {
                         <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                       </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' ,mt:1}}>
-                      {/* <Grid>
-                        <TextField
-                          size="small"
-                          select
-                          fullWidth
-                          label="Status"
-                          SelectProps={{ value: statusValue, onChange: handleStatusValue }}
-                        >
-                          <MenuItem value="Active">Active</MenuItem>
-                          <MenuItem value="Deactive">Deactive</MenuItem>
-                        </TextField>
-                      </Grid> */}
+                    <Box
+                      sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
+                    >
                       <Grid>
                         <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
                           View Attendance

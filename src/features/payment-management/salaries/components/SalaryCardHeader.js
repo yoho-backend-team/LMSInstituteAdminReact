@@ -1,16 +1,12 @@
-import React from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
-// import { useState } from 'react';
 
 const SalaryCardHeader = (props) => {
-  const { value, handleFilter,toggle} = props;
-
-
+  const { value, handleFilter, toggle } = props;
   return (
     <>
       <Box
@@ -23,8 +19,7 @@ const SalaryCardHeader = (props) => {
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-           p: 2
-
+          p: 2
         }}
       >
         <TextField

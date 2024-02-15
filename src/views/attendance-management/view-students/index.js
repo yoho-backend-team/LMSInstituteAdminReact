@@ -3,8 +3,6 @@ import { Grid } from '@mui/material';
 // project imports
 import AttendanceTable from 'features/attandence-management/student-attandences/components/AttendanceTable';
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
 const Fee = () => {
   return (
     <>
