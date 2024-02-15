@@ -1,26 +1,20 @@
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
+import MuiTimeline from '@mui/lab/Timeline';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem from '@mui/lab/TimelineItem';
-import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import MuiTimeline from '@mui/lab/Timeline';
-
-// ** Icon Imports
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-
-// ** Custom Components Imports
 import OptionsMenu from 'components/option-menu';
 
-// Styled Timeline component
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
     display: 'none'

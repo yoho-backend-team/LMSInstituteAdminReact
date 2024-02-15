@@ -8,9 +8,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../services/courseCategoryServices';
-import toast from 'react-hot-toast';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -27,11 +27,6 @@ const schema = yup.object().shape({
     .min(3, (obj) => showErrors('Category Name', obj.value.length, obj.min))
     .required()
 });
-
-// const defaultValues = {
-//   course: '',
-//   status: ''
-// };
 
 const CategoryEditModal = ({ open, handleEditClose, category }) => {
   const image =

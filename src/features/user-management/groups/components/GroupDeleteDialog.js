@@ -1,22 +1,14 @@
-// ** React Imports
-import { useState } from 'react';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import Typography from '@mui/material/Typography';
-import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
-// ** Icon Imports
+import DialogContent from '@mui/material/DialogContent';
+import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
+import { useState } from 'react';
 
 const DeleteGroupDialog = (props) => {
-  // ** Props
   const { open, setOpen, handleDeleteGroup } = props;
-
-  // ** States
   const [userInput, setUserInput] = useState('yes');
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const handleClose = () => setOpen(false);

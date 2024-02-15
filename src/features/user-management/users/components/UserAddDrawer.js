@@ -1,29 +1,17 @@
-// ** React Imports
 import { useState } from 'react';
-
-// ** MUI Imports
 import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-// import axios from 'axios';
 import { Button, Grid, Typography } from '@mui/material';
-
-// ** Custom Component Import
-
-// ** Third Party Imports
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-// ** Icon Imports
 import Icon from 'components/icon';
-
 import { TextField } from '@mui/material';
-
 import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import { addUser, checkUserName } from '../services/userServices';
@@ -47,19 +35,6 @@ const MenuProps = {
   }
 };
 
-// const names = [
-//   'Oliver Hansen',
-//   'Van Henry',
-//   'April Tucker',
-//   'Ralph Hubbard',
-//   'Omar Alexander',
-//   'Carlos Abbott',
-//   'Miriam Wagner',
-//   'Bradley Wilkerson',
-//   'Virginia Andrews',
-//   'Kelly Snyder'
-// ];
-
 const defaultValues = {
   email: '',
   password: '',
@@ -73,19 +48,12 @@ const defaultValues = {
 };
 
 const SidebarAddUser = (props) => {
-  // ** Props
   const { open, toggle, groups, setLoading } = props;
   const branches = useSelector((state) => state.auth.branches);
-
-  // ** State
-
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  // const handleBranchChange = (event) => {
-  //   setSelectedBranches(event.target.value);
-  // };
 
   const showErrors = (field, valueLen, min) => {
     if (valueLen === 0) {
@@ -96,6 +64,7 @@ const SidebarAddUser = (props) => {
       return '';
     }
   };
+
   const schema = yup.object().shape({
     password: yup.string().required(),
     designation: yup.string().required(),
@@ -120,7 +89,7 @@ const SidebarAddUser = (props) => {
       .required('Password confirmation is required'),
     branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
   });
-  // ** Hooks
+
   const {
     reset,
     control,
@@ -155,7 +124,6 @@ const SidebarAddUser = (props) => {
     const isUserNameTaken = await checkUserName(data.userName);
 
     if (!isUserNameTaken.success) {
-      // Set an error for the userName field
       setError('userName', {
         type: 'manual',
         message: 'Username is already taken'
@@ -173,8 +141,6 @@ const SidebarAddUser = (props) => {
         // toast.error(result.message);
       }
     }
-
-    //   //   dispatch(addUser({ ...data, role, currentPlan: plan }));
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({

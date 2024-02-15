@@ -1,38 +1,20 @@
-// ** Mui Components
-import { Grid, Typography, Box, Card, CardContent, IconButton, Button, Avatar, AvatarGroup } from '@mui/material';
-
-// ** React  Import
-import React, { useState, useEffect } from 'react';
-
-// ** Custom Components
-import Icon from 'components/icon';
+import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
 import Header from 'components/Header';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
-
-// ** React Router Import
-import { Link } from 'react-router-dom';
-
-// ** Axios Import
-import { useNavigate } from 'react-router-dom';
-
-// ** Toast Import
-import toast from 'react-hot-toast';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
-import { selectGroups, selectLoading as selectGroupLoading } from 'features/user-management/groups/redux/groupSelectors';
-import { deleteGroup, searchGroups } from 'features/user-management/groups/services/groupService';
+import Icon from 'components/icon';
+import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups/redux/groupSelectors';
 import { setGroups } from 'features/user-management/groups/redux/groupSlice';
+import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
+import { deleteGroup, searchGroups } from 'features/user-management/groups/services/groupService';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 const GroupManagement = () => {
-  // ** Dialog State
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
-  // ** SearchQuery State
   const [searchQuery, setSearchQuery] = useState('');
-
-  // ** Selected State
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
 
   const dispatch = useDispatch();
@@ -46,7 +28,6 @@ const GroupManagement = () => {
     dispatch(getAllGroups(selectedBranchId));
   }, [dispatch, selectedBranchId]);
 
-  // ** Add Role Image
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
 
   const handleDeleteGroup = async () => {
@@ -64,16 +45,13 @@ const GroupManagement = () => {
     }
   };
 
-  // Handle Search Function
   const handleSearch = async (value) => {
     try {
       setSearchQuery(value);
-      // Set loading to true while fetching data
       const result = await searchGroups(value);
 
       if (result.success) {
         console.log('Search results:', result.data);
-        // Update the Redux state using the setGroups action
         dispatch(setGroups(result.data));
       } else {
         console.log(result.message);
@@ -83,7 +61,6 @@ const GroupManagement = () => {
     }
   };
 
-  // Render Group Cards
   const renderCards = () => {
     return groups?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>

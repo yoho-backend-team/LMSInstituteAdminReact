@@ -1,19 +1,17 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-
 // ** MUI Imports
-import Box from '@mui/material/Box';
-// import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-// import CardHeader from '@mui/material/CardHeader';
 import { IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
-
 // ** Custom Components Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import NotesAddDrawer from 'features/content-management/course-contents/components/NotesAddDrawer';
 import NotesEdit from 'features/content-management/course-contents/components/NotesEdit';
@@ -21,10 +19,8 @@ import NotesHeader from 'features/content-management/course-contents/components/
 import NotesView from 'features/content-management/course-contents/components/NotesView';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
-import { useDispatch } from 'react-redux';
-import DeleteDialog from 'components/modal/DeleteModel';
 import { useEffect } from 'react';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import { useDispatch } from 'react-redux';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -36,7 +32,6 @@ const useTimeout = (callback, delay) => {
 
 const Notes = () => {
   // ** State
-
   const studyMaterials = [
     {
       id: 1,
@@ -147,6 +142,7 @@ const Notes = () => {
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
+
   // ** Hooks
   const dispatch = useDispatch();
 
@@ -192,13 +188,11 @@ const Notes = () => {
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
-    // toggleEditUserDrawer();
   };
 
   const columns = [
     {
       flex: 0.8,
-      // minWidth: 120,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -211,7 +205,6 @@ const Notes = () => {
     },
     {
       flex: 1.5,
-      // minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -220,7 +213,6 @@ const Notes = () => {
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
-                // component={Link}
                 sx={{
                   fontWeight: 500,
                   textDecoration: 'none',
@@ -237,7 +229,6 @@ const Notes = () => {
     },
     {
       flex: 1,
-      // minWidth: 190,
       field: 'description',
       headerName: 'Description',
       renderCell: ({ row }) => {
@@ -251,7 +242,6 @@ const Notes = () => {
     {
       flex: 1.5,
       field: 'course',
-      // minWidth: 170,
       headerName: 'course',
       renderCell: ({ row }) => {
         return (
@@ -266,7 +256,6 @@ const Notes = () => {
 
     {
       flex: 1,
-      // minWidth: 110,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -282,7 +271,6 @@ const Notes = () => {
     },
     {
       flex: 1,
-      // minWidth: 100,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -293,44 +281,43 @@ const Notes = () => {
   const [loading, setLoading] = useState(true);
 
   useTimeout(() => {
-    setLoading(false); 
+    setLoading(false);
   }, 1000);
 
   return (
     <>
-     {loading ? (
-        <ContentSkeleton/>
+      {loading ? (
+        <ContentSkeleton />
       ) : (
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          </Grid>
+          <Grid item xs={12}>
+            <Card>
+              <DataGrid
+                autoHeight
+                rowHeight={80}
+                rows={studyMaterials}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                onRowClick={handleRowClick}
+              />
+            </Card>
+          </Grid>
+          <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+          <DeleteDialog
+            open={isDeleteDialogOpen}
+            setOpen={setDeleteDialogOpen}
+            description="Are you sure you want to delete this item?"
+            title="Delete"
+          />
+          <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
         </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <DataGrid
-              autoHeight
-              rowHeight={80}
-              rows={studyMaterials}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              onRowClick={handleRowClick}
-            />
-          </Card>
-        </Grid>
-        <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-        <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          // handleSubmit={handleDeleteConfirm}
-          description="Are you sure you want to delete this item?"
-          title="Delete"
-        />
-        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
-      </Grid>
       )}
     </>
   );

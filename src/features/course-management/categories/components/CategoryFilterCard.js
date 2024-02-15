@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { TextField } from '@mui/material';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
+import { useState } from 'react';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const CategoryFilter = () => {
   const [statusValue, setStatusValue] = useState('');

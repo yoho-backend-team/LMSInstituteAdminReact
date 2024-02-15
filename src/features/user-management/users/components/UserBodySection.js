@@ -1,7 +1,4 @@
-// ** React Imports
 import { useCallback, useState } from 'react';
-
-// ** MUI Imports
 import { Button, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -12,11 +9,7 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-
-// ** React Router Import
 import { Link } from 'react-router-dom';
-
-// ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 import UserAddDrawer from 'features/user-management/users/components/UserAddDrawer';
 import UserTableHeader from 'features/user-management/users/components/UserTableHeader';
@@ -32,12 +25,12 @@ import {
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import toast from 'react-hot-toast';
+
 const userStatusObj = {
   1: 'success',
   0: 'error'
 };
 
-// ** renders client column
 const renderClient = (row) => {
   if (row?.profile_image) {
     return <CustomAvatar src={row?.profile_image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
@@ -66,16 +59,12 @@ const RowOptions = ({ id }) => {
 };
 
 const UserBodySection = ({ groups, users, setLoading }) => {
-  // ** State
   const [role, setRole] = useState('');
   const [value, setValue] = useState('');
   const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
-
-  // ** Hooks
   const dispatch = useDispatch();
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleFilter = useCallback(
@@ -189,7 +178,6 @@ const UserBodySection = ({ groups, users, setLoading }) => {
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
-                // component={Link}
                 sx={{
                   fontWeight: 500,
                   textDecoration: 'none',
@@ -235,26 +223,6 @@ const UserBodySection = ({ groups, users, setLoading }) => {
         );
       }
     },
-
-    // {
-    //   flex: 0.15,
-    //   minWidth: 110,
-    //   field: 'status',
-    //   headerName: 'Status',
-    //   renderCell: ({ row }) => {
-    //     return (
-    //       <CustomChip
-    //         rounded
-    //         skin="light"
-    //         size="small"
-    //         label={row.status == '1' ? 'Active' : 'InActive'}
-    //         color={userStatusObj[row.status]}
-    //         sx={{ textTransform: 'capitalize' }}
-    //       />
-    //     );
-    //   }
-    // },
-
     {
       flex: 1.25,
       minWidth: 180,

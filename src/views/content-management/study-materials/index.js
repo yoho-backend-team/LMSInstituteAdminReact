@@ -1,12 +1,9 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-
 // ** MUI Imports
-import Box from '@mui/material/Box';
-// import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-// import CardHeader from '@mui/material/CardHeader';
 import { IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 import { useEffect } from 'react';
@@ -14,6 +11,8 @@ import { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import StudyMaterialAddDrawer from 'features/content-management/course-contents/components/StudyMaterialAddDrawer';
 import StudyMaterialEdit from 'features/content-management/course-contents/components/StudyMaterialEdit';
@@ -22,12 +21,6 @@ import StudyMaterialView from 'features/content-management/course-contents/compo
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
-import DeleteDialog from 'components/modal/DeleteModel';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-// const userStatusObj = {
-//   Active: 'success',
-//   Inactive: 'error'
-// };
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -46,12 +39,11 @@ const StudyMaterials = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
-  
+
   console.log(deletingItemId);
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
-    // toggleEditUserDrawer();
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -86,11 +78,7 @@ const StudyMaterials = () => {
         <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
           <Icon icon="tabler:edit" />
         </IconButton>
-        <IconButton
-           onClick={() => handleDelete()}
-          aria-label="capture screenshot"
-          color="error"
-        >
+        <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
           <Icon icon="mdi:delete-outline" />
         </IconButton>
       </Box>
@@ -204,7 +192,6 @@ const StudyMaterials = () => {
   const columns = [
     {
       flex: 0.8,
-      // minWidth: 120,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -217,7 +204,6 @@ const StudyMaterials = () => {
     },
     {
       flex: 1.5,
-      // minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -226,7 +212,6 @@ const StudyMaterials = () => {
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
-                // component={Link}
                 sx={{
                   fontWeight: 500,
                   textDecoration: 'none',
@@ -243,7 +228,6 @@ const StudyMaterials = () => {
     },
     {
       flex: 1,
-      // minWidth: 190,
       field: 'description',
       headerName: 'Description',
       renderCell: ({ row }) => {
@@ -257,7 +241,6 @@ const StudyMaterials = () => {
     {
       flex: 1.5,
       field: 'course',
-      // minWidth: 170,
       headerName: 'course',
       renderCell: ({ row }) => {
         return (
@@ -272,7 +255,6 @@ const StudyMaterials = () => {
 
     {
       flex: 1,
-      // minWidth: 110,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -288,7 +270,6 @@ const StudyMaterials = () => {
     },
     {
       flex: 1,
-      // minWidth: 100,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -299,45 +280,44 @@ const StudyMaterials = () => {
   const [loading, setLoading] = useState(true);
 
   useTimeout(() => {
-    setLoading(false); 
+    setLoading(false);
   }, 1000);
 
   return (
     <>
-    {loading ? (
-        <ContentSkeleton/>
+      {loading ? (
+        <ContentSkeleton />
       ) : (
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          </Grid>
+          <Grid item xs={12}>
+            <Card>
+              <DataGrid
+                autoHeight
+                rowHeight={80}
+                rows={studyMaterials}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                onRowClick={handleRowClick}
+              />
+            </Card>
+          </Grid>
+          <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+          <DeleteDialog
+            open={isDeleteDialogOpen}
+            setOpen={setDeleteDialogOpen}
+            description="Are you sure you want to delete this item?"
+            title="Delete"
+          />
+          <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
         </Grid>
-        <Grid item xs={12}>
-          <Card>
-            <DataGrid
-              autoHeight
-              rowHeight={80}
-              rows={studyMaterials}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              onRowClick={handleRowClick}
-            />
-          </Card>
-        </Grid>
-        <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-        <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          // handleSubmit={handleDeleteConfirm}
-          description="Are you sure you want to delete this item?"
-          title="Delete"
-        />
-        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
-      </Grid>
-       )}
+      )}
     </>
   );
 };

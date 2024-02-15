@@ -1,25 +1,19 @@
-// ** React Imports
-import { useState } from 'react';
-
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import CardHeader from '@mui/material/CardHeader';
-import AlertTitle from '@mui/material/AlertTitle';
-import IconButton from '@mui/material/IconButton';
-import CardContent from '@mui/material/CardContent';
-import InputAdornment from '@mui/material/InputAdornment';
-
-// ** Icon Imports
-import Icon from 'components/icon';
-
-// ** Custom Component Import
-import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import Icon from 'components/icon';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-// import axios from 'axios';
 import { userChangePassword } from '../services/viewUserServices';
+
 const UserViewSecurity = ({ id }) => {
   const [values, setValues] = useState({
     newPassword: '',
@@ -29,7 +23,6 @@ const UserViewSecurity = ({ id }) => {
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
-  // Handle Password
   const handleNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -38,7 +31,6 @@ const UserViewSecurity = ({ id }) => {
     setValues({ ...values, showNewPassword: !values.showNewPassword });
   };
 
-  // Handle Confirm Password
   const handleConfirmNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };

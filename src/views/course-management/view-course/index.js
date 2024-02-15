@@ -19,6 +19,7 @@ const CourseViewPage = () => {
   const handleEdit = () => {
     setEditModalOpen(true);
   };
+
   const accordionData = [
     {
       id: 'panel1',
@@ -62,7 +63,6 @@ const CourseViewPage = () => {
         aria-controls={`customized-panel-content-${accordion.id}`}
       >
         <Typography variant="h3">{accordion.title}</Typography>
-
         {/* previewbox */}
         {expanded !== accordion.id && (
           <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', mr: 2 }}>
@@ -106,7 +106,6 @@ const CourseViewPage = () => {
   return (
     <div>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        {/* <Card sx={{ minWidth: 200, flexGrow: 1 }}> */}
         <video
           controls
           autoPlay
@@ -117,10 +116,9 @@ const CourseViewPage = () => {
         >
           <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
         </video>
-        {/* </Card> */}
       </Box>
       <Grid container spacing={2} sx={{ my: 2 }} display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-        <Grid item xs={12} sm={2} display={"flex"} justifyContent={'flex-end'} sx={{mr:1}}>
+        <Grid item xs={12} sm={2} display={'flex'} justifyContent={'flex-end'} sx={{ mr: 1 }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
             <Button size="large" onClick={() => handleEdit()} variant="contained" color="primary" startIcon={<Icon icon="mdi:pencil" />}>
               Edit

@@ -1,17 +1,11 @@
-// ** React Imports
-import { useState, useEffect } from 'react';
-
-// ** React Router Imports
-import { useLocation } from 'react-router-dom';
-
-// ** MUI Imports
 import Grid from '@mui/material/Grid';
-
-// ** Demo Components Imports
+import ViewUserSkeleton from 'components/cards/Skeleton/ViewUserSkeleton';
 import UserViewLeft from 'features/user-management/user-view/components/UserViewLeft';
 import UserViewRight from 'features/user-management/user-view/components/UserViewRight';
-import ViewUserSkeleton from 'components/cards/Skeleton/ViewUserSkeleton';
 import { getUserById } from 'features/user-management/user-view/services/viewUserServices';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 const UserView = () => {
   const location = useLocation();
 
@@ -23,31 +17,22 @@ const UserView = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 1000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
   useEffect(() => {
     getUserData();
   }, [userId]);
 
   const getUserData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const result = await getUserById(userId);
       if (result.success) {
         console.log('User Data:', result.data);
         console.log(result.data);
         setUserData(result.data);
-        setLoading(false)
+        setLoading(false);
       } else {
         console.log(result.message);
-        setLoading(false)
-
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -59,7 +44,6 @@ const UserView = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <ViewUserSkeleton />
           ) : (
             <Grid container spacing={3}>

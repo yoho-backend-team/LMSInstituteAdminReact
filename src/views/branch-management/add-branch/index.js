@@ -1,7 +1,6 @@
-import React from 'react';
 import { Grid, Typography } from '@mui/material';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import AddBranchForms from 'features/branch-management/add-branch/components/AddBranchForms';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const AddBranch = () => {
   return (

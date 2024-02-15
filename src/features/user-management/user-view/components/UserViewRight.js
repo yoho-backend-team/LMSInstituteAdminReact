@@ -1,21 +1,14 @@
-// ** React Imports
-import { useState, useEffect } from 'react';
-
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
-import { styled } from '@mui/material/styles';
-import MuiTab from '@mui/material/Tab';
 import MuiTabList from '@mui/lab/TabList';
-
-// ** Icon Imports
+import TabPanel from '@mui/lab/TabPanel';
+import Box from '@mui/material/Box';
+import MuiTab from '@mui/material/Tab';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-
+import { useEffect, useState } from 'react';
 import UserViewAccount from './UserViewAccount';
 import UserViewSecurity from './UserViewSecurity';
 
-// ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
   '& svg': {
@@ -49,11 +42,8 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 }));
 
 const UserViewRight = ({ id }) => {
-  // ** State
   const tab = 'account';
   const [activeTab, setActiveTab] = useState('account');
-
-  // ** Hooks
 
   const handleChange = (event, value) => {
     setActiveTab(value);

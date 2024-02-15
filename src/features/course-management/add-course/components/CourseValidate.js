@@ -1,6 +1,5 @@
-import * as Yup from 'yup';
-
 import { useCallback, useMemo } from 'react';
+import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -10,15 +9,11 @@ import { Card, Grid, Stack } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 
 // components
-// import { FormProvider, RHFUploadMultiFile } from '../../../components/hook-form';
 import { RHFUploadSingleFile } from 'components/upload/RHUpload';
 import FormProvider from 'features/course-management/add-course/components/FormProvider';
 import CoursePdfInput from '../CoursePdfInput';
-// ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
-export default function CourseValidate({ setCourseLogo, setCourseTemplate ,setCourseSyllabus}) {
+export default function CourseValidate({ setCourseLogo, setCourseTemplate, setCourseSyllabus }) {
   const NewProductSchema = Yup.object().shape({
     images: Yup.array().min(1, 'Images is required')
   });
@@ -28,7 +23,6 @@ export default function CourseValidate({ setCourseLogo, setCourseTemplate ,setCo
       course_logo: [],
       course_template: ''
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -84,15 +78,6 @@ export default function CourseValidate({ setCourseLogo, setCourseTemplate ,setCo
     },
     [setValue]
   );
-
-  // const handleRemoveAll = () => {
-  //   setValue('images', []);
-  // };
-
-  // const handleRemove = (file) => {
-  //   const filteredItems = values.images?.filter((_file) => _file !== file);
-  //   setValue('images', filteredItems);
-  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
