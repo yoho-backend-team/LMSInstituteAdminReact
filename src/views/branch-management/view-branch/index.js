@@ -1,15 +1,10 @@
-import React from 'react';
-// material-ui
 import { Grid } from '@mui/material';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import BranchSkeleton from 'components/cards/Skeleton/BranchSkeleton';
 import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
 import BranchTableList from 'features/branch-management/add-branch/components/BranchTableList';
 import HeaderCard from 'features/branch-management/view-branch/components/ViewBranchHeaderCard';
 import ProgressCard from 'features/branch-management/view-branch/components/ViewBranchProgressCard';
-import BranchSkeleton from 'components/cards/Skeleton/BranchSkeleton';
-
-// ==============================|| SAMPLE PAGE ||============================== //
+import { useEffect, useState } from 'react';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {

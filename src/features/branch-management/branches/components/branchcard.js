@@ -10,9 +10,8 @@ import { getAllBranches } from '../redux/branchThunks';
 import { useEffect } from 'react';
 import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
-const BranchCard = () => {
-  // const [anchorEl, setAnchorEl] = useState(null);
 
+const BranchCard = () => {
   const dispatch = useDispatch();
   const branches = useSelector(selectBranches);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -22,17 +21,10 @@ const BranchCard = () => {
   }, [dispatch, isEditModalOpen]);
 
   console.log(branches);
-  // const theme = useTheme();
 
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
-
-  // const handleEdit = (branchData) => {
-  //   console.log(branchData)
-  //   setSelectedBranch(branchData);
-  //   setEditModalOpen(true);
-  // };
 
   return (
     <Grid container spacing={2}>

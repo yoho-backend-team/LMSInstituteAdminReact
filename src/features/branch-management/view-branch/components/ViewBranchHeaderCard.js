@@ -1,15 +1,10 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-
-// ** Icon Imports
 import Icon from 'components/icon';
-
-// ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 
 const data = [

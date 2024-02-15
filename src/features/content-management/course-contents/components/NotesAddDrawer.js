@@ -1,32 +1,24 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 // ** MUI Imports
+import { Button, Grid, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
 import axios from 'axios';
-import { Button, Grid, Typography } from '@mui/material';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 // ** Icon Imports
-import Icon from 'components/icon';
-
 import { TextField } from '@mui/material';
-
-import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import Icon from 'components/icon';
 import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
+import toast from 'react-hot-toast';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -96,8 +88,8 @@ const NotesAddDrawer = (props) => {
   const [groups, setGroups] = useState([]);
   console.log(notesPdf);
   const handleSetPdf = (data) => {
-    setNotesPdf(data)
-  }
+    setNotesPdf(data);
+  };
   const handleBranchChange = (event) => {
     setSelectedBranches(event.target.value);
   };
@@ -183,7 +175,6 @@ const NotesAddDrawer = (props) => {
       .catch((error) => {
         console.log(error);
       });
-    //   //   dispatch(addUser({ ...data, course, currentPlan: plan }));
   };
 
   const handleClose = () => {
@@ -222,7 +213,7 @@ const NotesAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf}/>
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} />
           </Grid>
 
           <Grid item xs={12} sm={12}>

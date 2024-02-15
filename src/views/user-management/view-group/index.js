@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardContent
 } from '@mui/material';
-
 import { getAllPermissionsByRoleId } from 'features/user-management/groups/services/groupService';
 import { useLocation } from 'react-router';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
@@ -25,6 +24,7 @@ const useTimeout = (callback, delay) => {
     return () => clearTimeout(timeoutId);
   }, [callback, delay]);
 };
+
 const GroupViewPage = () => {
   const [permissions, setPermissions] = useState([]);
   const location = useLocation();

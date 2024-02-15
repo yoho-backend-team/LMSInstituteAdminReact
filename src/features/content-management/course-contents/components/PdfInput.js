@@ -3,10 +3,8 @@ import { useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Third Party Imports
 import Grid from '@mui/material/Grid';
 import { useDropzone } from 'react-dropzone';
@@ -14,7 +12,6 @@ import { useDropzone } from 'react-dropzone';
 const CoursePdfInput = ({ setCourseNotePdf }) => {
   // ** State
   const [files, setFiles] = useState([]);
-
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -29,8 +26,6 @@ const CoursePdfInput = ({ setCourseNotePdf }) => {
 
   const renderMedia = () => {
     if (files.length) {
-
-      // Assuming the files are videos
       return files.map((file) => <iframe title={file.name} key={file.name} src={URL.createObjectURL(file)} width="100%" height="500px" />);
     }
 

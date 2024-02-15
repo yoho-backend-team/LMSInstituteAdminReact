@@ -1,9 +1,6 @@
-import React from 'react'
 
 const QuestionPaper = () => {
-  return (
-    <div>QuestionPaper</div>
-  )
-}
+  return <div>QuestionPaper</div>;
+};
 
-export default QuestionPaper
+export default QuestionPaper;

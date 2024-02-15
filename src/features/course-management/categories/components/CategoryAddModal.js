@@ -111,7 +111,6 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
       toast.success(result.message);
     } else {
       toast.error(result.message);
-      // toast.error(result.message);
     }
   };
 

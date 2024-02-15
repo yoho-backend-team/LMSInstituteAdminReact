@@ -1,31 +1,23 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 // ** MUI Imports
+import { Button, Grid, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
 import axios from 'axios';
-import { Button, Grid, Typography } from '@mui/material';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 // ** Icon Imports
-import Icon from 'components/icon';
-
 import { TextField } from '@mui/material';
-
-import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import Icon from 'components/icon';
+import toast from 'react-hot-toast';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -51,7 +43,7 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
-    Videourl:yup.string().required()
+  Videourl: yup.string().required()
 });
 
 const ITEM_HEIGHT = 48;
@@ -182,7 +174,6 @@ const ModuleAddDrawer = (props) => {
       .catch((error) => {
         console.log(error);
       });
-    //   //   dispatch(addUser({ ...data, course, currentPlan: plan }));
   };
 
   const handleClose = () => {

@@ -1,32 +1,24 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 // ** MUI Imports
+import { Button, Grid, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
 import axios from 'axios';
-import { Button, Grid, Typography } from '@mui/material';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
 // ** Icon Imports
-import Icon from 'components/icon';
-
 import { TextField } from '@mui/material';
-
-import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import Icon from 'components/icon';
 import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
+import toast from 'react-hot-toast';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -89,8 +81,8 @@ const defaultValues = {
 const StudyMaterialEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
-  console.log("StudyMaterialEdit - open:", props.open);
-  console.log("StudyMaterialEdit - toggle:", props.toggle);
+  console.log('StudyMaterialEdit - open:', props.open);
+  console.log('StudyMaterialEdit - toggle:', props.toggle);
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
 
@@ -140,8 +132,8 @@ const StudyMaterialEdit = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
- 
-console.log(defaultValues);
+
+  console.log(defaultValues);
 
   useEffect(() => {
     if (open) {
@@ -188,7 +180,6 @@ console.log(defaultValues);
       .catch((error) => {
         console.log(error);
       });
-    //   //   dispatch(addUser({ ...data, course, currentPlan: plan }));
   };
 
   const handleClose = () => {

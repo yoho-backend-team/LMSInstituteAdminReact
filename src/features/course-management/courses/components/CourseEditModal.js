@@ -15,22 +15,13 @@ import CourseValidate from 'features/course-management/add-course/components/Cou
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// const showErrors = (field, valueLen, min) => {
-//   if (valueLen === 0) {
-//     return `${field} field is required`;
-//   } else if (valueLen > 0 && valueLen < min) {
-//     return `${field} must be at least ${min} characters`;
-//   } else {
-//     return '';
-//   }
-// };
+
 const schema = yup.object().shape({
   Course_duration: yup.number().required(),
   course_name: yup.string().required(),
   Course_Price: yup.number().required(),
   description: yup.string().required(),
   course_overview: yup.string().required(),
-  //   language: yup.array().min(1).required()
   Learning_Format: yup.array().min(1, 'Select at least one Learning Format').required(),
   Course_Category: yup.string().required()
 });
@@ -44,7 +35,6 @@ const defaultValues = {
   Learning_Format: [],
   Course_Category: ''
 };
-
 
 const groups = [
   { id: '1', name: 'Offline Class' },
@@ -105,10 +95,10 @@ const CourseEditModal = ({ open, handleEditClose }) => {
       textAlign: 'center'
     }
   }));
-const onSubmit =(data)=>{
-  console.log(data)
-}
-console.log(onSubmit);
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+  console.log(onSubmit);
 
   return (
     <div>
@@ -138,7 +128,6 @@ console.log(onSubmit);
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
-           
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
                 <ImgStyled src={imgSrc} alt="Profile Pic" />
@@ -157,9 +146,9 @@ console.log(onSubmit);
                 </div>
               </Box>
             </Grid>
-            <Grid container spacing={2}> 
-            <Grid item xs={12} sm={6}>
-            <Controller
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Controller
                   name="course_name"
                   control={control}
                   rules={{ required: true }}
@@ -176,11 +165,10 @@ console.log(onSubmit);
                     />
                   )}
                 />
-            </Grid>
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="Course_duration"
-
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -342,7 +330,7 @@ console.log(onSubmit);
               <CourseValidate />
             </Grid>
 
-            <Grid style={{ display: 'flex', justifyContent: 'center' ,marginTop:"30px"}}>
+            <Grid style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                 Submit
               </Button>

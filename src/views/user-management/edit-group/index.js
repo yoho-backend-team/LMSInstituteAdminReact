@@ -203,19 +203,6 @@ const GroupEditDialog = () => {
     );
   };
 
-  // const handleGroupEdit = async () => {
-  //   try {
-  //     const result = await updateGroup('1', groupName, selectedCheckbox);
-
-  //     if (result.success) {
-  //       toast.success(result.message);
-  //     } else {
-  //       toast.error(result.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   return (
     <>
       {loading ? (
@@ -247,7 +234,6 @@ const GroupEditDialog = () => {
                     <TextField
                       fullWidth
                       value={value}
-                      // sx={{ mb: 4 }}
                       label="Role Name"
                       onChange={onChange}
                       placeholder="John Doe"

@@ -6,12 +6,12 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 // ** Custom Component Import
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Icon from 'components/icon';
+import DeleteDialog from 'components/modal/DeleteModel';
 import { useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import DeleteDialog from 'components/modal/DeleteModel';
 
 const CardStatsVertical = (props) => {
   // ** Props
@@ -87,7 +87,6 @@ const CardStatsVertical = (props) => {
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
-        // handleSubmit={handleDeleteConfirm}
         description="Are you sure you want to delete this item?"
         title="Delete"
       />

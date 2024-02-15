@@ -1,7 +1,3 @@
-// ** React Components
-import React, { useEffect } from 'react';
-
-// ** Mui Components
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -26,21 +22,16 @@ import {
   Typography
 } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import CustomChip from 'components/mui/chip';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useNavigate } from 'react-router';
-// ** Custom Components
-import Icon from 'components/icon';
-
-// ** Toast Import
-import toast from 'react-hot-toast';
-
-// ** Api Services Import
-import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
-import { useSelector } from 'react-redux';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
-import { useState } from 'react';
+import Icon from 'components/icon';
+import CustomChip from 'components/mui/chip';
+import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import * as yup from 'yup';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -51,6 +42,7 @@ const showErrors = (field, valueLen, min) => {
     return '';
   }
 };
+
 const schema = yup.object().shape({
   groupName: yup
     .string()
@@ -97,8 +89,6 @@ const GroupAddPage = () => {
     reset();
   };
 
-  // ** States
-  // const [groupName, setGroupName] = React.useState('');
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
@@ -107,8 +97,6 @@ const GroupAddPage = () => {
 
   const onSubmit = async (data) => {
     try {
-      // const brn = data.branch;
-
       const branchIds = data?.branch?.map((branch) => branch.branch_id);
       console.log(branchIds);
       const inputData = {
@@ -129,7 +117,6 @@ const GroupAddPage = () => {
     }
   };
 
-  // ** useEffects
   useEffect(() => {
     if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
       setIsIndeterminateCheckbox(true);
@@ -142,22 +129,6 @@ const GroupAddPage = () => {
     getPermissions();
   }, []);
 
-  // ** Method for AddNewGroup
-  // const handleAddGroup = async () => {
-  //   try {
-  //     const result = await addGroup(groupName, selectedCheckbox);
-
-  //     if (result.success) {
-  //       toast.success(result.message);
-  //     } else {
-  //       toast.error(result.message);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // ** Method for SelectAllPermissions
   const handleSelectAllCheckbox = () => {
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
@@ -172,7 +143,6 @@ const GroupAddPage = () => {
     }
   };
 
-  // ** Method for Manage Permission selection
   const togglePermission = (id) => {
     const arr = selectedCheckbox;
     if (selectedCheckbox.includes(id)) {
@@ -184,7 +154,6 @@ const GroupAddPage = () => {
     }
   };
 
-  // ** Method for GetAllPermissions
   const getPermissions = async () => {
     try {
       const result = await getAllPermissions();
@@ -198,7 +167,6 @@ const GroupAddPage = () => {
     }
   };
 
-  // ** Method for RenderPermissions
   const renderPermissions = () => {
     return permissions.map((module) =>
       module.screens.map((screen, index) => (
@@ -265,7 +233,6 @@ const GroupAddPage = () => {
                       <TextField
                         fullWidth
                         value={value}
-                        // sx={{ mb: 4 }}
                         label="Group Name"
                         onChange={onChange}
                         placeholder="John Doe"
@@ -276,13 +243,12 @@ const GroupAddPage = () => {
                   />
                 </Grid>
                 <Grid xs={12} sm={5.9}>
-                <Controller
+                  <Controller
                     name="branch"
                     control={control}
                     rules={{ required: true }}
                     render={({ field: { value, onChange } }) => {
                       const branchesWithSelectAll = [{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches];
-
                       return (
                         <Autocomplete
                           multiple
@@ -306,7 +272,7 @@ const GroupAddPage = () => {
                               {...(errors.branch && { helperText: errors.branch.message })}
                               InputProps={{
                                 ...params.InputProps,
-                                style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' } //
+                                style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                               }}
                             />
                           )}
@@ -333,7 +299,6 @@ const GroupAddPage = () => {
                                     onChange(updatedValue);
                                   }}
                                   color="primary"
-                                  // {...getTagProps({ index })}
                                   sx={{ m: 0.75 }}
                                 />
                               ))}

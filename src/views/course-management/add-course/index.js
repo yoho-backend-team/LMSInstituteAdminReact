@@ -1,6 +1,8 @@
-// ** React Imports
-import { Fragment, useState, useEffect } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Checkbox, TextField as CustomTextField, TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -12,28 +14,17 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
+import CustomChip from 'components/mui/chip';
+import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
+import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
+import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses/services/courseServices';
+import { Fragment, useEffect, useState } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField, Checkbox, } from '@mui/material';
-import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
-// ** Styled Components
-import CustomChip from 'components/mui/chip';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
-import Autocomplete from '@mui/material/Autocomplete';
-import StepperWrapper from 'styles/mui/stepper';
 import { useSelector } from 'react-redux';
-import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses/services/courseServices';
-
-
+import StepperWrapper from 'styles/mui/stepper';
+import * as yup from 'yup';
 
 const steps = [
   {
@@ -45,8 +36,6 @@ const steps = [
     subtitle: 'Add Social Links'
   }
 ];
-
-// const defaultAccountValues = {};
 
 const defaultPersonalValues = {
   Course_duration: '',
@@ -71,12 +60,8 @@ const personalSchema = yup.object().shape({
 });
 
 const socialSchema = yup.object().shape({});
-// const gallerySchema = yup.object().shape({
-//   images: Yup.array().min(1, 'Images is required')
-// });
 
 const AddCoursePage = () => {
-  // ** States
   const [activeStep, setActiveStep] = useState(0);
   const [courseLogo, setCourseLogo] = useState('');
   const [courseTemplate, setCourseTemplate] = useState('');
@@ -88,7 +73,7 @@ const AddCoursePage = () => {
   const branches = [
     { branch_id: '1', branch_name: 'Branch 1' },
     { branch_id: '2', branch_name: 'Branch 2' },
-    { branch_id: '3', branch_name: 'Branch 3' },
+    { branch_id: '3', branch_name: 'Branch 3' }
   ];
   console.log(courseSyllabus);
 
@@ -98,14 +83,10 @@ const AddCoursePage = () => {
 
   const getAllCategories = async () => {
     const result = await getAllActiveCourseCategories(selectedBranchId);
-    // console.log('result', result?.data)
     if (result.success) {
       setActiveCategories(result?.data);
     }
   };
-  // const [features, setFeatures] = useState([]);
-
-  // ** Hooks
 
   const {
     reset: personalReset,
@@ -119,21 +100,16 @@ const AddCoursePage = () => {
 
   const {
     reset: socialReset,
-    // control: socialControl,
     handleSubmit: handleSocialSubmit,
     formState: { errors: socialErrors }
   } = useForm({
     defaultValues: defaultSocialValues,
     resolver: yupResolver(socialSchema)
   });
-  // const methods = useForm({
-  //   defaultValues: defaultGalleryValues,
-  //   resolver: yupResolver(gallerySchema)
-  // });
-  // console.log(galleryControl);
+
   console.log(defaultPersonalValues);
   console.log(activeCategories);
-  // Handle Stepper
+
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -141,7 +117,6 @@ const AddCoursePage = () => {
   const handleReset = () => {
     setActiveStep(0);
     socialReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
-    // galleryReset({ logo: '', image: '', gallery: [] });
     accountReset({ email: '', username: '', password: '', confirm_password: '', name: '', contact: '' });
     personalReset({
       Course_duration: Number(''),
@@ -154,19 +129,8 @@ const AddCoursePage = () => {
     });
   };
 
-  // const onSubmit = async () => {
-  //   try {
-  //     await new Promise((resolve) => setTimeout(resolve, 500));
-  //     reset();
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const onSubmit = async () => {
-    // const accountData = accountControl?._formValues;
     const personalData = personalControl?._formValues;
-    // const socialData = socialControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
@@ -196,7 +160,6 @@ const AddCoursePage = () => {
     switch (step) {
       case 0:
         return (
-          // <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
@@ -325,7 +288,6 @@ const AddCoursePage = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-
                 <Controller
                   name="Course_Category"
                   control={personalControl}
@@ -383,7 +345,6 @@ const AddCoursePage = () => {
                                   onChange(updatedValue);
                                 }}
                                 color="primary"
-                                // {...getTagProps({ index })}
                                 sx={{ m: 0.75 }}
                               />
                             ))}
@@ -397,7 +358,7 @@ const AddCoursePage = () => {
                   }}
                 />
               </Grid>
-             
+
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="Learning_Format"
@@ -475,7 +436,6 @@ const AddCoursePage = () => {
               </Grid>
             </Grid>
           </form>
-          // </DatePickerWrapper>
         );
       case 1:
         return (
@@ -522,10 +482,7 @@ const AddCoursePage = () => {
               const labelProps = {};
               if (index === activeStep) {
                 labelProps.error = false;
-                if (
-                  // (accountErrors.email || accountErrors.username || accountErrors.password || accountErrors['confirm_password']) &&
-                  activeStep === 3
-                ) {
+                if (activeStep === 3) {
                   labelProps.error = true;
                 } else if ((personalErrors['registered_date'] || personalErrors['first-name']) && activeStep === 0) {
                   labelProps.error = true;

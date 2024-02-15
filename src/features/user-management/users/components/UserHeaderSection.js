@@ -1,4 +1,3 @@
-import React from 'react';
 import Grid from '@mui/material/Grid';
 import UserHeaderCard from 'features/user-management/users/components/UserHeaderCard';
 const UserHeaderSection = ({ users, groups }) => {

@@ -1,6 +1,5 @@
 // ** React Import
 import { useEffect, useRef } from 'react';
-
 // ** Full Calendar & it's Plugins
 import FullCalendar from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
@@ -8,7 +7,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import interactionPlugin from '@fullcalendar/interaction';
-
 // ** Third Party Style Import
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
@@ -65,16 +63,10 @@ const TeacherAttendance = (props) => {
         }
       },
 
-      /*
-            Enable dragging and resizing event
-            ? Docs: https://fullcalendar.io/docs/editable
-          */
+ 
       editable: true,
 
-      /*
-            Enable resizing event from start
-            ? Docs: https://fullcalendar.io/docs/eventResizableFromStart
-          */
+
       eventResizableFromStart: true,
 
       /*
