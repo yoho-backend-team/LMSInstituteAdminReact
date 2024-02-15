@@ -5,7 +5,6 @@ import OnlineClassFilterCard from 'features/class-management/online-classes/comp
 import OnlineClassCardHeader from 'features/class-management/online-classes/components/OnlineClassCardHeader';
 import OnlineClassCard from 'features/class-management/online-classes/components/OnlineClassCard';
 
-
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const OnlineClass = () => {
