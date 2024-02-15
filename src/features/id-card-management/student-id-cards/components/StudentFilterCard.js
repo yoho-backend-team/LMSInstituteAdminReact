@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import TextField from '@mui/material/TextField';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
-import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
-
+import { useState } from 'react';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const StudentFilterCard = (props) => {
   const { handleSearchFilter, value } = props;
@@ -134,7 +133,7 @@ const StudentFilterCard = (props) => {
                         InputProps={{
                           ...params.InputProps,
                           style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }} 
+                        }}
                       />
                     )}
                     renderOption={(props, option, { selected }) => (

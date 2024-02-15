@@ -1,16 +1,16 @@
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Box, Button, Checkbox } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import { Box, Button, Checkbox } from '@mui/material';
-import { Link } from 'react-router-dom';
-import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const StudentFilter = (props) => {
   const { value, handleFilter } = props;

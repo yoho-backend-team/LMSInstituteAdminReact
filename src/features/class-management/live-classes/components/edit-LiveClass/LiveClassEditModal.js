@@ -1,26 +1,23 @@
-import { useState, forwardRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, Checkbox } from '@mui/material';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { Checkbox, Grid, IconButton, InputAdornment } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import CustomChip from 'components/mui/chip';
-import DatePicker from 'react-datepicker';
 import format from 'date-fns/format';
+import { forwardRef, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { InputAdornment, IconButton } from '@mui/material';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Autocomplete from '@mui/material/Autocomplete';
-
-// import { register } from 'react-hook-form';
+import * as yup from 'yup';
 
 /* eslint-disable */
 const DateCustomInput = forwardRef((props, ref) => {
@@ -73,8 +70,7 @@ const defaultValues = {
 };
 
 const handleCopyLink = () => {
-  // Logic to copy the link goes here
-  const link = 'Your generated link'; // Replace this with the actual link
+  const link = 'Your generated link';
   navigator.clipboard.writeText(link).then(() => {
     console.log('Link copied to clipboard');
   });
@@ -292,7 +288,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                       }
                       dateFormat="MM/dd/yyyy"
                       placeholderText="Select Class Date"
-                      // Add the error styling
                       className={`form-control ${errors.classDate ? 'is-invalid' : ''}`}
                     />
                   )}
@@ -324,7 +319,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                         }
                         dateFormat="h:mm aa"
                         placeholderText="Select Start Time"
-                        // Add the error styling
                         className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
                       />
                     )}
@@ -351,7 +345,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                         }
                         dateFormat="h:mm aa"
                         placeholderText="Select End Time"
-                        // Add the error styling
                         className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
                       />
                     )}
@@ -360,7 +353,7 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} sm={12} sx={{mt:0.5}}>
+              <Grid item xs={12} sm={12} sx={{ mt: 0.5 }}>
                 <Autocomplete
                   multiple
                   id="select-multiple-chip"
@@ -481,8 +474,7 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  // label="Generated Link"
-                  value="Your generated link" // Replace this with the actual link
+                  value="Your generated link"
                   readOnly
                   InputProps={{
                     startAdornment: (

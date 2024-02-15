@@ -1,17 +1,12 @@
 // material-ui
 import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
-
 // project imports
 import RefundTable from 'features/refund-management/refunds/components/RefundTable';
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
 const Refunds = () => {
   const [loading, setLoading] = useState(true);
-
-  // Simulate loading delay with useEffect
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -23,13 +18,7 @@ const Refunds = () => {
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
-          {loading ? (
-            // If data is still loading, display skeleton
-            <FeesTableSkeleton />
-          ) : (
-            // Once data is loaded, display actual FeesTable component
-            <RefundTable />
-          )}
+          {loading ? <FeesTableSkeleton /> : <RefundTable />}
         </Grid>
       </Grid>
     </>

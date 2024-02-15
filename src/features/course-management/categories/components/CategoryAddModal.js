@@ -179,6 +179,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
               />
               <Autocomplete
                 multiple
+                disableCloseOnSelect
                 id="select-multiple-chip"
                 options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
                 getOptionLabel={(option) => option.branch_name}

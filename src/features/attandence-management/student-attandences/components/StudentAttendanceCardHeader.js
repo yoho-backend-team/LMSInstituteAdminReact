@@ -2,26 +2,13 @@
 import Box from '@mui/material/Box';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
-// import { useState } from 'react';
-// import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
 
 const StudentAttendanceCardHeader = (props) => {
   const { value, handleFilter } = props;
-  //   const [isAddModalOpen, setAddModalOpen] = useState(false);
-
-  //   const handleAddClose = () => {
-  //     setAddModalOpen(false);
-  //   };
-
-//   const handleAdd = (itemId) => {
-//     console.log('Add clicked for item ID:', itemId);
-//     setAddModalOpen(true);
-//   };
   return (
     <>
       <Box
         sx={{
-          // p: 5,
           pb: 1,
           pt: 3,
           width: '100%',
@@ -40,7 +27,6 @@ const StudentAttendanceCardHeader = (props) => {
           onChange={(e) => handleFilter(e.target.value)}
         />
       </Box>
-      {/* <LiveClassAddModal open={isAddModalOpen} handleAddClose={handleAddClose} /> */}
     </>
   );
 };

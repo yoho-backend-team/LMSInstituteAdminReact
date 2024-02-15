@@ -1,13 +1,13 @@
-import { Avatar, Box, Grid, Stack, Typography, Card } from '@mui/material';
-import SocialsButton from './SocialButton';
-import SvgIconStyle from './svgIconStyle';
 import styled from '@emotion/styled';
-import cssStyles from './cssStyles';
-import StudentFilter from '../view-profile/studentFilterCard';
+import { Avatar, Box, Card, Grid, Stack, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
-import { useEffect, useState } from 'react';
 import StudentSkeleton from 'components/cards/Skeleton/StudentSkeleton';
+import { useEffect, useState } from 'react';
+import StudentFilter from '../view-profile/studentFilterCard';
+import SocialsButton from './SocialButton';
+import cssStyles from './cssStyles';
 import Image from './image';
+import SvgIconStyle from './svgIconStyle';
 
 const OverlayStyle = styled('div')(({ theme }) => ({
   ...cssStyles().bgBlur({ blur: 2, color: theme.palette.primary.main }),
@@ -58,7 +58,6 @@ const Students = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <StudentSkeleton />
           ) : (
             <Grid container spacing={2}>

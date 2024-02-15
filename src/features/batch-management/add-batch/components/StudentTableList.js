@@ -1,26 +1,15 @@
-// ** React Imports
-
 // ** Next Imports
 import { Link } from 'react-router-dom';
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-
 import Typography from '@mui/material/Typography';
-
 import { DataGrid } from '@mui/x-data-grid';
-
-// ** Icon Imports
-
 // ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 import CustomChip from 'components/mui/chip';
-
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
-// ** renders client column
 
 const userStatusObj = {
   active: 'success',
@@ -49,8 +38,6 @@ const renderClient = (row) => {
     );
   }
 };
-
-
 
 const columns = [
   {
@@ -101,20 +88,6 @@ const columns = [
       );
     }
   },
- 
-  //   {
-  //     flex: 0.15,
-  //     minWidth: 120,
-  //     headerName: 'Plan',
-  //     field: 'currentPlan',
-  //     renderCell: ({ row }) => {
-  //       return (
-  //         <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-  //           {row.currentPlan}
-  //         </Typography>
-  //       );
-  //     }
-  //   },
   {
     flex: 0.15,
     minWidth: 190,
@@ -135,14 +108,7 @@ const columns = [
     headerName: 'Role',
     renderCell: ({ row }) => {
       return (
-        <CustomChip
-          rounded
-          skin="light"
-          size="small"
-          label={row.role}
-          color={userRoleObj[row.role]}
-          sx={{ textTransform: 'capitalize' }}
-        />
+        <CustomChip rounded skin="light" size="small" label={row.role} color={userRoleObj[row.role]} sx={{ textTransform: 'capitalize' }} />
       );
     }
   },
@@ -163,7 +129,7 @@ const columns = [
         />
       );
     }
-  },
+  }
 ];
 
 const UserList = () => {
@@ -181,7 +147,7 @@ const UserList = () => {
       currentPlan: 'enterprise',
       status: 'inactive',
       avatar: '',
-      avatarColor: 'primary',
+      avatarColor: 'primary'
     },
     {
       id: 2,

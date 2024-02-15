@@ -1,17 +1,15 @@
-import { Fragment, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Icon from 'components/icon';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import HelpHeader from 'features/help-center/technical-support/components/helpHeader';
-import HelpFooter from 'features/help-center/technical-support/components/helpFooter';
-import HelpPage from 'features/help-center/technical-support/components/helpPage';
 import MainCard from 'components/cards/MainCard';
+import Icon from 'components/icon';
+import HelpFooter from 'features/help-center/technical-support/components/helpFooter';
+import HelpHeader from 'features/help-center/technical-support/components/helpHeader';
+import HelpPage from 'features/help-center/technical-support/components/helpPage';
+import { Fragment, useEffect, useState } from 'react';
 
-// ==============================|| SAMPLE PAGE ||============================== //
 const data = {
   faqData: {
-    // payment
     payment: {
       id: 'payment',
       title: 'Payment',
@@ -161,10 +159,12 @@ const data = {
     }
   }
 };
+
 const TechnicalSupport = () => {
   const [helps, setHelps] = useState([]);
   const [activeTab, setActiveTab] = useState('');
   const [load, SetLoad] = useState(false);
+  
   useEffect(() => {
     getAllHelps();
   }, [load]);
@@ -205,17 +205,17 @@ const TechnicalSupport = () => {
   );
   return (
     <MainCard title="Technical Support">
-     <Fragment>
-      <HelpHeader />
-      {data !== null ? (
-        <HelpPage SetLoad={SetLoad} data={data} helps={helps} activeTab={activeTab} handleChange={handleChange} />
-      ) : (
-        renderNoResult
-      )}
-      <HelpFooter />
-    </Fragment>
-  </MainCard>
-  )
+      <Fragment>
+        <HelpHeader />
+        {data !== null ? (
+          <HelpPage SetLoad={SetLoad} data={data} helps={helps} activeTab={activeTab} handleChange={handleChange} />
+        ) : (
+          renderNoResult
+        )}
+        <HelpFooter />
+      </Fragment>
+    </MainCard>
+  );
 };
 
 export default TechnicalSupport;

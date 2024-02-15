@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
-
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -8,25 +7,16 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-// import axios from 'axios';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Icon from 'components/icon';
-import CustomAutocomplete from 'components/mui/autocomplete';
-
-// import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import Icon from 'components/icon';
+import CustomAutocomplete from 'components/mui/autocomplete';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -155,32 +145,7 @@ const NotificationAddDrawer = (props) => {
     setSelectedBranches(event.target.value);
   };
 
-  useEffect(() => {
-    // getAllGroups(); // Commented out the axios fetch for demonstration purposes
-  }, []);
-
-  // Commented out axios fetch for demonstration purposes
-  // const getAllGroups = async () => {
-  //   let config = {
-  //     method: 'get',
-  //     maxBodyLength: Infinity,
-  //     url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `Bearer ${localStorage.getItem('token')}`
-  //     }
-  //   };
-
-  //   await axios
-  //     .request(config)
-  //     .then((response) => {
-  //       console.log('Groups : ', response.data);
-  //       setGroups(response.data.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  useEffect(() => {}, []);
 
   const {
     handleSubmit,
@@ -195,9 +160,7 @@ const NotificationAddDrawer = (props) => {
   });
 
   const onSubmit = (data) => {
-    // Handle form submission with validated data
     console.log(data);
-
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);
@@ -353,7 +316,7 @@ const NotificationAddDrawer = (props) => {
               options={batch}
               id="autocomplete-limit-tags-batch"
               getOptionLabel={(option) => (option && option.title) || ''}
-              defaultValue={batch.slice(0, 3)} // Adjust this based on your requirements
+              defaultValue={batch.slice(0, 3)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -374,7 +337,7 @@ const NotificationAddDrawer = (props) => {
               options={students}
               id="autocomplete-limit-tags-students"
               getOptionLabel={(option) => (option && option.title) || ''}
-              defaultValue={students.slice(0, 3)} // Adjust this based on your requirements
+              defaultValue={students.slice(0, 3)}
               renderInput={(params) => (
                 <TextField
                   {...params}

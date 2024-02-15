@@ -1,20 +1,17 @@
 // ** MUI Imports
 import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
 // ** Icon Import
 import Icon from 'components/icon';
-
 // ** Custom Component Import
 import CustomChip from 'components/mui/chip';
 
 const SubscriptionHeader = (props) => {
   // ** Props
   const { plan, handleChange } = props;
-
   // ** Hook
   const hidden = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 

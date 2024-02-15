@@ -1,41 +1,29 @@
 import { useState } from 'react';
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import Switch from '@mui/material/Switch';
-import MenuItem from '@mui/material/MenuItem';
-// import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
+import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import InputAdornment from '@mui/material/InputAdornment';
-// import LinearProgress from '@mui/material/LinearProgress'
-import FormControlLabel from '@mui/material/FormControlLabel';
-import DialogContentText from '@mui/material/DialogContentText';
-import TextField from '@mui/material/TextField';
-import Icon from 'components/icon';
+import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-
-// ** Icon Imports
-// import Icon from 'components/icon'
-// import Icon from 'components/icon'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
 // ** Custom Components
 import CustomChip from 'components/mui/chip';
-// import CustomAvatar from 'components/mui/avatar'
 import CustomTextField from 'components/mui/text-field';
-import UserSuspendDialog from './UserSubscriptionDialog';
-import UserSubscriptionDialog from './UserSubscriptionDialog';
-
-// ** Utils Import
-// import { getInitials } from 'utils/get-initials'
+import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const data = {
   id: 1,
@@ -53,14 +41,6 @@ const data = {
   avatar: '/images/avatars/14.png'
 };
 
-// const roleColors = {
-//   admin: 'error',
-//   editor: 'info',
-//   author: 'warning',
-//   maintainer: 'success',
-//   subscriber: 'primary'
-// }
-
 const statusColors = {
   active: 'success',
   pending: 'warning',
@@ -76,7 +56,7 @@ const course = [
     image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
     studentCount: 10,
     course_price: 49.99,
-    is_active: '1' // '1' for active, '0' for inactive
+    is_active: '1'
   },
   {
     personName: 'Arun',
@@ -86,7 +66,7 @@ const course = [
     image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
     studentCount: 10,
     course_price: 49.99,
-    is_active: '1' // '1' for active, '0' for inactive
+    is_active: '1'
   },
   {
     personName: 'Arun',
@@ -96,7 +76,7 @@ const course = [
     image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
     studentCount: 10,
     course_price: 49.99,
-    is_active: '1' // '1' for active, '0' for inactive
+    is_active: '1'
   },
   {
     personName: 'Arun',
@@ -106,83 +86,24 @@ const course = [
     image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
     studentCount: 10,
     course_price: 49.99,
-    is_active: '1' // '1' for active, '0' for inactive
+    is_active: '1'
   }
 ];
 
 const UserViewAccount = () => {
   // ** States
   const [openEdit, setOpenEdit] = useState(false);
-  // const [openPlans, setOpenPlans] = useState(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true);
   const handleEditClose = () => setOpenEdit(false);
 
-  // Handle Upgrade Plan dialog
-  // const handlePlansClickOpen = () => setOpenPlans(true)
-  // const handlePlansClose = () => setOpenPlans(false)
   if (data) {
     return (
       <Grid container spacing={2}>
-        <Grid  item  xs={12} md={4}>
+        <Grid item xs={12} md={4}>
           <Card>
-            {/* <CardContent sx={{ pt: 13.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {data.avatar ? (
-              <CustomAvatar
-                src={data.avatar}
-                variant='rounded'
-                alt={data.fullName}
-                sx={{ width: 100, height: 100, mb: 4 }}
-              />
-            ) : (
-              <CustomAvatar 
-                skin='light'
-                variant='rounded'
-                color={data.avatarColor}
-                sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}
-              >
-                {getInitials(data.fullName)}
-              </CustomAvatar>
-            )}
-            <Typography variant='h4' sx={{ mb: 3 }}>
-              {data.fullName}
-            </Typography> 
-            <CustomChip
-              rounded
-              skin='light'
-              size='small'
-              label={data.role}
-              color={roleColors[data.role]}
-              sx={{ textTransform: 'capitalize' }}
-            />
-          </CardContent>
-
-          <CardContent sx={{ pt: theme => `${theme.spacing(2)} !important` }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Box sx={{ mr: 8, display: 'flex', alignItems: 'center' }}>
-                <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                  <Icon fontSize='1.75rem' icon='tabler:checkbox' />
-                </CustomAvatar>
-                <div>
-                  <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>1.23k</Typography>
-                  <Typography variant='body2'>Task Done</Typography>
-                </div>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CustomAvatar skin='light' variant='rounded' sx={{ mr: 2.5, width: 38, height: 38 }}>
-                  <Icon fontSize='1.75rem' icon='tabler:briefcase' />
-                </CustomAvatar>
-                <div>
-                  <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>568</Typography>
-                  <Typography variant='body2'>Project Done</Typography>
-                </div>
-              </Box>
-            </Box>
-          </CardContent> */}
-
             <CardContent sx={{ pb: 4 }}>
               <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                 Details
@@ -355,224 +276,93 @@ const UserViewAccount = () => {
           </Card>
         </Grid>
 
-   <Grid item xs={12} md={8}>
-        <Grid container spacing={2} >
-          {course.map((course, index) => (
-            <Grid item spacing={2} key={index} xs={12} md={6}>
-              <Card sx={{ mb: 2 }}>
-                <CardContent sx={{ pb: 0 }}>
-                  <CardMedia
-                    sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                    image={course.image}
-                  >
-                    <CustomChip
-                      sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
-                      skin="light"
-                      label={course?.learning_format}
-                      rounded
-                      color="primary"
-                      size="small"
-                      variant="outlined"
-                    />
-                  </CardMedia>
-                </CardContent>
-                <CardContent>
-                  <Box>
-                    <CustomChip
-                      skin="light"
-                      label={course?.course_categories?.course_category_name}
-                      rounded
-                      color="secondary"
-                      size="small"
-                      variant="outlined"
-                    />
-                  </Box>
-                  <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="h4">{course?.course_name}</Typography>
-                    <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
-                      {course.personName}
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      mt: 2,
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <Grid
+        <Grid item xs={12} md={8}>
+          <Grid container spacing={2}>
+            {course.map((course, index) => (
+              <Grid item spacing={2} key={index} xs={12} md={6}>
+                <Card sx={{ mb: 2 }}>
+                  <CardContent sx={{ pb: 0 }}>
+                    <CardMedia
+                      sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
+                      image={course.image}
+                    >
+                      <CustomChip
+                        sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
+                        skin="light"
+                        label={course?.learning_format}
+                        rounded
+                        color="primary"
+                        size="small"
+                        variant="outlined"
+                      />
+                    </CardMedia>
+                  </CardContent>
+                  <CardContent>
+                    <Box>
+                      <CustomChip
+                        skin="light"
+                        label={course?.course_categories?.course_category_name}
+                        rounded
+                        color="secondary"
+                        size="small"
+                        variant="outlined"
+                      />
+                    </Box>
+                    <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
+                      <Typography variant="h4">{course?.course_name}</Typography>
+                      <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
+                        {course.personName}
+                      </Typography>
+                    </Box>
+                    <Box
                       sx={{
+                        mt: 2,
                         display: 'flex',
-                        alignItems: 'center',
-                        '& svg': { color: 'primary.main', mr: 0.5 }
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                       }}
                     >
-                      <Icon icon="ic:twotone-person" fontSize={20} />
-                      <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
+                      <Grid
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          '& svg': { color: 'primary.main', mr: 0.5 }
+                        }}
+                      >
+                        <Icon icon="ic:twotone-person" fontSize={20} />
+                        <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
+                      </Grid>
+                      <Grid>
+                        <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
+                      </Grid>
+                    </Box>
+                  </CardContent>
+                  <CardActions
+                    className="demo-space-x"
+                    sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    <Grid sx={{ mt: 1 }}>
+                      <TextField
+                        size="small"
+                        select
+                        fullWidth
+                        label="Status"
+                        SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e) }}
+                      >
+                        <MenuItem value="1">Active</MenuItem>
+                        <MenuItem value="0">Inactive</MenuItem>
+                      </TextField>
                     </Grid>
-                    <Grid>
-                      <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
-                    </Grid>
-                  </Box>
-                </CardContent>
-                <CardActions
-                  className="demo-space-x"
-                  sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                >
-                  <Grid sx={{ mt: 1 }}>
-                    <TextField
-                      size="small"
-                      select
-                      fullWidth
-                      label="Status"
-                      SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e) }}
-                    >
-                      <MenuItem value="1">Active</MenuItem>
-                      <MenuItem value="0">Inactive</MenuItem>
-                    </TextField>
-                  </Grid>
-                  <Button component={Link} to="view " size="medium" variant="contained" color="primary">
-                    View Details
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                    <Button component={Link} to="view " size="medium" variant="contained" color="primary">
+                      View Details
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
-        </Grid>
-        {/* <Grid item xs={12}>
-        <Card>
-          <CardContent sx={{ pb: 1, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-            <CustomChip rounded skin='light' size='small' color='primary' label='Popular' />
-            <Box sx={{ display: 'flex', position: 'relative' }}>
-              <Sup>$</Sup>
-              <Typography
-                variant='h4'
-                sx={{ mt: -1, mb: -1.2, color: 'primary.main', fontSize: '2.375rem !important' }}
-              >
-                99
-              </Typography>
-              <Sub>/ month</Sub>
-            </Box>
-          </CardContent>
-
-          <CardContent>
-            <Box sx={{ mt: 2.5, mb: 4 }}>
-              <Box sx={{ display: 'flex', mb: 2, alignItems: 'center', '& svg': { mr: 2, color: 'text.secondary' } }}>
-                <Icon icon='tabler:point' fontSize='1.125rem' />
-                <Typography sx={{ color: 'text.secondary' }}>10 Users</Typography>
-              </Box>
-              <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', '& svg': { mr: 2, color: 'text.secondary' } }}>
-                <Icon icon='tabler:point' fontSize='1.125rem' />
-                <Typography sx={{ color: 'text.secondary' }}>Up to 10GB storage</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 2, color: 'text.secondary' } }}>
-                <Icon icon='tabler:point' fontSize='1.125rem' />
-                <Typography sx={{ color: 'text.secondary' }}>Basic Support</Typography>
-              </Box>
-            </Box>
-            <Box sx={{ display: 'flex', mb: 1.5, justifyContent: 'space-between' }}>
-              <Typography sx={{ fontWeight: 500 }}>Days</Typography>
-              <Typography sx={{ fontWeight: 500 }}>75% Completed</Typography>
-            </Box>
-            <LinearProgress value={75} variant='determinate' sx={{ height: 10 }} />
-            <Typography sx={{ mt: 1.5, mb: 6, color: 'text.secondary' }}>4 days remaining</Typography>
-            <Button fullWidth variant='contained' onClick={handlePlansClickOpen}>
-              Upgrade Plan
-            </Button>
-          </CardContent>
-
-          <Dialog
-            open={openPlans}
-            onClose={handlePlansClose}
-            aria-labelledby='user-view-plans'
-            aria-describedby='user-view-plans-description'
-            sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650 } }}
-          >
-            <DialogTitle
-              id='user-view-plans'
-              sx={{
-                textAlign: 'center',
-                fontSize: '1.625rem !important',
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-              }}
-            >
-              Upgrade Plan
-            </DialogTitle>
-
-            <DialogContent
-              sx={{ px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`] }}
-            >
-              <DialogContentText sx={{ textAlign: 'center' }} id='user-view-plans-description'>
-                Choose the best plan for the user.
-              </DialogContentText>
-            </DialogContent>
-
-            <DialogContent
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                flexWrap: ['wrap', 'nowrap'],
-                pt: theme => `${theme.spacing(2)} !important`,
-                pb: theme => `${theme.spacing(8)} !important`,
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`]
-              }}
-            >
-              <CustomTextField
-                select
-                fullWidth
-                label='Choose Plan'
-                defaultValue='Standard'
-                sx={{ mr: [0, 3], mb: [3, 0] }}
-              >
-                <MenuItem value='Basic'>Basic - $0/month</MenuItem>
-                <MenuItem value='Standard'>Standard - $99/month</MenuItem>
-                <MenuItem value='Enterprise'>Enterprise - $499/month</MenuItem>
-                <MenuItem value='Company'>Company - $999/month</MenuItem>
-              </CustomTextField>
-              <Button variant='contained' sx={{ minWidth: ['100%', 0], mt: 4 }}>
-                Upgrade
-              </Button>
-            </DialogContent>
-
-            <Divider sx={{ m: '0 !important' }} />
-
-            <DialogContent
-              sx={{
-                pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(8)} !important`],
-                px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-              }}
-            >
-              <Typography variant='h6' sx={{ mb: 2, color: theme => theme.palette.text.secondary }}>
-                User current plan is standard plan
-              </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexWrap: ['wrap', 'nowrap'],
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Box sx={{ mr: 3, display: 'flex', ml: 2.4, position: 'relative' }}>
-                  <Sup>$</Sup>
-                  <Typography variant='h1' sx={{ mb: -1.2, color: 'primary.main', fontSize: '3rem !important' }}>
-                    99
-                  </Typography>
-                  <Sub>/ month</Sub>
-                </Box>
-                <Button color='error' variant='tonal' sx={{ mt: 2 }} onClick={() => setSubscriptionDialogOpen(true)}>
-                  Cancel Subscription
-                </Button>
-              </Box>
-            </DialogContent>
-          </Dialog>
-        </Card>
-      </Grid> */}
       </Grid>
     );
   } else {

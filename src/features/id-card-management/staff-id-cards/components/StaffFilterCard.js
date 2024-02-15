@@ -1,29 +1,24 @@
-import { useState } from 'react';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { TextField } from '@mui/material';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
-import Autocomplete from '@mui/material/Autocomplete';
 import CustomChip from 'components/mui/chip';
-
+import { useState } from 'react';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const StaffFilterCard = (props) => {
-
   const { handleFilter, value } = props;
-
   const [statusValue, setStatusValue] = useState('');
 
- 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
   };
-
 
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
@@ -42,7 +37,7 @@ const StaffFilterCard = (props) => {
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
@@ -101,21 +96,21 @@ const StaffFilterCard = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="0">Active</MenuItem>
                     <MenuItem value="1">Deactive</MenuItem>
                   </TextField>
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                <TextField
-                      fullWidth
-                      value={value}
-                      label="Search"
-                      sx={{}}
-                      placeholder="Search Staff"
-                      onChange={(e) => handleFilter(e.target.value)}
-                    />
+                  <TextField
+                    fullWidth
+                    value={value}
+                    label="Search"
+                    sx={{}}
+                    placeholder="Search Staff"
+                    onChange={(e) => handleFilter(e.target.value)}
+                  />
                 </Grid>
               </Grid>
             </CardContent>

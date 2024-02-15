@@ -1,12 +1,12 @@
-import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 import Icon from 'components/icon';
 
-import CustomChip from 'components/mui/chip';
 import CustomAvatar from 'components/mui/avatar';
+import CustomChip from 'components/mui/chip';
 
 const StyledBox1 = styled(Box)(({ theme }) => ({
   display: 'flex',

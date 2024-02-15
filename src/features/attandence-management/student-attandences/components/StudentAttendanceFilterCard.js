@@ -1,37 +1,23 @@
 // ** React Imports
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Checkbox } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import { Checkbox } from '@mui/material';
-
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-
-/* eslint-disable */
-// const CustomInput = forwardRef((props, ref) => {
-//   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-//   const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
-//   const value = `${startDate}${endDate !== null ? endDate : ''}`;
-//   props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-//   const updatedProps = { ...props };
-//   delete updatedProps.setDates;
-//   return <CustomTextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-// });
 
 /* eslint-enable */
 const StudentAttendanceFilterCard = (props) => {
   // ** State
-  // const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
-  
   const [selectedstudent, setSelectedstudent] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const courses = [
@@ -44,24 +30,13 @@ const StudentAttendanceFilterCard = (props) => {
     { student_id: '2', student_name: 'Student 2' },
     { student_id: '3', student_name: 'Student 3' }
   ];
-  // const [endDateRange, setEndDateRange] = useState(null);
-  // const [startDateRange, setStartDateRange] = useState(null);
 
   const handleFilterByBatch = (e) => {
     setStatusValue(e.target.value);
   };
 
-  // const handleOnChangeRange = (dates) => {
-  //   const [start, end] = dates;
-  //   if (start !== null && end !== null) {
-  //     setDates(dates);
-  //   }
-  //   setStartDateRange(start);
-  //   setEndDateRange(end);
-  // };
-
   const { value, handleFilter } = props;
- 
+
   return (
     <DatePickerWrapper>
       <Grid container spacing={6}>
@@ -82,7 +57,7 @@ const StudentAttendanceFilterCard = (props) => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
@@ -141,7 +116,7 @@ const StudentAttendanceFilterCard = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={3}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ student_id: 'selectAll', student_name: 'Select All' }, ...students]}
@@ -197,17 +172,17 @@ const StudentAttendanceFilterCard = (props) => {
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
-              </Grid>
-              <Grid item xs={12} sm={3}> 
-              <TextField
-          value={value}
-          sx={{
-            width: "100%"
-          }}
-          placeholder="Search Student"
-          onChange={(e) => handleFilter(e.target.value)}
-        />
-              </Grid>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    value={value}
+                    sx={{
+                      width: '100%'
+                    }}
+                    placeholder="Search Student"
+                    onChange={(e) => handleFilter(e.target.value)}
+                  />
+                </Grid>
               </Grid>
             </CardContent>
           </Card>

@@ -1,15 +1,11 @@
 // material-ui
 import { Grid } from '@mui/material';
-
 // project imports
-
 import Pagination from '@mui/material/Pagination';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
 import TeachingStaffCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCard';
 import TeachingStaffFilterCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffFilterCard';
 import { useEffect, useState } from 'react';
-
-// ==============================|| SAMPLE PAGE ||============================== //
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -20,11 +16,12 @@ const useTimeout = (callback, delay) => {
 };
 
 const TeachingStaff = () => {
-  const [loading, setLoading] = useState(true);
 
+  const [loading, setLoading] = useState(true);
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+
   return (
     <>
     {loading ? (
@@ -32,7 +29,6 @@ const TeachingStaff = () => {
     ) : (
     <Grid>
       <TeachingStaffFilterCard />
-      {/* <TeachingStaffCardHeader /> */}
       <Grid className="match-height">
         <TeachingStaffCard />
       </Grid>

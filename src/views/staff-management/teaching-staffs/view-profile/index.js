@@ -1,7 +1,3 @@
-// ** Third Party Imports
-// import axios from 'axios'
-// ** Demo Components Imports
-// import UserViewPage from ''
 import UserViewPage from './view/UserViewPage';
 
 const now = new Date();
@@ -845,9 +841,6 @@ export const getStaticPaths = () => {
 };
 
 export const getStaticProps = async ({ params }) => {
-  // const res = await axios.get('../view-profile/mockData/invoice')
-  // const invoiceData = res.data.allData
-
   return {
     props: {
       invoiceData,

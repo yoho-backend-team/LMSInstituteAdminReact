@@ -1,17 +1,11 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
 // ** Redux Imports
 import { useDispatch, useSelector } from 'react-redux';
-
-// ** Hooks
-
 // ** FullCalendar & App Components Imports
-
 import NonTeachingStaffAddEventSidebar from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffAddEventSidebar';
 import NonTeachingStaffCalendar from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCalendar';
 import NonTeachingStaffSidebarLeft from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffSidebarLeft';
@@ -42,16 +36,12 @@ const ViewAttendance = () => {
   const [calendarApi, setCalendarApi] = useState(null);
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false);
-
   // ** Hooks
-
   const dispatch = useDispatch();
   const store = useSelector((state) => state.calendar);
-
   // ** Vars
   const leftSidebarWidth = 300;
   const addEventSidebarWidth = 400;
-
   const skin = 'default';
   const direction = 'ltr';
   const mdAbove = useMediaQuery((theme) => theme.breakpoints.up('md'));

@@ -1,27 +1,23 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-
 // ** MUI Imports
 import { Button } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-import Avatar from '@mui/material/Avatar';
 // ** React Router Import
 import { Link } from 'react-router-dom';
-
 // ** Custom Components Imports
-
-
-import StaffNotificationAddDrawer from './StaffNotificationAddDrawer';
-import StaffNotificationTableHeader from './StaffNotificationTableHeader';
 import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import StaffNotificationAddDrawer from './StaffNotificationAddDrawer';
+import StaffNotificationTableHeader from './StaffNotificationTableHeader';
 
 // ** renders client column
 const renderClient = (row) => {
@@ -60,9 +56,7 @@ const StaffNotificationBodySection = () => {
 
   // ** Hooks
   const dispatch = useDispatch();
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
   const handleFilter = useCallback(
     async (val) => {
       try {

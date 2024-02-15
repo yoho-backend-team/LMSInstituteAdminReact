@@ -1,10 +1,9 @@
 import { Grid } from '@mui/material';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
-import Button from '@mui/material/Button';
-
 
 const StudentCertificateView = ({ open, handleViewClose }) => {
   return (
@@ -38,13 +37,13 @@ const StudentCertificateView = ({ open, handleViewClose }) => {
             <CoursePdfInput />
           </Grid>
           <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="error" onClick={handleViewClose}>
-                Cancel
-              </Button>
-            </Grid>
+            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+              Submit
+            </Button>
+            <Button variant="tonal" color="error" onClick={handleViewClose}>
+              Cancel
+            </Button>
+          </Grid>
         </DialogContent>
       </Dialog>
     </div>

@@ -1,47 +1,36 @@
 // ** React Imports
 import { forwardRef, useState } from 'react';
-
-// ** Next Import
-
 // ** MUI Imports
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
-import Autocomplete from '@mui/material/Autocomplete';
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Third Party Imports
 import format from 'date-fns/format';
-
-// ** Store & Actions Imports
-
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
 // ** Custom Components Imports
-import Avatar from '@mui/material/Avatar';
-import CustomChip from 'components/mui/chip';
-import { Link } from 'react-router-dom';
-
 import { TextField } from '@mui/material';
-import OptionsMenu from 'components/option-menu';
-
-import RefundCardHeader from './RefundCardHeader';
-import RefundAddDrawer from './RefundAddDrawer';
-import RefundEditDrawer from './RefundEditDrawer';
+import Avatar from '@mui/material/Avatar';
 import DeleteDialog from 'components/modal/DeleteModel';
-
+import CustomChip from 'components/mui/chip';
+import OptionsMenu from 'components/option-menu';
+import { Link } from 'react-router-dom';
+import RefundAddDrawer from './RefundAddDrawer';
+import RefundCardHeader from './RefundCardHeader';
+import RefundEditDrawer from './RefundEditDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -195,10 +184,8 @@ const RefundTable = () => {
   const [value, setValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
   const [editUserOpen, setEditUserOpen] = useState(false);
 
   const toggleEditUserDrawer = () => {
@@ -209,7 +196,6 @@ const RefundTable = () => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // ** Hooks
-
   const handleFilter = (val) => {
     setValue(val);
   };
@@ -330,15 +316,6 @@ const RefundTable = () => {
   ];
 
   const [selectedbatch, setSelectedbatch] = useState([]);
-
-  // const handlebatchChange = (newValue) => {
-  //   if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
-  //     setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
-  //   } else {
-  //     setSelectedbatch(newValue);
-  //   }
-  // };
-
   const students = [
     { students_id: '1', students_name: 'students 1' },
     { students_id: '2', students_name: 'students 2' },
@@ -346,15 +323,6 @@ const RefundTable = () => {
   ];
 
   const [selectedstudents, setSelectedstudents] = useState([]);
-
-  // const handlestudentsChange = (newValue) => {
-  //   if (newValue && newValue.some((option) => option.students_id === 'selectAll')) {
-  //     setSelectedstudents(students.filter((option) => option.students_id !== 'selectAll'));
-  //   } else {
-  //     setSelectedstudents(newValue);
-  //   }
-  // };
-
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -364,7 +332,7 @@ const RefundTable = () => {
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
@@ -423,7 +391,7 @@ const RefundTable = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                <Autocomplete
+                  <Autocomplete
                     multiple
                     id="select-multiple-chip"
                     options={[{ students_id: 'selectAll', students_name: 'Select All' }, ...students]}
@@ -480,7 +448,6 @@ const RefundTable = () => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-
               </Grid>
             </CardContent>
           </Card>
@@ -508,7 +475,6 @@ const RefundTable = () => {
           <DeleteDialog
             open={isDeleteDialogOpen}
             setOpen={setDeleteDialogOpen}
-            // handleSubmit={handleDeleteConfirm}
             description="Are you sure you want to delete this item?"
             title="Delete"
           />

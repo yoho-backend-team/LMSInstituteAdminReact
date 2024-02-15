@@ -1,29 +1,18 @@
-// material-ui
-
-// import MainCard from 'components/cards/MainCard';
+import { Chip as CustomChip, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-// import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-// import { styled } from '@mui/material/styles';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-// import CardActions from '@mui/material/CardActions';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
+import Typography from '@mui/material/Typography';
+import StaffManagement from 'components/cards/Skeleton/StaffManagement';
+import DeleteDialog from 'components/modal/DeleteModel';
+import Avatar from 'components/mui/avatar';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TeacherFilter from './TeacherFilterCard';
-// import { Link } from 'react-router-dom';
-import { Chip as CustomChip } from '@mui/material';
-import Pagination from '@mui/material/Pagination';
-import Avatar from 'components/mui/avatar';
-// import OptionsMenu from 'components/option-menu';
-import StaffManagement from 'components/cards/Skeleton/StaffManagement';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import MenuItem from '@mui/material/MenuItem';
-import { TextField } from '@mui/material';
-
-import DeleteDialog from 'components/modal/DeleteModel';
 
 const data = [
   {
@@ -129,10 +118,7 @@ const useTimeout = (callback, delay) => {
 
 const Teaching = () => {
   const [loading, setLoading] = useState(true);
-  // const [statusValue, setStatusValue] = useState('');
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
-
   useTimeout(() => {
     setLoading(false);
   }, 1000);
@@ -152,18 +138,6 @@ const Teaching = () => {
             {data.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4}>
                 <Card sx={{ position: 'relative' }}>
-                  {/* <OptionsMenu
-                    iconButtonProps={{
-                      size: 'small',
-                      sx: { top: 12, right: 12, position: 'absolute', color: 'text.disabled' }
-                    }}
-                    options={[
-                      'Share Connection',
-                      'Block Connection',
-                      { divider: true },
-                      { text: 'Delete', menuItemProps: { sx: { color: 'error.main' } } }
-                    ]}
-                  /> */}
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
@@ -171,7 +145,6 @@ const Teaching = () => {
                         {item.name}
                       </Typography>
                       <Typography variant="h6">{item.email}</Typography>
-                      {/* <Typography sx={{ mb: 2, color: 'text.secondary', fontWeight: 500 }}>{item.designation}</Typography> */}
                       <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
                         {item.chips &&
                           item.chips.map((chip, index) => (
@@ -205,7 +178,7 @@ const Teaching = () => {
                             select
                             fullWidth
                             label="Status"
-                            SelectProps={{ value: "", onChange: (e) => handleStatusChange(e) }}
+                            SelectProps={{ value: '', onChange: (e) => handleStatusChange(e) }}
                           >
                             <MenuItem value="1">Active</MenuItem>
                             <MenuItem value="0">Inactive</MenuItem>
@@ -231,7 +204,6 @@ const Teaching = () => {
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
-        // handleSubmit={handleDeleteConfirm}
         description="Are you sure you want to delete this item?"
         title="Delete"
       />

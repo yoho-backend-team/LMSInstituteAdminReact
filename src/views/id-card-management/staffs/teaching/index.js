@@ -1,24 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 // import Card from '@mui/material/Card';
-import { Avatar as CustomAvatar } from '@mui/material';
+import { Avatar as CustomAvatar, TextField } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import CustomChip from 'components/mui/chip';
 import MenuItem from '@mui/material/MenuItem';
-import { TextField } from '@mui/material';
-import StaffFilterCard from 'features/id-card-management/staff-id-cards/components/StaffFilterCard';
 import Pagination from '@mui/material/Pagination';
+import Typography from '@mui/material/Typography';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
-
-// import { Icon } from '@mui/material';
-// import Chip from '@mui/material/Chip';
-// import { Face } from '@mui/icons-material';
+import CustomChip from 'components/mui/chip';
+import StaffFilterCard from 'features/id-card-management/staff-id-cards/components/StaffFilterCard';
 
 const roleColors = {
   admin: 'error',
@@ -40,7 +35,6 @@ const TeachingIdCard = () => {
     role: 'admin',
     status: 'active',
     username: 'mdthasthakir',
-    // avatarColor: 'primary',
     country: 'El Salvador',
     company: 'Yotz PVT LTD',
     billing: 'Manual - Cash',
@@ -81,7 +75,6 @@ const TeachingIdCard = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <IdCardSkeleton />
           ) : (
             <Grid>
@@ -117,12 +110,9 @@ const TeachingIdCard = () => {
                           }
                         },
                         '.front, .back': {
-                          // boxSizing: 'border-box',
-                          // display: 'block',
                           position: 'absolute',
                           backfaceVisibility: 'hidden',
                           transition: 'transform ease 500ms'
-                          // zIndex: 2
                         },
                         '.front': {
                           transform: 'rotateY(0deg)'
@@ -144,7 +134,6 @@ const TeachingIdCard = () => {
                           ) : (
                             <CustomAvatar
                               skin="light"
-                              // variant="rounded"
                               color={statusColors.active}
                               sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
                             >
@@ -154,14 +143,7 @@ const TeachingIdCard = () => {
                           <Typography variant="h4" sx={{ mb: 2 }}>
                             {data.fullName}
                           </Typography>
-                          <CustomChip
-                            rounded
-                            skin="light"
-                            size="small"
-                            label={`@ ${data.username}`}
-                            color={statusColors.active}
-                            // sx={{ textTransform: 'capitalize' }}
-                          />
+                          <CustomChip rounded skin="light" size="small" label={`@ ${data.username}`} color={statusColors.active} />
                           <Box mt={3}>
                             <img
                               style={{ borderRadius: '10px' }}
@@ -171,45 +153,6 @@ const TeachingIdCard = () => {
                             />
                           </Box>
                         </CardContent>
-
-                        {/* <CardContent sx={{ pt: (theme) => `${theme.spacing(0)} !important` }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Box sx={{ mr: 4, alignItems: 'center' }}>
-                    <CustomChip
-                      rounded
-                      skin="light"
-                      size="small"
-                      label={data.role}
-                      color={roleColors[data.role]}
-                      sx={{ textTransform: 'capitalize' }}
-                    /> 
-                     <div style={{display:'flex'}}>
-                  <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>1.23k</Typography>
-                  <Typography variant="body2">Task Done</Typography>
-                </div> 
-                  <CustomAvatar skin="light" variant="rounded" sx={{ mr: 2.5, width: 38, height: 38 }}>
-                  <Icon fontSize="1.75rem" icon="tabler:checkbox" />
-                </CustomAvatar>
-                  </Box>
-                  <Box sx={{ alignItems: 'center' }}>
-                   <div>
-                  <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>568</Typography>
-                  <Typography variant="body2">Project Done</Typography>
-                </div>
-                <CustomAvatar skin="light" variant="rounded" sx={{ mr: 2.5, width: 38, height: 38 }}>
-                  <Icon fontSize="1.75rem" icon="tabler:briefcase" />
-                </CustomAvatar> 
-                     <CustomChip
-                      rounded
-                      skin="dark"
-                      size="small"
-                      label={data.role}
-                      color={roleColors[data.role]}
-                      sx={{ textTransform: 'capitalize' }}
-                    /> 
-                  </Box>
-                </Box>
-              </CardContent> */}
                       </Card>
                       <Card className="back" sx={{ width: '100%' }}>
                         <CardContent sx={{ pb: 3 }}>
@@ -225,19 +168,6 @@ const TeachingIdCard = () => {
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
                               <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
                             </Box>
-                            {/* <Box sx={{ display: 'flex', mb: 2, alignItems: 'center' }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
-                    <CustomChip
-                      rounded
-                      skin="light"
-                      size="small"
-                      label={data.status}
-                      color={statusColors[data.status]}
-                      sx={{
-                        textTransform: 'capitalize'
-                      }}
-                    />
-                  </Box> */}
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
                               <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
@@ -261,7 +191,7 @@ const TeachingIdCard = () => {
                           </Box>
 
                           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                          <TextField
+                            <TextField
                               select
                               fullWidth
                               label="Status"
@@ -272,19 +202,6 @@ const TeachingIdCard = () => {
                             </TextField>
                           </Box>
                         </CardContent>
-
-                        {/* <CardActions sx={{ display: 'flex', justifyContent: 'center', pt: 0 }}>
-                <Button
-                  variant="contained"
-                  sx={{ mr: 2 }}
-                  // onClick={handleEditClickOpen}
-                >
-                  Edit
-                </Button>
-                <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
-                  Suspend
-                </Button>
-              </CardActions> */}
                       </Card>
                     </Grid>
                   </Grid>
@@ -302,7 +219,6 @@ const TeachingIdCard = () => {
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
-        // handleSubmit={handleDeleteConfirm}
         description="Are you sure you want to delete this item?"
         title="Delete"
       />

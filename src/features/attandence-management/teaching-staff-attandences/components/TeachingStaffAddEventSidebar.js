@@ -1,24 +1,17 @@
 // ** React Imports
-import { useState, useEffect, forwardRef, useCallback, Fragment } from 'react';
-
+import { Fragment, forwardRef, useCallback, useEffect, useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
+import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-// import Switch from '@mui/material/Switch';
-// import FormControl from '@mui/material/FormControl';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-
 // ** Custom Component Import
-
 import { TextField } from '@mui/material';
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
 // ** Icon Imports
 import Icon from 'components/icon';
 
@@ -93,8 +86,6 @@ const TeachingStaffAddEventSidebar = (props) => {
     if (store?.selectedEvent) {
       dispatch(deleteEvent(store?.selectedEvent?.id));
     }
-
-    // attendanceApi.getEventById(store?.selectedEvent?.id).remove()
     handleSidebarClose();
   };
 
@@ -237,10 +228,8 @@ const TeachingStaffAddEventSidebar = (props) => {
               <DatePicker
                 selectsStart
                 id="event-start-date"
-                // endDate={values.endDate}
                 selected={values.attendance_date}
                 startDate={values.attendance_date}
-                // showTimeSelect={!values.allDay}
                 dateFormat={'yyyy-MM-dd'}
                 customInput={<PickersComponent label="Attendance Date" registername="attendance_date" />}
                 onChange={(date) => setValues({ ...values, attendance_date: new Date(date) })}

@@ -1,8 +1,5 @@
 // ** React Imports
 import { forwardRef, useState } from 'react';
-
-// ** Next Import
-
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -15,35 +12,27 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-
 // ** Icon Imports
 import Icon from 'components/icon';
-
 // ** Third Party Imports
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
-
-// ** Store & Actions Imports
-
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
 // ** Custom Components Imports
-import Avatar from '@mui/material/Avatar';
-import CustomChip from 'components/mui/chip';
-import { Link } from 'react-router-dom';
-
-import { TextField } from '@mui/material';
-import OptionsMenu from 'components/option-menu';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Checkbox from '@mui/material/Checkbox';
+import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import FeesCardHeader from './FeesCardHeader';
-import FeesAddDrawer from './FeesAddDrawer';
-import FeesEditDrawer from './FeesEditDrawer';
+import Avatar from '@mui/material/Avatar';
+import Checkbox from '@mui/material/Checkbox';
 import DeleteDialog from 'components/modal/DeleteModel';
-
+import CustomChip from 'components/mui/chip';
+import OptionsMenu from 'components/option-menu';
+import { Link } from 'react-router-dom';
+import FeesAddDrawer from './FeesAddDrawer';
+import FeesCardHeader from './FeesCardHeader';
+import FeesEditDrawer from './FeesEditDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -91,10 +80,8 @@ const FeesTable = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -108,7 +95,6 @@ const FeesTable = () => {
   };
 
   // ** Hooks
-
   const handleFilter = (val) => {
     setValue(val);
   };
@@ -495,11 +481,9 @@ const FeesTable = () => {
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
-      {/* Delete Modal */}
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
-        // handleSubmit={handleDeleteConfirm}
         description="Are you sure you want to delete this item?"
         title="Delete"
       />

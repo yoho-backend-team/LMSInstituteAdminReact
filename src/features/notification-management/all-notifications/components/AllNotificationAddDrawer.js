@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
-
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,23 +8,15 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Icon from 'components/icon';
-
-// import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import Icon from 'components/icon';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -64,8 +55,6 @@ const names = [
   'Virginia Andrews',
   'Kelly Snyder'
 ];
-
-
 
 const defaultValues = {
   email: '',
@@ -132,9 +121,7 @@ const AllNotificationAddDrawer = (props) => {
   });
 
   const onSubmit = (data) => {
-    // Handle form submission with validated data
     console.log(data);
-
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);
@@ -251,7 +238,6 @@ const AllNotificationAddDrawer = (props) => {
               )}
             />
           </Grid>
-
 
           <Grid item xs={12} sm={12}>
             <TextField

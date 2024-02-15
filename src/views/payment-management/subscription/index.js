@@ -1,14 +1,10 @@
 // ** React Imports
 import { useState } from 'react';
-
 // ** MUI Imports
 import Card from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import MuiCardContent from '@mui/material/CardContent';
-
 // ** Third Party Imports
-// import axios from 'axios';
-
 import SubscriptionHeader from 'features/payment-management/subscriptions/components/SubscriptionHeader';
 import SubscriptionCTA from 'features/payment-management/subscriptions/components/SubscriptionCTA';
 import SubscriptionPlans from 'features/payment-management/subscriptions/components/SubscriptionPlans';
@@ -160,9 +156,7 @@ const data = {
   }
 };
 
-
 const yourFaqData = {
-  // Other properties...
   faq: [
     {
       id: 'responses-limit',
@@ -197,7 +191,6 @@ const yourFaqData = {
 const Subscription = () => {
   // ** States
   const [plan, setPlan] = useState('annually');
-
   const handleChange = (e) => {
     if (e.target.checked) {
       setPlan('annually');
@@ -222,16 +215,5 @@ const Subscription = () => {
     </Card>
   );
 };
-
-// export const getStaticProps = async () => {
-//   const res = await axios.get('/pages/pricing');
-//   const apiData = res.data;
-
-//   return {
-//     props: {
-//       apiData
-//     }
-//   };
-// };
 
 export default Subscription;

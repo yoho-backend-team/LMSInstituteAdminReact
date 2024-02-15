@@ -1,17 +1,12 @@
-import React from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
-// import { useState } from 'react';
 
 const RefundCardHeader = (props) => {
-  const { value, handleFilter,toggle } = props;
-
-
-
+  const { value, handleFilter, toggle } = props;
   return (
     <>
       <Box
@@ -35,7 +30,6 @@ const RefundCardHeader = (props) => {
           placeholder="Search Refund"
           onChange={(e) => handleFilter(e.target.value)}
         />
-
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={toggle} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Refund

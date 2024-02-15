@@ -1,26 +1,17 @@
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-// import CardMedia from '@mui/material/CardMedia';
 import TimerIcon from '@mui/icons-material/Timer';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-import Button from '@mui/material/Button';
-// import { Link } from 'react-router-dom';
-
-// ** React Router Import
-// import { useState } from 'react';
 
 const StudentAttendanceCard = () => {
-  // const [copiedIndex, setCopiedIndex] = useState(null);
-
   const cardData = [
-    // Add your card data here
-    // For example:
     {
       classname: 'Introduction to App',
       location: 'Kumbakonam',
@@ -109,19 +100,6 @@ const StudentAttendanceCard = () => {
               borderTop: card.status === 'active' ? '4px solid green' : '4px solid #7cf2e1'
             }}
           >
-            {/* <CardMedia sx={{ height: '12.625rem' }} image={card.image} />
-            <Avatar
-              alt={card.classname}
-              src={card.avatar}
-              sx={{
-                width: 75,
-                height: 75,
-                left: '1.313rem',
-                top: '10.28125rem',
-                position: 'absolute',
-                border: (theme) => `0.25rem solid ${theme.palette.common.white}`
-              }}
-            /> */}
             <CardContent>
               <Box
                 sx={{
@@ -139,14 +117,14 @@ const StudentAttendanceCard = () => {
 
                 <Box
                   sx={{
-                    borderRadius: '10%', // Make it round
-                    border: '1px solid grey', // Add border
-                    padding: '3px 9px', // Adjust padding as needed
+                    borderRadius: '10%',
+                    border: '1px solid grey',
+                    padding: '3px 9px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     '& .MuiTypography-body2': {
-                      margin: 0 // Remove default margin on Typography
+                      margin: 0
                     }
                   }}
                 >
@@ -158,27 +136,6 @@ const StudentAttendanceCard = () => {
                 <TimerIcon sx={{ marginRight: 1 }} />
                 <Typography variant="body2">{card.dateandtime}</Typography>
               </Box>
-              {/* <Box
-                  sx={{
-                    gap: 2,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <AvatarGroup max={4} sx={{}}>
-                    {card.friends.map((friend, friendIndex) => (
-                      <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
-                    ))}
-                  </AvatarGroup>
-
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
-                  </Box>
-                </Box> */}
-
               <Box
                 sx={{
                   gap: 2,
@@ -193,28 +150,12 @@ const StudentAttendanceCard = () => {
                     <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
                   ))}
                 </AvatarGroup>
-                {/* {card.friends.length > 4 && (
-                  <Avatar
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      backgroundColor: 'primary.main',
-                      color: 'common.white',
-                      fontSize: 14,
-                      fontWeight: 'bold',
-                      marginLeft: -8
-                    }}
-                  >
-                    +{card.friends.length - 4}
-                  </Avatar>
-                )} */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
                 </Box>
               </Box>
               <Divider sx={{ my: 2 }} />
-
-              <Box  sx={{ display: 'flex', justifyContent:'flex-end', alignItems: 'flex-end', textDecoration: 'none' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', textDecoration: 'none' }}>
                 <Button variant="tonal" sx={{ px: 2 }}>
                   View Attendance
                 </Button>

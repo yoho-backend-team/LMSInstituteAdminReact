@@ -845,9 +845,6 @@ export const getStaticPaths = () => {
 };
 
 export const getStaticProps = async ({ params }) => {
-  // const res = await axios.get('../view-profile/mockData/invoice')
-  // const invoiceData = res.data.allData
-
   return {
     props: {
       invoiceData,

@@ -1,10 +1,8 @@
 // ** Mui Components
 import { Box, Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
-
 // ** React  Import
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
 // ** Custom Components
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,7 +15,6 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
-
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
@@ -33,13 +30,12 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 const Batch = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  
+
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
-    // If the status is changed, open the delete dialog
     setDeleteDialogOpen(true);
   };
-  
+
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
@@ -238,7 +234,6 @@ const Batch = () => {
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ alignItems: 'center' }}>
-                {/* <Avatar src={item.avatar} sx={{ mr: 2.5, height: 38, width: 38 }} /> */}
                 <Typography variant="h4">{item.title}</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -301,7 +296,7 @@ const Batch = () => {
                 </TextField>
               </Box>
               <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                <IconButton  onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
+                <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
                   <Icon icon="tabler:archive-filled" />
                 </IconButton>
                 <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
@@ -334,7 +329,6 @@ const Batch = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <BatchSkeleton />
           ) : (
             <Grid>
@@ -348,11 +342,9 @@ const Batch = () => {
                 </div>
               </Grid>
               <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
-
               <DeleteDialog
                 open={isDeleteDialogOpen}
                 setOpen={setDeleteDialogOpen}
-                // handleSubmit={handleDeleteConfirm}
                 description="Are you sure you want to delete this item?"
                 title="Delete"
               />

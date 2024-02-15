@@ -1,20 +1,12 @@
-import React from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
-// import { useState } from 'react';
-// import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
 
 const NonTeachingStaffCardHeader = (props) => {
   const { value, handleFilter } = props;
-  // const [isAddModalOpen, setAddModalOpen] = useState(false);
-
-  // const handleAddClose = () => {
-  //   setAddModalOpen(false);
-  // };
 
   const handleAdd = (itemId) => {
     console.log('Add clicked for item ID:', itemId);
@@ -24,7 +16,6 @@ const NonTeachingStaffCardHeader = (props) => {
     <>
       <Box
         sx={{
-          // p: 5,
           pb: 1,
           pt: 3,
           width: '100%',
@@ -49,7 +40,6 @@ const NonTeachingStaffCardHeader = (props) => {
           </Button>
         </Box>
       </Box>
-      {/* <LiveClassAddModal open={isAddModalOpen} handleAddClose={handleAddClose} /> */}
     </>
   );
 };

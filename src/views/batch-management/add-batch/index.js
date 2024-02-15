@@ -4,22 +4,17 @@ import StudentTableList from 'features/batch-management/add-batch/components/Stu
 import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
-
-// ==============================|| SAMPLE PAGE ||============================== //
 // ** React Imports
 import { forwardRef, useState } from 'react';
-
 // ** MUI Imports
-import Card from '@mui/material/Card';
-
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
 // ** Custom Component Import
 import { TextField as CustomTextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomChip from 'components/mui/chip';
@@ -107,8 +102,7 @@ const AddBatchPage = () => {
   };
 
   const onSubmit = (data) => {
-    // Handle form submission
-    console.log(errors); // Log validation errors
+    console.log(errors);
     console.log(data);
   };
   const handleStartDateChange = (date) => {
@@ -266,7 +260,7 @@ const AddBatchPage = () => {
                   </Grid>
                 </Grid>
               </CardContent>
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 6,marginBottom:12}}>
+              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 6, marginBottom: 12 }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                     Update

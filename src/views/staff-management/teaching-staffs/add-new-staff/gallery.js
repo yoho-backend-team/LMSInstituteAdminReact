@@ -1,16 +1,13 @@
 import { Box, Button } from '@mui/material';
-import React from 'react';
-import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 
 const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleImageChange = (event) => {
     const files = event.target.files;
-
     // Convert FileList to an array
     const filesArray = Array.from(files);
-
     // Update galleryImages state with the new files
     setGalleryImages([...galleryImages, ...filesArray]);
   };
@@ -19,7 +16,6 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
     // Create a copy of the array without the selected image
     const updatedImages = [...galleryImages];
     updatedImages.splice(index, 1);
-
     // Update galleryImages state
     setGalleryImages(updatedImages);
   };

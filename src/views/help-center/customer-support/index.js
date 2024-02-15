@@ -1,18 +1,16 @@
 // ** React Imports
-import { Fragment, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Icon from 'components/icon';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import HelpHeader from 'features/help-center/customer-support/components/helpHeader';
-import HelpFooter from 'features/help-center/customer-support/components/helpFooter';
-import HelpPage from 'features/help-center/customer-support/components/helpPage';
 import MainCard from 'components/cards/MainCard';
-
+import Icon from 'components/icon';
+import HelpFooter from 'features/help-center/customer-support/components/helpFooter';
+import HelpHeader from 'features/help-center/customer-support/components/helpHeader';
+import HelpPage from 'features/help-center/customer-support/components/helpPage';
+import { Fragment, useEffect, useState } from 'react';
 
 const data = {
   faqData: {
-    // payment
     payment: {
       id: 'payment',
       title: 'Payment',
@@ -205,18 +203,18 @@ const CustomerSupport = () => {
     </Box>
   );
   return (
-  <MainCard title="Customer Suppport">
-   <Fragment>
-      <HelpHeader />
-      {data !== null ? (
-        <HelpPage SetLoad={SetLoad} data={data} helps={helps} activeTab={activeTab} handleChange={handleChange} />
-      ) : (
-        renderNoResult
-      )}
-      <HelpFooter />
-    </Fragment>
-  </MainCard>
-  )
+    <MainCard title="Customer Suppport">
+      <Fragment>
+        <HelpHeader />
+        {data !== null ? (
+          <HelpPage SetLoad={SetLoad} data={data} helps={helps} activeTab={activeTab} handleChange={handleChange} />
+        ) : (
+          renderNoResult
+        )}
+        <HelpFooter />
+      </Fragment>
+    </MainCard>
+  );
 };
 
 export default CustomerSupport;

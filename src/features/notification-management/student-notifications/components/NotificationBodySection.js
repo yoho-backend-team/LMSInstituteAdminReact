@@ -1,26 +1,23 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-
 // ** MUI Imports
 import { Button } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-import Avatar from '@mui/material/Avatar';
 // ** React Router Import
 import { Link } from 'react-router-dom';
-
 // ** Custom Components Imports
-
-import NotificationTableHeader from './NotificationTableHeader';
-import NotificationAddDrawer from './NotificationAddDrawer';
 import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import NotificationAddDrawer from './NotificationAddDrawer';
+import NotificationTableHeader from './NotificationTableHeader';
 
 // ** renders client column
 const renderClient = (row) => {
@@ -59,7 +56,6 @@ const NotificationBodySection = () => {
 
   // ** Hooks
   const dispatch = useDispatch();
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleFilter = useCallback(
@@ -184,65 +180,62 @@ const NotificationBodySection = () => {
 
   const notification = [
     {
-        id: 1,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 100,
-        issuedDate: '2025-01-01',
-        balance: 55,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 1,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 100,
+      issuedDate: '2025-01-01',
+      balance: 55,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 2,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'arunbalaji.com',
-        total: 200,
-        issuedDate: '2000-01-01',
-        balance: 50,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 2,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'arunbalaji.com',
+      total: 200,
+      issuedDate: '2000-01-01',
+      balance: 50,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 3,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 300,
-        issuedDate: '25-01-01',
-        balance: 40,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 3,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 300,
+      issuedDate: '25-01-01',
+      balance: 40,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 4,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 40,
-        issuedDate: '202-01-01',
-        balance: 30,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 4,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 40,
+      issuedDate: '202-01-01',
+      balance: 30,
+      avatar: '',
+      avatarColor: 'primary'
+    },
     {
-        id: 5,
-        invoiceStatus: 'Sent',
-        name: 'John Doe',
-        companyEmail: 'john.doe@example.com',
-        total: 50,
-        issuedDate: '20-01-01',
-        balance: 0,
-        avatar: '',
-        avatarColor: 'primary'
-      },
+      id: 5,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 50,
+      issuedDate: '20-01-01',
+      balance: 0,
+      avatar: '',
+      avatarColor: 'primary'
+    }
+  ];
 
-
-
-      ];
-  
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />

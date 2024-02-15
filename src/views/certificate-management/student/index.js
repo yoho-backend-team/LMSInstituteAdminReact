@@ -1,12 +1,9 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
-
 // ** MUI Imports
-import Box from '@mui/material/Box';
-// import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-// import CardHeader from '@mui/material/CardHeader';
 import { IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 import { useEffect } from 'react';
@@ -14,16 +11,16 @@ import { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import CustomTextField from 'components/mui/text-field';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
-import { useDispatch } from 'react-redux';
-import DeleteDialog from 'components/modal/DeleteModel';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import DeleteDialog from 'components/modal/DeleteModel';
+import CustomTextField from 'components/mui/text-field';
 import StudentCertificateAddDrawer from 'features/certificate-management/student-certificates/components/StudentCertificateAddDrawer';
 import StudentCertificateEdit from 'features/certificate-management/student-certificates/components/StudentCertificateEdit';
 import StudentCertificateTableHeader from 'features/certificate-management/student-certificates/components/StudentCertificateTableHeader';
 import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
+import { setUsers } from 'features/user-management/users/redux/userSlices';
+import { searchUsers } from 'features/user-management/users/services/userServices';
+import { useDispatch } from 'react-redux';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -47,7 +44,6 @@ const StudenrCertificate = () => {
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
-    // toggleEditUserDrawer();
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -196,7 +192,6 @@ const StudenrCertificate = () => {
   const columns = [
     {
       flex: 0.8,
-      // minWidth: 120,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -209,7 +204,6 @@ const StudenrCertificate = () => {
     },
     {
       flex: 1.5,
-      // minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -218,7 +212,6 @@ const StudenrCertificate = () => {
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
-                // component={Link}
                 sx={{
                   fontWeight: 500,
                   textDecoration: 'none',
@@ -235,7 +228,6 @@ const StudenrCertificate = () => {
     },
     {
       flex: 1,
-      // minWidth: 190,
       field: 'description',
       headerName: 'Description',
       renderCell: ({ row }) => {
@@ -249,7 +241,6 @@ const StudenrCertificate = () => {
     {
       flex: 1.5,
       field: 'course',
-      // minWidth: 170,
       headerName: 'course',
       renderCell: ({ row }) => {
         return (
@@ -259,12 +250,11 @@ const StudenrCertificate = () => {
             </Typography>
           </Box>
         );
-      } 
+      }
     },
 
     {
       flex: 1,
-      // minWidth: 110,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -280,7 +270,6 @@ const StudenrCertificate = () => {
     },
     {
       flex: 1,
-      // minWidth: 100,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -323,7 +312,6 @@ const StudenrCertificate = () => {
           <DeleteDialog
             open={isDeleteDialogOpen}
             setOpen={setDeleteDialogOpen}
-            // handleSubmit={handleDeleteConfirm}
             description="Are you sure you want to delete this item?"
             title="Delete"
           />

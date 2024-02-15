@@ -9,8 +9,6 @@ import Avatar from 'components/mui/avatar';
 import { Link } from 'react-router-dom';
 
 const NonTeachingStaffCard = () => {
-  // Dummy data array
-
   const data = [
     {
       id: '1',
@@ -133,14 +131,14 @@ const NonTeachingStaffCard = () => {
       status: 'Active'
     }
   ];
+
   return (
     <>
       <Grid>
-        <Grid container xs={12} spacing={2} mt={2} sx={{display:"flex",justifyContent:"center"}}>
+        <Grid container xs={12} spacing={2} mt={2} sx={{ display: 'flex', justifyContent: 'center' }}>
           {data.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
               <Card sx={{ position: 'relative', p: 1.5 }}>
-           
                 <CardContent sx={{ pt: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
@@ -170,19 +168,9 @@ const NonTeachingStaffCard = () => {
                         <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                       </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' ,mt:1}}>
-                      {/* <Grid>
-                        <TextField
-                          size="small"
-                          select
-                          fullWidth
-                          label="Status"
-                          SelectProps={{ value: statusValue, onChange: handleStatusValue }}
-                        >
-                          <MenuItem value="Active">Active</MenuItem>
-                          <MenuItem value="Deactive">Deactive</MenuItem>
-                        </TextField>
-                      </Grid> */}
+                    <Box
+                      sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
+                    >
                       <Grid>
                         <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
                           View Attendance

@@ -16,7 +16,6 @@ import CustomChip from 'components/mui/chip';
 const StudentCertificateTableHeader = (props) => {
   // ** Props
   const { handleFilter, toggle, value } = props;
-
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedbatch, setSelectedbatch] = useState([]);
 
