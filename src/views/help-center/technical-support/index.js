@@ -164,6 +164,7 @@ const TechnicalSupport = () => {
   const [helps, setHelps] = useState([]);
   const [activeTab, setActiveTab] = useState('');
   const [load, SetLoad] = useState(false);
+  
   useEffect(() => {
     getAllHelps();
   }, [load]);
