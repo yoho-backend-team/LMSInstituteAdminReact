@@ -98,8 +98,8 @@ const DefaultPalette = () => {
   const darkPaperBgColor = '#2F3349';
   const mainColor = mode === 'light' ? lightColor : darkColor;
 
-  const primary = generatePrimaryObject('#64987E');
-  const secondary = generatePrimaryObject('#F2CC8E');
+  const primary = generatePrimaryObject('#D80032');
+  const secondary = generatePrimaryObject('#F79BD3');
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor;
