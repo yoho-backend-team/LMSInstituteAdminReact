@@ -1,20 +1,14 @@
-// ** Next Import
-// import Link from 'next/link';
 import { Link } from 'react-router-dom';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
 import { TextField } from '@mui/material';
-const TableHeader = (props) => {
-  // ** Props
-  const { value, handleFilter } = props;
 
+const TableHeader = (props) => {
+  const { value, handleFilter } = props;
   return (
     <Box
       sx={{
-        // p: 5,
         pb: 1,
         pt: 3,
         width: '100%',
@@ -32,7 +26,6 @@ const TableHeader = (props) => {
         placeholder="Search Branch"
         onChange={(e) => handleFilter(e.target.value)}
       />
-
       <Box
         component={Link}
         to="add"

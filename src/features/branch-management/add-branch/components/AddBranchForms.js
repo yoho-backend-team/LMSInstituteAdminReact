@@ -1,16 +1,11 @@
-// ** React Imports
-
-// ** MUI Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from 'react-router-dom';
 import CardContent from '@mui/material/CardContent';
-// ** Custom Component Import
 import { Button, TextField as CustomTextField } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-// ** Third Party Imports
 import { addBranch } from 'features/branch-management/branches/services/branchServices';
 import toast from 'react-hot-toast';
 
@@ -36,7 +31,6 @@ const branchSchema = yup.object().shape({
 });
 
 const AddBranchForms = () => {
-  // ** States
   const navigate = useNavigate();
 
   const {
@@ -49,7 +43,6 @@ const AddBranchForms = () => {
   });
 
   const onSubmit = async (data) => {
-    // Handle form submission
     console.log(data);
     const dummyData = {
       branch_name: data.branchName,
@@ -67,7 +60,7 @@ const AddBranchForms = () => {
 
       if (result.success) {
         toast.success(result.message);
-        navigate(-1)
+        navigate(-1);
       } else {
         toast.error(result.message);
       }
