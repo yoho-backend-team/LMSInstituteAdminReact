@@ -100,7 +100,7 @@ const OnlineClassCard = () => {
     }
     // Add more card data as needed
   ];
-
+  
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const handleEditClose = () => {
     setEditModalOpen(false);

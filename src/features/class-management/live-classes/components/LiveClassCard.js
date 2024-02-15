@@ -251,7 +251,7 @@ const LiveClassCard = () => {
                   </Box>
 
                   <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
+                    <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }} href="view">
                       <Icon icon="tabler:eye" />
                     </IconButton>
                     <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="secondary" sx={{ ml: 1 }}>

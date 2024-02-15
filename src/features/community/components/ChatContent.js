@@ -23,6 +23,7 @@ const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
 }));
 
 const ChatContent = (props) => {
+  // ** Props
   const {
     store,
     hidden,
@@ -36,15 +37,19 @@ const ChatContent = (props) => {
     handleLeftSidebarToggle,
     handleUserProfileRightSidebarToggle
   } = props;
+  } = props;
 
   const handleStartConversation = () => {
     if (!mdAbove) {
       handleLeftSidebarToggle();
+      handleLeftSidebarToggle();
     }
+  };
   };
 
   const renderContent = () => {
     if (store) {
+      const selectedChat = store.selectedChat;
       const selectedChat = store.selectedChat;
       if (!selectedChat) {
         return (
@@ -66,6 +71,7 @@ const ChatContent = (props) => {
               }}
             >
               <Icon icon="tabler:message" fontSize="3.125rem" />
+              <Icon icon="tabler:message" fontSize="3.125rem" />
             </MuiAvatar>
             <Box
               onClick={handleStartConversation}
@@ -79,8 +85,10 @@ const ChatContent = (props) => {
               }}
             >
               <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
+              <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
             </Box>
           </ChatWrapperStartChat>
+        );
         );
       } else {
         return (
@@ -101,16 +109,20 @@ const ChatContent = (props) => {
                 justifyContent: 'space-between',
                 backgroundColor: 'background.paper',
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`
+                borderBottom: (theme) => `1px solid ${theme.palette.divider}`
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {mdAbove ? null : (
                   <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
                     <Icon icon="tabler:menu-2" />
+                    <Icon icon="tabler:menu-2" />
                   </IconButton>
                 )}
                 <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                   <Badge
+                    overlap="circular"
                     overlap="circular"
                     anchorOrigin={{
                       vertical: 'bottom',
@@ -120,11 +132,13 @@ const ChatContent = (props) => {
                     badgeContent={
                       <Box
                         component="span"
+                        component="span"
                         sx={{
                           width: 8,
                           height: 8,
                           borderRadius: '50%',
                           color: `${statusObj[selectedChat.contact?.status]}.main`,
+                          boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
                           boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
                           backgroundColor: `${statusObj[selectedChat.contact?.status]}.main`
                         }}
@@ -133,10 +147,13 @@ const ChatContent = (props) => {
                   >
                     {selectedChat.contact.avatar ? (
                       <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
+                      <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
                     ) : (
                       <CustomAvatar
                         skin="light"
+                        skin="light"
                         color={selectedChat.contact.avatarColor}
+                        sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                         sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                       >
                         {getInitials(selectedChat.contact.fullName)}
@@ -144,6 +161,7 @@ const ChatContent = (props) => {
                     )}
                   </Badge>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography variant="h6">{selectedChat.contact.fullName}</Typography>
                     <Typography variant="h6">{selectedChat.contact.fullName}</Typography>
                     <Typography sx={{ color: 'text.disabled' }}>{selectedChat.contact.role}</Typography>
                   </Box>
@@ -153,6 +171,7 @@ const ChatContent = (props) => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <OptionsMenu
                   menuProps={{ sx: { mt: 2 } }}
+                  icon={<Icon icon="tabler:dots-vertical" />}
                   icon={<Icon icon="tabler:dots-vertical" />}
                   iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
                   options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
@@ -175,13 +194,19 @@ const ChatContent = (props) => {
             />
           </Box>
         );
+        );
       }
     } else {
       return null;
+      return null;
     }
+  };
   };
 
   return renderContent();
 };
+  return renderContent();
+};
 
+export default ChatContent;
 export default ChatContent;
