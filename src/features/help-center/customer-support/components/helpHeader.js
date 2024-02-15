@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import ListItem from '@mui/material/ListItem';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-import ListItemButton from '@mui/material/ListItemButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import { TextField } from '@mui/material';
-import CustomAutocomplete from 'components/mui/autocomplete';
+import CardContent from '@mui/material/CardContent';
+import InputAdornment from '@mui/material/InputAdornment';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import IconifyIcon from 'components/icon';
+import CustomAutocomplete from 'components/mui/autocomplete';
+import { useState } from 'react';
 
 const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -90,7 +90,6 @@ const HelpHeader = ({ allArticles }) => {
           ) : null;
         }}
       />
-
       <Typography sx={{ color: 'text.secondary' }}>Common troubleshooting topics: eCommerce, Blogging to payment</Typography>
     </CardContent>
   );

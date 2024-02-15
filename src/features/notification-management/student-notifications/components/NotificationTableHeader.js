@@ -1,15 +1,13 @@
 // ** MUI Imports
+import { Grid, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { Grid, TextField } from '@mui/material';
-
 // ** Icon Imports
 import Icon from 'components/icon';
 
 const NotificationTableHeader = (props) => {
   // ** Props
   const { handleFilter, toggle, value } = props;
-
   return (
     <Box
       sx={{

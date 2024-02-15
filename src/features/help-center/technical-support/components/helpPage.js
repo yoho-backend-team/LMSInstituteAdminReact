@@ -1,5 +1,3 @@
-import Icon from 'components/icon';
-import CustomAvatar from 'components/mui/avatar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import TabContext from '@mui/lab/TabContext';
@@ -16,8 +14,10 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { useState } from 'react';
+import Icon from 'components/icon';
+import CustomAvatar from 'components/mui/avatar';
 import DeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
+import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
 
@@ -219,7 +219,11 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
                 '& img': { maxWidth: '100%', display: { xs: 'none', md: 'block' } }
               }}
             >
-              <img src="https://cdni.iconscout.com/illustration/free/thumb/free-women-web-developer-with-laptop-2040890-1721886.png?f=webp" alt="illustration" width="230" />
+              <img
+                src="https://cdni.iconscout.com/illustration/free/thumb/free-women-web-developer-with-laptop-2040890-1721886.png?f=webp"
+                alt="illustration"
+                width="230"
+              />
             </Box>
           </Box>
           {renderTabContent()}

@@ -1,6 +1,5 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
-
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,24 +8,16 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-
-// ** Custom Component Import
-
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Icon from 'components/icon';
-import CustomAutocomplete from 'components/mui/autocomplete';
-
-// import toast from 'react-hot-toast';
-
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
+import Icon from 'components/icon';
+import CustomAutocomplete from 'components/mui/autocomplete';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -69,8 +60,6 @@ const names = [
   'Kelly Snyder'
 ];
 
-
-
 const staffs = [
   { title: 'Das Boot', year: 1981 },
   { title: 'Citizen Kane', year: 1941 },
@@ -93,10 +82,8 @@ const defaultValues = {
 const StaffNotificationAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
-
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
-
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
@@ -144,9 +131,7 @@ const StaffNotificationAddDrawer = (props) => {
   });
 
   const onSubmit = (data) => {
-    // Handle form submission with validated data
     console.log(data);
-
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     console.log(bodyFormData);
@@ -292,7 +277,7 @@ const StaffNotificationAddDrawer = (props) => {
               options={staffs}
               id="autocomplete-limit-tags-students"
               getOptionLabel={(option) => (option && option.title) || ''}
-              defaultValue={staffs.slice(0, 3)} // Adjust this based on your requirements
+              defaultValue={staffs.slice(0, 3)}
               renderInput={(params) => (
                 <TextField
                   {...params}
