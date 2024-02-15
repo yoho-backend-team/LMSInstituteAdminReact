@@ -1,14 +1,3 @@
-import { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/community/components/AppChat';
-import { useDispatch, useSelector } from 'react-redux';
-import { formatDateToMonthShort } from 'utils/format';
-import { getInitials } from 'utils/get-initials';
-import CommunitySkeleton from 'components/cards/Skeleton/CommunitySkeleton';
-import ChatContent from 'features/community/components/ChatContent';
-import SidebarLeft from 'features/community/components/SidebarLeft';
 // ** React Imports
 import { useEffect, useState } from 'react';
 
@@ -39,20 +28,6 @@ const useTimeout = (callback, delay) => {
 };
 
 const Community = () => {
-  const [userStatus, setUserStatus] = useState('online');
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
-  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
-  const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
-
-  const theme = useTheme();
-  const dispatch = useDispatch();
-  const hidden = useMediaQuery(theme.breakpoints.down('lg'));
-  const store = useSelector((state) => state.chat);
-
-  const skin = 'default';
-  const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
-  const sidebarWidth = smAbove ? 360 : 300;
-  const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
   // ** States
   const [userStatus, setUserStatus] = useState('online');
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -77,18 +52,11 @@ const Community = () => {
     online: 'success',
     offline: 'secondary'
   };
-  };
+
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
 
-  const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
-  const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
-  const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
-  console.log(selectChat);
-    dispatch(fetchUserProfile());
-    // dispatch(fetchChatsContacts())
-  }, [dispatch]);
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
@@ -102,7 +70,6 @@ const Community = () => {
   return (
     <>
       {loading ? (
-        <CommunitySkeleton />
         <CommunitySkeleton />
       ) : (
         <Box
@@ -157,9 +124,5 @@ const Community = () => {
   );
 };
 Community.contentHeightFixed = true;
-  );
-};
-Community.contentHeightFixed = true;
 
-export default Community;
 export default Community;
