@@ -1,9 +1,7 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import { useEffect } from 'react';
-// ** Custom Component Import
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, TextField as CustomTextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,8 +10,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { updateBranch } from '../../services/branchServices';
 import toast from 'react-hot-toast';
-
-// ** Third Party Imports
 import * as yup from 'yup';
 
 const branchSchema = yup.object().shape({
@@ -41,7 +37,6 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
     }
   }, [selectedBranch]);
 
-  // ** States
   const {
     handleSubmit,
     control,
@@ -52,7 +47,6 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
   });
 
   const onSubmit = async (data) => {
-    // Handle form submission
     const dummyData = {
       branch_name: data.branchName,
       id: selectedBranch.id,

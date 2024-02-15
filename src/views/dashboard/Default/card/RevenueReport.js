@@ -1,17 +1,10 @@
-// ** React Imports
-
-// ** MUI Imports
 import { Box, MenuItem, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { useTheme } from '@mui/material/styles';
 import CustomTextField from 'components/mui/text-field';
-
-// ** Custom Components Import
 import ReactApexChart from 'react-apexcharts';
-
-// ** Util Import
 
 const tabData = [
   {
@@ -37,13 +30,8 @@ const tabData = [
 ];
 
 const RevenueReport = () => {
-  // ** State
-
-  // ** Hook
   const theme = useTheme();
-
   const colors = Array(9).fill(theme.palette.primary.main);
-
   const options = {
     chart: {
       parentHeightOffset: 0,

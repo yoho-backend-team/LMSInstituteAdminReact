@@ -14,19 +14,16 @@ import { styled } from '@mui/material/styles';
 
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import * as yup from 'yup';
 
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import CustomAutocomplete from 'components/mui/autocomplete';
 
 // import toast from 'react-hot-toast';
 
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -37,97 +34,12 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  branch: yup.array().required('Branch is required').min(1, 'Select at least one branch'),
-  course: yup.array().required('Course is required').min(1, 'Select at least one course'),
-  batch: yup.array().required('Batch is required').min(1, 'Select at least one batch'),
-  students: yup.array().required('Students is required').min(1, 'Select at least one student'),
+  course: yup.string().required('Course is required'),
+  batch: yup.string().required('Batch is required'),
+  students: yup.string().required('Students is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
-
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 },
-  { title: '12 Angry Men', year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: 'Fight Club', year: 1999 },
-  { title: 'The Lord of the Rings: The Fellowship of the Ring', year: 2001 },
-  { title: 'Star Wars: Episode V - The Empire Strikes Back', year: 1980 },
-  { title: 'Forrest Gump', year: 1994 },
-  { title: 'Inception', year: 2010 },
-  { title: 'The Lord of the Rings: The Two Towers', year: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: 'Goodfellas', year: 1990 },
-  { title: 'The Matrix', year: 1999 },
-  { title: 'Seven Samurai', year: 1954 },
-  { title: 'Star Wars: Episode IV - A New Hope', year: 1977 },
-  { title: 'City of God', year: 2002 },
-  { title: 'Se7en', year: 1995 },
-  { title: 'The Silence of the Lambs', year: 1991 },
-  { title: 'Gladiator', year: 2000 },
-  { title: 'Memento', year: 2000 },
-  { title: 'The Prestige', year: 2006 },
-  { title: 'The Lion King', year: 1994 },
-  { title: 'Apocalypse Now', year: 1979 },
-  { title: 'Django Unchained', year: 2012 },
-  { title: 'The Shining', year: 1980 },
-  { title: 'WALL·E', year: 2008 },
-  { title: 'American Beauty', year: 1999 },
-  { title: 'The Dark Knight Rises', year: 2012 },
-  { title: 'Princess Mononoke', year: 1997 },
-  { title: 'Aliens', year: 1986 },
-  { title: 'Oldboy', year: 2003 },
-  { title: 'Once Upon a Time in America', year: 1984 },
-  { title: 'Witness for the Prosecution', year: 1957 },
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
-
-const batch = [
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
-
-const students = [
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
 
 const defaultValues = {
   email: '',
@@ -145,16 +57,11 @@ const FeesAddDrawer = (props) => {
   const { open, toggle } = props;
 
   // ** State
-  const [selectedBranches, setSelectedBranches] = useState([]);
 
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
 
   useEffect(() => {
     // getAllGroups(); // Commented out the axios fetch for demonstration purposes
@@ -222,7 +129,7 @@ const FeesAddDrawer = (props) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
           <Typography variant="h5">Add Fees</Typography>
@@ -244,7 +151,7 @@ const FeesAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -263,32 +170,23 @@ const FeesAddDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="branch"
+                name="course"
                 control={control}
-                render={({ field }) => (
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
                   <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
                     select
                     fullWidth
-                    label="Branch"
-                    id="select-multiple-checkbox"
-                    error={Boolean(errors.branch) && !selectedBranches.length} // Render error if field is empty
-                    helperText={!selectedBranches.length && errors.branch?.message} // Display error message only if field is empty
-                    SelectProps={{
-                      MenuProps,
-                      multiple: true,
-                      value: selectedBranches,
-                      onChange: (e) => handleBranchChange(e),
-                      renderValue: (selected) => selected.join(', ')
-                    }}
+                    value={value}
+                    sx={{ mb: 4 }}
+                    label="Select Course"
+                    onChange={onChange}
+                    SelectProps={{ value: value, onChange: onChange }}
+                    error={Boolean(errors.course)}
+                    {...(errors.course && { helperText: errors.course.message })}
                   >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
+                    <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                    <MenuItem value={'Android Development'}>Android Development</MenuItem>
                   </TextField>
                 )}
               />
@@ -296,72 +194,48 @@ const FeesAddDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="course"
+                name="batch"
                 control={control}
-                render={({ field }) => (
-                  <CustomAutocomplete
-                    {...field}
-                    sx={{ mb: 2 }}
-                    multiple
-                    limitTags={2}
-                    options={top100Films}
-                    id="autocomplete-limit-tags-course"
-                    getOptionLabel={(option) => (option && option.title) || ''}
-                    error={Boolean(errors.course)}
-                    helperText={errors.course?.message}
-                    defaultValue={top100Films.filter((film) => [13, 12, 11].includes(film.year))}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Course"
-                        placeholder="Favorites"
-                        error={Boolean(errors.course)}
-                        helperText={errors.course?.message}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <CustomAutocomplete
-                sx={{ mb: 2 }}
-                multiple
-                limitTags={2}
-                options={batch}
-                id="autocomplete-limit-tags-batch"
-                getOptionLabel={(option) => (option && option.title) || ''}
-                defaultValue={batch.slice(0, 3)} // Adjust this based on your requirements
-                renderInput={(params) => (
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
                   <TextField
-                    {...params}
-                    label="Batch"
-                    placeholder="Favorites"
+                    select
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 4 }}
+                    label="Select Batch"
+                    onChange={onChange}
+                    SelectProps={{ value: value, onChange: onChange }}
                     error={Boolean(errors.batch)}
-                    helperText={errors.batch?.message}
-                  />
+                    {...(errors.batch && { helperText: errors.batch.message })}
+                  >
+                    <MenuItem value={'Batch 1'}>Batch 1</MenuItem>
+                    <MenuItem value={'Batch 2'}>Batch 2</MenuItem>
+                  </TextField>
                 )}
               />
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <CustomAutocomplete
-                sx={{ mb: 2 }}
-                multiple
-                limitTags={2}
-                options={students}
-                id="autocomplete-limit-tags-students"
-                getOptionLabel={(option) => (option && option.title) || ''}
-                defaultValue={students.slice(0, 3)} // Adjust this based on your requirements
-                renderInput={(params) => (
+              <Controller
+                name="students"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
                   <TextField
-                    {...params}
-                    label="Students"
-                    placeholder="Favorites"
+                    select
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 4 }}
+                    label="Select Students"
+                    onChange={onChange}
+                    SelectProps={{ value: value, onChange: onChange }}
                     error={Boolean(errors.students)}
-                    helperText={errors.students?.message}
-                  />
+                    {...(errors.students && { helperText: errors.students.message })}
+                  >
+                    <MenuItem value={'Student 1'}>Student 1</MenuItem>
+                    <MenuItem value={'Student 2'}>Student 2</MenuItem>
+                  </TextField>
                 )}
               />
             </Grid>

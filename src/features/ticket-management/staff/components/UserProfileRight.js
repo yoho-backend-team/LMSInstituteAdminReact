@@ -3,10 +3,9 @@ import { Fragment } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-// import ListItemButton from '@mui/material/ListItemButton'
+import Typography from '@mui/material/Typography';
 
 // ** Custom Component Imports
 import Sidebar from 'components/sidebar';
@@ -16,14 +15,12 @@ const UserProfileRight = (props) => {
   const {
     store,
     hidden,
-    // statusObj,
-    // getInitials,
+
     sidebarWidth,
     userProfileRightOpen,
     handleUserProfileRightSidebarToggle
   } = props;
 
-  // Dummy visitor information
   const visitorInfo = {
     fullName: 'John Doe',
     role: 'Visitor',
@@ -75,15 +72,12 @@ const UserProfileRight = (props) => {
             </Box>
           </Box>
 
-          {/* Visitor Details */}
-
           <Box sx={{ height: 'calc(100% - 13.3125rem)', px: 4 }}>
             <ScrollWrapper>
               <Box sx={{ mb: 3 }}>
                 <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Basic Details
                 </Typography>
-                {/* Flexbox layout for basic details */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Box>
                     <Typography>Name</Typography>
@@ -154,7 +148,6 @@ const UserProfileRight = (props) => {
               {/* Divider */}
               <Box sx={{ borderBottom: '1px solid #E0E0E0', mb: 3 }} />
 
-              {/* Device Details */}
               <Box>
                 <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Device Details

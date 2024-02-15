@@ -151,7 +151,7 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
@@ -181,21 +181,21 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.total || 0}`}</Typography>
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
     },
     {
       flex: 1,
-      minWidth: 180,
+      minWidth: 130,
       field: 'balance',
       headerName: 'Balance',
       renderCell: ({ row }) =>
@@ -207,15 +207,12 @@ const FeesTable = () => {
     },
     {
       flex: 1.25,
-      minWidth: 180,
+      minWidth: 150,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
           <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
             <MenuItem value={10}>{row.balance}</MenuItem>
             <MenuItem value={20}>Twenty</MenuItem>
             <MenuItem value={30}>Thirty</MenuItem>
@@ -229,7 +226,7 @@ const FeesTable = () => {
     ...defaultColumns,
     {
       flex: 0.1,
-      minWidth: 140,
+      minWidth: 120,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -329,7 +326,7 @@ const FeesTable = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Filters" />
+            <CardHeader title="Fee" />
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>

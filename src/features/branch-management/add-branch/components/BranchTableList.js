@@ -1,26 +1,11 @@
-// ** React Imports
-
-// ** Next Imports
 import { Link } from 'react-router-dom';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-
 import Typography from '@mui/material/Typography';
-
 import { DataGrid } from '@mui/x-data-grid';
-
-// ** Icon Imports
-
-// ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 import CustomChip from 'components/mui/chip';
-
-// ** Utils Import
 import { getInitials } from 'utils/get-initials';
-
-// ** renders client column
 
 const userStatusObj = {
   active: 'success',
@@ -33,7 +18,6 @@ const userModeObj = {
   Offline: 'secondary'
 };
 
-// ** renders client column
 const renderClient = (row) => {
   if (row.avatar.length) {
     return <CustomAvatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
@@ -49,8 +33,6 @@ const renderClient = (row) => {
     );
   }
 };
-
-
 
 const columns = [
   {
@@ -101,19 +83,6 @@ const columns = [
       );
     }
   },
-  //   {
-  //     flex: 0.15,
-  //     minWidth: 120,
-  //     headerName: 'Plan',
-  //     field: 'currentPlan',
-  //     renderCell: ({ row }) => {
-  //       return (
-  //         <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-  //           {row.currentPlan}
-  //         </Typography>
-  //       );
-  //     }
-  //   },
   {
     flex: 0.15,
     minWidth: 190,
@@ -134,14 +103,7 @@ const columns = [
     headerName: 'Mode',
     renderCell: ({ row }) => {
       return (
-        <CustomChip
-          rounded
-          skin="light"
-          size="small"
-          label={row.mode}
-          color={userModeObj[row.mode]}
-          sx={{ textTransform: 'capitalize' }}
-        />
+        <CustomChip rounded skin="light" size="small" label={row.mode} color={userModeObj[row.mode]} sx={{ textTransform: 'capitalize' }} />
       );
     }
   },
@@ -162,110 +124,109 @@ const columns = [
         />
       );
     }
-  },
+  }
 ];
 const BranchTableList = () => {
-    const store = [
-        {
-          id: 1,
-          billing: 'Auto Debit',
-          courseName: 'React Native',
-          company: 'Yotz PVT LTD',
-          role: 'editor',
-          username: 'gslixby0',
-          country: 'El Salvador',
-          price: '(479)',
-          email: 'gslixby0@abc.net.au',
-          currentPlan: 'enterprise',
-          status: 'inactive',
-          avatar: '',
-          avatarColor: 'primary',
-          mode : 'Online'
-        },
-        {
-          id: 2,
-          billing: 'Manual - Paypal',
-          courseName: 'React Js',
-          company: 'Skinder PVT LTD',
-          role: 'author',
-          username: 'hredmore1',
-          country: 'Albania',
-          price: '(472)',
-          email: 'hredmore1@imgur.com',
-          currentPlan: 'team',
-          status: 'pending',
-          avatar: '/images/avatars/3.png',
-          mode : 'Offline'
+  const store = [
+    {
+      id: 1,
+      billing: 'Auto Debit',
+      courseName: 'React Native',
+      company: 'Yotz PVT LTD',
+      role: 'editor',
+      username: 'gslixby0',
+      country: 'El Salvador',
+      price: '(479)',
+      email: 'gslixby0@abc.net.au',
+      currentPlan: 'enterprise',
+      status: 'inactive',
+      avatar: '',
+      avatarColor: 'primary',
+      mode: 'Online'
+    },
+    {
+      id: 2,
+      billing: 'Manual - Paypal',
+      courseName: 'React Js',
+      company: 'Skinder PVT LTD',
+      role: 'author',
+      username: 'hredmore1',
+      country: 'Albania',
+      price: '(472)',
+      email: 'hredmore1@imgur.com',
+      currentPlan: 'team',
+      status: 'pending',
+      avatar: '/images/avatars/3.png',
+      mode: 'Offline'
+    },
+    {
+      id: 3,
+      billing: 'Manual - Cash',
+      courseName: 'React Native',
+      company: 'Oozz PVT LTD',
+      role: 'maintainer',
+      username: 'msicely2',
+      country: 'Russia',
+      price: '(321)',
+      email: 'msicely2@who.int',
+      currentPlan: 'enterprise',
+      status: 'active',
+      avatar: '/images/avatars/1.png',
+      mode: 'Online'
+    },
+    {
+      id: 4,
+      billing: 'Auto Debit',
+      courseName: 'React js',
+      company: 'Oozz PVT LTD',
+      role: 'maintainer',
+      username: 'crisby3',
+      country: 'China',
+      price: '(923)',
+      email: 'crisby3@wordpress.com',
+      currentPlan: 'team',
+      status: 'inactive',
+      avatar: '/images/avatars/3.png',
+      mode: 'Online'
+    },
+    {
+      id: 5,
+      billing: 'Auto Debit',
+      courseName: 'React Native',
+      company: 'Aimbo PVT LTD',
+      role: 'subscriber',
+      username: 'mhurran4',
+      country: 'Pakistan',
+      price: '(669)',
+      email: 'mhurran4@yahoo.co.jp',
+      currentPlan: 'enterprise',
+      status: 'pending',
+      avatar: '/images/avatars/1.png',
+      mode: 'Offline'
+    },
+    {
+      id: 6,
+      billing: 'Manual - Cash',
+      courseName: 'React Js',
+      company: 'Jaxbean PVT LTD',
+      role: 'author',
+      username: 'shalstead5',
+      country: 'China',
+      price: '(958)',
+      email: 'shalstead5@shinystat.com',
+      currentPlan: 'company',
+      status: 'active',
+      avatar: '',
+      avatarColor: 'error',
+      mode: 'Offline'
+    }
+  ];
 
-        },
-        {
-          id: 3,
-          billing: 'Manual - Cash',
-          courseName: 'React Native',
-          company: 'Oozz PVT LTD',
-          role: 'maintainer',
-          username: 'msicely2',
-          country: 'Russia',
-          price: '(321)',
-          email: 'msicely2@who.int',
-          currentPlan: 'enterprise',
-          status: 'active',
-          avatar: '/images/avatars/1.png',
-          mode : 'Online'
-        },
-        {
-          id: 4,
-          billing: 'Auto Debit',
-          courseName: 'React js',
-          company: 'Oozz PVT LTD',
-          role: 'maintainer',
-          username: 'crisby3',
-          country: 'China',
-          price: '(923)',
-          email: 'crisby3@wordpress.com',
-          currentPlan: 'team',
-          status: 'inactive',
-          avatar: '/images/avatars/3.png',
-          mode : 'Online'
-        },
-        {
-          id: 5,
-          billing: 'Auto Debit',
-          courseName: 'React Native',
-          company: 'Aimbo PVT LTD',
-          role: 'subscriber',
-          username: 'mhurran4',
-          country: 'Pakistan',
-          price: '(669)',
-          email: 'mhurran4@yahoo.co.jp',
-          currentPlan: 'enterprise',
-          status: 'pending',
-          avatar: '/images/avatars/1.png',
-          mode : 'Offline'
-        },
-        {
-          id: 6,
-          billing: 'Manual - Cash',
-          courseName: 'React Js',
-          company: 'Jaxbean PVT LTD',
-          role: 'author',
-          username: 'shalstead5',
-          country: 'China',
-          price: '(958)',
-          email: 'shalstead5@shinystat.com',
-          currentPlan: 'company',
-          status: 'active',
-          avatar: '',
-          avatarColor: 'error',
-          mode : 'Offline'
-        }
-      ];
-    
-      return (
-        <Card>
-          <DataGrid autoHeight rowHeight={80} rows={store} columns={columns} disableRowSelectionOnClick />
-        </Card>
-      );
+  return (
+    <Card>
+      <DataGrid autoHeight rowHeight={80} rows={store} columns={columns} disableRowSelectionOnClick />
+    </Card>
+  );
 };
 
-export default BranchTableList
+export default BranchTableList;

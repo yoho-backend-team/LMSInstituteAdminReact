@@ -1,10 +1,6 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-// import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-
-// ** Custom Components Imports
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -48,10 +44,8 @@ const data = [
 ];
 
 const CardPopularCourse = () => {
-  // Handler for sorting change
   const handleSortChange = (event) => {
     const selectedSortOption = event.target.value;
-    // Implement your sorting logic here
     console.log('Selected sort option:', selectedSortOption);
   };
   const limitedData = data.slice(0, 3);

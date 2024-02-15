@@ -8,17 +8,17 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 // ** Store & Actions Imports
+import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/ticket-management/staff/components/AppChat';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectChat, fetchUserProfile, removeSelectedChat, sendMsg } from 'features/ticket-management/staff/components/AppChat';
 
 // ** Utils Imports
-import { getInitials } from 'utils/get-initials';
 import { formatDateToMonthShort } from 'utils/format';
+import { getInitials } from 'utils/get-initials';
 
 // ** Chat App Components Imports
-import SidebarLeft from 'features/ticket-management/staff/components/SidebarLeft';
-import ChatContent from 'features/ticket-management/staff/components/ChatContent';
 import TicketSkeleton from 'components/cards/Skeleton/TicketSkeleton';
+import ChatContent from 'features/ticket-management/staff/components/ChatContent';
+import SidebarLeft from 'features/ticket-management/staff/components/SidebarLeft';
 
 const StaffTicket = () => {
   // ** States
@@ -70,7 +70,6 @@ const StaffTicket = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <TicketSkeleton />
           ) : (
             <Box

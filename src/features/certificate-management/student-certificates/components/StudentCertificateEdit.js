@@ -86,7 +86,7 @@ const defaultValues = {
   course: ''
 };
 
-const StudyMaterialEdit = (props) => {
+const StudentCertificateEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
   console.log("StudyMaterialEdit - open:", props.open);
@@ -207,7 +207,7 @@ console.log(defaultValues);
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Study Material</Typography>
+        <Typography variant="h5">Edit Certificate</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -326,4 +326,4 @@ console.log(defaultValues);
   );
 };
 
-export default StudyMaterialEdit;
+export default StudentCertificateEdit;

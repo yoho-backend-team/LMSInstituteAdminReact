@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
@@ -20,7 +19,7 @@ const TicketSkeleton = () => {
         {/* Left Side Card */}
         <Grid item xs={12} sm={4}>
           {cards.map((cardIndex) => (
-            <Card key={cardIndex} sx={{ mb: 2,py:2 }}>
+            <Card key={cardIndex} sx={{ mb: 2, py: 2 }}>
               <CardContent sx={{}}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Skeleton variant="circular" width={30} height={30} />
@@ -35,10 +34,9 @@ const TicketSkeleton = () => {
 
                 <Box style={{ ml: 2, mt: 2 }}>
                   <Skeleton variant="text" width="80%" />
-                  <Box sx={{ display: 'flex', gap:2, mt: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                     <Skeleton variant="rectangular" width={60} height={25} />
                     <Skeleton variant="rectangular" width={80} height={25} />
-                  
                   </Box>
                 </Box>
               </CardContent>
@@ -48,49 +46,55 @@ const TicketSkeleton = () => {
 
         {/* Chat Content */}
         <Grid item xs={12} sm={8}>
-            <Card sx={{ mb: 2 }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <Skeleton variant="circular" width={48} height={48} />
-                  <Box sx={{ ml: 2 }}>
-                    <Skeleton variant="text" width={60} />
-                  </Box>
+          <Card sx={{ mb: 2 }}>
+            <CardContent>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Skeleton variant="circular" width={48} height={48} />
+                <Box sx={{ ml: 2 }}>
+                  <Skeleton variant="text" width={60} />
                 </Box>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="60%" />
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
+              </Box>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <Skeleton variant="text" width="60%" />
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <Skeleton variant="text" width="70%" />
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <Skeleton variant="text" width="50%" />
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <Skeleton variant="text" width="80%" />
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <Skeleton variant="text" width="80%" />
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                <Skeleton variant="text" width="80%" />
+              </Typography>
+            </CardContent>
+          </Card>
+
+          {mails.map((mail, index) => (
+            <Card key={index} sx={{ mb: 2 }}>
+              <CardContent>
+                <Typography variant="h5">
+                  {' '}
                   <Skeleton variant="text" width="70%" />
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
                   <Skeleton variant="text" width="50%" />
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="80%" />
+                  <Skeleton variant="text" width="30%" />
                 </Typography>
                 <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="80%" />
+                  <Skeleton variant="text" width="20%" />
                 </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                  <Skeleton variant="text" width="80%" />
+                <Typography variant="body1">
+                  {' '}
+                  <Skeleton variant="text" width="40%" />
                 </Typography>
-              </CardContent>
-            </Card>
-
-          {mails.map((mail, index) => (
-            <Card key={index} sx={{  mb: 2 }}>
-              <CardContent>
-                <Typography variant="h5"> <Skeleton variant="text" width="70%" /></Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                <Skeleton variant="text" width="50%" />
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                <Skeleton variant="text" width="30%" />
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                <Skeleton variant="text" width="20%" />
-                </Typography>
-                <Typography variant="body1"> <Skeleton variant="text" width="40%" /></Typography>
               </CardContent>
             </Card>
           ))}

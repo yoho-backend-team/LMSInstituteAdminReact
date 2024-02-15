@@ -1,6 +1,6 @@
 import { useState, forwardRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid } from '@mui/material';
+import { Grid,Checkbox } from '@mui/material';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
@@ -14,6 +14,9 @@ import CustomChip from 'components/mui/chip';
 import DatePicker from 'react-datepicker';
 import format from 'date-fns/format';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import Autocomplete from '@mui/material/Autocomplete';
 // import { InputAdornment, IconButton } from '@mui/material';
 // import FileCopyIcon from '@mui/icons-material/FileCopy';
 
@@ -105,11 +108,18 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
     setPersonName(event.target.value);
   };
 
-  const [selectedTeachers, setSelectedTeachers] = useState([]);
-
-  const handleTeacherChange = (event) => {
-    setSelectedTeachers(event.target.value);
-  };
+  const [selectedInstructors, setSelectedInstructors] = useState([]);
+  const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+  const instructors = [
+    { instructor_id: '1', instructor_name: 'Instructor 1' },
+    { instructor_id: '2', instructor_name: 'Instructor 2' },
+    { instructor_id: '3', instructor_name: 'Instructor 3' }
+  ];
+  const coordinates = [
+    { coordinate_id: '1', coordinate_name: 'Coordinate 1' },
+    { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
+    { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
+  ];
 
   const {
     reset,
@@ -345,71 +355,122 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                   {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
                 </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="instructor"
-                  control={control}
-                  rules={{ required: 'Instructor is required' }}
-                  render={({ field: { value, onChange } }) => (
+              <Grid item xs={12} sm={12}>
+                <Autocomplete
+                  multiple
+                  id="select-multiple-chip"
+                  options={[{ instructor_id: 'selectAll', instructor_name: 'Select All' }, ...instructors]}
+                  getOptionLabel={(option) => option.instructor_name}
+                  value={selectedInstructors}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.instructor_id === 'selectAll')) {
+                      setSelectedInstructors(instructors.filter((option) => option.instructor_id !== 'selectAll'));
+                    } else {
+                      setSelectedInstructors(newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
                     <TextField
+                      {...params}
                       fullWidth
-                      select
-                      label="Instructor"
-                      id="custom-select"
-                      value={value}
-                      onChange={(e) => onChange(e)}
-                      error={Boolean(errors.instructor)}
-                      helperText={errors.instructor ? errors.instructor.message : null}
-                    >
-                      <MenuItem value="">
-                        <em>Thasthahir</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </TextField>
+                      label="Instructors"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                    />
                   )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.instructor_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value.map((option, index) => (
+                        <CustomChip
+                          key={option.instructor_id}
+                          label={option.instructor_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedInstructors(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.instructor_id === value.instructor_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
 
-              <Grid item xs={6}>
-                <Controller
-                  name="teacher"
-                  control={control}
-                  rules={{ required: 'Teacher field is required' }}
-                  render={({ field: { value, onChange } }) => (
+              <Grid item xs={12} sm={12}>
+                <Autocomplete
+                  multiple
+                  id="select-multiple-coordinates"
+                  options={[{ coordinate_id: 'selectAll', coordinate_name: 'Select All' }, ...coordinates]}
+                  getOptionLabel={(option) => option.coordinate_name}
+                  value={selectedCoordinates}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.coordinate_id === 'selectAll')) {
+                      setSelectedCoordinates(coordinates.filter((option) => option.coordinate_id !== 'selectAll'));
+                    } else {
+                      setSelectedCoordinates(newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
                     <TextField
-                      select
+                      {...params}
                       fullWidth
-                      label="Teacher"
-                      id="select-teacher-chip"
-                      SelectProps={{
-                        MenuProps,
-                        multiple: true,
-                        value: selectedTeachers,
-                        onChange: (e) => {
-                          handleTeacherChange(e);
-                          onChange(e);
-                        },
-                        renderValue: (selected) => (
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                            {selected.map((value) => (
-                              <CustomChip key={value} label={value} sx={{ m: 0.75 }} skin="light" color="primary" />
-                            ))}
-                          </Box>
-                        )
+                      label="Coordinates"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
-                      error={Boolean(errors.teacher)}
-                    >
-                      {teachersList.map((teacher) => (
-                        <MenuItem key={teacher} value={teacher}>
-                          {teacher}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    />
                   )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.coordinate_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value.map((option, index) => (
+                        <CustomChip
+                          key={option.coordinate_id}
+                          label={option.coordinate_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedCoordinates(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.coordinate_id === value.coordinate_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-                {errors.teacher && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.teacher.message}</p>}
               </Grid>
 
               {/* <Grid item xs={12}>

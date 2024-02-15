@@ -1,40 +1,34 @@
 // ** React Imports
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 // ** MUI Imports
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-// import Icon from 'components/icon';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 // ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 
-// ** Utils Imports
-// import { getInitials } from 'utils/get-initials';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
   padding: theme.spacing(3)
 }));
 
-const ChatLog = props => {
+const ChatLog = (props) => {
   // ** Props
   const { data, hidden } = props;
 
   // ** Ref
   const chatArea = useRef(null);
 
-  // ** Scroll to chat bottom
   const scrollToBottom = () => {
     if (chatArea.current) {
       if (hidden) {
-        // @ts-ignore
         chatArea.current.scrollTop = chatArea.current.scrollHeight;
       } else {
-        // @ts-ignore
         chatArea.current._container.scrollTop = chatArea.current._container.scrollHeight;
       }
     }
@@ -46,11 +40,11 @@ const ChatLog = props => {
       to: 'hr@example.com',
       from: 'employee@example.com',
       date: Date.now(),
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
+      content:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
     }
   ];
 
-  // ** Renders leave request details
   const renderChats = () => {
     return (
       <>
@@ -64,9 +58,9 @@ const ChatLog = props => {
                 sx={{ width: 48, height: 48, mr: 2 }}
                 {...(data.contact.avatar
                   ? {
-                    src: data.contact.avatar,
-                    alt: data.contact.fullName
-                  }
+                      src: data.contact.avatar,
+                      alt: data.contact.fullName
+                    }
                   : {})}
               />
               <Typography variant="h5">{data.contact.fullName}</Typography>
@@ -118,10 +112,8 @@ const ChatLog = props => {
     if (data && data.chat && data.chat.length) {
       scrollToBottom();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  // ** Renders scrollbar wrapper conditionally
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
       return (
@@ -142,7 +134,6 @@ const ChatLog = props => {
     <Box sx={{ height: 'calc(100% - 8.875rem)' }}>
       <ScrollWrapper>{renderChats()}</ScrollWrapper>
     </Box>
-
   );
 };
 

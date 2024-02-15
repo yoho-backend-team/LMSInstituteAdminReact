@@ -8,18 +8,18 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 // ** Store & Actions Imports
+import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/ticket-management/student/components/AppChat';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectChat, fetchUserProfile, removeSelectedChat, sendMsg } from 'features/ticket-management/student/components/AppChat';
 
 // ** Utils Imports
-import { getInitials } from 'utils/get-initials';
 import { formatDateToMonthShort } from 'utils/format';
+import { getInitials } from 'utils/get-initials';
 
 // ** Chat App Components Imports
 
-import SidebarLeft from 'features/ticket-management/student/components/SidebarLeft';
-import ChatContent from 'features/ticket-management/student/components/ChatContent';
 import TicketSkeleton from 'components/cards/Skeleton/TicketSkeleton';
+import ChatContent from 'features/ticket-management/student/components/ChatContent';
+import SidebarLeft from 'features/ticket-management/student/components/SidebarLeft';
 
 const StudentTicket = () => {
   // ** States
@@ -55,7 +55,6 @@ const StudentTicket = () => {
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
   console.log(selectChat);
 
-
   const [loading, setLoading] = useState(true);
 
   // Simulate loading delay with useEffect
@@ -67,13 +66,11 @@ const StudentTicket = () => {
     return () => clearTimeout(timer);
   }, []);
 
-
   return (
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
           {loading ? (
-            // If data is still loading, display skeleton
             <TicketSkeleton />
           ) : (
             <Box

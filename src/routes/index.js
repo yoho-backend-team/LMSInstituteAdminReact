@@ -104,7 +104,7 @@ const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/te
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs')));
 const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs/view-profile')));
 const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
-const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
+const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs/add-new-staff')));
 const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/view-profile')));
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
