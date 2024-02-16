@@ -310,6 +310,7 @@ const SalaryTable = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
+                    disableCloseOnSelect
                     multiple
                     id="select-multiple-chip"
                     options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...staff]}
@@ -397,7 +398,7 @@ const SalaryTable = () => {
         description="Are you sure you want to delete this item?"
         title="Delete"
       />
-    </DatePickerWrapper> 
+    </DatePickerWrapper>
   );
 };
 

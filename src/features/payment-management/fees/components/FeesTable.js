@@ -317,6 +317,7 @@ const FeesTable = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    disableCloseOnSelect
                     multiple
                     id="select-multiple-chip"
                     options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
@@ -376,6 +377,7 @@ const FeesTable = () => {
 
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    disableCloseOnSelect
                     multiple
                     id="select-multiple-chip"
                     options={[{ students_id: 'selectAll', students_name: 'Select All' }, ...students]}

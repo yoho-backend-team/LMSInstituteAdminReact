@@ -1,6 +1,5 @@
 // ** React Imports
 import { Fragment } from 'react';
-
 // ** MUI Imports
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';

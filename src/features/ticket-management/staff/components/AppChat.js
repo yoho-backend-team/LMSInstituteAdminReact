@@ -4,43 +4,27 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 // Import the dummy data
 import dummydata from './dummydata';
 
-// ------------------------------------------------
-// Define Async Thunks for fetching data
-// ------------------------------------------------
-
 // ** Fetch User Profile
 export const fetchUserProfile = createAsyncThunk('appChat/fetchUserProfile', async () => {
-  // Instead of Axios call, return the dummy profile user data
   return dummydata.profileUser;
 });
 
-// ** Fetch Chats & Contacts
 export const fetchChatsContacts = createAsyncThunk('appChat/fetchChatsContacts', async () => {
-  // Instead of Axios call, return the dummy chats and contacts data
   return { chatsContacts: dummydata.chatsContacts, contacts: dummydata.contacts };
 });
 
-// ** Select Chat
 export const selectChat = createAsyncThunk('appChat/selectChat', async (id) => {
-  // Instead of Axios call, find and return the chat and contact from dummy data
   const chat = dummydata.chats.find((chat) => chat.id === id);
   const contact = dummydata.contacts.find((contact) => contact.id === id);
 
   return { chat, contact };
 });
 
-// ** Send Msg
 export const sendMsg = createAsyncThunk('appChat/sendMsg', async (obj) => {
-  const newMessageData = {
-    /* populate with message data */
-  };
+  const newMessageData = {};
 
   return { newMessageData, id: obj.contact.id };
 });
-
-// ------------------------------------------------
-// Define Redux Slice
-// ------------------------------------------------
 
 export const appChatSlice = createSlice({
   name: 'appChat',
