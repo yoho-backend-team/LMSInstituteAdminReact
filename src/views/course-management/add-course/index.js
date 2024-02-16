@@ -232,6 +232,7 @@ const AddCoursePage = () => {
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="select-multiple-chip"
                   options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
                   getOptionLabel={(option) => option.branch_name}
@@ -298,6 +299,7 @@ const AddCoursePage = () => {
                     return (
                       <Autocomplete
                         multiple
+                        disableCloseOnSelect
                         id="select-multiple-chip"
                         options={branchesWithSelectAll}
                         getOptionLabel={(option) => option.course_category_name}

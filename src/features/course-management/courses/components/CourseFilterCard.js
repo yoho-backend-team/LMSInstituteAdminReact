@@ -43,6 +43,7 @@ const CourseFilter = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
+                    disableCloseOnSelect
                     id="select-multiple-chip"
                     options={[{ category_id: 'selectAll', category_name: 'Select All' }, ...categories]}
                     getOptionLabel={(option) => option.category_name}

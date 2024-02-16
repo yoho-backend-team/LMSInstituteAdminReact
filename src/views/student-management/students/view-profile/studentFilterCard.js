@@ -42,6 +42,7 @@ const StudentFilter = (props) => {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6}>
                 <Autocomplete
+                  disableCloseOnSelect
                   multiple
                   id="select-multiple-chip"
                   options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batches]}
@@ -101,6 +102,7 @@ const StudentFilter = (props) => {
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="select-multiple-chip"
                   options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                   getOptionLabel={(option) => option.course_name}

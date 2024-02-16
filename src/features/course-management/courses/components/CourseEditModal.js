@@ -234,6 +234,7 @@ const CourseEditModal = ({ open, handleEditClose }) => {
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       multiple
+                      disableCloseOnSelect
                       id="select-multiple-chip"
                       options={groups}
                       getOptionLabel={(option) => option.name}

@@ -74,6 +74,7 @@ const NonTeachingStaffFilterCard = (props) => {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Autocomplete
+                    disableCloseOnSelect
                     multiple
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}

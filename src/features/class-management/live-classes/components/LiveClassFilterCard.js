@@ -88,6 +88,7 @@ const LiveClassFilterCard = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
+                    disableCloseOnSelect
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                     getOptionLabel={(option) => option.course_name}
@@ -147,6 +148,7 @@ const LiveClassFilterCard = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
+                    disableCloseOnSelect
                     id="select-multiple-chip"
                     options={batch}
                     getOptionLabel={(option) => option.batch_name}
