@@ -173,13 +173,7 @@ const Teaching = () => {
                         }}
                       >
                         <Grid>
-                          <TextField
-                            size="small"
-                            select
-                            fullWidth
-                            label="Status"
-                            SelectProps={{ value: '', onChange: (e) => handleStatusChange(e) }}
-                          >
+                          <TextField size="small" select fullWidth label="Status" SelectProps={{ onChange: (e) => handleStatusChange(e) }}>
                             <MenuItem value="1">Active</MenuItem>
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
