@@ -21,6 +21,7 @@ const UserProfileRight = (props) => {
     handleUserProfileRightSidebarToggle
   } = props;
 
+  // Dummy visitor information
   const visitorInfo = {
     fullName: 'John Doe',
     role: 'Visitor',
@@ -43,7 +44,6 @@ const UserProfileRight = (props) => {
   };
 
   return (
-    // Side bar
     <Sidebar
       direction="right"
       show={userProfileRightOpen}
@@ -63,7 +63,6 @@ const UserProfileRight = (props) => {
       {store && store.selectedChat ? (
         <Fragment>
           <Box sx={{ position: 'relative' }}>
-            {/* Content header */}
             <Box sx={{ display: 'flex', flexDirection: 'column', p: (theme) => theme.spacing(6, 6) }}>
               <Typography variant="h5" sx={{ textAlign: 'center' }}>
                 {visitorInfo.fullName}
@@ -145,9 +144,9 @@ const UserProfileRight = (props) => {
                 </Box>
               </Box>
 
-              {/* Divider */}
               <Box sx={{ borderBottom: '1px solid #E0E0E0', mb: 3 }} />
 
+              {/* Device Details */}
               <Box>
                 <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
                   Device Details

@@ -11,11 +11,10 @@ import { styled } from '@mui/material/styles';
 // ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 
-// ** Utils Imports
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
-  padding: theme.spacing(5)
+  padding: theme.spacing(3)
 }));
 
 const ChatLog = (props) => {
@@ -43,23 +42,14 @@ const ChatLog = (props) => {
       date: Date.now(),
       content:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
-    },
-    {
-      subject: 'Regarding Meeting Schedule',
-      to: 'team@example.com',
-      from: 'manager@example.com',
-      date: Date.now(),
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce commodo nisi nec lectus ultricies, a euismod nibh eleifend. Ut lobortis erat vel dolor cursus rhoncus.'
     }
   ];
 
-  // ** Renders leave request details
   const renderChats = () => {
     return (
       <>
         {/* First Mail Card */}
-        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 4 }}>
+        <Card sx={{ maxWidth: 800, margin: 'auto', mb: 2 }}>
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <CustomAvatar
@@ -124,7 +114,6 @@ const ChatLog = (props) => {
     }
   }, [data]);
 
-  // ** Renders scrollbar wrapper conditionally
   const ScrollWrapper = ({ children }) => {
     if (hidden) {
       return (
