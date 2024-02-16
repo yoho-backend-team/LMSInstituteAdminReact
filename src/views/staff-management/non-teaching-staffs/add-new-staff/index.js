@@ -24,7 +24,7 @@ const schema = yup.object().shape({
   description: yup.string().required('Description is required'),
   First_name: yup.string().required('First Name is required'),
   Last_name: yup.string().required('Last Name is required'),
-  branch: yup.string().required('Branch is required'),
+  branch: yup.string().required('Branch is required')
 });
 
 const CustomInput = forwardRef(({ ...props }, ref) => {

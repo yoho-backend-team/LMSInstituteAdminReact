@@ -728,6 +728,7 @@ const StepperLinearWithValidation = () => {
                       aria-describedby="stepper-linear-personal-branch"
                       {...(personalErrors['branch'] && { helperText: 'This field is required' })}
                     >
+                      <MenuItem defaultValue={""}></MenuItem>
                       <MenuItem value={10}>Ten</MenuItem>
                       <MenuItem value={30}>Thirty</MenuItem>
                     </TextField>
