@@ -32,7 +32,8 @@ const data = {
       currentPlan: true,
       popularPlan: false,
       subtitle: 'A simple start for everyone',
-      imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-CGlChBtj__Xxdz5x1MhpgJTIBMKwvaMqtfk1dlvRYGp2qMTuFX7qEd4577tQp_Bc_4A&usqp=CAU',
+      imgSrc:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-CGlChBtj__Xxdz5x1MhpgJTIBMKwvaMqtfk1dlvRYGp2qMTuFX7qEd4577tQp_Bc_4A&usqp=CAU',
       yearlyPlan: {
         perMonth: 0,
         totalAnnual: 0
@@ -82,7 +83,7 @@ const data = {
       planBenefits: ['PayPal payments', 'Logic Jumps', 'File upload with 5GB storage', 'Custom domain support', 'Stripe integration']
     }
   ],
- 
+
   pricingTable: {
     header: [
       {
@@ -185,7 +186,7 @@ const yourFaqData = {
       question: 'I have more questions. Where can I get help?',
       answer: 'Please contact us if you have any other questions or concerns. We’re here to help!'
     }
-  ],
+  ]
 };
 
 const Subscription = () => {
@@ -210,7 +211,7 @@ const Subscription = () => {
         <SubscriptionTable data={data.pricingTable} />
       </CardContent>
       <CardContent sx={{ backgroundColor: 'action.hover' }}>
-      <SubscriptionFooter data={yourFaqData} />
+        <SubscriptionFooter data={yourFaqData} />
       </CardContent>
     </Card>
   );
