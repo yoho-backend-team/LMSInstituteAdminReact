@@ -47,6 +47,7 @@ const StudentFilterCard = (props) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    disableCloseOnSelect
                     multiple
                     id="select-multiple-chip"
                     options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
@@ -113,6 +114,7 @@ const StudentFilterCard = (props) => {
 
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
+                    disableCloseOnSelect
                     multiple
                     id="select-multiple-chip"
                     options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}

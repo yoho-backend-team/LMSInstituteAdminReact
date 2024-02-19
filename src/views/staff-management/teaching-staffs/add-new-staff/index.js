@@ -30,7 +30,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from './StepperCustomDot';
 // ** Styled Components
@@ -50,31 +49,6 @@ const steps = [
     title: 'Account Details',
     subtitle: 'Create Account Details'
   }
-];
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
 ];
 
 const defaultAccountValues = {
@@ -99,7 +73,8 @@ const defaultPersonalValues = {
   course: '',
   phone: '',
   alt_phone: '',
-  description: ''
+  description: '',
+  branch: ''
 };
 
 const defaultGalleryValues = {
@@ -136,17 +111,15 @@ const personalSchema = yup.object().shape({
   description: yup.string().required(),
   official_email: yup.string().required(),
   gender: yup.string().required(),
-  course: yup.string().required(),
   First_name: yup.string().required(),
-  Last_name: yup.string().required()
+  Last_name: yup.string().required(),
+  branch: yup.string().required('Branch is required'),
+  joiningdate: yup.string().required('Branch is required'),
+  specialization: yup.string().required('Branch is required')
 });
 
 const gallerySchema = yup.object().shape({});
 const StepperLinearWithValidation = () => {
-  const [selectedBranches, setSelectedBranches] = useState([]);
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
   // ** States
   const [activeStep, setActiveStep] = useState(0);
   const [state, setState] = useState({
@@ -448,6 +421,7 @@ const StepperLinearWithValidation = () => {
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="select-multiple-chip"
                   options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
                   getOptionLabel={(option) => option.course_name}
@@ -517,9 +491,9 @@ const StepperLinearWithValidation = () => {
                       customInput={
                         <CustomInput
                           label="Joining Date"
-                          error={Boolean(personalErrors['joining date'])}
+                          error={Boolean(personalErrors['joiningdate'])}
                           aria-describedby="stepper-linear-personal-joining-date"
-                          {...(personalErrors['joining-date'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['joiningdate'] && { helperText: 'This field is required' })}
                         />
                       }
                       onChange={onChange}
@@ -739,28 +713,30 @@ const StepperLinearWithValidation = () => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <TextField
-                  sx={{ mb: 4 }}
-                  select
-                  fullWidth
-                  label="Branch"
-                  id="select-multiple-checkbox"
-                  SelectProps={{
-                    MenuProps,
-                    multiple: true,
-                    value: selectedBranches,
-                    onChange: (e) => handleBranchChange(e),
-                    renderValue: (selected) => selected.join(', ')
-                  }}
-                >
-                  {names.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                      <ListItemText primary={name} />
-                    </MenuItem>
-                  ))}
-                </TextField>
+                <Controller
+                  name="branch"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      fullWidth
+                      select
+                      value={value}
+                      onChange={onChange}
+                      label="Branch"
+                      id="custom-select"
+                      error={Boolean(personalErrors['branch'])}
+                      aria-describedby="stepper-linear-personal-branch"
+                      {...(personalErrors['branch'] && { helperText: 'This field is required' })}
+                    >
+                      <MenuItem defaultValue={""}></MenuItem>
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </TextField>
+                  )}
+                />
               </Grid>
+
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="description"

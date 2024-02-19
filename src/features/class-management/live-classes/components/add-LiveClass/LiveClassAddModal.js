@@ -343,6 +343,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="select-multiple-chip"
                   options={[{ instructor_id: 'selectAll', instructor_name: 'Select All' }, ...instructors]}
                   getOptionLabel={(option) => option.instructor_name}
@@ -401,6 +402,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
 
               <Grid item xs={12} sm={12}>
                 <Autocomplete
+                  disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
                   options={[{ coordinate_id: 'selectAll', coordinate_name: 'Select All' }, ...coordinates]}

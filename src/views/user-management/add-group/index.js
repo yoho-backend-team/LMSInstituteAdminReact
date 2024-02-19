@@ -252,6 +252,7 @@ const GroupAddPage = () => {
                       return (
                         <Autocomplete
                           multiple
+                          disableCloseOnSelect
                           id="select-multiple-chip"
                           options={branchesWithSelectAll}
                           getOptionLabel={(option) => option.branch_name}

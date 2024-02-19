@@ -49,6 +49,7 @@ const NotesHeader = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
+                      disableCloseOnSelect
                       multiple
                       id="select-multiple-chip"
                       options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
