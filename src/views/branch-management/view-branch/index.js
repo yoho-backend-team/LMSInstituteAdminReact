@@ -36,7 +36,7 @@ const ViewBranch = () => {
           <Grid item xs={12}>
             <BranchTableList />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12}> 
             <StudentTableList />
           </Grid>
         </Grid>

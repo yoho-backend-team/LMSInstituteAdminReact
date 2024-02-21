@@ -8,7 +8,7 @@ import {
   CardHeader,
   Checkbox,
   FormControlLabel,
-  Grid,
+  Icon,
   Table,
   TableBody,
   TableCell,
@@ -20,12 +20,11 @@ import {
   Typography
 } from '@mui/material';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
-import Icon from 'components/icon';
-import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
-import React, { useEffect, useState } from 'react';
+import { getAllPermissions, getPermissionsByRoleId, updateGroup } from 'features/user-management/groups/services/groupService';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 const showErrors = (field, valueLen, min) => {
@@ -37,19 +36,12 @@ const showErrors = (field, valueLen, min) => {
     return '';
   }
 };
-
 const schema = yup.object().shape({
-  groupName: yup
+  roleName: yup
     .string()
-    .min(3, (obj) => showErrors('Group Name', obj.value.length, obj.min))
-    .required(),
-  branch: yup.array().min(1, 'Select at least one Branch').required()
+    .min(3, (obj) => showErrors('Role Name', obj.value.length, obj.min))
+    .required()
 });
-
-const defaultValues = {
-  groupName: '',
-  branch: []
-};
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -59,12 +51,24 @@ const useTimeout = (callback, delay) => {
   }, [callback, delay]);
 };
 
-const GroupAddPage = () => {
+const GroupEditDialog = () => {
+  const [selectedCheckbox, setSelectedCheckbox] = useState([]);
+  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
+  const [permissions, setPermissions] = useState([]);
+  const [permissionCount, setPermissionCount] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const groupId = location?.state?.id;
+  const groupName = location?.state?.name;
   const [loading, setLoading] = useState(true);
 
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+
+  const defaultValues = {
+    roleName: groupName
+  };
 
   const {
     reset,
@@ -79,23 +83,17 @@ const GroupAddPage = () => {
   });
 
   const handleClose = () => {
-    setValue('groupName', '');
-    setValue('branch', '');
+    setValue('roleName', '');
     reset();
   };
-
-  const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
-  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
-  const [permissions, setPermissions] = React.useState([]);
-  const navigate = useNavigate();
-
   const onSubmit = async (data) => {
     try {
       const inputData = {
-        name: data.groupName,
-        permissions: selectedCheckbox
+        id: groupId,
+        name: data.roleName,
+        permission_id: selectedCheckbox
       };
-      const result = await addGroup(inputData);
+      const result = await updateGroup(inputData);
 
       if (result.success) {
         navigate(-1);
@@ -109,47 +107,35 @@ const GroupAddPage = () => {
   };
 
   useEffect(() => {
-    if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
-      setIsIndeterminateCheckbox(true);
-    } else {
-      setIsIndeterminateCheckbox(false);
-    }
-  }, [selectedCheckbox, permissions]);
-
-  useEffect(() => {
     getPermissions();
   }, []);
 
-  const handleSelectAllCheckbox = () => {
-    if (isIndeterminateCheckbox) {
-      setSelectedCheckbox([]);
-    } else {
-      permissions.forEach((screens) => {
-        screens?.screens?.forEach((permissions) => {
-          permissions?.permissions?.forEach((permission) => {
-            togglePermission(permission.id);
-          });
-        });
-      });
-    }
-  };
-
-  const togglePermission = (id) => {
-    const arr = selectedCheckbox;
-    if (selectedCheckbox.includes(id)) {
-      arr.splice(arr.indexOf(id), 1);
-      setSelectedCheckbox([...arr]);
-    } else {
-      arr.push(id);
-      setSelectedCheckbox([...arr]);
-    }
-  };
+  useEffect(() => {
+    getAllPermissionsIdByRole();
+  }, [groupId]);
 
   const getPermissions = async () => {
     try {
       const result = await getAllPermissions();
+
       if (result.success) {
         setPermissions(result.data);
+        setPermissionCount(result.permissionsCount);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getAllPermissionsIdByRole = async () => {
+    try {
+      const result = await getPermissionsByRoleId(groupId);
+
+      if (result.success) {
+        result.data?.forEach((permission) => {
+          togglePermission(permission);
+        });
       } else {
         console.log(result.message);
       }
@@ -158,9 +144,33 @@ const GroupAddPage = () => {
     }
   };
 
+  const togglePermission = (id) => {
+    const arr = selectedCheckbox;
+    if (selectedCheckbox?.includes(id)) {
+      arr.splice(arr.indexOf(id), 1);
+      setSelectedCheckbox([...arr]);
+    } else {
+      arr.push(id);
+      setSelectedCheckbox([...arr]);
+    }
+  };
+
+  const handleSelectAllCheckbox = () => {
+    if (isIndeterminateCheckbox) {
+      setSelectedCheckbox([]);
+    } else {
+      const arr = [];
+      permissionCount?.forEach((permission) => {
+        arr.push(permission.id);
+      });
+      setSelectedCheckbox(arr);
+      setIsIndeterminateCheckbox(true);
+    }
+  };
+
   const renderPermissions = () => {
-    return permissions.map((module) =>
-      module.screens.map((screen, index) => (
+    return permissions?.map((module) =>
+      module?.screens?.map((screen, index) => (
         <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
           <TableCell
             sx={{
@@ -169,19 +179,20 @@ const GroupAddPage = () => {
               fontSize: (theme) => theme.typography.h6.fontSize
             }}
           >
-            {screen.screen_name}
+            {screen?.screen_name}
           </TableCell>
-          {screen.permissions.map((permission, index) => (
+          {screen?.permissions?.map((permission, index) => (
             <TableCell key={index}>
               <FormControlLabel
-                label={permission.name}
+                label={permission?.name}
                 sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
                 control={
                   <Checkbox
                     size="small"
                     id={`${index}-write`}
-                    onChange={() => togglePermission(permission.id)}
-                    checked={selectedCheckbox.includes(permission.id)}
+                    // disabled/
+                    onChange={() => togglePermission(permission?.id)}
+                    checked={selectedCheckbox?.includes(permission?.id)}
                   />
                 }
               />
@@ -205,7 +216,7 @@ const GroupAddPage = () => {
                 px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`],
                 pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
               }}
-              title="Add New Group"
+              title="Edit Group"
               subheader="Set Group Permissions"
             ></CardHeader>
             <CardContent
@@ -214,26 +225,24 @@ const GroupAddPage = () => {
                 px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
               }}
             >
-              <Grid sx={{ my: 4, gap: 2 }} container>
-                <Grid xs={12} sm={5.9}>
-                  <Controller
-                    name="groupName"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        value={value}
-                        label="Group Name"
-                        onChange={onChange}
-                        placeholder="John Doe"
-                        error={Boolean(errors.groupName)}
-                        {...(errors.groupName && { helperText: errors.groupName.message })}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
+              <Box sx={{ my: 4 }}>
+                <Controller
+                  name="roleName"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      fullWidth
+                      value={value}
+                      label="Role Name"
+                      onChange={onChange}
+                      placeholder="John Doe"
+                      error={Boolean(errors.roleName)}
+                      {...(errors.roleName && { helperText: errors.roleName.message })}
+                    />
+                  )}
+                />
+              </Box>
               <Typography variant="h4">Group Permissions</Typography>
               <TableContainer>
                 <Table size="small">
@@ -268,7 +277,7 @@ const GroupAddPage = () => {
                               size="small"
                               onChange={handleSelectAllCheckbox}
                               indeterminate={isIndeterminateCheckbox}
-                              checked={selectedCheckbox.length === permissions.length}
+                              checked={selectedCheckbox?.length === permissionCount?.length}
                             />
                           }
                         />
@@ -291,7 +300,7 @@ const GroupAddPage = () => {
                 <Button type="submit" variant="contained">
                   Submit
                 </Button>
-                <Button variant="tonal" sx={{ ml: 5 }} color="error" onClick={handleClose}>
+                <Button variant="tonal" color="error" onClick={handleClose}>
                   Cancel
                 </Button>
               </Box>
@@ -303,4 +312,4 @@ const GroupAddPage = () => {
   );
 };
 
-export default GroupAddPage;
+export default GroupEditDialog;
