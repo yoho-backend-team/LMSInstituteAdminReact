@@ -102,9 +102,18 @@ const AddBatchPage = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(errors);
+    const inputData = {
+      batchName: data.batchName,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      branches: data.branches,
+      course: data.course,
+      students: data.students,
+    };
+    console.log(inputData);
     console.log(data);
   };
+  
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
