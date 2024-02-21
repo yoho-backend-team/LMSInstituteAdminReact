@@ -95,8 +95,18 @@ const CourseEditModal = ({ open, handleEditClose }) => {
       textAlign: 'center'
     }
   }));
+
+
   const onSubmit = (data) => {
-    console.log(data);
+    const formData = new FormData();
+    formData.append('course_name',data.course_name);
+    formData.append('course_name',data.Course_duration);
+    formData.append('course_name',data.Course_Price);
+    formData.append('course_name',data.Course_Category);
+    formData.append('course_name',data.Learning_Format);
+    formData.append('course_name',data.course_overview);
+    formData.append('course_name',data.description);
+    console.log(formData);
   };
   console.log(onSubmit);
 

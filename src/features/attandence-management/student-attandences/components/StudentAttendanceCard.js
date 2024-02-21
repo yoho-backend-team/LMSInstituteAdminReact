@@ -9,6 +9,7 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
+import { Link } from 'react-router-dom';
 
 const StudentAttendanceCard = () => {
   const cardData = [
@@ -92,12 +93,12 @@ const StudentAttendanceCard = () => {
 
   return (
     <Grid container spacing={2}>
-      {cardData.map((card, index) => (
+      {cardData.map((item, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card
             sx={{
               position: 'relative',
-              borderTop: card.status === 'active' ? '4px solid green' : '4px solid #7cf2e1'
+              borderTop: item.status === 'active' ? '4px solid green' : '4px solid #7cf2e1'
             }}
           >
             <CardContent>
@@ -111,8 +112,8 @@ const StudentAttendanceCard = () => {
                 }}
               >
                 <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="h3">{card.classname}</Typography>
-                  <Typography variant="body2">{card.location}</Typography>
+                  <Typography variant="h3">{item.classname}</Typography>
+                  <Typography variant="body2">{item.location}</Typography>
                 </Box>
 
                 <Box
@@ -128,13 +129,13 @@ const StudentAttendanceCard = () => {
                     }
                   }}
                 >
-                  <Typography variant="body2">{card.duration}</Typography>
+                  <Typography variant="body2">{item.duration}</Typography>
                 </Box>
               </Box>
 
               <Box sx={{ mb: 2.55, display: 'flex', alignItems: 'center' }}>
                 <TimerIcon sx={{ marginRight: 1 }} />
-                <Typography variant="body2">{card.dateandtime}</Typography>
+                <Typography variant="body2">{item.dateandtime}</Typography>
               </Box>
               <Box
                 sx={{
@@ -146,7 +147,7 @@ const StudentAttendanceCard = () => {
                 }}
               >
                 <AvatarGroup max={4} sx={{ width: 40, height: 40, '& .MuiAvatar-root': { width: 32, height: 32 } }}>
-                  {card.friends.map((friend, friendIndex) => (
+                  {item.friends.map((friend, friendIndex) => (
                     <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
                   ))}
                 </AvatarGroup>
@@ -156,7 +157,7 @@ const StudentAttendanceCard = () => {
               </Box>
               <Divider sx={{ my: 2 }} />
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', textDecoration: 'none' }}>
-                <Button variant="tonal" sx={{ px: 2 }}>
+                <Button component={Link} to={'1'} variant="tonal" sx={{ px: 2 }}>
                   View Attendance
                 </Button>
               </Box>

@@ -32,7 +32,6 @@ const TeacherFilter = (props) => {
       <Grid item xs={12}>
         <Card>
           <CardHeader title="Teaching Staff" />
-
           <CardContent>
             <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Grid item xs={12} sm={6}>
