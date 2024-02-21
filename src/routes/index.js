@@ -31,7 +31,7 @@ const AddBatchPage = Loadable(lazy(() => import('views/batch-management/add-batc
 const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-batch')));
 
 // Attendance Management
-const StudentAttendanceViewPage = Loadable(lazy(() => import('views/attendance-management/view-students/index')));
+const StudentAttendanceViewPage = Loadable(lazy(() => import('views/attendance-management/students/view-attendance')));
 const StudentAttendancesPage = Loadable(lazy(() => import('views/attendance-management/students')));
 const TeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching -staffs')));
 const TeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching -staffs/view-attendance')));
@@ -180,7 +180,7 @@ const ApplicationRoutes = () => {
         <Route path="/attendance-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
           <Route path="student-attendances" element={<StudentAttendancesPage />} />
-          <Route path="student-attendances/view" element={<StudentAttendanceViewPage />} />
+          <Route path="student-attendances/:id" element={<StudentAttendanceViewPage />} />
           <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
           <Route path="teaching-staff-attendances/:id" element={<TeachingStaffViewAttendancesPage />} />
           <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
