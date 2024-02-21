@@ -1,4 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import {
   Box,
   Button,
@@ -19,12 +21,15 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
+import CustomChip from 'components/mui/chip';
 import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import * as yup from 'yup';
 
@@ -87,11 +92,15 @@ const GroupAddPage = () => {
   const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
   const [permissions, setPermissions] = React.useState([]);
+  const branches = useSelector((state) => state.auth.branches);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
+      const branchIds = data?.branch?.map((branch) => branch.branch_id);
+      console.log(branchIds);
       const inputData = {
+        branch_ids: branchIds,
         name: data.groupName,
         permissions: selectedCheckbox
       };
@@ -231,6 +240,77 @@ const GroupAddPage = () => {
                         {...(errors.groupName && { helperText: errors.groupName.message })}
                       />
                     )}
+                  />
+                </Grid>
+                <Grid xs={12} sm={5.9}>
+                  <Controller
+                    name="branch"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { value, onChange } }) => {
+                      const branchesWithSelectAll = [{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches];
+                      return (
+                        <Autocomplete
+                          multiple
+                          disableCloseOnSelect
+                          id="select-multiple-chip"
+                          options={branchesWithSelectAll}
+                          getOptionLabel={(option) => option.branch_name}
+                          value={value}
+                          onChange={(e, newValue) => {
+                            if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
+                              onChange(branches.filter((option) => option.branch_id !== 'selectAll'));
+                            } else {
+                              onChange(newValue);
+                            }
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              fullWidth
+                              label="Branch"
+                              error={Boolean(errors.branch)}
+                              {...(errors.branch && { helperText: errors.branch.message })}
+                              InputProps={{
+                                ...params.InputProps,
+                                style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                              }}
+                            />
+                          )}
+                          renderOption={(props, option, { selected }) => (
+                            <li {...props}>
+                              <Checkbox
+                                icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                                checkedIcon={<CheckBoxIcon fontSize="small" />}
+                                style={{ marginRight: 8 }}
+                                checked={selected}
+                              />
+                              {option.branch_name}
+                            </li>
+                          )}
+                          renderTags={(value) => (
+                            <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                              {value.map((option, index) => (
+                                <CustomChip
+                                  key={option.branch_id}
+                                  label={option.branch_name}
+                                  onDelete={() => {
+                                    const updatedValue = [...value];
+                                    updatedValue.splice(index, 1);
+                                    onChange(updatedValue);
+                                  }}
+                                  color="primary"
+                                  sx={{ m: 0.75 }}
+                                />
+                              ))}
+                            </div>
+                          )}
+                          isOptionEqualToValue={(option, value) => option.id === value.id}
+                          selectAllText="Select All"
+                          SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                        />
+                      );
+                    }}
                   />
                 </Grid>
               </Grid>

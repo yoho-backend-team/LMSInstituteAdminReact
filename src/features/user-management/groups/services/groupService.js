@@ -5,15 +5,13 @@ const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 const PERMISSION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/permission`;
 const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group/search`;
 
-export const getAllGroups = async (selectedBranchId) => {
-  console.log(selectedBranchId);
+export const getAllGroups = async () => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/read-by-branch-id`, {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { branch_id: selectedBranchId }
+      }
     });
     console.log(response);
     // Check if the response status is successful
@@ -87,6 +85,26 @@ export const deleteGroup = async (groupId) => {
       return { success: true, message: 'Group deleted successfully' };
     } else {
       return { success: false, message: 'Failed to delete group' };
+    }
+  } catch (error) {
+    console.error('Error in deleteGroup:', error);
+    throw error;
+  }
+};
+export const changeStatusGroup = async (data) => {
+  try {
+    const response = await axios.put(`${GROUP_API_ENDPOINT}/status-update`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    if (response.data.status) {
+      return { success: true, message: 'Group status changed successfully' };
+    } else {
+      return { success: false, message: 'Failed to change group status' };
     }
   } catch (error) {
     console.error('Error in deleteGroup:', error);
