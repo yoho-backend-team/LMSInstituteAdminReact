@@ -1,33 +1,35 @@
 // ** React Imports
-import { useState } from 'react'
+import { forwardRef, useState } from 'react';
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import Divider from '@mui/material/Divider'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Grid from '@mui/material/Grid'
-import InputAdornment from '@mui/material/InputAdornment'
-import LinearProgress from '@mui/material/LinearProgress'
-import MenuItem from '@mui/material/MenuItem'
-import Switch from '@mui/material/Switch'
-import Typography from '@mui/material/Typography'
-import { styled } from '@mui/material/styles'
-import Icon from 'components/icon'
+import { TextField } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import Icon from 'components/icon';
+import DatePicker from 'react-datepicker';
+import { Controller } from 'react-hook-form';
 // ** Custom Components
-import CustomAvatar from 'components/mui/avatar'
-import CustomChip from 'components/mui/chip'
-import CustomTextField from 'components/mui/text-field'
-import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog'
+import CustomAvatar from 'components/mui/avatar';
+import CustomChip from 'components/mui/chip';
+import CustomTextField from 'components/mui/text-field';
+import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 // ** Utils Import
-import { getInitials } from 'utils/get-initials'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { getInitials } from 'utils/get-initials';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
 
 const data = {
   id: 1,
@@ -74,6 +76,22 @@ const Sub = styled('sub')(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize
 }));
 
+const validationSchema = yup.object().shape({
+  First_name: yup.string().required('First Name is required'),
+  Last_name: yup.string().required('Last Name is required'),
+  date_of_birth: yup.date().required('Date of Birth is required'),
+  gender: yup.string().required('Gender is required'),
+  state: yup.string().required('State is required'),
+  city: yup.string().required('City is required'),
+  pin_code: yup.number().required('Pin Code is required'),
+  address_line_one: yup.string().required('Address Line One is required'),
+  address_line_two: yup.string().required('Address Line Two is required'),
+  phone: yup.number().required('Phone Number is required'),
+  alt_phone: yup.number().required('Alt Phone Number is required'),
+  official_email: yup.string().email('Invalid email').required('Official Email is required'),
+  description: yup.string().required('Description is required')
+});
+
 const UserViewLeft = () => {
   // ** States
   const [openEdit, setOpenEdit] = useState(false);
@@ -88,6 +106,39 @@ const UserViewLeft = () => {
   // Handle Upgrade Plan dialog
   const handlePlansClickOpen = () => setOpenPlans(true);
   const handlePlansClose = () => setOpenPlans(false);
+
+  const onSubmit = (data) => {
+    const inputData = {
+      First_name: data.First_name,
+      Last_name: data.Last_name,
+      date_of_birth: data.date_of_birth,
+      gender: data.gender,
+      state: data.state,
+      city: data.city,
+      pin_code: data.pin_code,
+      address_line_one: data.address_line_one,
+      address_line_two: data.address_line_two,
+      phone: data.phone,
+      alt_phone: data.alt_phone,
+      official_email: data.official_email,
+      description: data.description,
+    };
+    console.log(inputData);
+    console.log(data);
+  };
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(validationSchema)
+  });
+
+  const CustomInput = forwardRef(({ ...props }, ref) => {
+    return <TextField fullWidth inputRef={ref} {...props} />;
+  });
+
   if (data) {
     return (
       <Grid container spacing={6}>
@@ -207,110 +258,303 @@ const UserViewLeft = () => {
               onClose={handleEditClose}
               aria-labelledby="user-view-edit"
               aria-describedby="user-view-edit-description"
-              sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650 } }}
+              sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
             >
               <DialogTitle
                 id="user-view-edit"
                 sx={{
                   textAlign: 'center',
                   fontSize: '1.5rem !important',
-                  px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pt: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+                  px: (theme) => [`${theme.spacing(2)} !important`, `${theme.spacing(15)} !important`]
+                  // pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(12.5)} !important`]
                 }}
               >
                 Edit User Information
               </DialogTitle>
               <DialogContent
                 sx={{
-                  pb: (theme) => `${theme.spacing(8)} !important`,
-                  px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`]
+                  pb: (theme) => `${theme.spacing(5)} !important`,
+                  px: (theme) => [`${theme.spacing(2)} !important`, `${theme.spacing(8)} !important`]
                 }}
               >
                 <DialogContentText variant="body2" id="user-view-edit-description" sx={{ textAlign: 'center', mb: 7 }}>
                   Updating user details will receive a privacy audit.
                 </DialogContentText>
-                <form>
-                  <Grid container spacing={6}>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Grid container spacing={5}>
                     <Grid item xs={12} sm={6}>
-                      <CustomTextField fullWidth label="Full Name" placeholder="John Doe" defaultValue={data.fullName} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField
-                        fullWidth
-                        label="Username"
-                        placeholder="John.Doe"
-                        defaultValue={data.username}
-                        InputProps={{ startAdornment: <InputAdornment position="start">@</InputAdornment> }}
+                      <Controller
+                        name="First_name"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="First Name"
+                            onChange={onChange}
+                            placeholder="Leonard"
+                            error={Boolean(errors['First_name'])}
+                            aria-describedby="stepper-linear-personal-institute_name"
+                            {...(errors['First_name'] && { helperText: 'This field is required' })}
+                          />
+                        )}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <CustomTextField
-                        fullWidth
-                        type="email"
-                        label="Billing Email"
-                        defaultValue={data.email}
-                        placeholder="john.doe@gmail.com"
+                      <Controller
+                        name="Last_name"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="Last Name"
+                            onChange={onChange}
+                            placeholder="Leonard"
+                            error={Boolean(errors['Last_name'])}
+                            aria-describedby="stepper-linear-personal-institute_name"
+                            {...(errors['Last_name'] && { helperText: 'This field is required' })}
+                          />
+                        )}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <CustomTextField select fullWidth label="Status" defaultValue={data.status}>
-                        <MenuItem value="pending">Pending</MenuItem>
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
-                      </CustomTextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField fullWidth label="TAX ID" defaultValue="Tax-8894" placeholder="Tax-8894" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField fullWidth label="Contact" placeholder="723-348-2344" defaultValue={`+1 ${data.contact}`} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField select fullWidth label="Language" defaultValue="English">
-                        <MenuItem value="English">English</MenuItem>
-                        <MenuItem value="Spanish">Spanish</MenuItem>
-                        <MenuItem value="Portuguese">Portuguese</MenuItem>
-                        <MenuItem value="Russian">Russian</MenuItem>
-                        <MenuItem value="French">French</MenuItem>
-                        <MenuItem value="German">German</MenuItem>
-                      </CustomTextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField select fullWidth label="Country" defaultValue="USA">
-                        <MenuItem value="USA">USA</MenuItem>
-                        <MenuItem value="UK">UK</MenuItem>
-                        <MenuItem value="Spain">Spain</MenuItem>
-                        <MenuItem value="Russia">Russia</MenuItem>
-                        <MenuItem value="France">France</MenuItem>
-                        <MenuItem value="Germany">Germany</MenuItem>
-                      </CustomTextField>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControlLabel
-                        label="Use as a billing address?"
-                        control={<Switch defaultChecked />}
-                        sx={{ '& .MuiTypography-root': { fontWeight: 500 } }}
+                      <Controller
+                        name="date_of_birth"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <DatePicker
+                            id="issue-date"
+                            dateFormat={'dd/MM/yyyy'}
+                            value={value}
+                            selected={value}
+                            customInput={
+                              <CustomInput
+                                label="Date Of Birth"
+                                error={Boolean(errors['date_of_birth'])}
+                                aria-describedby="stepper-linear-personal-date_of_birth"
+                                {...(errors['date_of_birth'] && { helperText: 'This field is required' })}
+                              />
+                            }
+                            onChange={onChange}
+                          />
+                        )}
                       />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="gender"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            select
+                            fullWidth
+                            value={value}
+                            onChange={onChange}
+                            label="Gender"
+                            placeholder="Select Gender"
+                            error={Boolean(errors['gender'])}
+                            aria-describedby="stepper-linear-personal-gender"
+                            {...(errors['gender'] && { helperText: 'This field is required' })}
+                          >
+                            <MenuItem value="Male">Male</MenuItem>
+                            <MenuItem value="Female">Female</MenuItem>
+                            <MenuItem value="Other">Other</MenuItem>
+                          </CustomTextField>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="state"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="State"
+                            onChange={onChange}
+                            error={Boolean(errors.state)}
+                            aria-describedby="stepper-linear-personal-state-helper"
+                            {...(errors.state && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="city"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="City"
+                            onChange={onChange}
+                            error={Boolean(errors.city)}
+                            aria-describedby="stepper-linear-personal-city-helper"
+                            {...(errors.city && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="pin_code"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="Pin Code"
+                            type="number"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['pin_code'])}
+                            aria-describedby="stepper-linear-personal-pin_code"
+                            {...(errors['pin_code'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="address_line_one"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="Address Line One"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['address_line_one'])}
+                            aria-describedby="stepper-linear-personal-address_line_one"
+                            {...(errors['address_line_one'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="address_line_two"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="Address Line Two"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['address_line_two'])}
+                            aria-describedby="stepper-linear-personal-address_line_two"
+                            {...(errors['address_line_two'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="phone"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            type="number"
+                            value={value}
+                            label="Phone Number"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['phone'])}
+                            aria-describedby="stepper-linear-personal-phone"
+                            {...(errors['phone'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="alt_phone"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            type="number"
+                            label="Alt Phone Number"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['alt_phone'])}
+                            aria-describedby="stepper-linear-personal-alt_phone"
+                            {...(errors['alt_phone'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="official_email"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="Official Email"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['official_email'])}
+                            aria-describedby="stepper-linear-personal-official_email"
+                            {...(errors['official_email'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Controller
+                        name="description"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            multiline
+                            rows={3}
+                            label="Description"
+                            onChange={onChange}
+                            placeholder="Carter"
+                            error={Boolean(errors['description'])}
+                            aria-describedby="stepper-linear-personal-description"
+                            {...(errors['description'] && { helperText: 'This field is required' })}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Button variant="tonal" color="secondary">
+                        cancel
+                      </Button>
+                      <Button type="submit" variant="contained">
+                        Submit
+                      </Button>
                     </Grid>
                   </Grid>
                 </form>
               </DialogContent>
-              <DialogActions
-                sx={{
-                  justifyContent: 'center',
-                  px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pb: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-                }}
-              >
-                <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClose}>
-                  Submit
-                </Button>
-                <Button variant="tonal" color="secondary" onClick={handleEditClose}>
-                  Cancel
-                </Button>
-              </DialogActions>
             </Dialog>
-
             <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
             <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
           </Card>

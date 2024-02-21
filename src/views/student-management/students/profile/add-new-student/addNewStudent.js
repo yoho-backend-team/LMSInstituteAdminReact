@@ -337,10 +337,8 @@ const StepperLinearWithValidation = () => {
     var year = originalDate.getFullYear();
     var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
     // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -352,29 +350,21 @@ const StepperLinearWithValidation = () => {
       let data = new FormData();
       data.append('First_name', personalData?.First_name);
       data.append('Last_name', personalData?.Last_name);
-      data.append('email', personalData?.official_email);
-      data.append('description', personalData?.description);
+      data.append('date_of_birth', convertDateFormat(personalData?.date_of_birth));
+      data.append('gender', personalData?.gender);
+      data.append('state', personalData?.state);
+      data.append('city', personalData?.city);
+      data.append('pin_code', personalData?.pin_code);
       data.append('address_line_1', personalData?.address_line_one);
       data.append('address_line_2', personalData?.address_line_two);
-      data.append('city', personalData?.city);
-      data.append('state', personalData?.state);
-      data.append('gender', personalData?.gender);
-      data.append('pin_code', personalData?.pin_code);
       data.append('phone', personalData?.phone);
-      data.append('alternate_number', personalData?.alt_phone);
-      data.append('official_website', personalData?.official_website);
-      data.append('facebook', socialData?.facebook);
-      data.append('linkedin', socialData?.linkedIn);
-      data.append('instagram', socialData?.instagram);
-      data.append('twitter', socialData?.twitter);
-      data.append('name', accountData?.name);
-      data.append('date_of_birth', convertDateFormat(personalData?.date_of_birth));
-      data.append('logo', logo);
-      data.append('image', instituteImage);
-      data.append('gallery', galleryImages);
-      data.append('user_email', accountData?.email);
-      data.append('user_mobile', accountData?.contact);
+      data.append('alt_phone', personalData?.alt_phone);
+      data.append('official_email', personalData?.official_email);
+      data.append('description', personalData?.description);
       data.append('username', accountData?.username);
+      data.append('Password', accountData?.Password);
+      data.append('Confirm Password', accountData?.confirm_password);
+      data.append('logo', logo);
 
       let config = {
         method: 'post',
@@ -686,7 +676,6 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
-
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="official_email"
