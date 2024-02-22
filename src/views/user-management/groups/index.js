@@ -10,7 +10,7 @@ import { deleteGroup, searchGroups } from 'features/user-management/groups/servi
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const GroupManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -21,7 +21,6 @@ const GroupManagement = () => {
   const groups = useSelector(selectGroups);
   const groupLoading = useSelector(selectGroupLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const navigate = useNavigate();
 
   console.log(groups);
   useEffect(() => {
@@ -29,7 +28,7 @@ const GroupManagement = () => {
   }, [dispatch, selectedBranchId]);
 
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
-
+  console.log(selectedDeleteGroupId)
   const handleDeleteGroup = async () => {
     try {
       const result = await deleteGroup(selectedDeleteGroupId);
@@ -105,7 +104,7 @@ const GroupManagement = () => {
                   size="small"
                   sx={{ color: 'error.main' }}
                   onClick={() => {
-                    setSelectedDeleteGroupId(item.id);
+                    setSelectedDeleteGroupId(item?.role?.id);
                     setDeleteDialogOpen(true);
                   }}
                 >
@@ -129,7 +128,7 @@ const GroupManagement = () => {
 
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
             <Grid item xs={12} sm={6} lg={4}>
-              <Card sx={{ cursor: 'pointer' }} onClick={() => navigate('add')}>
+              <Card sx={{ cursor: 'pointer' }}>
                 <Grid container sx={{ height: '100%' }}>
                   <Grid item xs={5}>
                     <Box
@@ -147,7 +146,7 @@ const GroupManagement = () => {
                   <Grid item xs={7}>
                     <CardContent sx={{ pl: 0, height: '100%' }}>
                       <Box sx={{ textAlign: 'right' }}>
-                        <Button variant="contained" sx={{ mb: 3, whiteSpace: 'nowrap' }} onClick={() => navigate('add')}>
+                        <Button variant="contained" component={Link} to={'add'} sx={{ mb: 3, whiteSpace: 'nowrap' }}>
                           Add New Group
                         </Button>
                         <Typography sx={{ color: 'text.secondary' }}>Add group, if it doesnt exist.</Typography>

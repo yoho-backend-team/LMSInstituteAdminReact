@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
+const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group`;
 
 export const getUserById = async (id) => {
   try {
@@ -45,7 +46,7 @@ export const userChangePassword = async (data) => {
 
 export const updateUser = async (data) => {
   try {
-    const response = await axios.post('/data_storage/user-management/users/SingleUser.json', {
+    const response = await axios.post(`${USER_API_ENDPOINT}/password-update`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -53,8 +54,8 @@ export const updateUser = async (data) => {
       data: data
     });
 
-    if (response.data) {
-      return { success: true, data: response.data };
+    if (response.data.status) {
+      return { success: true, message:'User updated Successfully' };
     } else {
       return { success: false, message: 'Failed to update User' };
     }
@@ -66,7 +67,7 @@ export const updateUser = async (data) => {
 
 export const getAllActiveGroups = async () => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-active-roles`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -3,15 +3,17 @@ import axios from 'axios';
 
 const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/teaching-staff`;
 
-export const getAllTeachingStaffs = async (selectedBranchId) => {
+export const getAllTeachingStaffs = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
+
+    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {

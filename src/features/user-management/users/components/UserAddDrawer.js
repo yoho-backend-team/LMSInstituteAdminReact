@@ -138,6 +138,13 @@ const SidebarAddUser = (props) => {
         reset();
         toast.success('User created successfully');
       } else {
+        let errorMessage = '';
+        Object.values(result.message).forEach((errors) => {
+          errors.forEach((error) => {
+            errorMessage += `${error}\n`; // Concatenate errors with newline
+          });
+        });
+        toast.error(errorMessage.trim());
         // toast.error(result.message);
       }
     }

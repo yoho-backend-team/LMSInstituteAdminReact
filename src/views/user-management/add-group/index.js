@@ -42,8 +42,7 @@ const schema = yup.object().shape({
   groupName: yup
     .string()
     .min(3, (obj) => showErrors('Group Name', obj.value.length, obj.min))
-    .required(),
-  branch: yup.array().min(1, 'Select at least one Branch').required()
+    .required()
 });
 
 const defaultValues = {

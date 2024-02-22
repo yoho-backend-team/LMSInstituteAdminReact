@@ -136,8 +136,8 @@ const UserBodySection = ({ groups, users, setLoading }) => {
   const handleChangeStatus = async () => {
     try {
       const data = {
-        id: selectedDeleteMaterial.id,
-        status: selectedDeleteMaterial?.is_active === '1' ? '0' : '1'
+        id: selectedDeleteMaterial?.users.id,
+        status: selectedDeleteMaterial?.users.is_active === '1' ? '0' : '1'
       };
       const result = await updateUserStatus(data);
 
@@ -185,10 +185,10 @@ const UserBodySection = ({ groups, users, setLoading }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
+                {row?.users?.name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.institution_users?.email}
+                {row?.email}
               </Typography>
             </Box>
           </Box>
@@ -203,7 +203,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.institution_users?.mobile}
+            {row?.mobile}
           </Typography>
         );
       }
@@ -217,7 +217,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.role_group?.role?.name}
+              {row?.role_groups?.role?.name}
             </Typography>
           </Box>
         );
@@ -233,17 +233,17 @@ const UserBodySection = ({ groups, users, setLoading }) => {
           <TextField
             size="small"
             select
-            value={row.is_active}
+            value={row?.users?.is_active}
             label="status"
             id="custom-select"
             sx={{
-              color: userStatusObj[row.is_active]
+              color: userStatusObj[row?.users?.is_active]
             }}
             onChange={(e) => handleStatus(e, row)}
             SelectProps={{
               sx: {
                 borderColor: row.is_active === '1' ? 'success' : 'error',
-                color: userStatusObj[row.is_active]
+                color: userStatusObj[row?.users?.is_active]
               }
             }}
           >
@@ -259,7 +259,7 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions id={row?.users?.id} />
     }
   ];
   return (

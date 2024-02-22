@@ -81,6 +81,8 @@ export const deleteGroup = async (groupId) => {
       params: { id: groupId }
     });
 
+    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'Group deleted successfully' };
     } else {
