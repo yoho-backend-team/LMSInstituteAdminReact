@@ -19,6 +19,7 @@ const Categories = () => {
     dispatch(getAllCourseCategories(selectedBranchId));
   }, [dispatch, selectedBranchId]);
 
+  console.log(courseCategories);
   return (
     <Grid>
       {categoriesLoading ? (
@@ -30,7 +31,7 @@ const Categories = () => {
             <CategoryCardHeader />
           </Grid>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {courseCategories.map((category, index) => (
+            {courseCategories?.data?.map((category, index) => (
               <CategoryCard key={index} category={category} />
             ))}
           </Grid>

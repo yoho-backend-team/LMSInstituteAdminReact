@@ -10,13 +10,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addCourseCategory } from '../services/courseCategoryServices';
-
+import { getActiveBranches } from 'features/branch-management/branches/services/branchServices';
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`;
@@ -58,11 +58,20 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
   const [selectedImage, setSelectedImage] = useState('');
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedBranches, setSelectedBranches] = useState([]);
-  const branches = [
-    { branch_id: '1', branch_name: 'Branch 1' },
-    { branch_id: '2', branch_name: 'Branch 2' },
-    { branch_id: '3', branch_name: 'Branch 3' }
-  ];
+  const [branches, setBranches] = useState([]);
+
+  useEffect(() => {
+    getAllBranches();
+  }, []);
+
+  const getAllBranches = async () => {
+    const result = await getActiveBranches();
+
+    if (result.data.data) {
+      setBranches(result.data.data);
+    }
+  };
+
   console.log(selectedImage);
   const handleClose = () => {
     setValue('course', '');
@@ -100,7 +109,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('logo', selectedImage);
-    bodyFormData.append('course_category_name', data.course);
+    bodyFormData.append('category_name', data.course);
     bodyFormData.append('branch_id', selectedBranchId);
 
     const result = await addCourseCategory(bodyFormData);

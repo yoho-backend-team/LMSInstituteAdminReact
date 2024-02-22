@@ -25,7 +25,8 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import StepperWrapper from 'styles/mui/stepper';
 import * as yup from 'yup';
-
+import { getActiveBranches } from 'features/branch-management/branches/services/branchServices';
+import { getActiveCategoriesByBranch } from 'features/course-management/categories/services/courseCategoryServices';
 const steps = [
   {
     title: 'Personal Info',
@@ -66,15 +67,41 @@ const AddCoursePage = () => {
   const [courseLogo, setCourseLogo] = useState('');
   const [courseTemplate, setCourseTemplate] = useState('');
   const [courseSyllabus, setCourseSyllabus] = useState('');
-  const [activeCategories, setActiveCategories] = useState([]);
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedBranches, setSelectedBranches] = useState([]);
-  const branches = [
-    { branch_id: '1', branch_name: 'Branch 1' },
-    { branch_id: '2', branch_name: 'Branch 2' },
-    { branch_id: '3', branch_name: 'Branch 3' }
-  ];
+  const [branches, setBranches] = useState([]);
+  const [activeCategories, setActiveCategories] = useState([]);
+
+  useEffect(() => {
+    getAllBranches();
+  }, []);
+  useEffect(() => {
+    const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
+    getActiveCourseCategories(filteredBranchId);
+  }, [selectedBranches,setSelectedBranches]);
+  const getAllBranches = async () => {
+    const result = await getActiveBranches();
+
+    if (result.data.data) {
+      setBranches(result.data.data);
+    }
+  };
+  const getActiveCourseCategories = async (branchIds) => {
+    const data ={
+      branch_id : branchIds
+    }
+    console.log(data);
+    const result = await getActiveCategoriesByBranch(data);
+
+    if (result.data.data) {
+      setActiveCategories(result.data.data);
+    }
+  };
+  // const branches = [
+  //   { branch_id: '1', branch_name: 'Branch 1' },
+  //   { branch_id: '2', branch_name: 'Branch 2' },
+  //   { branch_id: '3', branch_name: 'Branch 3' }
+  // ];
   console.log(courseSyllabus);
 
   useEffect(() => {
@@ -133,18 +160,24 @@ const AddCoursePage = () => {
     const personalData = personalControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
+      const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
+      const filteredCategoryId = activeCategories?.map((category) => category?.id);
+
+      console.log(filteredBranchId);
+      console.log(filteredCategoryId);
+
       let data = new FormData();
       data.append('course_name', personalData?.course_name);
       data.append('description', personalData?.description);
       data.append('course_overview', personalData?.course_overview);
       data.append('course_duration', personalData?.Course_duration);
-      data.append('course_category', personalData?.Course_Category);
+      data.append('institute_category_id', filteredCategoryId);
       data.append('course_price', personalData?.Course_Price);
       data.append('learning_format', personalData?.Learning_Format);
       data.append('logo', courseLogo);
       data.append('image', courseTemplate);
       data.append('image', courseSyllabus);
-      data.append('branch_id', selectedBranchId);
+      data.append('branch_id', filteredBranchId);
 
       const result = await addCourse(data);
 
@@ -294,7 +327,7 @@ const AddCoursePage = () => {
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => {
-                    const branchesWithSelectAll = [{ id: 'selectAll', course_category_name: 'Select All' }, ...activeCategories];
+                    const branchesWithSelectAll = [{ id: 'selectAll', category_name: 'Select All' }, ...activeCategories];
 
                     return (
                       <Autocomplete
@@ -302,7 +335,7 @@ const AddCoursePage = () => {
                         disableCloseOnSelect
                         id="select-multiple-chip"
                         options={branchesWithSelectAll}
-                        getOptionLabel={(option) => option.course_category_name}
+                        getOptionLabel={(option) => option.category_name}
                         value={value}
                         onChange={(e, newValue) => {
                           if (newValue && newValue.some((option) => option.id === 'selectAll')) {
@@ -332,7 +365,7 @@ const AddCoursePage = () => {
                               style={{ marginRight: 8 }}
                               checked={selected}
                             />
-                            {option.course_category_name}
+                            {option.category_name}
                           </li>
                         )}
                         renderTags={(value) => (
@@ -340,7 +373,7 @@ const AddCoursePage = () => {
                             {value.map((option, index) => (
                               <CustomChip
                                 key={option.id}
-                                label={option.course_category_name}
+                                label={option.category_name}
                                 onDelete={() => {
                                   const updatedValue = [...value];
                                   updatedValue.splice(index, 1);
@@ -380,7 +413,7 @@ const AddCoursePage = () => {
                     >
                       <MenuItem value="online">Online Mode</MenuItem>
                       <MenuItem value="offline">Offline Mode</MenuItem>
-                      <MenuItem value="Hybrid">Hybrid Mode</MenuItem>
+                      <MenuItem value="hybrid">Hybrid Mode</MenuItem>
                     </TextField>
                   )}
                 />
