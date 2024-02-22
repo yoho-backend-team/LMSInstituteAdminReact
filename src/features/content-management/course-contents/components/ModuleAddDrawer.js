@@ -5,7 +5,6 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 // ** Third Party Imports
@@ -13,10 +12,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
+import CustomChip from 'components/mui/chip';
 import toast from 'react-hot-toast';
 import { addCourseModule } from '../modules/services/moduleServices';
 
@@ -39,45 +41,22 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  course: yup.string().required(),
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
-  Videourl: yup.string().required()
+    branches: yup.array().min(1, 'Please select at least one branch'),
+    courses: yup.array().min(1, 'Please select at least one course'),
+    Videourl: yup.string().required()
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
 
 const defaultValues = {
   description: '',
   title: '',
-  branch: '',
-  course: '',
-  Videourl: ''
+  Videourl: '',
+  branches: [],
+  courses: []
 };
 
 const ModuleAddDrawer = (props) => {
@@ -86,12 +65,21 @@ const ModuleAddDrawer = (props) => {
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+
+  const branches = [
+    { branch_id: '1', branch_name: 'Branch 1' },
+    { branch_id: '2', branch_name: 'Branch 2' },
+    { branch_id: '3', branch_name: 'Branch 3' }
+  ];
+  const courses = [
+    { course_id: '1', course_name: 'Course 1' },
+    { course_id: '2', course_name: 'Course 2' },
+    { course_id: '3', course_name: 'Course 3' }
+  ];
 
   const [groups, setGroups] = useState([]);
 
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
 
   useEffect(() => {
     getAllGroups();
@@ -142,7 +130,7 @@ const ModuleAddDrawer = (props) => {
       course: data.course,
       title: data.title,
       description: data.description,
-      videourl: data.Videourl,
+      videourl: data.Videourl
     };
     const result = await addCourseModule(dummyData);
 
@@ -196,105 +184,188 @@ const ModuleAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12}>
-            <TextField
-              sx={{ mb: 4 }}
-              select
-              fullWidth
-              label="Branch"
-              id="select-multiple-checkbox"
-              SelectProps={{
-                MenuProps,
-                multiple: true,
-                value: selectedBranches,
-                onChange: (e) => handleBranchChange(e),
-                renderValue: (selected) => selected.join(', ')
+            <Autocomplete
+              multiple
+              disableCloseOnSelect
+              id="select-multiple-chip"
+              options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
+              getOptionLabel={(option) => option.branch_name}
+              value={selectedBranches}
+              onChange={(e, newValue) => {
+                if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
+                  setSelectedBranches(branches.filter((option) => option.branch_id !== 'selectAll'));
+                } else {
+                  setSelectedBranches(newValue);
+                }
               }}
-            >
-              {names.map((name) => (
-                <MenuItem key={name} value={name}>
-                  <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                  <ListItemText primary={name} />
-                </MenuItem>
-              ))}
-            </TextField>
+              renderInput={(params) => (
+                <TextField
+                  sx={{ mb: 4 }}
+                  {...params}
+                  fullWidth
+                  label="Branches"
+                  InputProps={{
+                    ...params.InputProps,
+                    style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                  }}
+                  error={Boolean(errors.branches)}
+                  {...(errors.branches && { helperText: errors.branches.message })}
+                />
+              )}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.branch_name}
+                </li>
+              )}
+              renderTags={(value) => (
+                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                  {value.map((option, index) => (
+                    <CustomChip
+                      key={option.branch_id}
+                      label={option.branch_name}
+                      onDelete={() => {
+                        const updatedValue = [...value];
+                        updatedValue.splice(index, 1);
+                        setSelectedBranches(updatedValue);
+                      }}
+                      color="primary"
+                      sx={{ m: 0.75 }}
+                    />
+                  ))}
+                </div>
+              )}
+              isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
+              selectAllText="Select All"
+              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+            />
           </Grid>
 
-          <Controller
-            name="course"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                select
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Select Course"
-                onChange={onChange}
-                SelectProps={{ value: value, onChange: onChange }}
-                error={Boolean(errors.course)}
-                {...(errors.course && { helperText: errors.course.message })}
-              >
-                <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                <MenuItem value={'Android Development'}>Android Development</MenuItem>
-              </TextField>
-            )}
-          />
+          <Grid item xs={12} sm={12}>
+            <Autocomplete
+              multiple
+              disableCloseOnSelect
+              id="select-multiple-chip"
+              options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
+              getOptionLabel={(option) => option.course_name}
+              value={selectedCourses}
+              onChange={(e, newValue) => {
+                if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                  setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                } else {
+                  setSelectedCourses(newValue);
+                }
+              }}
+              renderInput={(params) => (
+                <TextField
+                  sx={{ mb: 4 }}
+                  {...params}
+                  fullWidth
+                  label="Courses"
+                  InputProps={{
+                    ...params.InputProps,
+                    style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                  }}
+                  error={Boolean(errors.courses)}
+                  {...(errors.courses && { helperText: errors.courses.message })}
+                />
+              )}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option.course_name}
+                </li>
+              )}
+              renderTags={(value) => (
+                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                  {value.map((option, index) => (
+                    <CustomChip
+                      key={option.course_id}
+                      label={option.course_name}
+                      onDelete={() => {
+                        const updatedValue = [...value];
+                        updatedValue.splice(index, 1);
+                        setSelectedCourses(updatedValue);
+                      }}
+                      color="primary"
+                      sx={{ m: 0.75 }}
+                    />
+                  ))}
+                </div>
+              )}
+              isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+              selectAllText="Select All"
+              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+            />
+          </Grid>
 
-          <Controller
-            name="title"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Title"
-                onChange={onChange}
-                placeholder="John Doe"
-                error={Boolean(errors.title)}
-                {...(errors.title && { helperText: errors.title.message })}
-              />
-            )}
-          />
-
-          <Controller
-            name="description"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="description"
-                onChange={onChange}
-                placeholder="Business Development Executive"
-                error={Boolean(errors.description)}
-                {...(errors.description && { helperText: errors.description.message })}
-              />
-            )}
-          />
-
-          <Controller
-            name="title"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Video URL"
-                onChange={onChange}
-                placeholder="Video URL"
-                error={Boolean(errors.Videourl)}
-                {...(errors.Videourl && { helperText: errors.Videourl.message })}
-              />
-            )}
-          />
-
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="title"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="Title"
+                  onChange={onChange}
+                  placeholder="John Doe"
+                  error={Boolean(errors.title)}
+                  {...(errors.title && { helperText: errors.title.message })}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="description"
+                  onChange={onChange}
+                  placeholder="Business Development Executive"
+                  error={Boolean(errors.description)}
+                  {...(errors.description && { helperText: errors.description.message })}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="Video URL"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="Video URL"
+                  onChange={onChange}
+                  placeholder="Video URL"
+                  error={Boolean(errors.Videourl)}
+                  {...(errors.Videourl && { helperText: errors.Videourl.message })}
+                />
+              )}
+            />
+          </Grid>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
               Submit
