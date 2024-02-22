@@ -1,6 +1,6 @@
 // nonTeachingAttendanceThunks.js
 import { getAllNonTeachingStaffAttendances as fetchAllNonTeachingStaffAttendances } from '../services/nonTeachingStaffAttendanceServices'; // Replace with your service file
-import { setNonTeachingStaffAttendances, setLoading } from './nonNonTeachingStaffAttendanceSlice';
+import { setNonTeachingStaffAttendances, setLoading } from './nonTeachingStaffAttendanceSlice';
 
 export const getAllNonTeachingStaffAttendances = (selectedBranchId) => async (dispatch) => {
   try {
