@@ -78,7 +78,7 @@ const AddCoursePage = () => {
   useEffect(() => {
     const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
     getActiveCourseCategories(filteredBranchId);
-  }, [selectedBranches,setSelectedBranches]);
+  }, [selectedBranches, setSelectedBranches]);
   const getAllBranches = async () => {
     const result = await getActiveBranches();
 
@@ -87,8 +87,8 @@ const AddCoursePage = () => {
     }
   };
   const getActiveCourseCategories = async (branchIds) => {
-    const data ={
-      branch_id : branchIds
+    const data = {
+      branch_id: branchIds
     }
     console.log(data);
     const result = await getActiveCategoriesByBranch(data);
@@ -327,14 +327,12 @@ const AddCoursePage = () => {
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => {
-                    const branchesWithSelectAll = [{ id: 'selectAll', category_name: 'Select All' }, ...activeCategories];
 
                     return (
                       <Autocomplete
-                        multiple
                         disableCloseOnSelect
                         id="select-multiple-chip"
-                        options={branchesWithSelectAll}
+                        options={branches}
                         getOptionLabel={(option) => option.category_name}
                         value={value}
                         onChange={(e, newValue) => {

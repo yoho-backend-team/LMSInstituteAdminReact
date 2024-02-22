@@ -1,22 +1,17 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, Grid, styled } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+
+import { Grid, styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import CustomChip from 'components/mui/chip';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addCourseCategory } from '../services/courseCategoryServices';
-import { getActiveBranches } from 'features/branch-management/branches/services/branchServices';
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`;
@@ -56,21 +51,8 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const [selectedBranches, setSelectedBranches] = useState([]);
-  const [branches, setBranches] = useState([]);
 
-  useEffect(() => {
-    getAllBranches();
-  }, []);
 
-  const getAllBranches = async () => {
-    const result = await getActiveBranches();
-
-    if (result.data.data) {
-      setBranches(result.data.data);
-    }
-  };
 
   console.log(selectedImage);
   const handleClose = () => {
@@ -110,7 +92,6 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     var bodyFormData = new FormData();
     bodyFormData.append('logo', selectedImage);
     bodyFormData.append('category_name', data.course);
-    bodyFormData.append('branch_id', selectedBranchId);
 
     const result = await addCourseCategory(bodyFormData);
 
@@ -186,63 +167,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
                   />
                 )}
               />
-              <Autocomplete
-                multiple
-                disableCloseOnSelect
-                id="select-multiple-chip"
-                options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
-                getOptionLabel={(option) => option.branch_name}
-                value={selectedBranches}
-                onChange={(e, newValue) => {
-                  if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
-                    setSelectedBranches(branches.filter((option) => option.branch_id !== 'selectAll'));
-                  } else {
-                    setSelectedBranches(newValue);
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    label="Branches"
-                    InputProps={{
-                      ...params.InputProps,
-                      style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                    }}
-                  />
-                )}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox
-                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                      checkedIcon={<CheckBoxIcon fontSize="small" />}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option.branch_name}
-                  </li>
-                )}
-                renderTags={(value) => (
-                  <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                    {value.map((option, index) => (
-                      <CustomChip
-                        key={option.branch_id}
-                        label={option.branch_name}
-                        onDelete={() => {
-                          const updatedValue = [...value];
-                          updatedValue.splice(index, 1);
-                          setSelectedBranches(updatedValue);
-                        }}
-                        color="primary"
-                        sx={{ m: 0.75 }}
-                      />
-                    ))}
-                  </div>
-                )}
-                isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
-                selectAllText="Select All"
-                SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-              />
+
             </Grid>
             <Grid sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
