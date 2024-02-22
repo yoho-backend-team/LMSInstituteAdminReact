@@ -18,11 +18,11 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import Gallery from './gallery';
 // ** Third Party Imports
 import * as yup from 'yup';
-// import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 // ** Icon Imports
@@ -37,6 +37,8 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import DatePicker from 'react-datepicker';
 import StepperWrapper from 'styles/mui/stepper';
+import { addStudent } from 'features/student-management/students/services/studentService';
+
 
 const steps = [
   {
@@ -145,6 +147,7 @@ const personalSchema = yup.object().shape({
 });
 
 const gallerySchema = yup.object().shape({});
+
 const data = [
   {
     value: 'basic',
@@ -361,30 +364,28 @@ const StepperLinearWithValidation = () => {
       data.append('alt_phone', personalData?.alt_phone);
       data.append('official_email', personalData?.official_email);
       data.append('description', personalData?.description);
+
       data.append('username', accountData?.username);
       data.append('Password', accountData?.Password);
       data.append('Confirm Password', accountData?.confirm_password);
       data.append('logo', logo);
+      console.log(data);
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes/create`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-        data: data
-      };
+      const result = await addStudent(bodyFormData);
 
-      await axios
-        .request(config)
-        .then((response) => {
-          console.log(response.data);
-          toast.success('Form Submitted');
-        })
-        .catch((error) => {
-          console.log(error);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
         });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
+     
     }
   };
 

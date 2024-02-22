@@ -18,6 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
+import { addCourseStudyMaterial } from '../study-materials/services/studyMaterialServices';
 import CoursePdfInput from './PdfInput';
 
 const showErrors = (field, valueLen, min) => {
@@ -126,7 +127,7 @@ const StudyMaterialAddDrawer = (props) => {
     reset,
     control,
     setValue,
-    setError,
+    // setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -137,43 +138,26 @@ const StudyMaterialAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    bodyFormData.append('name', data.title);
-    bodyFormData.append('email', data.email);
-    bodyFormData.append('mobile', data.contact);
-    bodyFormData.append('username', data.userName);
-    bodyFormData.append('password', data.password);
-    bodyFormData.append('c_password', data.confirm_password);
+    bodyFormData.append('branch', data.branch);
+    bodyFormData.append('course', data.course);
+    bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
-    bodyFormData.append('course_id', data.course);
     console.log(bodyFormData);
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: bodyFormData
-    };
+    const result = await addCourseStudyMaterial(bodyFormData);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        if (response.data.status) {
-          setError('');
-          toggle();
-          reset();
-          toast.success('User created successfully');
-        }
-        if (!response.data.status) {
-          toast.error('Failed to create user');
-        }
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
       });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
 
   const handleSetPdf = (data) => {

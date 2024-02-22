@@ -19,6 +19,9 @@ import ListItemText from '@mui/material/ListItemText';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomChip from 'components/mui/chip';
 import DatePicker from 'react-datepicker';
+import { addBatch } from 'features/batch-management/batches/services/batchServices';
+import toast from 'react-hot-toast';
+
 
 const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
@@ -80,6 +83,15 @@ const AddBatchPage = () => {
   const [selectedBranches, setSelectedBranches] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
 
+   const defaultValues = {
+    course: '',
+    branches: [],
+    startDate: null,
+    endDate: null,
+    students: [],
+    batchName:''
+  };
+
   const {
     handleSubmit,
     control,
@@ -89,15 +101,7 @@ const AddBatchPage = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  const defaultValues = {
-    course: '',
-    branches: [],
-    startDate: null,
-    endDate: null,
-    students: [],
-    batchName:''
-  };
-
+ 
   const handleClose = () => {
     handleEditClose();
     reset();
@@ -113,7 +117,7 @@ const AddBatchPage = () => {
 
 
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     const inputData = {
       batchName: data.batchName,
       startDate: data.startDate,
@@ -122,8 +126,22 @@ const AddBatchPage = () => {
       course: data.course,
       students: data.students,
     };
-    console.log(inputData);
-    console.log(data);
+    const result = await addBatch(inputData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
+
+   
   };
   
   const handleStartDateChange = (date) => {

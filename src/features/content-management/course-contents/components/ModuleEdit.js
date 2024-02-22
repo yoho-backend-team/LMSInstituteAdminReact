@@ -18,6 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
+import { updateCourseModule } from '../modules/services/moduleServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -125,7 +126,7 @@ const ModuleEdit = (props) => {
     reset,
     control,
     setValue,
-    setError,
+    // setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -138,46 +139,33 @@ const ModuleEdit = (props) => {
       reset(props.initialValues || defaultValues);
     }
   }, [open, reset, props.initialValues]);
+
+
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('name', data.title);
-    bodyFormData.append('email', data.email);
-    bodyFormData.append('mobile', data.contact);
-    bodyFormData.append('username', data.userName);
-    bodyFormData.append('password', data.password);
-    bodyFormData.append('c_password', data.confirm_password);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('course_id', data.course);
-    bodyFormData.append('Videourl', data.Videourl);
-    console.log(bodyFormData);
-
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: bodyFormData
+    console.log(data);
+    const dummyData = {
+      branch: data.branch,
+      course: data.course,
+      title: data.title,
+      description: data.description,
+      videourl: data.Videourl,
     };
+    const result = await updateCourseModule(dummyData);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        if (response.data.status) {
-          setError('');
-          toggle();
-          reset();
-          toast.success('User created successfully');
-        }
-        if (!response.data.status) {
-          toast.error('Failed to create user');
-        }
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
       });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
+
+   
   };
 
   const handleClose = () => {
