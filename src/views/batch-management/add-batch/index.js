@@ -85,8 +85,18 @@ const AddBatchPage = () => {
     control,
     formState: { errors }
   } = useForm({
+    defaultValues,
     resolver: yupResolver(validationSchema)
   });
+
+  const defaultValues = {
+    course: '',
+    branches: [],
+    startDate: null,
+    endDate: null,
+    students: [],
+    batchName:''
+  };
 
   const handleClose = () => {
     handleEditClose();
@@ -100,6 +110,8 @@ const AddBatchPage = () => {
   const handleStudentsChange = (event) => {
     setSelectedStudents(event.target.value);
   };
+
+
 
   const onSubmit = (data) => {
     const inputData = {

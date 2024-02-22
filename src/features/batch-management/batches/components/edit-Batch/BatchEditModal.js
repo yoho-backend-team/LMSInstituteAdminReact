@@ -82,14 +82,26 @@ const BatchEditModal = ({ open, handleEditClose }) => {
   const [selectedBranches, setSelectedBranches] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
 
+  const defaultValues = {
+    course: '',
+    branches: [],
+    startDate: null,
+    endDate: null,
+    students: [],
+    batchName:''
+  };
+
   const {
     handleSubmit,
     control,
     formState: { errors },
     reset
   } = useForm({
+    defaultValues,
     resolver: yupResolver(validationSchema)
   });
+
+  
 
   const handleClose = () => {
     handleEditClose();
