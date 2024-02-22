@@ -1,5 +1,5 @@
 // groupThunks.js
-import { getAllBatches as fetchAllBatches } from '../services/batchService'; // Replace with your service file
+import { getAllBatches as fetchAllBatches } from '../services/batchServices'; // Replace with your service file
 import { setBatches, setLoading } from './batchSlice';
 
 export const getAllBatches = (selectedBranchId) => async (dispatch) => {
