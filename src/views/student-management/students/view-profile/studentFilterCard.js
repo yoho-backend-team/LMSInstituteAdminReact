@@ -178,7 +178,7 @@ const StudentFilter = (props) => {
               <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
                 <Box component={Link} to={'add'}>
                   <Button variant="contained" size="medium" fullWidth>
-                    Add New Staff
+                    Add New Student
                   </Button>
                 </Box>
               </Grid>

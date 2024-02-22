@@ -30,6 +30,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { getInitials } from 'utils/get-initials';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { updateStudent } from 'features/student-management/students/services/studentService';
 
 const data = {
   id: 1,
@@ -107,7 +109,7 @@ const UserViewLeft = () => {
   const handlePlansClickOpen = () => setOpenPlans(true);
   const handlePlansClose = () => setOpenPlans(false);
 
-  const onSubmit = (data) => {
+  const onSubmit =async(data) => {
     const inputData = {
       First_name: data.First_name,
       Last_name: data.Last_name,
@@ -123,8 +125,20 @@ const UserViewLeft = () => {
       official_email: data.official_email,
       description: data.description,
     };
-    console.log(inputData);
-    console.log(data);
+    const result = await updateStudent(inputData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
 
   const {

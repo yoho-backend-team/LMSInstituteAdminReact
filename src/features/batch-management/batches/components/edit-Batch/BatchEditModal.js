@@ -20,7 +20,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomChip from 'components/mui/chip';
 import DatePicker from 'react-datepicker';
-
+import toast from 'react-hot-toast';
+import { updateBatch } from '../../services/batchServices';
 
 const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
@@ -116,7 +117,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     setSelectedStudents(event.target.value);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     const inputData = {
       batchName: data.batchName,
       startDate: data.startDate,
@@ -125,9 +126,24 @@ const BatchEditModal = ({ open, handleEditClose }) => {
       course: data.course,
       students: data.students,
     };
-    console.log(inputData);
-    console.log(data);
+    const result = await updateBatch(inputData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
+
+
+
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
