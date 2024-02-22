@@ -45,7 +45,7 @@ const defaultPersonalValues = {
   description: '',
   course_overview: '',
   Learning_Format: '',
-  Course_Category: []
+  Course_Category: ''
 };
 
 const defaultSocialValues = {};
@@ -57,7 +57,7 @@ const personalSchema = yup.object().shape({
   description: yup.string().required(),
   course_overview: yup.string().required(),
   Learning_Format: yup.string().required(),
-  Course_Category: yup.array().min(1, 'Select at least one CourseCategory').required()
+  Course_Category: yup.string().required()
 });
 
 const socialSchema = yup.object().shape({});
@@ -89,7 +89,7 @@ const AddCoursePage = () => {
   const getActiveCourseCategories = async (branchIds) => {
     const data = {
       branch_id: branchIds
-    }
+    };
     console.log(data);
     const result = await getActiveCategoriesByBranch(data);
 
@@ -326,69 +326,27 @@ const AddCoursePage = () => {
                   name="Course_Category"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => {
-
-                    return (
-                      <Autocomplete
-                        disableCloseOnSelect
-                        id="select-multiple-chip"
-                        options={branches}
-                        getOptionLabel={(option) => option.category_name}
-                        value={value}
-                        onChange={(e, newValue) => {
-                          if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                            onChange(activeCategories?.filter((option) => option.id !== 'selectAll'));
-                          } else {
-                            onChange(newValue);
-                          }
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            fullWidth
-                            label="Course Category"
-                            error={Boolean(personalErrors.Course_Category)}
-                            {...(personalErrors.Course_Category && { helperText: personalErrors.Course_Category.message })}
-                            InputProps={{
-                              ...params.InputProps,
-                              style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' } //
-                            }}
-                          />
-                        )}
-                        renderOption={(props, option, { selected }) => (
-                          <li {...props}>
-                            <Checkbox
-                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                              checkedIcon={<CheckBoxIcon fontSize="small" />}
-                              style={{ marginRight: 8 }}
-                              checked={selected}
-                            />
-                            {option.category_name}
-                          </li>
-                        )}
-                        renderTags={(value) => (
-                          <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                            {value.map((option, index) => (
-                              <CustomChip
-                                key={option.id}
-                                label={option.category_name}
-                                onDelete={() => {
-                                  const updatedValue = [...value];
-                                  updatedValue.splice(index, 1);
-                                  onChange(updatedValue);
-                                }}
-                                color="primary"
-                                sx={{ m: 0.75 }}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        selectAllText="Select All"
-                        SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                      />
-                    );
-                  }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      select
+                      defaultValue={value}
+                      onChange={onChange}
+                      label="Course_Category"
+                      id="custom-select"
+                      error={Boolean(personalErrors['Course_Category'])}
+                      aria-describedby="stepper-linear-personal-Course_Category"
+                      {...(personalErrors['Course_Category'] && { helperText: 'This field is required' })}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={10}>Ten</MenuItem>
+                      <MenuItem value={20}>Twenty</MenuItem>
+                      <MenuItem value={30}>Thirty</MenuItem>
+                    </TextField>
+                  )}
                 />
               </Grid>
 
