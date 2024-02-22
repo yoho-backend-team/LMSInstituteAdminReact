@@ -158,12 +158,13 @@ export const getAllPermissionsByRoleId = async (roleId) => {
 
 export const getAllPermissions = async () => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all-permissions`, {
+    const response = await axios.get(`${PERMISSION_API_ENDPOINT}/get-all-permissions`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data) {
       return { success: true, data: response?.data?.data, permissionsCount: response.data?.data?.length };

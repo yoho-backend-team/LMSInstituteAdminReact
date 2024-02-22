@@ -64,7 +64,7 @@ const CardStatsVertical = (props) => {
             </Box>
           </Box>
           <Typography variant="h3" sx={{ mb: 1, mt: 2 }}>
-            {category?.course_category_name}
+            {category?.category_name}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
             {category?.course?.length} Courses

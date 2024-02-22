@@ -33,6 +33,36 @@ export const getAllBranches = async () => {
   }
 };
 
+export const getActiveBranches = async () => {
+  try {
+    // let data = {
+    //   search: ''
+    // };
+    const response = await axios.get(`${BRANCH_API_ENDPOINT}/list-branch-by-auth-user`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Active Branches. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getActiveBranches:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
 export const searchBranches = async (searchQuery) => {
   try {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
@@ -62,6 +92,7 @@ export const addBranch = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Branch created successfully' };

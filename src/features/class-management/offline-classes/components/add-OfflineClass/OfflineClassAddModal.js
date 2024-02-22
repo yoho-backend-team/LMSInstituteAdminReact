@@ -1,38 +1,29 @@
-import { useState, forwardRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Grid, Checkbox } from '@mui/material';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Checkbox, Grid } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import CustomChip from 'components/mui/chip';
+import { forwardRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import format from 'date-fns/format';
+import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Autocomplete from '@mui/material/Autocomplete';
-
+import * as yup from 'yup';
+import { addOfflineClass } from '../../services/offlineClassServices';
 /* eslint-disable */
-const DateCustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const value = `${startDate}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
   const { label, readOnly } = props;
 
-  return <TextField {...props} inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
+  return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
 const showErrors = (field, valueLen, min) => {
@@ -50,22 +41,23 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
     .required('Course field is required'),
-  batch: yup.array().of(yup.string()).min(1, 'Batch field is required').required('Batch field is required'),
+  batch:yup.string().required('Batch field is required') ,
+  selectcourse:yup.string().required('Course field is required'),
   classDate: yup.date().nullable().required('Class Date field is required'),
   startTime: yup.date().nullable().required('Start Time field is required'),
   endTime: yup.date().nullable().required('End Time field is required'),
   instructor: yup.string().required('Instructor field is required'),
-  teacher: yup.array().of(yup.string()).min(1, 'Teacher field is required').required('Teacher field is required')
 });
 
 const defaultValues = {
   course: '',
-  batch: [],
-  classDate: null,
+  batch: '',
+  selectcourse:"",
+  classDate: new Date(),
   startTime: null,
   endTime: null,
   instructor: '',
-  teacher: []
+  teacher: [],
 };
 
 const OfflineClassAddModal = ({ open, handleAddClose }) => {
@@ -95,7 +87,6 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
   const handleChange = (event) => {
     setPersonName(event.target.value);
   };
-
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
   const instructors = [
@@ -108,7 +99,11 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
     { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
     { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
   ];
-
+  const courses = [
+    { id: '1', name: 'Course 1' },
+    { id: '2', name: 'Course 2' },
+    { id: '3', name: 'Course 3' }
+  ];
   const {
     reset,
     control,
@@ -123,7 +118,8 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
 
   const handleClose = () => {
     setValue('course', '');
-    setValue('batch', []);
+    setValue('selectcourse', '');
+    setValue('batch', '');
     setValue('classDate', null);
     setValue('startTime', null);
     setValue('endTime', null);
@@ -160,6 +156,32 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
 
   const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
 
+  const onSubmit = async (data) => {
+    console.log(data);
+    const dummyData = {
+      selectcourse: data.selectcourse,
+      course: data.course,
+      batch: data.batch,
+      classDate: data.classDate,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      instructor: data.instructor,
+    };
+
+    try {
+      const result = await addOfflineClass(dummyData);
+
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -187,8 +209,8 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
           px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
         }}
       >
-        <DatePickerWrapper>
-          <form onSubmit={handleSubmit()}>
+    <DatePickerWrapper>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Controller
@@ -208,7 +230,41 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                   )}
                 />
               </Grid>
-
+              <Grid item xs={12}>
+                <Controller
+                  name="selectcourse"
+                  control={control}
+                  rules={{ required: 'Extra Course field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      fullWidth
+                      select
+                      SelectProps={{
+                        MenuProps: Object.assign(MenuProps, {
+                          PaperProps: {
+                            style: {
+                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                              width: 250,
+                            },
+                          },
+                        }),
+                      }}
+                      label="Select Course"
+                      id="select-single-course-extra"
+                      value={value}
+                      onChange={onChange}
+                      error={Boolean(errors.selectcourse)}
+                      helperText={errors.selectcourse?.message}
+                    >
+                      {courses.map((course) => (
+                        <MenuItem key={course.id} value={course.name}>
+                          {course.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <Controller
                   name="batch"
@@ -218,24 +274,20 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                     <TextField
                       fullWidth
                       select
-                      label="Batch"
-                      id="select-multiple-chip"
-                      value={value}
-                      onChange={(e) => {
-                        handleChange(e);
-                        onChange(e);
-                      }}
                       SelectProps={{
-                        MenuProps,
-                        multiple: true,
-                        renderValue: (selected) => (
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                            {selected.map((value) => (
-                              <CustomChip key={value} label={value} sx={{ m: 0.75 }} skin="light" color="primary" />
-                            ))}
-                          </Box>
-                        )
+                        MenuProps: Object.assign(MenuProps, {
+                          PaperProps: {
+                            style: {
+                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                              width: 250,
+                            },
+                          },
+                        }),
                       }}
+                      label="Batch"
+                      id="select-single-batch"
+                      value={value}
+                      onChange={onChange}
                       error={Boolean(errors.batch)}
                       helperText={errors.batch?.message}
                     >
@@ -253,31 +305,15 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                 <Controller
                   name="classDate"
                   control={control}
-                  rules={{ required: 'Class date is required' }}
+                  rules={{ required: 'Class Date field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
-                      isClearable
-                      selectsRange
-                      monthsShown={1}
                       selected={value}
-                      startDate={value}
-                      shouldCloseOnSelect={false}
-                      onChange={(dates) => {
-                        handleOnChangeRange(dates);
-                        onChange(dates);
-                      }}
-                      customInput={
-                        <DateCustomInput
-                          dates={dates}
-                          setDates={setDates}
-                          label="Class Date"
-                          start={value}
-                          sx={{ border: errors.classDate ? '1px solid red' : 'none', borderRadius: '7px' }}
-                        />
-                      }
-                      dateFormat="MM/dd/yyyy"
-                      placeholderText="Select Class Date"
-                      className={`form-control ${errors.classDate ? 'is-invalid' : ''}`}
+                      id="basic-input"
+                      className="full-width-datepicker"
+                      onChange={onChange}
+                      placeholderText="Click to select a date"
+                      customInput={<CustomInput label="ClassDate" />}
                     />
                   )}
                 />
@@ -344,6 +380,7 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
+                  disableCloseOnSelect
                   id="select-multiple-chip"
                   options={[{ instructor_id: 'selectAll', instructor_name: 'Select All' }, ...instructors]}
                   getOptionLabel={(option) => option.instructor_name}
@@ -402,6 +439,7 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
 
               <Grid item xs={12} sm={12}>
                 <Autocomplete
+                  disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
                   options={[{ coordinate_id: 'selectAll', coordinate_name: 'Select All' }, ...coordinates]}
@@ -458,7 +496,6 @@ const OfflineClassAddModal = ({ open, handleAddClose }) => {
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
-
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
