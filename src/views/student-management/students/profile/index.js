@@ -2,7 +2,10 @@ import styled from '@emotion/styled';
 import { Avatar, Box, Card, Grid, Stack, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import StudentSkeleton from 'components/cards/Skeleton/StudentSkeleton';
-import { useEffect, useState } from 'react';
+import { selectLoading, selectStudents } from 'features/student-management/students/redux/studentSelectors';
+import { getAllStudents } from 'features/student-management/students/redux/studentThunks';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import StudentFilter from '../view-profile/studentFilterCard';
 import SocialsButton from './SocialButton';
 import cssStyles from './cssStyles';
@@ -20,44 +23,25 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 }));
 
 const Students = () => {
-  const [loading, setLoading] = useState(true);
+
+
+  const dispatch = useDispatch();
+  const Students = useSelector(selectStudents);
+  const StudentsLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(Students);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    dispatch(getAllStudents(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  const dummyData = [
-    {
-      name: 'Anish',
-      image: 'https://www.trickscity.com/wp-content/uploads/2016/11/K0cAXP3.jpg',
-      title: 'Full-Stack Web Development'
-    },
-    {
-      name: 'Anish',
-      image: 'https://i.pinimg.com/originals/d9/e9/a0/d9e9a0e75e88814c9480b8038af03d18.jpg',
-      title: 'Front-end Developer'
-    },
-    {
-      name: 'Anish',
-      image: 'https://i.pinimg.com/originals/d9/e9/a0/d9e9a0e75e88814c9480b8038af03d18.jpg',
-      title: 'Front-end Developer'
-    },
-    {
-      name: 'Anish',
-      image: 'https://i.pinimg.com/originals/d9/e9/a0/d9e9a0e75e88814c9480b8038af03d18.jpg',
-      title: 'Front-end Developer'
-    }
-  ];
 
   return (
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
-          {loading ? (
+          {StudentsLoading ? (
             <StudentSkeleton />
           ) : (
             <Grid container spacing={2}>
@@ -65,7 +49,7 @@ const Students = () => {
                 <StudentFilter />
               </Grid>
 
-              {dummyData.map((student, index) => (
+              {Students.map((item, index) => (
                 <Grid key={index} item xs={12} sm={6} md={3} lg={3}>
                   <Card sx={{ textAlign: 'center', height: '100%' }}>
                     <Box sx={{ position: 'relative' }}>
@@ -85,7 +69,7 @@ const Students = () => {
                       />
                       <Avatar
                         alt="image"
-                        src={student.image}
+                        src={item.image}
                         sx={{
                           width: 64,
                           height: 64,
@@ -106,10 +90,10 @@ const Students = () => {
                     </Box>
 
                     <Typography variant="subtitle1" sx={{ mt: 6 }}>
-                      {student.name}
+                      {item.student.first_name}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {student.title}
+                      {item.student.email}
                     </Typography>
 
                     <Stack alignItems="center">
