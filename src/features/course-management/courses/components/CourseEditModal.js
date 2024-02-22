@@ -100,15 +100,15 @@ const CourseEditModal = ({ open, handleEditClose }) => {
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append('course_name',data.course_name);
-    formData.append('course_name',data.Course_duration);
-    formData.append('course_name',data.Course_Price);
-    formData.append('course_name',data.Course_Category);
-    formData.append('course_name',data.Learning_Format);
-    formData.append('course_name',data.course_overview);
-    formData.append('course_name',data.description);
+    formData.append('Course_duration',data.Course_duration);
+    formData.append('Course_Price',data.Course_Price);
+    formData.append('Course_Category',data.Course_Category);
+    formData.append('Learning_Format',data.Learning_Format);
+    formData.append('course_overview',data.course_overview);
+    formData.append('description',data.description);
     console.log(formData);
   };
-  console.log(onSubmit);
+  console.log(onSubmit); 
 
   return (
     <div>
