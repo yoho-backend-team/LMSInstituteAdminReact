@@ -15,6 +15,11 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectBatches, selectLoading } from 'features/batch-management/batches/redux/batchSelectors';
+import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
@@ -53,182 +58,194 @@ const Batch = () => {
     setDeleteDialogOpen(true);
   };
 
-  const groups = [
-    {
-      extraMembers: 25,
-      title: 'React Developers',
-      avatar: '/images/icons/project-icons/react-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/1.png', name: 'Vinnie Mostowy' },
-        { avatar: '/images/avatars/2.png', name: 'Allen Rieske' },
-        { avatar: '/images/avatars/3.png', name: 'Julee Rossignol' },
-        { avatar: '/images/avatars/4.png', name: 'George Burrill' }
-      ],
-      description: 'We don’t make assumptions about the rest of your technology stack, so you can develop new features in React.',
-      chips: [
-        {
-          title: 'React',
-          color: 'primary'
-        },
-        {
-          title: 'MUI',
-          color: 'info'
-        }
-      ]
-    },
-    {
-      extraMembers: 15,
-      title: 'Vue.js Dev Team',
-      avatar: '/images/icons/project-icons/vue-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/5.png', name: "Kaith D'souza" },
-        { avatar: '/images/avatars/6.png', name: 'John Doe' },
-        { avatar: '/images/avatars/7.png', name: 'Alan Walker' },
-        { avatar: '/images/avatars/8.png', name: 'Calvin Middleton' }
-      ],
-      description:
-        'The development of Vue and its ecosystem is guided by an international team, some of whom have chosen to be featured below.',
-      chips: [
-        {
-          title: 'Vuejs',
-          color: 'success'
-        },
-        {
-          color: 'error',
-          title: 'Developer'
-        }
-      ]
-    },
-    {
-      extraMembers: 55,
-      title: 'Creative Designers',
-      avatar: '/images/icons/project-icons/xd-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/9.png', name: 'Jimmy Ressula' },
-        { avatar: '/images/avatars/10.png', name: 'Kristi Lawker' },
-        { avatar: '/images/avatars/11.png', name: 'Danny Paul' },
-        { avatar: '/images/avatars/12.png', name: 'Alicia Littleton' }
-      ],
-      description: 'A design or product team is more than just the people on it. A team includes the people, the roles they play.',
-      chips: [
-        {
-          title: 'Sketch',
-          color: 'warning'
-        },
-        {
-          title: 'XD',
-          color: 'error'
-        }
-      ]
-    },
-    {
-      extraMembers: 35,
-      title: 'Support Team',
-      avatar: '/images/icons/project-icons/support-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/5.png', name: 'Andrew Tye' },
-        { avatar: '/images/avatars/12.png', name: 'Rishi Swaat' },
-        { avatar: '/images/avatars/7.png', name: 'Rossie Kim' },
-        { avatar: '/images/avatars/8.png', name: 'Mary Hunter' }
-      ],
-      description: 'Support your team. Your customer support team is fielding the good, the bad, and the ugly day in and day out.',
-      chips: [
-        {
-          color: 'info',
-          title: 'Zendesk'
-        }
-      ]
-    },
-    {
-      extraMembers: 19,
-      title: 'Digital Marketing',
-      avatar: '/images/icons/project-icons/social-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/13.png', name: 'Kim Merchent' },
-        { avatar: '/images/avatars/12.png', name: "Sam D'souza" },
-        { avatar: '/images/avatars/11.png', name: 'Nurvi Karlos' },
-        { avatar: '/images/avatars/10.png', name: 'Margorie Whitmire' }
-      ],
-      description: 'Digital marketing refers to advertising delivered through digital channels such as search engines, websites…',
-      chips: [
-        {
-          color: 'primary',
-          title: 'Twitter'
-        },
-        {
-          title: 'Email',
-          color: 'success'
-        }
-      ]
-    },
-    {
-      title: 'Event',
-      extraMembers: 55,
-      avatar: '/images/icons/project-icons/event-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/6.png', name: 'Vinnie Mostowy' },
-        { avatar: '/images/avatars/5.png', name: 'Allen Rieske' },
-        { avatar: '/images/avatars/4.png', name: 'Julee Rossignol' },
-        { avatar: '/images/avatars/7.png', name: 'Daniel Long' }
-      ],
-      description: 'Event is defined as a particular contest which is part of a program of contests. An example of an event is the long…',
-      chips: [
-        {
-          title: 'Hubilo',
-          color: 'success'
-        }
-      ]
-    },
-    {
-      extraMembers: 45,
-      title: 'Figma Resources',
-      avatar: '/images/icons/project-icons/figma-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/8.png', name: 'Andrew Mostowy' },
-        { avatar: '/images/avatars/1.png', name: 'Micky Ressula' },
-        { avatar: '/images/avatars/3.png', name: 'Michel Pal' },
-        { avatar: '/images/avatars/12.png', name: 'Herman Lockard' }
-      ],
-      description:
-        'Explore, install, use, and remix thousands of plugins and files published to the Figma Community by designers and developers.',
-      chips: [
-        {
-          title: 'UI/UX',
-          color: 'success'
-        },
-        {
-          title: 'Figma',
-          color: 'secondary'
-        }
-      ]
-    },
-    {
-      extraMembers: 50,
-      title: 'Only Beginners',
-      avatar: '/images/icons/project-icons/html-label.png',
-      avatarGroup: [
-        { avatar: '/images/avatars/11.png', name: 'Kim Karlos' },
-        { avatar: '/images/avatars/10.png', name: 'Katy Turner' },
-        { avatar: '/images/avatars/9.png', name: 'Peter Adward' },
-        { avatar: '/images/avatars/6.png', name: 'Leona Miller' }
-      ],
-      description: 'Learn the basics of how websites work, front-end vs back-end, and using a code editor. Learn basic HTML, CSS, and…',
-      chips: [
-        {
-          title: 'CSS',
-          color: 'info'
-        },
-        {
-          title: 'HTML',
-          color: 'warning'
-        }
-      ]
-    }
-  ];
+  const dispatch = useDispatch();
+  const batches = useSelector(selectBatches);
+  const batchLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(batches);
+
+  useEffect(() => {
+    dispatch(getAllBatches(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
+
+  // const groups = [
+  //   {
+  //     extraMembers: 25,
+  //     title: 'React Developers',
+  //     avatar: '/images/icons/project-icons/react-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/1.png', name: 'Vinnie Mostowy' },
+  //       { avatar: '/images/avatars/2.png', name: 'Allen Rieske' },
+  //       { avatar: '/images/avatars/3.png', name: 'Julee Rossignol' },
+  //       { avatar: '/images/avatars/4.png', name: 'George Burrill' }
+  //     ],
+  //     description: 'We don’t make assumptions about the rest of your technology stack, so you can develop new features in React.',
+  //     chips: [
+  //       {
+  //         title: 'React',
+  //         color: 'primary'
+  //       },
+  //       {
+  //         title: 'MUI',
+  //         color: 'info'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     extraMembers: 15,
+  //     title: 'Vue.js Dev Team',
+  //     avatar: '/images/icons/project-icons/vue-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/5.png', name: "Kaith D'souza" },
+  //       { avatar: '/images/avatars/6.png', name: 'John Doe' },
+  //       { avatar: '/images/avatars/7.png', name: 'Alan Walker' },
+  //       { avatar: '/images/avatars/8.png', name: 'Calvin Middleton' }
+  //     ],
+  //     description:
+  //       'The development of Vue and its ecosystem is guided by an international team, some of whom have chosen to be featured below.',
+  //     chips: [
+  //       {
+  //         title: 'Vuejs',
+  //         color: 'success'
+  //       },
+  //       {
+  //         color: 'error',
+  //         title: 'Developer'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     extraMembers: 55,
+  //     title: 'Creative Designers',
+  //     avatar: '/images/icons/project-icons/xd-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/9.png', name: 'Jimmy Ressula' },
+  //       { avatar: '/images/avatars/10.png', name: 'Kristi Lawker' },
+  //       { avatar: '/images/avatars/11.png', name: 'Danny Paul' },
+  //       { avatar: '/images/avatars/12.png', name: 'Alicia Littleton' }
+  //     ],
+  //     description: 'A design or product team is more than just the people on it. A team includes the people, the roles they play.',
+  //     chips: [
+  //       {
+  //         title: 'Sketch',
+  //         color: 'warning'
+  //       },
+  //       {
+  //         title: 'XD',
+  //         color: 'error'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     extraMembers: 35,
+  //     title: 'Support Team',
+  //     avatar: '/images/icons/project-icons/support-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/5.png', name: 'Andrew Tye' },
+  //       { avatar: '/images/avatars/12.png', name: 'Rishi Swaat' },
+  //       { avatar: '/images/avatars/7.png', name: 'Rossie Kim' },
+  //       { avatar: '/images/avatars/8.png', name: 'Mary Hunter' }
+  //     ],
+  //     description: 'Support your team. Your customer support team is fielding the good, the bad, and the ugly day in and day out.',
+  //     chips: [
+  //       {
+  //         color: 'info',
+  //         title: 'Zendesk'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     extraMembers: 19,
+  //     title: 'Digital Marketing',
+  //     avatar: '/images/icons/project-icons/social-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/13.png', name: 'Kim Merchent' },
+  //       { avatar: '/images/avatars/12.png', name: "Sam D'souza" },
+  //       { avatar: '/images/avatars/11.png', name: 'Nurvi Karlos' },
+  //       { avatar: '/images/avatars/10.png', name: 'Margorie Whitmire' }
+  //     ],
+  //     description: 'Digital marketing refers to advertising delivered through digital channels such as search engines, websites…',
+  //     chips: [
+  //       {
+  //         color: 'primary',
+  //         title: 'Twitter'
+  //       },
+  //       {
+  //         title: 'Email',
+  //         color: 'success'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     title: 'Event',
+  //     extraMembers: 55,
+  //     avatar: '/images/icons/project-icons/event-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/6.png', name: 'Vinnie Mostowy' },
+  //       { avatar: '/images/avatars/5.png', name: 'Allen Rieske' },
+  //       { avatar: '/images/avatars/4.png', name: 'Julee Rossignol' },
+  //       { avatar: '/images/avatars/7.png', name: 'Daniel Long' }
+  //     ],
+  //     description: 'Event is defined as a particular contest which is part of a program of contests. An example of an event is the long…',
+  //     chips: [
+  //       {
+  //         title: 'Hubilo',
+  //         color: 'success'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     extraMembers: 45,
+  //     title: 'Figma Resources',
+  //     avatar: '/images/icons/project-icons/figma-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/8.png', name: 'Andrew Mostowy' },
+  //       { avatar: '/images/avatars/1.png', name: 'Micky Ressula' },
+  //       { avatar: '/images/avatars/3.png', name: 'Michel Pal' },
+  //       { avatar: '/images/avatars/12.png', name: 'Herman Lockard' }
+  //     ],
+  //     description:
+  //       'Explore, install, use, and remix thousands of plugins and files published to the Figma Community by designers and developers.',
+  //     chips: [
+  //       {
+  //         title: 'UI/UX',
+  //         color: 'success'
+  //       },
+  //       {
+  //         title: 'Figma',
+  //         color: 'secondary'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     extraMembers: 50,
+  //     title: 'Only Beginners',
+  //     avatar: '/images/icons/project-icons/html-label.png',
+  //     avatarGroup: [
+  //       { avatar: '/images/avatars/11.png', name: 'Kim Karlos' },
+  //       { avatar: '/images/avatars/10.png', name: 'Katy Turner' },
+  //       { avatar: '/images/avatars/9.png', name: 'Peter Adward' },
+  //       { avatar: '/images/avatars/6.png', name: 'Leona Miller' }
+  //     ],
+  //     description: 'Learn the basics of how websites work, front-end vs back-end, and using a code editor. Learn basic HTML, CSS, and…',
+  //     chips: [
+  //       {
+  //         title: 'CSS',
+  //         color: 'info'
+  //       },
+  //       {
+  //         title: 'HTML',
+  //         color: 'warning'
+  //       }
+  //     ]
+  //   }
+  // ];
 
   // Render Group Cards
+
   const renderCards = () => {
-    return groups?.map((item, index) => (
+    return batches?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <Card>
           <CardContent>
@@ -313,22 +330,11 @@ const Batch = () => {
     ));
   };
 
-  const [loading, setLoading] = useState(true);
-
-  // Simulate loading delay with useEffect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
-          {loading ? (
+          {batchLoading ? (
             <BatchSkeleton />
           ) : (
             <Grid>
