@@ -5,6 +5,9 @@ import { forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { addNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import toast from 'react-hot-toast';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const schema = yup.object().shape({
   // Add validation schemas for the new fields here
@@ -40,15 +43,47 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    // Call your API to submit the form data here
+    const dummyData = {
+      gender: data.gender,
+      joining_date: data.joining_date,
+      specialization: data.specialization,
+      position: data.position,
+      Qualification: data.qualification,
+      state: data.state,
+      city: data.city,
+      pin_code: data.pinCode || 0,
+      address_line_one: data.addressLineOne,
+      address_line_two: data.addressLineTwo,
+      phone: data.phoneNumber || 0,
+      alt_phone: data.alternateNumber || 0,
+      official_email: data.officialEmail,
+      description: data.description,
+      First_name: data.firstName,
+      Last_name: data.lastName,
+      branch: data.branchName
+    };
+
+    try {
+      const result = await addNonTeachingStaff(dummyData);
+
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
+    <DatePickerWrapper>
     <Card sx={{ p: 3 }}>
       <CardHeader title="Add New Staff" />
-      <form key={1} onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={5}>
           <Grid item xs={12} sm={6}>
             <Controller
@@ -121,17 +156,19 @@ const StepperLinearWithValidation = () => {
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <DatePicker
-                  dateFormat="dd/MM/yyyy"
+                  id="joining_date"
+                  dateFormat={'dd/MM/yyyy'}
+                  value={value}
                   selected={value}
-                  onChange={onChange}
                   customInput={
                     <CustomInput
                       label="Joining Date"
                       error={Boolean(personalErrors['joining_date'])}
-                      aria-describedby="stepper-linear-personal-joining_date"
-                      {...(personalErrors['joining_date'] && { helperText: personalErrors['joining_date'].message })}
+                      aria-describedby="stepper-linear-personal-joining-date"
+                      {...(personalErrors['joining_date'] && { helperText: 'This field is required' })}
                     />
                   }
+                  onChange={onChange}
                 />
               )}
             />
@@ -405,6 +442,7 @@ const StepperLinearWithValidation = () => {
         </Grid>
       </form>
     </Card>
+    </DatePickerWrapper>
   );
 };
 

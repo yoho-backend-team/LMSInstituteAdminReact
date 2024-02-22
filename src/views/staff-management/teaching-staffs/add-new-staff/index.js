@@ -17,7 +17,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import CustomChip from 'components/mui/chip';
 import Gallery from './gallery';
 // ** Third Party Imports
@@ -33,8 +32,11 @@ import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from './StepperCustomDot';
 // ** Styled Components
+import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
 import StepperWrapper from 'styles/mui/stepper';
+import toast from 'react-hot-toast';
+
 
 const steps = [
   {
@@ -74,7 +76,9 @@ const defaultPersonalValues = {
   phone: '',
   alt_phone: '',
   description: '',
-  branch: ''
+  branch: '',
+  joining_date:"",
+  position:""
 };
 
 const defaultGalleryValues = {
@@ -100,6 +104,7 @@ const accountSchema = yup.object().shape({
 });
 
 const personalSchema = yup.object().shape({
+  position: yup.string().required(),
   state: yup.string().required(),
   city: yup.string().required(),
   pin_code: yup.number().required(),
@@ -114,7 +119,7 @@ const personalSchema = yup.object().shape({
   First_name: yup.string().required(),
   Last_name: yup.string().required(),
   branch: yup.string().required('Branch is required'),
-  joiningdate: yup.string().required('Branch is required'),
+  joining_date: yup.string().required('Joining date is required'),
   specialization: yup.string().required('Branch is required')
 });
 
@@ -185,7 +190,9 @@ const StepperLinearWithValidation = () => {
       official_email: '',
       phone: Number(''),
       alt_phone: Number(''),
-      description: ''
+      description: '',
+      joining_date:"",
+      position:""
     });
   };
 
@@ -208,7 +215,8 @@ const StepperLinearWithValidation = () => {
     const personalData = personalControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
-      let data = new FormData();
+     let data = new FormData();
+      data.append('position', personalData?.position);
       data.append('First_name', personalData?.First_name);
       data.append('Last_name', personalData?.Last_name);
       data.append('email', personalData?.official_email);
@@ -227,8 +235,8 @@ const StepperLinearWithValidation = () => {
       data.append('linkedin', socialData?.linkedIn);
       data.append('instagram', socialData?.instagram);
       data.append('twitter', socialData?.twitter);
-      data.append('name', accountData?.name);
       data.append('date_of_birth', convertDateFormat(personalData?.date_of_birth));
+      data.append('joining_date', convertDateFormat(personalData?.date_of_birth));
       data.append('logo', logo);
       data.append('image', instituteImage);
       data.append('gallery', galleryImages);
@@ -236,25 +244,19 @@ const StepperLinearWithValidation = () => {
       data.append('user_mobile', accountData?.contact);
       data.append('username', accountData?.username);
 
-      let config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/institute-management/institutes/create`,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-        data: data
-      };
+      try {
+        const result = await addTeachingStaff(data);
+  
+        if (result.success) {
+          toast.success(result.message);
+          navigate(-1);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
-      await axios
-        .request(config)
-        .then((response) => {
-          console.log(response.data);
-          toast.success('Form Submitted');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
     }
   };
 
@@ -479,21 +481,21 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="joining-date"
+                  name="joining_date"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
-                      id="joining-date"
+                      id="joining_date"
                       dateFormat={'dd/MM/yyyy'}
                       value={value}
                       selected={value}
                       customInput={
                         <CustomInput
                           label="Joining Date"
-                          error={Boolean(personalErrors['joiningdate'])}
+                          error={Boolean(personalErrors['joining_date'])}
                           aria-describedby="stepper-linear-personal-joining-date"
-                          {...(personalErrors['joiningdate'] && { helperText: 'This field is required' })}
+                          {...(personalErrors['joining_date'] && { helperText: 'This field is required' })}
                         />
                       }
                       onChange={onChange}
@@ -532,9 +534,9 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="Position"
                       onChange={onChange}
-                      error={Boolean(personalErrors.state)}
+                      error={Boolean(personalErrors.position)}
                       aria-describedby="stepper-linear-personal-position-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
+                      {...(personalErrors.position && { helperText: 'This field is required' })}
                     />
                   )}
                 />
@@ -836,10 +838,10 @@ const StepperLinearWithValidation = () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[3].title}
+                  {steps[2].title}
                 </Typography>
                 <Typography variant="caption" component="p">
-                  {steps[3].subtitle}
+                  {steps[2].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
