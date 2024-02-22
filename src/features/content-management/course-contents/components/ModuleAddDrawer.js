@@ -21,6 +21,7 @@ import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import toast from 'react-hot-toast';
 import { addCourseModule } from '../modules/services/moduleServices';
+import MenuItem from '@mui/material/MenuItem';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -45,17 +46,16 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required(),
-    branches: yup.array().min(1, 'Please select at least one branch'),
-    courses: yup.array().min(1, 'Please select at least one course'),
-    Videourl: yup.string().required()
+  branch: yup.string().required(),
+  courses: yup.array().min(1, 'Please select at least one course'),
+  Videourl: yup.string().required()
 });
-
 
 const defaultValues = {
   description: '',
   title: '',
   Videourl: '',
-  branches: [],
+  branch: '',
   courses: []
 };
 
@@ -64,14 +64,8 @@ const ModuleAddDrawer = (props) => {
   const { open, toggle } = props;
 
   // ** State
-  const [selectedBranches, setSelectedBranches] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const branches = [
-    { branch_id: '1', branch_name: 'Branch 1' },
-    { branch_id: '2', branch_name: 'Branch 2' },
-    { branch_id: '3', branch_name: 'Branch 3' }
-  ];
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
     { course_id: '2', course_name: 'Course 2' },
@@ -79,7 +73,6 @@ const ModuleAddDrawer = (props) => {
   ];
 
   const [groups, setGroups] = useState([]);
-
 
   useEffect(() => {
     getAllGroups();
@@ -184,66 +177,23 @@ const ModuleAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12}>
-            <Autocomplete
-              multiple
-              disableCloseOnSelect
-              id="select-multiple-chip"
-              options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
-              getOptionLabel={(option) => option.branch_name}
-              value={selectedBranches}
-              onChange={(e, newValue) => {
-                if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
-                  setSelectedBranches(branches.filter((option) => option.branch_id !== 'selectAll'));
-                } else {
-                  setSelectedBranches(newValue);
-                }
-              }}
-              renderInput={(params) => (
-                <TextField
-                  sx={{ mb: 4 }}
-                  {...params}
-                  fullWidth
-                  label="Branches"
-                  InputProps={{
-                    ...params.InputProps,
-                    style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                  }}
-                  error={Boolean(errors.branches)}
-                  {...(errors.branches && { helperText: errors.branches.message })}
-                />
-              )}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.branch_name}
-                </li>
-              )}
-              renderTags={(value) => (
-                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                  {value.map((option, index) => (
-                    <CustomChip
-                      key={option.branch_id}
-                      label={option.branch_name}
-                      onDelete={() => {
-                        const updatedValue = [...value];
-                        updatedValue.splice(index, 1);
-                        setSelectedBranches(updatedValue);
-                      }}
-                      color="primary"
-                      sx={{ m: 0.75 }}
-                    />
-                  ))}
-                </div>
-              )}
-              isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
-              selectAllText="Select All"
-              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-            />
+            <TextField
+              sx={{ mb: 2 }}
+              fullWidth
+              select
+              defaultValue=""
+              label="Branch"
+              id="custom-select"
+              error={Boolean(errors.branch)}
+              {...(errors.branch && { helperText: errors.branch.message })}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </TextField>
           </Grid>
 
           <Grid item xs={12} sm={12}>
