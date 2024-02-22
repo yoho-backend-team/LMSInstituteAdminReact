@@ -1,5 +1,5 @@
 // courseStudyMaterialsThunks.js
-import { getAllCourseStudyMaterials as fetchAllCourseStudyMaterials } from '../services/studyMaterialServices'; // Replace with your service file
+import { getAllStudyMaterials as fetchAllCourseStudyMaterials } from '../services/studyMaterialServices'; // Replace with your service file
 import { setCourseStudyMaterials, setLoading } from './studyMaterialSlice';
 
 export const getAllCourseStudyMaterials = (selectedBranchId) => async (dispatch) => {
