@@ -60,7 +60,6 @@ const defaultValues = {
   startTime: null,
   endTime: null,
   instructor: '',
-  teacher: [],
   videoUrl: ''
 };
 

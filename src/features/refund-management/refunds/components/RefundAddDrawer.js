@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -31,14 +32,10 @@ const schema = yup.object().shape({
 });
 
 const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
+  batch: '',
+  students: '',
+  amount: '',
+  course: '',
 };
 
 const RefundAddDrawer = (props) => {
@@ -58,11 +55,29 @@ const RefundAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
-    console.log(bodyFormData);
+    const dummyData = {
+      batch: data.batch,
+      students: data.students,
+      amount: data.amount,
+      course:data.course
+    };
+
+    try {
+      const result = await  addStudentFeeRefund(dummyData);
+
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClose = () => {

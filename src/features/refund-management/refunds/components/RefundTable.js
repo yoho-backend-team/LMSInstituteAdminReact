@@ -33,6 +33,10 @@ import RefundCardHeader from './RefundCardHeader';
 import RefundEditDrawer from './RefundEditDrawer';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
+import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
+import { useEffect } from 'react';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -187,6 +191,13 @@ const RefundTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
+  
+  const dispatch = useDispatch();
+  const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  useEffect(() => {
+    dispatch(getAllStudentFeeRefunds(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -251,63 +262,63 @@ const RefundTable = () => {
     }
   ];
 
-  const store = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
+  // const store = [
+  //   {
+  //     id: 1,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 100,
+  //     issuedDate: '2025-01-01',
+  //     balance: 55,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 2,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'arunbalaji.com',
+  //     total: 200,
+  //     issuedDate: '2000-01-01',
+  //     balance: 50,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 3,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 300,
+  //     issuedDate: '25-01-01',
+  //     balance: 40,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 4,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 40,
+  //     issuedDate: '202-01-01',
+  //     balance: 30,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 5,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 50,
+  //     issuedDate: '20-01-01',
+  //     balance: 0,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   }
+  // ];
 
   const batch = [
     { batch_id: '1', batch_name: 'batch 1' },
@@ -462,7 +473,7 @@ const RefundTable = () => {
               autoHeight
               pagination
               rowHeight={62}
-              rows={store}
+              rows={studentFeeRefunds}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}
