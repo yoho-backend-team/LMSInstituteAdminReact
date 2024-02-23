@@ -1,35 +1,36 @@
-// TechnicalSupportService.js
+// groupService.js
 import axios from 'axios';
 
-const TECHNICAL_SUPPORT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/TechnicalSupport-management/TechnicalSupport`;
+const STAFF_TICKET_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/StaffTicket-management/StaffTickets`;
 
-export const getAllTechnicalSupports = async (selectedBranchId) => {
+export const getAllStaffTickets = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/read-all-student-notifications`, {
+    const response = await axios.get(`${STAFF_TICKET_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       params: { branch_id: selectedBranchId }
     });
+
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Technical Support. Status: ${response.status}`);
+      throw new Error(`Failed to fetch StaffTickets. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllTechnicalSupport:', error);
+    console.error('Error in getAllStaffTickets:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
 
-export const searchTechnicalSupports = async (searchQuery) => {
+export const searchStaffTickets = async (searchQuery) => {
   try {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
@@ -45,14 +46,14 @@ export const searchTechnicalSupports = async (searchQuery) => {
       return { success: false, message: 'Failed to fetch search results' };
     }
   } catch (error) {
-    console.error('Error in searchTechnicalSupports:', error);
+    console.error('Error in searchStaffTickets:', error);
     throw error;
   }
 };
 
-export const addTechnicalSupport = async (data) => {
+export const addStaffTicket = async (data) => {
   try {
-    const response = await axios.post(`${TECHNICAL_SUPPORT_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${STAFF_TICKET_API_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -60,40 +61,40 @@ export const addTechnicalSupport = async (data) => {
     });
 
     if (response.data.status) {
-      return { success: true, message: 'TechnicalSupport created successfully' };
+      return { success: true, message: 'StaffTicket created successfully' };
     } else {
-      return { success: false, message: 'Failed to create TechnicalSupport' };
+      return { success: false, message: 'Failed to create StaffTicket' };
     }
   } catch (error) {
-    console.error('Error in addTechnicalSupport:', error);
+    console.error('Error in addStaffTicket:', error);
     throw error;
   }
 };
 
-export const deleteTechnicalSupport = async (TechnicalSupportId) => {
+export const deleteStaffTicket = async (StaffTicketId) => {
   try {
-    const response = await axios.delete(`${TECHNICAL_SUPPORT_API_ENDPOINT}/delete`, {
+    const response = await axios.delete(`${STAFF_TICKET_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: TechnicalSupportId }
+      params: { id: StaffTicketId }
     });
 
     if (response.data.status) {
-      return { success: true, message: 'TechnicalSupport deleted successfully' };
+      return { success: true, message: 'StaffTicket deleted successfully' };
     } else {
-      return { success: false, message: 'Failed to delete TechnicalSupport' };
+      return { success: false, message: 'Failed to delete StaffTicket' };
     }
   } catch (error) {
-    console.error('Error in deleteTechnicalSupport:', error);
+    console.error('Error in deleteStaffTicket:', error);
     throw error;
   }
 };
 
-export const updateTechnicalSupport = async (data) => {
+export const updateStaffTicket = async (data) => {
   try {
-    const response = await axios.put(`${TECHNICAL_SUPPORT_API_ENDPOINT}/update`, data, {
+    const response = await axios.put(`${STAFF_TICKET_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -102,12 +103,12 @@ export const updateTechnicalSupport = async (data) => {
 
     if (response.data.status) {
       console.log(response);
-      return { success: true, message: 'TechnicalSupport updated successfully' };
+      return { success: true, message: 'StaffTicket updated successfully' };
     } else {
-      return { success: false, message: 'Failed to update TechnicalSupport' };
+      return { success: false, message: 'Failed to update StaffTicket' };
     }
   } catch (error) {
-    console.error('Error in updateTechnicalSupport:', error);
+    console.error('Error in updateStaffTicket:', error);
     throw error;
   }
 };

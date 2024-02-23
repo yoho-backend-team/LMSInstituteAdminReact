@@ -6,7 +6,7 @@ export const getAllCustomerSupports = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllCustomerSupports(); // Implement this function in your services
-    dispatch(setCustomerSupports(response?.data));
+    dispatch(setCustomerSupports(response?.data?.data));
   } catch (error) {
     console.error(error);
   } finally {

@@ -3,25 +3,26 @@ import axios from 'axios';
 
 const STAFF_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/StaffIdCard-management/StaffIdCard`;
 
-export const getAllStaffIdCards = async () => {
+export const getAllStaffIdCards = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${STAFF_ID_CARDS_API_ENDPOINT}/read-all-student-notifications`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StaffIdCards. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Staff Id Cards. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllStaffIdCards:', error);
+    console.error('Error in getAllStaffiCards:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
