@@ -4,9 +4,9 @@ import { lazy } from 'react';
 import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import MainLayout from 'layout/MainLayout';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 // view imports
 
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -51,9 +51,9 @@ const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offl
 
 // Content Management
 
-const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/study-materials')));
-const NotesPage = Loadable(lazy(() => import('views/content-management/notes')));
-const ModulesPage = Loadable(lazy(() => import('views/content-management/modules')));
+const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/course-study-materials-page')));
+const NotesPage = Loadable(lazy(() => import('views/content-management/course-notes-page')));
+const ModulesPage = Loadable(lazy(() => import('views/content-management/course-modules-page')));
 
 // const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
 // const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
@@ -61,10 +61,10 @@ const ModulesPage = Loadable(lazy(() => import('views/content-management/modules
 // const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
 
 // Course Management
-const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
-const CoursesPage = Loadable(lazy(() => import('views/course-management/courses')));
-const AddCoursePage = Loadable(lazy(() => import('views/course-management/add-course')));
-const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-course')));
+const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories-page/categories-overview-page')));
+const CoursesPage = Loadable(lazy(() => import('views/course-management/courses-page/courses-overview-page')));
+const AddCoursePage = Loadable(lazy(() => import('views/course-management/courses-page/course-add-page')));
+const ViewCoursePage = Loadable(lazy(() => import('views/course-management/courses-page/course[id]-page')));
 
 // Exam Management
 // const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
@@ -125,31 +125,31 @@ const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/Pro
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
-const Protected = () => {
-  // Access the isAuthenticated state from the Redux store
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+// const Protected = () => {
+//   // Access the isAuthenticated state from the Redux store
+//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  // If the user is authenticated, render the content
-  if (isAuthenticated) {
-    return <Outlet />;
-  } else {
-    // If not authenticated, redirect to the login page
-    return <Navigate to="/login" replace />;
-  }
-};
-const AdminRoute = () => {
-  const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
+//   // If the user is authenticated, render the content
+//   if (isAuthenticated) {
+//     return <Outlet />;
+//   } else {
+//     // If not authenticated, redirect to the login page
+//     return <Navigate to="/login" replace />;
+//   }
+// };
+// const AdminRoute = () => {
+//   const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
 
-  if (isAdmin === '1') {
-    return <Outlet />;
-  }
-  return <Navigate to="/un-authorized" />;
-};
+//   if (isAdmin === '1') {
+//     return <Outlet />;
+//   }
+//   return <Navigate to="/un-authorized" />;
+// };
 
 const ApplicationRoutes = () => {
   return (
     <Routes>
-      <Route element={<Protected />}>
+      {/* <Route element={<Protected />}> */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<DashboardDefault />} />
@@ -165,7 +165,7 @@ const ApplicationRoutes = () => {
         <Route path="/calender" element={<MainLayout />}>
           <Route index element={<CalenderPage />} />
         </Route>
-        <Route element={<AdminRoute />}>
+        {/* <Route element={<AdminRoute />}> */}
           <Route path="/user-management" element={<MainLayout />}>
             <Route index element={<Navigate to="/user-management/groups" />} />
             <Route path="groups" element={<GroupsPage />} />
@@ -175,7 +175,7 @@ const ApplicationRoutes = () => {
             <Route path="users" element={<UsersPage />} />
             <Route path="users/:id" element={<ViewUserPage />} />
           </Route>
-        </Route>
+        {/* </Route> */}
 
         <Route path="/attendance-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
@@ -193,14 +193,14 @@ const ApplicationRoutes = () => {
           <Route path="batches/add" element={<AddBatchPage />} />
           <Route path="batches/:id" element={<ViewBatchPage />} />
         </Route>
-        <Route element={<AdminRoute />}>
+        {/* <Route element={<AdminRoute />}> */}
           <Route path="/branch-management" element={<MainLayout />}>
             <Route index element={<Navigate to="/branch-management/branches" />} />
             <Route path="branches" element={<BranchesPage />} />
             <Route path="branches/add" element={<AddBranchPage />} />
             <Route path="branches/:id" element={<ViewBranchPage />} />
           </Route>
-        </Route>
+        {/* </Route> */}
         <Route path="/certificate-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
           <Route path="student-certificates" element={<StudentCertificatesPage />} />
@@ -291,7 +291,7 @@ const ApplicationRoutes = () => {
         {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
-      </Route>
+      {/* </Route> */}
 
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />

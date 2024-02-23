@@ -1,0 +1,6 @@
+{
+  "editor.defaultFormatter": "svipas.prettier-plus",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "codegpt.apiKey": "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",
+  "codegpt.model": "text-davinci-003"
+}
