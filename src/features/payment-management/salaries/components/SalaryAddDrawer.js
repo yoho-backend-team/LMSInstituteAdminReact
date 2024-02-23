@@ -15,6 +15,8 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import toast from 'react-hot-toast';
+import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -24,7 +26,6 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  branch: yup.array().required('Branch is required').min(1, 'Select at least one branch'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required'),
   type: yup.string().required('Type is required'),
@@ -65,11 +66,29 @@ const SalaryAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
+    bodyFormData.append('type', data.type);
+    bodyFormData.append('staff', data.staff);
+    bodyFormData.append('paymentId', data.paymentId);
+    bodyFormData.append('paidAmount', data.paidAmount);
     console.log(bodyFormData);
+
+    const result = await addTeachingStaffSalary(bodyFormData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({

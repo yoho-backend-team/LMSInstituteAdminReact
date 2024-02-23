@@ -6,7 +6,7 @@ export const getAllStudentIdCards = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllStudentIdCards(); // Implement this function in your services
-    dispatch(setStudentIdCards(response?.data));
+    dispatch(setStudentIdCards(response?.data?.data));
   } catch (error) {
     console.error(error);
   } finally {

@@ -38,6 +38,9 @@ import customerSupportsReducer from 'features/help-center/customer-support/redux
 import technicalSupportsReducer from 'features/help-center/technical-support/redux/technicalSupportSlice';
 
 import chats from 'features/chat/redux/chatSlicees';
+
+import studentTicketsReducer from 'features/ticket-management/student/redux/studentTicketSlice';
+import staffTicketsReducer from 'features/ticket-management/staff/redux/staffTicketSlice';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -74,7 +77,9 @@ const store = configureStore({
     consumerSupports: customerSupportsReducer,
     technicalSupport: technicalSupportsReducer,
     calendar: calendar,
-    auth: auth
+    auth: auth,
+    staffTickets: staffTicketsReducer,
+    studentTickets: studentTicketsReducer
   }
 });
 // configureStore(reducer);
