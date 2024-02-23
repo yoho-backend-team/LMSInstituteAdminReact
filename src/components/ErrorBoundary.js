@@ -20,6 +20,9 @@ class BeautifulMuiErrorBoundary extends Component {
     super(props);
     this.state = { hasError: false };
   }
+  static getDerivedStateFromError() {
+    return this.setState({ hasError: true });
+  }
 
   componentDidCatch(error, errorInfo) {
     console.error('Error caught by beautiful Mui error boundary:', error, errorInfo);
@@ -51,7 +54,6 @@ class BeautifulMuiErrorBoundary extends Component {
                 500 Internal Server Error
               </Typography>
               <Typography sx={{ mt: 5, color: 'text.secondary', textAlign: 'center' }}>
-                
                 There was an error, please try again later.
               </Typography>
               <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />

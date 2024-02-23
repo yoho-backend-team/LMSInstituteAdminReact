@@ -6,7 +6,7 @@ import auth from 'features/authentication/authReducer';
 import groupReducer from 'features/user-management/groups/redux/groupSlice';
 import userReducer from 'features/user-management/users/redux/userSlices';
 import batchReducer from 'features/batch-management/batches/redux/batchSlice';
-import branchReducer from 'features/branch-management/branches/redux/branchSlice';
+import branchReducer from 'features/branch-management/branch-overview-page/redux/branchSlice';
 import courseCategoryReducer from 'features/course-management/categories/redux/courseCategorySlice';
 import courseReducer from 'features/course-management/courses/redux/courseSlice';
 import courseStudyMaterialsReducer from 'features/content-management/course-contents/study-materials/redux/studyMaterialSlice';

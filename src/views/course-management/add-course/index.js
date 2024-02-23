@@ -25,7 +25,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import StepperWrapper from 'styles/mui/stepper';
 import * as yup from 'yup';
-import { getActiveBranches } from 'features/branch-management/branches/services/branchServices';
+import { getActiveBranches } from 'features/branch-management/branch-overview-page/services/branchServices';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories/services/courseCategoryServices';
 const steps = [
   {

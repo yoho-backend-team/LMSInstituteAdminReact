@@ -37,8 +37,8 @@ import FeesEditDrawer from './FeesEditDrawer';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { setStudentFees } from '../redux/studentFeeSlice';
 import { getAllStudentFees } from '../redux/studentFeeThunks';
+import { selectStudentFees } from '../redux/studentFeeSelectors';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -90,7 +90,7 @@ const FeesTable = () => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const dispatch = useDispatch();
-  const StudentFees = useSelector(setStudentFees);
+  const StudentFees = useSelector(selectStudentFees);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(StudentFees);

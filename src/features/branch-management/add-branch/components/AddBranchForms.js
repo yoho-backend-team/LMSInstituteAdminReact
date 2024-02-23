@@ -6,7 +6,7 @@ import { Button, TextField as CustomTextField } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { addBranch } from 'features/branch-management/branches/services/branchServices';
+import { addBranch } from 'features/branch-management/branch-overview-page/services/branchServices';
 import toast from 'react-hot-toast';
 
 const initialValues = {
