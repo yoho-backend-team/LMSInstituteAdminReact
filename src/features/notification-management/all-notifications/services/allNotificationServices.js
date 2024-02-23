@@ -12,7 +12,7 @@ export const getAllNotifications = async (selectedBranchId) => {
       },
       params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
