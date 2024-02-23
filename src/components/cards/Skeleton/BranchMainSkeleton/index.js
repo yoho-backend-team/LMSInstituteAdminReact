@@ -14,17 +14,17 @@ const BranchMainSkeleton = () => {
         <Grid item xs={12}>
           <Grid container justifyContent={'space-between'}>
             <Grid item xs={12} sm={3}>
-              <Skeleton variant="rectangular" height={50} width={400} animation="wave" />
+              <Skeleton variant="rectangular" sx={{ borderRadius: 3 }} height={50} width={400} animation="wave" />
             </Grid>
             <Grid container display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
-              <Skeleton variant="rectangular" height={40} width={150} animation="wave" />
+              <Skeleton variant="rectangular" height={40} width={150} sx={{ borderRadius: 3 }} animation="wave" />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
 
       <Grid container spacing={2} sx={{ mt: 1 }}>
-        {[...Array(6)].map((_, index) => (
+        {[...Array(8)].map((_, index) => (
           <Grid item xs={12} sm={6} lg={3} key={index}>
             <Card sx={{ position: 'relative' }}>
               <Box sx={{ position: 'absolute', display: 'flex', top: 5, right: 3, gap: 2, p: 1 }}>

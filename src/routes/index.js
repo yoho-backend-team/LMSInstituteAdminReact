@@ -13,17 +13,17 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
 
 // User Management
-const GroupsPage = Loadable(lazy(() => import('views/user-management/groups')));
-const AddGroupPage = Loadable(lazy(() => import('views/user-management/add-group')));
-const ViewGroupPage = Loadable(lazy(() => import('views/user-management/view-group')));
-const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-group')));
-const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
-const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
+const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-overview-page')));
+const AddGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-add-page')));
+const ViewGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups[id]-page')));
+const EditGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-edit-page')));
+const UsersPage = Loadable(lazy(() => import('views/user-management/users-page/users-overview-page')));
+const ViewUserPage = Loadable(lazy(() => import('views/user-management/users-page/users[id]-page')));
 
 //Branch Management
-const BranchesPage = Loadable(lazy(() => import('views/branch-management/branches')));
-const AddBranchPage = Loadable(lazy(() => import('views/branch-management/add-branch')));
-const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/view-branch')));
+const BranchesPage = Loadable(lazy(() => import('views/branch-management/branch-overview-page')));
+const AddBranchPage = Loadable(lazy(() => import('views/branch-management/branch-add-page')));
+const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/branch[id]-page')));
 
 // Batch Management
 const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
