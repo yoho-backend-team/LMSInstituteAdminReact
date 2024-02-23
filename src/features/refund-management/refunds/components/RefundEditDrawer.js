@@ -15,6 +15,7 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { updateStudentFeeRefund } from '../services/studentFeeRefundServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -30,14 +31,9 @@ const schema = yup.object().shape({
 });
 
 const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
+  batch: '',
+  students: '',
+  amount: ''
 };
 
 const RefundEditDrawer = (props) => {
@@ -62,13 +58,6 @@ const RefundEditDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-
-  const onSubmit = (data) => {
-    console.log(data);
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    console.log(bodyFormData);
-  };
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -96,9 +85,34 @@ const RefundEditDrawer = (props) => {
       }
     }
   };
+  const onSubmit = async (data) => {
+    console.log(data);
+    var bodyFormData = new FormData();
+    bodyFormData.append('image', selectedImage);
+    const dummyData = {
+      batch: data.batch,
+      students: data.students,
+      amount: data.amount,
+    };
+
+    try {
+      const result = await  updateStudentFeeRefund(dummyData);
+
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleClose = () => {
-    setValue('contact', Number(''));
+    setValue('amount', '');
+    setValue('students', '');
+    setValue('batch', '');
     toggle();
     reset();
   };

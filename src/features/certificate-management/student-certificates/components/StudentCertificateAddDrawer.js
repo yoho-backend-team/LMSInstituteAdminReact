@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -7,7 +7,6 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -19,6 +18,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
 import toast from 'react-hot-toast';
+import { addStudentCertificate } from '../services/studentCertificateServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -88,47 +88,16 @@ const StudentCertificateAddDrawer = (props) => {
 
   // ** State
   const [selectedBranches, setSelectedBranches] = useState([]);
-
-  const [groups, setGroups] = useState([]);
-
   const handleBranchChange = (event) => {
     setSelectedBranches(event.target.value);
   };
 
-  useEffect(() => {
-    getAllGroups();
-  }, []);
-
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/course/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  console.log(groups);
 
   // ** Hooks
   const {
     reset,
     control,
     setValue,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -140,42 +109,26 @@ const StudentCertificateAddDrawer = (props) => {
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('name', data.title);
-    bodyFormData.append('email', data.email);
-    bodyFormData.append('mobile', data.contact);
-    bodyFormData.append('username', data.userName);
-    bodyFormData.append('password', data.password);
-    bodyFormData.append('c_password', data.confirm_password);
     bodyFormData.append('description', data.description);
     bodyFormData.append('course_id', data.course);
+    bodyFormData.append('branch_id', data.branch);
+    bodyFormData.append('student', data.student);
+    bodyFormData.append('batch_id', data.batch);
+
     console.log(bodyFormData);
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: bodyFormData
-    };
+    try {
+      const result = await addStudentCertificate(data);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        if (response.data.status) {
-          setError('');
-          toggle();
-          reset();
-          toast.success('User created successfully');
-        }
-        if (!response.data.status) {
-          toast.error('Failed to create user');
-        }
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClose = () => {

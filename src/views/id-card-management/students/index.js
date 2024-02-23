@@ -12,6 +12,10 @@ import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import StudentFilterCard from 'features/id-card-management/student-id-cards/components/StudentFilterCard';
+import { selectLoading, selectStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardSelectors';
+
+import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
+import { useDispatch, useSelector } from 'react-redux';
 
 const roleColors = {
   admin: 'error',
@@ -28,51 +32,53 @@ const statusColors = {
 };
 
 const StudentIdCard = () => {
-  const data = {
-    id: 1,
-    role: 'admin',
-    status: 'active',
-    username: 'mdthasthakir',
-    country: 'El Salvador',
-    company: 'Yotz PVT LTD',
-    billing: 'Manual - Cash',
-    contact: '(479) 232-9151',
-    currentPlan: 'enterprise',
-    fullName: 'Mohammed Thasthakir',
-    email: 'gslixby0@abc.net.au',
-    avatar: 'https://weassist.io/wp-content/uploads/2022/11/Avatar-11-1.png'
-  };
+  // const item = {
+  //   id: 1,
+  //   role: 'admin',
+  //   status: 'active',
+  //   username: 'mdthasthakir',
+  //   country: 'El Salvador',
+  //   company: 'Yotz PVT LTD',
+  //   billing: 'Manual - Cash',
+  //   contact: '(479) 232-9151',
+  //   currentPlan: 'enterprise',
+  //   fullName: 'Mohammed Thasthakir',
+  //   email: 'gslixby0@abc.net.au',
+  //   avatar: 'https://weassist.io/wp-content/uploads/2022/11/Avatar-11-1.png'
+  // };
+
   const [flipped, setFlipped] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(false);
-  const [array] = useState([1, 2, 3, 4, 5, 6]);
+
   const flip = (index) => {
     setFlippedIndex(index);
     setFlipped(!flipped);
   };
 
-  const [loading, setLoading] = useState(true);
   const [statusValue, setStatusValue] = useState('');
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-
-  // Simulate loading delay with useEffect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     setDeleteDialogOpen(true);
   };
 
+  const dispatch = useDispatch();
+  const StudentIdCards = useSelector(selectStudentIdCards);
+  const StudentIdCardsLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(StudentIdCards);
+
+  useEffect(() => {
+    dispatch(getAllStudentIdCards(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
+
   return (
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
-          {loading ? (
+          {StudentIdCardsLoading ? (
             <IdCardSkeleton />
           ) : (
             <Grid>
@@ -80,7 +86,7 @@ const StudentIdCard = () => {
                 <StudentFilterCard />
               </Grid>
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-                {array.map((i, index) => (
+                {StudentIdCards.map((item, index) => (
                   <Grid
                     key={index}
                     item
@@ -135,13 +141,13 @@ const StudentIdCard = () => {
                               color={statusColors.active}
                               sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
                             >
-                              {getInitials(data.fullName)}
+                              {getInitials(item.fullName)}
                             </CustomAvatar>
                           )}
                           <Typography variant="h4" sx={{ mb: 2 }}>
-                            {data.fullName}
+                            {item.fullName}
                           </Typography>
-                          <CustomChip rounded skin="light" size="small" label={`@ ${data.username}`} color={statusColors.active} />
+                          <CustomChip rounded skin="light" size="small" label={`@ ${item.username}`} color={statusColors.active} />
                           <Box mt={3}>
                             <img
                               style={{ borderRadius: '10px' }}
@@ -160,15 +166,15 @@ const StudentIdCard = () => {
                           <Box sx={{ pt: 4 }}>
                             <Box sx={{ display: 'flex', mb: 3, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>@{item.username}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>{item.email}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                              <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
+                              <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{item.role}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
@@ -176,7 +182,7 @@ const StudentIdCard = () => {
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>+1 {item.contact}</Typography>
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
@@ -184,7 +190,7 @@ const StudentIdCard = () => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>{item.country}</Typography>
                             </Box>
                           </Box>
 

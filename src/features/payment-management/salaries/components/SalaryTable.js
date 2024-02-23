@@ -33,7 +33,12 @@ import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
 // ** Styled Components
+import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
+
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -79,6 +84,15 @@ const SalaryTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(TeachingStaffSalaries);
+  useEffect(() => {
+    dispatch(getAllTeachingStaffs(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -227,68 +241,7 @@ const SalaryTable = () => {
     }
   ];
 
-  const store = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      PaymentDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '5'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      PaymentDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '12'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      PaymentDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '5'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      PaymentDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '25'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      PaymentDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '55'
-    }
-  ];
+
 
   return (
     <DatePickerWrapper>
@@ -379,7 +332,7 @@ const SalaryTable = () => {
               autoHeight
               pagination
               rowHeight={62}
-              rows={store}
+              rows={TeachingStaffSalaries}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}

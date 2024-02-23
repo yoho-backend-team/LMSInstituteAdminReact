@@ -19,6 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
 import toast from 'react-hot-toast';
+import { updateStudentCertificate } from '../services/studentCertificateServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -123,7 +124,6 @@ const StudentCertificateEdit = (props) => {
     reset,
     control,
     setValue,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -143,42 +143,25 @@ const StudentCertificateEdit = (props) => {
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('name', data.title);
-    bodyFormData.append('email', data.email);
-    bodyFormData.append('mobile', data.contact);
-    bodyFormData.append('username', data.userName);
-    bodyFormData.append('password', data.password);
-    bodyFormData.append('c_password', data.confirm_password);
     bodyFormData.append('description', data.description);
     bodyFormData.append('course_id', data.course);
+    bodyFormData.append('branch_id', data.branch);
+
+
     console.log(bodyFormData);
 
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/user/create`,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      data: bodyFormData
-    };
+    try {
+      const result = await  updateStudentCertificate(data);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        if (response.data.status) {
-          setError('');
-          toggle();
-          reset();
-          toast.success('User created successfully');
-        }
-        if (!response.data.status) {
-          toast.error('Failed to create user');
-        }
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      if (result.success) {
+        toast.success(result.message);
+        navigate(-1);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleClose = () => {
