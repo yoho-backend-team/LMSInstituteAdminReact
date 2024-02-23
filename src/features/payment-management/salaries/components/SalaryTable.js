@@ -37,7 +37,8 @@ import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { setTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSlice';
+import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
+
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -85,7 +86,7 @@ const SalaryTable = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
 
   const dispatch = useDispatch();
-  const TeachingStaffSalaries = useSelector(setTeachingStaffSalaries);
+  const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(TeachingStaffSalaries);
