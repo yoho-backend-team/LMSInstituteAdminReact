@@ -28,7 +28,7 @@ const GroupManagement = () => {
   }, [dispatch, selectedBranchId]);
 
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
-  console.log(selectedDeleteGroupId)
+  console.log(selectedDeleteGroupId);
   const handleDeleteGroup = async () => {
     try {
       const result = await deleteGroup(selectedDeleteGroupId);
