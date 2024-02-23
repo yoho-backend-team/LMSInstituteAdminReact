@@ -21,12 +21,6 @@ import { getInitials } from 'utils/get-initials';
 import NotificationAddDrawer from './NotificationAddDrawer';
 import NotificationTableHeader from './NotificationTableHeader';
 
-// import {
-//   selectCourseStudyMaterials,
-//   selectLoading
-// } from 'features/content-management/course-contents/study-materials/redux/studyMaterialSelectors';
-// import { getAllCourseStudyMaterials } from 'features/content-management/course-contents/study-materials/redux/studyMaterialThunks';
-
 import { getAllStudentNotifications } from '../redux/studentNotificationThunks';
 import { selectStudentNotifications } from '../redux/studentNotificationSelectors';
 

@@ -185,23 +185,32 @@ const StudyMaterialAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <TextField
-            sx={{ mb: 2 }}
-              fullWidth
-              select
-              defaultValue=""
-              label="Branch"
-              id="custom-select"
-              error={Boolean(errors.branch)}
-              {...(errors.branch && { helperText: errors.branch.message })}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </TextField>
+            <Controller
+              name="Branch"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  sx={{ mb: 2 }}
+                  fullWidth
+                  value={value}
+                  select
+                  defaultValue=""
+                  label="Branch"
+                  id="custom-select"
+                  onChange={onChange}
+                  error={Boolean(errors.branch)}
+                  {...(errors.branch && { helperText: errors.branch.message })}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </TextField>
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={12}>
             <Autocomplete
