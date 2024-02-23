@@ -3,25 +3,26 @@ import axios from 'axios';
 
 const TECHNICAL_SUPPORT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/TechnicalSupport-management/TechnicalSupport`;
 
-export const getAllTechnicalSupports = async () => {
+export const getAllTechnicalSupports = async (selectedBranchId) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/read-all-student-notifications`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
-    if (response.status === 200) {
+    if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch TechnicalSupports. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Technical Support. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllTechnicalSupports:', error);
+    console.error('Error in getAllTechnicalSupport:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;

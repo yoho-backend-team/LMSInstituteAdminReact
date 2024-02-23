@@ -6,7 +6,7 @@ export const getAllTechnicalSupports = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllTechnicalSupports(); // Implement this function in your services
-    dispatch(setTechnicalSupports(response?.data));
+    dispatch(setTechnicalSupports(response?.data?.data));
   } catch (error) {
     console.error(error);
   } finally {
