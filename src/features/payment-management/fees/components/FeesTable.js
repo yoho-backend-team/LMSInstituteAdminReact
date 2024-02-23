@@ -34,7 +34,11 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 // ** Styled Components
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { setStudentFees } from '../redux/studentFeeSlice';
+import { getAllStudentFees } from '../redux/studentFeeThunks';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -84,6 +88,15 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const StudentFees = useSelector(setStudentFees);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(StudentFees);
+  useEffect(() => {
+    dispatch(getAllStudentFees(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -244,68 +257,6 @@ const FeesTable = () => {
     }
   ];
 
-  const store = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '5'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '12'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '5'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '25'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary',
-      transactionid: '55'
-    }
-  ];
 
   return (
     <DatePickerWrapper>
@@ -469,7 +420,7 @@ const FeesTable = () => {
               autoHeight
               pagination
               rowHeight={62}
-              rows={store}
+              rows={StudentFees}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}
