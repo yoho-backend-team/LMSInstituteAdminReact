@@ -18,6 +18,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import CustomAutocomplete from 'components/mui/autocomplete';
 
+import toast from 'react-hot-toast';
+
+import { addStudentNotification } from '../services/studentNotificationServices';
+
+
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -119,14 +124,13 @@ const students = [
 ];
 
 const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
+  branch: [],
+  course: [],
+  batch: [],
+  students: [],
+  title: '',
+  body: '',
+ 
 };
 
 const NotificationAddDrawer = (props) => {
@@ -159,11 +163,31 @@ const NotificationAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
+    bodyFormData.append('branch', data.branch);
+    bodyFormData.append('course', data.course);
+    bodyFormData.append('batch', data.batch);
+    bodyFormData.append('students', data.students);
+    bodyFormData.append('title', data.title);
+    bodyFormData.append('body', data.body);
     console.log(bodyFormData);
+
+    const result = await addStudentNotification(bodyFormData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({

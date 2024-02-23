@@ -14,10 +14,21 @@ import { Link } from 'react-router-dom';
 import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users/redux/userSlices';
 import { searchUsers } from 'features/user-management/users/services/userServices';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
+import { useEffect } from 'react';
+
 import { getInitials } from 'utils/get-initials';
 import NotificationAddDrawer from './NotificationAddDrawer';
 import NotificationTableHeader from './NotificationTableHeader';
+
+// import {
+//   selectCourseStudyMaterials,
+//   selectLoading
+// } from 'features/content-management/course-contents/study-materials/redux/studyMaterialSelectors';
+// import { getAllCourseStudyMaterials } from 'features/content-management/course-contents/study-materials/redux/studyMaterialThunks';
+
+import { getAllStudentNotifications } from '../redux/studentNotificationThunks';
+import { selectStudentNotifications } from '../redux/studentNotificationSelectors';
 
 // ** renders client column
 const renderClient = (row) => {
@@ -54,8 +65,19 @@ const NotificationBodySection = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
 
-  // ** Hooks
+
+  
   const dispatch = useDispatch();
+  const StudentNotifications = useSelector(selectStudentNotifications);
+  
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(StudentNotifications);
+  useEffect(() => {
+    dispatch(getAllStudentNotifications(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
+  // ** Hooks
+
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleFilter = useCallback(
@@ -75,6 +97,7 @@ const NotificationBodySection = () => {
     },
     [dispatch]
   );
+
 
   const columns = [
     {
@@ -178,63 +201,63 @@ const NotificationBodySection = () => {
     }
   ];
 
-  const notification = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
+  // const notification = [
+  //   {
+  //     id: 1,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 100,
+  //     issuedDate: '2025-01-01',
+  //     balance: 55,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 2,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'arunbalaji.com',
+  //     total: 200,
+  //     issuedDate: '2000-01-01',
+  //     balance: 50,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 3,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 300,
+  //     issuedDate: '25-01-01',
+  //     balance: 40,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 4,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 40,
+  //     issuedDate: '202-01-01',
+  //     balance: 30,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 5,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 50,
+  //     issuedDate: '20-01-01',
+  //     balance: 0,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   }
+  // ];
 
   return (
     <Card>
@@ -244,7 +267,7 @@ const NotificationBodySection = () => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={notification}
+        rows={StudentNotifications}
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[10, 25, 50]}
