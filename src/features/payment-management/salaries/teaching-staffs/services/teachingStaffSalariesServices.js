@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/teaching-staff-salaries`;
 
-export const getAllTeachingStaffSalaries = async (selectedBranchId) => {
+export const getAllStaffSalaries = async (selectedBranchId) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_SALARIES_API_END_POINT}/read-by-branch-id`, {
       headers: {
@@ -12,7 +12,7 @@ export const getAllTeachingStaffSalaries = async (selectedBranchId) => {
       },
       params: { branch_id: selectedBranchId }
     });
-
+    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -39,7 +39,7 @@ export const searchTeachingStaffSalaries = async (searchQuery) => {
       params: { search: searchQuery }
     });
 
-    if (response.data) {
+    if (response.data.status) {
       return { success: true, data: response.data };
     } else {
       return { success: false, message: 'Failed to fetch search results' };
