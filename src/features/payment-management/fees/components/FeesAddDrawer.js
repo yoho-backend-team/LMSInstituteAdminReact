@@ -14,7 +14,9 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
+import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { addStudentFee } from '../services/studentFeeServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -65,11 +67,30 @@ const FeesAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
+    bodyFormData.append('course', data.course);
+    bodyFormData.append('batch', data.batch);
+    bodyFormData.append('students', data.students);
+    bodyFormData.append('paymentId', data.paymentId);
+    bodyFormData.append('paidAmount', data.paidAmount);
     console.log(bodyFormData);
+
+    const result = await addStudentFee(bodyFormData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({
