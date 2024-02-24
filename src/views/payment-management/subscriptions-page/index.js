@@ -10,15 +10,16 @@ import SubscriptionCTA from 'features/payment-management/subscriptions/component
 import SubscriptionPlans from 'features/payment-management/subscriptions/components/SubscriptionPlans';
 import SubscriptionTable from 'features/payment-management/subscriptions/components/SubscriptionTable';
 import SubscriptionFooter from 'features/payment-management/subscriptions/components/SubscriptionFooter';
+import SubscriptionDataTable from 'features/payment-management/subscriptions/components/SubscriptionDataTable';
 
 // ** Styled Components
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
-  padding: `${theme.spacing(10, 10)} !important`,
+  padding: `${theme.spacing(2, 2)} !important`,
   [theme.breakpoints.down('xl')]: {
-    padding: `${theme.spacing(20)} !important`
+    padding: `${theme.spacing(2)} !important`
   },
   [theme.breakpoints.down('sm')]: {
-    padding: `${theme.spacing(10, 5)} !important`
+    padding: `${theme.spacing(2, 5)} !important`
   }
 }));
 
@@ -204,6 +205,9 @@ const Subscription = () => {
     <Card>
       <CardContent>
         <SubscriptionHeader plan={plan} handleChange={handleChange} />
+
+        <SubscriptionDataTable />
+
         <SubscriptionPlans plan={plan} data={data.pricingPlans} />
       </CardContent>
       <SubscriptionCTA />
