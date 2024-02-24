@@ -123,6 +123,10 @@ const CalenderPage = Loadable(lazy(() => import('views/calender')));
 const Community = Loadable(lazy(() => import('views/community/index.js')));
 const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/ProfileSection/AccountSettings')));
 
+
+// Profile management
+const AllNotifications =  Loadable(lazy(() => import('views/profile-management/notifications-page')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 // const Protected = () => {
@@ -264,6 +268,11 @@ const ApplicationRoutes = () => {
       <Route path="/refund-management" element={<MainLayout />}>
         <Route index element={<Navigate to="/refund-management/refunds" />} />
         <Route path="refunds" element={<RefundsPage />} />
+      </Route>
+
+      <Route path="/profile-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/profile-management/allnotifications" />} />
+        <Route path="allnotifications" element={<AllNotifications />} />
       </Route>
 
       <Route path="/staff-management" element={<MainLayout />}>
