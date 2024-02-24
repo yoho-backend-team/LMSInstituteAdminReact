@@ -32,7 +32,7 @@ const AllNotifications = () => {
 
             <TabPanel value="1">
               <Grid container spacing={3}>
-                {[...Array(5).keys()].map((item) => (
+                {[...Array(10).keys()].map((item) => (
                   <Grid item xs={12} key={item}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
