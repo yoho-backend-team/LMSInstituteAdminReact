@@ -99,6 +99,11 @@ const SubscriptionsPage = Loadable(lazy(() => import('views/payment-management/s
 // Refund Management
 const RefundsPage = Loadable(lazy(() => import('views/refund-management/student-fee-refunds-page')));
 
+//Faq Management
+const FaqCategoriesPage = Loadable(lazy(() => import('views/faq-management/categories')));
+const FaqFaqsPage = Loadable(lazy(() => import('views/faq-management/faqs')));
+
+
 // Staff Management
 const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-overview-page')));
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-overview-page')));
@@ -237,6 +242,12 @@ const ApplicationRoutes = () => {
         <Route index element={<Navigate to="/help-center/customer-support" />} />
         <Route path="customer-support" element={<CustomerSupportPage />} />
         <Route path="technical-support" element={<TechnicalSupportPage />} />
+      </Route>
+
+      <Route path="/faq-management" element={<MainLayout />}>
+        <Route index element={<Navigate to="/faq-management/categories" />} />
+        <Route path="categories" element={<FaqCategoriesPage />} />
+        <Route path="faqs" element={<FaqFaqsPage />} />
       </Route>
 
       <Route path="/ticket-management" element={<MainLayout />}>
