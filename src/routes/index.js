@@ -10,7 +10,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // view imports
 
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
+const AuthLogin = Loadable(lazy(() => import('views/authentication/login-page')));
 
 // User Management
 const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-overview-page')));
