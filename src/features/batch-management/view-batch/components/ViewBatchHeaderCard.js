@@ -1,130 +1,155 @@
 // ** MUI Imports
+import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import Avatar from 'components/mui/avatar';
 
 // ** Icon Imports
 // import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomAvatar from 'components/mui/avatar';
+// import * as source from 'src/views/components/avatars/AvatarsSourceCode'
 
 const renderStats = () => {
   return (
     <Grid item xs={12} md={12}>
-      <Box sx={{ display: 'flex', gap: 3 }}>
-        <Box>
-          <Box>
-            <Typography>Course</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h4">Ux Design</Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>Batch</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h4">#3022024</Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>Duration</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h4">1:24:36</Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>Date</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h4">13 Feb 2024</Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>Started at</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h4">10:30 AM</Typography>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>Ended at</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h4">11:54 AM</Typography>
-          </Box>
-        </Box>
-      </Box>
-
-      <Box sx={{ display: 'flex', gap: 3, mt: 4 }}>
-        <Box sx={{}}>
-          <Box>
-            <Typography>instructor</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-            <CustomAvatar skin="light" sx={{ mr: 1, width: 36, height: 36 }}>
-              {/* <Icon icon={sale.icon} fontSize="1.5rem" /> */}
-            </CustomAvatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h5">jerome bell</Typography>
-            </Box>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>coordinator</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-            <CustomAvatar skin="light" sx={{ mr: 1, width: 36, height: 36 }}>
-              {/* <Icon icon={sale.icon} fontSize="1.5rem" /> */}
-            </CustomAvatar>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h5">Robert Fox</Typography>
-            </Box>
-          </Box>
-        </Box>
-
-        <Box>
-          <Box>
-            <Typography>class type</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h4">Online</Typography>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
+      <Grid container>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title="Ux Class 13402324" />
+            <CardContent sx={{ mt: 0, pt: 0 }}>
+              <Grid container spacing={3}>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Course
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    UX Design
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Batch
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    #2323251
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Duration
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    1:24:36
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Date
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    13 Feb 2024
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Sarted At
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    10:30 AM
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Ended At
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    11:54 AM
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+            <CardContent sx={{ mt: 0, pt: 0 }}>
+              <Grid container spacing={3}>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Instructor
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                    <Box>
+                      <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Tooltip title="Olivia Sparks">
+                          <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Howard Lloyd">
+                          <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Hallie Richards">
+                          <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Alice Cobb">
+                          <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                      </AvatarGroup>
+                    </Box>
+                    <Box>
+                      <Typography variant="h4">Jerome Bell</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Coordinator
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                    <Box>
+                      <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Tooltip title="Olivia Sparks">
+                          <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Howard Lloyd">
+                          <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Hallie Richards">
+                          <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Alice Cobb">
+                          <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                      </AvatarGroup>
+                    </Box>
+                    <Box>
+                      <Typography variant="h4">Robert Fox</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Class Type
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    Online
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Grid>
   );
 };
 
 const EcommerceStatistics = () => {
   return (
-    <Card>
-      <CardHeader title="UX Class 13022024" sx={{ '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }} />
-      <CardContent sx={{ pt: (theme) => `${theme.spacing(0.75)} !important`, pb: (theme) => `${theme.spacing(3.5)} !important` }}>
-        <Grid container spacing={6}>
-          {renderStats()}
-        </Grid>
-      </CardContent>
-    </Card>
+    <Grid container spacing={6}>
+      {renderStats()}
+    </Grid>
   );
 };
 
