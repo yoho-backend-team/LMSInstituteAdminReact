@@ -202,7 +202,7 @@ const NotificationSection = () => {
                   </Grid>
                   <Divider />
                   <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
-                    <Button size="small" disableElevation>
+                    <Button component={Link} to="profile-management/allnotifications" size="small" disableElevation>
                       View All
                     </Button>
                   </CardActions>

@@ -12,20 +12,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 import ImageIcon from '@mui/icons-material/Image';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
-import { useDispatch ,useSelector} from 'react-redux';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
 import { getInitials } from 'utils/get-initials';
 import NotificationAddDrawer from './NotificationAddDrawer';
 import NotificationTableHeader from './NotificationTableHeader';
-
-// import {
-//   selectCourseStudyMaterials,
-//   selectLoading
-// } from 'features/content-management/course-contents/study-materials/redux/studyMaterialSelectors';
-// import { getAllCourseStudyMaterials } from 'features/content-management/course-contents/study-materials/redux/studyMaterialThunks';
 
 import { getAllStudentNotifications } from '../redux/studentNotificationThunks';
 import { selectStudentNotifications } from '../redux/studentNotificationSelectors';
@@ -66,10 +60,10 @@ const NotificationBodySection = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
 
-  
+
   const dispatch = useDispatch();
   const StudentNotifications = useSelector(selectStudentNotifications);
-  
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(StudentNotifications);

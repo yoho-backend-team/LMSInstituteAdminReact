@@ -1,25 +1,50 @@
 // assets
-import { IconQuestionCircle } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconHelp } from '@tabler/icons';
 
 // constant
-const icons = { IconQuestionCircle };
+const icons = {
+  IconKey,
+  IconShieldLock,
+  IconUser,
+  IconUsers,
+  IconCash,
+  IconHelp
+};
 
-// ==============================|| DASHBOARD MENU ITEMS ||============================== //
+// ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
-const FaqManagement = {
-  id: 'authentication',
+const pages = {
+  id: 'faq-management',
   title: '',
   type: 'group',
   children: [
     {
-      id: 'faq',
-      title: 'FAQ Management',
-      type: 'item',
-      url: '/faq-management/faq',
-      icon: icons.IconQuestionCircle,
-      breadcrumbs: false
+      id: 'authentication',
+      title: 'Faq Management',
+      type: 'collapse',
+      icon: icons.IconHelp,
+      children: [
+        {
+          id: 'categories',
+          title: 'Categories',
+          type: 'item',
+          url: '/faq-management/categories',
+          icon: icons.IconHelp,
+          target: false,
+          breadcrumbs: false
+        },
+        {
+          id: 'Faqs',
+          title: 'Faqs',
+          type: 'item',
+          url: '/faq-management/faqs',
+          icon: icons.IconHelp,
+          target: false,
+          breadcrumbs: false
+        }
+      ]
     }
   ]
 };
 
-export default FaqManagement;
+export default pages;

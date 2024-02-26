@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
+import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 
 const StudentCertificateView = ({ open, handleViewClose }) => {
   return (

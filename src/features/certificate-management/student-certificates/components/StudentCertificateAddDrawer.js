@@ -16,7 +16,7 @@ import { TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
-import CoursePdfInput from 'features/course-management/add-course/CoursePdfInput';
+import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import toast from 'react-hot-toast';
 import { addStudentCertificate } from '../services/studentCertificateServices';
 

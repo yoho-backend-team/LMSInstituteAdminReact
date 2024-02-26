@@ -4,26 +4,26 @@ import { lazy } from 'react';
 import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import MainLayout from 'layout/MainLayout';
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate ,Outlet} from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 // view imports
 
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
-const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
+const AuthLogin = Loadable(lazy(() => import('views/authentication/login-page')));
 
 // User Management
-const GroupsPage = Loadable(lazy(() => import('views/user-management/groups')));
-const AddGroupPage = Loadable(lazy(() => import('views/user-management/add-group')));
-const ViewGroupPage = Loadable(lazy(() => import('views/user-management/view-group')));
-const EditGroupPage = Loadable(lazy(() => import('views/user-management/edit-group')));
-const UsersPage = Loadable(lazy(() => import('views/user-management/users')));
-const ViewUserPage = Loadable(lazy(() => import('views/user-management/view-user')));
+const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-overview-page')));
+const AddGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-add-page')));
+const ViewGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups[id]-page')));
+const EditGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-edit-page')));
+const UsersPage = Loadable(lazy(() => import('views/user-management/users-page/users-overview-page')));
+const ViewUserPage = Loadable(lazy(() => import('views/user-management/users-page/users[id]-page')));
 
 //Branch Management
-const BranchesPage = Loadable(lazy(() => import('views/branch-management/branches')));
-const AddBranchPage = Loadable(lazy(() => import('views/branch-management/add-branch')));
-const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/view-branch')));
+const BranchesPage = Loadable(lazy(() => import('views/branch-management/branch-overview-page')));
+const AddBranchPage = Loadable(lazy(() => import('views/branch-management/branch-add-page')));
+const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/branch[id]-page')));
 
 // Batch Management
 const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
@@ -31,16 +31,16 @@ const AddBatchPage = Loadable(lazy(() => import('views/batch-management/add-batc
 const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-batch')));
 
 // Attendance Management
-const StudentAttendanceViewPage = Loadable(lazy(() => import('views/attendance-management/students/view-attendance')));
-const StudentAttendancesPage = Loadable(lazy(() => import('views/attendance-management/students')));
-const TeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching -staffs')));
-const TeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching -staffs/view-attendance')));
-const NonTeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staffs')));
-const NonTeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staffs/view-attendance')));
+const StudentAttendanceViewPage = Loadable(lazy(() => import('views/attendance-management/student-attendances-page/attendance[id]-page')));
+const StudentAttendancesPage = Loadable(lazy(() => import('views/attendance-management/student-attendances-page/attendance-overview-page')));
+const TeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching-staff-attendances-page/attendance-overview-page')));
+const TeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching-staff-attendances-page/attendance[id]-page')));
+const NonTeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staff-attendances-page/attendance-overview-page')));
+const NonTeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staff-attendances-page/attendance[id]-page')));
 
 // Certificate Management
 // const StaffCertificatesPage = Loadable(lazy(() => import('views/certificate-management/staff')));
-const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-management/student')));
+const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-management/student-certificates-page')));
 
 // Class Management
 const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class')));
@@ -51,9 +51,9 @@ const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offl
 
 // Content Management
 
-const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/study-materials')));
-const NotesPage = Loadable(lazy(() => import('views/content-management/notes')));
-const ModulesPage = Loadable(lazy(() => import('views/content-management/modules')));
+const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/course-study-materials-page')));
+const NotesPage = Loadable(lazy(() => import('views/content-management/course-notes-page')));
+const ModulesPage = Loadable(lazy(() => import('views/content-management/course-modules-page')));
 
 // const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
 // const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
@@ -61,10 +61,10 @@ const ModulesPage = Loadable(lazy(() => import('views/content-management/modules
 // const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
 
 // Course Management
-const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories')));
-const CoursesPage = Loadable(lazy(() => import('views/course-management/courses')));
-const AddCoursePage = Loadable(lazy(() => import('views/course-management/add-course')));
-const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-course')));
+const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories-page/categories-overview-page')));
+const CoursesPage = Loadable(lazy(() => import('views/course-management/courses-page/courses-overview-page')));
+const AddCoursePage = Loadable(lazy(() => import('views/course-management/courses-page/course-add-page')));
+const ViewCoursePage = Loadable(lazy(() => import('views/course-management/courses-page/course[id]-page')));
 
 // Exam Management
 // const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
@@ -75,41 +75,46 @@ const ViewCoursePage = Loadable(lazy(() => import('views/course-management/view-
 // const OnlineExamResultPage = Loadable(lazy(() => import('views/result-management/online-exams')));
 
 // Help Center
-const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support')));
-const TechnicalSupportPage = Loadable(lazy(() => import('views/help-center/technical-support')));
+const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support-page')));
+const TechnicalSupportPage = Loadable(lazy(() => import('views/help-center/technical-support-page')));
 
 // Ticket Management
-const StaffTicketPage = Loadable(lazy(() => import('views/ticket-management/staff-ticket')));
-const StudentTicketPage = Loadable(lazy(() => import('views/ticket-management/student-ticket')));
+const StaffTicketPage = Loadable(lazy(() => import('views/ticket-management/staff-tickets-page')));
+const StudentTicketPage = Loadable(lazy(() => import('views/ticket-management/student-tickets-page')));
 
 // Id Card Management
-const StaffIdCardsPage = Loadable(lazy(() => import('views/id-card-management/staffs/teaching')));
-const StudentIdCardsPage = Loadable(lazy(() => import('views/id-card-management/students')));
+const StaffIdCardsPage = Loadable(lazy(() => import('views/id-card-management/teaching-staff-id-cards-page')));
+const StudentIdCardsPage = Loadable(lazy(() => import('views/id-card-management/student-id-cards-page')));
 
 // Attendance Management
-const AllNotificationsPage = Loadable(lazy(() => import('views/notification-management/all-notification')));
-const StaffNotificationsPage = Loadable(lazy(() => import('views/notification-management/staff-notification')));
-const StudentNotificationsPage = Loadable(lazy(() => import('views/notification-management/student-notification')));
+const AllNotificationsPage = Loadable(lazy(() => import('views/notification-management/all-notifications-page')));
+const StaffNotificationsPage = Loadable(lazy(() => import('views/notification-management/staff-notifications-page')));
+const StudentNotificationsPage = Loadable(lazy(() => import('views/notification-management/student-notifications-page')));
 
 // Payment Management
-const FeesPage = Loadable(lazy(() => import('views/payment-management/fee')));
-const SalariesPage = Loadable(lazy(() => import('views/payment-management/salary')));
-const SubscriptionsPage = Loadable(lazy(() => import('views/payment-management/subscription')));
+const FeesPage = Loadable(lazy(() => import('views/payment-management/student-fees-page')));
+const SalariesPage = Loadable(lazy(() => import('views/payment-management/staff-salaries-page')));
+const SubscriptionsPage = Loadable(lazy(() => import('views/payment-management/subscriptions-page')));
 
 // Refund Management
-const RefundsPage = Loadable(lazy(() => import('views/refund-management/refunds')));
+const RefundsPage = Loadable(lazy(() => import('views/refund-management/student-fee-refunds-page')));
+
+//Faq Management
+const FaqCategoriesPage = Loadable(lazy(() => import('views/faq-management/categories')));
+const FaqFaqsPage = Loadable(lazy(() => import('views/faq-management/faqs')));
+
 
 // Staff Management
-const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/teaching-staffs')));
-const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs')));
-const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs/view-profile')));
-const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/add-new-staff')));
-const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs/add-new-staff')));
-const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs/view-profile')));
+const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-overview-page')));
+const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-overview-page')));
+const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff[id]-page')));
+const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-add-page')));
+const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-add-page')));
+const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff[id]-page')));
 // Student Management
-const StudentsPage = Loadable(lazy(() => import('views/student-management/students/profile')));
-const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/view-profile')));
-const AddNewStudent = Loadable(lazy(() => import('views/student-management/students/profile/add-new-student/addNewStudent')));
+const StudentsPage = Loadable(lazy(() => import('views/student-management/students-page/student-overview-page')));
+const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students-page/student[id]-page')));
+const AddNewStudent = Loadable(lazy(() => import('views/student-management/students-page/student-add-page')));
 
 // Faq Management
 const FAQ = Loadable(lazy(()=> import('views/faq-management/')));
@@ -125,6 +130,10 @@ const CalenderPage = Loadable(lazy(() => import('views/calender')));
 // Community
 const Community = Loadable(lazy(() => import('views/community/index.js')));
 const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/ProfileSection/AccountSettings')));
+
+
+// Profile management
+const AllNotifications = Loadable(lazy(() => import('views/profile-management/notifications-page')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
@@ -168,17 +177,17 @@ const ApplicationRoutes = () => {
         <Route path="/calender" element={<MainLayout />}>
           <Route index element={<CalenderPage />} />
         </Route>
-        <Route element={<AdminRoute />}>
-          <Route path="/user-management" element={<MainLayout />}>
-            <Route index element={<Navigate to="/user-management/groups" />} />
-            <Route path="groups" element={<GroupsPage />} />
-            <Route path="groups/add" element={<AddGroupPage />} />
-            <Route path="groups/view" element={<ViewGroupPage />} />
-            <Route path="groups/edit/:id" element={<EditGroupPage />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="users/:id" element={<ViewUserPage />} />
-          </Route>
+        {/* <Route element={<AdminRoute />}> */}
+        <Route path="/user-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/user-management/groups" />} />
+          <Route path="groups" element={<GroupsPage />} />
+          <Route path="groups/add" element={<AddGroupPage />} />
+          <Route path="groups/view" element={<ViewGroupPage />} />
+          <Route path="groups/edit/:id" element={<EditGroupPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="users/:id" element={<ViewUserPage />} />
         </Route>
+        {/* </Route> */}
 
         <Route path="/attendance-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
@@ -238,6 +247,12 @@ const ApplicationRoutes = () => {
           <Route path="technical-support" element={<TechnicalSupportPage />} />
         </Route>
 
+        <Route path="/faq-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/faq-management/categories" />} />
+          <Route path="categories" element={<FaqCategoriesPage />} />
+          <Route path="faqs" element={<FaqFaqsPage />} />
+        </Route>
+
         <Route path="/ticket-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/ticket-management/staff-ticket" />} />
           <Route path="staff-ticket" element={<StaffTicketPage />} />
@@ -267,6 +282,11 @@ const ApplicationRoutes = () => {
         <Route path="/refund-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/refund-management/refunds" />} />
           <Route path="refunds" element={<RefundsPage />} />
+        </Route>
+
+        <Route path="/profile-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/profile-management/allnotifications" />} />
+          <Route path="allnotifications" element={<AllNotifications />} />
         </Route>
 
         <Route path="/staff-management" element={<MainLayout />}>

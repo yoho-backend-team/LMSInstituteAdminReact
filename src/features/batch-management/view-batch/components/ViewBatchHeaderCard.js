@@ -1,78 +1,155 @@
 // ** MUI Imports
+import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import Avatar from 'components/mui/avatar';
 
 // ** Icon Imports
-import Icon from 'components/icon';
+// import Icon from 'components/icon';
 
 // ** Custom Components Imports
-import CustomAvatar from 'components/mui/avatar';
-
-const data = [
-  {
-    stats: '230k',
-    title: 'Students',
-    color: 'primary',
-    icon: 'tabler:chart-pie-2'
-  },
-  {
-    color: 'info',
-    stats: '8.549k',
-    title: 'Duration',
-    icon: 'tabler:users'
-  },
-  {
-    color: 'error',
-    stats: '1.423k',
-    title: 'Start Date',
-    icon: 'tabler:shopping-cart'
-  },
-  {
-    stats: '$9745',
-    color: 'success',
-    title: 'End Date',
-    icon: 'tabler:currency-dollar'
-  }
-];
+// import * as source from 'src/views/components/avatars/AvatarsSourceCode'
 
 const renderStats = () => {
-  return data.map((sale, index) => (
-    <Grid item xs={6} md={6} key={index}>
-      <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-        <CustomAvatar skin="light" color={sale.color} sx={{ mr: 4, width: 42, height: 42 }}>
-          <Icon icon={sale.icon} fontSize="1.5rem" />
-        </CustomAvatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h5">{sale.stats}</Typography>
-          <Typography variant="body2">{sale.title}</Typography>
-        </Box>
-      </Box>
+  return (
+    <Grid item xs={12} md={12}>
+      <Grid container>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader title="Ux Class 13402324" />
+            <CardContent sx={{ mt: 0, pt: 0 }}>
+              <Grid container spacing={3}>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Course
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    UX Design
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Batch
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    #2323251
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Duration
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    1:24:36
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Date
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    13 Feb 2024
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Sarted At
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    10:30 AM
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Ended At
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    11:54 AM
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+            <CardContent sx={{ mt: 0, pt: 0 }}>
+              <Grid container spacing={3}>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Instructor
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                    <Box>
+                      <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Tooltip title="Olivia Sparks">
+                          <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Howard Lloyd">
+                          <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Hallie Richards">
+                          <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Alice Cobb">
+                          <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                      </AvatarGroup>
+                    </Box>
+                    <Box>
+                      <Typography variant="h4">Jerome Bell</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Coordinator
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                    <Box>
+                      <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Tooltip title="Olivia Sparks">
+                          <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Howard Lloyd">
+                          <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Hallie Richards">
+                          <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                        <Tooltip title="Alice Cobb">
+                          <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
+                        </Tooltip>
+                      </AvatarGroup>
+                    </Box>
+                    <Box>
+                      <Typography variant="h4">Robert Fox</Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Class Type
+                  </Typography>
+                  <Typography variant="h4" sx={{ mt: 1 }}>
+                    Online
+                  </Typography>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </Grid>
-  ));
+  );
 };
 
 const EcommerceStatistics = () => {
   return (
-    <Card>
-      <CardHeader
-        title="Statistics"
-        sx={{ '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }}
-        action={
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-            Updated 1 month ago
-          </Typography>
-        }
-      />
-      <CardContent sx={{ pt: (theme) => `${theme.spacing(2.5)} !important`, pb: (theme) => `${theme.spacing(7.5)} !important` }}>
-        <Grid container spacing={6}>
-          {renderStats()}
-        </Grid>
-      </CardContent>
-    </Card>
+    <Grid container spacing={6}>
+      {renderStats()}
+    </Grid>
   );
 };
 

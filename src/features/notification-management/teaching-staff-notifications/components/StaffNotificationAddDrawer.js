@@ -10,14 +10,15 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import CustomAutocomplete from 'components/mui/autocomplete';
+import toast from 'react-hot-toast';
+
+import { addStaffNotification } from '../services/staffNotificationServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -27,38 +28,11 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  branch: yup.array().required('Branch is required').min(1, 'Select at least one branch'),
-  course: yup.array().required('Course is required').min(1, 'Select at least one course'),
-  batch: yup.array().required('Batch is required').min(1, 'Select at least one batch'),
+  type: yup.string().required('Type is required'),
   staffs: yup.array().required('Students is required').min(1, 'Select at least one student'),
   title: yup.string().required('Title is required'),
   body: yup.string().required('Body is required')
 });
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
 
 const staffs = [
   { title: 'Das Boot', year: 1981 },
@@ -69,29 +43,21 @@ const staffs = [
 ];
 
 const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
+  type: '',
+  staffs: [],
+  title: '',
+  body: ''
 };
 
 const StaffNotificationAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
   // ** State
-  const [selectedBranches, setSelectedBranches] = useState([]);
+
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
 
   useEffect(() => {
     getAllGroups();
@@ -130,12 +96,32 @@ const StaffNotificationAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
+    bodyFormData.append('type', data.type);
+    bodyFormData.append('staffs', data.staffs);
+    bodyFormData.append('title', data.title);
+    bodyFormData.append('body', data.body);
+  
     console.log(bodyFormData);
+
+    const result = await addStaffNotification(bodyFormData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
   };
+
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -218,55 +204,27 @@ const StaffNotificationAddDrawer = (props) => {
 
           <Grid item xs={12} sm={12}>
             <Controller
-              name="branch"
+              name="type"
               control={control}
-              render={({ field }) => (
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
                 <TextField
-                  {...field}
-                  sx={{ mb: 2 }}
                   select
+                  name="type"
                   fullWidth
-                  label="Branch"
-                  id="select-multiple-checkbox"
-                  error={Boolean(errors.branch)}
-                  helperText={errors.branch?.message}
-                  SelectProps={{
-                    MenuProps,
-                    multiple: true,
-                    value: selectedBranches,
-                    onChange: (e) => handleBranchChange(e),
-                    renderValue: (selected) => selected.join(', ')
-                  }}
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="Select Type"
+                  onChange={onChange}
+                  SelectProps={{ value: value, onChange: onChange }}
+                  error={Boolean(errors.type)}
+                  {...(errors.type && { helperText: errors.type.message })}
                 >
-                  {names.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                      <ListItemText primary={name} />
-                    </MenuItem>
-                  ))}
+                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
                 </TextField>
               )}
             />
-          </Grid>
-
-          <Grid item xs={12} sm={12}>
-            <TextField
-              sx={{ mb: 2 }}
-              fullWidth
-              select
-              defaultValue=""
-              label="Type"
-              id="custom-select"
-              error={Boolean(errors.title)}
-              helperText={errors.title?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </TextField>
           </Grid>
 
           <Grid item xs={12} sm={12}>
@@ -291,42 +249,53 @@ const StaffNotificationAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <TextField
-              sx={{ mb: 2 }}
-              fullWidth
-              select
-              defaultValue=""
-              label="Title"
-              id="custom-select"
-              error={Boolean(errors.title)}
-              helperText={errors.title?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </TextField>
+          <Controller
+              name="title"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  select
+                  name="title"
+                  fullWidth
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="Select Title"
+                  onChange={onChange}
+                  SelectProps={{ value: value, onChange: onChange }}
+                  error={Boolean(errors.title)}
+                  {...(errors.title && { helperText: errors.title.message })}
+                >
+                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
+                </TextField>
+              )}
+            />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <TextField
-              fullWidth
-              select
-              defaultValue=""
-              label="Body"
-              id="custom-select"
-              error={Boolean(errors.body)}
-              helperText={errors.body?.message}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </TextField>
+          <Controller
+              name="body"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  select
+                  name="body"
+                  fullWidth
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="Select Body"
+                  onChange={onChange}
+                  SelectProps={{ value: value, onChange: onChange }}
+                  error={Boolean(errors.body)}
+                  {...(errors.body && { helperText: errors.body.message })}
+                >
+                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
+                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
+                </TextField>
+              )}
+            />
           </Grid>
 
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
