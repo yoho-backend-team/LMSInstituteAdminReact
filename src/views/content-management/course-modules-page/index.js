@@ -13,17 +13,17 @@ import Icon from 'components/icon';
 import MenuItem from '@mui/material/MenuItem';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
-import ModuleAddDrawer from 'features/content-management/course-contents/components/ModuleAddDrawer';
-import ModuleEdit from 'features/content-management/course-contents/components/ModuleEdit';
-import ModuleHeader from 'features/content-management/course-contents/components/ModuleTableHeader';
-import ModuleView from 'features/content-management/course-contents/components/ModuleView';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import ModuleAddDrawer from 'features/content-management/course-contents/course-modules-page/components/ModuleAddDrawer';
+import ModuleEdit from 'features/content-management/course-contents/course-modules-page/components/ModuleEdit';
+import ModuleHeader from 'features/content-management/course-contents/course-modules-page/components/ModuleTableHeader';
+import ModuleView from 'features/content-management/course-contents/course-modules-page/components/ModuleView';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectCourseModules, selectLoading } from 'features/content-management/course-contents/modules/redux/moduleSelectors';
-import { getAllCourseModules } from 'features/content-management/course-contents/modules/redux/moduleThunks';
+import { selectCourseModules, selectLoading } from 'features/content-management/course-contents/course-modules-page/redux/moduleSelectors';
+import { getAllCourseModules } from 'features/content-management/course-contents/course-modules-page/redux/moduleThunks';
 
 const Modules = () => {
   const [value, setValue] = useState('');

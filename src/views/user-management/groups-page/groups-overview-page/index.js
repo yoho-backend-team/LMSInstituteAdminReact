@@ -2,11 +2,11 @@ import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, IconButton, 
 import Header from 'components/Header';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
 import Icon from 'components/icon';
-import GroupDeleteDialog from 'features/user-management/groups/components/GroupDeleteDialog';
-import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups/redux/groupSelectors';
-import { setGroups } from 'features/user-management/groups/redux/groupSlice';
-import { getAllGroups } from 'features/user-management/groups/redux/groupThunks';
-import { deleteGroup, searchGroups } from 'features/user-management/groups/services/groupService';
+import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
+import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
+import { setGroups } from 'features/user-management/groups-page/redux/groupSlice';
+import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
+import { deleteGroup, searchGroups } from 'features/user-management/groups-page/services/groupService';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';

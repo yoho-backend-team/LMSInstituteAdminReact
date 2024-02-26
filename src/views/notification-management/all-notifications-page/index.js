@@ -6,9 +6,9 @@ import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import AllNotificationHeaderSection from 'features/notification-management/all-notifications/components/AllNotificationHeaderSection';
 import AllNotificationBodySection from 'features/notification-management/all-notifications/components/AllNotificationBodySection';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from 'features/user-management/users/redux/userThunks';
-import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users/redux/userSelectors';
-import { getAllActiveGroups } from 'features/user-management/users/services/userServices';
+import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
+import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users-page/redux/userSelectors';
+import { getAllActiveGroups } from 'features/user-management/users-page/services/userServices';
 
 const AllNotification = () => {
   const dispatch = useDispatch();

@@ -6,9 +6,9 @@ import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import StaffNotificationHeaderSection from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationHeaderSection';
 import StaffNotificationBodySection from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationBodySection';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from 'features/user-management/users/redux/userThunks';
-import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users/redux/userSelectors';
-import { getAllActiveGroups } from 'features/user-management/users/services/userServices';
+import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
+import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users-page/redux/userSelectors';
+import { getAllActiveGroups } from 'features/user-management/users-page/services/userServices';
 
 const StaffNotification = () => {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@mui/material';
-import AddBranchForms from 'features/branch-management/add-branch/components/AddBranchForms';
+import AddBranchForms from 'features/branch-management/branch-add-page/components/AddBranchForms';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const AddBranch = () => {

@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
-import { addGroup, getAllPermissions } from 'features/user-management/groups/services/groupService';
+import { addGroup, getAllPermissions } from 'features/user-management/groups-page/services/groupService';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';

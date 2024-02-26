@@ -20,7 +20,7 @@ import {
   Typography
 } from '@mui/material';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
-import { getAllPermissions, getPermissionsByRoleId, updateGroup } from 'features/user-management/groups/services/groupService';
+import { getAllPermissions, getPermissionsByRoleId, updateGroup } from 'features/user-management/groups-page/services/groupService';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';

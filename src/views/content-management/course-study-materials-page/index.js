@@ -14,19 +14,19 @@ import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
-import StudyMaterialAddDrawer from 'features/content-management/course-contents/components/StudyMaterialAddDrawer';
-import StudyMaterialEdit from 'features/content-management/course-contents/components/StudyMaterialEdit';
-import StudyMaterialHeader from 'features/content-management/course-contents/components/StudyMaterialTableHeader';
-import StudyMaterialView from 'features/content-management/course-contents/components/StudyMaterialView';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import StudyMaterialAddDrawer from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialAddDrawer';
+import StudyMaterialEdit from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialEdit';
+import StudyMaterialHeader from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialTableHeader';
+import StudyMaterialView from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialView';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
   selectCourseStudyMaterials,
   selectLoading
-} from 'features/content-management/course-contents/study-materials/redux/studyMaterialSelectors';
-import { getAllCourseStudyMaterials } from 'features/content-management/course-contents/study-materials/redux/studyMaterialThunks';
+} from 'features/content-management/course-contents/course-study-materials-page/redux/studyMaterialSelectors';
+import { getAllCourseStudyMaterials } from 'features/content-management/course-contents/course-study-materials-page/redux/studyMaterialThunks';
 
 const StudyMaterials = () => {
   const [value, setValue] = useState('');

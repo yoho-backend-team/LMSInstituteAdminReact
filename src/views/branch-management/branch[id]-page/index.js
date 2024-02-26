@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import BranchSkeleton from 'components/cards/Skeleton/BranchSkeleton';
 import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
-import BranchTableList from 'features/branch-management/add-branch/components/BranchTableList';
+import BranchTableList from 'features/branch-management/branch-add-page/components/BranchTableList';
 import HeaderCard from 'features/branch-management/view-branch/components/ViewBranchHeaderCard';
 import ProgressCard from 'features/branch-management/view-branch/components/ViewBranchProgressCard';
 import { useEffect, useState } from 'react';
@@ -36,7 +36,7 @@ const ViewBranch = () => {
           <Grid item xs={12}>
             <BranchTableList />
           </Grid>
-          <Grid item xs={12}> 
+          <Grid item xs={12}>
             <StudentTableList />
           </Grid>
         </Grid>

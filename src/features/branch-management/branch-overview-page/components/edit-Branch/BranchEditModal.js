@@ -8,7 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { updateBranch } from '../../services/branchServices';
+import { updateBranch } from '../../../services/branchServices';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 

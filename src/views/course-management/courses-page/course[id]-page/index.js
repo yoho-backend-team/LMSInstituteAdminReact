@@ -3,7 +3,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, List, ListItem, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-import CourseEditModal from 'features/course-management/courses/components/CourseEditModal';
+import CourseEditModal from 'features/course-management/courses-page/course-overview-page/components/CourseEditModal';
 import { useState } from 'react';
 
 const CourseViewPage = () => {

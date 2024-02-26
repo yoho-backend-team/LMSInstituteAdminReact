@@ -1,11 +1,11 @@
 import { Grid } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import CategorySkeleton from 'components/cards/Skeleton/CategorySkeleton';
-import CategoryCard from 'features/course-management/categories/components/CategoryCard';
-import CategoryCardHeader from 'features/course-management/categories/components/CategoryCardHeader';
-import CategoryFilter from 'features/course-management/categories/components/CategoryFilterCard';
-import { selectCourseCategories, selectLoading } from 'features/course-management/categories/redux/courseCategorySelectors';
-import { getAllCourseCategories } from 'features/course-management/categories/redux/courseCategoryThunks';
+import CategoryCard from 'features/course-management/categories-page/category-overview-page/components/CategoryCard';
+import CategoryCardHeader from 'features/course-management/categories-page/category-overview-page/components/CategoryCardHeader';
+import CategoryFilter from 'features/course-management/categories-page/category-overview-page/components/CategoryFilterCard';
+import { selectCourseCategories, selectLoading } from 'features/course-management/categories-page/redux/courseCategorySelectors';
+import { getAllCourseCategories } from 'features/course-management/categories-page/redux/courseCategoryThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 

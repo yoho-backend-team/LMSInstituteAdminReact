@@ -18,8 +18,8 @@ import StudentCertificateAddDrawer from 'features/certificate-management/student
 import StudentCertificateEdit from 'features/certificate-management/student-certificates/components/StudentCertificateEdit';
 import StudentCertificateTableHeader from 'features/certificate-management/student-certificates/components/StudentCertificateTableHeader';
 import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
 import { selectStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
@@ -83,8 +83,8 @@ const StudenrCertificate = () => {
         <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
           <Icon icon="mdi:delete-outline" />
         </IconButton>
-        <IconButton  aria-label="capture screenshot" color="error">
-         <Icon icon="tabler:download" fontSize={20} />
+        <IconButton aria-label="capture screenshot" color="error">
+          <Icon icon="tabler:download" fontSize={20} />
         </IconButton>
       </Box>
     );

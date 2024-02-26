@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid';
 import ViewUserSkeleton from 'components/cards/Skeleton/ViewUserSkeleton';
-import UserViewLeft from 'features/user-management/user-view/components/UserViewLeft';
-import UserViewRight from 'features/user-management/user-view/components/UserViewRight';
-import { getUserById } from 'features/user-management/user-view/services/viewUserServices';
+import UserViewLeft from 'features/user-management/users-page/user-view-page/components/UserViewLeft';
+import UserViewRight from 'features/user-management/users-page/user-view-page/components/UserViewRight';
+import { getUserById } from 'features/user-management/users-page/services/userServices';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 

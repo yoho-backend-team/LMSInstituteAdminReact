@@ -4,8 +4,8 @@ import { Grid } from '@mui/material';
 import BranchHeader from 'features/branch-management/branch-overview-page/components/BrachesCardHeader';
 import BranchEditModal from 'features/branch-management/branch-overview-page/components/edit-Branch/BranchEditModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectBranches, selectLoading } from 'features/branch-management/branch-overview-page/redux/branchSelectors';
-import { getAllBranches } from 'features/branch-management/branch-overview-page/redux/branchThunks';
+import { selectBranches, selectLoading } from 'features/branch-management/redux/branchSelectors';
+import { getAllBranches } from 'features/branch-management/redux/branchThunks';
 import BranchCard from 'features/branch-management/branch-overview-page/components/BranchCard';
 const Branches = () => {
   const dispatch = useDispatch();
@@ -32,7 +32,7 @@ const Branches = () => {
             <BranchHeader />
           </Grid>
           {branches?.map((branch, index) => (
-            <BranchCard key={index} branch={branch}/>
+            <BranchCard key={index} branch={branch} />
           ))}
           <BranchEditModal
             open={isEditModalOpen}

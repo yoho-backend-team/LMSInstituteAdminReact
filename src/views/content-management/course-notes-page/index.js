@@ -13,17 +13,17 @@ import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
-import NotesAddDrawer from 'features/content-management/course-contents/components/NotesAddDrawer';
-import NotesEdit from 'features/content-management/course-contents/components/NotesEdit';
-import NotesHeader from 'features/content-management/course-contents/components/NotesTableHeader';
-import NotesView from 'features/content-management/course-contents/components/NotesView';
-import { setUsers } from 'features/user-management/users/redux/userSlices';
-import { searchUsers } from 'features/user-management/users/services/userServices';
+import NotesAddDrawer from 'features/content-management/course-contents/course-notes-page/components/NotesAddDrawer';
+import NotesEdit from 'features/content-management/course-contents/course-notes-page/components/NotesEdit';
+import NotesHeader from 'features/content-management/course-contents/course-notes-page/components/NotesTableHeader';
+import NotesView from 'features/content-management/course-contents/course-notes-page/components/NotesView';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/notes/redux/noteSelectors';
-import { getAllCourseNotes } from 'features/content-management/course-contents/notes/redux/noteThunks';
+import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/course-notes-page/redux/noteSelectors';
+import { getAllCourseNotes } from 'features/content-management/course-contents/course-notes-page/redux/noteThunks';
 
 const Notes = () => {
   const [value, setValue] = useState('');
@@ -60,7 +60,7 @@ const Notes = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(Notes);
-  
+
   useEffect(() => {
     dispatch(getAllCourseNotes(selectedBranchId));
   }, [dispatch, selectedBranchId]);

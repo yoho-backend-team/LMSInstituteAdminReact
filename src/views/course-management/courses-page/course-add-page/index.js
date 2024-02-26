@@ -15,9 +15,9 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-import CourseValidate from 'features/course-management/add-course/components/CourseValidate';
-import StepperCustomDot from 'features/course-management/add-course/components/StepperCustomDot';
-import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses/services/courseServices';
+import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
+import StepperCustomDot from 'features/course-management/courses-page/course-add-page/components/StepperCustomDot';
+import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
 import { Fragment, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
@@ -25,8 +25,8 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import StepperWrapper from 'styles/mui/stepper';
 import * as yup from 'yup';
-import { getActiveBranches } from 'features/branch-management/branch-overview-page/services/branchServices';
-import { getActiveCategoriesByBranch } from 'features/course-management/categories/services/courseCategoryServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
 const steps = [
   {
     title: 'Personal Info',

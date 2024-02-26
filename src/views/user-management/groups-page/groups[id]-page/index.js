@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardContent
 } from '@mui/material';
-import { getAllPermissionsByRoleId } from 'features/user-management/groups/services/groupService';
+import { getAllPermissionsByRoleId } from 'features/user-management/groups-page/services/groupService';
 import { useLocation } from 'react-router';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 
@@ -83,39 +83,39 @@ const GroupViewPage = () => {
 
   return (
     <>
-     {loading ? (
+      {loading ? (
         <AddGroupSkeleton />
       ) : (
         <Card fullWidth maxWidth="md" scroll="body">
-        <CardHeader
-          component="div"
-          sx={{
-            textAlign: 'center',
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-            pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-          }}
-          title={group?.name}
-        ></CardHeader>
-        <CardContent
-          sx={{
-            pb: (theme) => `${theme.spacing(3)} !important`,
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
-          }}
-        >
-          <Typography variant="h4" sx={{ pb: 3 }}>
-            Group Permissions
-          </Typography>
-          <TableContainer>
-            <Table size="small">
-              <TableHead></TableHead>
-              <TableBody>{renderPermissions()}</TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
+          <CardHeader
+            component="div"
+            sx={{
+              textAlign: 'center',
+              px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+              pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+            }}
+            title={group?.name}
+          ></CardHeader>
+          <CardContent
+            sx={{
+              pb: (theme) => `${theme.spacing(3)} !important`,
+              px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+            }}
+          >
+            <Typography variant="h4" sx={{ pb: 3 }}>
+              Group Permissions
+            </Typography>
+            <TableContainer>
+              <Table size="small">
+                <TableHead></TableHead>
+                <TableBody>{renderPermissions()}</TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
       )}
     </>
-   
+
   );
 };
 
