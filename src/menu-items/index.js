@@ -18,6 +18,7 @@ import allNotifications from './notification-management';
 import helpCenter from './help-center';
 import community from './community';
 import ticketManagement from './ticket-management'
+import FaqManagement from './faq-management';
 // import calender from './calender'
 // ==============================|| MENU ITEMS ||============================== //
 
@@ -41,7 +42,8 @@ const menuItems = {
     certificateManagement,
     IdCardManagement,
     helpCenter,
-    ticketManagement
+    ticketManagement,
+    FaqManagement
   ]
 };
 

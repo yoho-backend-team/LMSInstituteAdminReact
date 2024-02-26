@@ -11,5 +11,5 @@ export const getAllLiveClasses = (selectedBranchId) => async (dispatch) => {
     console.error(error);
   } finally {
     dispatch(setLoading(false));
-  }
+  }    
 };

@@ -111,6 +111,9 @@ const StudentsPage = Loadable(lazy(() => import('views/student-management/studen
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students/view-profile')));
 const AddNewStudent = Loadable(lazy(() => import('views/student-management/students/profile/add-new-student/addNewStudent')));
 
+// Faq Management
+const FAQ = Loadable(lazy(()=> import('views/faq-management/')));
+
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
 const Page401 = Loadable(lazy(() => import('views/error-pages/401-page')));
@@ -281,6 +284,10 @@ const ApplicationRoutes = () => {
           <Route path="students" element={<StudentsPage />} />
           <Route path="students/:id" element={<ViewStudentProfile />} />
           <Route path="students/add" element={<AddNewStudent />} />
+        </Route>
+        <Route path="/faq-management" element={<MainLayout/>}>
+          <Route index element={<Navigate to ="/faq-management/faq"/>}/>
+          <Route path="faq" element={<FAQ/>}/>
         </Route>
         <Route element={<MinimalLayout />}>
           <Route path="*" element={<Page404 />} />
