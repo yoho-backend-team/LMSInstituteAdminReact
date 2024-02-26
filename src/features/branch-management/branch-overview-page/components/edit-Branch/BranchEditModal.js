@@ -23,7 +23,7 @@ const branchSchema = yup.object().shape({
   state: yup.string().required('State is required')
 });
 
-const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch }) => {
+const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch, setRefetchBranch }) => {
   useEffect(() => {
     if (selectedBranch) {
       setValue('branchName', selectedBranch.branch_name || '');
@@ -64,6 +64,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
 
       if (result.success) {
         toast.success(result.message);
+        setRefetchBranch((state) => !state);
         handleClose();
       } else {
         toast.error(result.message);

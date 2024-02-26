@@ -7,9 +7,9 @@ export const getAllBranches = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllBranches(); // Implement this function in your services
-    dispatch(setBranches(response.data.data));
-    dispatch(updateAuthBranch(response.data.data));
-    localStorage.setItem('branches', JSON.stringify(response.data.data));
+    dispatch(setBranches(response.data.data.data));
+    dispatch(updateAuthBranch(response.data.data.data));
+    localStorage.setItem('branches', JSON.stringify(response.data.data.data));
   } catch (error) {
     console.error(error);
   } finally {

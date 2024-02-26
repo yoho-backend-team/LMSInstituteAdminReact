@@ -13,10 +13,12 @@ const Branches = () => {
   const branchLoading = useSelector(selectLoading);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const [refetchBranch, setRefetchBranch] = useState(false);
+  console.log("branches", branches);
 
   useEffect(() => {
     dispatch(getAllBranches());
-  }, [dispatch, isEditModalOpen]);
+  }, [dispatch, refetchBranch]);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -32,13 +34,14 @@ const Branches = () => {
             <BranchHeader />
           </Grid>
           {branches?.map((branch, index) => (
-            <BranchCard key={index} branch={branch} />
+            <BranchCard key={index} branch={branch} setSelectedBranch={setSelectedBranch} setEditModalOpen={setEditModalOpen} />
           ))}
           <BranchEditModal
             open={isEditModalOpen}
             handleEditClose={handleEditClose}
             selectedBranch={selectedBranch}
             setSelectedBranch={setSelectedBranch}
+            setRefetchBranch={setRefetchBranch}
           />
         </Grid>
       )}

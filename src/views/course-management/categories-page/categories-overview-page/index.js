@@ -6,7 +6,7 @@ import CategoryCardHeader from 'features/course-management/categories-page/categ
 import CategoryFilter from 'features/course-management/categories-page/category-overview-page/components/CategoryFilterCard';
 import { selectCourseCategories, selectLoading } from 'features/course-management/categories-page/redux/courseCategorySelectors';
 import { getAllCourseCategories } from 'features/course-management/categories-page/redux/courseCategoryThunks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Categories = () => {
@@ -14,10 +14,11 @@ const Categories = () => {
   const courseCategories = useSelector(selectCourseCategories);
   const categoriesLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [categoryRefetch, setCategoryRefetch] = useState(false);
 
   useEffect(() => {
     dispatch(getAllCourseCategories(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId, categoryRefetch]);
 
   console.log(courseCategories);
   return (
@@ -32,7 +33,7 @@ const Categories = () => {
           </Grid>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
             {courseCategories?.data?.map((category, index) => (
-              <CategoryCard key={index} category={category} />
+              <CategoryCard key={index} category={category} setCategoryRefetch={ setCategoryRefetch} />
             ))}
           </Grid>
         </div>

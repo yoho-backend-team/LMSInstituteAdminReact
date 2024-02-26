@@ -27,40 +27,6 @@ import StepperWrapper from 'styles/mui/stepper';
 import * as yup from 'yup';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
-const steps = [
-  {
-    title: 'Personal Info',
-    subtitle: 'Setup Information'
-  },
-  {
-    title: 'Social Links',
-    subtitle: 'Add Social Links'
-  }
-];
-
-const defaultPersonalValues = {
-  Course_duration: '',
-  course_name: '',
-  Course_Price: '',
-  description: '',
-  course_overview: '',
-  Learning_Format: '',
-  Course_Category: ''
-};
-
-const defaultSocialValues = {};
-
-const personalSchema = yup.object().shape({
-  Course_duration: yup.number().required(),
-  course_name: yup.string().required(),
-  Course_Price: yup.number().required(),
-  description: yup.string().required(),
-  course_overview: yup.string().required(),
-  Learning_Format: yup.string().required(),
-  Course_Category: yup.string().required()
-});
-
-const socialSchema = yup.object().shape({});
 
 const AddCoursePage = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -72,13 +38,52 @@ const AddCoursePage = () => {
   const [branches, setBranches] = useState([]);
   const [activeCategories, setActiveCategories] = useState([]);
 
+  const steps = [
+    {
+      title: 'Course Information',
+      subtitle: 'Setup Information'
+    },
+    {
+      title: 'Course Files',
+      subtitle: 'Add Logo, Template, Syllabus'
+    }
+  ];
+
+  const defaultCourseValues = {
+    course_duration: '',
+    course_name: '',
+    course_price: '',
+    description: '',
+    course_overview: '',
+    learning_format: '',
+    course_category: '',
+    branches: []
+  };
+
+  const defaultCourseFileValues = {};
+
+  const courseSchema = yup.object().shape({
+    course_duration: yup.number().required(),
+    course_name: yup.string().required(),
+    course_price: yup.number().required(),
+    description: yup.string().required(),
+    course_overview: yup.string().required(),
+    learning_format: yup.string().required(),
+    course_category: yup.string().required(),
+    branches: yup.array().required().min(1)
+  });
+
+  const courseFileSchema = yup.object().shape({});
+
   useEffect(() => {
     getAllBranches();
   }, []);
+
   useEffect(() => {
     const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
     getActiveCourseCategories(filteredBranchId);
   }, [selectedBranches, setSelectedBranches]);
+
   const getAllBranches = async () => {
     const result = await getActiveBranches();
 
@@ -86,6 +91,7 @@ const AddCoursePage = () => {
       setBranches(result.data.data);
     }
   };
+
   const getActiveCourseCategories = async (branchIds) => {
     const data = {
       branch_id: branchIds
@@ -97,12 +103,8 @@ const AddCoursePage = () => {
       setActiveCategories(result.data.data);
     }
   };
-  // const branches = [
-  //   { branch_id: '1', branch_name: 'Branch 1' },
-  //   { branch_id: '2', branch_name: 'Branch 2' },
-  //   { branch_id: '3', branch_name: 'Branch 3' }
-  // ];
-  console.log(courseSyllabus);
+
+  console.log("course Categories : ", activeCategories);
 
   useEffect(() => {
     getAllCategories();
@@ -116,25 +118,24 @@ const AddCoursePage = () => {
   };
 
   const {
-    reset: personalReset,
-    control: personalControl,
-    handleSubmit: handlePersonalSubmit,
-    formState: { errors: personalErrors }
+    reset: courseReset,
+    control: courseControl,
+    handleSubmit: handleCourseSubmit,
+    formState: { errors: courseErrors }
   } = useForm({
-    defaultValues: defaultPersonalValues,
-    resolver: yupResolver(personalSchema)
+    defaultValues: defaultCourseValues,
+    resolver: yupResolver(courseSchema)
   });
 
   const {
-    reset: socialReset,
-    handleSubmit: handleSocialSubmit,
-    formState: { errors: socialErrors }
+    reset: courseFileReset,
+    handleSubmit: handleCourseFileSubmit,
+    formState: { errors: courseFileErrors }
   } = useForm({
-    defaultValues: defaultSocialValues,
-    resolver: yupResolver(socialSchema)
+    defaultValues: defaultCourseFileValues,
+    resolver: yupResolver(courseFileSchema)
   });
 
-  console.log(defaultPersonalValues);
   console.log(activeCategories);
 
   const handleBack = () => {
@@ -143,40 +144,37 @@ const AddCoursePage = () => {
 
   const handleReset = () => {
     setActiveStep(0);
-    socialReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
-    accountReset({ email: '', username: '', password: '', confirm_password: '', name: '', contact: '' });
-    personalReset({
-      Course_duration: Number(''),
+    courseFileReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
+    courseReset({
+      course_duration: Number(''),
       course_name: '',
-      Course_Price: Number(''),
+      course_price: Number(''),
       description: '',
       course_overview: '',
-      Learning_Format: '',
-      Course_Category: ''
+      learning_format: '',
+      course_category: ''
     });
   };
 
   const onSubmit = async () => {
-    const personalData = personalControl?._formValues;
+    const personalData = courseControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
-      const filteredCategoryId = activeCategories?.map((category) => category?.id);
 
       console.log(filteredBranchId);
-      console.log(filteredCategoryId);
 
       let data = new FormData();
       data.append('course_name', personalData?.course_name);
       data.append('description', personalData?.description);
       data.append('course_overview', personalData?.course_overview);
-      data.append('course_duration', personalData?.Course_duration);
-      data.append('institute_category_id', filteredCategoryId);
-      data.append('course_price', personalData?.Course_Price);
-      data.append('learning_format', personalData?.Learning_Format);
+      data.append('course_duration', personalData?.course_duration);
+      data.append('institute_category_id', personalData?.course_duration);
+      data.append('course_price', personalData?.course_price);
+      data.append('learning_format', personalData?.learning_format);
       data.append('logo', courseLogo);
       data.append('image', courseTemplate);
-      data.append('image', courseSyllabus);
+      data.append('syllabus', courseSyllabus);
       data.append('branch_id', filteredBranchId);
 
       const result = await addCourse(data);
@@ -193,7 +191,7 @@ const AddCoursePage = () => {
     switch (step) {
       case 0:
         return (
-          <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+          <form key={1} onSubmit={handleCourseSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
                 <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
@@ -206,7 +204,7 @@ const AddCoursePage = () => {
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="course_name"
-                  control={personalControl}
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
@@ -215,17 +213,17 @@ const AddCoursePage = () => {
                       label="Course Name"
                       onChange={onChange}
                       placeholder="Leonard"
-                      error={Boolean(personalErrors['course_name'])}
+                      error={Boolean(courseErrors['course_name'])}
                       aria-describedby="stepper-linear-personal-course_name"
-                      {...(personalErrors['course_name'] && { helperText: 'This field is required' })}
+                      {...(courseErrors['course_name'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Course_duration"
-                  control={personalControl}
+                  name="course_duration"
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
@@ -235,17 +233,17 @@ const AddCoursePage = () => {
                       type="number"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(personalErrors['Course_duration'])}
-                      aria-describedby="stepper-linear-personal-Course_duration"
-                      {...(personalErrors['Course_duration'] && { helperText: 'This field is required' })}
+                      error={Boolean(courseErrors['course_duration'])}
+                      aria-describedby="stepper-linear-personal-course_duration"
+                      {...(courseErrors['course_duration'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Course_Price"
-                  control={personalControl}
+                  name="course_price"
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
@@ -255,9 +253,9 @@ const AddCoursePage = () => {
                       label="Course Price"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(personalErrors['Course_Price'])}
-                      aria-describedby="stepper-linear-personal-Course_Price"
-                      {...(personalErrors['Course_Price'] && { helperText: 'This field is required' })}
+                      error={Boolean(courseErrors['course_price'])}
+                      aria-describedby="stepper-linear-personal-course_price"
+                      {...(courseErrors['course_price'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
@@ -281,7 +279,11 @@ const AddCoursePage = () => {
                     <TextField
                       {...params}
                       fullWidth
+                      name='branches'
                       label="Branches"
+                      error={Boolean(courseErrors['branches'])}
+                      aria-describedby="stepper-linear-personal-branches"
+                      {...(courseErrors['branches'] && { helperText: 'This field is required' })}
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -323,8 +325,8 @@ const AddCoursePage = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Course_Category"
-                  control={personalControl}
+                  name="course_category"
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
@@ -333,11 +335,11 @@ const AddCoursePage = () => {
                       select
                       defaultValue={value}
                       onChange={onChange}
-                      label="Course_Category"
+                      label="course_category"
                       id="custom-select"
-                      error={Boolean(personalErrors['Course_Category'])}
-                      aria-describedby="stepper-linear-personal-Course_Category"
-                      {...(personalErrors['Course_Category'] && { helperText: 'This field is required' })}
+                      error={Boolean(courseErrors['course_category'])}
+                      aria-describedby="stepper-linear-personal-course_category"
+                      {...(courseErrors['course_category'] && { helperText: 'This field is required' })}
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -352,8 +354,8 @@ const AddCoursePage = () => {
 
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Learning_Format"
-                  control={personalControl}
+                  name="learning_format"
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
@@ -362,8 +364,8 @@ const AddCoursePage = () => {
                       fullWidth
                       id="validation-billing-select"
                       aria-describedby="validation-billing-select"
-                      error={Boolean(personalErrors['Learning_Format'])}
-                      {...(personalErrors['Learning_Format'] && { helperText: 'This field is required' })}
+                      error={Boolean(courseErrors['learning_format'])}
+                      {...(courseErrors['learning_format'] && { helperText: 'This field is required' })}
                       onChange={onChange}
                       value={value}
                     >
@@ -377,7 +379,7 @@ const AddCoursePage = () => {
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="course_overview"
-                  control={personalControl}
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
@@ -388,9 +390,9 @@ const AddCoursePage = () => {
                       label="Course Overview"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(personalErrors['course_overview'])}
+                      error={Boolean(courseErrors['course_overview'])}
                       aria-describedby="stepper-linear-personal-course_overview"
-                      {...(personalErrors['course_overview'] && { helperText: 'This field is required' })}
+                      {...(courseErrors['course_overview'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
@@ -398,7 +400,7 @@ const AddCoursePage = () => {
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="description"
-                  control={personalControl}
+                  control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
@@ -409,9 +411,9 @@ const AddCoursePage = () => {
                       label="Description"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(personalErrors['description'])}
+                      error={Boolean(courseErrors['description'])}
                       aria-describedby="stepper-linear-personal-description"
-                      {...(personalErrors['description'] && { helperText: 'This field is required' })}
+                      {...(courseErrors['description'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
@@ -430,7 +432,7 @@ const AddCoursePage = () => {
         );
       case 1:
         return (
-          <form key={2} onSubmit={handleSocialSubmit(onSubmit)}>
+          <form key={2} onSubmit={handleCourseFileSubmit(onSubmit)}>
             <CourseValidate setCourseLogo={setCourseLogo} setCourseSyllabus={setCourseSyllabus} setCourseTemplate={setCourseTemplate} />
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
               <Button variant="tonal" color="secondary" onClick={handleBack}>
@@ -475,10 +477,10 @@ const AddCoursePage = () => {
                 labelProps.error = false;
                 if (activeStep === 3) {
                   labelProps.error = true;
-                } else if ((personalErrors['registered_date'] || personalErrors['first-name']) && activeStep === 0) {
+                } else if ((courseErrors['registered_date'] || courseErrors['first-name']) && activeStep === 0) {
                   labelProps.error = true;
                 } else if (
-                  (socialErrors.instagram || socialErrors.twitter || socialErrors.facebook || socialErrors.linkedIn) &&
+                  (courseFileErrors.instagram || courseFileErrors.twitter || courseFileErrors.facebook || courseFileErrors.linkedIn) &&
                   activeStep === 2
                 ) {
                   labelProps.error = true;

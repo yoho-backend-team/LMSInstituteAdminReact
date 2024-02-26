@@ -4,9 +4,9 @@ import { lazy } from 'react';
 import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import MainLayout from 'layout/MainLayout';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate ,Outlet} from 'react-router-dom';
 
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 // view imports
 
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -130,188 +130,188 @@ const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/Pro
 
 
 // Profile management
-const AllNotifications =  Loadable(lazy(() => import('views/profile-management/notifications-page')));
+const AllNotifications = Loadable(lazy(() => import('views/profile-management/notifications-page')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
-// const Protected = () => {
-//   // Access the isAuthenticated state from the Redux store
-//   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+const Protected = () => {
+  // Access the isAuthenticated state from the Redux store
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-//   // If the user is authenticated, render the content
-//   if (isAuthenticated) {
-//     return <Outlet />;
-//   } else {
-//     // If not authenticated, redirect to the login page
-//     return <Navigate to="/login" replace />;
-//   }
-// };
-// const AdminRoute = () => {
-//   const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
+  // If the user is authenticated, render the content
+  if (isAuthenticated) {
+    return <Outlet />;
+  } else {
+    // If not authenticated, redirect to the login page
+    return <Navigate to="/login" replace />;
+  }
+};
+const AdminRoute = () => {
+  const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
 
-//   if (isAdmin === '1') {
-//     return <Outlet />;
-//   }
-//   return <Navigate to="/un-authorized" />;
-// };
+  if (isAdmin === '1') {
+    return <Outlet />;
+  }
+  return <Navigate to="/un-authorized" />;
+};
 
 const ApplicationRoutes = () => {
   return (
     <Routes>
-      {/* <Route element={<Protected />}> */}
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Navigate to="/dashboard" />} />
-        <Route path="dashboard" element={<DashboardDefault />} />
-      </Route>
-      <Route path="/community-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/community" />} />
-        <Route path="community" element={<Community />} />
-      </Route>
-      <Route path="/profile-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/account-settings" />} />
-        <Route path="account-settings" element={<AccountSettings />} />
-      </Route>
-      <Route path="/calender" element={<MainLayout />}>
-        <Route index element={<CalenderPage />} />
-      </Route>
-      {/* <Route element={<AdminRoute />}> */}
-      <Route path="/user-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/user-management/groups" />} />
-        <Route path="groups" element={<GroupsPage />} />
-        <Route path="groups/add" element={<AddGroupPage />} />
-        <Route path="groups/view" element={<ViewGroupPage />} />
-        <Route path="groups/edit/:id" element={<EditGroupPage />} />
-        <Route path="users" element={<UsersPage />} />
-        <Route path="users/:id" element={<ViewUserPage />} />
-      </Route>
-      {/* </Route> */}
+      <Route element={<Protected />}>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Navigate to="/dashboard" />} />
+          <Route path="dashboard" element={<DashboardDefault />} />
+        </Route>
+        <Route path="/community-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/community" />} />
+          <Route path="community" element={<Community />} />
+        </Route>
+        <Route path="/profile-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/account-settings" />} />
+          <Route path="account-settings" element={<AccountSettings />} />
+        </Route>
+        <Route path="/calender" element={<MainLayout />}>
+          <Route index element={<CalenderPage />} />
+        </Route>
+        {/* <Route element={<AdminRoute />}> */}
+        <Route path="/user-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/user-management/groups" />} />
+          <Route path="groups" element={<GroupsPage />} />
+          <Route path="groups/add" element={<AddGroupPage />} />
+          <Route path="groups/view" element={<ViewGroupPage />} />
+          <Route path="groups/edit/:id" element={<EditGroupPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="users/:id" element={<ViewUserPage />} />
+        </Route>
+        {/* </Route> */}
 
-      <Route path="/attendance-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
-        <Route path="student-attendances" element={<StudentAttendancesPage />} />
-        <Route path="student-attendances/:id" element={<StudentAttendanceViewPage />} />
-        <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
-        <Route path="teaching-staff-attendances/:id" element={<TeachingStaffViewAttendancesPage />} />
-        <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
-        <Route path="non-teaching-staff-attendances/:id" element={<NonTeachingStaffViewAttendancesPage />} />
-      </Route>
+        <Route path="/attendance-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
+          <Route path="student-attendances" element={<StudentAttendancesPage />} />
+          <Route path="student-attendances/:id" element={<StudentAttendanceViewPage />} />
+          <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
+          <Route path="teaching-staff-attendances/:id" element={<TeachingStaffViewAttendancesPage />} />
+          <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
+          <Route path="non-teaching-staff-attendances/:id" element={<NonTeachingStaffViewAttendancesPage />} />
+        </Route>
 
-      <Route path="/batch-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/batch-management/batches" />} />
-        <Route path="batches" element={<BatchesPage />} />
-        <Route path="batches/add" element={<AddBatchPage />} />
-        <Route path="batches/:id" element={<ViewBatchPage />} />
-      </Route>
-      {/* <Route element={<AdminRoute />}> */}
-      <Route path="/branch-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/branch-management/branches" />} />
-        <Route path="branches" element={<BranchesPage />} />
-        <Route path="branches/add" element={<AddBranchPage />} />
-        <Route path="branches/:id" element={<ViewBranchPage />} />
-      </Route>
-      {/* </Route> */}
-      <Route path="/certificate-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
-        <Route path="student-certificates" element={<StudentCertificatesPage />} />
-      </Route>
+        <Route path="/batch-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/batch-management/batches" />} />
+          <Route path="batches" element={<BatchesPage />} />
+          <Route path="batches/add" element={<AddBatchPage />} />
+          <Route path="batches/:id" element={<ViewBatchPage />} />
+        </Route>
+        <Route element={<AdminRoute />}>
+          <Route path="/branch-management" element={<MainLayout />}>
+            <Route index element={<Navigate to="/branch-management/branches" />} />
+            <Route path="branches" element={<BranchesPage />} />
+            <Route path="branches/add" element={<AddBranchPage />} />
+            <Route path="branches/:id" element={<ViewBranchPage />} />
+          </Route>
+        </Route>
+        <Route path="/certificate-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
+          <Route path="student-certificates" element={<StudentCertificatesPage />} />
+        </Route>
 
-      <Route path="/class-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/class-management/live-classes" />} />
-        <Route path="live-classes" element={<LiveClassesPage />} />
-        <Route path="live-classes/view" element={<ViewLiveClass />} />
-        <Route path="offline-classes" element={<OfflineClassesPage />} />
-        <Route path="offline-classes/view" element={<ViewOfflineClass />} />
-      </Route>
+        <Route path="/class-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/class-management/live-classes" />} />
+          <Route path="live-classes" element={<LiveClassesPage />} />
+          <Route path="live-classes/view" element={<ViewLiveClass />} />
+          <Route path="offline-classes" element={<OfflineClassesPage />} />
+          <Route path="offline-classes/view" element={<ViewOfflineClass />} />
+        </Route>
 
-      <Route path="/content-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/content-management/study-materials" />} />
-        <Route path="study-materials" element={<StudyMaterialsPage />} />
-        <Route path="notes" element={<NotesPage />} />
-        <Route path="modules" element={<ModulesPage />} />
-      </Route>
+        <Route path="/content-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/content-management/study-materials" />} />
+          <Route path="study-materials" element={<StudyMaterialsPage />} />
+          <Route path="notes" element={<NotesPage />} />
+          <Route path="modules" element={<ModulesPage />} />
+        </Route>
 
-      <Route path="/course-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/course-management/categories" />} />
-        <Route path="categories" element={<CategoriesPage />} />
-        <Route path="courses" element={<CoursesPage />} />
-        <Route path="courses/add" element={<AddCoursePage />} />
-        <Route path="courses/:id" element={<ViewCoursePage />} />
-      </Route>
+        <Route path="/course-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/course-management/categories" />} />
+          <Route path="categories" element={<CategoriesPage />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="courses/add" element={<AddCoursePage />} />
+          <Route path="courses/:id" element={<ViewCoursePage />} />
+        </Route>
 
-      <Route path="/help-center" element={<MainLayout />}>
-        <Route index element={<Navigate to="/help-center/customer-support" />} />
-        <Route path="customer-support" element={<CustomerSupportPage />} />
-        <Route path="technical-support" element={<TechnicalSupportPage />} />
-      </Route>
+        <Route path="/help-center" element={<MainLayout />}>
+          <Route index element={<Navigate to="/help-center/customer-support" />} />
+          <Route path="customer-support" element={<CustomerSupportPage />} />
+          <Route path="technical-support" element={<TechnicalSupportPage />} />
+        </Route>
 
-      <Route path="/faq-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/faq-management/categories" />} />
-        <Route path="categories" element={<FaqCategoriesPage />} />
-        <Route path="faqs" element={<FaqFaqsPage />} />
-      </Route>
+        <Route path="/faq-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/faq-management/categories" />} />
+          <Route path="categories" element={<FaqCategoriesPage />} />
+          <Route path="faqs" element={<FaqFaqsPage />} />
+        </Route>
 
-      <Route path="/ticket-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/ticket-management/staff-ticket" />} />
-        <Route path="staff-ticket" element={<StaffTicketPage />} />
-        <Route path="student-ticket" element={<StudentTicketPage />} />
-      </Route>
+        <Route path="/ticket-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/ticket-management/staff-ticket" />} />
+          <Route path="staff-ticket" element={<StaffTicketPage />} />
+          <Route path="student-ticket" element={<StudentTicketPage />} />
+        </Route>
 
-      <Route path="/id-card-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />
-        <Route path="student-id-cards" element={<StudentIdCardsPage />} />
-        <Route path="staff-id-cards" element={<StaffIdCardsPage />} />
-      </Route>
+        <Route path="/id-card-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />
+          <Route path="student-id-cards" element={<StudentIdCardsPage />} />
+          <Route path="staff-id-cards" element={<StaffIdCardsPage />} />
+        </Route>
 
-      <Route path="/notification-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/notification-management/all-notifications" />} />
-        <Route path="all-notifications" element={<AllNotificationsPage />} />
-        <Route path="staff-notifications" element={<StaffNotificationsPage />} />
-        <Route path="student-notifications" element={<StudentNotificationsPage />} />
-      </Route>
+        <Route path="/notification-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/notification-management/all-notifications" />} />
+          <Route path="all-notifications" element={<AllNotificationsPage />} />
+          <Route path="staff-notifications" element={<StaffNotificationsPage />} />
+          <Route path="student-notifications" element={<StudentNotificationsPage />} />
+        </Route>
 
-      <Route path="/payment-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/payment-management/fees" />} />
-        <Route path="fees" element={<FeesPage />} />
-        <Route path="salaries" element={<SalariesPage />} />
-        <Route path="subscriptions" element={<SubscriptionsPage />} />
-      </Route>
+        <Route path="/payment-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/payment-management/fees" />} />
+          <Route path="fees" element={<FeesPage />} />
+          <Route path="salaries" element={<SalariesPage />} />
+          <Route path="subscriptions" element={<SubscriptionsPage />} />
+        </Route>
 
-      <Route path="/refund-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/refund-management/refunds" />} />
-        <Route path="refunds" element={<RefundsPage />} />
-      </Route>
+        <Route path="/refund-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/refund-management/refunds" />} />
+          <Route path="refunds" element={<RefundsPage />} />
+        </Route>
 
-      <Route path="/profile-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/profile-management/allnotifications" />} />
-        <Route path="allnotifications" element={<AllNotifications />} />
-      </Route>
+        <Route path="/profile-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/profile-management/allnotifications" />} />
+          <Route path="allnotifications" element={<AllNotifications />} />
+        </Route>
 
-      <Route path="/staff-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
-        <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
-        <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
-        <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
-        <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
-        <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
-        <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
-      </Route>
+        <Route path="/staff-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
+          <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
+          <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
+          <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
+          <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
+          <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
+          <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
+        </Route>
 
-      <Route path="/student-management" element={<MainLayout />}>
-        <Route index element={<Navigate to="/student-management/students" />} />
-        <Route path="students" element={<StudentsPage />} />
-        <Route path="students/:id" element={<ViewStudentProfile />} />
-        <Route path="students/add" element={<AddNewStudent />} />
-      </Route>
-      <Route element={<MinimalLayout />}>
-        <Route path="*" element={<Page404 />} />
-      </Route>
-      <Route element={<MinimalLayout />}>
-        <Route path="/server-error" element={<Page500 />} />
-      </Route>
-      {/* <Route element={<MinimalLayout />}>
+        <Route path="/student-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/student-management/students" />} />
+          <Route path="students" element={<StudentsPage />} />
+          <Route path="students/:id" element={<ViewStudentProfile />} />
+          <Route path="students/add" element={<AddNewStudent />} />
+        </Route>
+        <Route element={<MinimalLayout />}>
+          <Route path="*" element={<Page404 />} />
+        </Route>
+        <Route element={<MinimalLayout />}>
+          <Route path="/server-error" element={<Page500 />} />
+        </Route>
+        {/* <Route element={<MinimalLayout />}>
           <Route path="/login" element={<Navigate to="/" />} />
         </Route> */}
-      {/* </Route> */}
+      </Route>
 
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />

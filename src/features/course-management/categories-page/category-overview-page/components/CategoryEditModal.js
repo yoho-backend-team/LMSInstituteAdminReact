@@ -28,7 +28,7 @@ const schema = yup.object().shape({
     .required()
 });
 
-const CategoryEditModal = ({ open, handleEditClose, category }) => {
+const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
   const image =
     'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
@@ -84,13 +84,14 @@ const CategoryEditModal = ({ open, handleEditClose, category }) => {
   const onSubmit = async (data) => {
     console.log(data);
     const inputData = new FormData();
-    inputData.append('id', category?.id);
+    inputData.append('category_id', category?.category_id);
     inputData.append('logo', selectedImage);
-    inputData.append('course_category_name', data?.category_name);
+    inputData.append('category_name', data?.category_name);
 
     try {
       const result = await updateCourseCategory(inputData);
       if (result.success) {
+        setCategoryRefetch((state) => !state);
         toast.success(result.message);
       } else {
         toast.error(result.message);
@@ -154,7 +155,7 @@ const CategoryEditModal = ({ open, handleEditClose, category }) => {
                     <TextField
                       fullWidth
                       value={value}
-                      defaultValue={category?.course_category_name}
+                      defaultValue={category?.category_name}
                       sx={{ mb: 4 }}
                       label="Category Name"
                       onChange={onChange}

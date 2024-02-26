@@ -15,7 +15,7 @@ import CategoryEditModal from './CategoryEditModal';
 
 const CardStatsVertical = (props) => {
   // ** Props
-  const { sx, category } = props;
+  const { sx, category, setCategoryRefetch } = props;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusValue, setStatusValue] = useState(category?.is_active);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -23,6 +23,7 @@ const CardStatsVertical = (props) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   console.log(deletingItemId);
+  console.log(selectedCategory);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -83,7 +84,7 @@ const CardStatsVertical = (props) => {
           </Grid>
         </CardContent>
       </Card>
-      <CategoryEditModal category={selectedCategory} open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <CategoryEditModal category={selectedCategory} open={isEditModalOpen} handleEditClose={handleEditClose} setCategoryRefetch={setCategoryRefetch} />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

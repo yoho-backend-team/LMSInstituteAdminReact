@@ -3,9 +3,9 @@ import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, Typography, IconButton, Box, Grid } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
-const BranchCard = ({branch}) => {
+const BranchCard = ({ branch, setEditModalOpen, setSelectedBranch }) => {
   return (
-    <Grid item xs={12} sm={6} md={3} key={index}>
+    <Grid item xs={12} sm={6} md={3}>
       <Card sx={{ position: 'relative' }}>
         <Grid
           sx={{
@@ -18,13 +18,15 @@ const BranchCard = ({branch}) => {
             aria-label="capture screenshot"
             color="primary"
             onClick={() => {
-              setSelectedBranch(branch);
-              setEditModalOpen(true);
+              if (branch) {
+                setSelectedBranch(branch);
+                setEditModalOpen(true);
+              }
             }}
           >
             <Icon icon="tabler:edit" />
           </IconButton>
-          <Box component={Link} to={`${branch.branch_id}`}>
+          <Box component={Link} to={`${branch?.branch_id}`}>
             <IconButton aria-label="capture screenshot" color="primary">
               <Icon icon="tabler:eye" />
             </IconButton>
