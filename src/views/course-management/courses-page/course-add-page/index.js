@@ -70,7 +70,7 @@ const AddCoursePage = () => {
     course_overview: yup.string().required(),
     learning_format: yup.string().required(),
     course_category: yup.string().required(),
-    branches: yup.array().required().min(1)
+    branches: yup.array().required()
   });
 
   const courseFileSchema = yup.object().shape({});
@@ -152,7 +152,8 @@ const AddCoursePage = () => {
       description: '',
       course_overview: '',
       learning_format: '',
-      course_category: ''
+      course_category: '',
+      branches: []
     });
   };
 
@@ -165,17 +166,20 @@ const AddCoursePage = () => {
       console.log(filteredBranchId);
 
       let data = new FormData();
+      filteredBranchId.forEach((id) => {
+        data.append(`branch_id[]`, id);
+      });
       data.append('course_name', personalData?.course_name);
       data.append('description', personalData?.description);
       data.append('course_overview', personalData?.course_overview);
       data.append('course_duration', personalData?.course_duration);
-      data.append('institute_category_id', personalData?.course_duration);
+      data.append('institute_category_id', personalData?.course_category);
       data.append('course_price', personalData?.course_price);
       data.append('learning_format', personalData?.learning_format);
       data.append('logo', courseLogo);
       data.append('image', courseTemplate);
       data.append('syllabus', courseSyllabus);
-      data.append('branch_id', filteredBranchId);
+      // data.append('branch_id', filteredBranchId);
 
       const result = await addCourse(data);
 
@@ -276,19 +280,26 @@ const AddCoursePage = () => {
                     }
                   }}
                   renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      fullWidth
-                      name='branches'
-                      label="Branches"
-                      error={Boolean(courseErrors['branches'])}
-                      aria-describedby="stepper-linear-personal-branches"
-                      {...(courseErrors['branches'] && { helperText: 'This field is required' })}
-                      InputProps={{
-                        ...params.InputProps,
-                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                      }}
-                    />
+                    <Controller
+                      name="branches"
+                      control={courseControl}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          label="Branches"
+                          value={value}
+                          onChange={onChange}
+                          error={Boolean(courseErrors['branches'])}
+                          aria-describedby="stepper-linear-personal-branches"
+                          {...(courseErrors['branches'] && { helperText: 'This field is required' })}
+                          InputProps={{
+                            ...params.InputProps,
+                            style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                          }}
+                        />
+                      )} />
                   )}
                   renderOption={(props, option, { selected }) => (
                     <li {...props}>
@@ -335,18 +346,18 @@ const AddCoursePage = () => {
                       select
                       defaultValue={value}
                       onChange={onChange}
-                      label="course_category"
+                      label="Course Category"
                       id="custom-select"
                       error={Boolean(courseErrors['course_category'])}
                       aria-describedby="stepper-linear-personal-course_category"
                       {...(courseErrors['course_category'] && { helperText: 'This field is required' })}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      {
+                        activeCategories?.map((item, index) => (
+                          <MenuItem key={index} value={item.category_id}>{item.category_name}</MenuItem>
+                        ))
+                      }
+
                     </TextField>
                   )}
                 />

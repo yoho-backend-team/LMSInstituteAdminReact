@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { selectCourseModules, selectLoading } from 'features/content-management/course-contents/course-modules-page/redux/moduleSelectors';
 import { getAllCourseModules } from 'features/content-management/course-contents/course-modules-page/redux/moduleThunks';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 const Modules = () => {
   const [value, setValue] = useState('');
@@ -34,6 +35,17 @@ const Modules = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
+  const [activeBranches, setActiveBranches] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log(result.data);
+    setActiveBranches(result.data.data);
+  };
 
   console.log(deletingItemId);
 
@@ -220,7 +232,7 @@ const Modules = () => {
               />
             </Card>
           </Grid>
-          <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
           <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
           <DeleteDialog
             open={isDeleteDialogOpen}

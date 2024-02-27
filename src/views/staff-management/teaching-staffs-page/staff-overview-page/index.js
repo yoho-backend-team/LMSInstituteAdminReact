@@ -1,4 +1,4 @@
-import { Chip as CustomChip, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -34,7 +34,7 @@ const Teaching = () => {
 
   useEffect(() => {
     const data = {
-      type: "TeachingStaffs",
+      type: "teaching",
       branch_id: selectedBranchId
     }
     dispatch(getAllTeachingStaffs(data));
@@ -63,28 +63,11 @@ const Teaching = () => {
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
-                      <Typography variant="h4" sx={{ mb: 2 }}>
-                        {item.name}
+                      <Typography variant="h4" sx={{ mb: 1 }}>
+                        {item.staff?.staff_name}
                       </Typography>
-                      <Typography variant="h6">{item.email}</Typography>
-                      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-                        {item.chips &&
-                          item.chips.map((chip, index) => (
-                            <Box
-                              href="/"
-                              key={index}
-                              component={Link}
-                              onClick={(e) => e.preventDefault()}
-                              sx={{
-                                textDecoration: 'none',
-                                '&:not(:last-of-type)': { mr: 2.5 },
-                                '& .MuiChip-root': { cursor: 'pointer' }
-                              }}
-                            >
-                              <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
-                            </Box>
-                          ))}
-                      </Box>
+                      <Typography variant="h5" sx={{ mb: 4 }}>{item?.staff.email}</Typography>
+
                       <Box
                         sx={{
                           display: 'flex',
@@ -101,7 +84,7 @@ const Teaching = () => {
                           </TextField>
                         </Grid>
                         <Grid>
-                          <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
+                          <Button component={Link} to={'1'} variant="tonal" sx={{ px: 4 }}>
                             View Profile
                           </Button>
                         </Grid>

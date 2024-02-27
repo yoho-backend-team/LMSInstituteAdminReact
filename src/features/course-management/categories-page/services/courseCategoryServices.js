@@ -2,10 +2,11 @@
 import axios from 'axios';
 
 const COURSE_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/course-categories`;
+const COURSES_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses/active-categories`;
 
 export const getActiveCategoriesByBranch = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read-category-branches`, {
+    const response = await axios.get(`${COURSES_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -83,7 +84,7 @@ export const addCourseCategory = async (data) => {
   try {
     const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });

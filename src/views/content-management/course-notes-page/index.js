@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/course-notes-page/redux/noteSelectors';
 import { getAllCourseNotes } from 'features/content-management/course-contents/course-notes-page/redux/noteThunks';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 const Notes = () => {
   const [value, setValue] = useState('');
@@ -64,6 +65,18 @@ const Notes = () => {
   useEffect(() => {
     dispatch(getAllCourseNotes(selectedBranchId));
   }, [dispatch, selectedBranchId]);
+
+  const [activeBranches, setActiveBranches] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log("active branches : ", result.data);
+    setActiveBranches(result.data.data);
+  };
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const toggleEditUserDrawer = () => {
@@ -221,7 +234,7 @@ const Notes = () => {
               />
             </Card>
           </Grid>
-          <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
           <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
           <DeleteDialog
             open={isDeleteDialogOpen}

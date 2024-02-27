@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 import TeacherFilter from '../../../../features/staff-management/non-teaching-staffs/components/TeacherFilterCard';
-import { Chip as CustomChip } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Avatar from 'components/mui/avatar';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
@@ -129,7 +128,7 @@ const NonTeaching = () => {
 
   useEffect(() => {
     const data = {
-      type: "NonTeachingStaffs",
+      type: "non_teaching",
       branch_id: selectedBranchId
     }
     dispatch(getAllTeachingStaffs(data));
@@ -157,28 +156,11 @@ const NonTeaching = () => {
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
-                      <Typography variant="h4" sx={{ mb: 2 }}>
-                        {item.name}
+                      <Typography variant="h4" sx={{ mb: 1 }}>
+                        {item.staff?.staff_name}
                       </Typography>
-                      <Typography variant="h6">{item.email}</Typography>
-                      <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
-                        {item.chips &&
-                          item.chips.map((chip, index) => (
-                            <Box
-                              href="/"
-                              key={index}
-                              component={Link}
-                              onClick={(e) => e.preventDefault()}
-                              sx={{
-                                textDecoration: 'none',
-                                '&:not(:last-of-type)': { mr: 2.5 },
-                                '& .MuiChip-root': { cursor: 'pointer' }
-                              }}
-                            >
-                              <CustomChip rounded size="small" skin="light" color={chip.color} label={chip.title} />
-                            </Box>
-                          ))}
-                      </Box>
+                      <Typography variant="h5" sx={{ mb: 4 }}>{item?.staff.email}</Typography>
+
                       <Box
                         sx={{
                           display: 'flex',
@@ -195,7 +177,7 @@ const NonTeaching = () => {
                           </TextField>
                         </Grid>
                         <Grid>
-                          <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
+                          <Button component={Link} to={'1'} variant="tonal" sx={{ px: 4 }}>
                             View Profile
                           </Button>
                         </Grid>

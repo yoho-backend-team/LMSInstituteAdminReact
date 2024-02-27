@@ -28,7 +28,7 @@ const CourseCard = (props) => {
         <CardContent sx={{ pb: 0 }}>
           <CardMedia
             sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-            image={'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d'}
+            image={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${course.logo}`}
           >
             <CustomChip
               sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}

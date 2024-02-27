@@ -14,6 +14,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 
+
 const StudyMaterialHeader = (props) => {
   // ** Props
   const { handleFilter, toggle, value } = props;

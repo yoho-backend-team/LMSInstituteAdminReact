@@ -60,6 +60,8 @@ export const addStudent = async (data) => {
       }
     });
 
+    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'Student created successfully' };
     } else {

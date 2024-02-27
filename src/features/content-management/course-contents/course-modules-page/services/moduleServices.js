@@ -1,7 +1,7 @@
 // courseModuleService.js
 import axios from 'axios';
 
-const COURSE_MODULE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/institutes/admin/content-management/course-modules`;
+const COURSE_MODULE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-modules`;
 
 export const getAllCourseModules = async (selectedBranchId) => {
   try {
@@ -20,6 +20,7 @@ export const getAllCourseModules = async (selectedBranchId) => {
       return response;
     } else {
       // If the response status is not successful, throw an error
+      // return { success: false, message: response.data.message };
       throw new Error(`Failed to fetch CourseModules. Status: ${response.status}`);
     }
   } catch (error) {
@@ -61,10 +62,12 @@ export const addCourseModule = async (data) => {
       }
     });
 
+    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'CourseModule created successfully' };
     } else {
-      return { success: false, message: 'Failed to create CourseModule' };
+      return { success: false, message: response.data.message };
     }
   } catch (error) {
     console.error('Error in addCourseModule:', error);

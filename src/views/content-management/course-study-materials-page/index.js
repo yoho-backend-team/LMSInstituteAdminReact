@@ -21,7 +21,7 @@ import StudyMaterialView from 'features/content-management/course-contents/cours
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import {
   selectCourseStudyMaterials,
   selectLoading
@@ -45,15 +45,29 @@ const StudyMaterials = () => {
   const StudyMaterialsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log(StudyMaterials);
+
   useEffect(() => {
     dispatch(getAllCourseStudyMaterials(selectedBranchId));
   }, [dispatch, selectedBranchId]);
+
+  const [activeBranches, setActiveBranches] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log("active branches : ",result.data);
+    setActiveBranches(result.data.data);
+  };
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+
 
   const handleStatusChange = () => {
     setDeleteDialogOpen(true);
@@ -223,7 +237,7 @@ const StudyMaterials = () => {
               />
             </Card>
           </Grid>
-          <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
           <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
           <DeleteDialog
             open={isDeleteDialogOpen}

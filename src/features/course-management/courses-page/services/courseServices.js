@@ -5,7 +5,7 @@ const COURSE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes
 
 export const getAllCourses = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${COURSE_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -48,6 +48,31 @@ export const getAllActiveCourseCategories = async (selectedBranchId) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllCourseCategories:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+export const getAllActiveCourses = async (selectedBranchId) => {
+  try {
+    const response = await axios.get(`${COURSE_END_POINT}/get-by-branch-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: { branch_id: selectedBranchId }
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch ActiveCourses. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllActu=iveCourse:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;

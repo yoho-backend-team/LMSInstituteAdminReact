@@ -6,112 +6,85 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import Checkbox from '@mui/material/Checkbox';
 import Icon from 'components/icon';
-import CustomChip from 'components/mui/chip';
-import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import toast from 'react-hot-toast';
+// import { addCourseStudyMaterial } from '../services/studyMaterialServices';
 import { addCourseNote } from '../services/noteServices';
+import CoursePdfInput from '../../components/PdfInput';
 import MenuItem from '@mui/material/MenuItem';
+import { useSelector } from 'react-redux';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
 
-const Header = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(6),
-  justifyContent: 'space-between'
-}));
 
-const schema = yup.object().shape({
-  description: yup.string().required(),
-  title: yup
-    .string()
-    .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required(),
-  branch: yup.string().required(),
-  courses: yup.array().min(1, 'Please select at least one course')
-});
-
-const defaultValues = {
-  description: '',
-  title: '',
-  branch: '',
-  courses: []
-};
-
-const NotesAddDrawer = (props) => {
+const CourseNotesAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, branches } = props;
 
   // ** State
-  const [notesPdf, setNotesPdf] = useState('');
-  const [groups, setGroups] = useState([]);
+  const [studymaterialPdf, setstudymaterialPdf] = useState('');
+  const [activeCourse, setActiveCourse] = useState([]);
 
-  console.log(notesPdf);
-  const handleSetPdf = (data) => {
-    setNotesPdf(data);
-  };
-  const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const courses = [
-    { course_id: '1', course_name: 'Course 1' },
-    { course_id: '2', course_name: 'Course 2' },
-    { course_id: '3', course_name: 'Course 3' }
-  ];
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  console.log(selectedBranchId);
 
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    getActiveCoursesByBranch(selectedBranchId);
+  }, [selectedBranchId]);
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/course/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    console.log("active courses : ", result.data);
+    setActiveCourse(result.data.data);
   };
 
-  console.log(groups);
+  const showErrors = (field, valueLen, min) => {
+    if (valueLen === 0) {
+      return `${field} field is required`;
+    } else if (valueLen > 0 && valueLen < min) {
+      return `${field} must be at least ${min} characters`;
+    } else {
+      return '';
+    }
+  };
+
+  const Header = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(6),
+    justifyContent: 'space-between'
+  }));
+
+  const schema = yup.object().shape({
+    description: yup.string().required(),
+    title: yup
+      .string()
+      .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
+      .required(),
+    branch: yup.string().required(),
+    course: yup.string().required(),
+  });
+
+  const defaultValues = {
+    description: '',
+    title: '',
+    branch: selectedBranchId,
+    course: ''
+  };
 
   // ** Hooks
   const {
     reset,
     control,
     setValue,
-    // setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -120,18 +93,23 @@ const NotesAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
+  console.log(studymaterialPdf);
+
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    bodyFormData.append('branch', data.branch);
-    bodyFormData.append('course', data.course);
+    bodyFormData.append('branch_id', data.branch);
+    bodyFormData.append('course_id', data.course);
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
+    bodyFormData.append('document', studymaterialPdf);
     console.log(bodyFormData);
 
     const result = await addCourseNote(bodyFormData);
 
     if (result.success) {
       toast.success(result.message);
+      reset();
+      toggle();
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
@@ -142,6 +120,10 @@ const NotesAddDrawer = (props) => {
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
+  };
+
+  const handleSetPdf = (data) => {
+    setstudymaterialPdf(data);
   };
 
   const handleClose = () => {
@@ -160,7 +142,7 @@ const NotesAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Notes</Typography>
+        <Typography variant="h5">Add Study Material</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -184,84 +166,52 @@ const NotesAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <TextField
-              sx={{ mb: 2 }}
-              fullWidth
-              select
-              defaultValue=""
-              label="Branch"
-              id="custom-select"
-              error={Boolean(errors.branch)}
-              {...(errors.branch && { helperText: errors.branch.message })}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <Autocomplete
-              multiple
-              disableCloseOnSelect
-              id="select-multiple-chip"
-              options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
-              getOptionLabel={(option) => option.course_name}
-              value={selectedCourses}
-              onChange={(e, newValue) => {
-                if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                  setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-                } else {
-                  setSelectedCourses(newValue);
-                }
-              }}
-              renderInput={(params) => (
+            <Controller
+              name="branch"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value } }) => (
                 <TextField
                   sx={{ mb: 2 }}
-                  {...params}
                   fullWidth
-                  label="Courses"
-                  InputProps={{
-                    ...params.InputProps,
-                    style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                  value={value}
+                  select
+                  label="Branch"
+                  id="custom-select"
+                  onChange={(e) => {
+                    setValue('branch', e.target.value);
+                    getActiveCoursesByBranch(e.target.value);
                   }}
-                  error={Boolean(errors.courses)}
-                  {...(errors.courses && { helperText: errors.courses.message })}
-                />
-              )}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.course_name}
-                </li>
-              )}
-              renderTags={(value) => (
-                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                  {value.map((option, index) => (
-                    <CustomChip
-                      key={option.course_id}
-                      label={option.course_name}
-                      onDelete={() => {
-                        const updatedValue = [...value];
-                        updatedValue.splice(index, 1);
-                        setSelectedCourses(updatedValue);
-                      }}
-                      color="primary"
-                      sx={{ m: 0.75 }}
-                    />
+                  error={Boolean(errors.branch)}
+                  {...(errors.branch && { helperText: errors.branch.message })}>
+                  {branches?.map((item, index) => (
+                    <MenuItem key={index} value={item.branch_id}>{item.branch_name}</MenuItem>
                   ))}
-                </div>
+                </TextField>
               )}
-              isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-              selectAllText="Select All"
-              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="course"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  sx={{ mb: 2 }}
+                  fullWidth
+                  value={value}
+                  select
+                  label="Select Course"
+                  id="custom-select"
+                  onChange={onChange}
+                  error={Boolean(errors.course)}
+                  {...(errors.course && { helperText: errors.course.message })}>
+                  {activeCourse?.map((item, index) => (
+                    <MenuItem key={index} value={item.course_id}>{item.course_name}</MenuItem>
+                  ))}
+                </TextField>
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -313,8 +263,8 @@ const NotesAddDrawer = (props) => {
           </Box>
         </form>
       </Box>
-    </Drawer>
+    </Drawer >
   );
 };
 
-export default NotesAddDrawer;
+export default CourseNotesAddDrawer;

@@ -1,6 +1,6 @@
 // ** React Imports
 import MenuItem from '@mui/material/MenuItem';
-import { Fragment, forwardRef, useState } from 'react';
+import { Fragment, forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -11,20 +11,16 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-import Gallery from '../../../../features/staff-management/teaching-staffs/components/gallery';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
-import Icon from 'components/icon';
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
@@ -36,118 +32,104 @@ import { addTeachingStaff } from 'features/staff-management/teaching-staffs/serv
 import DatePicker from 'react-datepicker';
 import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 
-const steps = [
-  {
-    title: 'Personal Info',
-    subtitle: 'Setup Informion'
-  },
-  {
-    title: 'Documents',
-    subtitle: 'Add Documents'
-  },
-  {
-    title: 'Account Details',
-    subtitle: 'Create Account Details'
-  }
-];
-
-const defaultAccountValues = {
-  email: '',
-  username: '',
-  password: '',
-  name: '',
-  contact: '',
-  confirm_password: ''
-};
-
-const defaultPersonalValues = {
-  state: '',
-  city: '',
-  pin_code: '',
-  address_line_one: '',
-  address_line_two: '',
-  date_of_birth: '',
-  First_name: '',
-  Last_name: '',
-  gender: '',
-  course: '',
-  phone: '',
-  alt_phone: '',
-  description: '',
-  branch: '',
-  joining_date:"",
-  position:""
-};
-
-const defaultGalleryValues = {
-  logo: '',
-  image: '',
-  gallery: ''
-};
-
-const CustomInput = forwardRef(({ ...props }, ref) => {
-  return <TextField fullWidth inputRef={ref} {...props} />;
-});
-
-const accountSchema = yup.object().shape({
-  username: yup.string().required(),
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  contact: yup.number().required(),
-  password: yup.string().min(6).required(),
-  confirm_password: yup
-    .string()
-    .required()
-    .oneOf([yup.ref('password'), ''], 'Passwords must match')
-});
-
-const personalSchema = yup.object().shape({
-  position: yup.string().required(),
-  state: yup.string().required(),
-  city: yup.string().required(),
-  pin_code: yup.number().required(),
-  address_line_one: yup.string().required(),
-  address_line_two: yup.string().required(),
-  date_of_birth: yup.string().required(),
-  phone: yup.number().required(),
-  alt_phone: yup.number().required(),
-  description: yup.string().required(),
-  official_email: yup.string().required(),
-  gender: yup.string().required(),
-  First_name: yup.string().required(),
-  Last_name: yup.string().required(),
-  branch: yup.string().required('Branch is required'),
-  joining_date: yup.string().required('Joining date is required'),
-  specialization: yup.string().required('Branch is required')
-});
-
-const gallerySchema = yup.object().shape({});
 const StepperLinearWithValidation = () => {
+
+  const steps = [
+    {
+      title: 'Personal Info',
+      subtitle: 'Setup Informion'
+    },
+  ];
+
+
+  const defaultPersonalValues = {
+    name: '',
+    email: '',
+    phone: '',
+    alt_phone: '',
+    state: '',
+    city: '',
+    pin_code: '',
+    address_line_one: '',
+    address_line_two: '',
+    date_of_birth: '',
+    gender: '',
+    course: '',
+    branch: '',
+    designation: "",
+    education_qualification: "",
+    username: '',
+    logo: '',
+
+  };
+
+  const CustomInput = forwardRef(({ ...props }, ref) => {
+    return <TextField fullWidth inputRef={ref} {...props} />;
+  });
+
+
+  const personalSchema = yup.object().shape({
+    name: yup.string().required(),
+    email: yup.string().email().required(),
+    phone: yup.number().required(),
+    alt_phone: yup.number().required(),
+    designation: yup.string().required(),
+    state: yup.string().required(),
+    city: yup.string().required(),
+    pin_code: yup.number().required(),
+    address_line_one: yup.string().required(),
+    address_line_two: yup.string().required(),
+    date_of_birth: yup.string().required(),
+    gender: yup.string().required(),
+    branch: yup.string().required('Branch is required'),
+    username: yup.string().required(),
+  });
+
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-  const [state, setState] = useState({
-    password: '',
-    password2: '',
-    showPassword: false,
-    showPassword2: false
-  });
+
+  const [activeCourse, setActiveCourse] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  console.log(selectedCourses);
+
+  useEffect(() => {
+    getActiveCoursesByBranch(selectedBranchId);
+  }, [selectedBranchId]);
+
+
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
+
+    console.log("active courses : ", result.data);
+    setActiveCourse(result.data.data);
+  };
+
+  const [activeBranches, setActiveBranches] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log(result.data);
+    setActiveBranches(result.data.data);
+  };
 
   // ** Hooks
-  const {
-    reset: accountReset,
-    control: accountControl,
-    handleSubmit: handleAccountSubmit,
-    formState: { errors: accountErrors }
-  } = useForm({
-    defaultValues: defaultAccountValues,
-    resolver: yupResolver(accountSchema)
-  });
+
 
   const {
     reset: personalReset,
     control: personalControl,
+    setValue,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
@@ -155,17 +137,7 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(personalSchema)
   });
 
-  const {
-    reset: galleryReset,
-    control: galleryControl,
-    handleSubmit: handleGallerySubmit,
-    formState: { errors: galleryErrors }
-  } = useForm({
-    defaultValues: defaultGalleryValues,
-    resolver: yupResolver(gallerySchema)
-  });
-  console.log(galleryControl);
-  console.log(defaultPersonalValues);
+
   // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -173,9 +145,6 @@ const StepperLinearWithValidation = () => {
 
   const handleReset = () => {
     setActiveStep(0);
-    // socialReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
-    galleryReset({ logo: '', image: '', gallery: [] });
-    accountReset({ email: '', username: '', password: '', confirm_password: '', name: '', contact: '' });
     personalReset({
       state: '',
       city: '',
@@ -183,7 +152,7 @@ const StepperLinearWithValidation = () => {
       address_line_one: '',
       address_line_two: '',
       date_of_birth: '',
-      First_name: '',
+      name: '',
       Last_name: '',
       gender: '',
       course: '',
@@ -191,8 +160,8 @@ const StepperLinearWithValidation = () => {
       phone: Number(''),
       alt_phone: Number(''),
       description: '',
-      joining_date:"",
-      position:""
+      joining_date: "",
+      designation: ""
     });
   };
 
@@ -209,65 +178,6 @@ const StepperLinearWithValidation = () => {
 
     return formattedDateString;
   }
-
-  const onSubmit = async () => {
-    const accountData = accountControl?._formValues;
-    const personalData = personalControl?._formValues;
-    setActiveStep(activeStep + 1);
-    if (activeStep === steps.length - 1) {
-     let data = new FormData();
-      data.append('position', personalData?.position);
-      data.append('First_name', personalData?.First_name);
-      data.append('Last_name', personalData?.Last_name);
-      data.append('email', personalData?.official_email);
-      data.append('description', personalData?.description);
-      data.append('address_line_1', personalData?.address_line_one);
-      data.append('address_line_2', personalData?.address_line_two);
-      data.append('city', personalData?.city);
-      data.append('state', personalData?.state);
-      data.append('gender', personalData?.gender);
-      data.append('course', personalData?.course);
-      data.append('pin_code', personalData?.pin_code);
-      data.append('phone', personalData?.phone);
-      data.append('alternate_number', personalData?.alt_phone);
-      data.append('official_website', personalData?.official_website);
-      data.append('facebook', socialData?.facebook);
-      data.append('linkedin', socialData?.linkedIn);
-      data.append('instagram', socialData?.instagram);
-      data.append('twitter', socialData?.twitter);
-      data.append('date_of_birth', convertDateFormat(personalData?.date_of_birth));
-      data.append('joining_date', convertDateFormat(personalData?.date_of_birth));
-      data.append('logo', logo);
-      data.append('image', instituteImage);
-      data.append('gallery', galleryImages);
-      data.append('user_email', accountData?.email);
-      data.append('user_mobile', accountData?.contact);
-      data.append('username', accountData?.username);
-
-      try {
-        const result = await addTeachingStaff(data);
-  
-        if (result.success) {
-          toast.success(result.message);
-          navigate(-1);
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-
-    }
-  };
-
-  // Handle Password
-  const handleClickShowPassword = () => {
-    setState({ ...state, showPassword: !state.showPassword });
-  };
-  // Handle Confirm Password
-  const handleClickShowConfirmPassword = () => {
-    setState({ ...state, showPassword2: !state.showPassword2 });
-  };
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -294,7 +204,6 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [galleryImages, setGalleryImages] = useState([]);
   const [logoSrc, setLogoSrc] = useState(
     'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
   );
@@ -308,17 +217,60 @@ const StepperLinearWithValidation = () => {
       setLogo(files[0]);
     }
   };
-  const courses = [
-    { course_id: '1', course_name: 'Course 1' },
-    { course_id: '2', course_name: 'Course 2' },
-    { course_id: '3', course_name: 'Course 3' }
-  ];
-  const [selectedCourses, setSelectedCourses] = useState([]);
+
 
   const handleInputImageReset = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
+  console.log(logo)
+
+  const onSubmit = async () => {
+    const personalData = personalControl?._formValues;
+    const filteredCourseId = selectedCourses?.map((course) => course.course_id);
+    setActiveStep(activeStep + 1);
+    if (activeStep === steps.length - 1) {
+      let data = new FormData();
+      filteredCourseId.forEach((id) => {
+        data.append(`course_ids[]`, id);
+      });
+      data.append('name', personalData?.name);
+      data.append('email', personalData?.email);
+      data.append('phone_number', personalData?.phone);
+      data.append('alternate_number', personalData?.alt_phone);
+      data.append('designation', personalData?.designation);
+      data.append('type', 'teaching');
+      data.append('branch_id', personalData?.branch);
+      data.append('image', logo);
+      data.append('gender', personalData?.gender);
+      data.append('address_line_1', personalData?.address_line_one);
+      data.append('address_line_2', personalData?.address_line_two);
+      data.append('city', personalData?.city);
+      data.append('state', personalData?.state);
+      data.append('pin_code', personalData?.pin_code);
+      data.append('dob', convertDateFormat(personalData?.date_of_birth));
+      data.append('username', personalData?.username);
+      data.append('education_qualification', personalData?.education_qualification);
+
+      try {
+        const result = await addTeachingStaff(data);
+
+        if (result.success) {
+          toast.success(result.message);
+          navigate(-1);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+    }
+  };
+
+
+
+
 
   const getStepContent = (step) => {
     switch (step) {
@@ -334,44 +286,73 @@ const StepperLinearWithValidation = () => {
                   {steps[0].subtitle}
                 </Typography>
               </Grid>
+              <Grid item xs={12} sm={12}>
+                <Typography color="dark" sx={{ fontWeight: 600 }}>
+                  Upload Profile Picture
+                </Typography>
+                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
+                  Upload here
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <ImgStyled src={logoSrc} alt="Profile Pic" />
+                  <div>
+                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+                      Upload your Logo
+                      <input
+                        hidden
+                        type="file"
+                        accept="image/png, image/jpeg"
+                        onChange={handleInputImageChange}
+                        id="account-settings-upload-image"
+                      />
+                    </ButtonStyled>
+                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
+                      Reset
+                    </ResetButtonStyled>
+                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                  </div>
+                </Box>
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="First_name"
+                  name="name"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="First Name"
+                      label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
-                      error={Boolean(personalErrors['First_name'])}
+                      error={Boolean(personalErrors['name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
-                      {...(personalErrors['First_name'] && { helperText: 'This field is required' })}
+                      {...(personalErrors['name'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Last_name"
+                  name="email"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Last Name"
+                      label="Email"
                       onChange={onChange}
-                      placeholder="Leonard"
-                      error={Boolean(personalErrors['Last_name'])}
-                      aria-describedby="stepper-linear-personal-institute_name"
-                      {...(personalErrors['Last_name'] && { helperText: 'This field is required' })}
+                      placeholder="Carter"
+                      error={Boolean(personalErrors['email'])}
+                      aria-describedby="stepper-linear-personal-official_email"
+                      {...(personalErrors['email'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="date_of_birth"
@@ -413,10 +394,41 @@ const StepperLinearWithValidation = () => {
                       aria-describedby="stepper-linear-personal-gender"
                       {...(personalErrors['gender'] && { helperText: 'This field is required' })}
                     >
-                      <MenuItem value="Male">Male</MenuItem>
-                      <MenuItem value="Female">Female</MenuItem>
-                      <MenuItem value="Other">Other</MenuItem>
+                      <MenuItem value="male">Male</MenuItem>
+                      <MenuItem value="female">Female</MenuItem>
+                      <MenuItem value="other">Other</MenuItem>
                     </CustomTextField>
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="branch"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value } }) => (
+                    <TextField
+                      fullWidth
+                      select
+                      value={value}
+                      onChange={(e) => {
+                        setValue('branch', e.target.value);
+                        getActiveCoursesByBranch(e.target.value);
+                      }}
+                      label="Branch"
+                      id="custom-select"
+                      error={Boolean(personalErrors['branch'])}
+                      aria-describedby="stepper-linear-personal-branch"
+                      {...(personalErrors['branch'] && { helperText: 'This field is required' })}
+                    >
+                      {
+                        activeBranches.map((item, index) => (
+                          <MenuItem key={index} value={item.branch_id}>{item.branch_name}</MenuItem>
+                        ))
+                      }
+
+                    </TextField>
                   )}
                 />
               </Grid>
@@ -425,12 +437,12 @@ const StepperLinearWithValidation = () => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
+                  options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
                   getOptionLabel={(option) => option.course_name}
                   value={selectedCourses}
                   onChange={(e, newValue) => {
                     if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
+                      setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
                     } else {
                       setSelectedCourses(newValue);
                     }
@@ -479,71 +491,28 @@ const StepperLinearWithValidation = () => {
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="joining_date"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      id="joining_date"
-                      dateFormat={'dd/MM/yyyy'}
-                      value={value}
-                      selected={value}
-                      customInput={
-                        <CustomInput
-                          label="Joining Date"
-                          error={Boolean(personalErrors['joining_date'])}
-                          aria-describedby="stepper-linear-personal-joining-date"
-                          {...(personalErrors['joining_date'] && { helperText: 'This field is required' })}
-                        />
-                      }
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="specialization"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Specialization"
-                      onChange={onChange}
-                      placeholder="eg: Code Customization"
-                      error={Boolean(personalErrors['specialization'])}
-                      aria-describedby="stepper-linear-personal-specialization"
-                      {...(personalErrors['specialization'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
 
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="position"
+                  name="designation"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Position"
+                      label="designation"
                       onChange={onChange}
-                      error={Boolean(personalErrors.position)}
-                      aria-describedby="stepper-linear-personal-position-helper"
-                      {...(personalErrors.position && { helperText: 'This field is required' })}
+                      error={Boolean(personalErrors.designation)}
+                      aria-describedby="stepper-linear-personal-designation-helper"
+                      {...(personalErrors.designation && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Qualification"
+                  name="education_qualification"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -696,158 +665,8 @@ const StepperLinearWithValidation = () => {
 
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="official_email"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Official Email"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['official_email'])}
-                      aria-describedby="stepper-linear-personal-official_email"
-                      {...(personalErrors['official_email'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="branch"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <TextField
-                      fullWidth
-                      select
-                      value={value}
-                      onChange={onChange}
-                      label="Branch"
-                      id="custom-select"
-                      error={Boolean(personalErrors['branch'])}
-                      aria-describedby="stepper-linear-personal-branch"
-                      {...(personalErrors['branch'] && { helperText: 'This field is required' })}
-                    >
-                      <MenuItem defaultValue={""}></MenuItem>
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </TextField>
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={12}>
-                <Controller
-                  name="description"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      multiline
-                      rows={3}
-                      label="Description"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['description'])}
-                      aria-describedby="stepper-linear-personal-description"
-                      {...(personalErrors['description'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        );
-      case 1:
-        return (
-          <form key={2} onSubmit={handleGallerySubmit(onSubmit)}>
-            <Grid container spacing={5} item>
-              <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[1].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[1].subtitle}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Profile Picture
-                </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload here
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <ImgStyled src={logoSrc} alt="Profile Pic" />
-                  <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                      Upload your Logo
-                      <input
-                        hidden
-                        type="file"
-                        accept="image/png, image/jpeg"
-                        onChange={handleInputImageChange}
-                        id="account-settings-upload-image"
-                      />
-                    </ButtonStyled>
-                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
-                      Reset
-                    </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
-                  </div>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Documents
-                </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload here
-                </Typography>
-                <Gallery setGalleryImages={setGalleryImages} galleryImages={galleryImages} />
-              </Grid>
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        );
-
-      case 2:
-        return (
-          <form key={0} onSubmit={handleAccountSubmit(onSubmit)}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[2].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[2].subtitle}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
                   name="username"
-                  control={accountControl}
+                  control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
@@ -856,94 +675,27 @@ const StepperLinearWithValidation = () => {
                       label="Username"
                       onChange={onChange}
                       placeholder="carterLeonard"
-                      error={Boolean(accountErrors.username)}
+                      error={Boolean(personalErrors['username'])}
                       aria-describedby="stepper-linear-account-username"
-                      {...(accountErrors.username && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="password"
-                  control={accountControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Password"
-                      onChange={onChange}
-                      id="stepper-linear-account-password"
-                      error={Boolean(accountErrors.password)}
-                      type={state.showPassword ? 'text' : 'password'}
-                      {...(accountErrors.password && { helperText: accountErrors.password.message })}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              edge="end"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={(e) => e.preventDefault()}
-                              aria-label="toggle password visibility"
-                            >
-                              <Icon fontSize="1.25rem" icon={state.showPassword ? 'tabler:eye' : 'tabler:eye-off'} />
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
+                      {...(personalErrors['username'] && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="confirm_password"
-                  control={accountControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      onChange={onChange}
-                      label="Confirm Password"
-                      id="stepper-linear-account-confirm_password"
-                      type={state.showPassword2 ? 'text' : 'password'}
-                      error={Boolean(accountErrors['confirm_password'])}
-                      {...(accountErrors['confirm_password'] && {
-                        helperText: accountErrors['confirm_password'].message
-                      })}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              edge="end"
-                              onMouseDown={(e) => e.preventDefault()}
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowConfirmPassword}
-                            >
-                              <Icon fontSize="1.25rem" icon={state.showPassword2 ? 'tabler:eye' : 'tabler:eye-off'} />
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={handleBack}>
                   Back
                 </Button>
                 <Button type="submit" variant="contained">
-                  Submit
+                  Next
                 </Button>
               </Grid>
             </Grid>
           </form>
         );
+
       default:
         return null;
     }
@@ -975,14 +727,7 @@ const StepperLinearWithValidation = () => {
               const labelProps = {};
               if (index === activeStep) {
                 labelProps.error = false;
-                if (
-                  (accountErrors.email || accountErrors.username || accountErrors.password || accountErrors['confirm_password']) &&
-                  activeStep === 3
-                ) {
-                  labelProps.error = true;
-                } else if ((personalErrors['date_of_birth'] || personalErrors['first-name']) && activeStep === 0) {
-                  labelProps.error = true;
-                } else if (galleryErrors.logo || (galleryErrors.gallery && activeStep === 1)) {
+                if ((personalErrors['date_of_birth'] || personalErrors['first-name']) && activeStep === 0) {
                   labelProps.error = true;
                 } else {
                   labelProps.error = false;
