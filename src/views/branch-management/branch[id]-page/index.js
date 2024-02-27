@@ -1,48 +1,56 @@
 import { Grid } from '@mui/material';
-import BranchSkeleton from 'components/cards/Skeleton/BranchSkeleton';
-import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
-import BranchTableList from 'features/branch-management/branch-add-page/components/BranchTableList';
-import HeaderCard from 'features/branch-management/view-branch/components/ViewBranchHeaderCard';
-import ProgressCard from 'features/branch-management/view-branch/components/ViewBranchProgressCard';
-import { useEffect, useState } from 'react';
-
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
-
-const ViewBranch = () => {
-  const [loading, setLoading] = useState(true);
-
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
+import React from 'react';
+import Coursescard from 'features/branch-management/view-branch/components/headerCards/Coursescard';
+import UsersCard from 'features/branch-management/view-branch/components/headerCards/usersCard';
+import StaffsCard from 'features/branch-management/view-branch/components/headerCards/staffsCard';
+import StudentsCard from 'features/branch-management/view-branch/components/headerCards/studentsCard';
+import Earningscard from 'features/branch-management/view-branch/components/Earningscard';
+import SupportTicket from 'features/branch-management/view-branch/components/supportTickets';
+import CardStudentAndTeachers from 'features/branch-management/view-branch/components/horizondalCards/CardStudentandTeacher';
+import CardHorizondalCourses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalCourses';
+import { gridSpacing } from 'store/constant';
+import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
+import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
+const index = () => {
   return (
-    <>
-      {loading ? (
-        <BranchSkeleton />
-      ) : (
-        <Grid container spacing={4} sx={{ p: 1 }}>
-          <Grid item xs={12} sm={6}>
-            <HeaderCard />
+    <Grid container spacing={gridSpacing}>
+      <Grid item xs={12} sm={8} spacing={gridSpacing}>
+        <Grid container spacing={gridSpacing}>
+          <Grid item xs={6} sm={3}>
+            <UsersCard />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <ProgressCard />
+          <Grid item xs={6} sm={3}>
+            <Coursescard />
           </Grid>
-          <Grid item xs={12}>
-            <BranchTableList />
+          <Grid item xs={6} sm={3}>
+            <StaffsCard />
           </Grid>
-          <Grid item xs={12}>
-            <StudentTableList />
+          <Grid item xs={6} sm={3}>
+            <StudentsCard />
           </Grid>
         </Grid>
-      )}
-    </>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <CardStudentAndTeachers />
+      </Grid>
+      <Grid item xs={12} sm={8}>
+        <Earningscard />
+      </Grid>
+
+      <Grid item xs={12} sm={4}>
+        <SupportTicket />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <CardHorizondalCourses />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <CardHorizondalClasses />
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <CardHorizondalUsers />
+      </Grid>
+    </Grid>
   );
 };
 
-export default ViewBranch;
+export default index;
