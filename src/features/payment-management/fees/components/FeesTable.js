@@ -94,6 +94,7 @@ const FeesTable = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(StudentFees);
+
   useEffect(() => {
     dispatch(getAllStudentFees(selectedBranchId));
   }, [dispatch, selectedBranchId]);
@@ -134,6 +135,73 @@ const FeesTable = () => {
     { batch_id: '1', batch_name: 'batch 1' },
     { batch_id: '2', batch_name: 'batch 2' },
     { batch_id: '3', batch_name: 'batch 3' }
+  ];
+
+  const StudentFeesdummyData = [
+    {
+      id: 1,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 100,
+      issuedDate: '2025-01-01',
+      balance: 55,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 2,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'arunbalaji.com',
+      total: 200,
+      issuedDate: '2000-01-01',
+      balance: 50,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 3,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 300,
+      issuedDate: '25-01-01',
+      balance: 40,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 4,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 40,
+      issuedDate: '202-01-01',
+      balance: 30,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 5,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 50,
+      issuedDate: '20-01-01',
+      balance: 0,
+      avatar: '',
+      avatarColor: 'primary'
+    }
   ];
 
   const defaultColumns = [
@@ -256,7 +324,6 @@ const FeesTable = () => {
       )
     }
   ];
-
 
   return (
     <DatePickerWrapper>
@@ -420,7 +487,8 @@ const FeesTable = () => {
               autoHeight
               pagination
               rowHeight={62}
-              rows={StudentFees}
+              // rows={StudentFees}
+              rows={StudentFeesdummyData}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}
