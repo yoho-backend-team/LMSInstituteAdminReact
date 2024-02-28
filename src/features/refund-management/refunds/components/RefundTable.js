@@ -195,6 +195,7 @@ const RefundTable = () => {
   const dispatch = useDispatch();
   const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  console.log(studentFeeRefunds);
   useEffect(() => {
     dispatch(getAllStudentFeeRefunds(selectedBranchId));
   }, [dispatch, selectedBranchId]);
@@ -262,63 +263,63 @@ const RefundTable = () => {
     }
   ];
 
-  // const store = [
-  //   {
-  //     id: 1,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 100,
-  //     issuedDate: '2025-01-01',
-  //     balance: 55,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 2,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'arunbalaji.com',
-  //     total: 200,
-  //     issuedDate: '2000-01-01',
-  //     balance: 50,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 3,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 300,
-  //     issuedDate: '25-01-01',
-  //     balance: 40,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 4,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 40,
-  //     issuedDate: '202-01-01',
-  //     balance: 30,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 5,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 50,
-  //     issuedDate: '20-01-01',
-  //     balance: 0,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   }
-  // ];
+  const store = [
+    {
+      id: 1,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 100,
+      issuedDate: '2025-01-01',
+      balance: 55,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 2,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'arunbalaji.com',
+      total: 200,
+      issuedDate: '2000-01-01',
+      balance: 50,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 3,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 300,
+      issuedDate: '25-01-01',
+      balance: 40,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 4,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 40,
+      issuedDate: '202-01-01',
+      balance: 30,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 5,
+      invoiceStatus: 'Sent',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 50,
+      issuedDate: '20-01-01',
+      balance: 0,
+      avatar: '',
+      avatarColor: 'primary'
+    }
+  ];
 
   const batch = [
     { batch_id: '1', batch_name: 'batch 1' },
@@ -473,7 +474,7 @@ const RefundTable = () => {
               autoHeight
               pagination
               rowHeight={62}
-              rows={studentFeeRefunds}
+              rows={store}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}

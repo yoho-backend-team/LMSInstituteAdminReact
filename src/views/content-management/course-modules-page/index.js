@@ -123,7 +123,7 @@ const Modules = () => {
 
   const columns = [
     {
-      flex: 0.8,
+      flex: 0.6,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -135,7 +135,7 @@ const Modules = () => {
       }
     },
     {
-      flex: 1.5,
+      flex: 1.8,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -145,7 +145,7 @@ const Modules = () => {
               <Typography
                 noWrap
                 sx={{
-                  fontWeight: 500,
+                  fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
                   '&:hover': { color: 'primary.main' }
@@ -153,20 +153,11 @@ const Modules = () => {
               >
                 {row?.title}
               </Typography>
+              <Typography noWrap sx={{ color: 'text.secondary',fontSize:"0.75rem" ,mt:1}}>
+                {row?.description}
+              </Typography>
             </Box>
           </Box>
-        );
-      }
-    },
-    {
-      flex: 1,
-      field: 'description',
-      headerName: 'Description',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.description}
-          </Typography>
         );
       }
     },
@@ -178,7 +169,7 @@ const Modules = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.course_name}
+              {row?.institute_branch_courses?.course_name}
             </Typography>
           </Box>
         );
@@ -191,9 +182,9 @@ const Modules = () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select defaultValue={row.status} onChange={(e) => handleStatusChange(e, row.id)}>
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Inactive">Inactive</MenuItem>
+            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusChange(e, row.id)}>
+              <MenuItem value="1">Active</MenuItem>
+              <MenuItem value="0">Inactive</MenuItem>
             </CustomTextField>
           </div>
         );

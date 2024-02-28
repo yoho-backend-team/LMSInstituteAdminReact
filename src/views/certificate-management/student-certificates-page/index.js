@@ -90,90 +90,91 @@ const StudenrCertificate = () => {
     );
   };
 
-  // const studentCertificates = [
-  //   {
-  //     id: 1,
-  //     title: 'Introduction to JavaScript',
-  //     description: 'Learn the basics of JavaScript programming language.',
-  //     course_name: 'JavaScript Fundamentals',
-  //     status: 'Active',
-  //     file: 'intro_to_js.pdf'
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Advanced JavaScript Concepts',
-  //     description: 'Explore advanced concepts such as closures, prototypes, and async programming.',
-  //     course_name: 'Advanced JavaScript',
-  //     status: 'Active',
-  //     file: 'advanced_js_notes.docx'
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'DOM Manipulation',
-  //     description: 'Study how to interact with the Document Object Model (DOM).',
-  //     course_name: 'Web Development with JavaScript',
-  //     status: 'Inactive',
-  //     file: 'dom_manipulation_video.mp4'
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'Node.js Basics',
-  //     description: 'Get started with server-side JavaScript using Node.js.',
-  //     course_name: 'Node.js Fundamentals',
-  //     status: 'Active',
-  //     file: 'nodejs_basics.txt'
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'React.js Fundamentals',
-  //     description: 'Learn the basics of building user interfaces with React.js.',
-  //     course_name: 'React.js for Beginners',
-  //     status: 'Active',
-  //     file: 'react_fundamentals.pdf'
-  //   },
-  //   {
-  //     id: 6,
-  //     title: 'JavaScript Design Patterns',
-  //     description: 'Explore common design patterns used in JavaScript applications.',
-  //     course_name: 'Design Patterns in JS',
-  //     status: 'Active',
-  //     file: 'js_design_patterns.doc'
-  //   },
-  //   {
-  //     id: 7,
-  //     title: 'Testing in JavaScript',
-  //     description: 'Understand how to write tests for JavaScript code.',
-  //     course_name: 'JavaScript Testing',
-  //     status: 'Inactive',
-  //     file: 'testing_in_js_video.mkv'
-  //   },
-  //   {
-  //     id: 8,
-  //     title: 'ES6 Features',
-  //     description: 'Explore the features introduced in ECMAScript 6 (ES6).',
-  //     course_name: 'Modern JavaScript',
-  //     status: 'Active',
-  //     file: 'es6_features_cheatsheet.pdf'
-  //   },
-  //   {
-  //     id: 9,
-  //     title: 'Web Development Best Practices',
-  //     description: 'Learn best practices for building robust and maintainable web applications.',
-  //     course_name: 'Web Dev Best Practices',
-  //     status: 'Active',
-  //     file: 'web_dev_best_practices.docx'
-  //   },
-  //   {
-  //     id: 10,
-  //     title: 'Asynchronous Programming in JavaScript',
-  //     description: 'Understand how to work with asynchronous code in JavaScript.',
-  //     course_name: 'Async JS',
-  //     status: 'Inactive',
-  //     file: 'async_programming_guide.txt'
-  //   }
-  // ];
+  const studentCertificatesdata = [
+    {
+      id: 1,
+      title: 'Introduction to JavaScript',
+      description: 'Learn the basics of JavaScript programming language.',
+      course_name: 'JavaScript Fundamentals',
+      status: 'Active',
+      file: 'intro_to_js.pdf'
+    },
+    {
+      id: 2,
+      title: 'Advanced JavaScript Concepts',
+      description: 'Explore advanced concepts such as closures, prototypes, and async programming.',
+      course_name: 'Advanced JavaScript',
+      status: 'Active',
+      file: 'advanced_js_notes.docx'
+    },
+    {
+      id: 3,
+      title: 'DOM Manipulation',
+      description: 'Study how to interact with the Document Object Model (DOM).',
+      course_name: 'Web Development with JavaScript',
+      status: 'Inactive',
+      file: 'dom_manipulation_video.mp4'
+    },
+    {
+      id: 4,
+      title: 'Node.js Basics',
+      description: 'Get started with server-side JavaScript using Node.js.',
+      course_name: 'Node.js Fundamentals',
+      status: 'Active',
+      file: 'nodejs_basics.txt'
+    },
+    {
+      id: 5,
+      title: 'React.js Fundamentals',
+      description: 'Learn the basics of building user interfaces with React.js.',
+      course_name: 'React.js for Beginners',
+      status: 'Active',
+      file: 'react_fundamentals.pdf'
+    },
+    {
+      id: 6,
+      title: 'JavaScript Design Patterns',
+      description: 'Explore common design patterns used in JavaScript applications.',
+      course_name: 'Design Patterns in JS',
+      status: 'Active',
+      file: 'js_design_patterns.doc'
+    },
+    {
+      id: 7,
+      title: 'Testing in JavaScript',
+      description: 'Understand how to write tests for JavaScript code.',
+      course_name: 'JavaScript Testing',
+      status: 'Inactive',
+      file: 'testing_in_js_video.mkv'
+    },
+    {
+      id: 8,
+      title: 'ES6 Features',
+      description: 'Explore the features introduced in ECMAScript 6 (ES6).',
+      course_name: 'Modern JavaScript',
+      status: 'Active',
+      file: 'es6_features_cheatsheet.pdf'
+    },
+    {
+      id: 9,
+      title: 'Web Development Best Practices',
+      description: 'Learn best practices for building robust and maintainable web applications.',
+      course_name: 'Web Dev Best Practices',
+      status: 'Active',
+      file: 'web_dev_best_practices.docx'
+    },
+    {
+      id: 10,
+      title: 'Asynchronous Programming in JavaScript',
+      description: 'Understand how to work with asynchronous code in JavaScript.',
+      course_name: 'Async JS',
+      status: 'Inactive',
+      file: 'async_programming_guide.txt'
+    }
+  ];
 
   // ** Hooks
+  
   const dispatch = useDispatch();
   const studentCertificates = useSelector(selectStudentCertificates);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -181,6 +182,7 @@ const StudenrCertificate = () => {
     dispatch(getAllStudentCertificates(selectedBranchId));
   }, [dispatch, selectedBranchId]);
 
+  console.log(studentCertificates);
   const handleFilter = useCallback(
     async (val) => {
       try {
@@ -307,7 +309,7 @@ const StudenrCertificate = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificates}
+                rows={studentCertificatesdata}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
