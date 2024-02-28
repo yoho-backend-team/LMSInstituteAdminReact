@@ -113,6 +113,10 @@ const FeesTable = () => {
     setValue(val);
   };
 
+  const handleRowClick = (rowData) => {
+    setSelectedRows(rowData);
+  };
+
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
@@ -316,7 +320,12 @@ const FeesTable = () => {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
-                menuItemProps: { onClick: toggleEditUserDrawer }
+                menuItemProps: {
+                  onClick: () => {
+                    handleRowClick(row);
+                    toggleEditUserDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                  }
+                }
               }
             ]}
           />
@@ -501,7 +510,7 @@ const FeesTable = () => {
       </Grid>
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} selectedRows={selectedRows} handleRowClick={handleRowClick}/>
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

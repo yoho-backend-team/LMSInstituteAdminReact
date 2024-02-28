@@ -18,7 +18,6 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import toast from 'react-hot-toast';
 import { updateStudentFee } from '../services/studentFeeServices';
 
-
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -34,33 +33,46 @@ const schema = yup.object().shape({
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
-const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
-};
+// const defaultValues = {
+//   email: '',
+//   password: '',
+//   confirm_password: '',
+//   designation: '',
+//   fullName: '',
+//   userName: '',
+//   role: '',
+//   contact: Number('')
+// };
 
 const FeesEditDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, selectedRows } = props;
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+  const [defaultValues, setDefaultValues] = useState('');
 
-  useEffect(() => {}, []);
+  console.log(selectedRows);
+
+  useEffect(() => {
+    setDefaultValues({
+      course: selectedRows.course,
+      batch: selectedRows.batch,
+      students: selectedRows.students,
+      paymentId: Number(selectedRows.transactionid),
+      paidAmount: selectedRows.balance
+    });
+  }, [selectedRows]);
+
+  console.log(defaultValues);
 
   const {
-    handleSubmit,
+    reset,
     control,
     setValue,
-    formState: { errors },
-    reset
+    handleSubmit,
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -137,7 +149,7 @@ const FeesEditDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h5">Edit Fees</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -183,6 +195,8 @@ const FeesEditDrawer = (props) => {
                     select
                     fullWidth
                     value={value}
+                    // defaultValue={}
+
                     sx={{ mb: 4 }}
                     label="Select Course"
                     onChange={onChange}
@@ -248,13 +262,18 @@ const FeesEditDrawer = (props) => {
             <Grid item xs={12} sm={12}>
               <Controller
                 name="paymentId"
+                rules={{ required: true }}
                 control={control}
-                render={({ field }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
-                    {...field}
+                    // defaultValue={selectedRows? selectedRows?.total :5556}
+                    value={selectedRows ? selectedRows.total : ''}
                     sx={{ mb: 2 }}
                     fullWidth
-                    label="Payment Id"
+                    // value={value}
+                    onChange={onChange}
+                    // label={selectedRows?.total}
+                    // label="Payment Id"
                     type="number"
                     error={Boolean(errors.paymentId)}
                     helperText={errors.paymentId?.message}
@@ -266,12 +285,14 @@ const FeesEditDrawer = (props) => {
             <Grid item xs={12} sm={12}>
               <Controller
                 name="paidAmount"
+                rules={{ required: true }}
                 control={control}
-                render={({ field }) => (
+                render={({ field: { onChange } }) => (
                   <TextField
-                    {...field}
                     sx={{ mb: 2 }}
                     fullWidth
+                    value={selectedRows ? selectedRows.balance : ''}
+                    onChange={onChange}
                     label="Paid Amount"
                     type="number"
                     error={Boolean(errors.paidAmount)}
