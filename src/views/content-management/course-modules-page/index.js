@@ -178,7 +178,7 @@ const Modules = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.course_name}
+              {row?.institute_branch_courses?.course_name}
             </Typography>
           </Box>
         );
@@ -191,9 +191,9 @@ const Modules = () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select defaultValue={row.status} onChange={(e) => handleStatusChange(e, row.id)}>
-              <MenuItem value="Active">Active</MenuItem>
-              <MenuItem value="Inactive">Inactive</MenuItem>
+            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusChange(e, row.id)}>
+              <MenuItem value="1">Active</MenuItem>
+              <MenuItem value="0">Inactive</MenuItem>
             </CustomTextField>
           </div>
         );
