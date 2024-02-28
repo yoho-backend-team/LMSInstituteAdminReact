@@ -241,6 +241,72 @@ const SalaryTable = () => {
     }
   ];
 
+  const TeachingStaffSalariesdummyData = [
+    {
+      id: 1,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 100,
+      PaymentDate: '2025-01-01',
+      balance: 55,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 2,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'arunbalaji.com',
+      total: 200,
+      PaymentDate: '2000-01-01',
+      balance: 50,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 3,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 300,
+      PaymentDate: '25-01-01',
+      balance: 40,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 4,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 40,
+      PaymentDate: '202-01-01',
+      balance: 30,
+      avatar: '',
+      avatarColor: 'primary'
+    },
+    {
+      id: 5,
+      invoiceStatus: 'Sent',
+      transactionid: '123456',
+
+      name: 'John Doe',
+      companyEmail: 'john.doe@example.com',
+      total: 50,
+      PaymentDate: '20-01-01',
+      balance: 0,
+      avatar: '',
+      avatarColor: 'primary'
+    }
+  ];
 
 
   return (
@@ -332,7 +398,8 @@ const SalaryTable = () => {
               autoHeight
               pagination
               rowHeight={62}
-              rows={TeachingStaffSalaries}
+              // rows={TeachingStaffSalaries}
+              rows={TeachingStaffSalariesdummyData}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}

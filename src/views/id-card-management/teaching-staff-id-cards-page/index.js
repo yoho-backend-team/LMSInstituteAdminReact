@@ -20,6 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { selectStaffIdCards, selectLoading } from 'features/id-card-management/staff-id-cards/redux/staffIdcardSelectors';
 
+import { getInitials } from 'utils/get-initials';
+
+
 const roleColors = {
   admin: 'error',
   editor: 'info',
@@ -64,6 +67,94 @@ const TeachingIdCard = () => {
   useEffect(() => {
     dispatch(getAllStaffIdCards(selectedBranchId));
   }, [dispatch, selectedBranchId]);
+
+
+  const data = [
+    {
+      id: 1,
+      role: 'admin',
+      status: 'active',
+      username: 'mdthasthakir',
+      country: 'El Salvador',
+      company: 'Yotz PVT LTD',
+      billing: 'Manual - Cash',
+      contact: '(479) 232-9151',
+      currentPlan: 'enterprise',
+      fullName: 'Mohammed Thasthakir',
+      email: 'gslixby0@abc.net.au',
+      avatar: 'https://weassist.io/wp-content/uploads/2022/11/Avatar-11-1.png'
+    },
+    {
+      id: 2,
+      role: 'user',
+      status: 'inactive',
+      username: 'johndoe123',
+      country: 'United States',
+      company: 'Tech Solutions Inc.',
+      billing: 'Credit Card',
+      contact: '(123) 456-7890',
+      currentPlan: 'basic',
+      fullName: 'John Doe',
+      email: 'johndoe@example.com',
+      avatar: 'https://example.com/avatar2.png'
+    },
+    {
+      id: 3,
+      role: 'manager',
+      status: 'active',
+      username: 'manager123',
+      country: 'United Kingdom',
+      company: 'ABC Corporation',
+      billing: 'PayPal',
+      contact: '(987) 654-3210',
+      currentPlan: 'premium',
+      fullName: 'Emma Johnson',
+      email: 'emma@example.com',
+      avatar: 'https://example.com/avatar3.png'
+    },
+    {
+      id: 4,
+      role: 'user',
+      status: 'active',
+      username: 'jsmith',
+      country: 'Canada',
+      company: 'XYZ Ltd.',
+      billing: 'Automatic - Credit Card',
+      contact: '(567) 890-1234',
+      currentPlan: 'standard',
+      fullName: 'Jane Smith',
+      email: 'jane.smith@example.com',
+      avatar: 'https://example.com/avatar4.png'
+    },
+    {
+      id: 5,
+      role: 'admin',
+      status: 'active',
+      username: 'adminuser',
+      country: 'Australia',
+      company: 'Acme Corp',
+      billing: 'Automatic - Bank Transfer',
+      contact: '(111) 222-3333',
+      currentPlan: 'enterprise',
+      fullName: 'Admin User',
+      email: 'admin@example.com',
+      avatar: 'https://example.com/avatar5.png'
+    },
+    {
+      id: 6,
+      role: 'manager',
+      status: 'inactive',
+      username: 'manager456',
+      country: 'France',
+      company: 'Tech Innovations',
+      billing: 'Manual - Check',
+      contact: '(444) 555-6666',
+      currentPlan: 'premium',
+      fullName: 'Louis Dupont',
+      email: 'louis@example.com',
+      avatar: 'https://example.com/avatar6.png'
+    }
+  ];
   return (
     <>
       <Grid>
@@ -76,7 +167,7 @@ const TeachingIdCard = () => {
                 <StaffFilterCard />
               </Grid>
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-              {StaffIdCards.map((item, index) => (
+              {data.map((item, index) => (
                   <Grid
                     key={index}
                     item
