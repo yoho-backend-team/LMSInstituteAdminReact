@@ -108,7 +108,7 @@ export const addCourse = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(response)
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Course created successfully' };
@@ -121,6 +121,28 @@ export const addCourse = async (data) => {
   }
 };
 
+export const getStudentByCourse = async (courseId) => {
+  try {
+    const response = await axios.get(`${COURSE_END_POINT}/get-by-course-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: { course_id: courseId }
+    });
+
+    console.log(response);
+
+    if (response.data.status) {
+      return response;
+    } else {
+      return { success: false, message: 'Failed to Fetch Active student' };
+    }
+  } catch (error) {
+    console.error('Error in Fetch Active student:', error);
+    throw error;
+  }
+};
 export const deleteCourse = async (courseId) => {
   try {
     const response = await axios.delete(`${COURSE_CATEGORY_END_POINT}/delete`, {

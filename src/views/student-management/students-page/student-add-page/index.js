@@ -223,10 +223,11 @@ const StepperLinearWithValidation = () => {
     const personalData = personalControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
-      data.append('first_name', personalData?.first_name);
-      data.append('last_name', personalData?.first_name);
-      data.append('email', personalData?.email);
-      data.append('phone_number', personalData?.phone);
+      const data = new FormData();
+      data.append('student_first_name', personalData?.first_name);
+      data.append('student_last_name', personalData?.first_name);
+      data.append('student_email', personalData?.email);
+      data.append('student_phone_no', personalData?.phone);
       data.append('alternate_number', personalData?.alt_phone);
       data.append('branch_id', personalData?.branch);
       data.append('course_id', personalData?.course);
@@ -236,7 +237,7 @@ const StepperLinearWithValidation = () => {
       data.append('address_line_2', personalData?.address_line_two);
       data.append('city', personalData?.city);
       data.append('state', personalData?.state);
-      data.append('pin_code', personalData?.pin_code);
+      data.append('pincode', personalData?.pin_code);
       data.append('dob', convertDateFormat(personalData?.date_of_birth));
       data.append('username', personalData?.username);
       data.append('education_qualification', personalData?.education_qualification);

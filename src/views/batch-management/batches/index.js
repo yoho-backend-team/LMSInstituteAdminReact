@@ -251,7 +251,7 @@ const Batch = () => {
           <CardContent>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ alignItems: 'center' }}>
-                <Typography variant="h4">{item.title}</Typography>
+                <Typography variant="h4">{item?.batch?.batch_name}</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
@@ -262,7 +262,7 @@ const Batch = () => {
               <Icon fontSize="1.25rem" icon="tabler:book" />
 
               <Typography sx={{ ml: 1 }} variant="h5">
-                React Web Development
+                {item?.batch?.batch_name}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
@@ -271,14 +271,14 @@ const Batch = () => {
                 <Typography sx={{ ml: 1 }} variant="h5">
                   Start Date
                 </Typography>
-                <Typography sx={{ color: 'text.secondary', ml: 1 }}>21 Jun 2024</Typography>
+                <Typography sx={{ color: 'text.secondary', ml: 1 }}>{item?.batch?.start_date}</Typography>
               </Box>
               <Icon fontSize="1.25rem" icon="tabler:calendar-month" />
               <Box sx={{ alignItems: 'center' }}>
                 <Typography sx={{ ml: 1 }} variant="h5">
                   End Date
                 </Typography>
-                <Typography sx={{ color: 'text.secondary', ml: 1 }}>21 Jun 2025</Typography>
+                <Typography sx={{ color: 'text.secondary', ml: 1 }}>{item?.batch?.end_date}</Typography>
               </Box>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>

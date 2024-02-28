@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 // ** React Imports
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,118 +13,151 @@ import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
 // ** Custom Component Import
 import { TextField as CustomTextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import CustomChip from 'components/mui/chip';
 import DatePicker from 'react-datepicker';
 import { addBatch } from 'features/batch-management/batches/services/batchServices';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
 
 
-const CustomInput = forwardRef((props, ref) => {
-  return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
-});
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const validationSchema = yup.object().shape({
-  batchName: yup.string().required('Batch Name is required'),
-  startDate: yup.date().required('Start Date is required'),
-  endDate: yup.date().required('End Date is required'),
-  branches: yup
-    .array()
-    .min(1, 'Please select at least one Branch')
-    .test({
-      name: 'atLeastOneBranch',
-      message: 'Please select at least one Branch',
-      test: (value) => value && value.length > 0
-    }),
-  course: yup.string().required('Course is required'),
-  students: yup
-    .array()
-    .min(1, 'Please select at least one Student')
-    .test({
-      name: 'atLeastOneStudent',
-      message: 'Please select at least one Student',
-      test: (value) => value && value.length > 0
-    })
-    .nullable()
-});
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
 
 const AddBatchPage = () => {
   // ** States
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [selectedBranches, setSelectedBranches] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
+  const [activeCourse, setActiveCourse] = useState([]);
 
-   const defaultValues = {
+  const CustomInput = forwardRef((props, ref) => {
+    return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
+  });
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        width: 250,
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+      }
+    }
+  };
+
+  const validationSchema = yup.object().shape({
+    batchName: yup.string().required('Batch Name is required'),
+    startDate: yup.date().required('Start Date is required'),
+    endDate: yup.date().required('End Date is required'),
+    branch: yup.string().required('Branch is required'),
+    course: yup.string().required('Course is required'),
+    students: yup
+      .array()
+      .min(1, 'Please select at least one Student')
+      .test({
+        name: 'atLeastOneStudent',
+        message: 'Please select at least one Student',
+        test: (value) => value && value.length > 0
+      })
+      .nullable()
+  });
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  console.log(selectedBranchId);
+
+  useEffect(() => {
+    getActiveCoursesByBranch(selectedBranchId);
+  }, [selectedBranchId]);
+
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
+
+    console.log('active courses : ', result.data);
+    setActiveCourse(result.data.data);
+  };
+
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
+  const [activeBranches, setActiveBranches] = useState([]);
+  const [activeStudents, setActiveStudents] = useState([]);
+
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log('active branches : ', result.data);
+    setActiveBranches(result.data.data);
+  };
+
+  const defaultValues = {
+    batchName: '',
     course: '',
-    branches: [],
+    branch: selectedBranchId,
     startDate: null,
     endDate: null,
     students: [],
-    batchName:''
   };
 
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { errors }
   } = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema)
   });
 
- 
   const handleClose = () => {
-    handleEditClose();
     reset();
   };
 
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
-
   const handleStudentsChange = (event) => {
-    setSelectedStudents(event.target.value);
+    setValue('students', event.target.value);
+    // const filteredStudent = activeStudents.filter((student) => student.student_id === event.target.value);
+    // console.log('filtered', filteredStudent);
+    const filteredStudent = activeStudents.filter(item => event.target.value.includes(item.student_id));
+    console.log('event', filteredStudent);
+    setSelectedStudents(filteredStudent);
   };
 
+  const getStudentByCourseId = async (courseId) => {
+    const result = await getStudentByCourse(courseId);
+    console.log(result.data.data);
+    setActiveStudents(result.data.data);
+  };
 
+  console.log('Active Students :', activeStudents);
+  console.log('Selected Students :', selectedStudents);
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
+    console.log(data);
     const inputData = {
-      batchName: data.batchName,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      branches: data.branches,
-      course: data.course,
-      students: data.students,
+      batch_name: data.batchName,
+      start_date: convertDateFormat(data.startDate),
+      end_date: convertDateFormat(data.endDate),
+      branch_id: data.branch,
+      course_id: data.course,
+      student_ids: data.students
     };
     const result = await addBatch(inputData);
 
@@ -140,18 +173,18 @@ const AddBatchPage = () => {
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
-
-   
   };
-  
+
   const handleStartDateChange = (date) => {
+    setValue('startDate', date);
     setStartDate(date);
   };
 
   const handleEndDateChange = (date) => {
+    setValue('endDate', date);
     setEndDate(date);
   };
-
+  console.log(activeStudents);
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
       <Grid item xs={12}>
@@ -171,67 +204,82 @@ const AddBatchPage = () => {
                     <Controller
                       name="batchName"
                       control={control}
-                      render={({ field }) => (
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
                         <CustomTextField
-                          {...field}
                           fullWidth
+                          value={value}
                           label="Batch Name"
-                          placeholder="carterLeonard"
-                          error={Boolean(errors.batchName)}
-                          helperText={errors.batchName?.message}
+                          onChange={onChange}
+                          placeholder="Leonard"
+                          error={Boolean(errors['batchName'])}
+                          aria-describedby="stepper-linear-personal-institute_batchName"
+                          {...(errors['batchName'] && { helperText: 'This field is required' })}
                         />
                       )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <DatePicker
-                      selected={startDate}
-                      showYearDropdown
-                      showMonthDropdown
-                      placeholderText="MM-DD-YYYY"
-                      customInput={
-                        <CustomInput label="Start Date" error={Boolean(errors.startDate)} helperText={errors.startDate?.message} />
-                      }
-                      id="form-layouts-separator-date"
-                      onChange={handleStartDateChange}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <DatePicker
-                      selected={endDate}
-                      showYearDropdown
-                      showMonthDropdown
-                      placeholderText="MM-DD-YYYY"
-                      customInput={<CustomInput label="End Date" error={Boolean(errors.endDate)} helperText={errors.endDate?.message} />}
-                      id="form-layouts-separator-date"
-                      onChange={handleEndDateChange}
+                    <Controller
+                      name="startDate"
+                      control={control}
+                      render={({ value }) => (
+                        <DatePicker
+                          selected={startDate}
+                          value={value}
+                          showYearDropdown
+                          showMonthDropdown
+                          placeholderText="MM-DD-YYYY"
+                          customInput={
+                            <CustomInput label="Start Date" error={Boolean(errors.startDate)} helperText={errors.startDate?.message} />
+                          }
+                          id="form-layouts-separator-date"
+                          onChange={handleStartDateChange}
+                        />
+                      )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Controller
-                      name="branches"
+                      name="endDate"
                       control={control}
-                      render={({ field }) => (
+                      render={({ value }) => (
+                        <DatePicker
+                          selected={endDate}
+                          value={value}
+                          showYearDropdown
+                          showMonthDropdown
+                          placeholderText="MM-DD-YYYY"
+                          customInput={
+                            <CustomInput label="End Date" error={Boolean(errors.endDate)} helperText={errors.endDate?.message} />
+                          }
+                          id="form-layouts-separator-date"
+                          onChange={handleEndDateChange}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="branch"
+                      control={control}
+                      render={({ value }) => (
                         <CustomTextField
-                          {...field}
+                          value={value}
+                          onChange={(e) => {
+                            setValue('branch', e.target.value);
+                            getActiveCoursesByBranch(e.target.value);
+                          }}
                           select
                           fullWidth
-                          label="Branch"
-                          id="select-multiple-checkbox"
-                          SelectProps={{
-                            MenuProps,
-                            multiple: true,
-                            value: selectedBranches,
-                            onChange: (e) => handleBranchChange(e),
-                            renderValue: (selected) => selected.join(', ')
-                          }}
-                          error={Boolean(errors.branches)}
-                          helperText={errors.branches?.message}
+                          label="branch"
+                          id="form-layouts-separator-select"
+                          error={Boolean(errors.branch)}
+                          helperText={errors.branch?.message}
                         >
-                          {names.map((name) => (
-                            <MenuItem key={name} value={name}>
-                              <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                              <ListItemText primary={name} />
+                          {activeBranches?.map((item, index) => (
+                            <MenuItem key={index} value={item.branch_id}>
+                              {item.branch_name}
                             </MenuItem>
                           ))}
                         </CustomTextField>
@@ -242,21 +290,25 @@ const AddBatchPage = () => {
                     <Controller
                       name="course"
                       control={control}
-                      render={({ field }) => (
+                      render={({ value }) => (
                         <CustomTextField
-                          {...field}
+                          value={value}
                           select
                           fullWidth
                           label="Course"
                           id="form-layouts-separator-select"
-                          defaultValue=""
                           error={Boolean(errors.course)}
                           helperText={errors.course?.message}
+                          onChange={(e) => {
+                            setValue('course', e.target.value);
+                            getStudentByCourseId(e.target.value);
+                          }}
                         >
-                          <MenuItem value="UK">UK</MenuItem>
-                          <MenuItem value="USA">USA</MenuItem>
-                          <MenuItem value="Australia">Australia</MenuItem>
-                          <MenuItem value="Germany">Germany</MenuItem>
+                          {activeCourse?.map((item, index) => (
+                            <MenuItem key={index} value={item.course_id}>
+                              {item.course_name}
+                            </MenuItem>
+                          ))}
                         </CustomTextField>
                       )}
                     />
@@ -265,9 +317,9 @@ const AddBatchPage = () => {
                     <Controller
                       name="students"
                       control={control}
-                      render={({ field }) => (
+                      render={({ value, }) => (
                         <CustomTextField
-                          {...field}
+                          value={value}
                           select
                           fullWidth
                           label="Students"
@@ -279,8 +331,8 @@ const AddBatchPage = () => {
                             onChange: (e) => handleStudentsChange(e),
                             renderValue: (selected) => (
                               <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                {selected.map((value) => (
-                                  <CustomChip key={value} label={value} sx={{ m: 0.75 }} skin="light" color="primary" />
+                                {selected.map((student) => (
+                                  <CustomChip key={student?.student_id} label={`${student?.first_name} ${student?.last_name}`} sx={{ m: 0.75 }} skin="light" color="primary" />
                                 ))}
                               </Box>
                             )
@@ -288,9 +340,9 @@ const AddBatchPage = () => {
                           error={Boolean(errors.students)}
                           helperText={errors.students?.message}
                         >
-                          {names.map((name) => (
-                            <MenuItem key={name} value={name}>
-                              {name}
+                          {activeStudents.map((student, index) => (
+                            <MenuItem key={index} value={student?.student_id}>
+                              {student?.first_name} {student?.last_name}
                             </MenuItem>
                           ))}
                         </CustomTextField>
