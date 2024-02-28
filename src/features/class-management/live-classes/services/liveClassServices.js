@@ -60,7 +60,7 @@ export const addLiveClass = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'LiveClass created successfully' };
     } else {

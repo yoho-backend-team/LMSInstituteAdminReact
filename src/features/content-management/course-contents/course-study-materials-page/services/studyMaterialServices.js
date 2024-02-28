@@ -54,7 +54,7 @@ export const addCourseStudyMaterial = async (data) => {
   try {
     const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
@@ -95,6 +95,26 @@ export const updateCourseStudyMaterial = async (data) => {
   try {
     const response = await axios.put(`${COURSE_STUDY_MATERIALS_END_POINT}/update`, data, {
       headers: {
+        // 'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'CourseStudyMaterial updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update CourseStudyMaterial' };
+    }
+  } catch (error) {
+    console.error('Error in updateCourseStudyMaterial:', error);
+    throw error;
+  }
+};
+export const updateCourseStudyMaterialStatus = async (data) => {
+  try {
+    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/status`, data, {
+      headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
@@ -102,9 +122,9 @@ export const updateCourseStudyMaterial = async (data) => {
 
     if (response.data.status) {
       console.log(response);
-      return { success: true, message: 'CourseStudyMaterial updated successfully' };
+      return { success: true, message: 'CourseStudyMaterial status updated successfully' };
     } else {
-      return { success: false, message: 'Failed to update CourseStudyMaterial' };
+      return { success: false, message: 'Failed to update CourseStudyMaterial status' };
     }
   } catch (error) {
     console.error('Error in updateCourseStudyMaterial:', error);

@@ -28,12 +28,12 @@ const StudyMaterialAddDrawer = (props) => {
 
   // ** State
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
-  const [activeCourse, setActiveCourse] = useState([]);
 
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
 
+  const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
   }, [selectedBranchId]);

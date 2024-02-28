@@ -30,6 +30,33 @@ export const getAllTeachingStaffs = async (data) => {
     throw error;
   }
 };
+export const getAllActiveStaffs = async (data) => {
+  try {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllTeachingStaffs:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
 
 export const searchTeachingStaffs = async (searchQuery) => {
   try {
@@ -56,7 +83,7 @@ export const addTeachingStaff = async (data) => {
   try {
     const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });

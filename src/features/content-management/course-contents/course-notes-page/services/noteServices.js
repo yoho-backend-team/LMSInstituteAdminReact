@@ -54,7 +54,7 @@ export const addCourseNote = async (data) => {
   try {
     const response = await axios.post(`${COURSE_NOTE_API_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });

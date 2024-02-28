@@ -32,7 +32,7 @@ const defaultValues = {
   course: ''
 };
 
-const CategoryAddModal = ({ open, handleAddClose }) => {
+const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const image =
     'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
@@ -98,6 +98,7 @@ const CategoryAddModal = ({ open, handleAddClose }) => {
     if (result.success) {
       reset();
       handleAddClose();
+      setCategoryRefetch((state) => !state);
       toast.success(result.message);
     } else {
       toast.error(result.message);

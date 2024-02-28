@@ -1,92 +1,19 @@
-/**
- * Color intention that you want to used in your theme
- * @param {JsonObject} theme Theme customization object
- */
-
-// export default function themePalette(theme) {
-//   return {
-//     mode: theme?.customization?.navType,
-//     common: {
-//       black: theme.colors?.darkPaper
-//     },
-//     primary: {
-//       light: theme.colors?.primaryLight,
-//       main: theme.colors?.primaryMain,
-//       dark: theme.colors?.primaryDark,
-//       200: theme.colors?.primary200,
-//       800: theme.colors?.primary800
-//     },
-//     secondary: {
-//       light: theme.colors?.secondaryLight,
-//       main: theme.colors?.secondaryMain,
-//       dark: theme.colors?.secondaryDark,
-//       200: theme.colors?.secondary200,
-//       800: theme.colors?.secondary800
-//     },
-//     error: {
-//       light: theme.colors?.errorLight,
-//       main: theme.colors?.errorMain,
-//       dark: theme.colors?.errorDark
-//     },
-//     orange: {
-//       light: theme.colors?.orangeLight,
-//       main: theme.colors?.orangeMain,
-//       dark: theme.colors?.orangeDark
-//     },
-//     warning: {
-//       light: theme.colors?.warningLight,
-//       main: theme.colors?.warningMain,
-//       dark: theme.colors?.warningDark
-//     },
-//     success: {
-//       light: theme.colors?.successLight,
-//       200: theme.colors?.success200,
-//       main: theme.colors?.successMain,
-//       dark: theme.colors?.successDark
-//     },
-//     grey: {
-//       50: theme.colors?.grey50,
-//       100: theme.colors?.grey100,
-//       500: theme.darkTextSecondary,
-//       600: theme.heading,
-//       700: theme.darkTextPrimary,
-//       900: theme.textDark
-//     },
-//     dark: {
-//       light: theme.colors?.darkTextPrimary,
-//       main: theme.colors?.darkLevel1,
-//       dark: theme.colors?.darkLevel2,
-//       800: theme.colors?.darkBackground,
-//       900: theme.colors?.darkPaper
-//     },
-//     text: {
-//       primary: theme.darkTextPrimary,
-//       secondary: theme.darkTextSecondary,
-//       dark: theme.textDark,
-//       hint: theme.colors?.grey100
-//     },
-//     background: {
-//       paper: theme.paper,
-//       default: theme.backgroundDefault
-//     }
-//   };
-// }
 
 import { useSelector } from 'react-redux';
-import tinycolor from 'tinycolor2';
+// import tinycolor from 'tinycolor2';
 const DefaultPalette = () => {
-  const generatePrimaryObject = (primaryColor) => {
-    const color = tinycolor(primaryColor);
+  // const generatePrimaryObject = (primaryColor) => {
+  //   const color = tinycolor(primaryColor);
 
-    return {
-      light: color.lighten(20).toHexString(),
-      main: primaryColor,
-      dark: color.darken(40).toHexString(),
-      800: color.darken(40).toHexString(),
-      200: color.lighten(60).toHexString(),
-      contrastText: '#FFF'
-    };
-  };
+  //   return {
+  //     light: color.lighten(20).toHexString(),
+  //     main: primaryColor,
+  //     dark: color.darken(40).toHexString(),
+  //     800: color.darken(40).toHexString(),
+  //     200: color.lighten(60).toHexString(),
+  //     contrastText: '#FFF'
+  //   };
+  // };
   // ** Vars
 
   const isDarkMode = useSelector((state) => state.customization.darkMode);
@@ -98,8 +25,8 @@ const DefaultPalette = () => {
   const darkPaperBgColor = '#2F3349';
   const mainColor = mode === 'light' ? lightColor : darkColor;
 
-  const primary = generatePrimaryObject('#D80032');
-  const secondary = generatePrimaryObject('#F79BD3');
+  // const primary = generatePrimaryObject('#D80032');
+  // const secondary = generatePrimaryObject('#F79BD3');
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor;
@@ -127,24 +54,24 @@ const DefaultPalette = () => {
       black: '#000',
       white: whiteColor
     },
-    primary: primary,
-    // primary: {
-    //   light: '#e3e1fc',
-    //   main: '#7367F0',
-    //   dark: '#655BD3',
-    //   800: '#2e2960',
-    //   200: '#c7c2f9',
-    //   contrastText: whiteColor
-    // },
-    // secondary: {
-    //   light: '#d3eafd',
-    //   200: '#a6d5fa',
-    //   main: '#2196f3',
-    //   dark: '#1e88e5',
-    //   800: '#0d3c61',
-    //   contrastText: whiteColor
-    // },
-    secondary: secondary,
+    // primary: primary,
+    primary: {
+      light: '#e3e1fc',
+      main: '#7367F0',
+      dark: '#655BD3',
+      800: '#2e2960',
+      200: '#c7c2f9',
+      contrastText: whiteColor
+    },
+    secondary: {
+      light: '#d3eafd',
+      200: '#a6d5fa',
+      main: '#2196f3',
+      dark: '#1e88e5',
+      800: '#0d3c61',
+      contrastText: whiteColor
+    },
+    // secondary: secondary,
 
     error: {
       light: '#ED6F70',

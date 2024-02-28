@@ -7,33 +7,28 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Avatar from 'components/mui/avatar';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { getAllNonTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceThunks';
-import { selectnONTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceSelectors';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useEffect } from 'react';
+// import { getAllNonTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceThunks';
+// import { selectnONTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceSelectors';
 
-const NonTeachingStaffCard = () => {
-  const dispatch = useDispatch();
-  const nonTeachingStaffAttendances = useSelector(selectnONTeachingStaffAttendances);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  useEffect(() => {
-    dispatch(getAllNonTeachingStaffAttendances(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
+
 
   return (
     <>
       <Grid>
-        <Grid container xs={12} spacing={2} mt={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-          {nonTeachingStaffAttendances.map((item, i) => (
+        <Grid container xs={12} spacing={2} mt={2} sx={{ display: 'flex', }}>
+          {nonTeachingStaffs.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
               <Card sx={{ position: 'relative', p: 1.5 }}>
                 <CardContent sx={{ pt: 2.5 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                     <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
                     <Typography variant="h4" sx={{ mb: 1 }}>
-                      {item.name}
+                      {item.staff?.staff_name}
                     </Typography>
-                    <Typography variant="h6">{item.email}</Typography>
+                    <Typography variant="h6">{item.staff.email}</Typography>
 
                     <Box
                       sx={{
@@ -60,7 +55,7 @@ const NonTeachingStaffCard = () => {
                       sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
                     >
                       <Grid>
-                        <Button component={Link} to={item.id} variant="tonal" sx={{ px: 4 }}>
+                        <Button component={Link} to={item.staff.id} variant="tonal" sx={{ px: 4 }}>
                           View Attendance
                         </Button>
                       </Grid>

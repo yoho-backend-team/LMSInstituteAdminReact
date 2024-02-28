@@ -155,7 +155,7 @@ const NonTeaching = () => {
                 <Card sx={{ position: 'relative' }}>
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
+                      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item.image}`} sx={{ mb: 2, width: 100, height: 100 }} />
                       <Typography variant="h4" sx={{ mb: 1 }}>
                         {item.staff?.staff_name}
                       </Typography>

@@ -55,7 +55,7 @@ export const addNonTeachingStaff = async (data) => {
   try {
     const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });

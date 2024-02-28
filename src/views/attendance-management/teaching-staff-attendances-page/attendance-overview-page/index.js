@@ -6,6 +6,9 @@ import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkelet
 import TeachingStaffCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCard';
 import TeachingStaffFilterCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffFilterCard';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -22,21 +25,33 @@ const TeachingStaff = () => {
     setLoading(false);
   }, 1000);
 
+  const teachingStaffs = useSelector(selectTeachingStaffs);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const data = {
+      type: "teaching",
+      branch_id: selectedBranchId
+    }
+    dispatch(getAllTeachingStaffs(data));
+  }, [dispatch, selectedBranchId]);
+
   return (
     <>
-    {loading ? (
-      <TeachingStaffSkeleton />
-    ) : (
-    <Grid>
-      <TeachingStaffFilterCard />
-      <Grid className="match-height">
-        <TeachingStaffCard />
-      </Grid>
-      <Grid sx={{mt:2,display:"flex",justifyContent:"flex-end"}} >
-      <Pagination count={10} color='primary' />
-      </Grid>
-    </Grid>
-    )}
+      {loading ? (
+        <TeachingStaffSkeleton />
+      ) : (
+        <Grid>
+          <TeachingStaffFilterCard />
+          <Grid className="match-height">
+            <TeachingStaffCard teachingStaffs={teachingStaffs} />
+          </Grid>
+          <Grid sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }} >
+            <Pagination count={10} color='primary' />
+          </Grid>
+        </Grid>
+      )}
     </>
   );
 };

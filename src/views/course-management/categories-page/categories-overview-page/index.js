@@ -29,11 +29,11 @@ const Categories = () => {
         <div>
           <Grid item xs={12} sm={12}>
             <CategoryFilter />
-            <CategoryCardHeader />
+            <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
           </Grid>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
             {courseCategories?.data?.map((category, index) => (
-              <CategoryCard key={index} category={category} setCategoryRefetch={ setCategoryRefetch} />
+              <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
             ))}
           </Grid>
         </div>

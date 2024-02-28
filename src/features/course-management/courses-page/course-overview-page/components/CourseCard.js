@@ -45,7 +45,7 @@ const CourseCard = (props) => {
           <Box>
             <CustomChip
               skin="light"
-              label={course?.course_categories?.course_category_name}
+              label={course?.course?.course_categories?.category_name}
               rounded
               color="secondary"
               size="small"

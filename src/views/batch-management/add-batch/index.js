@@ -31,6 +31,7 @@ const AddBatchPage = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
+  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
 
   const CustomInput = forwardRef((props, ref) => {
@@ -135,9 +136,13 @@ const AddBatchPage = () => {
     setValue('students', event.target.value);
     // const filteredStudent = activeStudents.filter((student) => student.student_id === event.target.value);
     // console.log('filtered', filteredStudent);
-    const filteredStudent = activeStudents.filter(item => event.target.value.includes(item.student_id));
-    console.log('event', filteredStudent);
-    setSelectedStudents(filteredStudent);
+    // const filteredStudent = activeStudents.filter(item => event.target.value.includes(item.student_id));
+    const filteredStudents = activeStudents.filter(student => event.target.value.includes(student.student_id));
+
+    console.log('event', event.target.value);
+    console.log('filter', filteredStudents);
+    setSelectedStudentIds(event.target.value);
+    setSelectedStudents(filteredStudents);
   };
 
   const getStudentByCourseId = async (courseId) => {
@@ -327,11 +332,11 @@ const AddBatchPage = () => {
                           SelectProps={{
                             MenuProps,
                             multiple: true,
-                            value: selectedStudents,
+                            value: selectedStudentIds,
                             onChange: (e) => handleStudentsChange(e),
-                            renderValue: (selected) => (
+                            renderValue: () => (
                               <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                {selected.map((student) => (
+                                {selectedStudents.map((student) => (
                                   <CustomChip key={student?.student_id} label={`${student?.first_name} ${student?.last_name}`} sx={{ m: 0.75 }} skin="light" color="primary" />
                                 ))}
                               </Box>

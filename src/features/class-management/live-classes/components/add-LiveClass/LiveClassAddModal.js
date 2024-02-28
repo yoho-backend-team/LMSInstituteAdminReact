@@ -12,13 +12,18 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 // import format from 'date-fns/format';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addLiveClass } from '../../services/liveClassServices';
-
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useSelector } from 'react-redux';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import toast from 'react-hot-toast';
 /* eslint-disable */
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -28,40 +33,7 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
 
-const schema = yup.object().shape({
-  course: yup
-    .string()
-    .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-    .required('Course field is required'),
-  batch:yup.string().required('Batch field is required') ,
-  selectcourse:yup.string().required('Course field is required'),
-  classDate: yup.date().nullable().required('Class Date field is required'),
-  startTime: yup.date().nullable().required('Start Time field is required'),
-  endTime: yup.date().nullable().required('End Time field is required'),
-  instructor: yup.string().required('Instructor field is required'),
-  videoUrl: yup.string().required('VideoUrl field is required')
-});
-
-const defaultValues = {
-  course: '',
-  batch: '',
-  selectcourse:"",
-  classDate: new Date(),
-  startTime: null,
-  endTime: null,
-  instructor: '',
-  videoUrl: ''
-};
 
 const LiveClassAddModal = ({ open, handleAddClose }) => {
   const [personName, setPersonName] = useState([]);
@@ -70,6 +42,57 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [activeBranches, setActiveBranches] = useState([]);
+  const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
+  const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log("active branches : ", result.data);
+    setActiveBranches(result.data.data);
+  };
+
+  const [activeCourse, setActiveCourse] = useState([]);
+  const [activeBatches, setActiveBatches] = useState([]);
+  useEffect(() => {
+    getActiveCoursesByBranch(selectedBranchId);
+    getActiveTeachingStaffs(selectedBranchId);
+    getActiveNonTeachingStaffs(selectedBranchId);
+  }, [selectedBranchId]);
+
+
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
+
+    console.log("active courses : ", result.data);
+    setActiveCourse(result.data.data);
+  };
+  const getActiveTeachingStaffs = async (selectedBranchId) => {
+    const data = { type: 'teaching', branch_id: selectedBranchId }
+    const result = await getAllActiveStaffs(data);
+
+    console.log("active teaching staffs : ", result.data);
+    setActiveTeachingStaff(result.data.data);
+  };
+  const getActiveNonTeachingStaffs = async (selectedBranchId) => {
+    const data = { type: 'non_teaching', branch_id: selectedBranchId }
+    const result = await getAllActiveStaffs(data);
+
+    console.log("active non teaching staffs : ", result.data);
+    setActiveNonTeachingStaff(result.data.data);
+  };
+  const getActiveBatchesByCourse = async (courseId) => {
+    const data = { course_id: courseId }
+    const result = await getAllActiveBatchesByCourse(data);
+
+    console.log("active batches : ", result.data);
+    setActiveBatches(result.data.data);
+  };
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);
@@ -107,6 +130,47 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     { id: '2', name: 'Course 2' },
     { id: '3', name: 'Course 3' }
   ];
+
+
+
+  const showErrors = (field, valueLen, min) => {
+    if (valueLen === 0) {
+      return `${field} field is required`;
+    } else if (valueLen > 0 && valueLen < min) {
+      return `${field} must be at least ${min} characters`;
+    } else {
+      return '';
+    }
+  };
+
+  const schema = yup.object().shape({
+    class_name: yup
+      .string()
+      .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
+      .required('Course field is required'),
+    branch: yup.string().required('Branch field is required'),
+    course: yup.string().required('Course field is required'),
+    batch: yup.string().required('Batch field is required'),
+    classDate: yup.date().nullable().required('Class Date field is required'),
+    startTime: yup.date().nullable().required('Start Time field is required'),
+    endTime: yup.date().nullable().required('End Time field is required'),
+    // instructor: yup.array().required('Instructor field is required'),
+    // coordinator: yup.array().required('Instructor field is required'),
+    videoUrl: yup.string().required('VideoUrl field is required')
+  });
+
+  const defaultValues = {
+    class_name: '',
+    branch: selectedBranchId,
+    course: "",
+    batch: '',
+    classDate: new Date(),
+    startTime: null,
+    endTime: null,
+    instructor: [],
+    coordinator: [],
+    videoUrl: ''
+  };
   const {
     reset,
     control,
@@ -120,15 +184,16 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   });
 
   const handleClose = () => {
+    setValue('class_name', '');
+    setValue('branch', '');
     setValue('course', '');
-    setValue('selectcourse', '');
-    setValue('videoUrl', '');
     setValue('batch', '');
+    setValue('videoUrl', '');
     setValue('classDate', null);
     setValue('startTime', null);
     setValue('endTime', null);
-    setValue('instructor', '');
-    setValue('teacher', []);
+    setValue('instructor', []);
+    setValue('coordinator', []);
     handleAddClose();
     reset();
   };
@@ -159,18 +224,38 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   ];
 
   const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
 
   const onSubmit = async (data) => {
     console.log(data);
+
+    const filteredInstructorId = data.instructor?.map((staff) => staff.staff_id);
+    const filteredCoordinatorId = data.coordinator?.map((staff) => staff.staff_id);
     const dummyData = {
-      selectcourse: data.selectcourse,
-      course: data.course,
-      batch: data.batch,
-      classDate: data.classDate,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      instructor: data.instructor,
-      videoUrl: data.videoUrl
+      class_name: data.class_name,
+      branch_id: data.branch,
+      course_id: data.course,
+      batch_id: data.batch,
+      class_date: convertDateFormat(data.classDate),
+      start_time: data.startTime,
+      end_time: data.endTime,
+      instructor_staff_ids: filteredInstructorId,
+      coordinator_staff_ids: filteredCoordinatorId,
+      class_link: data.videoUrl,
+      type: 'live',
+      status: 'pending',
     };
 
     try {
@@ -178,7 +263,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
 
       if (result.success) {
         toast.success(result.message);
-        navigate(-1);
       } else {
         toast.error(result.message);
       }
@@ -219,27 +303,64 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Controller
-                  name="course"
+                  name="class_name"
                   control={control}
-                  rules={{ required: 'Course field is required' }}
+                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
                       value={value}
-                      label="Course Name"
+                      label="Class Name"
                       onChange={onChange}
                       placeholder="John Doe"
-                      error={Boolean(errors.course)}
-                      {...(errors.course && { helperText: errors.course.message })}
+                      error={Boolean(errors.class_name)}
+                      {...(errors.class_name && { helperText: errors.class_name.message })}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Controller
-                  name="selectcourse"
+                  name="branch"
                   control={control}
-                  rules={{ required: 'Extra Course field is required' }}
+                  rules={{ required: 'Branch field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      fullWidth
+                      select
+                      SelectProps={{
+                        MenuProps: Object.assign(MenuProps, {
+                          PaperProps: {
+                            style: {
+                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                              width: 250,
+                            },
+                          },
+                        }),
+                      }}
+                      label="Select Branch"
+                      value={value}
+                      onChange={(e) => {
+                        setValue('branch', e.target.value);
+                        getActiveCoursesByBranch(e.target.value);
+                      }}
+                      error={Boolean(errors.branch)}
+                      helperText={errors.branch?.message}
+                    >
+                      {activeBranches.map((branch) => (
+                        <MenuItem key={branch.branch_id} value={branch.branch_id}>
+                          {branch.branch_name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  name="course"
+                  control={control}
+                  rules={{ required: 'Course field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
@@ -257,13 +378,16 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                       label="Select Course"
                       id="select-single-course-extra"
                       value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.selectcourse)}
-                      helperText={errors.selectcourse?.message}
+                      onChange={(e) => {
+                        setValue('course', e.target.value)
+                        getActiveBatchesByCourse(e.target.value);
+                      }}
+                      error={Boolean(errors.course)}
+                      helperText={errors.course?.message}
                     >
-                      {courses.map((course) => (
-                        <MenuItem key={course.id} value={course.name}>
-                          {course.name}
+                      {activeCourse.map((course) => (
+                        <MenuItem key={course.course_id} value={course.course_id}>
+                          {course.course_name}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -296,9 +420,9 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                       error={Boolean(errors.batch)}
                       helperText={errors.batch?.message}
                     >
-                      {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          {name}
+                      {activeBatches.map((batch) => (
+                        <MenuItem key={batch.batch_id} value={batch.batch_id}>
+                          {batch.batch_name}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -387,14 +511,16 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ instructor_id: 'selectAll', instructor_name: 'Select All' }, ...instructors]}
-                  getOptionLabel={(option) => option.instructor_name}
+                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.staff_name}
                   value={selectedInstructors}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.instructor_id === 'selectAll')) {
-                      setSelectedInstructors(instructors.filter((option) => option.instructor_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                      setValue('instructor', activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'))
                     } else {
                       setSelectedInstructors(newValue);
+                      setValue('instructor', newValue)
                     }
                   }}
                   renderInput={(params) => (
@@ -416,19 +542,20 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.instructor_name}
+                      {option.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.instructor_id}
-                          label={option.instructor_name}
+                          key={option.staff_id}
+                          label={option.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
+                            setValue('instructor', updatedValue)
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -436,7 +563,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.instructor_id === value.instructor_id}
+                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
@@ -447,14 +574,17 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ coordinate_id: 'selectAll', coordinate_name: 'Select All' }, ...coordinates]}
+                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
                   getOptionLabel={(option) => option.coordinate_name}
                   value={selectedCoordinates}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.coordinate_id === 'selectAll')) {
-                      setSelectedCoordinates(coordinates.filter((option) => option.coordinate_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                      setValue('coordinator', activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'))
+
                     } else {
                       setSelectedCoordinates(newValue);
+                      setValue('coordinator', newValue)
                     }
                   }}
                   renderInput={(params) => (
@@ -476,19 +606,20 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.coordinate_name}
+                      {option.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.coordinate_id}
-                          label={option.coordinate_name}
+                          key={option.staff_id}
+                          label={option.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
+                            setValue('coordinator', updatedValue)
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -496,7 +627,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.coordinate_id === value.coordinate_id}
+                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
