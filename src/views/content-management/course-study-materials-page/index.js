@@ -127,7 +127,7 @@ const StudyMaterials = () => {
 
   const columns = [
     {
-      flex: 0.8,
+      flex: 0.6,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -139,7 +139,7 @@ const StudyMaterials = () => {
       }
     },
     {
-      flex: 1.5,
+      flex: 1.8,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -149,7 +149,7 @@ const StudyMaterials = () => {
               <Typography
                 noWrap
                 sx={{
-                  fontWeight: 500,
+                  fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
                   '&:hover': { color: 'primary.main' }
@@ -157,20 +157,11 @@ const StudyMaterials = () => {
               >
                 {row?.title}
               </Typography>
+              <Typography noWrap sx={{ color: 'text.secondary',fontSize:"0.75rem" ,mt:1}}>
+                {row?.description}
+              </Typography>
             </Box>
           </Box>
-        );
-      }
-    },
-    {
-      flex: 1,
-      field: 'description',
-      headerName: 'Description',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.description}
-          </Typography>
         );
       }
     },
