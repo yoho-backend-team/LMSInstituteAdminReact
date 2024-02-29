@@ -47,7 +47,6 @@ const AppCalendar = () => {
   const dispatch = useDispatch();
   const store = useSelector((state) => state.calendar);
 
-
   // ** Vars
   const leftSidebarWidth = 300;
   const addEventSidebarWidth = 400;

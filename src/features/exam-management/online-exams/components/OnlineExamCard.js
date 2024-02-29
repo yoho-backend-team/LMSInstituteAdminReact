@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -16,9 +16,9 @@ import { useState } from 'react';
 import OnlineExamEditModal from './edit-OnlineExam/OnlineExamEditModal';
 
 const OnlineExamCard = () => {
- // const [copiedIndex, setCopiedIndex] = useState(null);
+  // const [copiedIndex, setCopiedIndex] = useState(null);
 
- const cardData = [
+  const cardData = [
     // Add your card data here
     // For example:
     {
@@ -98,7 +98,6 @@ const OnlineExamCard = () => {
     }
     // Add more card data as needed
   ];
-
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const handleEditClose = () => {
@@ -204,16 +203,9 @@ const OnlineExamCard = () => {
           </Card>
         </Grid>
       ))}
-       <OnlineExamEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+      <OnlineExamEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
     </Grid>
   );
-}
+};
 
-export default OnlineExamCard
-
-
-
-
-
-
-
+export default OnlineExamCard;

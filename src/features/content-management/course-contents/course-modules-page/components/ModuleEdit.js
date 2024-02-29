@@ -140,7 +140,6 @@ const ModuleEdit = (props) => {
     }
   }, [open, reset, props.initialValues]);
 
-
   const onSubmit = async (data) => {
     console.log(data);
     const dummyData = {
@@ -148,7 +147,7 @@ const ModuleEdit = (props) => {
       course: data.course,
       title: data.title,
       description: data.description,
-      videourl: data.Videourl,
+      videourl: data.Videourl
     };
     const result = await updateCourseModule(dummyData);
 
@@ -164,8 +163,6 @@ const ModuleEdit = (props) => {
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
-
-
   };
 
   const handleClose = () => {

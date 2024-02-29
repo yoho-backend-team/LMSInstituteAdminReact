@@ -48,21 +48,21 @@ const showErrors = (field, valueLen, min) => {
 
 const schema = yup.object().shape({
   course: yup
-  .string()
-  .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-  .required('Course field is required'),
-batch:yup.string().required('Batch field is required') ,
-selectcourse:yup.string().required('Course field is required'),
-classDate: yup.date().nullable().required('Class Date field is required'),
-startTime: yup.date().nullable().required('Start Time field is required'),
-endTime: yup.date().nullable().required('End Time field is required'),
-instructor: yup.string().required('Instructor field is required'),
+    .string()
+    .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
+    .required('Course field is required'),
+  batch: yup.string().required('Batch field is required'),
+  selectcourse: yup.string().required('Course field is required'),
+  classDate: yup.date().nullable().required('Class Date field is required'),
+  startTime: yup.date().nullable().required('Start Time field is required'),
+  endTime: yup.date().nullable().required('End Time field is required'),
+  instructor: yup.string().required('Instructor field is required'),
 });
 
 const defaultValues = {
   course: '',
   batch: '',
-  selectcourse:"",
+  selectcourse: "",
   classDate: new Date(),
   startTime: null,
   endTime: null,
@@ -192,7 +192,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, }) => {
     { id: 2, name: 'Course 2' },
     { id: 3, name: 'Course 3' },
   ];
-  
+
   return (
     <Dialog
       open={open}
@@ -221,7 +221,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, }) => {
         }}
       >
         <DatePickerWrapper>
-        <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Controller

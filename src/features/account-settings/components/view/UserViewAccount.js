@@ -92,7 +92,7 @@ const UserViewAccount = () => {
                 sx={{ width: 100, height: 100, mb: 4 }}
               />
             ) : (
-              <CustomAvatar 
+              <CustomAvatar
                 skin='light'
                 variant='rounded'
                 color={data.avatarColor}
@@ -103,7 +103,7 @@ const UserViewAccount = () => {
             )}
             <Typography variant='h4' sx={{ mb: 3 }}>
               {data.fullName}
-            </Typography> 
+            </Typography>
             <CustomChip
               rounded
               skin='light'

@@ -111,7 +111,9 @@ const LiveClassCard = () => {
                   }}
                 >
                   <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="h3" sx={{ flexShrink: 1 }}>{card?.class_name}</Typography>
+                    <Typography variant="h3" sx={{ flexShrink: 1 }}>
+                      {card?.class_name}
+                    </Typography>
                     <Typography variant="body2">{card?.location}</Typography>
                   </Box>
 
@@ -158,7 +160,7 @@ const LiveClassCard = () => {
                 </Box>
                 <Divider sx={{ my: 2 }} />
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box sx={{ mt: 1, alignItems: 'center', display: 'flex', }}>
+                  <Box sx={{ mt: 1, alignItems: 'center', display: 'flex' }}>
                     <IconButton
                       onClick={() => handleCopyLink(card.class_link)}
                       sx={{ marginLeft: 'auto', color: 'primary.main' }}

@@ -120,15 +120,15 @@ const ChatLog = (props) => {
               }}
               {...(data.contact.avatar && !isSender
                 ? {
-                    src: data.contact.avatar,
-                    alt: data.contact.fullName
-                  }
+                  src: data.contact.avatar,
+                  alt: data.contact.fullName
+                }
                 : {})}
               {...(isSender
                 ? {
-                    src: data.userContact.avatar,
-                    alt: data.userContact.fullName
-                  }
+                  src: data.userContact.avatar,
+                  alt: data.userContact.fullName
+                }
                 : {})}
             >
               {data.contact.avatarColor ? getInitials(data.contact.fullName) : null}

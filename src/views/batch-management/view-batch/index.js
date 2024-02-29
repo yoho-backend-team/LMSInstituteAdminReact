@@ -29,7 +29,6 @@ const ViewBatch = () => {
           <Grid item xs={12} sm={12}>
             <HeaderCard />
           </Grid>
-         
 
           <Grid item xs={12}>
             <ViewBatchTable />

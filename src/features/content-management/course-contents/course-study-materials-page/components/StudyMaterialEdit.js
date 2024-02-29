@@ -164,7 +164,6 @@ const StudyMaterialEdit = (props) => {
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
-
   };
 
   const handleClose = () => {

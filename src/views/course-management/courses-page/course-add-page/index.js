@@ -104,7 +104,7 @@ const AddCoursePage = () => {
     }
   };
 
-  console.log("course Categories : ", activeCategories);
+  console.log('course Categories : ', activeCategories);
 
   useEffect(() => {
     getAllCategories();
@@ -191,7 +191,7 @@ const AddCoursePage = () => {
     }
   };
 
-  const getStepContent = (step) => {
+  function getStepContent(step) {
     switch (step) {
       case 0:
         return (
@@ -299,7 +299,8 @@ const AddCoursePage = () => {
                             style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                           }}
                         />
-                      )} />
+                      )}
+                    />
                   )}
                   renderOption={(props, option, { selected }) => (
                     <li {...props}>
@@ -352,12 +353,11 @@ const AddCoursePage = () => {
                       aria-describedby="stepper-linear-personal-course_category"
                       {...(courseErrors['course_category'] && { helperText: 'This field is required' })}
                     >
-                      {
-                        activeCategories?.map((item, index) => (
-                          <MenuItem key={index} value={item.category_id}>{item.category_name}</MenuItem>
-                        ))
-                      }
-
+                      {activeCategories?.map((item, index) => (
+                        <MenuItem key={index} value={item.category_id}>
+                          {item.category_name}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 />
@@ -458,9 +458,9 @@ const AddCoursePage = () => {
       default:
         return null;
     }
-  };
+  }
 
-  const renderContent = () => {
+  function renderContent() {
     if (activeStep === steps.length) {
       return (
         <Fragment>
@@ -475,7 +475,7 @@ const AddCoursePage = () => {
     } else {
       return getStepContent(activeStep);
     }
-  };
+  }
 
   return (
     <Card>

@@ -31,10 +31,7 @@ const NavCollapse = ({ menu, level }) => {
     }
   };
   const theme = useTheme();
-  console.log(selected);
-
   const { pathname } = useLocation();
-  console.log(pathname);
   const checkOpenForParent = (child, id) => {
     child.forEach((item) => {
       if (item.url === pathname) {

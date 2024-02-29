@@ -103,7 +103,6 @@ const FeesTable = () => {
     console.log('Toggle drawer');
   };
 
-
   // ** Hooks
   const handleFilter = (val) => {
     setValue(val);
@@ -197,9 +196,7 @@ const FeesTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return (
-          <Typography>{row.status}</Typography>
-        );
+        return <Typography>{row.status}</Typography>;
       }
     }
   ];

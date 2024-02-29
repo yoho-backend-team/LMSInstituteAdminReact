@@ -42,7 +42,6 @@ const LiveClassCard = () => {
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
     const date = new Date(timestamp);
@@ -108,7 +107,9 @@ const LiveClassCard = () => {
                   }}
                 >
                   <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="h3" sx={{ flexShrink: 1 }}>{card?.class_name}</Typography>
+                    <Typography variant="h3" sx={{ flexShrink: 1 }}>
+                      {card?.class_name}
+                    </Typography>
                     <Typography variant="body2">{card?.location}</Typography>
                   </Box>
 

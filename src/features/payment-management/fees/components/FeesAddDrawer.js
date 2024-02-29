@@ -87,27 +87,27 @@ const FeesAddDrawer = (props) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log("active branches : ", result.data);
+    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
 
-    console.log("active courses : ", result.data);
+    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId }
+    const data = { course_id: courseId };
     const result = await getAllActiveBatchesByCourse(data);
 
-    console.log("active batches : ", result.data);
+    console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
   const getActiveStudentByBatch = async (courseId) => {
-    const data = { batch_id: courseId }
+    const data = { batch_id: courseId };
     const result = await getAllStudentsByBatch(data);
 
-    console.log("active students : ", result.data);
+    console.log('active students : ', result.data);
     setActiveStudents(result.data.data);
   };
 
@@ -137,7 +137,7 @@ const FeesAddDrawer = (props) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);
@@ -252,7 +252,6 @@ const FeesAddDrawer = (props) => {
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="branch"
-
                 control={control}
                 rules={{ required: 'Branch field is required' }}
                 render={({ field: { value } }) => (
@@ -264,10 +263,10 @@ const FeesAddDrawer = (props) => {
                         PaperProps: {
                           style: {
                             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
+                            width: 250
+                          }
+                        }
+                      })
                     }}
                     label="Select Branch"
                     value={value}
@@ -301,16 +300,16 @@ const FeesAddDrawer = (props) => {
                         PaperProps: {
                           style: {
                             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
+                            width: 250
+                          }
+                        }
+                      })
                     }}
                     label="Select Course"
                     id="select-single-course-extra"
                     value={value}
                     onChange={(e) => {
-                      setValue('course', e.target.value)
+                      setValue('course', e.target.value);
                       getActiveBatchesByCourse(e.target.value);
                     }}
                     error={Boolean(errors.course)}
@@ -339,16 +338,16 @@ const FeesAddDrawer = (props) => {
                         PaperProps: {
                           style: {
                             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
+                            width: 250
+                          }
+                        }
+                      })
                     }}
                     label="Batch"
                     id="select-single-batch"
                     value={value}
                     onChange={(e) => {
-                      setValue('batch', e.target.value)
+                      setValue('batch', e.target.value);
                       getActiveStudentByBatch(e.target.value);
                     }}
                     error={Boolean(errors.batch)}
@@ -378,10 +377,10 @@ const FeesAddDrawer = (props) => {
                         PaperProps: {
                           style: {
                             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
+                            width: 250
+                          }
+                        }
+                      })
                     }}
                     label="student"
                     id="select-single-student"
@@ -399,7 +398,7 @@ const FeesAddDrawer = (props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={6}sx={{ mb: 2 }}>
+            <Grid item xs={6} sx={{ mb: 2 }}>
               <Controller
                 name="payment_date"
                 control={control}
@@ -415,7 +414,9 @@ const FeesAddDrawer = (props) => {
                   />
                 )}
               />
-              {errors.payment_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>}
+              {errors.payment_date && (
+                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={12}>

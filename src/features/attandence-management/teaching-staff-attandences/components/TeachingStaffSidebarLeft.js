@@ -32,21 +32,21 @@ const TeachingStaffSidebarLeft = (props) => {
 
   const renderFilters = colorsArr.length
     ? colorsArr.map(([key, value]) => {
-        return (
-          <FormControlLabel
-            key={key}
-            label={key}
-            sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
-            control={
-              <Checkbox
-                color={value}
-                checked={store?.selectedCalendars.includes(key)}
-                onChange={() => dispatch(handleCalendarsUpdate(key))}
-              />
-            }
-          />
-        );
-      })
+      return (
+        <FormControlLabel
+          key={key}
+          label={key}
+          sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
+          control={
+            <Checkbox
+              color={value}
+              checked={store?.selectedCalendars.includes(key)}
+              onChange={() => dispatch(handleCalendarsUpdate(key))}
+            />
+          }
+        />
+      );
+    })
     : null;
 
   const handleSidebarToggleSidebar = () => {

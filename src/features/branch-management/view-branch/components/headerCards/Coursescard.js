@@ -57,7 +57,7 @@ const Coursescard = ({ isLoading }) => {
         <SkeletonEarningCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box sx={{ p: 2}}>
+          <Box sx={{ p: 2 }}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
@@ -71,7 +71,7 @@ const Coursescard = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                      <Icon icon="tabler:books" color='white'/>
+                      <Icon icon="tabler:books" color="white" />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -85,7 +85,7 @@ const Coursescard = ({ isLoading }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item sx={{ mb: 1}}>
+              <Grid item sx={{ mb: 1 }}>
                 <Typography
                   sx={{
                     fontSize: '1rem',

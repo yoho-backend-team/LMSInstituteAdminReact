@@ -2,15 +2,14 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid ,Typography } from '@mui/material';
+import { Avatar, Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'components/cards/MainCard';
 import SkeletonEarningCard from 'components/cards/Skeleton/EarningCard';
 
 // assets
-import Icon from 'components/icon'
-
+import Icon from 'components/icon';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -53,7 +52,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 const UsersCard = ({ isLoading }) => {
   const theme = useTheme();
 
-
   return (
     <>
       {isLoading ? (
@@ -74,22 +72,18 @@ const UsersCard = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                    <Icon icon='tabler:users-group' color='white'/>
+                      <Icon icon="tabler:users-group" color="white" />
                     </Avatar>
                   </Grid>
-            
                 </Grid>
               </Grid>
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography
-                      sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}
-                    >
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
                       3
                     </Typography>
                   </Grid>
-                 
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 1 }}>
@@ -100,7 +94,7 @@ const UsersCard = ({ isLoading }) => {
                     color: theme.palette.common.white
                   }}
                 >
-                 Users
+                  Users
                 </Typography>
               </Grid>
             </Grid>

@@ -74,7 +74,7 @@ const Notes = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log("active branches : ", result.data);
+    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -154,7 +154,7 @@ const Notes = () => {
               >
                 {row?.title}
               </Typography>
-              <Typography noWrap sx={{ color: 'text.secondary',fontSize:"0.75rem" ,mt:1}}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontSize: '0.75rem', mt: 1 }}>
                 {row?.description}
               </Typography>
             </Box>

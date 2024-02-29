@@ -96,7 +96,6 @@ const CourseEditModal = ({ open, handleEditClose }) => {
     }
   }));
 
-
   const onSubmit = (data) => {
     const formData = new FormData();
     formData.append('course_name', data.course_name);

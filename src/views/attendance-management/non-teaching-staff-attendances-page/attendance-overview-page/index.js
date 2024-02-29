@@ -30,9 +30,9 @@ const NonTeachingStaffs = () => {
 
   useEffect(() => {
     const data = {
-      type: "non_teaching",
+      type: 'non_teaching',
       branch_id: selectedBranchId
-    }
+    };
     dispatch(getAllTeachingStaffs(data));
   }, [dispatch, selectedBranchId]);
   return (
@@ -41,7 +41,7 @@ const NonTeachingStaffs = () => {
         <TeachingStaffSkeleton />
       ) : (
         <Grid>
-          <NonTeachingStaffFilterCard/>
+          <NonTeachingStaffFilterCard />
           <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs} />
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination count={10} color="primary" />

@@ -24,8 +24,6 @@ import { getAllActiveCourses } from 'features/course-management/courses-page/ser
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
 
-
-
 const AddBatchPage = () => {
   // ** States
   const [startDate, setStartDate] = useState(null);
@@ -115,7 +113,7 @@ const AddBatchPage = () => {
     branch: selectedBranchId,
     startDate: null,
     endDate: null,
-    students: [],
+    students: []
   };
 
   const {
@@ -137,7 +135,7 @@ const AddBatchPage = () => {
     // const filteredStudent = activeStudents.filter((student) => student.student_id === event.target.value);
     // console.log('filtered', filteredStudent);
     // const filteredStudent = activeStudents.filter(item => event.target.value.includes(item.student_id));
-    const filteredStudents = activeStudents.filter(student => event.target.value.includes(student.student_id));
+    const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student.student_id));
 
     console.log('event', event.target.value);
     console.log('filter', filteredStudents);
@@ -322,7 +320,7 @@ const AddBatchPage = () => {
                     <Controller
                       name="students"
                       control={control}
-                      render={({ value, }) => (
+                      render={({ value }) => (
                         <CustomTextField
                           value={value}
                           select
@@ -337,7 +335,13 @@ const AddBatchPage = () => {
                             renderValue: () => (
                               <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                                 {selectedStudents.map((student) => (
-                                  <CustomChip key={student?.student_id} label={`${student?.first_name} ${student?.last_name}`} sx={{ m: 0.75 }} skin="light" color="primary" />
+                                  <CustomChip
+                                    key={student?.student_id}
+                                    label={`${student?.first_name} ${student?.last_name}`}
+                                    sx={{ m: 0.75 }}
+                                    skin="light"
+                                    color="primary"
+                                  />
                                 ))}
                               </Box>
                             )

@@ -59,7 +59,7 @@ export const addStudentCertificate = async (data) => {
       }
     });
 
-    console.log(response)
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'StudentCertificate created successfully' };

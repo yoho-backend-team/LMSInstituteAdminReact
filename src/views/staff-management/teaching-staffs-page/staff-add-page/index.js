@@ -36,16 +36,13 @@ import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
-
 const StepperLinearWithValidation = () => {
-
   const steps = [
     {
       title: 'Personal Info',
       subtitle: 'Setup Informion'
-    },
+    }
   ];
-
 
   const defaultPersonalValues = {
     name: '',
@@ -61,17 +58,15 @@ const StepperLinearWithValidation = () => {
     gender: '',
     course: '',
     branch: '',
-    designation: "",
-    education_qualification: "",
+    designation: '',
+    education_qualification: '',
     username: '',
-    logo: '',
-
+    logo: ''
   };
 
   const CustomInput = forwardRef(({ ...props }, ref) => {
     return <TextField fullWidth inputRef={ref} {...props} />;
   });
-
 
   const personalSchema = yup.object().shape({
     name: yup.string().required(),
@@ -87,7 +82,7 @@ const StepperLinearWithValidation = () => {
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
     branch: yup.string().required('Branch is required'),
-    username: yup.string().required(),
+    username: yup.string().required()
   });
 
   // ** States
@@ -103,11 +98,10 @@ const StepperLinearWithValidation = () => {
     getActiveCoursesByBranch(selectedBranchId);
   }, [selectedBranchId]);
 
-
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
 
-    console.log("active courses : ", result.data);
+    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
 
@@ -125,7 +119,6 @@ const StepperLinearWithValidation = () => {
 
   // ** Hooks
 
-
   const {
     reset: personalReset,
     control: personalControl,
@@ -136,7 +129,6 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
-
 
   // Handle Stepper
   const handleBack = () => {
@@ -160,8 +152,8 @@ const StepperLinearWithValidation = () => {
       phone: Number(''),
       alt_phone: Number(''),
       description: '',
-      joining_date: "",
-      designation: ""
+      joining_date: '',
+      designation: ''
     });
   };
 
@@ -218,12 +210,11 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-
   const handleInputImageReset = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
-  console.log(logo)
+  console.log(logo);
 
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
@@ -264,13 +255,8 @@ const StepperLinearWithValidation = () => {
       } catch (error) {
         console.log(error);
       }
-
     }
   };
-
-
-
-
 
   const getStepContent = (step) => {
     switch (step) {
@@ -422,12 +408,11 @@ const StepperLinearWithValidation = () => {
                       aria-describedby="stepper-linear-personal-branch"
                       {...(personalErrors['branch'] && { helperText: 'This field is required' })}
                     >
-                      {
-                        activeBranches.map((item, index) => (
-                          <MenuItem key={index} value={item.branch_id}>{item.branch_name}</MenuItem>
-                        ))
-                      }
-
+                      {activeBranches.map((item, index) => (
+                        <MenuItem key={index} value={item.branch_id}>
+                          {item.branch_name}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 />
@@ -682,7 +667,6 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
-
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={handleBack}>

@@ -283,17 +283,17 @@ const rows = [
     experience: '5 Years',
     present: 1,
     absent: 1
-  },
+  }
 ];
 
 const present = {
   1: { title: 'Present', color: 'success' },
-  2: { title: 'Absent', color: 'error' },
+  2: { title: 'Absent', color: 'error' }
 };
 
 const absent = {
   1: { title: 'Present', color: 'success' },
-  2: { title: 'Absent', color: 'error' },
+  2: { title: 'Absent', color: 'error' }
 };
 const ViewLiveClass = () => {
   const theme = useTheme();
@@ -335,16 +335,16 @@ const ViewLiveClass = () => {
       headerName: 'Present',
 
       renderCell: (params) => {
-        const presentStatus = present[params.row.present]; 
+        const presentStatus = present[params.row.present];
 
         return (
           <CustomChip
-          rounded
-          size="small"
-          skin="light"
-          color={presentStatus.color} 
-          label={presentStatus.title} 
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
+            rounded
+            size="small"
+            skin="light"
+            color={presentStatus.color}
+            label={presentStatus.title}
+            sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
           />
         );
       }

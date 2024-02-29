@@ -46,7 +46,11 @@ const CardStatsVertical = (props) => {
         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Avatar alt="Remy Sharp" src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}`} sx={{ width: 56, height: 56 }} />
+              <Avatar
+                alt="Remy Sharp"
+                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}`}
+                sx={{ width: 56, height: 56 }}
+              />
             </Box>
             <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <IconButton
@@ -84,7 +88,12 @@ const CardStatsVertical = (props) => {
           </Grid>
         </CardContent>
       </Card>
-      <CategoryEditModal category={selectedCategory} open={isEditModalOpen} handleEditClose={handleEditClose} setCategoryRefetch={setCategoryRefetch} />
+      <CategoryEditModal
+        category={selectedCategory}
+        open={isEditModalOpen}
+        handleEditClose={handleEditClose}
+        setCategoryRefetch={setCategoryRefetch}
+      />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

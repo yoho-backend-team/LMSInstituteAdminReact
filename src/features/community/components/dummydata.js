@@ -1,5 +1,5 @@
-const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
+const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2);
 
 const dummydata = {
   profileUser: {
@@ -7,8 +7,7 @@ const dummydata = {
     avatar: '/images/avatars/1.png',
     fullName: 'John Doe',
     role: 'admin',
-    about:
-      'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
+    about: 'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
     status: 'online',
     settings: {
       isTwoStepAuthVerificationEnabled: true,
@@ -37,8 +36,7 @@ const dummydata = {
       id: 3,
       fullName: 'Joaquina Weisenborn',
       role: 'Town planner',
-      about:
-        'Soufflé soufflé caramels sweet roll. Jelly lollipop sesame snaps bear claw jelly beans sugar plum sugar plum.',
+      about: 'Soufflé soufflé caramels sweet roll. Jelly lollipop sesame snaps bear claw jelly beans sugar plum sugar plum.',
       avatar: '/images/avatars/8.png',
       status: 'busy'
     },
@@ -72,8 +70,7 @@ const dummydata = {
       id: 7,
       fullName: 'Miguel Guelff',
       role: 'Special educational needs teacher',
-      about:
-        'Biscuit powder oat cake donut brownie ice cream I love soufflé. I love tootsie roll I love powder tootsie roll.',
+      about: 'Biscuit powder oat cake donut brownie ice cream I love soufflé. I love tootsie roll I love powder tootsie roll.',
       avatar: '/images/avatars/7.png',
       status: 'online'
     },
@@ -280,6 +277,6 @@ const dummydata = {
       ]
     }
   ]
-}
+};
 
 export default dummydata;

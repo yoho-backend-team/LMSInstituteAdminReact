@@ -89,7 +89,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     startDate: null,
     endDate: null,
     students: [],
-    batchName:''
+    batchName: ''
   };
 
   const {
@@ -102,7 +102,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     resolver: yupResolver(validationSchema)
   });
 
-  
+
 
   const handleClose = () => {
     handleEditClose();
@@ -117,7 +117,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     setSelectedStudents(event.target.value);
   };
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     const inputData = {
       batchName: data.batchName,
       startDate: data.startDate,

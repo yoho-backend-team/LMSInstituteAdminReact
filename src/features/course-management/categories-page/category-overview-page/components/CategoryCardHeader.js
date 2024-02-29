@@ -9,7 +9,7 @@ import CategoryAddModal from './CategoryAddModal';
 
 const CategoryCardHeader = (props) => {
   // ** Props
-  const { value, handleFilter,setCategoryRefetch } = props;
+  const { value, handleFilter, setCategoryRefetch } = props;
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 
   const handleAddClose = () => {
@@ -48,7 +48,7 @@ const CategoryCardHeader = (props) => {
           </Button>
         </Box>
       </Box>
-      <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose} setCategoryRefetch={setCategoryRefetch}/>
+      <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose} setCategoryRefetch={setCategoryRefetch} />
     </>
   );
 };

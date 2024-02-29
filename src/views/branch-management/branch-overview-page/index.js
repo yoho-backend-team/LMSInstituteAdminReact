@@ -14,7 +14,7 @@ const Branches = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [refetchBranch, setRefetchBranch] = useState(false);
-  console.log("branches", branches);
+  console.log('branches', branches);
 
   useEffect(() => {
     dispatch(getAllBranches());

@@ -60,8 +60,6 @@ const StudentIdCard = () => {
     dispatch(getAllStudentIdCards(selectedBranchId));
   }, [dispatch, selectedBranchId]);
 
-
-
   return (
     <>
       <Grid>
@@ -154,7 +152,9 @@ const StudentIdCard = () => {
                           <Box sx={{ pt: 2 }}>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.student.first_name} {item.student.last_name}</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>
+                                {item.student.first_name} {item.student.last_name}
+                              </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -175,7 +175,10 @@ const StudentIdCard = () => {
 
                             <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state}, {item.student.pincode},</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>
+                                {item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state},{' '}
+                                {item.student.pincode},
+                              </Typography>
                             </Box>
                           </Box>
 

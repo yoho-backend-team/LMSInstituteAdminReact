@@ -1,4 +1,3 @@
-
 const QuestionPaper = () => {
   return <div>QuestionPaper</div>;
 };

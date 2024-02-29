@@ -147,7 +147,6 @@ const StudentCertificateEdit = (props) => {
     bodyFormData.append('course_id', data.course);
     bodyFormData.append('branch_id', data.branch);
 
-
     console.log(bodyFormData);
 
     try {

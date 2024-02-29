@@ -1,13 +1,13 @@
-import CategoriesDataGrid from 'features/faq-management/faq-categories/components/categoriesDataGrid'
-import React from 'react'
-import { Box } from '@mui/material'
+import CategoriesDataGrid from 'features/faq-management/faq-categories/components/categoriesDataGrid';
+import React from 'react';
+import { Box } from '@mui/material';
 
 const FaqCategories = () => {
   return (
     <Box>
-      <CategoriesDataGrid/>
+      <CategoriesDataGrid />
     </Box>
-  )
-}
+  );
+};
 
-export default FaqCategories
+export default FaqCategories;

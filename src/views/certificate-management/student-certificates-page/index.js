@@ -174,7 +174,7 @@ const StudenrCertificate = () => {
   ];
 
   // ** Hooks
-  
+
   const dispatch = useDispatch();
   const studentCertificates = useSelector(selectStudentCertificates);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);

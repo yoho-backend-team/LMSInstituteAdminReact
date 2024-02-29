@@ -161,7 +161,6 @@ const data = {
   }
 };
 
-
 const CustomerSupport = () => {
   const [helps, setHelps] = useState([]);
   const [activeTab, setActiveTab] = useState('');

@@ -21,8 +21,6 @@ import MenuItem from '@mui/material/MenuItem';
 import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 
-
-
 const CourseNotesAddDrawer = (props) => {
   // ** Props
   const { open, toggle, branches } = props;
@@ -30,7 +28,6 @@ const CourseNotesAddDrawer = (props) => {
   // ** State
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
   const [activeCourse, setActiveCourse] = useState([]);
-
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
@@ -42,7 +39,7 @@ const CourseNotesAddDrawer = (props) => {
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
 
-    console.log("active courses : ", result.data);
+    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
 
@@ -70,7 +67,7 @@ const CourseNotesAddDrawer = (props) => {
       .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
       .required(),
     branch: yup.string().required(),
-    course: yup.string().required(),
+    course: yup.string().required()
   });
 
   const defaultValues = {
@@ -183,9 +180,12 @@ const CourseNotesAddDrawer = (props) => {
                     getActiveCoursesByBranch(e.target.value);
                   }}
                   error={Boolean(errors.branch)}
-                  {...(errors.branch && { helperText: errors.branch.message })}>
+                  {...(errors.branch && { helperText: errors.branch.message })}
+                >
                   {branches?.map((item, index) => (
-                    <MenuItem key={index} value={item.branch_id}>{item.branch_name}</MenuItem>
+                    <MenuItem key={index} value={item.branch_id}>
+                      {item.branch_name}
+                    </MenuItem>
                   ))}
                 </TextField>
               )}
@@ -206,9 +206,12 @@ const CourseNotesAddDrawer = (props) => {
                   id="custom-select"
                   onChange={onChange}
                   error={Boolean(errors.course)}
-                  {...(errors.course && { helperText: errors.course.message })}>
+                  {...(errors.course && { helperText: errors.course.message })}
+                >
                   {activeCourse?.map((item, index) => (
-                    <MenuItem key={index} value={item.course_id}>{item.course_name}</MenuItem>
+                    <MenuItem key={index} value={item.course_id}>
+                      {item.course_name}
+                    </MenuItem>
                   ))}
                 </TextField>
               )}
@@ -263,7 +266,7 @@ const CourseNotesAddDrawer = (props) => {
           </Box>
         </form>
       </Box>
-    </Drawer >
+    </Drawer>
   );
 };
 

@@ -28,9 +28,11 @@ const data = [
 
 const CardStudentandTeacher = () => {
   const renderData = data.map((item, index) => (
-    <Box key={index} sx={{ ...(index !== data.length - 1 && { mb:5 }) }}>
+    <Box key={index} sx={{ ...(index !== data.length - 1 && { mb: 5 }) }}>
       <Box sx={{ gap: 3, mb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant='h5' sx={{ color: 'text.secondary' }}>{item.subtitle}</Typography>
+        <Typography variant="h5" sx={{ color: 'text.secondary' }}>
+          {item.subtitle}
+        </Typography>
         <CustomChip rounded size="small" skin="light" color={item.chipColor} label={item.chipText} />
         <Typography variant="body2" sx={{ color: 'text.disabled' }}>
           {`${item.progress}%`}

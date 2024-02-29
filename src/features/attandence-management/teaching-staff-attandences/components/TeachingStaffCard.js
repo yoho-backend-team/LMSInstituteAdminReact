@@ -13,8 +13,6 @@ import { Link } from 'react-router-dom';
 // import { selectTeachingStaffAttendances } from '../redux/teachingStaffAttendanceSelectors';
 
 const TeachingStaffCard = ({ teachingStaffs }) => {
-
-
   return (
     <>
       <Grid>

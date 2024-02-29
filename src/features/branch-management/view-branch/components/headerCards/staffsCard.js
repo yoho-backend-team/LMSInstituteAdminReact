@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid ,Typography } from '@mui/material';
+import { Avatar, Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'components/cards/MainCard';
@@ -52,7 +52,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 const StaffsCard = ({ isLoading }) => {
   const theme = useTheme();
 
-
   return (
     <>
       {isLoading ? (
@@ -73,22 +72,18 @@ const StaffsCard = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                     <Icon icon='tabler:chalkboard' color='white'/>
+                      <Icon icon="tabler:chalkboard" color="white" />
                     </Avatar>
                   </Grid>
-            
                 </Grid>
               </Grid>
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography
-                      sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}
-                    >
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
                       57
                     </Typography>
                   </Grid>
-                 
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 1 }}>
@@ -99,7 +94,7 @@ const StaffsCard = ({ isLoading }) => {
                     color: theme.palette.common.white
                   }}
                 >
-                 Staffs
+                  Staffs
                 </Typography>
               </Grid>
             </Grid>

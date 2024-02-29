@@ -38,7 +38,6 @@ const ChatContent = (props) => {
     handleUserProfileRightSidebarToggle
   } = props;
 
-
   const handleStartConversation = () => {
     if (!mdAbove) {
       handleLeftSidebarToggle();
@@ -83,7 +82,6 @@ const ChatContent = (props) => {
             </Box>
           </ChatWrapperStartChat>
         );
-
       } else {
         return (
           <Box
@@ -103,10 +101,8 @@ const ChatContent = (props) => {
                 justifyContent: 'space-between',
                 backgroundColor: 'background.paper',
                 borderBottom: (theme) => `1px solid ${theme.palette.divider}`
-
               }}
             >
-
               {mdAbove ? null : (
                 <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
                   <Icon icon="tabler:menu-2" />
@@ -137,11 +133,9 @@ const ChatContent = (props) => {
                 >
                   {selectedChat.contact.avatar ? (
                     <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
-
                   ) : (
                     <CustomAvatar
                       skin="light"
-
                       color={selectedChat.contact.avatarColor}
                       sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                     >
@@ -154,7 +148,6 @@ const ChatContent = (props) => {
                   <Typography sx={{ color: 'text.disabled' }}>{selectedChat.contact.role}</Typography>
                 </Box>
               </Box>
-
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <OptionsMenu
@@ -180,24 +173,13 @@ const ChatContent = (props) => {
               handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
             />
           </Box>
-
         );
-
       }
     } else {
       return null;
-
     }
   };
   return renderContent();
 };
 
-
-
-
-
-
-
-
 export default ChatContent;
-

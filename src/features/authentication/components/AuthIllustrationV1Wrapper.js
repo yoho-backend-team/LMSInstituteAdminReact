@@ -1,6 +1,6 @@
 // ** MUI Components
-import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 // ** Styled Components
 const AuthIllustrationV1Wrapper = styled(Box)(({ theme }) => ({
@@ -38,6 +38,6 @@ const AuthIllustrationV1Wrapper = styled(Box)(({ theme }) => ({
       )}' fill-opacity='0.08'/%3E%3C/svg%3E")`
     }
   }
-}))
+}));
 
-export default AuthIllustrationV1Wrapper
+export default AuthIllustrationV1Wrapper;

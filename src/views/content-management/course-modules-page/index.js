@@ -153,7 +153,7 @@ const Modules = () => {
               >
                 {row?.title}
               </Typography>
-              <Typography noWrap sx={{ color: 'text.secondary',fontSize:"0.75rem" ,mt:1}}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontSize: '0.75rem', mt: 1 }}>
                 {row?.description}
               </Typography>
             </Box>

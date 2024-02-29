@@ -19,15 +19,12 @@ import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addCourseModule } from '../services/moduleServices';
 
-
-
 const CourseModuleAddDrawer = (props) => {
   // ** Props
   const { open, toggle, branches } = props;
 
   // ** State
   const [activeCourse, setActiveCourse] = useState([]);
-
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
@@ -36,11 +33,10 @@ const CourseModuleAddDrawer = (props) => {
     getActiveCoursesByBranch(selectedBranchId);
   }, [selectedBranchId]);
 
-
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
 
-    console.log("active courses : ", result.data);
+    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
 
@@ -69,7 +65,7 @@ const CourseModuleAddDrawer = (props) => {
       .required(),
     branch: yup.string().required(),
     course: yup.string().required(),
-    video_url: yup.string().required(),
+    video_url: yup.string().required()
   });
 
   const defaultValues = {
@@ -93,9 +89,7 @@ const CourseModuleAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-
   const onSubmit = async (data) => {
-
     const inputData = {
       branch_id: data.branch,
       course_id: data.course,
@@ -104,7 +98,7 @@ const CourseModuleAddDrawer = (props) => {
       video_url: data.video_url
     };
 
-    console.log(inputData)
+    console.log(inputData);
 
     const result = await addCourseModule(inputData);
 
@@ -177,9 +171,12 @@ const CourseModuleAddDrawer = (props) => {
                     getActiveCoursesByBranch(e.target.value);
                   }}
                   error={Boolean(errors.branch)}
-                  {...(errors.branch && { helperText: errors.branch.message })}>
+                  {...(errors.branch && { helperText: errors.branch.message })}
+                >
                   {branches?.map((item, index) => (
-                    <MenuItem key={index} value={item.branch_id}>{item.branch_name}</MenuItem>
+                    <MenuItem key={index} value={item.branch_id}>
+                      {item.branch_name}
+                    </MenuItem>
                   ))}
                 </TextField>
               )}
@@ -200,9 +197,12 @@ const CourseModuleAddDrawer = (props) => {
                   id="custom-select"
                   onChange={onChange}
                   error={Boolean(errors.course)}
-                  {...(errors.course && { helperText: errors.course.message })}>
+                  {...(errors.course && { helperText: errors.course.message })}
+                >
                   {activeCourse?.map((item, index) => (
-                    <MenuItem key={index} value={item.course_id}>{item.course_name}</MenuItem>
+                    <MenuItem key={index} value={item.course_id}>
+                      {item.course_name}
+                    </MenuItem>
                   ))}
                 </TextField>
               )}

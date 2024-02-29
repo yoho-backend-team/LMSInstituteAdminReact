@@ -19,7 +19,6 @@ const useTimeout = (callback, delay) => {
 };
 
 const TeachingStaff = () => {
-
   const [loading, setLoading] = useState(true);
   useTimeout(() => {
     setLoading(false);
@@ -31,9 +30,9 @@ const TeachingStaff = () => {
 
   useEffect(() => {
     const data = {
-      type: "teaching",
+      type: 'teaching',
       branch_id: selectedBranchId
-    }
+    };
     dispatch(getAllTeachingStaffs(data));
   }, [dispatch, selectedBranchId]);
 
@@ -47,8 +46,8 @@ const TeachingStaff = () => {
           <Grid className="match-height">
             <TeachingStaffCard teachingStaffs={teachingStaffs} />
           </Grid>
-          <Grid sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }} >
-            <Pagination count={10} color='primary' />
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination count={10} color="primary" />
           </Grid>
         </Grid>
       )}

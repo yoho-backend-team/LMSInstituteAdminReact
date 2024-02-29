@@ -40,11 +40,14 @@ const AllNotifications = () => {
                         <Box>
                           <Typography variant="h4">Michael just purchased</Typography>
                           <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.
+                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly
+                            cake caramels brownie gummies.
                           </Typography>
                         </Box>
                       </Box>
-                      <Typography fontSize={12} variant='body2'>33 minutes ago</Typography>
+                      <Typography fontSize={12} variant="body2">
+                        33 minutes ago
+                      </Typography>
                     </Box>
                   </Grid>
                 ))}
@@ -61,11 +64,14 @@ const AllNotifications = () => {
                         <Box>
                           <Typography variant="h4">Michael just purchased</Typography>
                           <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.
+                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly
+                            cake caramels brownie gummies.
                           </Typography>
                         </Box>
                       </Box>
-                      <Typography fontSize={12} variant='body2'>33 minutes ago</Typography>
+                      <Typography fontSize={12} variant="body2">
+                        33 minutes ago
+                      </Typography>
                     </Box>
                   </Grid>
                 ))}
@@ -81,12 +87,15 @@ const AllNotifications = () => {
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
                         <Box>
                           <Typography variant="h4">Michael just purchased</Typography>
-                          <Typography  fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly cake caramels brownie gummies.
-                          </Typography>     
+                          <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
+                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly
+                            cake caramels brownie gummies.
+                          </Typography>
                         </Box>
                       </Box>
-                      <Typography fontSize={12} variant='body2'>33 minutes ago</Typography>
+                      <Typography fontSize={12} variant="body2">
+                        33 minutes ago
+                      </Typography>
                     </Box>
                   </Grid>
                 ))}

@@ -34,9 +34,9 @@ const Teaching = () => {
 
   useEffect(() => {
     const data = {
-      type: "teaching",
+      type: 'teaching',
       branch_id: selectedBranchId
-    }
+    };
     dispatch(getAllTeachingStaffs(data));
   }, [dispatch, selectedBranchId]);
 
@@ -66,7 +66,9 @@ const Teaching = () => {
                       <Typography variant="h4" sx={{ mb: 1 }}>
                         {item.staff?.staff_name}
                       </Typography>
-                      <Typography variant="h5" sx={{ mb: 4 }}>{item?.staff.email}</Typography>
+                      <Typography variant="h5" sx={{ mb: 4 }}>
+                        {item?.staff.email}
+                      </Typography>
 
                       <Box
                         sx={{

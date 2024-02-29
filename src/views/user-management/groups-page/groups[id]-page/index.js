@@ -115,7 +115,6 @@ const GroupViewPage = () => {
         </Card>
       )}
     </>
-
   );
 };
 

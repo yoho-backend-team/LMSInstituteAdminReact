@@ -52,8 +52,6 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
-
-
   console.log(selectedImage);
   const handleClose = () => {
     setValue('course', '');
@@ -168,7 +166,6 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
                   />
                 )}
               />
-
             </Grid>
             <Grid sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>

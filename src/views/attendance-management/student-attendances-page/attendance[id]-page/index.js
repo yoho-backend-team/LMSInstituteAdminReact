@@ -3,7 +3,6 @@ import { Grid } from '@mui/material';
 import BatchViewSkeleton from 'components/cards/Skeleton/BatchViewSkeleton';
 import { useEffect, useState } from 'react';
 
-
 import StudentAttendanceTable from 'features/attandence-management/student-attandences/components/StudentAttendanceTable';
 import StudentViewHeaderCard from 'features/attandence-management/student-attandences/components/StudentViewHeaderCard';
 
