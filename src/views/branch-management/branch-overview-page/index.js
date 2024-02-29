@@ -25,7 +25,7 @@ const Branches = () => {
   };
 
   return (
-    <Grid spacing={1} className="match-height">
+    <Grid container spacing={1} className="match-height">
       {branchLoading ? (
         <BranchMainSkeleton />
       ) : (

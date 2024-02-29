@@ -180,10 +180,10 @@ const Customization = () => {
                       4px
                     </Typography>
                   </Grid>
-                  <Grid item xs>
+                  <Grid item xs={12}>
                     <Slider
                       size="small"
-                      value={borderRadius}
+                      value={Number(borderRadius)}
                       onChange={handleBorderRadius}
                       getAriaValueText={valueText}
                       valueLabelDisplay="on"

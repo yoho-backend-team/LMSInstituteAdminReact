@@ -28,17 +28,17 @@ const CourseSkeleton = () => (
       </Grid>
     </Grid>
     <Grid container spacing={2} sx={{ mt: 1 }}>
-        <Grid item xs={12}>
-          <Grid container justifyContent={'space-between'}>
-            <Grid item xs={12} sm={3}>
-              <Skeleton variant="rounded" height={50} width={410} animation="wave" />
-            </Grid>
-            <Grid container display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
-              <Skeleton variant="rounded" height={40} width={150} animation="wave" />
-            </Grid>
+      <Grid item xs={12}>
+        <Grid container justifyContent={'space-between'}>
+          <Grid item xs={12} sm={3}>
+            <Skeleton variant="rounded" height={50} width={410} animation="wave" />
+          </Grid>
+          <Grid item display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
+            <Skeleton variant="rounded" height={40} width={150} animation="wave" />
           </Grid>
         </Grid>
       </Grid>
+    </Grid>
     <Grid container spacing={2} sx={{ mt: 1 }}>
       {[...Array(6)].map((_, index) => (
         <Grid key={index} item xs={12} sm={4}>
@@ -60,7 +60,7 @@ const CourseSkeleton = () => (
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <Grid sx={{ display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 0.5 } }}>

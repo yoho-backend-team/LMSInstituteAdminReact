@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const COURSE_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/course-categories`;
+
 const COURSES_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses/active-categories`;
 
 export const getActiveCategoriesByBranch = async (data) => {
@@ -41,21 +42,21 @@ export const getAllCourseCategories = async (selectedBranchId) => {
       params: { branch_id: selectedBranchId }
     });
 
-    console.log(response);
+    // console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch CourseCategories. Status: ${response.status}`);
+      throw new Error(`Failed to fetch course categories. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllCourseCategories:', error);
+    console.error('Error in get all ccourse categories:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    // throw error;
   }
 };
 

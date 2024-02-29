@@ -94,7 +94,7 @@ const GroupSkeleton = () => (
     <Grid item xs={12} sm={12}>
       <Card>
         <CardContent>
-          <Grid container md={12} spacing={gridSpacing}>
+          <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
                 <Grid item xs zeroMinWidth>

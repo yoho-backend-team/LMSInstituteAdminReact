@@ -6,32 +6,41 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../../services/courseCategoryServices';
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
-const schema = yup.object().shape({
-  category_name: yup
-    .string()
-    .min(3, (obj) => showErrors('Category Name', obj.value.length, obj.min))
-    .required()
-});
-
+// CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
   const image =
     'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
+  // Function to handle error messages
+  const showErrors = useCallback((field, valueLen, min) => {
+    if (valueLen === 0) {
+      return `${field} field is required`;
+    } else if (valueLen > 0 && valueLen < min) {
+      return `${field} must be at least ${min} characters`;
+    } else {
+      return '';
+    }
+  }, []);
+
+  // Schema for form validation
+  const schema = useMemo(
+    () =>
+      yup.object().shape({
+        category_name: yup
+          .string()
+          .min(3, (obj) => showErrors('Category Name', obj.value.length, obj.min))
+          .required()
+      }),
+    [showErrors]
+  );
+
+  // Form control using react-hook-form
   const {
     reset,
     control,
@@ -46,15 +55,16 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  console.log('selected', selectedImage);
-  const handleClose = () => {
-    setValue('course', '');
-    setValue('status', '');
-    handleEditClose();
-    reset();
-  };
 
-  const handleInputImageChange = (file) => {
+  // Function to handle closing the dialog
+  const handleClose = useCallback(() => {
+    setValue('category_name', ''); // Reset input value
+    handleEditClose(); // Close the dialog
+    reset(); // Reset form
+  }, [setValue, handleEditClose, reset]);
+
+  // Function to handle image input change
+  const handleInputImageChange = useCallback((file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
@@ -65,41 +75,53 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
         setInputValue(reader.result);
       }
     }
-  };
+  }, []);
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  // Styled components
+  const ImgStyled = useMemo(
+    () =>
+      styled('img')(({ theme }) => ({
+        width: 100,
+        height: 100,
+        marginRight: theme.spacing(2),
+        borderRadius: theme.shape.borderRadius
+      })),
+    []
+  );
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
+  const ButtonStyled = useMemo(
+    () =>
+      styled(Button)(({ theme }) => ({
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+          textAlign: 'center'
+        }
+      })),
+    []
+  );
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    const inputData = new FormData();
-    inputData.append('category_id', category?.category_id);
-    inputData.append('logo', selectedImage);
-    inputData.append('category_name', data?.category_name);
+  // Form submission handler
+  const onSubmit = useCallback(
+    async (data) => {
+      const inputData = new FormData();
+      inputData.append('category_id', category?.category_id);
+      inputData.append('logo', selectedImage);
+      inputData.append('category_name', data?.category_name);
 
-    try {
-      const result = await updateCourseCategory(inputData);
-      if (result.success) {
-        setCategoryRefetch((state) => !state);
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
+      try {
+        const result = await updateCourseCategory(inputData);
+        if (result.success) {
+          setCategoryRefetch((state) => !state);
+          toast.success(result.message);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    [category, selectedImage, setCategoryRefetch]
+  );
 
   return (
     <div>
@@ -160,8 +182,8 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                       label="Category Name"
                       onChange={onChange}
                       placeholder="John Doe"
-                      error={Boolean(errors.course)}
-                      {...(errors.course && { helperText: errors.course.message })}
+                      error={Boolean(errors.category_name)}
+                      {...(errors.category_name && { helperText: errors.category_name.message })}
                     />
                   )}
                 />

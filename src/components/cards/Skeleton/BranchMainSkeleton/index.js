@@ -16,7 +16,7 @@ const BranchMainSkeleton = () => {
             <Grid item xs={12} sm={3}>
               <Skeleton variant="rectangular" sx={{ borderRadius: 3 }} height={50} width={400} animation="wave" />
             </Grid>
-            <Grid container display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
+            <Grid item display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
               <Skeleton variant="rectangular" height={40} width={150} sx={{ borderRadius: 3 }} animation="wave" />
             </Grid>
           </Grid>
