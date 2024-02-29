@@ -1,11 +1,11 @@
 // studentIdCardService.js
 import axios from 'axios';
 
-const STUDENT_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/StudentIdCard-management/StudentIdCard`;
+const STUDENT_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/id-card-management/student`;
 
 export const getAllStudentIdCards = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${STUDENT_ID_CARDS_API_ENDPOINT}/read-all-student-notifications`, {
+    const response = await axios.get(`${STUDENT_ID_CARDS_API_ENDPOINT}/get-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

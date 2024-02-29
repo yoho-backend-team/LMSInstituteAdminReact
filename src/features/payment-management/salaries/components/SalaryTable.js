@@ -33,12 +33,12 @@ import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
 // ** Styled Components
-import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
+// import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
-
+import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -49,16 +49,16 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row.avatar.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.avatar?.length) {
+    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
         skin="light"
-        color={row.avatarColor || 'primary'}
+        color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row.name || 'John Doe')}
+        {getInitials(row?.name || 'John Doe')}
       </Avatar>
     );
   }
@@ -91,7 +91,7 @@ const SalaryTable = () => {
 
   console.log(TeachingStaffSalaries);
   useEffect(() => {
-    dispatch(getAllTeachingStaffs(selectedBranchId));
+    dispatch(getAllStaffSalaries(selectedBranchId));
   }, [dispatch, selectedBranchId]);
 
   const toggleEditUserDrawer = () => {
@@ -101,9 +101,6 @@ const SalaryTable = () => {
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
-  };
 
   const handleFilter = (val) => {
     setValue(val);
@@ -134,25 +131,24 @@ const SalaryTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transaction_id}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 210,
       field: 'name',
-      headerName: 'Students',
+      headerName: 'Staff',
       renderCell: ({ row }) => {
-        const { name, companyEmail } = row;
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {name}
+                {row.staff?.staff_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {companyEmail}
+                {row.staff?.email}
               </Typography>
             </Box>
           </Box>
@@ -164,26 +160,14 @@ const SalaryTable = () => {
       minWidth: 120,
       field: 'total',
       headerName: 'Salary Amount',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.total || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{`$${row.salary_amount || 0}`}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'PaymentDate',
       headerName: 'Payment Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.PaymentDate}</Typography>
-    },
-    {
-      flex: 1,
-      minWidth: 130,
-      field: 'balance',
-      headerName: 'Balance',
-      renderCell: ({ row }) =>
-        row.balance !== 0 ? (
-          <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
-        ) : (
-          <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-        )
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.paid_date}</Typography>
     },
     {
       flex: 1.25,
@@ -192,14 +176,7 @@ const SalaryTable = () => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>{row.balance}</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </TextField>
+          <Typography sx={{ color: 'text.secondary' }}>{row.status}</Typography>
         );
       }
     }
@@ -241,72 +218,72 @@ const SalaryTable = () => {
     }
   ];
 
-  const TeachingStaffSalariesdummyData = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      PaymentDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
+  // const TeachingStaffSalariesdummyData = [
+  //   {
+  //     id: 1,
+  //     invoiceStatus: 'Sent',
+  //     transactionid: '123456',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 100,
+  //     PaymentDate: '2025-01-01',
+  //     balance: 55,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 2,
+  //     invoiceStatus: 'Sent',
+  //     transactionid: '123456',
 
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      PaymentDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
+  //     name: 'John Doe',
+  //     companyEmail: 'arunbalaji.com',
+  //     total: 200,
+  //     PaymentDate: '2000-01-01',
+  //     balance: 50,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 3,
+  //     invoiceStatus: 'Sent',
+  //     transactionid: '123456',
 
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      PaymentDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 300,
+  //     PaymentDate: '25-01-01',
+  //     balance: 40,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 4,
+  //     invoiceStatus: 'Sent',
+  //     transactionid: '123456',
 
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      PaymentDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 40,
+  //     PaymentDate: '202-01-01',
+  //     balance: 30,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 5,
+  //     invoiceStatus: 'Sent',
+  //     transactionid: '123456',
 
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      PaymentDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 50,
+  //     PaymentDate: '20-01-01',
+  //     balance: 0,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   }
+  // ];
 
 
   return (
@@ -399,7 +376,7 @@ const SalaryTable = () => {
               pagination
               rowHeight={62}
               // rows={TeachingStaffSalaries}
-              rows={TeachingStaffSalariesdummyData}
+              rows={TeachingStaffSalaries}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -14,9 +14,14 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import toast from 'react-hot-toast';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+// import { addStudentFee } from '../services/studentFeeServices';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useSelector } from 'react-redux';
+import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import DatePicker from 'react-datepicker';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -26,24 +31,35 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
+  branch: yup.string().required('Branch is required'),
+  staff_type: yup.string().required('Batch is required'),
+  staff: yup.string().required('Students is required'),
+  payment_date: yup.string().required('Payment Date is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required'),
-  type: yup.string().required('Type is required'),
-  staff: yup.string().required('Staff is required')
+  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
 const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
+  branch: '',
+  staff_type: '',
+  staff: '',
+  payment_date: '',
+  paymentId: Number('0'),
+  paidAmount: Number('0')
+};
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
 };
 
-const SalaryAddDrawer = (props) => {
+const FeesAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
   // ** State
@@ -52,7 +68,35 @@ const SalaryAddDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
-  useEffect(() => {}, []);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [activeBranches, setActiveBranches] = useState([]);
+  const [activeStaffs, setActiveStaffs] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  useEffect(() => {
+    getActiveStaffsByBranch(selectedBranchId);
+  }, [selectedBranchId]);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log("active branches : ", result.data);
+    setActiveBranches(result.data.data);
+  };
+
+  const getActiveStaffsByBranch = async (selectedBranchId, type) => {
+    const data = {
+      'type': type,
+      branch_id: selectedBranchId
+    }
+    const result = await getAllActiveStaffs(data);
+
+    console.log("active staffs : ", result.data);
+    setActiveStaffs(result.data.data);
+  };
+
 
   const {
     handleSubmit,
@@ -65,15 +109,29 @@ const SalaryAddDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
 
   const onSubmit = async (data) => {
+    console.log(data)
     var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('type', data.type);
-    bodyFormData.append('staff', data.staff);
-    bodyFormData.append('paymentId', data.paymentId);
-    bodyFormData.append('paidAmount', data.paidAmount);
-    console.log(bodyFormData);
+    bodyFormData.append('payment_proof', selectedImage);
+    bodyFormData.append('branch_id', data.branch);
+    bodyFormData.append('institute_staff_id', data.staff);
+    bodyFormData.append('transaction_id', data.paymentId);
+    bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
+    bodyFormData.append('salary_amount', data.paidAmount);
 
     const result = await addTeachingStaffSalary(bodyFormData);
 
@@ -90,6 +148,13 @@ const SalaryAddDrawer = (props) => {
       // toast.error(result.message);
     }
   };
+
+  const CustomInput = forwardRef(({ ...props }, ref) => {
+    // ** Props
+    const { label, readOnly } = props;
+
+    return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
+  });
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -154,7 +219,7 @@ const SalaryAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -171,50 +236,140 @@ const SalaryAddDrawer = (props) => {
               </div>
             </Box>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
-                name="type"
+                name="branch"
+
                 control={control}
-                render={({ field }) => (
+                rules={{ required: 'Branch field is required' }}
+                render={({ field: { value } }) => (
                   <TextField
-                    sx={{ mb: 2 }}
-                    {...field}
                     fullWidth
                     select
-                    label="Type"
-                    error={Boolean(errors.type)}
-                    helperText={errors.type?.message}
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
+                    label="Select Branch"
+                    value={value}
+                    onChange={(e) => {
+                      setValue('branch', e.target.value);
+                      getActiveCoursesByBranch(e.target.value);
+                    }}
+                    error={Boolean(errors.branch)}
+                    helperText={errors.branch?.message}
                   >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="Ten">Ten</MenuItem>
-                    <MenuItem value="Twenty">Twenty</MenuItem>
-                    <MenuItem value="Thirty">Thirty</MenuItem>
+                    {activeBranches.map((branch) => (
+                      <MenuItem key={branch.branch_id} value={branch.branch_id}>
+                        {branch.branch_name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ mb: 2 }}>
+              <Controller
+                name="staff_type"
+                control={control}
+                rules={{ required: 'Staff Type field is required' }}
+                render={({ field: { value, } }) => (
+                  <TextField
+                    fullWidth
+                    select
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
+                    label="Select Staff Type"
+                    id="select-single-course-extra"
+                    value={value}
+                    onChange={(e) => {
+                      setValue('staff_type', e.target.value);
+                      getActiveStaffsByBranch(selectedBranchId, e.target.value);
+                    }}
+                    error={Boolean(errors.course)}
+                    helperText={errors.course?.message}
+                  >
+                    <MenuItem value={''}>
+                      Select Staff Type
+                    </MenuItem>
+                    <MenuItem value={'teaching'}>
+                      Teaching
+                    </MenuItem>
+                    <MenuItem value={'non_teaching'}>
+                      Non Teaching
+                    </MenuItem>
+
                   </TextField>
                 )}
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="staff"
                 control={control}
-                render={({ field }) => (
+                rules={{ required: 'staff field is required' }}
+                render={({ field: { value, onChange } }) => (
                   <TextField
-                    sx={{ mb: 2 }}
-                    {...field}
                     fullWidth
                     select
-                    label="Staff"
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
+                    label="staff"
+                    id="select-single-staff"
+                    value={value}
+                    onChange={onChange}
                     error={Boolean(errors.staff)}
                     helperText={errors.staff?.message}
                   >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="Ten">Ten</MenuItem>
-                    <MenuItem value="Twenty">Twenty</MenuItem>
-                    <MenuItem value="Thirty">Thirty</MenuItem>
+                    {activeStaffs.map((staff) => (
+                      <MenuItem key={staff.staff_id} value={staff.staff_id}>
+                        {staff.staff_name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 )}
               />
+            </Grid>
+            <Grid item xs={6} sx={{ mb: 2 }}>
+              <Controller
+                name="payment_date"
+                control={control}
+                rules={{ required: 'Payment Date field is required' }}
+                render={({ field: { value, onChange } }) => (
+                  <DatePicker
+                    selected={value}
+                    id="basic-input"
+                    className="full-width-datepicker"
+                    onChange={onChange}
+                    placeholderText="Click to select a date"
+                    customInput={<CustomInput label="Payment Date" />}
+                  />
+                )}
+              />
+              {errors.payment_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>}
             </Grid>
 
             <Grid item xs={12} sm={12}>
@@ -268,4 +423,4 @@ const SalaryAddDrawer = (props) => {
   );
 };
 
-export default SalaryAddDrawer;
+export default FeesAddDrawer;

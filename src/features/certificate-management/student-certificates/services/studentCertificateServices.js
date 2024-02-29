@@ -1,7 +1,7 @@
 // studentCertificateService.js
 import axios from 'axios';
 
-const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/StudentCertificate-management/StudentCertificate`;
+const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/certificate-management/student-certificates`;
 
 export const getAllStudentCertificates = async (selectedBranchId) => {
   try {
@@ -54,10 +54,12 @@ export const addStudentCertificate = async (data) => {
   try {
     const response = await axios.post(`${STUDENT_CERTIFICATE_API_ENDPOINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+
+    console.log(response)
 
     if (response.data.status) {
       return { success: true, message: 'StudentCertificate created successfully' };

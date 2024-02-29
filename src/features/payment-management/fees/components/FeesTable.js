@@ -7,7 +7,6 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -49,16 +48,16 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row.avatar.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.avatar?.length) {
+    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
         skin="light"
-        color={row.avatarColor || 'primary'}
+        color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row.name || 'John Doe')}
+        {getInitials(row?.name || 'John Doe')}
       </Avatar>
     );
   }
@@ -104,9 +103,6 @@ const FeesTable = () => {
     console.log('Toggle drawer');
   };
 
-  const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
-  };
 
   // ** Hooks
   const handleFilter = (val) => {
@@ -141,73 +137,6 @@ const FeesTable = () => {
     { batch_id: '3', batch_name: 'batch 3' }
   ];
 
-  const StudentFeesdummyData = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
-
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
-
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
-
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      transactionid: '123456',
-
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
-
   const defaultColumns = [
     {
       flex: 0.1,
@@ -225,7 +154,7 @@ const FeesTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transactionid}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transaction_id}</Typography>
     },
     {
       flex: 1.25,
@@ -233,17 +162,15 @@ const FeesTable = () => {
       field: 'name',
       headerName: 'Students',
       renderCell: ({ row }) => {
-        const { name, companyEmail } = row;
-
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {name}
+                {row.students.first_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {companyEmail}
+                {row.students.email}
               </Typography>
             </Box>
           </Box>
@@ -255,26 +182,14 @@ const FeesTable = () => {
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.total || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
-    },
-    {
-      flex: 1,
-      minWidth: 130,
-      field: 'balance',
-      headerName: 'Balance',
-      renderCell: ({ row }) =>
-        row.balance !== 0 ? (
-          <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
-        ) : (
-          <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-        )
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.payment_date}</Typography>
     },
     {
       flex: 1.25,
@@ -283,11 +198,7 @@ const FeesTable = () => {
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
-          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
-            <MenuItem value={10}>{row.balance}</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </TextField>
+          <Typography>{row.status}</Typography>
         );
       }
     }
@@ -497,7 +408,7 @@ const FeesTable = () => {
               pagination
               rowHeight={62}
               // rows={StudentFees}
-              rows={StudentFeesdummyData}
+              rows={StudentFees}
               columns={columns}
               disableRowSelectionOnClick
               pageSizeOptions={[10, 25, 50]}
@@ -510,7 +421,7 @@ const FeesTable = () => {
       </Grid>
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} selectedRows={selectedRows} handleRowClick={handleRowClick}/>
+      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} selectedRows={selectedRows} handleRowClick={handleRowClick} />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

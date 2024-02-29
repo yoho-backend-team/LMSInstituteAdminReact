@@ -42,13 +42,23 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [activeBranches, setActiveBranches] = useState([]);
+  const [activeCourse, setActiveCourse] = useState([]);
+  const [activeBatches, setActiveBatches] = useState([]);
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
+
+  useEffect(() => {
+    getActiveCoursesByBranch(selectedBranchId);
+    getActiveTeachingStaffs(selectedBranchId);
+    getActiveNonTeachingStaffs(selectedBranchId);
+  }, [selectedBranchId]);
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
@@ -56,21 +66,18 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     console.log("active branches : ", result.data);
     setActiveBranches(result.data.data);
   };
-
-  const [activeCourse, setActiveCourse] = useState([]);
-  const [activeBatches, setActiveBatches] = useState([]);
-  useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
-    getActiveTeachingStaffs(selectedBranchId);
-    getActiveNonTeachingStaffs(selectedBranchId);
-  }, [selectedBranchId]);
-
-
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
 
     console.log("active courses : ", result.data);
     setActiveCourse(result.data.data);
+  };
+  const getActiveBatchesByCourse = async (courseId) => {
+    const data = { course_id: courseId }
+    const result = await getAllActiveBatchesByCourse(data);
+
+    console.log("active batches : ", result.data);
+    setActiveBatches(result.data.data);
   };
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId }
@@ -86,13 +93,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     console.log("active non teaching staffs : ", result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
-  const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId }
-    const result = await getAllActiveBatchesByCourse(data);
 
-    console.log("active batches : ", result.data);
-    setActiveBatches(result.data.data);
-  };
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);

@@ -3,9 +3,35 @@ import axios from 'axios';
 
 const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/student-management/students`;
 
+export const getAllStudentsByBatch = async (data) => {
+  try {
+    const response = await axios.get(`${STUDENT_API_END_POINT}/get-by-batch-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data,
+    });
+
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Students. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllStudents:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
 export const getAllStudents = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/read`, {
+    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

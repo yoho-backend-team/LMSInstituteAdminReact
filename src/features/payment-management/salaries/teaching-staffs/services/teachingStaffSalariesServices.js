@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/teaching-staff-salaries`;
+const TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/staff-salaries`;
 
 export const getAllStaffSalaries = async (selectedBranchId) => {
   try {

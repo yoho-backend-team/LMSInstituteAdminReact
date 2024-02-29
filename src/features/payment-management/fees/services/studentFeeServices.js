@@ -54,7 +54,7 @@ export const addStudentFee = async (data) => {
   try {
     const response = await axios.post(`${STUDENT_FEE_API_ENDPOINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });

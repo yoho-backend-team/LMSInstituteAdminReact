@@ -5,7 +5,7 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 
 export const getAllBatches = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/read`, {
+    const response = await axios.get(`${BATCH_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

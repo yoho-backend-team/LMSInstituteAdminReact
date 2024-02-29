@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -17,6 +17,12 @@ import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFee } from '../services/studentFeeServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useSelector } from 'react-redux';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import DatePicker from 'react-datepicker';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -27,21 +33,33 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
+  branch: yup.string().required('Branch is required'),
   batch: yup.string().required('Batch is required'),
-  students: yup.string().required('Students is required'),
+  student: yup.string().required('Students is required'),
+  payment_date: yup.string().required('Payment Date is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
 const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
+  branch: '',
+  course: '',
+  batch: '',
+  student: '',
+  payment_date: '',
+  paymentId: Number('0'),
+  paidAmount: Number('0')
+};
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
 };
 
 const FeesAddDrawer = (props) => {
@@ -53,7 +71,45 @@ const FeesAddDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
-  useEffect(() => {}, []);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [activeBranches, setActiveBranches] = useState([]);
+  const [activeCourse, setActiveCourse] = useState([]);
+  const [activeBatches, setActiveBatches] = useState([]);
+  const [activeStudents, setActiveStudents] = useState([]);
+  useEffect(() => {
+    getActiveBranchesByUser();
+  }, []);
+
+  useEffect(() => {
+    getActiveCoursesByBranch(selectedBranchId);
+  }, [selectedBranchId]);
+
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log("active branches : ", result.data);
+    setActiveBranches(result.data.data);
+  };
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
+
+    console.log("active courses : ", result.data);
+    setActiveCourse(result.data.data);
+  };
+  const getActiveBatchesByCourse = async (courseId) => {
+    const data = { course_id: courseId }
+    const result = await getAllActiveBatchesByCourse(data);
+
+    console.log("active batches : ", result.data);
+    setActiveBatches(result.data.data);
+  };
+  const getActiveStudentByBatch = async (courseId) => {
+    const data = { batch_id: courseId }
+    const result = await getAllStudentsByBatch(data);
+
+    console.log("active students : ", result.data);
+    setActiveStudents(result.data.data);
+  };
 
   const {
     handleSubmit,
@@ -66,16 +122,29 @@ const FeesAddDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
 
   const onSubmit = async (data) => {
+    console.log(data)
     var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('course', data.course);
-    bodyFormData.append('batch', data.batch);
-    bodyFormData.append('students', data.students);
-    bodyFormData.append('paymentId', data.paymentId);
-    bodyFormData.append('paidAmount', data.paidAmount);
-    console.log(bodyFormData);
+    bodyFormData.append('payment_proof', selectedImage);
+    bodyFormData.append('branch_id', data.branch);
+    bodyFormData.append('student_id', data.student);
+    bodyFormData.append('transaction_id', data.paymentId);
+    bodyFormData.append('payment_date', convertDateFormat(data.payment_date));
+    bodyFormData.append('paid_amount', data.paidAmount);
 
     const result = await addStudentFee(bodyFormData);
 
@@ -92,6 +161,13 @@ const FeesAddDrawer = (props) => {
       // toast.error(result.message);
     }
   };
+
+  const CustomInput = forwardRef(({ ...props }, ref) => {
+    // ** Props
+    const { label, readOnly } = props;
+
+    return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
+  });
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -173,76 +249,173 @@ const FeesAddDrawer = (props) => {
               </div>
             </Box>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
+              <Controller
+                name="branch"
+
+                control={control}
+                rules={{ required: 'Branch field is required' }}
+                render={({ field: { value } }) => (
+                  <TextField
+                    fullWidth
+                    select
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
+                    label="Select Branch"
+                    value={value}
+                    onChange={(e) => {
+                      setValue('branch', e.target.value);
+                      getActiveCoursesByBranch(e.target.value);
+                    }}
+                    error={Boolean(errors.branch)}
+                    helperText={errors.branch?.message}
+                  >
+                    {activeBranches.map((branch) => (
+                      <MenuItem key={branch.branch_id} value={branch.branch_id}>
+                        {branch.branch_name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="course"
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                rules={{ required: 'Course field is required' }}
+                render={({ field: { value } }) => (
                   <TextField
-                    select
                     fullWidth
-                    value={value}
-                    sx={{ mb: 4 }}
+                    select
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
                     label="Select Course"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
+                    id="select-single-course-extra"
+                    value={value}
+                    onChange={(e) => {
+                      setValue('course', e.target.value)
+                      getActiveBatchesByCourse(e.target.value);
+                    }}
                     error={Boolean(errors.course)}
-                    {...(errors.course && { helperText: errors.course.message })}
+                    helperText={errors.course?.message}
                   >
-                    <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                    <MenuItem value={'Android Development'}>Android Development</MenuItem>
+                    {activeCourse.map((course) => (
+                      <MenuItem key={course.course_id} value={course.course_id}>
+                        {course.course_name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 )}
               />
             </Grid>
-
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="batch"
                 control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                rules={{ required: 'Batch field is required' }}
+                render={({ field: { value } }) => (
                   <TextField
-                    select
                     fullWidth
+                    select
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
+                    label="Batch"
+                    id="select-single-batch"
                     value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Batch"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
+                    onChange={(e) => {
+                      setValue('batch', e.target.value)
+                      getActiveStudentByBatch(e.target.value);
+                    }}
                     error={Boolean(errors.batch)}
-                    {...(errors.batch && { helperText: errors.batch.message })}
+                    helperText={errors.batch?.message}
                   >
-                    <MenuItem value={'Batch 1'}>Batch 1</MenuItem>
-                    <MenuItem value={'Batch 2'}>Batch 2</MenuItem>
+                    {activeBatches.map((batch) => (
+                      <MenuItem key={batch.batch_id} value={batch.batch_id}>
+                        {batch.batch_name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 )}
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
-                name="students"
+                name="student"
                 control={control}
-                rules={{ required: true }}
+                rules={{ required: 'student field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
-                    select
                     fullWidth
+                    select
+                    SelectProps={{
+                      MenuProps: Object.assign(MenuProps, {
+                        PaperProps: {
+                          style: {
+                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                            width: 250,
+                          },
+                        },
+                      }),
+                    }}
+                    label="student"
+                    id="select-single-student"
                     value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Students"
                     onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.students)}
-                    {...(errors.students && { helperText: errors.students.message })}
+                    error={Boolean(errors.student)}
+                    helperText={errors.student?.message}
                   >
-                    <MenuItem value={'Student 1'}>Student 1</MenuItem>
-                    <MenuItem value={'Student 2'}>Student 2</MenuItem>
+                    {activeStudents.map((student) => (
+                      <MenuItem key={student.student_id} value={student.student_id}>
+                        {student.first_name} {student.last_name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 )}
               />
+            </Grid>
+            <Grid item xs={6}sx={{ mb: 2 }}>
+              <Controller
+                name="payment_date"
+                control={control}
+                rules={{ required: 'Payment Date field is required' }}
+                render={({ field: { value, onChange } }) => (
+                  <DatePicker
+                    selected={value}
+                    id="basic-input"
+                    className="full-width-datepicker"
+                    onChange={onChange}
+                    placeholderText="Click to select a date"
+                    customInput={<CustomInput label="Payment Date" />}
+                  />
+                )}
+              />
+              {errors.payment_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>}
             </Grid>
 
             <Grid item xs={12} sm={12}>

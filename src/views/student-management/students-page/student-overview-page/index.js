@@ -23,8 +23,6 @@ const OverlayStyle = styled('div')(({ theme }) => ({
 }));
 
 const Students = () => {
-
-
   const dispatch = useDispatch();
   const Students = useSelector(selectStudents);
   const StudentsLoading = useSelector(selectLoading);
@@ -35,7 +33,6 @@ const Students = () => {
   useEffect(() => {
     dispatch(getAllStudents(selectedBranchId));
   }, [dispatch, selectedBranchId]);
-
 
   return (
     <>
