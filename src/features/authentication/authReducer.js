@@ -17,7 +17,7 @@ const initialState = {
   isAuthenticated: localStorage.getItem('isAuthenticated') || false,
   token: localStorage.getItem('token') || null,
   userData: JSON.parse(localStorage.getItem('userData')) || null,
-  permissions: JSON.parse(localStorage.getItem('userData')) || null,
+  permissions: JSON.parse(localStorage.getItem('permissions')) || null,
   branches: JSON.parse(localStorage.getItem('branches')) || null,
   selectedBranchId: haveBranchId(),
   errorMessage: ''
