@@ -86,7 +86,7 @@ const Teaching = () => {
                           </TextField>
                         </Grid>
                         <Grid>
-                          <Button component={Link} to={'1'} variant="tonal" sx={{ px: 4 }}>
+                          <Button component={Link} to={'1'} variant="tonal" sx={{ p: 1.05 }}>
                             View Profile
                           </Button>
                         </Grid>
