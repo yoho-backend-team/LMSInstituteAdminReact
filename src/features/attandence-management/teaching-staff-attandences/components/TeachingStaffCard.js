@@ -41,11 +41,11 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <Typography variant="h4">{item.Present}</Typography>
+                        <Typography variant="h4">40</Typography>
                         <Typography sx={{ color: 'text.secondary' }}>Present</Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <Typography variant="h4">{item.Absent}</Typography>
+                        <Typography variant="h4">15</Typography>
                         <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                       </Box>
                     </Box>
