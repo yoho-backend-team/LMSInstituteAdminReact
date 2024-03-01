@@ -15,7 +15,7 @@ const BranchCard = ({ branch, setEditModalOpen, setSelectedBranch }) => {
             right: 3
           }}
         >
-          <OptionsMenu 
+          <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
@@ -56,10 +56,30 @@ const BranchCard = ({ branch, setEditModalOpen, setSelectedBranch }) => {
           image={require('assets/images/avatar/map-pin.png')}
         />
         <CardContent>
-          <Typography variant="h4" sx={{ mb: 2 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 2,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {branch?.branch_name}
           </Typography>
-          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'text.secondary',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
           </Typography>
         </CardContent>
