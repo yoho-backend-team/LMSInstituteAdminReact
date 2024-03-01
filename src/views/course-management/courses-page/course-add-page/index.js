@@ -110,8 +110,6 @@ const AddCoursePage = () => {
     }
   };
 
-  console.log('course Categories : ', activeCategories);
-
   useEffect(() => {
     getAllCategories();
   }, [selectedBranchId]);
@@ -142,8 +140,6 @@ const AddCoursePage = () => {
     resolver: yupResolver(courseFileSchema)
   });
 
-  console.log(activeCategories);
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -169,7 +165,8 @@ const AddCoursePage = () => {
     if (activeStep === steps.length - 1) {
       const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
 
-      console.log(filteredBranchId);
+      console.log(personalData);
+      console.log(selectedBranches);
 
       let data = new FormData();
       filteredBranchId.forEach((id) => {
@@ -179,7 +176,7 @@ const AddCoursePage = () => {
       data.append('description', personalData?.description);
       data.append('course_overview', personalData?.course_overview);
       data.append('course_duration', personalData?.course_duration);
-      data.append('institute_category_id', personalData?.course_category);
+      data.append('institute_category_id', personalData?.course_category.category_id);
       data.append('course_price', personalData?.course_price);
       data.append('learning_format', personalData?.learning_format);
       data.append('logo', courseLogo);
@@ -351,13 +348,17 @@ const AddCoursePage = () => {
                       fullWidth
                       value={value || null}
                       onChange={(event, newValue) => {
+                        console.log(event);
                         onChange(newValue);
+                        // setValue('course_category', newValue.category_id);
                       }}
                       options={activeCategories ?? []}
                       getOptionLabel={(option) => option.category_name}
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          value={value}
+                          onChange={onChange}
                           label="Course Category"
                           error={Boolean(courseErrors['course_category'])}
                           helperText={courseErrors['course_category'] ? 'This field is required' : ''}
@@ -380,7 +381,7 @@ const AddCoursePage = () => {
                       onChange={(event, newValue) => {
                         onChange(newValue);
                       }}
-                      options={['online', 'offline', 'hybrid']} 
+                      options={['online', 'offline', 'hybrid']}
                       renderInput={(params) => (
                         <TextField
                           {...params}
