@@ -42,7 +42,7 @@ export const getAllCourseCategories = async (selectedBranchId) => {
       params: { branch_id: selectedBranchId }
     });
 
-    // console.log(response);
+    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -85,7 +85,8 @@ export const addCourseCategory = async (data) => {
   try {
     const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/create`, data, {
       headers: {
-        // 'Content-Type': 'application/json',
+        // 'Content-Type': 'multipart/form-data',
+        Accept: 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
