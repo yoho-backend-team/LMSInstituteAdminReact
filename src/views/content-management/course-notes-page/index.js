@@ -146,6 +146,11 @@ const Notes = () => {
               <Typography
                 noWrap
                 sx={{
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
@@ -154,7 +159,19 @@ const Notes = () => {
               >
                 {row?.title}
               </Typography>
-              <Typography noWrap sx={{ color: 'text.secondary', fontSize: '0.75rem', mt: 1 }}>
+              <Typography
+                noWrap
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  mt: 1,
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
                 {row?.description}
               </Typography>
             </Box>
@@ -170,7 +187,18 @@ const Notes = () => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            <Typography
+              noWrap
+              sx={{
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 1,
+                WebkitBoxOrient: 'vertical',
+                textOverflow: 'ellipsis',
+                color: 'text.secondary',
+                textTransform: 'capitalize'
+              }}
+            >
               {row?.institute_branch_courses?.course_name}
             </Typography>
           </Box>

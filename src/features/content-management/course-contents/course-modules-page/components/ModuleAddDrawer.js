@@ -18,6 +18,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addCourseModule } from '../services/moduleServices';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const CourseModuleAddDrawer = (props) => {
   // ** Props
@@ -153,32 +154,32 @@ const CourseModuleAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12}>
+        
+        <Grid item xs={12} sm={12}>
             <Controller
               name="branch"
               control={control}
               rules={{ required: true }}
               render={({ field: { value } }) => (
-                <TextField
-                  sx={{ mb: 2 }}
+                <Autocomplete
                   fullWidth
                   value={value}
-                  select
-                  label="Branch"
-                  id="custom-select"
-                  onChange={(e) => {
-                    setValue('branch', e.target.value);
-                    getActiveCoursesByBranch(e.target.value);
+                  onChange={(event, newValue) => {
+                    setValue('branch', newValue);
+                    getActiveCoursesByBranch(newValue);
                   }}
-                  error={Boolean(errors.branch)}
-                  {...(errors.branch && { helperText: errors.branch.message })}
-                >
-                  {branches?.map((item, index) => (
-                    <MenuItem key={index} value={item.branch_id}>
-                      {item.branch_name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  options={branches ?? []}
+                  getOptionLabel={(option) => option.branch_name}
+                  renderInput={(params) => (
+                    <TextField
+                  sx={{ mb: 2 }}
+                      {...params}
+                      label="Branch"
+                      error={Boolean(errors.branch)}
+                      {...(errors.branch && { helperText: errors.branch.message })}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
