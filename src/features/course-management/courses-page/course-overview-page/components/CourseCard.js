@@ -53,7 +53,19 @@ const CourseCard = (props) => {
             />
           </Box>
           <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="h4">{course?.course_name}</Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                mt: 1.5,
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {course?.course_name}
+            </Typography>
             <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
               {personName}
             </Typography>

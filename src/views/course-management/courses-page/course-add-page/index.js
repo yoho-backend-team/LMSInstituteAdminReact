@@ -9,12 +9,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
 import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
 import StepperCustomDot from 'features/course-management/courses-page/course-add-page/components/StepperCustomDot';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
@@ -25,8 +26,6 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import StepperWrapper from 'styles/mui/stepper';
 import * as yup from 'yup';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
 
 const AddCoursePage = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -69,8 +68,15 @@ const AddCoursePage = () => {
     description: yup.string().required(),
     course_overview: yup.string().required(),
     learning_format: yup.string().required(),
-    course_category: yup.string().required(),
-    branches: yup.array().required()
+    course_category: yup.object().required('Course Category is required').nullable(true),
+    branches: yup
+      .array()
+      .required()
+      .test('no-special-characters', 'Branches must not contain special characters', (value) => {
+        if (!value) return true;
+        const specialCharRegex = /[^\w\s]/;
+        return !value.some((branch) => specialCharRegex.test(branch));
+      })
   });
 
   const courseFileSchema = yup.object().shape({});
@@ -341,24 +347,23 @@ const AddCoursePage = () => {
                   control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      sx={{ mb: 2 }}
+                    <Autocomplete
                       fullWidth
-                      select
-                      defaultValue={value}
-                      onChange={onChange}
-                      label="Course Category"
-                      id="custom-select"
-                      error={Boolean(courseErrors['course_category'])}
-                      aria-describedby="stepper-linear-personal-course_category"
-                      {...(courseErrors['course_category'] && { helperText: 'This field is required' })}
-                    >
-                      {activeCategories?.map((item, index) => (
-                        <MenuItem key={index} value={item.category_id}>
-                          {item.category_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      value={value || null}
+                      onChange={(event, newValue) => {
+                        onChange(newValue);
+                      }}
+                      options={activeCategories ?? []}
+                      getOptionLabel={(option) => option.category_name}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Course Category"
+                          error={Boolean(courseErrors['course_category'])}
+                          helperText={courseErrors['course_category'] ? 'This field is required' : ''}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
@@ -369,21 +374,22 @@ const AddCoursePage = () => {
                   control={courseControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      select
-                      label="Learning Format"
+                    <Autocomplete
                       fullWidth
-                      id="validation-billing-select"
-                      aria-describedby="validation-billing-select"
-                      error={Boolean(courseErrors['learning_format'])}
-                      {...(courseErrors['learning_format'] && { helperText: 'This field is required' })}
-                      onChange={onChange}
                       value={value}
-                    >
-                      <MenuItem value="online">Online Mode</MenuItem>
-                      <MenuItem value="offline">Offline Mode</MenuItem>
-                      <MenuItem value="hybrid">Hybrid Mode</MenuItem>
-                    </TextField>
+                      onChange={(event, newValue) => {
+                        onChange(newValue);
+                      }}
+                      options={['online', 'offline', 'hybrid']} 
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Learning Format"
+                          error={Boolean(courseErrors['learning_format'])}
+                          {...(courseErrors['learning_format'] && { helperText: 'This field is required' })}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>

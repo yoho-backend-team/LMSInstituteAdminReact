@@ -59,14 +59,25 @@ const CategoryCard = (props) => {
             </Box>
           </Box>
           {/* Category Details */}
-          <Typography variant="h3" sx={{ mb: 1, mt: 2 }}>
+          <Typography
+            variant="h3"
+            sx={{
+              mb: 1,
+              mt: 2,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {category?.category_name}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
             {category?.course?.length} Courses
           </Typography>
           {/* Category Status Selector */}
-          <Grid sx={{ mt: 1 }}>
+          <Grid sx={{ mt: 2 }}>
             <TextField size="small" select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: handleStatusChange }}>
               <MenuItem value="1">Active</MenuItem>
               <MenuItem value="0">Inactive</MenuItem>
