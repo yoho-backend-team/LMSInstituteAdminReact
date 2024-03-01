@@ -81,7 +81,7 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required(),
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
-    branch: yup.string().required('Branch is required'),
+    branch: yup.string().required(),
     username: yup.string().required()
   });
 
@@ -122,7 +122,7 @@ const StepperLinearWithValidation = () => {
   const {
     reset: personalReset,
     control: personalControl,
-    setValue,
+    // setValue,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
@@ -153,7 +153,8 @@ const StepperLinearWithValidation = () => {
       alt_phone: Number(''),
       description: '',
       joining_date: '',
-      designation: ''
+      designation: '',
+      branch:'',
     });
   };
 
@@ -393,30 +394,29 @@ const StepperLinearWithValidation = () => {
                   name="branch"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value } }) => (
-                    <TextField
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
                       fullWidth
-                      select
-                      value={value}
-                      onChange={(e) => {
-                        setValue('branch', e.target.value);
-                        getActiveCoursesByBranch(e.target.value);
+                      value={value || null}
+                      onChange={(event, newValue) => {
+                        onChange(newValue); // Update the value of the branch field
                       }}
-                      label="Branch"
-                      id="custom-select"
-                      error={Boolean(personalErrors['branch'])}
-                      aria-describedby="stepper-linear-personal-branch"
-                      {...(personalErrors['branch'] && { helperText: 'This field is required' })}
-                    >
-                      {activeBranches.map((item, index) => (
-                        <MenuItem key={index} value={item.branch_id}>
-                          {item.branch_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      options={activeBranches ?? []}
+                      getOptionLabel={(option) => option.branch_name}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Branch"
+                          error={Boolean(personalErrors['branch'])}
+                          aria-describedby="stepper-linear-personal-branch"
+                          {...(personalErrors['branch'] && { helperText: 'This field is required' })}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
