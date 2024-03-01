@@ -169,12 +169,29 @@ const StudyMaterials = () => {
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
+                  '&:hover': { color: 'primary.main' },
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
                 }}
               >
                 {row?.title}
               </Typography>
-              <Typography noWrap sx={{ color: 'text.secondary', fontSize: '0.75rem', mt: 1 }}>
+              <Typography
+                noWrap
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  mt: 1,
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
                 {row?.description}
               </Typography>
             </Box>
@@ -189,7 +206,18 @@ const StudyMaterials = () => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+            <Typography
+              noWrap
+              sx={{
+                color: 'text.secondary',
+                textTransform: 'capitalize',
+                overflow: 'hidden',
+                display: '-webkit-box',
+                WebkitLineClamp: 1,
+                WebkitBoxOrient: 'vertical',
+                textOverflow: 'ellipsis'
+              }}
+            >
               {row?.institute_branch_courses?.course_name}
             </Typography>
           </Box>

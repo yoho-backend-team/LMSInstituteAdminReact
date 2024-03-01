@@ -19,6 +19,8 @@ import CoursePdfInput from '../../components/PdfInput';
 import MenuItem from '@mui/material/MenuItem';
 import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import Autocomplete from '@mui/material/Autocomplete'
+
 
 const StudyMaterialAddDrawer = (props) => {
   // ** Props
@@ -167,26 +169,25 @@ const StudyMaterialAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value } }) => (
-                <TextField
-                  sx={{ mb: 2 }}
+                <Autocomplete
                   fullWidth
                   value={value}
-                  select
-                  label="Branch"
-                  id="custom-select"
-                  onChange={(e) => {
-                    setValue('branch', e.target.value);
-                    getActiveCoursesByBranch(e.target.value);
+                  onChange={(event, newValue) => {
+                    setValue('branch', newValue);
+                    getActiveCoursesByBranch(newValue);
                   }}
-                  error={Boolean(errors.branch)}
-                  {...(errors.branch && { helperText: errors.branch.message })}
-                >
-                  {branches?.map((item, index) => (
-                    <MenuItem key={index} value={item.branch_id}>
-                      {item.branch_name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  options={branches ?? []}
+                  getOptionLabel={(option) => option.branch_name}
+                  renderInput={(params) => (
+                    <TextField
+                  sx={{ mb: 2 }}
+                      {...params}
+                      label="Branch"
+                      error={Boolean(errors.branch)}
+                      {...(errors.branch && { helperText: errors.branch.message })}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
