@@ -1,8 +1,9 @@
-import React from 'react';
-import Icon from 'components/icon';
-import { Link } from 'react-router-dom';
-import { Card, CardContent, Typography, IconButton, Box, Grid } from '@mui/material';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
+import Icon from 'components/icon';
+import OptionsMenu from 'components/option-menu';
+import { Link } from 'react-router-dom';
+
 const BranchCard = ({ branch, setEditModalOpen, setSelectedBranch }) => {
   return (
     <Grid item xs={12} sm={6} md={3}>
@@ -14,25 +15,34 @@ const BranchCard = ({ branch, setEditModalOpen, setSelectedBranch }) => {
             right: 3
           }}
         >
-          <IconButton
-            aria-label="capture screenshot"
-            color="primary"
-            onClick={() => {
-              if (branch) {
-                setSelectedBranch(branch);
-                setEditModalOpen(true);
-              }
-            }}
-          >
-            <Icon icon="tabler:edit" />
-          </IconButton>
-          <Box component={Link} to={`${branch?.branch_id}`}>
-            <IconButton aria-label="capture screenshot" color="primary">
-              <Icon icon="tabler:eye" />
-            </IconButton>
-          </Box>
-        </Grid>
+          <OptionsMenu
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+            options={[
+              {
+                text: 'View',
+                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                menuItemProps: {
+                  component: Link,
+                  to: `${branch?.branch_id}`
+                }
+              },
+              {
+                text: 'Edit',
 
+                icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
+                menuItemProps: {
+                  onClick: () => {
+                    if (branch) {
+                      setSelectedBranch(branch);
+                      setEditModalOpen(true);
+                    }
+                  }
+                }
+              }
+            ]}
+          />
+        </Grid>
         <CardMedia
           sx={{
             height: 100,
@@ -46,10 +56,30 @@ const BranchCard = ({ branch, setEditModalOpen, setSelectedBranch }) => {
           image={require('assets/images/avatar/map-pin.png')}
         />
         <CardContent>
-          <Typography variant="h4" sx={{ mb: 2 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 2,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {branch?.branch_name}
           </Typography>
-          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+          <Typography
+            variant="h6"
+            sx={{
+              color: 'text.secondary',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
           </Typography>
         </CardContent>
