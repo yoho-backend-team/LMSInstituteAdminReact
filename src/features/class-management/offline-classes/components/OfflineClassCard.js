@@ -93,7 +93,8 @@ const LiveClassCard = () => {
             <Card
               sx={{
                 position: 'relative',
-                borderTop: card?.status === 'completed' ? '4px solid green' : '4px solid #7cf2e1'
+                borderTop: card?.status === 'completed' ? '4px solid green' : '4px solid #7cf2e1',
+                height:275
               }}
             >
               <CardContent>
