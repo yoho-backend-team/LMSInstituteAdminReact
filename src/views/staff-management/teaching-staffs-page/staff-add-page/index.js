@@ -81,7 +81,7 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required(),
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
-    branch: yup.string().required(),
+    branch: yup.object().required(),
     username: yup.string().required()
   });
 
@@ -154,7 +154,7 @@ const StepperLinearWithValidation = () => {
       description: '',
       joining_date: '',
       designation: '',
-      branch:'',
+      branch: '',
     });
   };
 
@@ -232,7 +232,7 @@ const StepperLinearWithValidation = () => {
       data.append('alternate_number', personalData?.alt_phone);
       data.append('designation', personalData?.designation);
       data.append('type', 'teaching');
-      data.append('branch_id', personalData?.branch);
+      data.append('branch_id', personalData?.branch.branch_id);
       data.append('image', logo);
       data.append('gender', personalData?.gender);
       data.append('address_line_1', personalData?.address_line_one);
@@ -407,6 +407,8 @@ const StepperLinearWithValidation = () => {
                         <TextField
                           {...params}
                           label="Branch"
+                          value={value}
+                          onChange={onChange}
                           error={Boolean(personalErrors['branch'])}
                           aria-describedby="stepper-linear-personal-branch"
                           {...(personalErrors['branch'] && { helperText: 'This field is required' })}
