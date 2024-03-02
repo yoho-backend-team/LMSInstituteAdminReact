@@ -5,7 +5,6 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,13 +16,15 @@ import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 // import { addStudentFee } from '../services/studentFeeServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import Autocomplete from '@mui/material/Autocomplete';
 import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
-import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
-import { addStudentCertificate } from '../services/studentCertificateServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import CoursePdfInput from 'features/content-management/course-contents/components/PdfInput';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import { useSelector } from 'react-redux';
+import { addStudentCertificate } from '../services/studentCertificateServices';
+
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -47,17 +48,7 @@ const defaultValues = {
   name: '',
   description: ''
 };
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
 
 const StudentCertificateAddDrawer = (props) => {
   // ** Props
@@ -192,110 +183,65 @@ const StudentCertificateAddDrawer = (props) => {
                 control={control}
                 rules={{ required: 'Branch field is required' }}
                 render={({ field: { value } }) => (
-                  <TextField
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
-                    }}
-                    label="Select Branch"
+                    options={activeBranches}
+                    getOptionLabel={(branch) => branch.branch_name}
                     value={value}
-                    onChange={(e) => {
-                      setValue('branch', e.target.value);
-                      getActiveCoursesByBranch(e.target.value);
+                    onChange={(e, newValue) => {
+                      setValue('branch', newValue);
+                      getActiveCoursesByBranch(newValue);
                     }}
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
-                  >
-                    {activeBranches.map((branch) => (
-                      <MenuItem key={branch.branch_id} value={branch.branch_id}>
-                        {branch.branch_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="course"
                 control={control}
                 rules={{ required: 'Course field is required' }}
                 render={({ field: { value } }) => (
-                  <TextField
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
-                    }}
-                    label="Select Course"
-                    id="select-single-course-extra"
+                    options={activeCourse}
+                    getOptionLabel={(course) => course.course_name}
                     value={value}
-                    onChange={(e) => {
-                      setValue('course', e.target.value);
-                      getActiveBatchesByCourse(e.target.value);
+                    onChange={(e, newValue) => {
+                      setValue('course', newValue);
+                      getActiveBatchesByCourse(newValue);
                     }}
-                    error={Boolean(errors.course)}
-                    helperText={errors.course?.message}
-                  >
-                    {activeCourse.map((course) => (
-                      <MenuItem key={course.course_id} value={course.course_id}>
-                        {course.course_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="batch"
                 control={control}
                 rules={{ required: 'Batch field is required' }}
                 render={({ field: { value } }) => (
-                  <TextField
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
-                    }}
-                    label="Batch"
-                    id="select-single-batch"
+                    options={activeBatches}
+                    getOptionLabel={(batch) => batch.batch_name}
                     value={value}
-                    onChange={(e) => {
-                      setValue('batch', e.target.value);
-                      getActiveStudentByBatch(e.target.value);
+                    onChange={(e, newValue) => {
+                      setValue('batch', newValue);
+                      getActiveStudentByBatch(newValue);
                     }}
-                    error={Boolean(errors.batch)}
-                    helperText={errors.batch?.message}
-                  >
-                    {activeBatches.map((batch) => (
-                      <MenuItem key={batch.batch_id} value={batch.batch_id}>
-                        {batch.batch_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    renderInput={(params) => (
+                      <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
@@ -304,34 +250,18 @@ const StudentCertificateAddDrawer = (props) => {
               <Controller
                 name="student"
                 control={control}
-                rules={{ required: 'student field is required' }}
+                rules={{ required: 'Student field is required' }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
-                    }}
-                    label="student"
-                    id="select-single-student"
+                    options={activeStudents}
+                    getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
                     value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.student)}
-                    helperText={errors.student?.message}
-                  >
-                    {activeStudents.map((student) => (
-                      <MenuItem key={student.student_id} value={student.student_id}>
-                        {student.first_name} {student.last_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    onChange={(e, newValue) => onChange(newValue)}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>

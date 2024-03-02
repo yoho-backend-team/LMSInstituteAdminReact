@@ -1,7 +1,6 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
 // ** MUI Imports
-import { IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
@@ -14,15 +13,16 @@ import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
+import OptionsMenu from 'components/option-menu';
 import StudentCertificateAddDrawer from 'features/certificate-management/student-certificates/components/StudentCertificateAddDrawer';
 import StudentCertificateEdit from 'features/certificate-management/student-certificates/components/StudentCertificateEdit';
 import StudentCertificateTableHeader from 'features/certificate-management/student-certificates/components/StudentCertificateTableHeader';
 import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
+import { selectStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
+import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
-import { selectStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -69,25 +69,6 @@ const StudenrCertificate = () => {
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
-  };
-
-  const RowOptions = () => {
-    return (
-      <Box sx={{ gap: 1 }}>
-        <IconButton onClick={() => handleView()} aria-label="capture screenshot" color="primary">
-          <Icon icon="tabler:eye" />
-        </IconButton>
-        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
-          <Icon icon="tabler:edit" />
-        </IconButton>
-        <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
-          <Icon icon="mdi:delete-outline" />
-        </IconButton>
-        <IconButton aria-label="capture screenshot" color="error">
-          <Icon icon="tabler:download" fontSize={20} />
-        </IconButton>
-      </Box>
-    );
   };
 
   const studentCertificatesdata = [
@@ -285,7 +266,51 @@ const StudenrCertificate = () => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: () => (
+        <Box sx={{ gap: 1 }}>
+          <OptionsMenu
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+            options={[
+              {
+                // to: `/apps/invoice/download/${row.id}`,
+                text: 'Download',
+                icon: <Icon icon="tabler:download" fontSize={20} />
+              },
+              {
+                // to: `/apps/invoice/edit/${row.id}`,
+                text: 'Edit',
+                icon: <Icon icon="tabler:edit" />,
+                menuItemProps: {
+                  onClick: () => {
+                    toggleEditUserDrawer();
+                  }
+                }
+              },
+              {
+                // to: `/apps/invoice/view/${row.id}`,
+                text: 'View',
+                icon: <Icon icon="tabler:eye" />,
+                menuItemProps: {
+                  onClick: () => {
+                    handleView();
+                  }
+                }
+              },
+              {
+                // to: `/apps/invoice/delete/${row.id}`,
+                text: 'Delete',
+                icon: <Icon icon="mdi:delete-outline" />,
+                menuItemProps: {
+                  onClick: () => {
+                    handleDelete();
+                  }
+                }
+              }
+            ]}
+          />
+        </Box>
+      )
     }
   ];
 
