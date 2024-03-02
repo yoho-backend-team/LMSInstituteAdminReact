@@ -20,6 +20,7 @@ import Icon from 'components/icon';
 import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import toast from 'react-hot-toast';
 import { updateStudentCertificate } from '../services/studentCertificateServices';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -231,20 +232,21 @@ const StudentCertificateEdit = (props) => {
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
-              <TextField
-                select
+              <Autocomplete
                 fullWidth
                 value={value}
-                sx={{ mb: 4 }}
-                label="Select Course"
-                onChange={onChange}
-                SelectProps={{ value: value, onChange: onChange }}
-                error={Boolean(errors.course)}
-                {...(errors.course && { helperText: errors.course.message })}
-              >
-                <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                <MenuItem value={'Android Development'}>Android Development</MenuItem>
-              </TextField>
+                onChange={(event, newValue) => onChange(newValue)}
+                options={['Web Development', 'Android Development']}
+                renderInput={(params) => (
+                  <TextField
+                    sx={{ mb: 4 }}
+                    {...params}
+                    label="Select Course"
+                    error={Boolean(errors.course)}
+                    helperText={errors.course?.message}
+                  />
+                )}
+              />
             )}
           />
 
