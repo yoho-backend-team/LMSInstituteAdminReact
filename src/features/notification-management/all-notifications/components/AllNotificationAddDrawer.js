@@ -5,7 +5,6 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 // ** Third Party Imports
@@ -14,8 +13,8 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-
 import toast from 'react-hot-toast';
 
 import { addNotification } from '../services/allNotificationServices';
@@ -196,20 +195,23 @@ const AllNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  sx={{ mb: 4 }}
-                  label="Select Branch"
-                  onChange={onChange}
-                  SelectProps={{ value: value, onChange: onChange }}
-                  error={Boolean(errors.branch)}
-                  {...(errors.branch && { helperText: errors.branch.message })}
-                >
-                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                </TextField>
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'branch' field
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Branch"
+                      sx={{ mb: 4 }}
+                      error={Boolean(errors.branch)}
+                      helperText={errors.branch?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
@@ -220,20 +222,23 @@ const AllNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  sx={{ mb: 4 }}
-                  label="Select Title"
-                  onChange={onChange}
-                  SelectProps={{ value: value, onChange: onChange }}
-                  error={Boolean(errors.title)}
-                  {...(errors.title && { helperText: errors.title.message })}
-                >
-                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                </TextField>
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'title' field
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Title"
+                      sx={{ mb: 4 }}
+                      error={Boolean(errors.title)}
+                      helperText={errors.title?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
@@ -244,20 +249,23 @@ const AllNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  sx={{ mb: 4 }}
-                  label="Select Body"
-                  onChange={onChange}
-                  SelectProps={{ value: value, onChange: onChange }}
-                  error={Boolean(errors.body)}
-                  {...(errors.body && { helperText: errors.body.message })}
-                >
-                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                </TextField>
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'body' field
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Body"
+                      sx={{ mb: 4 }}
+                      error={Boolean(errors.body)}
+                      helperText={errors.body?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
