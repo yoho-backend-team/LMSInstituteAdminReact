@@ -5,7 +5,6 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,6 +12,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFeeRefund } from '../services/studentFeeRefundServices';
@@ -92,11 +92,11 @@ const RefundEditDrawer = (props) => {
     const dummyData = {
       batch: data.batch,
       students: data.students,
-      amount: data.amount,
+      amount: data.amount
     };
 
     try {
-      const result = await  updateStudentFeeRefund(dummyData);
+      const result = await updateStudentFeeRefund(dummyData);
 
       if (result.success) {
         toast.success(result.message);
@@ -169,46 +169,39 @@ const RefundEditDrawer = (props) => {
                 name="batch"
                 control={control}
                 render={({ field }) => (
-                  <TextField
+                  <Autocomplete
                     {...field}
-                    sx={{ mb: 2 }}
-                    select
                     fullWidth
-                    label="Batch"
-                    id="batch-select"
-                    defaultValue=""
-                    error={Boolean(errors.batch)}
-                    helperText={errors.batch?.message}
-                  >
-                    <MenuItem value="UK">UK</MenuItem>
-                    <MenuItem value="USA">USA</MenuItem>
-                    <MenuItem value="Australia">Australia</MenuItem>
-                    <MenuItem value="Germany">Germany</MenuItem>
-                  </TextField>
+                    sx={{ mb: 2 }}
+                    options={['UK', 'USA', 'Australia', 'Germany']}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                    )}
+                    onChange={(e, value) => {
+                      field.onChange(value);
+                    }}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={12}>
               <Controller
                 name="students"
                 control={control}
                 render={({ field }) => (
-                  <TextField
+                  <Autocomplete
                     {...field}
-                    sx={{ mb: 2 }}
-                    select
                     fullWidth
-                    label="Student"
-                    id="student-select"
-                    defaultValue=""
-                    error={Boolean(errors.students)}
-                    helperText={errors.students?.message}
-                  >
-                    <MenuItem value="UK">UK</MenuItem>
-                    <MenuItem value="USA">USA</MenuItem>
-                    <MenuItem value="Australia">Australia</MenuItem>
-                    <MenuItem value="Germany">Germany</MenuItem>
-                  </TextField>
+                    sx={{ mb: 2 }}
+                    options={['UK', 'USA', 'Australia', 'Germany']}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Students" error={Boolean(errors.students)} helperText={errors.students?.message} />
+                    )}
+                    onChange={(e, value) => {
+                      field.onChange(value);
+                    }}
+                  />
                 )}
               />
             </Grid>
