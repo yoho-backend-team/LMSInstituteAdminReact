@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import format from 'date-fns/format';
@@ -56,21 +55,21 @@ const schema = yup.object().shape({
   classDate: yup.date().nullable().required('Class Date field is required'),
   startTime: yup.date().nullable().required('Start Time field is required'),
   endTime: yup.date().nullable().required('End Time field is required'),
-  instructor: yup.string().required('Instructor field is required'),
+  instructor: yup.string().required('Instructor field is required')
 });
 
 const defaultValues = {
   course: '',
   batch: '',
-  selectcourse: "",
+  selectcourse: '',
   classDate: new Date(),
   startTime: null,
   endTime: null,
   instructor: '',
-  teacher: [],
+  teacher: []
 };
 
-const OfflineClassEditModal = ({ open, handleEditClose, }) => {
+const OfflineClassEditModal = ({ open, handleEditClose }) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -169,7 +168,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, }) => {
       classDate: data.classDate,
       startTime: data.startTime,
       endTime: data.endTime,
-      instructor: data.instructor,
+      instructor: data.instructor
     };
 
     try {
@@ -190,7 +189,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, }) => {
   const courses = [
     { id: 1, name: 'Course 1' },
     { id: 2, name: 'Course 2' },
-    { id: 3, name: 'Course 3' },
+    { id: 3, name: 'Course 3' }
   ];
 
   return (
@@ -247,67 +246,40 @@ const OfflineClassEditModal = ({ open, handleEditClose, }) => {
                   control={control}
                   rules={{ required: 'Extra Course field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
-                      }}
-                      label="Select Course"
-                      id="select-single-course-extra"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.selectcourse)}
-                      helperText={errors.selectcourse?.message}
-                    >
-                      {courses.map((course) => (
-                        <MenuItem key={course.id} value={course.name}>
-                          {course.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      options={courses}
+                      getOptionLabel={(course) => course.name}
+                      onChange={(event, newValue) => onChange(newValue?.name)}
+                      value={courses.find((course) => course.name === value) || null}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          error={Boolean(errors.selectcourse)}
+                          helperText={errors.selectcourse?.message}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <Controller
                   name="batch"
                   control={control}
                   rules={{ required: 'Batch field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
-                      }}
-                      label="Batch"
-                      id="select-single-batch"
+                      options={names}
+                      onChange={(event, newValue) => onChange(newValue)}
                       value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.batch)}
-                      helperText={errors.batch?.message}
-                    >
-                      {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      renderInput={(params) => (
+                        <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      )}
+                    />
                   )}
                 />
               </Grid>

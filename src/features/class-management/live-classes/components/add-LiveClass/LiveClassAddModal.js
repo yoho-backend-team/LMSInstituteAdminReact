@@ -8,22 +8,21 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 // import format from 'date-fns/format';
-import { forwardRef, useState, useEffect } from 'react';
+import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addLiveClass } from '../../services/liveClassServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
-import toast from 'react-hot-toast';
 /* eslint-disable */
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -32,8 +31,6 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
-
-
 
 const LiveClassAddModal = ({ open, handleAddClose }) => {
   const [personName, setPersonName] = useState([]);
@@ -44,7 +41,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   const [endTime, setEndTime] = useState(null);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
-
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
@@ -63,37 +59,36 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log("active branches : ", result.data);
+    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
 
-    console.log("active courses : ", result.data);
+    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId }
+    const data = { course_id: courseId };
     const result = await getAllActiveBatchesByCourse(data);
 
-    console.log("active batches : ", result.data);
+    console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
   const getActiveTeachingStaffs = async (selectedBranchId) => {
-    const data = { type: 'teaching', branch_id: selectedBranchId }
+    const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveStaffs(data);
 
-    console.log("active teaching staffs : ", result.data);
+    console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
-    const data = { type: 'non_teaching', branch_id: selectedBranchId }
+    const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveStaffs(data);
 
-    console.log("active non teaching staffs : ", result.data);
+    console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
-
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);
@@ -132,8 +127,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     { id: '3', name: 'Course 3' }
   ];
 
-
-
   const showErrors = (field, valueLen, min) => {
     if (valueLen === 0) {
       return `${field} field is required`;
@@ -150,7 +143,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
       .required('Course field is required'),
     branch: yup.string().required('Branch field is required'),
-    course: yup.string().required('Course field is required'),
+    course: yup.object().required('Course field is required'),
     batch: yup.string().required('Batch field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     startTime: yup.date().nullable().required('Start Time field is required'),
@@ -163,7 +156,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   const defaultValues = {
     class_name: '',
     branch: selectedBranchId,
-    course: "",
+    course: '',
     batch: '',
     classDate: new Date(),
     startTime: null,
@@ -256,7 +249,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       coordinator_staff_ids: filteredCoordinatorId,
       class_link: data.videoUrl,
       type: 'live',
-      status: 'pending',
+      status: 'pending'
     };
 
     try {
@@ -326,34 +319,19 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   control={control}
                   rules={{ required: 'Branch field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
+                      options={activeBranches}
+                      getOptionLabel={(option) => option.branch_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.branch_id);
+                        getActiveCoursesByBranch(newValue?.branch_id);
                       }}
-                      label="Select Branch"
-                      value={value}
-                      onChange={(e) => {
-                        setValue('branch', e.target.value);
-                        getActiveCoursesByBranch(e.target.value);
-                      }}
-                      error={Boolean(errors.branch)}
-                      helperText={errors.branch?.message}
-                    >
-                      {activeBranches.map((branch) => (
-                        <MenuItem key={branch.branch_id} value={branch.branch_id}>
-                          {branch.branch_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                      )}
+                    />
                   )}
                 />
               </Grid>
@@ -363,70 +341,45 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   control={control}
                   rules={{ required: 'Course field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
+                      options={activeCourse}
+                      getOptionLabel={(option) => option.course_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue);
+                        getActiveBatchesByCourse(newValue?.course_id);
                       }}
-                      label="Select Course"
-                      id="select-single-course-extra"
-                      value={value}
-                      onChange={(e) => {
-                        setValue('course', e.target.value)
-                        getActiveBatchesByCourse(e.target.value);
-                      }}
-                      error={Boolean(errors.course)}
-                      helperText={errors.course?.message}
-                    >
-                      {activeCourse.map((course) => (
-                        <MenuItem key={course.course_id} value={course.course_id}>
-                          {course.course_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          id="select-single-course-extra"
+                          error={Boolean(errors.course)}
+                          helperText={errors.course?.message}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12}>
                 <Controller
                   name="batch"
                   control={control}
                   rules={{ required: 'Batch field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
-                      }}
-                      label="Batch"
-                      id="select-single-batch"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.batch)}
-                      helperText={errors.batch?.message}
-                    >
-                      {activeBatches.map((batch) => (
-                        <MenuItem key={batch.batch_id} value={batch.batch_id}>
-                          {batch.batch_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      options={activeBatches}
+                      getOptionLabel={(option) => option.batch_name}
+                      onChange={(event, newValue) => onChange(newValue?.batch_id)}
+                      value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      )}
+                    />
                   )}
                 />
               </Grid>
@@ -518,10 +471,13 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   onChange={(e, newValue) => {
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
-                      setValue('instructor', activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'))
+                      setValue(
+                        'instructor',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedInstructors(newValue);
-                      setValue('instructor', newValue)
+                      setValue('instructor', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -556,7 +512,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
-                            setValue('instructor', updatedValue)
+                            setValue('instructor', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -581,11 +537,13 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   onChange={(e, newValue) => {
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
-                      setValue('coordinator', activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'))
-
+                      setValue(
+                        'coordinator',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedCoordinates(newValue);
-                      setValue('coordinator', newValue)
+                      setValue('coordinator', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -620,7 +578,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
-                            setValue('coordinator', updatedValue)
+                            setValue('coordinator', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}

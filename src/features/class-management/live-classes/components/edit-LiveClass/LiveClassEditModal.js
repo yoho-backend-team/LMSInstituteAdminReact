@@ -9,7 +9,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import format from 'date-fns/format';
@@ -64,7 +63,7 @@ const schema = yup.object().shape({
 const defaultValues = {
   course: '',
   batch: '',
-  selectcourse: "",
+  selectcourse: '',
   classDate: new Date(),
   startTime: null,
   endTime: null,
@@ -175,7 +174,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
     'Kelly Snyder'
   ];
 
-
   const onSubmit = async (data) => {
     console.log(data);
     const dummyData = {
@@ -203,13 +201,12 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
     }
   };
 
-
   const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
 
   const courses = [
     { id: 1, name: 'Course 1' },
     { id: 2, name: 'Course 2' },
-    { id: 3, name: 'Course 3' },
+    { id: 3, name: 'Course 3' }
   ];
 
   return (
@@ -266,32 +263,21 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                   control={control}
                   rules={{ required: 'Extra Course field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
-                      }}
-                      label="Select Course"
-                      id="select-single-course-extra"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.selectcourse)}
-                      helperText={errors.selectcourse?.message}
-                    >
-                      {courses.map((course) => (
-                        <MenuItem key={course.id} value={course.name}>
-                          {course.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      options={courses}
+                      getOptionLabel={(course) => course.name}
+                      onChange={(event, newValue) => onChange(newValue?.name)}
+                      value={courses.find((course) => course.name === value) || null}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          error={Boolean(errors.selectcourse)}
+                          helperText={errors.selectcourse?.message}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
@@ -301,32 +287,15 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                   control={control}
                   rules={{ required: 'Batch field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
-                      }}
-                      label="Batch"
-                      id="select-single-batch"
+                      options={names}
+                      onChange={(event, newValue) => onChange(newValue)}
                       value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.batch)}
-                      helperText={errors.batch?.message}
-                    >
-                      {names.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          {name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      renderInput={(params) => (
+                        <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      )}
+                    />
                   )}
                 />
               </Grid>

@@ -1,8 +1,8 @@
 // ** React Imports
 import MenuItem from '@mui/material/MenuItem';
-import { Fragment, forwardRef, useState, useEffect } from 'react';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 // ** MUI Imports
-
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -25,13 +25,13 @@ import { styled } from '@mui/material/styles';
 import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
 
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addStudent } from 'features/student-management/students/services/studentService';
 import DatePicker from 'react-datepicker';
-import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import StepperWrapper from 'styles/mui/stepper';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -401,53 +401,54 @@ const StepperLinearWithValidation = () => {
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      value={value}
-                      onChange={(e) => {
-                        setValue('branch', e.target.value);
-                        getActiveCoursesByBranch(e.target.value);
+                      options={activeBranches}
+                      getOptionLabel={(option) => option.branch_name}
+                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      onChange={(event, newValue) => {
+                        setValue('branch', newValue ? newValue.branch_id : '');
+                        getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
                       }}
-                      label="Branch"
-                      id="custom-select"
-                      error={Boolean(personalErrors['branch'])}
-                      aria-describedby="stepper-linear-personal-branch"
-                      {...(personalErrors['branch'] && { helperText: 'This field is required' })}
-                    >
-                      {activeBranches.map((item, index) => (
-                        <MenuItem key={index} value={item.branch_id}>
-                          {item.branch_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Branch"
+                          error={Boolean(personalErrors['branch'])}
+                          helperText={personalErrors['branch'] ? 'This field is required' : ''}
+                          id="custom-select"
+                          aria-describedby="stepper-linear-personal-branch"
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
-
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="course"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      value={value}
-                      onChange={onChange}
-                      label="Select Course"
-                      id="custom-select"
-                      error={Boolean(personalErrors['course'])}
-                      aria-describedby="stepper-linear-personal-course"
-                      {...(personalErrors['course'] && { helperText: 'This field is required' })}
-                    >
-                      {activeCourse.map((item, index) => (
-                        <MenuItem key={index} value={item.course_id}>
-                          {item.course_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      options={activeCourse}
+                      getOptionLabel={(option) => option.course_name}
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      onChange={(event, newValue) => {
+                        onChange(newValue ? newValue.course_id : '');
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          error={Boolean(personalErrors['course'])}
+                          helperText={personalErrors['course'] ? 'This field is required' : ''}
+                          id="custom-select"
+                          aria-describedby="stepper-linear-personal-course"
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
