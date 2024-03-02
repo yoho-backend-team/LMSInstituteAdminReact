@@ -1,7 +1,7 @@
-import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, Typography } from '@mui/material';
 import Header from 'components/Header';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
-import Icon from 'components/icon';
+import OptionsMenu from 'components/option-menu';
 import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
 import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
 import { setGroups } from 'features/user-management/groups-page/redux/groupSlice';
@@ -84,32 +84,38 @@ const GroupManagement = () => {
                 <Typography variant="h4" sx={{ mb: 1 }}>
                   {item?.role?.name}
                 </Typography>
-
-                <Typography
-                  component={Link}
-                  to={`edit/${item.role.id}`}
-                  state={{ id: item.role.id, name: item.role.name }}
-                  sx={{ color: 'primary.main', textDecoration: 'none', boxShadow: 'none' }}
-                >
-                  Edit Role
-                </Typography>
               </Box>
-              <Box sx={{ display: 'flex' }}>
-                <Box component={Link} to={'view'} state={{ group: item }}>
-                  <IconButton size="small" sx={{ color: 'dark.dark' }}>
-                    <Icon icon="tabler:eye-filled" />
-                  </IconButton>
-                </Box>
-                <IconButton
-                  size="small"
-                  sx={{ color: 'error.main' }}
-                  onClick={() => {
-                    setSelectedDeleteGroupId(item?.role?.id);
-                    setDeleteDialogOpen(true);
-                  }}
-                >
-                  <Icon icon="tabler:archive" />
-                </IconButton>
+              <Box>
+                <OptionsMenu
+                  menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                  options={[
+                    {
+                      text: 'View',
+                      menuItemProps: {
+                        component: Link,
+                        to: 'view'
+                      }
+                    },
+                    {
+                      text: 'Delete',
+
+                      menuItemProps: {
+                        onClick: () => {
+                          setSelectedDeleteGroupId(item?.role?.id);
+                          setDeleteDialogOpen(true);
+                        }
+                      }
+                    },
+                    {
+                      text: 'Edit',
+                      menuItemProps: {
+                        component: Link,
+                        to: `edit/${item.role.id}`
+                      }
+                    }
+                  ]}
+                />
               </Box>
             </Box>
           </CardContent>
