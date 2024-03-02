@@ -8,22 +8,21 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 // import format from 'date-fns/format';
-import { forwardRef, useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import { Controller, useForm } from 'react-hook-form';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import * as yup from 'yup';
+import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { useSelector } from 'react-redux';
+import { addLiveClass } from 'features/class-management/live-classes/services/liveClassServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { addLiveClass } from 'features/class-management/live-classes/services/liveClassServices';
+import { useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 /* eslint-disable */
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -321,34 +320,19 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   control={control}
                   rules={{ required: 'Branch field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
+                      options={activeBranches}
+                      getOptionLabel={(option) => option.branch_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.branch_id);
+                        getActiveCoursesByBranch(newValue?.branch_id);
                       }}
-                      label="Select Branch"
-                      value={value}
-                      onChange={(e) => {
-                        setValue('branch', e.target.value);
-                        getActiveCoursesByBranch(e.target.value);
-                      }}
-                      error={Boolean(errors.branch)}
-                      helperText={errors.branch?.message}
-                    >
-                      {activeBranches.map((branch) => (
-                        <MenuItem key={branch.branch_id} value={branch.branch_id}>
-                          {branch.branch_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                      )}
+                    />
                   )}
                 />
               </Grid>
@@ -358,35 +342,25 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   control={control}
                   rules={{ required: 'Course field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
+                      options={activeCourse}
+                      getOptionLabel={(option) => option.course_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue);
+                        getActiveBatchesByCourse(newValue?.course_id);
                       }}
-                      label="Select Course"
-                      id="select-single-course-extra"
-                      value={value}
-                      onChange={(e) => {
-                        setValue('course', e.target.value)
-                        getActiveBatchesByCourse(e.target.value);
-                      }}
-                      error={Boolean(errors.course)}
-                      helperText={errors.course?.message}
-                    >
-                      {activeCourse.map((course) => (
-                        <MenuItem key={course.course_id} value={course.course_id}>
-                          {course.course_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          id="select-single-course-extra"
+                          error={Boolean(errors.course)}
+                          helperText={errors.course?.message}
+                        />
+                      )}
+                    />
                   )}
                 />
               </Grid>
@@ -396,32 +370,16 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   control={control}
                   rules={{ required: 'Batch field is required' }}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
+                    <Autocomplete
                       fullWidth
-                      select
-                      SelectProps={{
-                        MenuProps: Object.assign(MenuProps, {
-                          PaperProps: {
-                            style: {
-                              maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                              width: 250,
-                            },
-                          },
-                        }),
-                      }}
-                      label="Batch"
-                      id="select-single-batch"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.batch)}
-                      helperText={errors.batch?.message}
-                    >
-                      {activeBatches.map((batch) => (
-                        <MenuItem key={batch.batch_id} value={batch.batch_id}>
-                          {batch.batch_name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      options={activeBatches}
+                      getOptionLabel={(option) => option.batch_name}
+                      onChange={(event, newValue) => onChange(newValue?.batch_id)}
+                      value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      )}
+                    />
                   )}
                 />
               </Grid>
