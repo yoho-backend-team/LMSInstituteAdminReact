@@ -23,6 +23,7 @@ import { getAllActiveCourses } from 'features/course-management/courses-page/ser
 import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
 import DatePicker from 'react-datepicker';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -50,17 +51,7 @@ const defaultValues = {
   paymentId: Number('0'),
   paidAmount: Number('0')
 };
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
 
 const FeesAddDrawer = (props) => {
   // ** Props
@@ -254,111 +245,66 @@ const FeesAddDrawer = (props) => {
                 name="branch"
                 control={control}
                 rules={{ required: 'Branch field is required' }}
-                render={({ field: { value } }) => (
-                  <TextField
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
+                    options={activeBranches}
+                    getOptionLabel={(branch) => branch.branch_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.branch_id);
+                      getActiveCoursesByBranch(newValue?.branch_id);
                     }}
-                    label="Select Branch"
-                    value={value}
-                    onChange={(e) => {
-                      setValue('branch', e.target.value);
-                      getActiveCoursesByBranch(e.target.value);
-                    }}
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
-                  >
-                    {activeBranches.map((branch) => (
-                      <MenuItem key={branch.branch_id} value={branch.branch_id}>
-                        {branch.branch_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="course"
                 control={control}
                 rules={{ required: 'Course field is required' }}
-                render={({ field: { value } }) => (
-                  <TextField
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
+                    options={activeCourse}
+                    getOptionLabel={(course) => course.course_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.course_id);
+                      getActiveBatchesByCourse(newValue?.course_id);
                     }}
-                    label="Select Course"
-                    id="select-single-course-extra"
-                    value={value}
-                    onChange={(e) => {
-                      setValue('course', e.target.value);
-                      getActiveBatchesByCourse(e.target.value);
-                    }}
-                    error={Boolean(errors.course)}
-                    helperText={errors.course?.message}
-                  >
-                    {activeCourse.map((course) => (
-                      <MenuItem key={course.course_id} value={course.course_id}>
-                        {course.course_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="batch"
                 control={control}
                 rules={{ required: 'Batch field is required' }}
-                render={({ field: { value } }) => (
-                  <TextField
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
+                    options={activeBatches}
+                    getOptionLabel={(batch) => batch.batch_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.batch_id);
+                      getActiveStudentByBatch(newValue?.batch_id);
                     }}
-                    label="Batch"
-                    id="select-single-batch"
-                    value={value}
-                    onChange={(e) => {
-                      setValue('batch', e.target.value);
-                      getActiveStudentByBatch(e.target.value);
-                    }}
-                    error={Boolean(errors.batch)}
-                    helperText={errors.batch?.message}
-                  >
-                    {activeBatches.map((batch) => (
-                      <MenuItem key={batch.batch_id} value={batch.batch_id}>
-                        {batch.batch_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
@@ -367,37 +313,22 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="student"
                 control={control}
-                rules={{ required: 'student field is required' }}
+                rules={{ required: 'Student field is required' }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250
-                          }
-                        }
-                      })
-                    }}
-                    label="student"
-                    id="select-single-student"
-                    value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.student)}
-                    helperText={errors.student?.message}
-                  >
-                    {activeStudents.map((student) => (
-                      <MenuItem key={student.student_id} value={student.student_id}>
-                        {student.first_name} {student.last_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    options={activeStudents}
+                    getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
+                    onChange={(event, newValue) => onChange(newValue?.student_id)}
+                    value={activeStudents.find((student) => student.student_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={6} sx={{ mb: 2 }}>
               <Controller
                 name="payment_date"

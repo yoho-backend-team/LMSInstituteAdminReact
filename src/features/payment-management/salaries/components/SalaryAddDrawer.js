@@ -1,11 +1,10 @@
 // ** React Imports
-import { useEffect, useState, forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -17,11 +16,12 @@ import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 // import { addStudentFee } from '../services/studentFeeServices';
-import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import Autocomplete from '@mui/material/Autocomplete';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { useSelector } from 'react-redux';
 import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
+import { useSelector } from 'react-redux';
+import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -31,7 +31,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  branch: yup.string().required('Branch is required'),
+  branch: yup.object().required('Branch is required'),
   staff_type: yup.string().required('Batch is required'),
   staff: yup.string().required('Students is required'),
   payment_date: yup.string().required('Payment Date is required'),
@@ -47,17 +47,7 @@ const defaultValues = {
   paymentId: Number('0'),
   paidAmount: Number('0')
 };
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
 
 const FeesAddDrawer = (props) => {
   // ** Props
@@ -82,21 +72,20 @@ const FeesAddDrawer = (props) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log("active branches : ", result.data);
+    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
   const getActiveStaffsByBranch = async (selectedBranchId, type) => {
     const data = {
-      'type': type,
+      type: type,
       branch_id: selectedBranchId
-    }
+    };
     const result = await getAllActiveStaffs(data);
 
-    console.log("active staffs : ", result.data);
+    console.log('active staffs : ', result.data);
     setActiveStaffs(result.data.data);
   };
-
 
   const {
     handleSubmit,
@@ -124,7 +113,7 @@ const FeesAddDrawer = (props) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);
@@ -239,81 +228,49 @@ const FeesAddDrawer = (props) => {
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="branch"
-
                 control={control}
                 rules={{ required: 'Branch field is required' }}
-                render={({ field: { value } }) => (
-                  <TextField
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
-                    }}
-                    label="Select Branch"
                     value={value}
-                    onChange={(e) => {
-                      setValue('branch', e.target.value);
-                      getActiveCoursesByBranch(e.target.value);
+                    onChange={(e, newValue) => {
+                      onChange(newValue);
+                      getActiveCoursesByBranch(newValue);
                     }}
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
-                  >
-                    {activeBranches.map((branch) => (
-                      <MenuItem key={branch.branch_id} value={branch.branch_id}>
-                        {branch.branch_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    options={activeBranches}
+                    getOptionLabel={(branch) => branch.branch_name}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="staff_type"
                 control={control}
                 rules={{ required: 'Staff Type field is required' }}
-                render={({ field: { value, } }) => (
-                  <TextField
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
-                    }}
-                    label="Select Staff Type"
-                    id="select-single-course-extra"
                     value={value}
-                    onChange={(e) => {
-                      setValue('staff_type', e.target.value);
-                      getActiveStaffsByBranch(selectedBranchId, e.target.value);
+                    onChange={(e, newValue) => {
+                      onChange(newValue);
+                      getActiveStaffsByBranch(selectedBranchId, newValue);
                     }}
-                    error={Boolean(errors.course)}
-                    helperText={errors.course?.message}
-                  >
-                    <MenuItem value={''}>
-                      Select Staff Type
-                    </MenuItem>
-                    <MenuItem value={'teaching'}>
-                      Teaching
-                    </MenuItem>
-                    <MenuItem value={'non_teaching'}>
-                      Non Teaching
-                    </MenuItem>
-
-                  </TextField>
+                    options={['Teaching', 'Non Teaching']}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Staff Type"
+                        error={Boolean(errors.staff_type)}
+                        helperText={errors.staff_type?.message}
+                      />
+                    )}
+                  />
                 )}
               />
             </Grid>
@@ -322,37 +279,22 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="staff"
                 control={control}
-                rules={{ required: 'staff field is required' }}
+                rules={{ required: 'Staff field is required' }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField
+                  <Autocomplete
                     fullWidth
-                    select
-                    SelectProps={{
-                      MenuProps: Object.assign(MenuProps, {
-                        PaperProps: {
-                          style: {
-                            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-                            width: 250,
-                          },
-                        },
-                      }),
-                    }}
-                    label="staff"
-                    id="select-single-staff"
                     value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.staff)}
-                    helperText={errors.staff?.message}
-                  >
-                    {activeStaffs.map((staff) => (
-                      <MenuItem key={staff.staff_id} value={staff.staff_id}>
-                        {staff.staff_name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    onChange={(event, newValue) => onChange(newValue)}
+                    options={activeStaffs}
+                    getOptionLabel={(staff) => staff.staff_name}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
+
             <Grid item xs={6} sx={{ mb: 2 }}>
               <Controller
                 name="payment_date"
@@ -369,7 +311,9 @@ const FeesAddDrawer = (props) => {
                   />
                 )}
               />
-              {errors.payment_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>}
+              {errors.payment_date && (
+                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={12}>
