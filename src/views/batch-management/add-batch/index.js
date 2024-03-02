@@ -23,6 +23,8 @@ import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
+import Autocomplete from '@mui/material/Autocomplete';
+// import { top100Films } from '_mock';
 
 const AddBatchPage = () => {
   // ** States
@@ -262,57 +264,55 @@ const AddBatchPage = () => {
                       )}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <Controller
                       name="branch"
                       control={control}
                       render={({ value }) => (
-                        <CustomTextField
+                        <Autocomplete
                           value={value}
-                          onChange={(e) => {
-                            setValue('branch', e.target.value);
-                            getActiveCoursesByBranch(e.target.value);
+                          onChange={(event, newValue) => {
+                            setValue('branch', newValue ? newValue.branch_id : ''); // Update the value of the 'branch' field
+                            getActiveCoursesByBranch(newValue ? newValue.branch_id : ''); // Call function to fetch active courses based on the selected branch
                           }}
-                          select
-                          fullWidth
-                          label="branch"
-                          id="form-layouts-separator-select"
-                          error={Boolean(errors.branch)}
-                          helperText={errors.branch?.message}
-                        >
-                          {activeBranches?.map((item, index) => (
-                            <MenuItem key={index} value={item.branch_id}>
-                              {item.branch_name}
-                            </MenuItem>
-                          ))}
-                        </CustomTextField>
+                          options={activeBranches}
+                          getOptionLabel={(option) => option.branch_name || ''}
+                          renderInput={(params) => (
+                            <CustomTextField
+                              {...params}
+                              label="Branch"
+                              error={Boolean(errors.branch)}
+                              helperText={errors.branch?.message}
+                            />
+                          )}
+                        />
                       )}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <Controller
                       name="course"
                       control={control}
                       render={({ value }) => (
-                        <CustomTextField
+                        <Autocomplete
                           value={value}
-                          select
-                          fullWidth
-                          label="Course"
-                          id="form-layouts-separator-select"
-                          error={Boolean(errors.course)}
-                          helperText={errors.course?.message}
-                          onChange={(e) => {
-                            setValue('course', e.target.value);
-                            getStudentByCourseId(e.target.value);
+                          onChange={(event, newValue) => {
+                            setValue('course', newValue ? newValue.course_id : ''); // Update the value of the 'course' field
+                            getStudentByCourseId(newValue ? newValue.course_id : ''); // Call function to get students by course ID
                           }}
-                        >
-                          {activeCourse?.map((item, index) => (
-                            <MenuItem key={index} value={item.course_id}>
-                              {item.course_name}
-                            </MenuItem>
-                          ))}
-                        </CustomTextField>
+                          options={activeCourse}
+                          getOptionLabel={(option) => option.course_name || ''}
+                          renderInput={(params) => (
+                            <CustomTextField
+                              {...params}
+                              label="Course"
+                              error={Boolean(errors.course)}
+                              helperText={errors.course?.message}
+                            />
+                          )}
+                        />
                       )}
                     />
                   </Grid>

@@ -5,7 +5,6 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,9 +13,10 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import toast from 'react-hot-toast';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFee } from '../services/studentFeeServices';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -191,22 +191,15 @@ const FeesEditDrawer = (props) => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
+                  <Autocomplete
                     fullWidth
                     value={value}
-                    // defaultValue={}
-
-                    sx={{ mb: 4 }}
-                    label="Select Course"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.course)}
-                    {...(errors.course && { helperText: errors.course.message })}
-                  >
-                    <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                    <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                  </TextField>
+                    onChange={(event, newValue) => onChange(newValue)}
+                    options={['Web Development', 'Android Development']}
+                    renderInput={(params) => (
+                      <TextField  sx={{ mb: 2 }} {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
@@ -217,20 +210,15 @@ const FeesEditDrawer = (props) => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
+                  <Autocomplete
                     fullWidth
                     value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Batch"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.batch)}
-                    {...(errors.batch && { helperText: errors.batch.message })}
-                  >
-                    <MenuItem value={'Batch 1'}>Batch 1</MenuItem>
-                    <MenuItem value={'Batch 2'}>Batch 2</MenuItem>
-                  </TextField>
+                    onChange={(event, newValue) => onChange(newValue)}
+                    options={['Batch 1', 'Batch 2']}
+                    renderInput={(params) => (
+                      <TextField  sx={{ mb: 2 }} {...params} label="Select Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
@@ -241,20 +229,22 @@ const FeesEditDrawer = (props) => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
+                  <Autocomplete
                     fullWidth
+                    multiple
                     value={value}
-                    sx={{ mb: 4 }}
-                    label="Select Students"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.students)}
-                    {...(errors.students && { helperText: errors.students.message })}
-                  >
-                    <MenuItem value={'Student 1'}>Student 1</MenuItem>
-                    <MenuItem value={'Student 2'}>Student 2</MenuItem>
-                  </TextField>
+                    onChange={(event, newValue) => onChange(newValue)}
+                    options={['Student 1', 'Student 2']}
+                    renderInput={(params) => (
+                      <TextField
+                      sx={{ mb: 2 }}
+                        {...params}
+                        label="Select Students"
+                        error={Boolean(errors.students)}
+                        helperText={errors.students?.message}
+                      />
+                    )}
+                  />
                 )}
               />
             </Grid>

@@ -20,8 +20,8 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import toast from 'react-hot-toast';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -318,20 +318,14 @@ const SalaryEditDrawer = (props) => {
                 name="type"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    sx={{ mb: 2 }}
+                  <Autocomplete
                     {...field}
                     fullWidth
-                    select
-                    label="Type"
-                    error={Boolean(errors.type)}
-                    helperText={errors.type?.message}
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="Ten">Ten</MenuItem>
-                    <MenuItem value="Twenty">Twenty</MenuItem>
-                    <MenuItem value="Thirty">Thirty</MenuItem>
-                  </TextField>
+                    options={['Ten', 'Twenty', 'Thirty']}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Type" sx={{ mb: 2 }} error={Boolean(errors.type)} helperText={errors.type?.message} />
+                    )}
+                  />
                 )}
               />
             </Grid>
@@ -341,20 +335,20 @@ const SalaryEditDrawer = (props) => {
                 name="staff"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    sx={{ mb: 2 }}
+                  <Autocomplete
                     {...field}
                     fullWidth
-                    select
-                    label="Staff"
-                    error={Boolean(errors.staff)}
-                    helperText={errors.staff?.message}
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="Ten">Ten</MenuItem>
-                    <MenuItem value="Twenty">Twenty</MenuItem>
-                    <MenuItem value="Thirty">Thirty</MenuItem>
-                  </TextField>
+                    options={['Ten', 'Twenty', 'Thirty']}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Staff"
+                        sx={{ mb: 2 }}
+                        error={Boolean(errors.staff)}
+                        helperText={errors.staff?.message}
+                      />
+                    )}
+                  />
                 )}
               />
             </Grid>

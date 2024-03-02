@@ -18,7 +18,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import CustomChip from 'components/mui/chip';
+import Autocomplete from '@mui/material/Autocomplete';
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
 import { updateBatch } from '../../services/batchServices';
@@ -83,6 +83,8 @@ const BatchEditModal = ({ open, handleEditClose }) => {
   const [selectedBranches, setSelectedBranches] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
 
+  console.log(setSelectedStudents);
+
   const defaultValues = {
     course: '',
     branches: [],
@@ -102,8 +104,6 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     resolver: yupResolver(validationSchema)
   });
 
-
-
   const handleClose = () => {
     handleEditClose();
     reset();
@@ -113,10 +113,6 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     setSelectedBranches(event.target.value);
   };
 
-  const handleStudentsChange = (event) => {
-    setSelectedStudents(event.target.value);
-  };
-
   const onSubmit = async (data) => {
     const inputData = {
       batchName: data.batchName,
@@ -124,7 +120,7 @@ const BatchEditModal = ({ open, handleEditClose }) => {
       endDate: data.endDate,
       branches: data.branches,
       course: data.course,
-      students: data.students,
+      students: data.students
     };
     const result = await updateBatch(inputData);
 
@@ -141,8 +137,6 @@ const BatchEditModal = ({ open, handleEditClose }) => {
       // toast.error(result.message);
     }
   };
-
-
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -260,57 +254,51 @@ const BatchEditModal = ({ open, handleEditClose }) => {
                         name="course"
                         control={control}
                         render={({ field }) => (
-                          <CustomTextField
+                          <Autocomplete
                             {...field}
-                            select
                             fullWidth
-                            label="Course"
-                            id="form-layouts-separator-select"
-                            defaultValue=""
-                            error={Boolean(errors.course)}
-                            helperText={errors.course?.message}
-                          >
-                            <MenuItem value="UK">UK</MenuItem>
-                            <MenuItem value="USA">USA</MenuItem>
-                            <MenuItem value="Australia">Australia</MenuItem>
-                            <MenuItem value="Germany">Germany</MenuItem>
-                          </CustomTextField>
+                            options={['UK', 'USA', 'Australia', 'Germany']}
+                            renderInput={(params) => (
+                              <CustomTextField
+                                {...params}
+                                label="Course"
+                                error={Boolean(errors.course)}
+                                helperText={errors.course?.message}
+                              />
+                            )}
+                            onChange={(e, value) => {
+                              field.onChange(value);
+                            }}
+                          />
                         )}
                       />
                     </Grid>
+
                     <Grid item xs={12} sm={12}>
                       <Controller
                         name="students"
                         control={control}
                         render={({ field }) => (
-                          <CustomTextField
+                          <Autocomplete
                             {...field}
-                            select
-                            fullWidth
-                            label="Students"
-                            id="select-multiple-chip"
-                            SelectProps={{
-                              MenuProps,
-                              multiple: true,
-                              value: selectedStudents,
-                              onChange: (e) => handleStudentsChange(e),
-                              renderValue: (selected) => (
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                  {selected.map((value) => (
-                                    <CustomChip key={value} label={value} sx={{ m: 0.75 }} skin="light" color="primary" />
-                                  ))}
-                                </Box>
-                              )
+                            multiple
+                            id="students-autocomplete"
+                            options={names}
+                            getOptionLabel={(option) => option}
+                            renderInput={(params) => (
+                              <CustomTextField
+                                {...params}
+                                label="Students"
+                                fullWidth
+                                error={Boolean(errors.students)}
+                                helperText={errors.students?.message}
+                              />
+                            )}
+                            value={selectedStudents}
+                            onChange={(event, newValue) => {
+                              setValue('students', newValue);
                             }}
-                            error={Boolean(errors.students)}
-                            helperText={errors.students?.message}
-                          >
-                            {names.map((name) => (
-                              <MenuItem key={name} value={name}>
-                                {name}
-                              </MenuItem>
-                            ))}
-                          </CustomTextField>
+                          />
                         )}
                       />
                     </Grid>

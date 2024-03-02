@@ -1,5 +1,5 @@
 // ** Mui Components
-import { Box, Card, CardContent, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
 // ** React  Import
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -12,13 +12,12 @@ import { styled } from '@mui/material/styles';
 import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
-import CustomChip from 'components/mui/chip';
+import OptionsMenu from 'components/option-menu';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
-import { useDispatch, useSelector } from 'react-redux';
-
 import { selectBatches, selectLoading } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { useDispatch, useSelector } from 'react-redux';
 
 // ** Toast Import
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -247,18 +246,70 @@ const Batch = () => {
   const renderCards = () => {
     return batches?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
-        <Card>
+        <Card sx={{ position: 'relative' }}>
           <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Box sx={{ alignItems: 'center' }}>
-                <Typography variant="h4">{item?.batch?.batch_name}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
-              </Box>
-            </Box>
+            <Grid container>
+              <Grid
+                item
+                sx={{
+                  position: 'absolute',
+                  top: 15,
+                  right: 3
+                }}
+              >
+                <OptionsMenu
+                  menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                  options={[
+                    {
+                      text: 'View',
+                      icon: <Icon icon="tabler:eye" fontSize={20} />,
+                      menuItemProps: {
+                        component: Link,
+                        to: `view`
+                      }
+                    },
+                    {
+                      text: 'Edit',
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
+                      icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
+                      menuItemProps: {
+                        onClick: () => {
+                          handleEdit();
+                        }
+                      }
+                    },
+                    {
+                      text: 'Delete',
+
+                      icon: <Icon color="primary" icon="tabler:archive-filled" fontSize={20} />,
+                      menuItemProps: {
+                        onClick: () => {
+                          handleDelete();
+                        }
+                      }
+                    }
+                  ]}
+                />
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    mb: 0,
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    textOverflow: 'ellipsis'
+                  }}
+                >
+                  {item?.batch?.batch_name}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
               <Icon fontSize="1.25rem" icon="tabler:book" />
 
               <Typography sx={{ ml: 1 }} variant="h5">
@@ -311,17 +362,6 @@ const Batch = () => {
                   <MenuItem value="Active">Active</MenuItem>
                   <MenuItem value="Deactive">Deactive</MenuItem>
                 </TextField>
-              </Box>
-              <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
-                  <Icon icon="tabler:archive-filled" />
-                </IconButton>
-                <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary">
-                  <Icon icon="tabler:edit" />
-                </IconButton>
-                <IconButton component={Link} to="view" aria-label="capture screenshot" color="primary">
-                  <Icon icon="tabler:eye-filled" />
-                </IconButton>
               </Box>
             </Box>
           </CardContent>
