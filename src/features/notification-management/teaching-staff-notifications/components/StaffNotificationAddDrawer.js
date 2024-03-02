@@ -5,17 +5,16 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import CustomAutocomplete from 'components/mui/autocomplete';
 import toast from 'react-hot-toast';
 
 import { addStaffNotification } from '../services/staffNotificationServices';
@@ -103,7 +102,7 @@ const StaffNotificationAddDrawer = (props) => {
     bodyFormData.append('staffs', data.staffs);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
-  
+
     console.log(bodyFormData);
 
     const result = await addStaffNotification(bodyFormData);
@@ -121,7 +120,6 @@ const StaffNotificationAddDrawer = (props) => {
       // toast.error(result.message);
     }
   };
-
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -208,92 +206,109 @@ const StaffNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  name="type"
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  sx={{ mb: 4 }}
-                  label="Select Type"
-                  onChange={onChange}
-                  SelectProps={{ value: value, onChange: onChange }}
-                  error={Boolean(errors.type)}
-                  {...(errors.type && { helperText: errors.type.message })}
-                >
-                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                </TextField>
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={12}>
-            <CustomAutocomplete
-              sx={{ mb: 2 }}
-              multiple
-              limitTags={2}
-              options={staffs}
-              id="autocomplete-limit-tags-students"
-              getOptionLabel={(option) => (option && option.title) || ''}
-              defaultValue={staffs.slice(0, 3)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="staffs"
-                  placeholder="Favorites"
-                  error={Boolean(errors.staffs)}
-                  helperText={errors.staffs?.message}
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'type' field
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Type"
+                      sx={{ mb: 4 }}
+                      error={Boolean(errors.type)}
+                      helperText={errors.type?.message}
+                    />
+                  )}
                 />
               )}
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-          <Controller
-              name="title"
+            <Controller
+              name="staffs"
               control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  name="title"
-                  fullWidth
-                  value={value}
-                  sx={{ mb: 4 }}
-                  label="Select Title"
-                  onChange={onChange}
-                  SelectProps={{ value: value, onChange: onChange }}
-                  error={Boolean(errors.title)}
-                  {...(errors.title && { helperText: errors.title.message })}
-                >
-                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                </TextField>
+              defaultValue={[]}
+              rules={{ validate: (value) => value.length > 0 || 'Select at least one student' }}
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
+                  multiple
+                  limitTags={2}
+                  sx={{ mb: 2 }}
+                  options={staffs}
+                  id="autocomplete-limit-tags-students"
+                  getOptionLabel={(option) => option.title || ''}
+                  onChange={(event, newValue) => {
+                    field.onChange(newValue); // Update the value of the 'students' field
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Staffs"
+                      placeholder="Favorites"
+                      error={Boolean(errors.staffs)}
+                      helperText={errors.staffs?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
 
           <Grid item xs={12} sm={12}>
-          <Controller
+            <Controller
+              name="title"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <Autocomplete
+                  value={value}
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'title' field
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Title"
+                      sx={{ mb: 4 }}
+                      error={Boolean(errors.title)}
+                      helperText={errors.title?.message}
+                    />
+                  )}
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <Controller
               name="body"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  name="body"
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  sx={{ mb: 4 }}
-                  label="Select Body"
-                  onChange={onChange}
-                  SelectProps={{ value: value, onChange: onChange }}
-                  error={Boolean(errors.body)}
-                  {...(errors.body && { helperText: errors.body.message })}
-                >
-                  <MenuItem value={'Web Development'}>Web Development</MenuItem>
-                  <MenuItem value={'Android Development'}>Android Development</MenuItem>
-                </TextField>
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'body' field
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Body"
+                      sx={{ mb: 4 }}
+                      error={Boolean(errors.body)}
+                      helperText={errors.body?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
