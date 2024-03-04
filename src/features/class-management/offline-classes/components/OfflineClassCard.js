@@ -146,19 +146,16 @@ const LiveClassCard = () => {
                 <Grid item justifyContent="center" display="flex">
                   <Typography>8+ Students on this class</Typography>
                 </Grid>
-                <Grid item justifyContent="center" display="flex" mb={3}>
+                <Grid item justifyContent="center" display="flex" mb={2}>
                   <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
                     {' '}
                     <IconCalendar />
                     {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
                   </Typography>
                 </Grid>
-                <Grid container p={2} justifyContent="space-between">
+                <Grid container p={2} justifyContent="center">
                   <Button variant="tonal" size="small" href="view">
                     View More
-                  </Button>
-                  <Button variant="contained" size="small" href="student-classes/view">
-                    Go Class
                   </Button>
                 </Grid>
               </Grid>

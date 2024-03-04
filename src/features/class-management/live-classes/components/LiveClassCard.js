@@ -166,12 +166,9 @@ const LiveClassCard = () => {
                     <Typography>{card?.class_link}</Typography>
                   </Box>
                 </Grid>
-                <Grid container p={2} justifyContent="space-between">
+                <Grid container p={2} justifyContent="center">
                   <Button variant="tonal" size="small" href="view">
                     View More
-                  </Button>
-                  <Button variant="contained" size="small" href="student-classes/view">
-                    Go Class
                   </Button>
                 </Grid>
               </Grid>
