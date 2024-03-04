@@ -180,7 +180,7 @@ const NotesEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Study Material</Typography>
+        <Typography variant="h5">Edit Notes</Typography>
         <IconButton
           size="small"
           onClick={handleClose}

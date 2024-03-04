@@ -1,7 +1,6 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
 // ** MUI Imports
-import { IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
@@ -13,18 +12,18 @@ import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
+import OptionsMenu from 'components/option-menu';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import NotesAddDrawer from 'features/content-management/course-contents/course-notes-page/components/NotesAddDrawer';
 import NotesEdit from 'features/content-management/course-contents/course-notes-page/components/NotesEdit';
 import NotesHeader from 'features/content-management/course-contents/course-notes-page/components/NotesTableHeader';
 import NotesView from 'features/content-management/course-contents/course-notes-page/components/NotesView';
+import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/course-notes-page/redux/noteSelectors';
+import { getAllCourseNotes } from 'features/content-management/course-contents/course-notes-page/redux/noteThunks';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/course-notes-page/redux/noteSelectors';
-import { getAllCourseNotes } from 'features/content-management/course-contents/course-notes-page/redux/noteThunks';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 const Notes = () => {
   const [value, setValue] = useState('');
@@ -86,17 +85,33 @@ const Notes = () => {
 
   const RowOptions = () => {
     return (
-      <Box sx={{ gap: 1 }}>
-        <IconButton onClick={() => handleView()} aria-label="capture screenshot" color="primary">
-          <Icon icon="tabler:eye" />
-        </IconButton>
-        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
-          <Icon icon="tabler:edit" />
-        </IconButton>
-        <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
-          <Icon icon="mdi:delete-outline" />
-        </IconButton>
-      </Box>
+      <OptionsMenu
+        menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+        options={[
+          {
+            text: 'View',
+            icon: <Icon icon="tabler:eye" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => handleView()
+            }
+          },
+          {
+            text: 'Edit',
+            icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => toggleEditUserDrawer()
+            }
+          },
+          {
+            text: 'Delete',
+            icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => handleDelete()
+            }
+          }
+        ]}
+      />
     );
   };
 

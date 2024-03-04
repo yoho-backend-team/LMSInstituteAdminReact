@@ -1,7 +1,6 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
 // ** MUI Imports
-import { IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -13,18 +12,18 @@ import Icon from 'components/icon';
 import MenuItem from '@mui/material/MenuItem';
 import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
+import OptionsMenu from 'components/option-menu';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import ModuleAddDrawer from 'features/content-management/course-contents/course-modules-page/components/ModuleAddDrawer';
 import ModuleEdit from 'features/content-management/course-contents/course-modules-page/components/ModuleEdit';
 import ModuleHeader from 'features/content-management/course-contents/course-modules-page/components/ModuleTableHeader';
 import ModuleView from 'features/content-management/course-contents/course-modules-page/components/ModuleView';
+import { selectCourseModules, selectLoading } from 'features/content-management/course-contents/course-modules-page/redux/moduleSelectors';
+import { getAllCourseModules } from 'features/content-management/course-contents/course-modules-page/redux/moduleThunks';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { selectCourseModules, selectLoading } from 'features/content-management/course-contents/course-modules-page/redux/moduleSelectors';
-import { getAllCourseModules } from 'features/content-management/course-contents/course-modules-page/redux/moduleThunks';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 const Modules = () => {
   const [value, setValue] = useState('');
@@ -87,17 +86,33 @@ const Modules = () => {
 
   const RowOptions = () => {
     return (
-      <Box sx={{ gap: 1 }}>
-        <IconButton aria-label="capture screenshot" color="primary">
-          <Icon onClick={() => handleView()} icon="tabler:eye" />
-        </IconButton>
-        <IconButton onClick={toggleEditUserDrawer} aria-label="capture screenshot" color="secondary">
-          <Icon icon="tabler:edit" />
-        </IconButton>
-        <IconButton onClick={() => handleDelete()} aria-label="capture screenshot" color="error">
-          <Icon icon="mdi:delete-outline" />
-        </IconButton>
-      </Box>
+      <OptionsMenu
+        menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+        options={[
+          {
+            text: 'View',
+            icon: <Icon icon="tabler:eye" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => handleView()
+            }
+          },
+          {
+            text: 'Edit',
+            icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => toggleEditUserDrawer()
+            }
+          },
+          {
+            text: 'Delete',
+            icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => handleDelete()
+            }
+          }
+        ]}
+      />
     );
   };
 
