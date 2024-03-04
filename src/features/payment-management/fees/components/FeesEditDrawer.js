@@ -12,11 +12,11 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFee } from '../services/studentFeeServices';
-import Autocomplete from '@mui/material/Autocomplete';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -187,25 +187,6 @@ const FeesEditDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="course"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    value={value}
-                    onChange={(event, newValue) => onChange(newValue)}
-                    options={['Web Development', 'Android Development']}
-                    renderInput={(params) => (
-                      <TextField  sx={{ mb: 2 }} {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
                 name="batch"
                 control={control}
                 rules={{ required: true }}
@@ -263,7 +244,7 @@ const FeesEditDrawer = (props) => {
                     // value={value}
                     onChange={onChange}
                     // label={selectedRows?.total}
-                    // label="Payment Id"
+                    label="Payment Id"
                     type="number"
                     error={Boolean(errors.paymentId)}
                     helperText={errors.paymentId?.message}

@@ -257,48 +257,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="selectcourse"
-                  control={control}
-                  rules={{ required: 'Extra Course field is required' }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={courses}
-                      getOptionLabel={(course) => course.name}
-                      onChange={(event, newValue) => onChange(newValue?.name)}
-                      value={courses.find((course) => course.name === value) || null}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Course"
-                          error={Boolean(errors.selectcourse)}
-                          helperText={errors.selectcourse?.message}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="batch"
-                  control={control}
-                  rules={{ required: 'Batch field is required' }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={names}
-                      onChange={(event, newValue) => onChange(newValue)}
-                      value={value}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
 
               <Grid item xs={6}>
                 <Controller
