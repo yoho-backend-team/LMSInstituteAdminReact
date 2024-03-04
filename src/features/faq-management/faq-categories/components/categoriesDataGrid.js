@@ -171,6 +171,7 @@ const CategoriesDataGrid = () => {
               <Typography
                 noWrap
                 sx={{
+                  textAlign:"justify",
                   fontSize:"15px",
                   fontWeight: 600,
                   textDecoration: 'none',
@@ -180,7 +181,7 @@ const CategoriesDataGrid = () => {
               >
                 {row?.title}
               </Typography>
-              <Typography noWrap sx={{ color: 'text.secondary',mt:1.3,fontSize:"13px" }}>
+              <Typography noWrap sx={{textAlign:"justify", color: 'text.secondary',mt:1.3,fontSize:"13px" }}>
             {row?.description}
           </Typography>
             </Box>

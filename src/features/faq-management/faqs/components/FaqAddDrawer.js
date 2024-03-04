@@ -14,6 +14,7 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 // import { addStudentFee } from '../services/studentFeeServices';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -24,16 +25,20 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   name: yup.string().required('Category Name is required'),
-  description:yup.string().required('Description is required')
+  description:yup.string().required('Description is required'),
+  category: yup.string().required('Category is required'),
+
 });
 
 const defaultValues = {
   name: '',
-  description: ''
+  description: '',
+  category: '',
+
 };
 
 
-const FaqCategoriesAddDrawer = (props) => {
+const FaqAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
   // ** State
@@ -58,6 +63,8 @@ const FaqCategoriesAddDrawer = (props) => {
 
     bodyFormData.append('name', data.name);
     bodyFormData.append('description', data.description);
+    bodyFormData.append('category', data.category);
+
 
   };
 
@@ -78,7 +85,7 @@ const FaqCategoriesAddDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Faq Categories</Typography>
+          <Typography variant="h5">Add Faq</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -133,6 +140,27 @@ const FaqCategoriesAddDrawer = (props) => {
                 )}
               />
             </Grid>
+            <Grid item xs={12} sm={12}>
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <Autocomplete
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  value={value}
+                  onChange={(e, newValue) => {
+                    onChange(newValue);
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Category" error={Boolean(errors.category)} helperText={errors.category?.message} />
+                  )}
+                />
+              )}
+            />
+          </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
@@ -149,4 +177,4 @@ const FaqCategoriesAddDrawer = (props) => {
   );
 };
 
-export default FaqCategoriesAddDrawer;
+export default FaqAddDrawer;
