@@ -1,24 +1,22 @@
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import TimerIcon from '@mui/icons-material/Timer';
+import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
+import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
-import CustomChip from 'components/mui/chip';
-import { useState } from 'react';
-import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
-import { useDispatch, useSelector } from 'react-redux';
+import OptionsMenu from 'components/option-menu';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
 
 const LiveClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -94,103 +92,89 @@ const LiveClassCard = () => {
       <Grid container spacing={2}>
         {liveClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card
-              sx={{
-                position: 'relative',
-                borderTop: card?.status === 'completed' ? '4px solid green' : '4px solid #7cf2e1',
-                height:340
-
-              }}
-            >
-              <CardContent>
-                <Box
-                  sx={{
-                    mt: 2.55,
-                    mb: 1.85,
-                    display: 'flex',
-                    // flexWrap: 'wrap',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column' }}>
-                    <Typography variant="h3" sx={{ flexShrink: 1 }}>
+            <Card sx={{ p: 3 }}>
+              <Grid container direction="column" spacing={1}>
+                <Grid item sx={{ alignItems: 'center', justifyContent: 'space-between', display: 'flex', mt: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                      sx={{
+                        mb: 0,
+                        flexShrink: 1,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '230px'
+                      }}
+                      variant="h3"
+                      gutterBottom
+                      textAlign="center"
+                    >
                       {card?.class_name}
                     </Typography>
-                    <Typography variant="body2">{card?.location}</Typography>
                   </Box>
-
-                  {/* <Box
-                    sx={{
-                      borderRadius: '10%',
-                      border: '1px solid grey',
-                      padding: '3px 9px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      '& .MuiTypography-body2': {
-                        margin: 0
-                      }
-                    }}
-                  >
-                    <Typography variant="body2">{calculateDuration(card?.start_time, card?.end_time)}</Typography>
-                  </Box> */}
-                </Box>
-
-                <Box sx={{ mb: 2.55, display: 'flex', alignItems: 'center' }}>
-                  <TimerIcon sx={{ marginRight: 1 }} />
-                  <Typography variant="body2">
-                    {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    gap: 2,
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <AvatarGroup max={4} sx={{ width: 40, height: 40, '& .MuiAvatar-root': { width: 32, height: 32 } }}>
+                  <Box>
+                    <OptionsMenu
+                      menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+                      iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                      options={[
+                        {
+                          // to: `/apps/invoice/edit/${row.id}`,
+                          text: 'Edit',
+                          icon: <Icon icon="tabler:edit" />,
+                          menuItemProps: {
+                            onClick: () => {
+                              handleEdit();
+                            }
+                          }
+                        },
+                        {
+                          // to: `/apps/invoice/delete/${row.id}`,
+                          text: 'Delete',
+                          icon: <Icon icon="mdi:delete-outline" />,
+                          menuItemProps: {
+                            onClick: () => {
+                              setDeleteDialogOpen(true);
+                            }
+                          }
+                        }
+                      ]}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
+                  <AvatarGroup className="pull-up" max={4}>
                     {card?.batch_class?.batch_student?.map((student, studentIndex) => (
                       <Avatar key={studentIndex} src={student} alt={student?.first_name} />
                     ))}
                   </AvatarGroup>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CustomChip rounded size="small" skin="light" color={'secondary'} label={card.class_id} />
-                  </Box>
-                </Box>
-                <Divider sx={{ my: 2 }} />
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Box sx={{ mt: 1, alignItems: 'center', display: 'flex' }}>
-                    <IconButton
-                      onClick={() => handleCopyLink(card.class_link)}
-                      sx={{ marginLeft: 'auto', color: 'primary.main' }}
-                      aria-label="copy-link"
-                    >
+                </Grid>
+                <Grid item justifyContent="center" display="flex">
+                  <Typography>8+ Students on this class</Typography>
+                </Grid>
+                <Grid item justifyContent="center" display="flex" mb={3}>
+                  <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
+                    {' '}
+                    <IconCalendar />
+                    {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                  </Typography>
+                </Grid>
+                <Grid sx={{ mb: 1 }}>
+                  <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                    <IconButton onClick={() => handleCopyLink(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
                       <FileCopyIcon />
                     </IconButton>
                     <Typography>{card?.class_link}</Typography>
                   </Box>
-                </Box>
-                <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
-                  <IconButton aria-label="capture screenshot" color="primary" sx={{ ml: 1 }} href="view">
-                    <Icon icon="tabler:eye" />
-                  </IconButton>
-                  <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="secondary" sx={{ ml: 1 }}>
-                    <Icon icon="tabler:edit" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setDeleteDialogOpen(true);
-                    }}
-                    aria-label="capture screenshot"
-                    color="error"
-                  >
-                    <Icon icon="tabler:archive-filled" />
-                  </IconButton>
-                </Box>
-              </CardContent>
+                </Grid>
+                <Grid container p={2} justifyContent="space-between">
+                  <Button variant="tonal" size="small" href="view">
+                    View More
+                  </Button>
+                  <Button variant="contained" size="small" href="student-classes/view">
+                    Go Class
+                  </Button>
+                </Grid>
+              </Grid>
             </Card>
           </Grid>
         ))}
