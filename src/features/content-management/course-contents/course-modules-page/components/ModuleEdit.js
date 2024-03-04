@@ -181,7 +181,7 @@ const ModuleEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 380 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Module</Typography>
+        <Typography variant="h5">Edit Module</Typography>
         <IconButton
           size="small"
           onClick={handleClose}

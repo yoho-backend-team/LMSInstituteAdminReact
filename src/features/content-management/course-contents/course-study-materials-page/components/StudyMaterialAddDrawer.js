@@ -12,15 +12,13 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import toast from 'react-hot-toast';
-import { addCourseStudyMaterial } from '../services/studyMaterialServices';
-import CoursePdfInput from '../../components/PdfInput';
-import MenuItem from '@mui/material/MenuItem';
-import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import Autocomplete from '@mui/material/Autocomplete'
-
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import CoursePdfInput from '../../components/PdfInput';
+import { addCourseStudyMaterial } from '../services/studyMaterialServices';
 
 const StudyMaterialAddDrawer = (props) => {
   // ** Props
@@ -67,8 +65,8 @@ const StudyMaterialAddDrawer = (props) => {
       .string()
       .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
       .required(),
-    branch: yup.string().required(),
-    course: yup.string().required()
+    branch: yup.object().required(),
+    course: yup.object().required()
   });
 
   const defaultValues = {
@@ -180,7 +178,7 @@ const StudyMaterialAddDrawer = (props) => {
                   getOptionLabel={(option) => option.branch_name}
                   renderInput={(params) => (
                     <TextField
-                  sx={{ mb: 2 }}
+                      sx={{ mb: 2 }}
                       {...params}
                       label="Branch"
                       error={Boolean(errors.branch)}
@@ -191,29 +189,32 @@ const StudyMaterialAddDrawer = (props) => {
               )}
             />
           </Grid>
+         
+
           <Grid item xs={12} sm={12}>
             <Controller
               name="course"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  sx={{ mb: 2 }}
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  select
-                  label="Select Course"
-                  id="custom-select"
-                  onChange={onChange}
-                  error={Boolean(errors.course)}
-                  {...(errors.course && { helperText: errors.course.message })}
-                >
-                  {activeCourse?.map((item, index) => (
-                    <MenuItem key={index} value={item.course_id}>
-                      {item.course_name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'course' field
+                  }}
+                  options={activeCourse || []} // Ensure options are available
+                  getOptionLabel={(option) => option.course_name || ''}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Course"
+                      sx={{ mb: 2 }}
+                      error={Boolean(errors.course)}
+                      helperText={errors.course?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>

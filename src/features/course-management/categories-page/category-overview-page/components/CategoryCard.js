@@ -1,7 +1,8 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { Box, IconButton, Avatar, Card, CardContent, Typography, Grid, MenuItem, TextField } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
+import OptionsMenu from 'components/option-menu';
+import { useCallback, useMemo, useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
 
 const CategoryCard = (props) => {
@@ -48,14 +49,32 @@ const CategoryCard = (props) => {
             </Box>
             {/* Category Actions */}
             <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {/* Edit Button */}
-              <IconButton onClick={handleEditClick} aria-label="Edit" color="primary">
-                <Icon icon="tabler:edit" />
-              </IconButton>
-              {/* Delete Button */}
-              <IconButton onClick={handleDeleteClick} aria-label="Delete" color="error">
-                <Icon icon="tabler:archive-filled" />
-              </IconButton>
+              <OptionsMenu
+                menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+                iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                options={[
+                  {
+                    // to: `/apps/invoice/edit/${row.id}`,
+                    text: 'Edit',
+                    icon: <Icon icon="tabler:edit" />,
+                    menuItemProps: {
+                      onClick: () => {
+                        handleEditClick();
+                      }
+                    }
+                  },
+                  {
+                    // to: `/apps/invoice/delete/${row.id}`,
+                    text: 'Delete',
+                    icon: <Icon icon="mdi:delete-outline" />,
+                    menuItemProps: {
+                      onClick: () => {
+                        handleDeleteClick();
+                      }
+                    }
+                  }
+                ]}
+              />
             </Box>
           </Box>
           {/* Category Details */}

@@ -148,7 +148,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
       .required('Course field is required'),
     branch: yup.string().required('Branch field is required'),
-    course: yup.string().required('Course field is required'),
+    course: yup.object().required('Course field is required'),
     batch: yup.string().required('Batch field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     startTime: yup.date().nullable().required('Start Time field is required'),
