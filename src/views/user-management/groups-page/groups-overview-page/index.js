@@ -17,6 +17,7 @@ const GroupManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
+  const [statusValue, setStatusValue] = useState('');
 
   const dispatch = useDispatch();
   const groups = useSelector(selectGroups);
@@ -43,6 +44,12 @@ const GroupManagement = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleStatusValue = (event) => {
+    setStatusValue(event.target.value);
+    setDeleteDialogOpen(true);
+    setSelectedDeleteGroupId(item?.role?.id);
   };
 
   const handleSearch = async (value) => {
@@ -91,7 +98,7 @@ const GroupManagement = () => {
                 select
                 width={100}
                 label="Status"
-                // SelectProps={{ value: statusValue, onChange: handleStatusChange }}
+                  SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
               >
                 <MenuItem value="1">Active</MenuItem>
                 <MenuItem value="0">Inactive</MenuItem>
