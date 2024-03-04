@@ -9,11 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // ** FullCalendar & App Components Imports
 import Calendar from 'features/calender/components/Calendar';
 import CalendarWrapper from 'styles/libs/fullcalendar';
-
 // ** Actions
 import { fetchEvents, handleSelectEvent, updateEvent } from 'features/calender/redux/reducers';
 
-// ** CalendarColors
 const calendarsColor = {
   Personal: 'error',
   Business: 'primary',
@@ -22,7 +20,7 @@ const calendarsColor = {
   ETC: 'info'
 };
 
-const StudentAttendance = () => {
+const AppCalendar = () => {
   // ** States
   const [calendarApi, setCalendarApi] = useState(null);
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -31,7 +29,6 @@ const StudentAttendance = () => {
   // ** Hooks
   const dispatch = useDispatch();
   const store = useSelector((state) => state.calendar);
-
   const skin = 'default';
   const direction = 'ltr';
   const mdAbove = useMediaQuery((theme) => theme.breakpoints.up('md'));
@@ -81,4 +78,4 @@ const StudentAttendance = () => {
   );
 };
 
-export default StudentAttendance;
+export default AppCalendar;

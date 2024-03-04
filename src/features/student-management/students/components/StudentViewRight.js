@@ -7,12 +7,14 @@ import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
+// ** Icon Imports
 import Icon from 'components/icon';
 // ** Demo Components Imports
-import StudentAttendance from './StudentAttendance';
+import TeacherAttendance from './StudentAttendance';
 import UserViewAccount from './StudentViewAccount';
-import UserViewClasses from './StudentViewBilling';
+import UserViewConnection from './StudentViewConnection';
 import UserViewSecurity from './StudentViewSecurity';
+import UserViewBilling from './StudentClass';
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
@@ -50,7 +52,6 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 const UserViewRight = ({ tab, invoiceData }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
-
   const handleChange = (event, value) => {
     setActiveTab(value);
   };
@@ -69,10 +70,11 @@ const UserViewRight = ({ tab, invoiceData }) => {
         aria-label="forced scroll tabs example"
         sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value="account" label="Account" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
+        <Tab value="account" label="Info" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
         <Tab value="security" label="Security" icon={<Icon fontSize="1.125rem" icon="tabler:lock" />} />
-        <Tab value="classes" label="Classes" icon={<Icon fontSize="1.125rem" icon="tabler:currency-dollar" />} />
+        <Tab value="class" label="Classes" icon={<Icon fontSize="1.125rem" icon="tabler:books" />} />
         <Tab value="attendance" label="Attendance" icon={<Icon fontSize="1.125rem" icon="tabler:calendar-plus" />} />
+        <Tab value="activity" label="Activity" icon={<Icon fontSize="1.125rem" icon="tabler:link" />} />
       </TabList>
       <Box sx={{ mt: 4 }}>
         <>
@@ -82,11 +84,14 @@ const UserViewRight = ({ tab, invoiceData }) => {
           <TabPanel sx={{ p: 0 }} value="security">
             <UserViewSecurity />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="classes">
-            <UserViewClasses />
+          <TabPanel sx={{ p: 0 }} value="class">
+            <UserViewBilling />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="attendance">
-            <StudentAttendance />
+            <TeacherAttendance />
+          </TabPanel>
+          <TabPanel sx={{ p: 0 }} value="activity">
+            <UserViewConnection />
           </TabPanel>
         </>
       </Box>

@@ -48,8 +48,7 @@ const GroupManagement = () => {
 
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
-    setDeleteDialogOpen(true);
-    setSelectedDeleteGroupId(item?.role?.id);
+  
   };
 
   const handleSearch = async (value) => {
