@@ -12,13 +12,12 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Icon from 'components/icon';
-import toast from 'react-hot-toast';
-import MenuItem from '@mui/material/MenuItem';
-import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { addCourseModule } from '../services/moduleServices';
 import Autocomplete from '@mui/material/Autocomplete';
+import Icon from 'components/icon';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { addCourseModule } from '../services/moduleServices';
 
 const CourseModuleAddDrawer = (props) => {
   // ** Props
@@ -64,8 +63,8 @@ const CourseModuleAddDrawer = (props) => {
       .string()
       .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
       .required(),
-    branch: yup.string().required(),
-    course: yup.string().required(),
+    branch: yup.object().required(),
+    course: yup.object().required(),
     video_url: yup.string().required()
   });
 
@@ -135,7 +134,7 @@ const CourseModuleAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Study Material</Typography>
+        <Typography variant="h5">Add Module</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -154,8 +153,7 @@ const CourseModuleAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-        
-        <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={12}>
             <Controller
               name="branch"
               control={control}
@@ -172,7 +170,7 @@ const CourseModuleAddDrawer = (props) => {
                   getOptionLabel={(option) => option.branch_name}
                   renderInput={(params) => (
                     <TextField
-                  sx={{ mb: 2 }}
+                      sx={{ mb: 2 }}
                       {...params}
                       label="Branch"
                       error={Boolean(errors.branch)}
@@ -189,23 +187,24 @@ const CourseModuleAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  sx={{ mb: 2 }}
-                  fullWidth
+                <Autocomplete
                   value={value}
-                  select
-                  label="Select Course"
-                  id="custom-select"
-                  onChange={onChange}
-                  error={Boolean(errors.course)}
-                  {...(errors.course && { helperText: errors.course.message })}
-                >
-                  {activeCourse?.map((item, index) => (
-                    <MenuItem key={index} value={item.course_id}>
-                      {item.course_name}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  onChange={(event, newValue) => {
+                    onChange(newValue); // Update the value of the 'course' field
+                  }}
+                  options={activeCourse || []} // Ensure options are available
+                  getOptionLabel={(option) => option.course_name || ''}
+                  fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Select Course"
+                      sx={{ mb: 2 }}
+                      error={Boolean(errors.course)}
+                      helperText={errors.course?.message}
+                    />
+                  )}
+                />
               )}
             />
           </Grid>
