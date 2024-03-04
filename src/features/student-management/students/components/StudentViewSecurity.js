@@ -41,8 +41,9 @@ const UserViewSecurity = () => {
   const handleClickShowConfirmNewPassword = () => {
     setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword });
   };
+
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardHeader title="Change Password" />
