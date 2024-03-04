@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -25,6 +25,8 @@ import {
 import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import toast from 'react-hot-toast';
+import OptionsMenu from 'components/option-menu';
+import Icon from 'components/icon';
 
 const userStatusObj = {
   1: 'success',
@@ -46,15 +48,50 @@ const renderClient = (row) => {
   }
 };
 
-const RowOptions = ({ id }) => {
+// const RowOptions = ({ id }) => {
+//   return (
+//     <>
+//       <Link to={`${id}`} state={{ id: id }}>
+//         <Button size="small" variant="outlined" color="secondary">
+//           View
+//         </Button>
+//       </Link>
+//     </>
+//   );
+// };
+
+const RowOptions = ({id}) => {
   return (
-    <>
-      <Link to={`${id}`} state={{ id: id }}>
-        <Button size="small" variant="outlined" color="secondary">
-          View
-        </Button>
-      </Link>
-    </>
+    <OptionsMenu
+      menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+      iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+      options={[
+        {
+          text: 'View',
+          icon: <Icon icon="tabler:eye" fontSize={20} />,
+          menuItemProps: {
+            component: Link,
+            to: `${id}`,
+            state:{id:id}
+          }
+          // renderOption: () => (
+          //   <MenuItem state={{ id: id }} onClick={() => {}}>
+          //     <Button size="small" variant="outlined" color="secondary">
+          //       View
+          //     </Button>
+          //   </MenuItem>
+          // )
+        },
+
+        {
+          text: 'Delete',
+          icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
+          menuItemProps: {
+            onClick: () => handleDelete()
+          }
+        }
+      ]}
+    />
   );
 };
 

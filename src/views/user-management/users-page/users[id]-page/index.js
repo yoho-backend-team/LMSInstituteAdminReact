@@ -15,7 +15,7 @@ const UserView = () => {
 
   const [userId, setUserId] = useState(location?.state?.id);
   const [userData, setUserData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getUserData();
@@ -23,7 +23,7 @@ const UserView = () => {
 
   const getUserData = async () => {
     try {
-      setLoading(true);
+      setLoading(false);
       const result = await getUserById(userId);
       if (result.success) {
         console.log('User Data:', result.data);
