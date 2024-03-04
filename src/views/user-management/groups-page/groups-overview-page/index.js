@@ -48,7 +48,6 @@ const GroupManagement = () => {
 
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
-  
   };
 
   const handleSearch = async (value) => {
@@ -111,7 +110,8 @@ const GroupManagement = () => {
                     text: 'View',
                     menuItemProps: {
                       component: Link,
-                      to: 'view'
+                      to: 'view',
+                      state: { group: item.role }
                     }
                   },
                   {

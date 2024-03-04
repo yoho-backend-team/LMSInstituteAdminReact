@@ -5,21 +5,15 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 import Icon from 'components/icon';
-import CustomChip from 'components/mui/chip';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
@@ -38,30 +32,6 @@ const schema = yup.object().shape({
   staff: yup.string().required('Staff is required')
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
 
 const defaultValues = {
   email: '',
@@ -78,15 +48,12 @@ const SalaryEditDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
   // ** State
-  const [selectedBranches, setSelectedBranches] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
+
 
   useEffect(() => {}, []);
 
@@ -160,22 +127,6 @@ const SalaryEditDrawer = (props) => {
     reset();
   };
 
-  const courses = [
-    { course_id: '1', course_name: 'Course 1' },
-    { course_id: '2', course_name: 'Course 2' },
-    { course_id: '3', course_name: 'Course 3' }
-  ];
-
-  const [selectedCourses, setSelectedCourses] = useState([]);
-
-  const handleCourseChange = (newValue) => {
-    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-      setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-    } else {
-      setSelectedCourses(newValue);
-    }
-  };
-
   return (
     <DatePickerWrapper>
       <Drawer
@@ -223,96 +174,7 @@ const SalaryEditDrawer = (props) => {
               </div>
             </Box>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="branch"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    select
-                    fullWidth
-                    label="Branch"
-                    id="select-multiple-checkbox"
-                    error={Boolean(errors.branch) && !selectedBranches.length} // Render error if field is empty
-                    helperText={!selectedBranches.length && errors.branch?.message} // Display error message only if field is empty
-                    SelectProps={{
-                      MenuProps,
-                      multiple: true,
-                      value: selectedBranches,
-                      onChange: (e) => handleBranchChange(e),
-                      renderValue: (selected) => selected.join(', ')
-                    }}
-                  >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="course"
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    sx={{ mb: 2 }}
-                    multiple
-                    id="select-multiple-chip"
-                    options={courses}
-                    getOptionLabel={(option) => option.course_name}
-                    value={selectedCourses}
-                    onChange={(event, newValue) => handleCourseChange(newValue)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Courses"
-                        error={Boolean(errors.course) && !selectedCourses.length}
-                        helperText={!selectedCourses.length && errors.course?.message}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.course_name}
-                      </li>
-                    )}
-                    renderTags={(value) =>
-                      value.map((option, index) => (
-                        <CustomChip
-                          key={option.course_id}
-                          label={option.course_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedCourses(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))
-                    }
-                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                  />
-                )}
-              />
-            </Grid>
-
+      
             <Grid item xs={12} sm={12}>
               <Controller
                 name="type"

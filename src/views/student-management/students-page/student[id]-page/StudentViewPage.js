@@ -7,11 +7,11 @@ import UserViewRight from '../../../../features/student-management/students/comp
 const UserView = ({ tab, invoiceData }) => {
   return (
     <>
-      <Grid container spacing={6}>
-        <Grid item xs={12} md={5} lg={4}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12} lg={12}>
           <UserViewLeft />
         </Grid>
-        <Grid item xs={12} md={7} lg={8}>
+        <Grid item xs={12} md={12} lg={12}>
           <UserViewRight tab={tab} invoiceData={invoiceData} />
         </Grid>
       </Grid>

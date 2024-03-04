@@ -144,8 +144,9 @@ export const getAllPermissionsByRoleId = async (roleId) => {
       },
       params: { id: roleId }
     });
+    console.log(response)
 
-    if (response.data.data) {
+    if (response.data.status) {
       return { success: true, data: response.data.data };
     } else {
       return { success: false, message: 'Failed to fetch permissions' };

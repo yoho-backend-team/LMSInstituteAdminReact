@@ -15,7 +15,7 @@ const UserList = () => {
   const userLoading = useSelector(selectUserLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const groups = useSelector(selectGroups);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     dispatch(getAllGroups(selectedBranchId));
   }, [selectedBranchId]);

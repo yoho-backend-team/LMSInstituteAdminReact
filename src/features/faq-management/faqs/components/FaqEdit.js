@@ -1,7 +1,7 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
 // ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -14,9 +14,7 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
-import toast from 'react-hot-toast';
-import { updateStudentCertificate } from '../services/studentCertificateServices';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -37,7 +35,7 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  course: yup.string().required(),
+  category: yup.string().required('Category is required'),
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
@@ -48,15 +46,12 @@ const schema = yup.object().shape({
 const defaultValues = {
   description: '',
   title: '',
-  branch: '',
-  course: ''
+  category: '',
 };
 
-const StudentCertificateEdit = (props) => {
+const FaqEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
-  console.log('StudyMaterialEdit - open:', props.open);
-  console.log('StudyMaterialEdit - toggle:', props.toggle);
   // ** State
   
   const [groups, setGroups] = useState([]);
@@ -115,23 +110,10 @@ const StudentCertificateEdit = (props) => {
     var bodyFormData = new FormData();
     bodyFormData.append('name', data.title);
     bodyFormData.append('description', data.description);
-    bodyFormData.append('course_id', data.course);
-    bodyFormData.append('branch_id', data.branch);
+    bodyFormData.append('category', data.category);
+
 
     console.log(bodyFormData);
-
-    try {
-      const result = await updateStudentCertificate(data);
-
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleClose = () => {
@@ -150,7 +132,7 @@ const StudentCertificateEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Edit Certificate</Typography>
+        <Typography variant="h5">Edit Faq </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -169,9 +151,7 @@ const StudentCertificateEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
-          </Grid>
+    
 
           <Controller
             name="title"
@@ -209,6 +189,26 @@ const StudentCertificateEdit = (props) => {
             )}
           />
 
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <Autocomplete
+                  fullWidth
+                  sx={{ mb: 4 }}
+                  value={value}
+                  onChange={(e, newValue) => {
+                    onChange(newValue);
+                  }}
+                  options={['Web Development', 'Android Development']}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select Category" error={Boolean(errors.category)} helperText={errors.category?.message} />
+                  )}
+                />
+              )}
+            />
+      
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
               Submit
@@ -223,4 +223,4 @@ const StudentCertificateEdit = (props) => {
   );
 };
 
-export default StudentCertificateEdit;
+export default FaqEdit;
