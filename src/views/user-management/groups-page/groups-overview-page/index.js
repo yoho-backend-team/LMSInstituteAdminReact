@@ -92,13 +92,13 @@ const GroupManagement = () => {
                 {item?.role?.name}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
               <TextField
                 size="small"
                 select
                 width={100}
                 label="Status"
-                  SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+                SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
               >
                 <MenuItem value="1">Active</MenuItem>
                 <MenuItem value="0">Inactive</MenuItem>
