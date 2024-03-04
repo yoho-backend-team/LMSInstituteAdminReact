@@ -1,42 +1,32 @@
-import Box from '@mui/material/Box';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
-import { useEffect } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField as CustomTextField } from '@mui/material';
+import { Button, TextField as CustomTextField, Grid, CardContent } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { updateBranch } from '../../../services/branchServices';
+import { updateBranch } from 'features/branch-management/services/branchServices';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 
-const branchSchema = yup.object().shape({
-  branchName: yup.string().required('Branch Name is required'),
-  phone: yup.number().required('Phone No. is required'),
-  alternatePhone: yup.number().required('Alternate Phone No. is required'),
-  address: yup.string().required('Address is required'),
-  pinCode: yup.number().required('PIN Code is required'),
-  landmark: yup.string().required('Landmark is required'),
-  city: yup.string().required('City is required'),
-  state: yup.string().required('State is required')
-});
-
 const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch, setRefetchBranch }) => {
-  useEffect(() => {
-    if (selectedBranch) {
-      setValue('branchName', selectedBranch.branch_name || '');
-      setValue('phone', selectedBranch.phone_number || '');
-      setValue('alternatePhone', selectedBranch.alternate_number || '');
-      setValue('address', selectedBranch.address || ''); // Set default value to 'location'
-      setValue('pinCode', selectedBranch.pin_code || '');
-      setValue('landmark', selectedBranch.landmark || '');
-      setValue('city', selectedBranch.city || '');
-      setValue('state', selectedBranch.state || '');
-    }
-  }, [selectedBranch]);
+  // Form validation schema
+  const branchSchema = useMemo(
+    () =>
+      yup.object().shape({
+        branchName: yup.string().required('Branch Name is required'),
+        phone: yup.number().required('Phone No. is required'),
+        alternatePhone: yup.number().required('Alternate Phone No. is required'),
+        address: yup.string().required('Address is required'),
+        pinCode: yup.number().required('PIN Code is required'),
+        landmark: yup.string().required('Landmark is required'),
+        city: yup.string().required('City is required'),
+        state: yup.string().required('State is required')
+      }),
+    []
+  );
 
+  // React Hook Form initialization
   const {
     handleSubmit,
     control,
@@ -46,38 +36,57 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
     resolver: yupResolver(branchSchema)
   });
 
-  const onSubmit = async (data) => {
-    const dummyData = {
-      branch_name: data.branchName,
-      id: selectedBranch.id,
-      address: data.address,
-      city: data.city,
-      state: data.state,
-      pin_code: data.pinCode,
-      landmark: data.landmark,
-      phone_number: data.phone,
-      alternate_number: data.alternatePhone
-    };
-    console.log(data);
-    try {
-      const result = await updateBranch(dummyData);
-
-      if (result.success) {
-        toast.success(result.message);
-        setRefetchBranch((state) => !state);
-        handleClose();
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (selectedBranch) {
+      setValue('branchName', selectedBranch.branch_name || '');
+      setValue('phone', selectedBranch.phone_number || '');
+      setValue('alternatePhone', selectedBranch.alternate_number || '');
+      setValue('address', selectedBranch.address || '');
+      setValue('pinCode', selectedBranch.pin_code || '');
+      setValue('landmark', selectedBranch.landmark || '');
+      setValue('city', selectedBranch.city || '');
+      setValue('state', selectedBranch.state || '');
     }
-  };
-  const handleClose = () => {
+  }, [selectedBranch, setValue]);
+
+  // Handle form submission
+  const onSubmit = useCallback(
+    async (data) => {
+      const dummyData = {
+        branch_name: data.branchName,
+        id: selectedBranch.id,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        pin_code: data.pinCode,
+        landmark: data.landmark,
+        phone_number: data.phone,
+        alternate_number: data.alternatePhone
+      };
+
+      try {
+        const result = await updateBranch(dummyData);
+
+        if (result.success) {
+          toast.success(result.message);
+          setRefetchBranch((state) => !state);
+          handleClose();
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [selectedBranch, setRefetchBranch]
+  );
+
+  // Close the modal
+  const handleClose = useCallback(() => {
     handleEditClose();
     setSelectedBranch(null);
-    reset();
-  };
+  }, [handleEditClose, setSelectedBranch]);
 
   return (
     <div>
@@ -109,6 +118,8 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent>
               <Grid container spacing={3}>
+                {/* Form fields */}
+                {/* Branch Name */}
                 <Grid item xs={12} sm={12}>
                   <Controller
                     name="branchName"
@@ -127,6 +138,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                   />
                 </Grid>
 
+                {/* Phone No. */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="phone"
@@ -144,6 +156,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                     )}
                   />
                 </Grid>
+                {/* Alternate Phone No. */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="alternatePhone"
@@ -161,6 +174,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                     )}
                   />
                 </Grid>
+                {/* Address */}
                 <Grid item xs={12}>
                   <Controller
                     name="address"
@@ -180,6 +194,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                     )}
                   />
                 </Grid>
+                {/* PIN Code */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="pinCode"
@@ -197,6 +212,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                     )}
                   />
                 </Grid>
+                {/* Landmark */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="landmark"
@@ -213,6 +229,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                     )}
                   />
                 </Grid>
+                {/* City */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="city"
@@ -229,6 +246,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                     )}
                   />
                 </Grid>
+                {/* State */}
                 <Grid item xs={12} sm={6}>
                   <Controller
                     name="state"
@@ -246,15 +264,14 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                   />
                 </Grid>
 
+                {/* Submit and Cancel buttons */}
                 <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Box>
-                    <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                      Update
-                    </Button>
-                    <Button variant="tonal" color="error" onClick={handleClose}>
-                      Cancel
-                    </Button>
-                  </Box>
+                  <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+                    Update
+                  </Button>
+                  <Button variant="tonal" color="error" onClick={handleClose}>
+                    Cancel
+                  </Button>
                 </Grid>
               </Grid>
             </CardContent>

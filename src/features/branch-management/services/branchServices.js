@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-management/institute-branches`;
 
-export const getAllBranches = async () => {
+export const getAllBranches = async (data) => {
   try {
     // let data = {
     //   search: ''
@@ -12,7 +12,8 @@ export const getAllBranches = async () => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params: data
     });
 
     console.log(response);
@@ -105,14 +106,14 @@ export const addBranch = async (data) => {
   }
 };
 
-export const deleteBranch = async (BranchId) => {
+export const deleteBranch = async (data) => {
   try {
     const response = await axios.delete(`${BRANCH_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: BranchId }
+      params: data
     });
 
     if (response.data.status) {
