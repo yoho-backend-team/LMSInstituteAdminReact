@@ -11,11 +11,8 @@ import { forwardRef, useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
-import MenuItem from '@mui/material/MenuItem';
 // ** Custom Component Import
 import { TextField as CustomTextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -27,31 +24,11 @@ const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
 const validationSchema = yup.object().shape({
   batchName: yup.string().required('Batch Name is required'),
   startDate: yup.date().required('Start Date is required'),
   endDate: yup.date().required('End Date is required'),
-  branches: yup
-    .array()
-    .min(1, 'Please select at least one Branch')
-    .test({
-      name: 'atLeastOneBranch',
-      message: 'Please select at least one Branch',
-      test: (value) => value && value.length > 0
-    }),
-  course: yup.string().required('Course is required'),
+
   students: yup
     .array()
     .min(1, 'Please select at least one Student')
@@ -80,14 +57,12 @@ const BatchEditModal = ({ open, handleEditClose }) => {
   // ** States
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [selectedBranches, setSelectedBranches] = useState([]);
+
   const [selectedStudents, setSelectedStudents] = useState([]);
 
   console.log(setSelectedStudents);
 
   const defaultValues = {
-    course: '',
-    branches: [],
     startDate: null,
     endDate: null,
     students: [],
@@ -109,17 +84,12 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     reset();
   };
 
-  const handleBranchChange = (event) => {
-    setSelectedBranches(event.target.value);
-  };
-
   const onSubmit = async (data) => {
     const inputData = {
       batchName: data.batchName,
       startDate: data.startDate,
       endDate: data.endDate,
-      branches: data.branches,
-      course: data.course,
+
       students: data.students
     };
     const result = await updateBatch(inputData);
@@ -216,61 +186,6 @@ const BatchEditModal = ({ open, handleEditClose }) => {
                         customInput={<CustomInput label="End Date" error={Boolean(errors.endDate)} helperText={errors.endDate?.message} />}
                         id="form-layouts-separator-date"
                         onChange={handleEndDateChange}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Controller
-                        name="branches"
-                        control={control}
-                        render={({ field }) => (
-                          <CustomTextField
-                            {...field}
-                            select
-                            fullWidth
-                            label="Branch"
-                            id="select-multiple-checkbox"
-                            SelectProps={{
-                              MenuProps,
-                              multiple: true,
-                              value: selectedBranches,
-                              onChange: (e) => handleBranchChange(e),
-                              renderValue: (selected) => selected.join(', ')
-                            }}
-                            error={Boolean(errors.branches)}
-                            helperText={errors.branches?.message}
-                          >
-                            {names.map((name) => (
-                              <MenuItem key={name} value={name}>
-                                <Checkbox checked={selectedBranches.indexOf(name) > -1} />
-                                <ListItemText primary={name} />
-                              </MenuItem>
-                            ))}
-                          </CustomTextField>
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Controller
-                        name="course"
-                        control={control}
-                        render={({ field }) => (
-                          <Autocomplete
-                            {...field}
-                            fullWidth
-                            options={['UK', 'USA', 'Australia', 'Germany']}
-                            renderInput={(params) => (
-                              <CustomTextField
-                                {...params}
-                                label="Course"
-                                error={Boolean(errors.course)}
-                                helperText={errors.course?.message}
-                              />
-                            )}
-                            onChange={(e, value) => {
-                              field.onChange(value);
-                            }}
-                          />
-                        )}
                       />
                     </Grid>
 
