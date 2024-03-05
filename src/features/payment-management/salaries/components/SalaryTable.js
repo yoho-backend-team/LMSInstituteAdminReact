@@ -6,8 +6,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
@@ -197,11 +195,11 @@ const SalaryTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="View">
+          {/* <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
               <Icon icon="tabler:eye" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -215,6 +213,15 @@ const SalaryTable = () => {
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
                 menuItemProps: { onClick: toggleEditUserDrawer }
+              },
+              {
+                text: 'View',
+                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                menuItemProps: {
+                  component: Link,
+                  to: `/apps/invoice/preview/${row.id}`
+                
+                }
               }
             ]}
           />
