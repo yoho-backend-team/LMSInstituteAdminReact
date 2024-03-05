@@ -6,8 +6,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
@@ -36,8 +34,8 @@ import FeesEditDrawer from './FeesEditDrawer';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { getAllStudentFees } from '../redux/studentFeeThunks';
 import { selectStudentFees } from '../redux/studentFeeSelectors';
+import { getAllStudentFees } from '../redux/studentFeeThunks';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -211,11 +209,11 @@ const FeesTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="View">
+          {/* <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
               <Icon icon="tabler:eye" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -233,6 +231,16 @@ const FeesTable = () => {
                     handleRowClick(row);
                     toggleEditUserDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
                   }
+                }
+              },
+
+              {
+                text: 'View',
+                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                menuItemProps: {
+                  component: Link,
+                  to: `/apps/invoice/preview/${row.id}`
+                
                 }
               }
             ]}
