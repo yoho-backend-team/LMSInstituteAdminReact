@@ -322,13 +322,13 @@ const StudenrCertificate = () => {
 
   return (
     <>
-      {loading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <StudentCertificateTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <StudentCertificateTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+        {loading ? (
+          <ContentSkeleton />
+        ) : (
           <Grid item xs={12}>
             <Card>
               <DataGrid
@@ -344,17 +344,17 @@ const StudenrCertificate = () => {
               />
             </Card>
           </Grid>
-          <StudentCertificateAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-          <StudentCertificateEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-          />
-          <StudentCertificateView open={isViewModalOpen} handleViewClose={handleViewClose} />
-        </Grid>
-      )}
+        )}
+        <StudentCertificateAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        <StudentCertificateEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
+        <StudentCertificateView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
     </>
   );
 };

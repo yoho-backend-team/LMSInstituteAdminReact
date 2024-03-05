@@ -10,7 +10,6 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -32,11 +31,12 @@ import RefundAddDrawer from './RefundAddDrawer';
 import RefundCardHeader from './RefundCardHeader';
 import RefundEditDrawer from './RefundEditDrawer';
 // ** Styled Components
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
-import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
+import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
+import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -184,6 +184,14 @@ const CustomInput = forwardRef((props, ref) => {
 
 /* eslint-enable */
 const RefundTable = () => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
   // ** State
   const [value, setValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
@@ -191,7 +199,7 @@ const RefundTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
-  
+
   const dispatch = useDispatch();
   const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -206,6 +214,9 @@ const RefundTable = () => {
   };
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const handleDelete = () => {
+    setDeleteDialogOpen(true);
+  };
 
   // ** Hooks
   const handleFilter = (val) => {
@@ -222,22 +233,6 @@ const RefundTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="Delete Invoice">
-            <IconButton
-              onClick={() => {
-                setDeleteDialogOpen(true);
-              }}
-              size="small"
-              sx={{ color: 'text.secondary' }}
-            >
-              <Icon icon="tabler:trash" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="View">
-            <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon="tabler:eye" />
-            </IconButton>
-          </Tooltip>
           <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -251,6 +246,22 @@ const RefundTable = () => {
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
                 menuItemProps: { onClick: toggleEditUserDrawer }
+              },
+              {
+                text: 'View',
+                to: `/apps/invoice/view/${row.id}`,
+                icon: <Icon icon="tabler:eye" />,
+                menuItemProps: { onClick: toggleEditUserDrawer }
+              },
+              {
+                text: 'Delete',
+                to: `/apps/invoice/delete/${row.id}`,
+                icon: <Icon icon="tabler:trash" />,
+                menuItemProps: {
+                  onClick: () => {
+                    handleDelete();
+                  }
+                }
               },
               {
                 text: 'Duplicate',
@@ -467,22 +478,26 @@ const RefundTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
-          <Card>
-            <RefundCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-            <DataGrid
-              sx={{ p: 2 }}
-              autoHeight
-              pagination
-              rowHeight={62}
-              rows={store}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
-            />
-          </Card>
+          {loading ? (
+            <FeesTableSkeleton />
+          ) : (
+            <Card>
+              <RefundCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+              <DataGrid
+                sx={{ p: 2 }}
+                autoHeight
+                pagination
+                rowHeight={62}
+                rows={store}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+              />
+            </Card>
+          )}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
           <RefundEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
 

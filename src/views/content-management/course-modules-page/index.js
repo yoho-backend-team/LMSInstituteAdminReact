@@ -24,6 +24,7 @@ import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import StatusDialog from 'components/modal/DeleteModel';
 
 const Modules = () => {
   const [value, setValue] = useState('');
@@ -35,6 +36,8 @@ const Modules = () => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [activeBranches, setActiveBranches] = useState([]);
+  const [statusOpen, setStatusDialogOpen] = useState(false);
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -53,7 +56,7 @@ const Modules = () => {
   };
 
   const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
+    setStatusDialogOpen(true);
   };
 
   const handleViewClose = () => {
@@ -244,13 +247,13 @@ const Modules = () => {
 
   return (
     <>
-      {ModuleLoading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+        {ModuleLoading ? (
+          <ContentSkeleton />
+        ) : (
           <Grid item xs={12}>
             <Card>
               <DataGrid
@@ -266,17 +269,18 @@ const Modules = () => {
               />
             </Card>
           </Grid>
-          <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-          <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-          />
-          <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />
-        </Grid>
-      )}
+        )}
+        <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
+        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
     </>
   );
 };

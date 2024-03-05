@@ -23,17 +23,17 @@ const OfflineClass = () => {
   }, 1000);
   return (
     <>
-      {loading ? (
-        <ClassSkeleton />
-      ) : (
-        <Grid>
-          <OfflineClassFilterCard />
-          <OfflineClassCardHeader />
+      <Grid>
+        <OfflineClassFilterCard />
+        <OfflineClassCardHeader />
+        {loading ? (
+          <ClassSkeleton />
+        ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
             <OfflineClassCard />
           </Grid>
-        </Grid>
-      )}
+        )}
+      </Grid>
     </>
   );
 };

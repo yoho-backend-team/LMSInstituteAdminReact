@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 // ==============================|| SKELETON - EARNING CARD ||============================== //
 
 const GroupSkeleton = () => (
-  <Grid container spacing={2}>
+  <Grid container spacing={2} sx={{mt:2}}>
     <Grid item xs={12} sm={4}>
       <Card>
         <CardContent>
