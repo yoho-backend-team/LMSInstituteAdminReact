@@ -1,14 +1,12 @@
 // ** React Imports
+import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Icon from 'components/icon';
 import { IconCalendar } from '@tabler/icons';
-import { Button } from '@mui/material';
-import OptionsMenu from 'components/option-menu';
 
 const LiveClassCard = () => {
   const cardData = [
@@ -18,7 +16,8 @@ const LiveClassCard = () => {
       class_name: 'Introduction to App',
       location: 'Kumbakonam',
       duration: '5hr',
-      dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
+      class_date: '2024-03-04',
+
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Change the avatar URL here
       batch_class: {
@@ -39,7 +38,7 @@ const LiveClassCard = () => {
       class_name: 'Introduction to web',
       location: 'Kumbakonam',
       duration: '2hr',
-      dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
+      class_date: '2024-03-04',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
       batch_class: {
@@ -60,7 +59,7 @@ const LiveClassCard = () => {
       class_name: 'Block chain',
       location: 'Kumbakonam',
       duration: '3.5hr',
-      dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
+      class_date: '2024-03-04',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
       batch_class: {
@@ -81,7 +80,7 @@ const LiveClassCard = () => {
       class_name: 'Figma',
       location: 'Kumbakonam',
       duration: '5hr',
-      dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
+      class_date: '2024-03-04',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
       batch_class: {
@@ -102,7 +101,8 @@ const LiveClassCard = () => {
       class_name: 'Analysis',
       location: 'Kumbakonam',
       duration: '1hr',
-      dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
+      class_date: '2024-03-04',
+      start_time:' 5:NaN AM',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
       batch_class: {
@@ -142,12 +142,12 @@ const LiveClassCard = () => {
   }
 
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={2}>
       {cardData?.map((card, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card sx={{ p: 3 }}>
             <Grid container direction="column" spacing={1}>
-              <Grid item sx={{ alignItems: 'center', justifyContent: 'space-between', display: 'flex', mt: 1 }}>
+              <Grid item sx={{ mt: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Typography
                     sx={{
@@ -164,34 +164,6 @@ const LiveClassCard = () => {
                   >
                     {card?.class_name}
                   </Typography>
-                </Box>
-                <Box>
-                  <OptionsMenu
-                    menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-                    iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                    options={[
-                      {
-                        // to: `/apps/invoice/edit/${row.id}`,
-                        text: 'Edit',
-                        icon: <Icon icon="tabler:edit" />
-                        // menuItemProps: {
-                        //   onClick: () => {
-                        //     handleEdit();
-                        //   }
-                        // }
-                      },
-                      {
-                        // to: `/apps/invoice/delete/${row.id}`,
-                        text: 'Delete',
-                        icon: <Icon icon="mdi:delete-outline" />
-                        // menuItemProps: {
-                        //   onClick: () => {
-                        //     setDeleteDialogOpen(true);
-                        //   }
-                        // }
-                      }
-                    ]}
-                  />
                 </Box>
               </Grid>
               <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
