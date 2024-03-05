@@ -7,8 +7,6 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
@@ -221,18 +219,16 @@ const UserViewAccount = () => {
                     className="demo-space-x"
                     sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    <Grid sx={{ mt: 1 }}>
-                      <TextField
-                        size="small"
-                        select
-                        fullWidth
-                        label="Status"
-                        SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e) }}
-                      >
-                        <MenuItem value="1">Active</MenuItem>
-                        <MenuItem value="0">Inactive</MenuItem>
-                      </TextField>
-                    </Grid>
+                    <Box>
+                      <CustomChip
+                        skin="light"
+                        label={course?.course_categories?.course_category_name}
+                        rounded
+                        color="secondary"
+                        size="medium"
+                        variant="outlined"
+                      />
+                    </Box>
                     <Button component={Link} to="view " size="medium" variant="contained" color="primary">
                       View Details
                     </Button>
