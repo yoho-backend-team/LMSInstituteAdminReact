@@ -49,7 +49,7 @@ const FaqEdit = (props) => {
   // ** State
   const defaultValues = {
     description: '',
-    title: '',
+    title: ''
     // category: {}
   };
   const {

@@ -27,6 +27,7 @@ import { getInitials } from 'utils/get-initials';
 import toast from 'react-hot-toast';
 import OptionsMenu from 'components/option-menu';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const userStatusObj = {
   1: 'success',
@@ -47,18 +48,6 @@ const renderClient = (row) => {
     );
   }
 };
-
-// const RowOptions = ({ id }) => {
-//   return (
-//     <>
-//       <Link to={`${id}`} state={{ id: id }}>
-//         <Button size="small" variant="outlined" color="secondary">
-//           View
-//         </Button>
-//       </Link>
-//     </>
-//   );
-// };
 
 const RowOptions = ({ id }) => {
   return (
@@ -101,6 +90,8 @@ const UserBodySection = ({ groups, users, setLoading }) => {
   const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
   const dispatch = useDispatch();
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -162,14 +153,10 @@ const UserBodySection = ({ groups, users, setLoading }) => {
     [dispatch]
   );
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedDeleteMaterial, setSelectedDeleteMaterial] = useState(null);
-
   const handleStatus = (event, row) => {
     setSelectedDeleteMaterial(row);
     setDeleteDialogOpen(true);
   };
-  console.log(selectedDeleteMaterial);
   const handleChangeStatus = async () => {
     try {
       const data = {
@@ -359,6 +346,12 @@ const UserBodySection = ({ groups, users, setLoading }) => {
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleChangeStatus} />
     </Card>
   );
+};
+
+UserBodySection.propTypes = {
+  groups: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
+  setLoading: PropTypes.func.isRequired
 };
 
 export default UserBodySection;
