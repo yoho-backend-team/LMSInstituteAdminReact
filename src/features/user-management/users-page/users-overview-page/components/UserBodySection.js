@@ -60,7 +60,7 @@ const renderClient = (row) => {
 //   );
 // };
 
-const RowOptions = ({id}) => {
+const RowOptions = ({ id }) => {
   return (
     <OptionsMenu
       menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -72,7 +72,7 @@ const RowOptions = ({id}) => {
           menuItemProps: {
             component: Link,
             to: `${id}`,
-            state:{id:id}
+            state: { id: id }
           }
           // renderOption: () => (
           //   <MenuItem state={{ id: id }} onClick={() => {}}>
@@ -87,7 +87,7 @@ const RowOptions = ({id}) => {
           text: 'Delete',
           icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
           menuItemProps: {
-            onClick: () => handleDelete()
+            onClick: () => setDeleteDialogOpen(true)
           }
         }
       ]}

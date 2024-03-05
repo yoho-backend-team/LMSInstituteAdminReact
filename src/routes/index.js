@@ -110,6 +110,7 @@ const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management
 const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff[id]-page')));
 const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-add-page')));
 const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-add-page')));
+const EditTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-edit-page')));
 const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff[id]-page')));
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students-page/student-overview-page')));
@@ -297,6 +298,7 @@ const ApplicationRoutes = () => {
           <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
           <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
           <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
+          <Route path="teaching-staffs/:id/edit" element={<EditTeachingStaff />} />
         </Route>
 
         <Route path="/student-management" element={<MainLayout />}>
