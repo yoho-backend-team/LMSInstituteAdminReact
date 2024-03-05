@@ -98,7 +98,6 @@ const SalaryTable = () => {
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-
   const handleFilter = (val) => {
     setValue(val);
   };
@@ -142,7 +141,6 @@ const SalaryTable = () => {
       field: 'name',
       headerName: 'Staff',
       renderCell: ({ row }) => {
-
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
@@ -178,9 +176,7 @@ const SalaryTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return (
-          <Typography sx={{ color: 'text.secondary' }}>{row.status}</Typography>
-        );
+        return <Typography sx={{ color: 'text.secondary' }}>{row.status}</Typography>;
       }
     }
   ];
@@ -205,8 +201,12 @@ const SalaryTable = () => {
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
-                text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
+                text: 'View',
+                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                menuItemProps: {
+                  component: Link,
+                  to: `/apps/invoice/preview/${row.id}`
+                }
               },
               {
                 text: 'Edit',
@@ -215,13 +215,8 @@ const SalaryTable = () => {
                 menuItemProps: { onClick: toggleEditUserDrawer }
               },
               {
-                text: 'View',
-                icon: <Icon icon="tabler:eye" fontSize={20} />,
-                menuItemProps: {
-                  component: Link,
-                  to: `/apps/invoice/preview/${row.id}`
-                
-                }
+                text: 'Download',
+                icon: <Icon icon="tabler:download" fontSize={20} />
               }
             ]}
           />
@@ -297,7 +292,6 @@ const SalaryTable = () => {
   //   }
   // ];
 
-
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -306,7 +300,7 @@ const SalaryTable = () => {
             <CardHeader title="Salary" />
             <CardContent>
               <Grid container spacing={6}>
-              <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <Autocomplete
                     disableCloseOnSelect
                     multiple

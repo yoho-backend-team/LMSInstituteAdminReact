@@ -219,8 +219,12 @@ const FeesTable = () => {
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
-                text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
+                text: 'View',
+                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                menuItemProps: {
+                  component: Link,
+                  to: `/apps/invoice/preview/${row.id}`
+                }
               },
               {
                 text: 'Edit',
@@ -233,15 +237,9 @@ const FeesTable = () => {
                   }
                 }
               },
-
               {
-                text: 'View',
-                icon: <Icon icon="tabler:eye" fontSize={20} />,
-                menuItemProps: {
-                  component: Link,
-                  to: `/apps/invoice/preview/${row.id}`
-                
-                }
+                text: 'Download',
+                icon: <Icon icon="tabler:download" fontSize={20} />
               }
             ]}
           />
