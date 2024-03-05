@@ -24,6 +24,7 @@ import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import StatusDialog from 'components/modal/DeleteModel';
 
 const Notes = () => {
   const [value, setValue] = useState('');
@@ -34,11 +35,12 @@ const Notes = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
+  const [statusOpen, setStatusDialogOpen] = useState(false);
 
   console.log(deletingItemId);
 
   const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
+    setStatusDialogOpen(true);
   };
 
   const handleViewClose = () => {
@@ -247,13 +249,14 @@ const Notes = () => {
 
   return (
     <>
-      {NotesLoading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+
+        {NotesLoading ? (
+          <ContentSkeleton />
+        ) : (
           <Grid item xs={12}>
             <Card>
               <DataGrid
@@ -269,17 +272,19 @@ const Notes = () => {
               />
             </Card>
           </Grid>
-          <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-          <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-          />
-          <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
-        </Grid>
-      )}
+        )}
+
+        <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+        />
+        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
     </>
   );
 };
