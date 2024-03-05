@@ -1,8 +1,8 @@
 import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, Typography, TextField, MenuItem } from '@mui/material';
 import Header from 'components/Header';
-
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
 import OptionsMenu from 'components/option-menu';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
 import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
 import { setGroups } from 'features/user-management/groups-page/redux/groupSlice';
@@ -15,6 +15,8 @@ import { Link } from 'react-router-dom';
 
 const GroupManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
   const [statusValue, setStatusValue] = useState('');
@@ -47,6 +49,7 @@ const GroupManagement = () => {
   };
 
   const handleStatusValue = (event) => {
+    setStatusChangeDialogOpen(true);
     setStatusValue(event.target.value);
   };
 
@@ -142,12 +145,11 @@ const GroupManagement = () => {
 
   return (
     <>
-      {groupLoading ? (
-        <GroupSkeleton />
-      ) : (
-        <Grid>
-          <Header title="Groups" handleSearch={handleSearch} searchQuery={searchQuery} />
-
+      <Grid>
+        <Header title="Groups" handleSearch={handleSearch} searchQuery={searchQuery} />
+        {groupLoading ? (
+          <GroupSkeleton />
+        ) : (
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
             <Grid item xs={12} sm={6} lg={4}>
               <Card sx={{ cursor: 'pointer' }}>
@@ -180,9 +182,15 @@ const GroupManagement = () => {
             </Grid>
             {renderCards()}
           </Grid>
-          <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
-        </Grid>
-      )}
+        )}
+        <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+        <StatusChangeDialog
+          open={statusChangeDialogOpen}
+          setOpen={setStatusChangeDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+        />
+      </Grid>
     </>
   );
 };
