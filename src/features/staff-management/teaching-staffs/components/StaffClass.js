@@ -1,206 +1,222 @@
 // ** React Imports
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import TimerIcon from '@mui/icons-material/Timer';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
-import CustomChip from 'components/mui/chip';
+import { IconCalendar } from '@tabler/icons';
+import { Button } from '@mui/material';
+import OptionsMenu from 'components/option-menu';
 
 const LiveClassCard = () => {
   const cardData = [
     // Add your card data here
     // For example:
     {
-      classname: 'Introduction to App',
+      class_name: 'Introduction to App',
       location: 'Kumbakonam',
       duration: '5hr',
       dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-      avatar: '/images/avatars/1.png',
-      friends: [
-        'https://images.hindustantimes.com/rf/image_size_640x362/HT/p1/2015/03/18/Incoming/Pictures/1327679_Wallpaper2.jpg',
-        'https://media.istockphoto.com/id/1272815911/photo/young-indian-female-university-student-stock-photo.jpg?s=612x612&w=0&k=20&c=Iwdc08GR3pw8_Qg3_nabNJUQYTo52EU3dvW4tsth1tE=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q='
-      ]
+      avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Change the avatar URL here
+      batch_class: {
+        batch_student: [
+          {
+            first_name: 'John',
+            avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
+          },
+          {
+            first_name: 'Jane',
+            avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
+          }
+          // Add more students as needed
+        ]
+      }
     },
     {
-      classname: 'Introduction to web',
+      class_name: 'Introduction to web',
       location: 'Kumbakonam',
       duration: '2hr',
       dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
-      friends: [
-        'https://images.hindustantimes.com/rf/image_size_640x362/HT/p1/2015/03/18/Incoming/Pictures/1327679_Wallpaper2.jpg',
-        'https://media.istockphoto.com/id/1272815911/photo/young-indian-female-university-student-stock-photo.jpg?s=612x612&w=0&k=20&c=Iwdc08GR3pw8_Qg3_nabNJUQYTo52EU3dvW4tsth1tE=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q='
-      ]
+      batch_class: {
+        batch_student: [
+          {
+            first_name: 'John',
+            avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
+          },
+          {
+            first_name: 'Jane',
+            avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
+          }
+          // Add more students as needed
+        ]
+      }
     },
     {
-      classname: 'Block chain',
+      class_name: 'Block chain',
       location: 'Kumbakonam',
       duration: '3.5hr',
       dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
-      friends: [
-        'https://images.hindustantimes.com/rf/image_size_640x362/HT/p1/2015/03/18/Incoming/Pictures/1327679_Wallpaper2.jpg',
-        'https://media.istockphoto.com/id/1272815911/photo/young-indian-female-university-student-stock-photo.jpg?s=612x612&w=0&k=20&c=Iwdc08GR3pw8_Qg3_nabNJUQYTo52EU3dvW4tsth1tE=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q='
-      ]
+      batch_class: {
+        batch_student: [
+          {
+            first_name: 'John',
+            avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
+          },
+          {
+            first_name: 'Jane',
+            avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
+          }
+          // Add more students as needed
+        ]
+      }
     },
     {
-      classname: 'Figma',
+      class_name: 'Figma',
       location: 'Kumbakonam',
       duration: '5hr',
       dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
-      friends: [
-        'https://images.hindustantimes.com/rf/image_size_640x362/HT/p1/2015/03/18/Incoming/Pictures/1327679_Wallpaper2.jpg',
-        'https://media.istockphoto.com/id/1272815911/photo/young-indian-female-university-student-stock-photo.jpg?s=612x612&w=0&k=20&c=Iwdc08GR3pw8_Qg3_nabNJUQYTo52EU3dvW4tsth1tE=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q='
-      ]
+      batch_class: {
+        batch_student: [
+          {
+            first_name: 'John',
+            avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
+          },
+          {
+            first_name: 'Jane',
+            avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
+          }
+          // Add more students as needed
+        ]
+      }
     },
     {
-      classname: 'Analysis',
+      class_name: 'Analysis',
       location: 'Kumbakonam',
       duration: '1hr',
       dateandtime: 'Sun Jun 26, 2024 / 10:00 am',
       image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
       avatar: '/images/avatars/1.png',
-      friends: [
-        'https://images.hindustantimes.com/rf/image_size_640x362/HT/p1/2015/03/18/Incoming/Pictures/1327679_Wallpaper2.jpg',
-        'https://media.istockphoto.com/id/1272815911/photo/young-indian-female-university-student-stock-photo.jpg?s=612x612&w=0&k=20&c=Iwdc08GR3pw8_Qg3_nabNJUQYTo52EU3dvW4tsth1tE=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q=',
-        'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q='
-      ]
+      batch_class: {
+        batch_student: [
+          {
+            first_name: 'John',
+            avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
+          },
+          {
+            first_name: 'Jane',
+            avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
+          }
+          // Add more students as needed
+        ]
+      }
     }
     // Add more card data as needed
   ];
 
-  const handleEdit = () => {
-    setEditModalOpen(true);
-  };
+  function convertTo12HourFormat(timestamp) {
+    // Create a new Date object from the timestamp string
+    const date = new Date(timestamp);
 
-  const handleCopyLink = (index) => {
-    console.log(`Link copied for card at index ${index}`);
-  };
+    // Extract hours and minutes from the Date object
+    let hours = date.getUTCHours();
+    let minutes = date.getUTCMinutes();
+
+    // Convert hours to 12-hour format and determine AM/PM
+    const meridiem = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Convert midnight (0) to 12
+
+    // Pad minutes with leading zero if needed
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+
+    // Return the formatted time string
+    return hours + ':' + minutes + ' ' + meridiem;
+  }
 
   return (
     <Grid container spacing={6}>
-      {cardData.map((card, index) => (
-        <Grid item xs={12} sm={6} md={6} key={index}>
-          <Card
-            sx={{
-              position: 'relative',
-              borderTop: card.status === 'active' ? '4px solid green' : '4px solid #7cf2e1'
-            }}
-          >
-            <CardContent>
-              <Box
-                sx={{
-                  mt: 2.55,
-                  mb: 1.85,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="h3">{card.classname}</Typography>
-                  <Typography variant="body2">{card.location}</Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    borderRadius: '10%',
-                    border: '1px solid grey',
-                    padding: '3px 9px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    '& .MuiTypography-body2': {
-                      margin: 0
-                    }
-                  }}
-                >
-                  <Typography variant="body2">{card.duration}</Typography>
-                </Box>
-              </Box>
-
-              <Box sx={{ mb: 2.55, display: 'flex', alignItems: 'center' }}>
-                <TimerIcon sx={{ marginRight: 1 }} />
-                <Typography variant="body2">{card.dateandtime}</Typography>
-              </Box>
-              <Box
-                sx={{
-                  gap: 2,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
-                <AvatarGroup max={4} sx={{ width: 40, height: 40, '& .MuiAvatar-root': { width: 32, height: 32 } }}>
-                  {card.friends.map((friend, friendIndex) => (
-                    <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
-                  ))}
-                </AvatarGroup>
+      {cardData?.map((card, index) => (
+        <Grid item xs={12} sm={6} md={4} key={index}>
+          <Card sx={{ p: 3 }}>
+            <Grid container direction="column" spacing={1}>
+              <Grid item sx={{ alignItems: 'center', justifyContent: 'space-between', display: 'flex', mt: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
-                </Box>
-              </Box>
-              <Divider sx={{ my: 2 }} />
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ mt: 1, alignItems: 'center' }}>
-                  <IconButton
-                    onClick={() => handleCopyLink(index)}
-                    sx={{ marginLeft: 'auto', color: 'primary.main' }}
-                    aria-label="copy-link"
+                  <Typography
+                    sx={{
+                      mb: 0,
+                      flexShrink: 1,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '230px'
+                    }}
+                    variant="h3"
+                    gutterBottom
+                    textAlign="center"
                   >
-                    <FileCopyIcon />
-                  </IconButton>
-                  <input
-                    type="text"
-                    value={`Your Link Here - ${index}`} // Replace this with your actual link
-                    readOnly
-                    style={{ border: 'none', outline: 'none', backgroundColor: 'transparent' }}
+                    {card?.class_name}
+                  </Typography>
+                </Box>
+                <Box>
+                  <OptionsMenu
+                    menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+                    iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                    options={[
+                      {
+                        // to: `/apps/invoice/edit/${row.id}`,
+                        text: 'Edit',
+                        icon: <Icon icon="tabler:edit" />
+                        // menuItemProps: {
+                        //   onClick: () => {
+                        //     handleEdit();
+                        //   }
+                        // }
+                      },
+                      {
+                        // to: `/apps/invoice/delete/${row.id}`,
+                        text: 'Delete',
+                        icon: <Icon icon="mdi:delete-outline" />
+                        // menuItemProps: {
+                        //   onClick: () => {
+                        //     setDeleteDialogOpen(true);
+                        //   }
+                        // }
+                      }
+                    ]}
                   />
                 </Box>
-
-                <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', mt: 2 }}>
-                  <IconButton onClick={() => handleEdit()} aria-label="capture screenshot" color="primary" sx={{ ml: 1 }}>
-                    <Icon icon="tabler:edit" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      setDeleteDialogOpen(true);
-                    }}
-                    aria-label="capture screenshot"
-                    color="error"
-                  >
-                    <Icon icon="tabler:archive-filled" />
-                  </IconButton>
-                </Box>
-              </Box>
-            </CardContent>
+              </Grid>
+              <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
+                <AvatarGroup className="pull-up" max={4}>
+                  {card?.batch_class?.batch_student?.map((student, studentIndex) => (
+                    <Avatar key={studentIndex} src={student} alt={student?.first_name} />
+                  ))}
+                </AvatarGroup>
+              </Grid>
+              <Grid item justifyContent="center" display="flex">
+                <Typography>8+ Students on this class</Typography>
+              </Grid>
+              <Grid item justifyContent="center" display="flex" mb={2}>
+                <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
+                  {' '}
+                  <IconCalendar />
+                  {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                </Typography>
+              </Grid>
+              <Grid container p={2} justifyContent="center">
+                <Button variant="tonal" size="small" href="view">
+                  View More
+                </Button>
+              </Grid>
+            </Grid>
           </Card>
         </Grid>
       ))}
