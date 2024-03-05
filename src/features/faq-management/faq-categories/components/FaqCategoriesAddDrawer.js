@@ -13,6 +13,8 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { addFaqCategory } from '../services/faqCategoryServices';
+import toast from 'react-hot-toast';
 // import { addStudentFee } from '../services/studentFeeServices';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -24,7 +26,7 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   name: yup.string().required('Category Name is required'),
-  description:yup.string().required('Description is required')
+  description: yup.string().required('Description is required')
 });
 
 const defaultValues = {
@@ -32,10 +34,9 @@ const defaultValues = {
   description: ''
 };
 
-
 const FaqCategoriesAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, setRefetch } = props;
   // ** State
 
   const {
@@ -50,15 +51,19 @@ const FaqCategoriesAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-
-
   const onSubmit = async (data) => {
-    console.log(data);
-    var bodyFormData = new FormData();
-
-    bodyFormData.append('name', data.name);
-    bodyFormData.append('description', data.description);
-
+    const InputData = {
+      title: data.name,
+      description: data.description
+    };
+    const result = await addFaqCategory(InputData);
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+      toggle();
+    } else {
+      toast.error(result.message);
+    }
   };
 
   const handleClose = () => {

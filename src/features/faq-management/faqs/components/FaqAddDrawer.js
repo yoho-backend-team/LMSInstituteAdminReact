@@ -15,6 +15,8 @@ import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 // import { addStudentFee } from '../services/studentFeeServices';
 import Autocomplete from '@mui/material/Autocomplete';
+import { addFaq } from '../services/faqServices';
+import toast from 'react-hot-toast';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -25,22 +27,19 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   name: yup.string().required('Category Name is required'),
-  description:yup.string().required('Description is required'),
-  category: yup.string().required('Category is required'),
-
+  description: yup.string().required('Description is required'),
+  category: yup.object().required('Category is required')
 });
 
 const defaultValues = {
   name: '',
   description: '',
-  category: '',
-
+  category: ''
 };
-
 
 const FaqAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, faqCategories, setRefetch } = props;
   // ** State
 
   const {
@@ -55,17 +54,22 @@ const FaqAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-
-
   const onSubmit = async (data) => {
     console.log(data);
-    var bodyFormData = new FormData();
 
-    bodyFormData.append('name', data.name);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('category', data.category);
-
-
+    const inputData = {
+      title: data.name,
+      description: data.description,
+      faq_module_id: data.category.faq_module_id
+    };
+    const result = await addFaq(inputData);
+    if (result.success) {
+      toast.success(result.message);
+      toggle();
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
   };
 
   const handleClose = () => {
@@ -141,26 +145,31 @@ const FaqAddDrawer = (props) => {
               />
             </Grid>
             <Grid item xs={12} sm={12}>
-            <Controller
-              name="category"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  value={value}
-                  onChange={(e, newValue) => {
-                    onChange(newValue);
-                  }}
-                  options={['Web Development', 'Android Development']}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Select Category" error={Boolean(errors.category)} helperText={errors.category?.message} />
-                  )}
-                />
-              )}
-            />
-          </Grid>
+              <Controller
+                name="category"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange } }) => (
+                  <Autocomplete
+                    fullWidth
+                    sx={{ mb: 2 }}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(e, newValue) => {
+                      onChange(newValue);
+                    }}
+                    options={faqCategories}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Category"
+                        error={Boolean(errors.category)}
+                        helperText={errors.category?.message}
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>

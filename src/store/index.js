@@ -41,6 +41,9 @@ import chats from 'features/chat/redux/chatSlicees';
 
 import studentTicketsReducer from 'features/ticket-management/student/redux/studentTicketSlice';
 import staffTicketsReducer from 'features/ticket-management/staff/redux/staffTicketSlice';
+
+import faqCategoryReducer from 'features/faq-management/faq-categories/redux/faqCategorySlice';
+import faqReducer from 'features/faq-management/faqs/redux/faqSlice';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -79,7 +82,9 @@ const store = configureStore({
     calendar: calendar,
     auth: auth,
     staffTickets: staffTicketsReducer,
-    studentTickets: studentTicketsReducer
+    studentTickets: studentTicketsReducer,
+    faqCategories: faqCategoryReducer,
+    faqs: faqReducer
   }
 });
 // configureStore(reducer);
