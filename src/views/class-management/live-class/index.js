@@ -23,17 +23,19 @@ const LiveClass = () => {
   }, 1000);
   return (
     <>
-      {loading ? (
-        <ClassSkeleton />
-      ) : (
+ 
         <Grid>
           <LiveClassFilterCard />
           <LiveClassCardHeader />
+          {loading ? (
+        <ClassSkeleton />
+      ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
             <LiveClassCard />
           </Grid>
-        </Grid>
       )}
+          
+        </Grid>
     </>
   );
 };
