@@ -7,7 +7,6 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -113,6 +112,12 @@ const SalaryTable = () => {
   ];
 
   const [selectedstaff, setSelectedstaff] = useState([]);
+  const [selectedstafftype, setSelectedstafftype] = useState([]);
+  const stafftype = [
+    { staff_id: '1', staff_name: 'stafftype 1' },
+    { staff_id: '2', staff_name: 'stafftype 2' },
+    { staff_id: '3', staff_name: 'stafftype 3' }
+  ];
 
   const defaultColumns = [
     {
@@ -294,15 +299,64 @@ const SalaryTable = () => {
             <CardHeader title="Salary" />
             <CardContent>
               <Grid container spacing={6}>
-                <Grid item xs={12} sm={6}>
-                  <TextField fullWidth select defaultValue="" label="Staff Type" id="custom-select">
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </TextField>
+              <Grid item xs={12} sm={6}>
+                  <Autocomplete
+                    disableCloseOnSelect
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...stafftype]}
+                    getOptionLabel={(option) => option.staff_name}
+                    value={selectedstafftype}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                        setSelectedstafftype(staff.filter((option) => option.staff_id !== 'selectAll'));
+                      } else {
+                        setSelectedstafftype(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Staff Type"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.staff_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.staff_id}
+                            label={option.staff_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedstafftype(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
