@@ -28,7 +28,7 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
   batch: yup.string().required('Batch is required'),
-  students: yup.string().required('Students is required'),
+  students: yup.array().required('Students is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
