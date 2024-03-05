@@ -1,5 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import { Link } from 'react-router-dom';
 import {
   Accordion,
   AccordionDetails,
@@ -13,13 +14,25 @@ import {
   Card,
   CardContent
 } from '@mui/material';
+import Tab from '@mui/material/Tab';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import TabContext from '@mui/lab/TabContext';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import CourseEditModal from 'features/course-management/courses-page/course-overview-page/components/CourseEditModal';
 import { useState } from 'react';
+import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
+import Notes from 'features/course-management/courses-page/course-overview-page/components/view-course/notes';
 
 const CourseViewPage = () => {
+  const [value, setValue] = useState('1');
+
+  const handleSwitch = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const [expanded, setExpanded] = useState(null);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -92,7 +105,7 @@ const CourseViewPage = () => {
       >
         <Grid item xs={12}>
           <AccordionSummary
-           className='course-id-page'
+            className="course-id-page"
             id={`customized-panel-header-${accordion.id}`}
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`customized-panel-content-${accordion.id}`}
@@ -122,7 +135,7 @@ const CourseViewPage = () => {
               <List>
                 {accordion.content.map((item, index) => (
                   <ListItem key={index}>
-                    <Typography variant="subtitle2" sx={{ fontSize: '16px', textAlign: 'justify' }}>
+                    <Typography variant="subtitle1" sx={{color:'dark.main',fontWeight:50,textAlign:'justify'}}>
                       {item}
                     </Typography>
                   </ListItem>
@@ -165,14 +178,14 @@ const CourseViewPage = () => {
             looking for a way to develop passive income, look no further! This course will take you from absolute beginner to online video
             course rockstar in no time flat. Every method shown in this course has been developed and refined over the last 3 years to get
             long-lasting income results.
-            <Button size="medium" sx={{ p: 0 }}>
+            <Link to="" sx={{TextDecoder:'none',color:'primary'}}>
               View more
-            </Button>
+            </Link>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <Card sx={{ pb: 2 }}>
+        <Card sx={{pb:1 }}>
           <Button
             fullWidth
             onClick={() => handleEdit()}
@@ -186,6 +199,24 @@ const CourseViewPage = () => {
           {accordionData.map(createAccordion)}
 
           <CourseEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+        <TabContext value={value}>
+          <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
+            <Tab value="1" label="Study Materials" />
+            <Tab value="2" label="Notes" />
+          </TabList>
+          <TabPanel value="1">
+            <Typography>
+              <StudyMaterials />
+            </Typography>
+          </TabPanel>
+          <TabPanel value="2">
+            <Notes />
+          </TabPanel>
+        </TabContext>
         </Card>
       </Grid>
     </Grid>
