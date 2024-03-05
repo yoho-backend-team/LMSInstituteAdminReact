@@ -29,6 +29,7 @@ import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import StatusDialog from 'components/modal/DeleteModel';
 
 const StudyMaterials = () => {
   const [value, setValue] = useState('');
@@ -42,6 +43,7 @@ const StudyMaterials = () => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [refetch, setRefetch] = useState(false);
+  const [statusOpen, setStatusDialogOpen] = useState(false);
 
   console.log(deletingItemId);
 
@@ -74,7 +76,7 @@ const StudyMaterials = () => {
   const handleStatusChange = (e, row) => {
     setSelectedModule(row);
     setSelectedModuleStatus(e.target.value);
-    setDeleteDialogOpen(true);
+    setStatusDialogOpen(true);
   };
 
   const handleStatusChangeApi = async () => {
@@ -268,13 +270,13 @@ const StudyMaterials = () => {
 
   return (
     <>
-      {StudyMaterialsLoading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+        {StudyMaterialsLoading ? (
+          <ContentSkeleton />
+        ) : (
           <Grid item xs={12}>
             <Card>
               <DataGrid
@@ -290,18 +292,19 @@ const StudyMaterials = () => {
               />
             </Card>
           </Grid>
-          <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-          <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-            handleSubmit={handleStatusChangeApi}
-          />
-          <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
-        </Grid>
-      )}
+        )}
+        <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+          handleSubmit={handleStatusChangeApi}
+        />
+        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
     </>
   );
 };
