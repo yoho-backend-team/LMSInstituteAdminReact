@@ -1,22 +1,21 @@
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import { Link } from 'react-router-dom';
-import TeacherFilter from '../../../../features/staff-management/non-teaching-staffs/components/TeacherFilterCard';
-import Pagination from '@mui/material/Pagination';
-import Avatar from 'components/mui/avatar';
-import StaffManagement from 'components/cards/Skeleton/StaffManagement';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
+import Typography from '@mui/material/Typography';
+import StaffManagement from 'components/cards/Skeleton/StaffManagement';
+import DeleteDialog from 'components/modal/DeleteModel';
+import Avatar from 'components/mui/avatar';
 import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-import DeleteDialog from 'components/modal/DeleteModel';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import TeacherFilter from '../../../../features/staff-management/non-teaching-staffs/components/TeacherFilterCard';
 
 // const data = [
 //   {
