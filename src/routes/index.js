@@ -109,12 +109,15 @@ const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/te
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-overview-page')));
 const ViewTeachingProfile = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff[id]-page')));
 const AddNewNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-add-page')));
+const EditNonTeachingStaff = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-edit-page')));
 const AddNewTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-add-page')));
+const EditTeachingStaff = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-edit-page')));
 const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff[id]-page')));
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students-page/student-overview-page')));
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students-page/student[id]-page')));
 const AddNewStudent = Loadable(lazy(() => import('views/student-management/students-page/student-add-page')));
+const EditStudent = Loadable(lazy(() => import('views/student-management/students-page/student-edit-page')));
 
 // Faq Management
 const FAQ = Loadable(lazy(()=> import('views/faq-management/')));
@@ -296,7 +299,9 @@ const ApplicationRoutes = () => {
           <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
           <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
           <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
+          <Route path="non-teaching-staffs/:id/edit" element={<EditNonTeachingStaff />} />
           <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
+          <Route path="teaching-staffs/:id/edit" element={<EditTeachingStaff />} />
         </Route>
 
         <Route path="/student-management" element={<MainLayout />}>
@@ -304,6 +309,7 @@ const ApplicationRoutes = () => {
           <Route path="students" element={<StudentsPage />} />
           <Route path="students/:id" element={<ViewStudentProfile />} />
           <Route path="students/add" element={<AddNewStudent />} />
+          <Route path="students/:id/edit" element={<EditStudent />} />
         </Route>
         <Route path="/faq-management" element={<MainLayout/>}>
           <Route index element={<Navigate to ="/faq-management/faq"/>}/>

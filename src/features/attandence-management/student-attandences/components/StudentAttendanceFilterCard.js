@@ -7,7 +7,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
@@ -17,9 +16,16 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 /* eslint-enable */
 const StudentAttendanceFilterCard = (props) => {
   // ** State
-  const [statusValue, setStatusValue] = useState('');
   const [selectedstudent, setSelectedstudent] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedbatch, setSelectedbatch] = useState([]);
+
+  const batch = [
+    { batch_id: '1', batch_name: 'batch 1' },
+    { batch_id: '2', batch_name: 'batch 2' },
+    { batch_id: '3', batch_name: 'batch 3' }
+  ];
+
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
     { course_id: '2', course_name: 'Course 2' },
@@ -31,9 +37,7 @@ const StudentAttendanceFilterCard = (props) => {
     { student_id: '3', student_name: 'Student 3' }
   ];
 
-  const handleFilterByBatch = (e) => {
-    setStatusValue(e.target.value);
-  };
+
 
   const { value, handleFilter } = props;
 
@@ -45,16 +49,64 @@ const StudentAttendanceFilterCard = (props) => {
             <CardHeader title="Student Attendance" />
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
-                  <TextField select fullWidth label="Batch" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByBatch(e) }}>
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value="downloaded">Downloaded</MenuItem>
-                    <MenuItem value="draft">Draft</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                    <MenuItem value="partial payment">Partial Payment</MenuItem>
-                    <MenuItem value="past due">Past Due</MenuItem>
-                    <MenuItem value="sent">Sent</MenuItem>
-                  </TextField>
+              <Grid item xs={12} sm={3}>
+                  <Autocomplete
+                    disableCloseOnSelect
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
+                    getOptionLabel={(option) => option.batch_name}
+                    value={selectedbatch}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
+                        setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
+                      } else {
+                        setSelectedbatch(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Batch"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.batch_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.batch_id}
+                            label={option.batch_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedbatch(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Autocomplete

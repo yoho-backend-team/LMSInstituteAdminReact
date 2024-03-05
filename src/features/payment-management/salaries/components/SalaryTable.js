@@ -6,9 +6,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
@@ -101,7 +98,6 @@ const SalaryTable = () => {
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-
   const handleFilter = (val) => {
     setValue(val);
   };
@@ -113,6 +109,12 @@ const SalaryTable = () => {
   ];
 
   const [selectedstaff, setSelectedstaff] = useState([]);
+  const [selectedstafftype, setSelectedstafftype] = useState([]);
+  const stafftype = [
+    { staff_id: '1', staff_name: 'stafftype 1' },
+    { staff_id: '2', staff_name: 'stafftype 2' },
+    { staff_id: '3', staff_name: 'stafftype 3' }
+  ];
 
   const defaultColumns = [
     {
@@ -139,7 +141,6 @@ const SalaryTable = () => {
       field: 'name',
       headerName: 'Staff',
       renderCell: ({ row }) => {
-
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
@@ -175,9 +176,7 @@ const SalaryTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return (
-          <Typography sx={{ color: 'text.secondary' }}>{row.status}</Typography>
-        );
+        return <Typography sx={{ color: 'text.secondary' }}>{row.status}</Typography>;
       }
     }
   ];
@@ -192,24 +191,32 @@ const SalaryTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="View">
+          {/* <Tooltip title="View">
             <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
               <Icon icon="tabler:eye" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
-                text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
+                text: 'View',
+                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                menuItemProps: {
+                  component: Link,
+                  to: `/apps/invoice/preview/${row.id}`
+                }
               },
               {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
                 menuItemProps: { onClick: toggleEditUserDrawer }
+              },
+              {
+                text: 'Download',
+                icon: <Icon icon="tabler:download" fontSize={20} />
               }
             ]}
           />
@@ -285,7 +292,6 @@ const SalaryTable = () => {
   //   }
   // ];
 
-
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -295,14 +301,63 @@ const SalaryTable = () => {
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth select defaultValue="" label="Staff Type" id="custom-select">
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </TextField>
+                  <Autocomplete
+                    disableCloseOnSelect
+                    multiple
+                    id="select-multiple-chip"
+                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...stafftype]}
+                    getOptionLabel={(option) => option.staff_name}
+                    value={selectedstafftype}
+                    onChange={(e, newValue) => {
+                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                        setSelectedstafftype(staff.filter((option) => option.staff_id !== 'selectAll'));
+                      } else {
+                        setSelectedstafftype(newValue);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        fullWidth
+                        label="Staff Type"
+                        InputProps={{
+                          ...params.InputProps,
+                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        }}
+                      />
+                    )}
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                          checkedIcon={<CheckBoxIcon fontSize="small" />}
+                          style={{ marginRight: 8 }}
+                          checked={selected}
+                        />
+                        {option.staff_name}
+                      </li>
+                    )}
+                    renderTags={(value) => (
+                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                        {value.map((option, index) => (
+                          <CustomChip
+                            key={option.staff_id}
+                            label={option.staff_name}
+                            onDelete={() => {
+                              const updatedValue = [...value];
+                              updatedValue.splice(index, 1);
+                              setSelectedstafftype(updatedValue);
+                            }}
+                            color="primary"
+                            sx={{ m: 0.75 }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                    selectAllText="Select All"
+                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete

@@ -6,23 +6,13 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
-import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from '@mui/material/MenuItem';
-import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
 // ** Custom Components
 import CustomChip from 'components/mui/chip';
-import CustomTextField from 'components/mui/text-field';
+
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const data = {
@@ -92,12 +82,9 @@ const course = [
 
 const UserViewAccount = () => {
   // ** States
-  const [openEdit, setOpenEdit] = useState(false);
+
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  // Handle Edit dialog
-  const handleEditClickOpen = () => setOpenEdit(true);
-  const handleEditClose = () => setOpenEdit(false);
 
   if (data) {
     return (
@@ -154,122 +141,17 @@ const UserViewAccount = () => {
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-                Edit
-              </Button>
-              <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
-                Suspend
-              </Button>
+              <Box component={Link} to={'edit'}>
+                <Button variant="contained" sx={{ mr: 2 }}>
+                  Edit
+                </Button>
+              </Box>
+              <Box>
+                <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
+                  Suspend
+                </Button>
+              </Box>
             </CardActions>
-
-            <Dialog
-              open={openEdit}
-              onClose={handleEditClose}
-              aria-labelledby="user-view-edit"
-              aria-describedby="user-view-edit-description"
-              sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650 } }}
-            >
-              <DialogTitle
-                id="user-view-edit"
-                sx={{
-                  textAlign: 'center',
-                  fontSize: '1.5rem !important',
-                  px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pt: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-                }}
-              >
-                Edit User Information
-              </DialogTitle>
-              <DialogContent
-                sx={{
-                  pb: (theme) => `${theme.spacing(8)} !important`,
-                  px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`]
-                }}
-              >
-                <DialogContentText variant="body2" id="user-view-edit-description" sx={{ textAlign: 'center', mb: 7 }}>
-                  Updating user details will receive a privacy audit.
-                </DialogContentText>
-                <form>
-                  <Grid container spacing={6}>
-                    <Grid item xs={12} sm={12}>
-                      <CustomTextField fullWidth label="Full Name" placeholder="John Doe" defaultValue={data.fullName} />
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
-                      <CustomTextField
-                        fullWidth
-                        label="Username"
-                        placeholder="John.Doe"
-                        defaultValue={data.username}
-                        InputProps={{ startAdornment: <InputAdornment position="start">@</InputAdornment> }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField
-                        fullWidth
-                        type="email"
-                        label="Billing Email"
-                        defaultValue={data.email}
-                        placeholder="john.doe@gmail.com"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField select fullWidth label="Status" defaultValue={data.status}>
-                        <MenuItem value="pending">Pending</MenuItem>
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
-                      </CustomTextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField fullWidth label="TAX ID" defaultValue="Tax-8894" placeholder="Tax-8894" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField fullWidth label="Contact" placeholder="723-348-2344" defaultValue={`+1 ${data.contact}`} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField select fullWidth label="Language" defaultValue="English">
-                        <MenuItem value="English">English</MenuItem>
-                        <MenuItem value="Spanish">Spanish</MenuItem>
-                        <MenuItem value="Portuguese">Portuguese</MenuItem>
-                        <MenuItem value="Russian">Russian</MenuItem>
-                        <MenuItem value="French">French</MenuItem>
-                        <MenuItem value="German">German</MenuItem>
-                      </CustomTextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <CustomTextField select fullWidth label="Country" defaultValue="USA">
-                        <MenuItem value="USA">USA</MenuItem>
-                        <MenuItem value="UK">UK</MenuItem>
-                        <MenuItem value="Spain">Spain</MenuItem>
-                        <MenuItem value="Russia">Russia</MenuItem>
-                        <MenuItem value="France">France</MenuItem>
-                        <MenuItem value="Germany">Germany</MenuItem>
-                      </CustomTextField>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControlLabel
-                        label="Use as a billing address?"
-                        control={<Switch defaultChecked />}
-                        sx={{ '& .MuiTypography-root': { fontWeight: 500 } }}
-                      />
-                    </Grid>
-                  </Grid>
-                </form>
-              </DialogContent>
-              <DialogActions
-                sx={{
-                  justifyContent: 'center',
-                  px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pb: (theme) => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-                }}
-              >
-                <Button variant="contained" sx={{ mr: 2 }} onClick={handleEditClose}>
-                  Submit
-                </Button>
-                <Button variant="tonal" color="secondary" onClick={handleEditClose}>
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
 
             <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
             <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
@@ -342,18 +224,16 @@ const UserViewAccount = () => {
                     className="demo-space-x"
                     sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    <Grid sx={{ mt: 1 }}>
-                      <TextField
-                        size="small"
-                        select
-                        fullWidth
-                        label="Status"
-                        SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e) }}
-                      >
-                        <MenuItem value="1">Active</MenuItem>
-                        <MenuItem value="0">Inactive</MenuItem>
-                      </TextField>
-                    </Grid>
+                    <Box>
+                      <CustomChip
+                        skin="light"
+                        label={course?.course_categories?.course_category_name}
+                        rounded
+                        color="secondary"
+                        size="medium"
+                        variant="outlined"
+                      />
+                    </Box>
                     <Button component={Link} to="view " size="medium" variant="contained" color="primary">
                       View Details
                     </Button>
