@@ -7,6 +7,8 @@ import { Box, TextField, MenuItem, Button } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
 import Icon from 'components/icon'
 // ** renders client column
+import DeleteDialog from 'components/modal/DeleteModel';
+import StatusDialog from 'components/modal/DeleteModel';
 
 export const row = [
   {
@@ -664,9 +666,18 @@ const renderClient = () => {};
 
 const StudyMaterials = () => {
   const [statusValue, setStatusValue] = useState(0);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusOpen, setStatusDialogOpen] = useState(false);
+
   const handleStatusValue = (event) => {
     setStatusValue(event.target.value);
+    setStatusDialogOpen(true);
   };
+  
+  const handleDelete = () => {
+    setDeleteDialogOpen(true);
+  };
+
   const columns = [
     {
       flex: 0.25,
@@ -752,7 +763,9 @@ const StudyMaterials = () => {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleDelete()
+              onClick: () => {
+                handleDelete();
+              }
             }
           }
         ]}
@@ -764,7 +777,7 @@ const StudyMaterials = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
 
   return (
-    
+    <Box>
       <DataGrid
         autoHeight
         rows={row}
@@ -774,7 +787,20 @@ const StudyMaterials = () => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-   
+      <DeleteDialog
+      open={isDeleteDialogOpen}
+      setOpen={setDeleteDialogOpen}
+      description="Are you sure you want to delete this item?"
+      title="Delete"
+    />
+    <StatusDialog
+      open={statusOpen}
+      setOpen={setStatusDialogOpen}
+      description="Are you sure you want to Change Status"
+      title="Status"
+    />
+    </Box>
+
   );
 };
 
