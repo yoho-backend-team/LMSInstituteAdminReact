@@ -91,8 +91,8 @@ const CourseModuleAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     const inputData = {
-      branch_id: data.branch,
-      course_id: data.course,
+      branch_id: data.branch.branch_id,
+      course_id: data.course.course_id,
       title: data.title,
       description: data.description,
       video_url: data.video_url
@@ -158,10 +158,9 @@ const CourseModuleAddDrawer = (props) => {
               name="branch"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value } }) => (
+              render={() => (
                 <Autocomplete
                   fullWidth
-                  value={value}
                   onChange={(event, newValue) => {
                     setValue('branch', newValue);
                     getActiveCoursesByBranch(newValue);

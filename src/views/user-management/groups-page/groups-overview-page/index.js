@@ -53,12 +53,13 @@ const GroupManagement = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === 1 ? 0 : 1,
+      status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
     };
     const response = await updateStatus(data);
     if (response.success) {
       toast.success(response.message);
+      dispatch(getAllGroups(selectedBranchId));
     } else {
       toast.error(response.message);
     }
@@ -85,7 +86,7 @@ const GroupManagement = () => {
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <Card sx={{ minHeight: 175 }}>
           <CardContent>
-            <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 32 }}>
               <Typography sx={{ color: 'text.secondary' }}>{`Total ${item.users?.length} users`}</Typography>
               <AvatarGroup
                 max={4}

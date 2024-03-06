@@ -28,7 +28,7 @@ const CourseCard = (props) => {
         <CardContent sx={{ pb: 0 }}>
           <CardMedia
             sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'cover' }}
-            image={`https://www.gameosophy.net/storage/product/12-2022/eLearniv-Learning-Management-System-with-React-Next.js-1024x521.png`}
+            image={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.logo}`}
           >
             <CustomChip
               sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}

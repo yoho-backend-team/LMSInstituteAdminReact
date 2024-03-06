@@ -211,11 +211,12 @@ const StepperLinearWithValidation = () => {
 
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
+    console.log(personalData);
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       const data = new FormData();
       data.append('student_first_name', personalData?.first_name);
-      data.append('student_last_name', personalData?.first_name);
+      data.append('student_last_name', personalData?.last_name);
       data.append('student_email', personalData?.email);
       data.append('student_phone_no', personalData?.phone);
       data.append('alternate_number', personalData?.alt_phone);

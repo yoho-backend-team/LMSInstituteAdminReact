@@ -29,9 +29,9 @@ export const getAllUsers = async (selectedBranchId) => {
     throw error;
   }
 };
-export const getUserById = async (data) => {
+export const getUserActivityLog = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/get-all`, {
+    const response = await axios.get(`${USER_API_ENDPOINT}/activity-log-by-user-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -41,7 +41,32 @@ export const getUserById = async (data) => {
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return response;
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch users. Activity Log: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllUsers Activity Log:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+export const getUserById = async (data) => {
+  try {
+    const response = await axios.get(`${USER_API_ENDPOINT}/query-by-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch users. Status: ${response.status}`);

@@ -19,6 +19,8 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseStudyMaterial } from '../services/studyMaterialServices';
+import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
+import { useDispatch } from 'react-redux';
 
 const StudyMaterialAddDrawer = (props) => {
   // ** Props
@@ -26,6 +28,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   // ** State
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
+  const dispatch = useDispatch();
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
@@ -92,9 +95,10 @@ const StudyMaterialAddDrawer = (props) => {
   console.log(studymaterialPdf);
 
   const onSubmit = async (data) => {
+    console.log(data);
     var bodyFormData = new FormData();
-    bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('course_id', data.course);
+    bodyFormData.append('branch_id', data.branch?.branch_id);
+    bodyFormData.append('course_id', data.course?.course_id);
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('document', studymaterialPdf);
@@ -104,6 +108,7 @@ const StudyMaterialAddDrawer = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      dispatch(getAllCourseStudyMaterials());
       reset();
       toggle();
     } else {
@@ -166,10 +171,10 @@ const StudyMaterialAddDrawer = (props) => {
               name="branch"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value } }) => (
+              render={() => (
                 <Autocomplete
                   fullWidth
-                  value={value}
+                  // value={value}
                   onChange={(event, newValue) => {
                     setValue('branch', newValue);
                     getActiveCoursesByBranch(newValue);
@@ -189,7 +194,6 @@ const StudyMaterialAddDrawer = (props) => {
               )}
             />
           </Grid>
-         
 
           <Grid item xs={12} sm={12}>
             <Controller

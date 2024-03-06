@@ -94,8 +94,8 @@ const CourseNotesAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('course_id', data.course);
+    bodyFormData.append('branch_id', data.branch?.branch_id);
+    bodyFormData.append('course_id', data.course?.course_id);
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('document', studymaterialPdf);
@@ -167,10 +167,9 @@ const CourseNotesAddDrawer = (props) => {
               name="branch"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value } }) => (
+              render={() => (
                 <Autocomplete
                   fullWidth
-                  value={value}
                   onChange={(event, newValue) => {
                     setValue('branch', newValue);
                     getActiveCoursesByBranch(newValue);
