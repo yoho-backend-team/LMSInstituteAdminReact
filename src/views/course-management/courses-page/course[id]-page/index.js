@@ -23,17 +23,39 @@ import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import CourseEditModal from 'features/course-management/courses-page/course-overview-page/components/CourseEditModal';
 import { useState } from 'react';
-import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
+// import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
 import Notes from 'features/course-management/courses-page/course-overview-page/components/view-course/notes';
+import { useLocation } from 'react-router-dom';
+import { getCourseDetails } from 'features/course-management/courses-page/services/courseServices';
+import { useEffect } from 'react';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
 
+  const location = useLocation();
+  const courseId = location.state.id;
+
+  const [expanded, setExpanded] = useState(null);
+  const [course, setCourse] = useState(null);
+
+  useEffect(() => {
+    console.log('hello');
+    getCourseData(courseId);
+  }, [courseId]);
+
+  console.log(courseId);
+
+  const getCourseData = async (id) => {
+    const data = {
+      course_id: id
+    };
+    const result = await getCourseDetails(data);
+    setCourse(result?.data);
+  };
+
   const handleSwitch = (event, newValue) => {
     setValue(newValue);
   };
-
-  const [expanded, setExpanded] = useState(null);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -45,55 +67,6 @@ const CourseViewPage = () => {
   const handleEdit = () => {
     setEditModalOpen(true);
   };
-
-  const accordionData = [
-    {
-      id: 'panel1',
-      title: 'Accordion 1',
-      content: [
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged',
-        'Cupcake sesame snaps sweet tart dessert biscuit.',
-        'Topping soufflé tart sweet croissant.'
-      ]
-    },
-    {
-      id: 'panel2',
-      title: 'Accordion 2',
-      content: [
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged',
-        'Cupcake sesame snaps sweet tart dessert biscuit.',
-        'Topping soufflé tart sweet croissant.'
-      ]
-    },
-    {
-      id: 'panel3',
-      title: 'Accordion 3',
-      content: [
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged'
-      ]
-    },
-    {
-      id: 'panel3',
-      title: 'Accordion 3',
-      content: [
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged'
-      ]
-    },
-    {
-      id: 'panel3',
-      title: 'Accordion 3',
-      content: [
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged'
-      ]
-    },
-    {
-      id: 'panel3',
-      title: 'Accordion 3',
-      content: [
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged'
-      ]
-    }
-  ];
 
   const createAccordion = (accordion) => (
     <Grid container xs={12} sx={{ p: 0, m: 0 }}>
@@ -112,18 +85,6 @@ const CourseViewPage = () => {
           >
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, p: 0 }}>
               <Typography variant="p">{accordion.title}</Typography>
-
-              {/* previewbox */}
-              {/* {expanded !== accordion.id && (
-                <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', mr: 2, transformStyle: 'flat' }}>
-                  <Button variant="tonal" color="primary" >
-                    <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
-                    <Typography variant="p" color="primary" sx={{ ml: 1 }}>
-                      Preview
-                    </Typography>
-                  </Button>
-                </Box>
-              )} */}
             </Box>
           </AccordionSummary>
           <Divider />
@@ -133,13 +94,11 @@ const CourseViewPage = () => {
           <Grid container xs={12}>
             <Grid item xs={12}>
               <List>
-                {accordion.content.map((item, index) => (
-                  <ListItem key={index}>
-                    <Typography variant="subtitle1" sx={{color:'dark.main',fontWeight:50,textAlign:'justify'}}>
-                      {item}
-                    </Typography>
-                  </ListItem>
-                ))}
+                <ListItem>
+                  <Typography variant="subtitle1" sx={{ color: 'dark.main', fontWeight: 50, textAlign: 'justify' }}>
+                    {accordion?.description}
+                  </Typography>
+                </ListItem>
               </List>
             </Grid>
             <Grid item xs={12}>
@@ -156,11 +115,13 @@ const CourseViewPage = () => {
     </Grid>
   );
 
+  // console.log(course);
+
   return (
     <Grid container xs={12} spacing={2}>
       <Grid item xs={12} sm={8}>
         <Card>
-          <CardHeader title="New course" />{' '}
+          <CardHeader title={course?.institute_course_branch?.course_name} />{' '}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <video
               controls
@@ -174,18 +135,15 @@ const CourseViewPage = () => {
             </video>
           </Box>
           <CardContent>
-            Each and every day, people are earning passive income through teaching their valuable skills online. If you`&apos;ve been
-            looking for a way to develop passive income, look no further! This course will take you from absolute beginner to online video
-            course rockstar in no time flat. Every method shown in this course has been developed and refined over the last 3 years to get
-            long-lasting income results.
-            <Link to="" sx={{TextDecoder:'none',color:'primary'}}>
+            {course?.institute_course_branch?.description}
+            <Link to="" sx={{ TextDecoder: 'none', color: 'primary' }}>
               View more
             </Link>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <Card sx={{pb:1 }}>
+        <Card sx={{ pb: 1 }}>
           <Button
             fullWidth
             onClick={() => handleEdit()}
@@ -196,27 +154,23 @@ const CourseViewPage = () => {
           >
             Edit Course
           </Button>
-          {accordionData.map(createAccordion)}
+          {course?.course_module?.map(createAccordion)}
 
           <CourseEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
         </Card>
       </Grid>
       <Grid item xs={12}>
         <Card>
-        <TabContext value={value}>
-          <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
-            <Tab value="1" label="Study Materials" />
-            <Tab value="2" label="Notes" />
-          </TabList>
-          <TabPanel value="1">
-            <Typography>
-              <StudyMaterials />
-            </Typography>
-          </TabPanel>
-          <TabPanel value="2">
-            <Notes />
-          </TabPanel>
-        </TabContext>
+          <TabContext value={value}>
+            <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
+              <Tab value="1" label="Study Materials" />
+              <Tab value="2" label="Notes" />
+            </TabList>
+            <TabPanel value="1"></TabPanel>
+            <TabPanel value="2">
+              <Notes />
+            </TabPanel>
+          </TabContext>
         </Card>
       </Grid>
     </Grid>

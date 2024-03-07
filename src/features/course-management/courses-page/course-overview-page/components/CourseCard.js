@@ -107,7 +107,7 @@ const CourseCard = (props) => {
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Grid>
-          <Button component={Link} to="view " size="medium" variant="contained" color="primary">
+          <Button component={Link} to="view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary">
             View Details
           </Button>
         </CardActions>
