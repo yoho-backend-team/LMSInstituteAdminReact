@@ -5,8 +5,13 @@ import { Link } from 'react-router-dom';
 import Icon from 'components/icon';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material';
+import { sendOtp } from '../services/forgetPasswordService';
+import toast from 'react-hot-toast';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller } from 'react-hook-form';
 
-const UserNameAndEmailInput = ({ handleSendOtp }) => {
+const UserNameAndEmailInput = ({ handleSendOtp, setUserId }) => {
     const theme = useTheme();
     const LinkStyled = styled(Link)(({ theme }) => ({
         textDecoration: 'none',
@@ -14,6 +19,34 @@ const UserNameAndEmailInput = ({ handleSendOtp }) => {
         alignItems: 'center',
         display: 'flex'
     }));
+    const defaultValues = {
+        username: ''
+    };
+
+    const schema = yup.object().shape({
+        username: yup.string().required('Username or Email is required')
+    });
+    const {
+        control,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({
+        defaultValues,
+        mode: 'onChange',
+        resolver: yupResolver(schema)
+    });
+
+    const handleOtpSend = async (data) => {
+        const inputData = {
+            username: data.username
+        };
+        const result = await sendOtp(inputData);
+        if (result.success) {
+            toast.success(result.message);
+            setUserId(result?.data?.id);
+            handleSendOtp();
+        }
+    };
     return (
         <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
             <AuthIllustrationV1Wrapper>
@@ -54,8 +87,24 @@ const UserNameAndEmailInput = ({ handleSendOtp }) => {
                                     Enter your email and we&prime;ll send you instructions to reset your password
                                 </Typography>
                             </Box>
-                            <form noValidate autoComplete="off" onSubmit={handleSendOtp}>
-                                <TextField fullWidth autoFocus label="Email or Username" sx={{ display: 'flex', mb: 4 }} />
+                            <form noValidate autoComplete="off" onSubmit={handleSubmit(handleOtpSend)}>
+                                <Controller
+                                    name="username"
+                                    control={control}
+                                    rules={{ required: true }}
+                                    render={({ field: { value, onChange } }) => (
+                                        <TextField
+                                            fullWidth
+                                            value={value}
+                                            sx={{ mb: 4 }}
+                                            label="Username or Email"
+                                            onChange={onChange}
+                                            placeholder="John Doe"
+                                            error={Boolean(errors.username)}
+                                            {...(errors.username && { helperText: errors.username.message })}
+                                        />
+                                    )}
+                                />
                                 <Button fullWidth type="submit" variant="contained" sx={{ mb: 4 }}>
                                     Send OTP
                                 </Button>

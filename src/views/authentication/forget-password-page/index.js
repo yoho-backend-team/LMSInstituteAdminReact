@@ -10,12 +10,17 @@ import SetPasswordInput from 'features/authentication/forget-password-page/compo
 
 const Login = () => {
     const [otp, setOtp] = useState(false);
+    const [userId, setUserId] = useState('');
     const [showPasswordInput, setShowPasswordInput] = useState(false);
 
     // ** Hooks
 
     const handleSendOtp = () => {
         setOtp((state) => !state);
+    };
+    const handleOtpVerify = () => {
+        setOtp((state) => !state);
+        setShowPasswordInput((state) => !state);
     };
 
     // ** Vars
@@ -25,8 +30,10 @@ const Login = () => {
             <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
-                        {!otp && !showPasswordInput && <UserNameAndEmailInput handleSendOtp={handleSendOtp} />}
-                        {otp && <OTPInput setShowPasswordInput={setShowPasswordInput} setOtp={setOtp} />}
+                        {!otp && !showPasswordInput && <UserNameAndEmailInput handleSendOtp={handleSendOtp} setUserId={setUserId} />}
+                        {otp && (
+                            <OTPInput setShowPasswordInput={setShowPasswordInput} setOtp={setOtp} userId={userId} handleOtpVerify={handleOtpVerify} />
+                        )}
                         {showPasswordInput && <SetPasswordInput />}
                     </Grid>
                 </Grid>

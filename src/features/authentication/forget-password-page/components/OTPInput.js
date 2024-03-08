@@ -10,6 +10,8 @@ import { hexToRGBA } from 'utils/hex-to-rgba';
 import Cleave from 'cleave.js/react';
 import 'cleave.js/dist/addons/cleave-phone.us';
 import { useState } from 'react';
+import { verifyOtp } from '../services/forgetPasswordService';
+import toast from 'react-hot-toast';
 
 const CleaveInput = styled(Cleave)(({ theme }) => ({
     maxWidth: 48,
@@ -35,7 +37,7 @@ const defaultValues = {
     val5: '',
     val6: ''
 };
-const OTPInput = ({ setShowPasswordInput,setOtp }) => {
+const OTPInput = ({ userId,handleOtpVerify }) => {
     const theme = useTheme();
     const LinkStyled = styled(Link)(({ theme }) => ({
         textDecoration: 'none',
@@ -65,6 +67,20 @@ const OTPInput = ({ setShowPasswordInput,setOtp }) => {
             }
             event.preventDefault();
         }
+    };
+
+    const handleVerifyOtp = async (data) => {
+        const otp = Object.values(data).join('');
+        const inputData = {
+            user_id: userId,
+            otp: otp
+        };
+        const result = await verifyOtp(inputData);
+        if (result.success) {
+            toast.success(result.message);
+            handleOtpVerify()
+        }
+        console.warn(inputData);
     };
 
     const handleKeyDown = (event) => {
@@ -155,12 +171,7 @@ const OTPInput = ({ setShowPasswordInput,setOtp }) => {
                             <Typography variant="h6">******9763</Typography>
                         </Box>
                         <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>Type your 6 digit security code</Typography>
-                        <form
-                            onSubmit={handleSubmit(() => {
-                                setOtp(false);
-                                setShowPasswordInput(true);
-                            })}
-                        >
+                        <form onSubmit={handleSubmit(handleVerifyOtp)}>
                             <CleaveWrapper
                                 sx={{
                                     display: 'flex',
