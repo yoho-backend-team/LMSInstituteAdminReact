@@ -211,7 +211,7 @@ export const updateCourse = async (data) => {
 };
 export const updateCourseStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_END_POINT}/status`, data, {
+    const response = await axios.post(`${COURSE_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

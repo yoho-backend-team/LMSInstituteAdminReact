@@ -417,7 +417,7 @@ const Login = () => {
                                                     Set New Password
                                                 </Button>
                                                 <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', '& svg': { mr: 1 } }}>
-                                                    <Typography component={LinkStyled} to="/pages/auth/login-v1">
+                                                    <Typography component={LinkStyled} to="/login">
                                                         <Icon fontSize="1.25rem" icon="tabler:chevron-left" />
                                                         <span>Back to login</span>
                                                     </Typography>
