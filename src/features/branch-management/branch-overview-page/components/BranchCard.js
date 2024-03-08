@@ -1,13 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography, Box, TextField, MenuItem } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
 import Icon from 'components/icon';
 import BranchDeleteModel from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import BranchEditModal from './edit-Branch/BranchEditModal';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 import { deleteBranch } from 'features/branch-management/services/branchServices';
 import toast from 'react-hot-toast';
+import { updateBranchStatus } from 'features/branch-management/services/branchServices';
 
 const BranchCard = ({ branch, setRefetchBranch }) => {
   // State variables
@@ -15,6 +17,8 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
   const [selectedBranchDeleteId, setSelectedBranchDeleteId] = useState(null);
   const [branchEditModelOpen, setBranchEditModelOpen] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -32,6 +36,25 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
     } else {
       toast.error(result.message);
     }
+  };
+
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateBranchStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetchBranch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  const handleStatusValue = (event, branch) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(branch);
   };
 
   return (
@@ -122,6 +145,19 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
           >
             {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
           </Typography>
+
+          <Box sx={{ mt: 1.75 }}>
+            <TextField
+              size="small"
+              select
+              width={100}
+              label="Status"
+              SelectProps={{ value: branch?.is_active, onChange: (e) => handleStatusValue(e, branch) }}
+            >
+              <MenuItem value="1">Active</MenuItem>
+              <MenuItem value="0">Inactive</MenuItem>
+            </TextField>
+          </Box>
         </CardContent>
       </Card>
       {/* Delete branch modal */}
@@ -132,6 +168,15 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
         title="Delete"
         handleSubmit={handleBranchDelete}
       />
+      {/* Status Change Modal */}
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+
       {/* Edit branch modal */}
       <BranchEditModal
         open={branchEditModelOpen}
