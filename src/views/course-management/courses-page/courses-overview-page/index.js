@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-
 const Courses = () => {
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
@@ -18,7 +17,10 @@ const Courses = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourses(selectedBranchId));
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId]);
 
   return (

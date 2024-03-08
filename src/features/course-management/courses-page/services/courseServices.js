@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const COURSE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses`;
 
-export const getAllCourses = async (selectedBranchId) => {
+export const getAllCourses = async (data) => {
   try {
     const response = await axios.get(`${COURSE_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
