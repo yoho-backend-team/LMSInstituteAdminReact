@@ -1,28 +1,30 @@
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import CustomChip from 'components/mui/chip';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch,useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
-import { useDispatch } from 'react-redux';
-
-const CategoryFilter = () => {
+const CategoryFilter = ({selectedBranchId}) => {
   const [statusValue, setStatusValue] = useState('');
-  const [selectedCourses, setSelectedCourses] = useState([]);
   const dispatch = useDispatch();
-  const courses = [
-    { course_id: '1', course_name: 'Course 1' },
-    { course_id: '2', course_name: 'Course 2' },
-    { course_id: '3', course_name: 'Course 3' }
-  ];
+  const courses = useSelector(selectCourses);
+
+
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllCourses(data));
+  }, [dispatch, selectedBranchId,]);
+
+
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -44,63 +46,25 @@ const CategoryFilter = () => {
                     <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
-                    disableCloseOnSelect
-                    id="select-multiple-chip"
-                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
-                    getOptionLabel={(option) => option.course_name}
-                    value={selectedCourses}
+                    fullWidth
+                    options={courses}
+                    filterSelectedOptions
                     onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-                      } else {
-                        setSelectedCourses(newValue);
-                      }
+                      const courseId = newValue.map((item) => item.course_id);
+                      const data = {
+                        course_id: courseId,
+                        branch_id: selectedBranchId
+                      };
+                      dispatch(getAllCourseCategories(data));
                     }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Courses"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.course_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.course_id}
-                            label={option.course_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedCourses(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                    // defaultValue={[top100Films[13]]}
+                    id="autocomplete-multiple-outlined"
+                    getOptionLabel={(option) => option.course_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
                   />
                 </Grid>
               </Grid>

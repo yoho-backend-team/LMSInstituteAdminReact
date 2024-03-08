@@ -5,10 +5,30 @@ import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useState, useCallback } from 'react';
+import { getAllCourses } from '../../redux/courseThunks';
 
-const CourseCardHeader = (props) => {
+const CourseCardHeader = ({selectedBranchId}) => {
   // ** Props
-  const { value, handleFilter } = props;
+  // const { value, handleFilter } = props;
+  
+  // State for search value
+  const [searchValue, setSearchValue] = useState('');
+
+  // Dispatch function
+  const dispatch = useDispatch();
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllCourses({ search: searchInput,branch_id:selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
 
   return (
     <>
@@ -24,12 +44,12 @@ const CourseCardHeader = (props) => {
         }}
       >
         <TextField
-          value={value}
+          value={searchValue}
           sx={{
             width: 400
           }}
           placeholder="Search Course"
-          onChange={(e) => handleFilter(e.target.value)}
+          onChange={(e)=>handleSearch(e)}
         />
         <Box
           component={Link}

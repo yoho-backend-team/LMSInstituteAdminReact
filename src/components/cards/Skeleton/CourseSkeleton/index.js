@@ -1,4 +1,3 @@
-import React from 'react';
 import { Skeleton } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -6,39 +5,9 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import CardHeader from '@mui/material/CardHeader';
 
 const CourseSkeleton = () => (
   <>
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title={<Skeleton height={25} width={200} />} />
-          <CardContent sx={{ pt: 0 }}>
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={56} animation="wave" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={56} animation="wave" />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid item xs={12}>
-        <Grid container justifyContent={'space-between'}>
-          <Grid item xs={12} sm={3}>
-            <Skeleton variant="rounded" height={50} width={410} animation="wave" />
-          </Grid>
-          <Grid item display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
-            <Skeleton variant="rounded" height={40} width={150} animation="wave" />
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
     <Grid container spacing={2} sx={{ mt: 1 }}>
       {[...Array(6)].map((_, index) => (
         <Grid key={index} item xs={12} sm={4}>
