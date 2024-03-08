@@ -144,3 +144,23 @@ export const updateCourseCategory = async (data) => {
     throw error;
   }
 };
+export const updateCourseCategoryStatus = async (data) => {
+  try {
+    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (response.data.status) {
+      console.log(response);
+      return { success: true, message: 'CourseCategory updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update CourseCategory' };
+    }
+  } catch (error) {
+    console.error('Error in updateCourseCategory:', error);
+    throw error;
+  }
+};

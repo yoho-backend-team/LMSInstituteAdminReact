@@ -138,6 +138,9 @@ const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/Pro
 // Profile management
 const AllNotifications = Loadable(lazy(() => import('views/profile-management/notifications-page')));
 
+//Forget Password
+const ForgetPassword = Loadable(lazy(() => import('views/authentication/forget-password-page')));
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 
 const Protected = () => {
@@ -328,6 +331,9 @@ const ApplicationRoutes = () => {
 
       <Route element={<MinimalLayout />}>
         <Route path="/login" element={<AuthLogin />} />
+      </Route>
+      <Route element={<MinimalLayout />}>
+        <Route path="/forget-password" element={<ForgetPassword />} />
       </Route>
       <Route element={<MinimalLayout />}>
         <Route path="*" element={<Page404 />} />
