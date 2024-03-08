@@ -1,11 +1,14 @@
 import { Avatar, Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Icon from 'components/icon';
-import DeleteDialog from 'components/modal/DeleteModel';
+// import DeleteDialog from 'components/modal/DeleteModel';
+import CategoryDeleteModel from 'components/modal/DeleteModel';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { useCallback, useMemo, useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
 import { updateCourseCategoryStatus } from '../../services/courseCategoryServices';
+import { deleteCourseCategory } from '../../services/courseCategoryServices';
+
 import toast from 'react-hot-toast';
 const CategoryCard = (props) => {
   // Props
@@ -15,11 +18,13 @@ const CategoryCard = (props) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletingItemId, setDeletingItemId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  console.log(deletingItemId);
+  const [categoryDeleteModelOpen, setCategoryDeleteModelOpen] = useState(false);
+
+  const [selectedCategoryDeleteId, setSelectedCategoryDeleteId] = useState(null);
+
+  // console.log(deletingItemId);
 
   // Memoized variables
   const categoryLogoSrc = useMemo(() => `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}`, [category]);
@@ -30,10 +35,23 @@ const CategoryCard = (props) => {
     setEditModalOpen(true);
   }, [category]);
 
-  const handleDeleteClick = useCallback(() => {
-    setDeletingItemId(category.id); // Assuming category has an id property
-    setDeleteDialogOpen(true);
-  }, [category]);
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedCategoryDeleteId(itemId);
+    setCategoryDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleCategoryDelete = async () => {
+    const data = { id: selectedCategoryDeleteId };
+    const result = await deleteCourseCategory(data);
+    if (result.success) {
+      toast.success(result.message);
+      setCategoryRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -85,9 +103,7 @@ const CategoryCard = (props) => {
                     text: 'Delete',
                     icon: <Icon icon="mdi:delete-outline" />,
                     menuItemProps: {
-                      onClick: () => {
-                        handleDeleteClick();
-                      }
+                      onClick: () => handleDelete(category?.id)
                     }
                   }
                 ]}
@@ -143,13 +159,20 @@ const CategoryCard = (props) => {
         handleSubmit={handleStatusChangeApi}
       />
 
+      <CategoryDeleteModel
+        open={categoryDeleteModelOpen}
+        setOpen={setCategoryDeleteModelOpen}
+        description="Are you sure you want to delete this item?"
+        title="Delete"
+        handleSubmit={handleCategoryDelete}
+      />
       {/* Delete Dialog */}
-      <DeleteDialog
+      {/* <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
         description="Are you sure you want to delete this item?"
         title="Delete"
-      />
+      /> */}
     </Grid>
   );
 };
