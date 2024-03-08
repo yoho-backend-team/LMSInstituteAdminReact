@@ -35,8 +35,8 @@ const CategoryFilter = () => {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="0">Active</MenuItem>
-                    <MenuItem value="1">Deactive</MenuItem>
+                    <MenuItem value="1">Active</MenuItem>
+                    <MenuItem value="0">Deactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
