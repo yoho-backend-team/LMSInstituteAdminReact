@@ -4,14 +4,34 @@ import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 // ** Custom Component Import
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import CategoryAddModal from './CategoryAddModal';
+import { useDispatch } from 'react-redux';
+import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
+// import { getAllCourseCategories } from '../../services/courseCategoryServices';
+
 
 const CategoryCardHeader = (props) => {
   // ** Props
-  const { value, handleFilter, setCategoryRefetch } = props;
+  const { setCategoryRefetch } = props;
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 
+  // State for search value
+  const [searchValue, setSearchValue] = useState('');
+
+  // Dispatch function
+  const dispatch = useDispatch();
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllCourseCategories({ search: searchInput }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
   const handleAddClose = () => {
     setAddModalOpen(false);
   };
@@ -35,12 +55,12 @@ const CategoryCardHeader = (props) => {
         }}
       >
         <TextField
-          value={value}
+          value={searchValue}
           sx={{
             width: 400
           }}
           placeholder="Search Category"
-          onChange={(e) => handleFilter(e.target.value)}
+          onChange={(e)=>handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>

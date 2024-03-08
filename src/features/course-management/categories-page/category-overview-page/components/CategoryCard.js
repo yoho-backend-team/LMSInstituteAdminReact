@@ -1,17 +1,20 @@
 import { Avatar, Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { useCallback, useMemo, useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
-
+import { updateCourseCategoryStatus } from '../../services/courseCategoryServices';
+import toast from 'react-hot-toast';
 const CategoryCard = (props) => {
   // Props
   const { sx, category, setCategoryRefetch } = props;
 
   // State
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [statusValue, setStatusValue] = useState(category?.is_active);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -32,10 +35,24 @@ const CategoryCard = (props) => {
     setDeleteDialogOpen(true);
   }, [category]);
 
-  const handleStatusChange = useCallback((event) => {
-    setStatusValue(event.target.value);
-    setDeleteDialogOpen(true); // Not sure why opening delete dialog here, check if necessary
-  }, []);
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateCourseCategoryStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setCategoryRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  const handleStatusValue = (event, category) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(category);
+  };
 
   return (
     <Grid item xs={12} sm={6} lg={4}>
@@ -97,7 +114,13 @@ const CategoryCard = (props) => {
           </Typography>
           {/* Category Status Selector */}
           <Grid sx={{ mt: 2 }}>
-            <TextField size="small" select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: handleStatusChange }}>
+            <TextField
+              size="small"
+              select
+              width={100}
+              label="Status"
+              SelectProps={{ value: category?.is_active, onChange: (e) => handleStatusValue(e, category) }}
+            >
               <MenuItem value="1">Active</MenuItem>
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
@@ -111,6 +134,15 @@ const CategoryCard = (props) => {
         handleEditClose={() => setEditModalOpen(false)}
         setCategoryRefetch={setCategoryRefetch}
       />
+      {/* Status Change Modal */}
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+
       {/* Delete Dialog */}
       <DeleteDialog
         open={isDeleteDialogOpen}

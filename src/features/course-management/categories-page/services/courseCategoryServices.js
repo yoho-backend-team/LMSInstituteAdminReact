@@ -32,14 +32,14 @@ export const getActiveCategoriesByBranch = async (data) => {
     throw error;
   }
 };
-export const getAllCourseCategories = async (selectedBranchId) => {
+export const getAllCourseCategories = async (data) => {
   try {
     const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
