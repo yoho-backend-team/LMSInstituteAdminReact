@@ -209,3 +209,23 @@ export const updateCourse = async (data) => {
     throw error;
   }
 };
+export const updateCourseStatus = async (data) => {
+  try {
+    const response = await axios.post(`${COURSE_CATEGORY_END_POINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Course updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update Course' };
+    }
+  } catch (error) {
+    console.error('Error in updateCourse:', error);
+    throw error;
+  }
+};
