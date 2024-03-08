@@ -6,7 +6,7 @@ import CourseCardHeader from 'features/course-management/courses-page/course-ove
 import CourseFilter from 'features/course-management/courses-page/course-overview-page/components/CourseFilterCard';
 import { selectCourses, selectLoading } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -16,12 +16,14 @@ const Courses = () => {
   const courseLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
+  const [courseRefetch, setCourseRefetch] = useState(false);
+
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
     dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId, courseRefetch]);
 
   return (
     <>
@@ -31,11 +33,11 @@ const Courses = () => {
         <Grid>
           <Grid item xs={12} sm={12}>
             <CourseFilter />
-            <CourseCardHeader />
+            <CourseCardHeader setCourseRefetch={setCourseRefetch} />
           </Grid>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
             {courses.map((course, index) => (
-              <CourseCard key={index} course={course} />
+              <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} />
             ))}
           </Grid>
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
