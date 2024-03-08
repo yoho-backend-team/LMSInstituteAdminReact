@@ -11,10 +11,13 @@ import MenuItem from '@mui/material/MenuItem';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
+import { useDispatch } from 'react-redux';
 
 const CategoryFilter = () => {
   const [statusValue, setStatusValue] = useState('');
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const dispatch = useDispatch();
   const courses = [
     { course_id: '1', course_name: 'Course 1' },
     { course_id: '2', course_name: 'Course 2' },
@@ -23,6 +26,8 @@ const CategoryFilter = () => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
+    const data = { status: e.target.value };
+    dispatch(getAllCourseCategories(data));
   };
 
   return (
@@ -36,7 +41,7 @@ const CategoryFilter = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Deactive</MenuItem>
+                    <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
