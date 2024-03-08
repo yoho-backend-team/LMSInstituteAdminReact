@@ -27,24 +27,25 @@ const Courses = () => {
 
   return (
     <>
-      {courseLoading ? (
-        <CourseSkeleton />
-      ) : (
-        <Grid>
+      <Grid container spacing={1} className="match-height">
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={12}>
-            <CourseFilter />
-            <CourseCardHeader setCourseRefetch={setCourseRefetch} />
+            <CourseFilter selectedBranchId={selectedBranchId} />
+            <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId}/>
           </Grid>
-          <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {courses.map((course, index) => (
+          {courseLoading ? (
+            <CourseSkeleton />
+          ) : (
+            courses?.map((course, index) => (
+              // Using useMemo to memoize the BranchCard component to prevent unnecessary re-renders
               <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} />
-            ))}
-          </Grid>
-          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination count={10} color="primary" />
-          </Grid>
+            ))
+          )}
         </Grid>
-      )}
+        <Grid item xs={12} sm={12} sx={{ mt: 2.75 , display: 'flex', justifyContent: 'flex-end' }}>
+          <Pagination count={10} color="primary" />
+        </Grid>
+      </Grid>
     </>
   );
 };
