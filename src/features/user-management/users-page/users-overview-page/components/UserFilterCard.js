@@ -5,7 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
 import Card from '@mui/material/Card';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+// import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import { FilterUsersByRole } from 'features/user-management/users-page/services/userServices';
 import { useDispatch } from 'react-redux';
@@ -25,7 +25,7 @@ const UserFilterCard = ({ selectedBranchId, groups }) => {
         const result = await FilterUsersByRole(e.target.value);
         if (result.success) {
           console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
+          dispatch(getAllUsers(result.data));
         } else {
           console.log(result.message);
         }
