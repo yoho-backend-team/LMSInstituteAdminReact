@@ -22,7 +22,7 @@ const UserView = () => {
     const data = { id: id };
     const result = await studentById(data);
     if (result.success) {
-      setStudent(result.data);
+      setStudent(result.data.student);
       // setLoading(false);
     }
     // setLoading(false);

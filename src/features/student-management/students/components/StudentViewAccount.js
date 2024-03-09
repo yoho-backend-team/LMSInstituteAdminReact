@@ -14,48 +14,6 @@ import { Link } from 'react-router-dom';
 import CustomChip from 'components/mui/chip';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
-const course = [
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  },
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  },
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  },
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  }
-];
 
 const UserViewAccount = ({ student }) => {
   // ** States
@@ -75,7 +33,7 @@ const UserViewAccount = ({ student }) => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  {/* <Typography sx={{ color: 'text.secondary' }}>@{student.username}</Typography> */}
+                  <Typography sx={{ color: 'text.secondary' }}>@{student.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -148,18 +106,18 @@ const UserViewAccount = ({ student }) => {
 
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {course.map((course, index) => (
-              <Grid item spacing={2} key={index} xs={12} md={6}>
+           
+              <Grid item spacing={2}  xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
                       sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                      image={course.image}
+                      image={student?.institute_student_courses?.image}
                     >
                       <CustomChip
                         sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
                         skin="light"
-                        label={course?.learning_format}
+                        label={student?.institute_student_courses?.learning_format}
                         rounded
                         color="primary"
                         size="small"
@@ -171,7 +129,7 @@ const UserViewAccount = ({ student }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.course_categories?.course_category_name}
+                        label={student?.institute_student_courses?.learning_format}
                         rounded
                         color="secondary"
                         size="small"
@@ -179,9 +137,9 @@ const UserViewAccount = ({ student }) => {
                       />
                     </Box>
                     <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="h4">{course?.course_name}</Typography>
+                      <Typography variant="h4">{student?.institute_student_courses?.course_name}</Typography>
                       <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
-                        {course.personName}
+                        {student?.institute_student_courses?.personName}
                       </Typography>
                     </Box>
                     <Box
@@ -201,10 +159,10 @@ const UserViewAccount = ({ student }) => {
                         }}
                       >
                         <Icon icon="ic:twotone-person" fontSize={20} />
-                        <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>{student?.institute_student_courses?.studentCount} Modules</Typography>
                       </Grid>
                       <Grid>
-                        <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>₹ {student?.institute_student_courses?.course_price}</Typography>
                       </Grid>
                     </Box>
                   </CardContent>
@@ -215,7 +173,7 @@ const UserViewAccount = ({ student }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.course_categories?.course_category_name}
+                        label='Category'
                         rounded
                         color="secondary"
                         size="medium"
@@ -228,7 +186,7 @@ const UserViewAccount = ({ student }) => {
                   </CardActions>
                 </Card>
               </Grid>
-            ))}
+          
           </Grid>
         </Grid>
       </Grid>

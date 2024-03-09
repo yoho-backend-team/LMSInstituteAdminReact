@@ -19,7 +19,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-const UserViewLeft = ({student}) => {
+const UserViewLeft = ({ student }) => {
   return (
     <Card>
       <CardMedia
@@ -61,7 +61,7 @@ const UserViewLeft = ({student}) => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-               {student.first_name}{" "}{student.last_name}
+                {student.first_name} {student.last_name}
               </Typography>
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize="1.25rem" icon="tabler:briefcase" />

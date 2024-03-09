@@ -166,3 +166,5 @@ export const studentById = async (data) => {
     throw error;
   }
 };
+
+
