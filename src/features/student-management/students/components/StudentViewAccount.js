@@ -14,28 +14,6 @@ import { Link } from 'react-router-dom';
 import CustomChip from 'components/mui/chip';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
-const data = {
-  id: 1,
-  role: 'admin',
-  status: 'active',
-  username: 'gslixby0',
-  avatarColor: 'primary',
-  country: 'El Salvador',
-  company: 'Yotz PVT LTD',
-  billing: 'Manual - Cash',
-  contact: '(479) 232-9151',
-  currentPlan: 'enterprise',
-  fullName: 'Teacher Profile',
-  email: 'gslixby0@abc.net.au',
-  avatar: '/images/avatars/14.png'
-};
-
-const statusColors = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
-};
-
 const course = [
   {
     personName: 'Arun',
@@ -79,13 +57,13 @@ const course = [
   }
 ];
 
-const UserViewAccount = () => {
+const UserViewAccount = ({ student }) => {
   // ** States
 
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
-  if (data) {
+  if (student) {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
@@ -97,11 +75,11 @@ const UserViewAccount = () => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
+                  {/* <Typography sx={{ color: 'text.secondary' }}>@{student.username}</Typography> */}
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{student.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
@@ -109,33 +87,48 @@ const UserViewAccount = () => {
                     rounded
                     skin="light"
                     size="small"
-                    label={data.status}
-                    color={statusColors[data.status]}
+                    label={student.is_active === '1' ? 'Active' : 'Inactive'}
+                    color={student.is_active === '1' ? 'success' : 'error'}
                     sx={{
                       textTransform: 'capitalize'
                     }}
                   />
                 </Box>
+
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{student.gender}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>Tax-8894</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{student.dob}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', mb: 3 }}>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{student.education_qualification}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {student.phone_no}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>English</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Contact:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {student.alternate_number}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography sx={{ mr: 2, mb: 1, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
+                  <Typography sx={{ color: 'text.secondary', mb: 1 }}>
+                    {student.address_line_1}, {student.address_line_2}
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary', mb: 1 }}>
+                    {student.city}-{student.pincode}
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary', mb: 1 }}>{student.state}</Typography>
+                </Box>
+                {/* <Box sx={{ display: 'flex' }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
-                </Box>
+                </Box> */}
               </Box>
             </CardContent>
 

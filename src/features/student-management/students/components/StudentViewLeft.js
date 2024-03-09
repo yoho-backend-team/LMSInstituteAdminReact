@@ -19,7 +19,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-const UserViewLeft = () => {
+const UserViewLeft = ({student}) => {
   return (
     <Card>
       <CardMedia
@@ -61,7 +61,7 @@ const UserViewLeft = () => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                Lara Carlson
+               {student.first_name}{" "}{student.last_name}
               </Typography>
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize="1.25rem" icon="tabler:briefcase" />
@@ -77,9 +77,9 @@ const UserViewLeft = () => {
               </Box>
             </Box>
           </Box>
-          <Button variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={student.is_active === '1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            Active
+            {student.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>
