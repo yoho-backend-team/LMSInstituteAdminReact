@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
 import UserAddDrawer from 'features/user-management/users-page/users-overview-page/components/UserAddDrawer';
+import UserFilterCard from 'features/user-management/users-page/users-overview-page/components/UserFilterCard';
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,9 @@ const UserList = () => {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
+        </Grid>
+        <Grid item xs={12}>
+          <UserFilterCard users={users} groups={groups} setLoading={setLoading} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
         </Grid>
         <Grid item xs={12}>
           <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />

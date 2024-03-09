@@ -1,10 +1,8 @@
 import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
+
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
@@ -15,12 +13,9 @@ import { Link } from 'react-router-dom';
 import Icon from 'components/icon';
 import { default as StatusChangeDialog, default as UserDeleteModel } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
-import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
-import { FilterUsersByRole,  updateUserStatus } from 'features/user-management/users-page/services/userServices';
+import {   updateUserStatus } from 'features/user-management/users-page/services/userServices';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 // import { deleteCourseCategory } from '../../services/courseCategoryServices';
 import { deleteUsers } from 'features/user-management/users-page/services/userServices';
@@ -45,44 +40,22 @@ const renderClient = (row) => {
   }
 };
 
-const UserBodySection = ({ groups, users, setUserRefetch ,selectedBranchId}) => {
-  const [role, setRole] = useState('');
+const UserBodySection = ({  users, setUserRefetch ,}) => {
+ 
   // const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const [filterstatusValue, setFilterStatusValue] = useState('');
+ 
 
   const [userDeleteModelOpen, setUserDeleteModelOpen] = useState(false);
 
   const [selectedUserDeleteId, setSelectedUserDeleteId] = useState(null);
 
-  const dispatch = useDispatch();
+  
 
-  const handleRoleChange = useCallback(
-    async (e) => {
-      try {
-        setRole(e.target.value);
-        const result = await FilterUsersByRole(e.target.value);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
 
-  const handleFilterByStatus = (e) => {
-    setFilterStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
-    dispatch(getAllUsers(data));
-  };
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -261,44 +234,7 @@ const UserBodySection = ({ groups, users, setUserRefetch ,selectedBranchId}) => 
   ];
   return (
     <Card>
-      <CardHeader title="Search Filters" />
-      <CardContent>
-        <Grid container spacing={2}>
-          <Grid item sm={6} xs={12}>
-            <TextField
-              select
-              fullWidth
-              defaultValue="Select Role"
-              SelectProps={{
-                value: role,
-                displayEmpty: true,
-                onChange: (e) => handleRoleChange(e)
-              }}
-            >
-              <MenuItem value="">Select Role</MenuItem>
-              {groups?.map((group, index) => (
-                <MenuItem key={index} value={group?.role?.id}>
-                  {group?.role?.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-
-          <Grid item sm={6} xs={12}>
-            <TextField
-              select
-              fullWidth
-              label="Status"
-              defaultValue={''}
-              SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
-            >
-              <MenuItem value="">Select Status</MenuItem>
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
-            </TextField>
-          </Grid>
-        </Grid>
-      </CardContent>
+     
       <Divider sx={{ m: '0 !important' }} />
 
       <DataGrid
