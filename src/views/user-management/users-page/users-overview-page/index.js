@@ -20,26 +20,34 @@ const UserList = () => {
     dispatch(getAllGroups(selectedBranchId));
   }, [selectedBranchId]);
 
-  useEffect(() => {
-    dispatch(getAllUsers(selectedBranchId));
-  }, [dispatch, selectedBranchId, loading]);
+
+    // Local state
+    const [userRefetch, setUserRefetch] = useState(false);
+
+    // Fetch course categories on component mount or when dependencies change
+    useEffect(() => {
+      const data = {
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllUsers(data));
+    }, [dispatch, selectedBranchId, userRefetch,loading]);
 
   console.log(users);
 
   return (
     <>
-      {userLoading ? (
-        <UserSkeleton />
-      ) : (
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
-          </Grid>
-          <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users} setLoading={setLoading} />
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
         </Grid>
-      )}
+        {userLoading ? (
+          <UserSkeleton />
+        ) : (
+          <Grid item xs={12}>
+            <UserBodySection groups={groups} users={users} setLoading={setLoading} setUserRefetch={setUserRefetch}  />
+          </Grid>
+        )}
+      </Grid>
     </>
   );
 };

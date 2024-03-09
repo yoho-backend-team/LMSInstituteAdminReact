@@ -268,3 +268,26 @@ export const FilterUsersByStatus = async (status) => {
     throw error;
   }
 };
+
+export const deleteUsers = async (userId) => { 
+  try {
+    const response = await axios.delete(`${USER_API_ENDPOINT}/delete`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: { id: userId }
+    });
+
+    console.log(response);
+
+    if (response.data.status) {
+      return { success: true, message: 'User deleted successfully' };
+    } else {
+      return { success: false, message: 'Failed to delete group' };
+    }
+  } catch (error) {
+    console.error('Error in deleteUser:', error);
+    throw error;
+  }
+};
