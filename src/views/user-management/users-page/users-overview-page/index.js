@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
 import UserAddDrawer from 'features/user-management/users-page/users-overview-page/components/UserAddDrawer';
+import UserFilterCard from 'features/user-management/users-page/users-overview-page/components/UserFilterCard';
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -48,13 +49,16 @@ const UserList = () => {
           <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
         </Grid>
         <Grid item xs={12}>
+          <UserFilterCard users={users} groups={groups} setLoading={setLoading} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
+        </Grid>
+        <Grid item xs={12}>
           <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         {userLoading ? (
           <UserSkeleton />
         ) : (
           <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users} setLoading={setLoading} setUserRefetch={setUserRefetch} />
+            <UserBodySection groups={groups} users={users} setLoading={setLoading} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId}/>
           </Grid>
         )}
 
