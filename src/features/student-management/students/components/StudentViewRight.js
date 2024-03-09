@@ -49,7 +49,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab, invoiceData }) => {
+const UserViewRight = ({ tab,student }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
   const handleChange = (event, value) => {
@@ -79,19 +79,19 @@ const UserViewRight = ({ tab, invoiceData }) => {
       <Box sx={{ mt: 4 }}>
         <>
           <TabPanel sx={{ p: 0 }} value="account">
-            <UserViewAccount invoiceData={invoiceData} />
+            <UserViewAccount student={student} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="security">
-            <UserViewSecurity />
+          <TabPanel sx={{ p: 0 }} value="security"  >
+            <UserViewSecurity student={student}/>
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="class">
-            <UserViewBilling />
+          <TabPanel sx={{ p: 0 }} value="class"  >
+            <UserViewBilling student={student} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="attendance">
-            <TeacherAttendance />
+          <TabPanel sx={{ p: 0 }} value="attendance"  >
+            <TeacherAttendance student={student} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="activity">
-            <UserViewConnection />
+          <TabPanel sx={{ p: 0 }} value="activity" >
+            <UserViewConnection  student={student} />
           </TabPanel>
         </>
       </Box>
