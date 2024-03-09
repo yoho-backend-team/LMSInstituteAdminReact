@@ -36,14 +36,18 @@ const CategoriesDataGrid = () => {
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const dispatch = useDispatch();
   const faqCategories = useSelector(selectFaqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
 
   useEffect(() => {
-    dispatch(getAllFaqCategories());
-  }, [dispatch, refetch]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllFaqCategories(data));
+  }, [dispatch,selectedBranchId, refetch]);
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
@@ -211,14 +215,16 @@ const CategoriesDataGrid = () => {
 
   return (
     <>
-      {faqCategoryLoading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
+      <Grid container>
+        {/* Category filter and header */}
+        <Grid item xs={12}>
+          <FaqCategoriesTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+        </Grid>
+        {faqCategoryLoading ? (
+          <ContentSkeleton />
+        ) : (
           <Grid item xs={12}>
-            <FaqCategoriesTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
-          <Grid item xs={12}>
+            {/* Display categories */}
             <Card>
               <DataGrid
                 autoHeight
@@ -233,24 +239,24 @@ const CategoriesDataGrid = () => {
               />
             </Card>
           </Grid>
-          <FaqCategoriesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
-          <FaqCategoriesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} setRefetch={setRefetch} />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-            handleSubmit={handleDeleteApi}
-          />
-          <StatusDialog
-            open={statusOpen}
-            setOpen={setStatusDialogOpen}
-            description="Are you sure you want to Change Status"
-            title="Status"
-            handleSubmit={handleStatusChangeApi}
-          />
-        </Grid>
-      )}
+        )}
+        <FaqCategoriesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
+        <FaqCategoriesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} setRefetch={setRefetch} />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+          handleSubmit={handleDeleteApi}
+        />
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
+      </Grid>
     </>
   );
 };
