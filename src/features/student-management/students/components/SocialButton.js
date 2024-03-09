@@ -11,7 +11,7 @@ SocialsButton.propTypes = {
   sx: PropTypes.object
 };
 
-export default function SocialsButton({ initialColor = false, simple = true, links = {}, sx, ...other }) {
+export default function SocialsButton({ item,initialColor = false, simple = true, links = {}, sx, ...other }) {
   const SOCIALS = [
     {
       name: 'Call Now',
@@ -36,7 +36,7 @@ export default function SocialsButton({ initialColor = false, simple = true, lin
       name: 'View Profile',
       icon: 'eva:navigation-2-fill',
       socialColor: '#007EBB',
-      path: '1'
+      path: `${item.student.id.toString()}`
     }
   ];
 

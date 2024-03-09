@@ -94,7 +94,7 @@ const Students = () => {
                     </Typography>
 
                     <Stack alignItems="center">
-                      <SocialsButton initialColor sx={{ my: 2.5 }} />
+                      <SocialsButton initialColor sx={{ my: 2.5 }} item={item}/>
                     </Stack>
                   </Card>
                 </Grid>

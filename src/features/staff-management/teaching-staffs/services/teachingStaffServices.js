@@ -122,7 +122,7 @@ export const deleteTeachingStaff = async (teachingStaffId) => {
 };
 
 export const updateTeachingStaff = async (data) => {
-  try { 
+  try {
     const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
