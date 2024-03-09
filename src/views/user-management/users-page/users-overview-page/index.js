@@ -20,7 +20,10 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getAllGroups(selectedBranchId));
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllGroups(data));
   }, [selectedBranchId]);
 
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -45,7 +48,7 @@ const UserList = () => {
           <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
         </Grid>
         <Grid item xs={12}>
-          <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggleAddUserDrawer} />
+          <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         {userLoading ? (
           <UserSkeleton />

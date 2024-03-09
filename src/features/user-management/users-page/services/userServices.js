@@ -4,14 +4,14 @@ import axios from 'axios';
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
-export const getAllUsers = async (selectedBranchId) => {
+export const getAllUsers = async (data) => {
   try {
     const response = await axios.get(`${USER_API_ENDPOINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -269,7 +269,7 @@ export const FilterUsersByStatus = async (status) => {
   }
 };
 
-export const deleteUsers = async (userId) => { 
+export const deleteUsers = async (userId) => {
   try {
     const response = await axios.delete(`${USER_API_ENDPOINT}/delete`, {
       headers: {
