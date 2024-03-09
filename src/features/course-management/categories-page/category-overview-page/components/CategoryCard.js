@@ -8,8 +8,8 @@ import { useCallback, useMemo, useState } from 'react';
 import CategoryEditModal from './CategoryEditModal';
 import { updateCourseCategoryStatus } from '../../services/courseCategoryServices';
 import { deleteCourseCategory } from '../../services/courseCategoryServices';
-
 import toast from 'react-hot-toast';
+
 const CategoryCard = (props) => {
   // Props
   const { sx, category, setCategoryRefetch } = props;
