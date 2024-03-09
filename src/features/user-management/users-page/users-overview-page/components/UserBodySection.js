@@ -17,7 +17,7 @@ import { default as StatusChangeDialog, default as UserDeleteModel } from 'compo
 import OptionsMenu from 'components/option-menu';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
-import { FilterUsersByRole, FilterUsersByStatus, updateUserStatus } from 'features/user-management/users-page/services/userServices';
+import { FilterUsersByRole,  updateUserStatus } from 'features/user-management/users-page/services/userServices';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
@@ -45,39 +45,20 @@ const renderClient = (row) => {
   }
 };
 
-const UserBodySection = ({ groups, users,  setUserRefetch }) => {
+const UserBodySection = ({ groups, users, setUserRefetch ,selectedBranchId}) => {
   const [role, setRole] = useState('');
-  const [status, setStatus] = useState('');
+  // const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
 
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
+  const [filterstatusValue, setFilterStatusValue] = useState('');
 
   const [userDeleteModelOpen, setUserDeleteModelOpen] = useState(false);
 
   const [selectedUserDeleteId, setSelectedUserDeleteId] = useState(null);
 
   const dispatch = useDispatch();
- 
-
-  // const handleFilter = useCallback(
-  //   async (val) => {
-  //     try {
-  //       setValue(val);
-  //       const result = await searchUsers(val);
-  //       if (result.success) {
-  //         console.log('Search results:', result.data);
-  //         dispatch(setUsers(result.data));
-  //       } else {
-  //         console.log(result.message);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   },
-  //   [dispatch]
-  // );
 
   const handleRoleChange = useCallback(
     async (e) => {
@@ -97,27 +78,11 @@ const UserBodySection = ({ groups, users,  setUserRefetch }) => {
     [dispatch]
   );
 
-  const handleStatusChange = useCallback(
-    async (e) => {
-      if (e.target.value != '') {
-        try {
-          setStatus(e.target.value);
-          const result = await FilterUsersByStatus(e.target.value);
-          if (result.success) {
-            console.log('Search results:', result.data);
-            dispatch(setUsers(result.data));
-          } else {
-            console.log(result.message);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      } else if (e.target.value == '') {
-        dispatch(getAllUsers());
-      }
-    },
-    [dispatch]
-  );
+  const handleFilterByStatus = (e) => {
+    setFilterStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllUsers(data));
+  };
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -323,12 +288,9 @@ const UserBodySection = ({ groups, users,  setUserRefetch }) => {
             <TextField
               select
               fullWidth
-              defaultValue="Select Status"
-              SelectProps={{
-                value: status,
-                displayEmpty: true,
-                onChange: (e) => handleStatusChange(e)
-              }}
+              label="Status"
+              defaultValue={''}
+              SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
             >
               <MenuItem value="">Select Status</MenuItem>
               <MenuItem value="1">Active</MenuItem>
@@ -338,7 +300,7 @@ const UserBodySection = ({ groups, users,  setUserRefetch }) => {
         </Grid>
       </CardContent>
       <Divider sx={{ m: '0 !important' }} />
-    
+
       <DataGrid
         sx={{ p: 2 }}
         autoHeight
@@ -350,7 +312,7 @@ const UserBodySection = ({ groups, users,  setUserRefetch }) => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-    
+
       {/* <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleChangeStatus} /> */}
 
       <StatusChangeDialog

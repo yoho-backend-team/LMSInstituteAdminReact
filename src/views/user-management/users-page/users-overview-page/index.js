@@ -54,7 +54,7 @@ const UserList = () => {
           <UserSkeleton />
         ) : (
           <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users} setLoading={setLoading} setUserRefetch={setUserRefetch} />
+            <UserBodySection groups={groups} users={users} setLoading={setLoading} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId}/>
           </Grid>
         )}
 
