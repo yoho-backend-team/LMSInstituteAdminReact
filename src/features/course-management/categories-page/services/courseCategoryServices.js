@@ -32,14 +32,14 @@ export const getActiveCategoriesByBranch = async (data) => {
     throw error;
   }
 };
-export const getAllCourseCategories = async (selectedBranchId) => {
+export const getAllCourseCategories = async (data) => {
   try {
     const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
@@ -127,6 +127,26 @@ export const deleteCourseCategory = async (courseCategoryId) => {
 export const updateCourseCategory = async (data) => {
   try {
     const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (response.data.status) {
+      console.log(response);
+      return { success: true, message: 'CourseCategory updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update CourseCategory' };
+    }
+  } catch (error) {
+    console.error('Error in updateCourseCategory:', error);
+    throw error;
+  }
+};
+export const updateCourseCategoryStatus = async (data) => {
+  try {
+    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

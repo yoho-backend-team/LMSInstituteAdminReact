@@ -34,6 +34,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 // import Google from 'assets/images/icons/social-google.svg';
 
@@ -140,7 +141,9 @@ const FirebaseLogin = ({ ...others }) => {
             />
 
             <Typography
-              onClick={others?.handleOtpPage}
+              component={Link}
+              // onClick={others?.handleOtpPage}
+              to='/forget-password'
               variant="subtitle1"
               color="secondary"
               sx={{ textDecoration: 'none', cursor: 'pointer' }}

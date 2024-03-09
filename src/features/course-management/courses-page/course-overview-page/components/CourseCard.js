@@ -10,16 +10,36 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { updateCourseStatus } from '../../services/courseServices';
 
 const CourseCard = (props) => {
-  const { sx, personName, course } = props;
+  const { sx, personName, course, setCourseRefetch } = props;
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
 
-  const handleStatusValue = () => {
-    setDeleteDialogOpen(true);
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateCourseStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setCourseRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  const handleStatusValue = (event, course) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(course);
   };
 
   return (
@@ -99,9 +119,9 @@ const CourseCard = (props) => {
             <TextField
               size="small"
               select
-              fullWidth
+              width={100}
               label="Status"
-              SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e) }}
+              SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
             >
               <MenuItem value="1">Active</MenuItem>
               <MenuItem value="0">Inactive</MenuItem>
@@ -112,6 +132,17 @@ const CourseCard = (props) => {
           </Button>
         </CardActions>
       </Card>
+
+      {/* Status Change Modal */}
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+
+      {/* Delete Dialogue */}
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

@@ -1,12 +1,12 @@
 // material-ui
-import { Card, CardContent, Grid, CardHeader } from '@mui/material';
+import { Card, CardContent, Grid,  } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 
 // ==============================|| SKELETON - EARNING CARD ||============================== //
 
 const CategorySkeleton = () => (
   <>
-    <Grid container spacing={6}>
+    {/* <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardHeader title={<Skeleton height={25} width={200} />} />
@@ -22,8 +22,8 @@ const CategorySkeleton = () => (
           </CardContent>
         </Card>
       </Grid>
-    </Grid>
-    <Grid container spacing={2} sx={{ mt: 1 }}>
+    </Grid> */}
+    {/* <Grid container spacing={2} sx={{ mt: 1 }}>
       <Grid item xs={12}>
         <Grid container justifyContent={'space-between'}>
           <Grid item xs={12} sm={3}>
@@ -34,7 +34,7 @@ const CategorySkeleton = () => (
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </Grid> */}
     <Grid container spacing={2} sx={{ mt: 1 }}>
       <Grid item xs={12} sm={4}>
         <Card>
