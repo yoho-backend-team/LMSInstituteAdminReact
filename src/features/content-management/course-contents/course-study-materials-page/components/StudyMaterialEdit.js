@@ -1,12 +1,11 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -55,36 +54,6 @@ const StudyMaterialEdit = (props) => {
   console.log('StudyMaterialEdit - toggle:', props.toggle);
   // ** State
 
-  const [groups, setGroups] = useState([]);
-
-  useEffect(() => {
-    getAllGroups();
-  }, []);
-
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/course/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  console.log(groups);
-
   const {
     reset,
     control,
@@ -110,6 +79,7 @@ const StudyMaterialEdit = (props) => {
     var bodyFormData = new FormData();
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
+    bodyFormData.append('id', props.initialValues.id);
     console.log(bodyFormData);
 
     const result = await updateCourseStudyMaterial(bodyFormData);
@@ -118,11 +88,11 @@ const StudyMaterialEdit = (props) => {
       toast.success(result.message);
     } else {
       let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }

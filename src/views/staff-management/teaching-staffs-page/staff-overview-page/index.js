@@ -49,6 +49,7 @@ const Teaching = () => {
   }, 1000);
   console.log(teachingStaffs);
 
+
   return (
     <>
       {loading ? (
@@ -85,11 +86,13 @@ const Teaching = () => {
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
-                        <Grid>
-                          <Button component={Link} to={'1'} variant="tonal" sx={{ p: 1.05 }}>
+                        <Box component={Link} to={item?.staff?.id.toString()} state={{id:item?.staff?.id}}>
+                        {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
+                          <Button variant="tonal" sx={{ p: 1.05 }}>
                             View Profile
-                          </Button>
-                        </Grid>
+                          </Button>   
+                          {/* </Link> */}
+                        </Box>
                       </Box>
                     </Box>
                   </CardContent>

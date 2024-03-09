@@ -93,7 +93,7 @@ export const deleteCourseStudyMaterial = async (courseStudyMaterialId) => {
 
 export const updateCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.put(`${COURSE_STUDY_MATERIALS_END_POINT}/update`, data, {
+    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/update`, data, {
       headers: {
         // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -122,7 +122,7 @@ export const deleteTeachingStaff = async (teachingStaffId) => {
 };
 
 export const updateTeachingStaff = async (data) => {
-  try {
+  try { 
     const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
@@ -138,6 +138,53 @@ export const updateTeachingStaff = async (data) => {
     }
   } catch (error) {
     console.error('Error in updateTeachingStaff:', error);
+    throw error;
+  }
+};
+
+export const TeachingStaffById = async (data) => {
+  try {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in teaching staffs:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+export const staffChangePassword = async (data) => {
+  try {
+    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User status updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
     throw error;
   }
 };

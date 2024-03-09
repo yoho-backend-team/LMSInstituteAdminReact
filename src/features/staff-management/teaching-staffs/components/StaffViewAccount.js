@@ -5,88 +5,30 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+// import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Icon from 'components/icon';
+// import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
-// ** Custom Components
-import CustomChip from 'components/mui/chip';
+// import CustomChip from 'components/mui/chip';
 
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
-const data = {
-  id: 1,
-  role: 'admin',
-  status: 'active',
-  username: 'gslixby0',
-  avatarColor: 'primary',
-  country: 'El Salvador',
-  company: 'Yotz PVT LTD',
-  billing: 'Manual - Cash',
-  contact: '(479) 232-9151',
-  currentPlan: 'enterprise',
-  fullName: 'Teacher Profile',
-  email: 'gslixby0@abc.net.au',
-  avatar: '/images/avatars/14.png'
-};
-
-const statusColors = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
-};
-
-const course = [
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  },
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  },
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  },
-  {
-    personName: 'Arun',
-    learning_format: 'Online',
-    course_categories: { course_category_name: 'Programming' },
-    course_name: 'Introduction to React',
-    image: 'https://repository-images.githubusercontent.com/294419498/1786062b-16a6-4231-b247-e774048c532d',
-    studentCount: 10,
-    course_price: 49.99,
-    is_active: '1'
-  }
-];
-
-const UserViewAccount = () => {
+const UserViewAccount = ({ staff }) => {
   // ** States
-
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
-  if (data) {
+  //dateFormat
+  // function formattedDate(inputDate) {
+  //   const dateObject = new Date(inputDate);
+  //   const day = dateObject.getDate();
+  //   const month = dateObject.getMonth() + 1;
+  //   const year = dateObject.getFullYear();
+  //   return `${day}/${month}/${year}`;
+  // }
+
+  if (staff) {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
@@ -98,44 +40,45 @@ const UserViewAccount = () => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
-                  <CustomChip
-                    rounded
-                    skin="light"
-                    size="small"
-                    label={data.status}
-                    color={statusColors[data.status]}
-                    sx={{
-                      textTransform: 'capitalize'
-                    }}
-                  />
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.staff?.designation}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>Tax-8894</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.gender}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>
+                    {staff?.staff?.dob}
+
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>English</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.staff?.phone_number}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
+                <Box sx={{ display: 'flex', mb: 3 }}>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.staff?.alternate_number}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', mb: 3 }}>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.education_qualification}</Typography>
+                </Box>
+                <Box>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>
+                    {staff?.staff?.address_line_1}, {staff?.staff?.address_line_2}
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.city}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -158,9 +101,9 @@ const UserViewAccount = () => {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={8}>
+        {/* <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {course.map((course, index) => (
+            {staff.staff.course.map((course, index) => (
               <Grid item spacing={2} key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
@@ -242,7 +185,7 @@ const UserViewAccount = () => {
               </Grid>
             ))}
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
     );
   } else {
