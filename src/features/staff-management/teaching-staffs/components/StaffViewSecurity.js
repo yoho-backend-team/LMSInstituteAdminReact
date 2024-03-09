@@ -10,12 +10,16 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import { Typography } from '@mui/material';
+import toast from 'react-hot-toast';
+// import { staffChangePassword } from '../services/teachingStaffServices';
+import { userChangePassword } from 'features/user-management/users-page/services/userServices';
 // ** Icon Imports
 import Icon from 'components/icon';
 // ** Custom Component Import
 import CustomTextField from 'components/mui/text-field';
 
-const UserViewSecurity = () => {
+const UserViewSecurity = ({id}) => {
   // ** States
   const [values, setValues] = useState({
     newPassword: '',
@@ -24,6 +28,7 @@ const UserViewSecurity = () => {
     showConfirmNewPassword: false
   });
 
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
   // Handle Password
   const handleNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -42,6 +47,39 @@ const UserViewSecurity = () => {
     setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword });
   };
 
+  const handleSubmit =async (event)=>{
+    event.preventDefault();
+    if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !==''){
+      try {
+        let data = {
+          user_id:id,
+          c_password:values.confirmNewPassword,
+          password:values.newPassword
+        };
+        const result = await userChangePassword(data);
+              if (result.success) {
+                toast.success(result.message);
+                setValues({
+                  newPassword: '',
+                  confirmNewPassword: '',
+                  showNewPassword: false,
+                  showConfirmNewPassword: false
+                });
+                setPasswordsMatch(true);
+              } else {
+                toast.error(result.message);
+              }
+            } catch (error) {
+              console.error('Error:', error);
+            }
+          } else {
+            setPasswordsMatch(false);
+          }
+  }
+
+  
+
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -55,7 +93,7 @@ const UserViewSecurity = () => {
               Minimum 8 characters long, uppercase & symbol
             </Alert>
 
-            <form onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={handleSubmit}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <CustomTextField
@@ -113,6 +151,11 @@ const UserViewSecurity = () => {
                   <Button type="submit" variant="contained">
                     Change Password
                   </Button>
+                  {!passwordsMatch && (
+                    <Typography variant="caption" color="error">
+                      Passwords do not match
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
             </form>
@@ -121,6 +164,5 @@ const UserViewSecurity = () => {
       </Grid>
     </Grid>
   );
-};
-
+                  }
 export default UserViewSecurity;

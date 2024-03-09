@@ -19,7 +19,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-const UserViewLeft = () => {
+const UserViewLeft = ({ staff }) => {
   return (
     <Card>
       <CardMedia
@@ -61,25 +61,13 @@ const UserViewLeft = () => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                Lara Carlson
+                {staff?.staff?.staff_name}
               </Typography>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:briefcase" />
-                <Typography sx={{ color: 'text.secondary' }}>ReactJs</Typography>
-              </Box>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:map-pin" />
-                <Typography sx={{ color: 'text.secondary' }}>london</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:calendar" />
-                <Typography sx={{ color: 'text.secondary' }}>Joined 11/09/2023</Typography>
-              </Box>
             </Box>
           </Box>
-          <Button variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={staff?.staff?.is_active === '1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            Active
+            {staff?.staff?.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>

@@ -47,8 +47,8 @@ const UserViewSecurity = ({ id }) => {
       try {
         let data = {
           user_id: id,
-          password: values.confirmNewPassword,
-          c_password: values.newPassword
+          c_password: values.confirmNewPassword,
+          password: values.newPassword
         };
         const result = await userChangePassword(data);
         if (result.success) {
