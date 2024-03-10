@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import Icon from 'components/icon';
 import { default as StatusChangeDialog, default as UserDeleteModel } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import {   updateUserStatus } from 'features/user-management/users-page/services/userServices';
+import { updateUserStatus } from 'features/user-management/users-page/services/userServices';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
@@ -40,22 +40,16 @@ const renderClient = (row) => {
   }
 };
 
-const UserBodySection = ({  users, setUserRefetch ,}) => {
- 
+const UserBodySection = ({ users, setUserRefetch }) => {
   // const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
- 
 
   const [userDeleteModelOpen, setUserDeleteModelOpen] = useState(false);
 
   const [selectedUserDeleteId, setSelectedUserDeleteId] = useState(null);
-
-  
-
-
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -84,8 +78,7 @@ const UserBodySection = ({  users, setUserRefetch ,}) => {
 
   // Handle branch deletion
   const handleUserDelete = async () => {
-    const data = { id: selectedUserDeleteId };
-    const result = await deleteUsers(data);
+    const result = await deleteUsers(selectedUserDeleteId);
     if (result.success) {
       toast.success(result.message);
       setUserRefetch((state) => !state);
@@ -114,7 +107,7 @@ const UserBodySection = ({  users, setUserRefetch ,}) => {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleDelete(users?.id)
+              onClick: () => handleDelete(id)
             }
           }
         ]}
@@ -234,7 +227,6 @@ const UserBodySection = ({  users, setUserRefetch ,}) => {
   ];
   return (
     <Card>
-     
       <Divider sx={{ m: '0 !important' }} />
 
       <DataGrid
