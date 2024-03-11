@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 // import { getAllActiveGroups, updateUser } from '../../../user-view/services/viewUserServices';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
-import {  updateUser } from '../../services/userServices';
+import { updateUser } from '../../services/userServices';
 import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
 
 const showErrors = (field, valueLen, min) => {
@@ -41,22 +41,20 @@ const schema = yup.object().shape({
     .typeError('Contact Number field is required')
     .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
     .required(),
-  designation: yup.string().required(),
+  designation: yup.string().required()
   // role: yup.string().required()
 });
 
-const defaultValues = {
-  full_name: '',
-  user_name: '',
-  email: '',
-  contact: Number(''),
-  designation: '',
-  role: ''
-};
-
 const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
   const [role, setRole] = useState('');
-
+  const defaultValues = {
+    full_name: '',
+    user_name: '',
+    email: '',
+    contact: Number(''),
+    designation: '',
+    role: ''
+  };
   const {
     reset,
     control,
@@ -84,6 +82,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [groups, setGroups] = useState([]);
+
   console.log(selectedImage);
   useEffect(() => {
     getAllGroups();
@@ -136,7 +135,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     async (e) => {
       try {
         setRole(e.target.value);
-      
       } catch (error) {
         console.log(error);
       }
@@ -144,20 +142,20 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     [dispatch]
   );
 
-  console.log(groups)
+  console.log(groups);
 
-  const onSubmit =async (data) => {
+  const onSubmit = async (data) => {
     const InputData = new FormData();
-    InputData.append('full_name', data.full_name);
+    InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);
     InputData.append('email', data.email);
-    InputData.append('contact', data.contact);
+    InputData.append('mobile', data.contact);
     InputData.append('designation', data.designation);
-    InputData.append('role', role);
+    InputData.append('role_id', role);
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
 
-    const result =await updateUser(InputData);
+    const result = await updateUser(InputData);
 
     if (result.success) {
       toast.success(result.message);
@@ -165,9 +163,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
       toast.error(result.message);
     }
   };
-
-
-
 
   return (
     <Dialog
