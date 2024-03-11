@@ -11,7 +11,6 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 import Icon from 'components/icon';
-import DeleteDialog from 'components/modal/DeleteModel';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 
 import OptionsMenu from 'components/option-menu';
@@ -23,6 +22,9 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { updateBatch } from 'features/batch-management/batches/services/batchServices';
 import { updateBatchStatus } from 'features/batch-management/batches/services/batchServices';
 // ** Toast Import
+import BatchDeleteModel from 'components/modal/DeleteModel';
+import { deleteBatch } from 'features/batch-management/batches/services/batchServices';
+import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -37,6 +39,18 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   }
 }));
 const Batch = () => {
+  const dispatch = useDispatch();
+  const batches = useSelector(selectBatches);
+  const batchLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [batchRefetch, setBatchRefetch] = useState(false);
+
+  console.log(batches);
+
+  useEffect(() => {
+    dispatch(getAllBatches({ branch_id: selectedBranchId }));
+  }, [dispatch, selectedBranchId, batchRefetch]);
+
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
@@ -68,27 +82,27 @@ const Batch = () => {
     setEditModalOpen(true);
   };
 
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletingItemId, setDeletingItemId] = useState(null);
-  console.log(deletingItemId);
+  const [batchDeleteModelOpen, setBatchDeleteModelOpen] = useState(false);
 
-  const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId);
-    setDeleteDialogOpen(true);
+  const [selectedBatchDeleteId, setSelectedBatchDeleteId] = useState(null);
+
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedBatchDeleteId(itemId);
+    setBatchDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleBatchDelete = async () => {
+    const data = { id: selectedBatchDeleteId };
+    const result = await deleteBatch(data);
+    if (result.success) {
+      toast.success(result.message);
+      setBatchRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
   };
-
-  const dispatch = useDispatch();
-  const batches = useSelector(selectBatches);
-  const batchLoading = useSelector(selectLoading);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const [batchRefetch, setBatchRefetch] = useState(false);
-
-  console.log(batches);
-
-  useEffect(() => {
-    dispatch(getAllBatches({branch_id:selectedBranchId}));
-  }, [dispatch, selectedBranchId, batchRefetch]);
 
   // const groups = [
   //   {
@@ -263,8 +277,6 @@ const Batch = () => {
   //   }
   // ];
 
-  // Render Group Cards
-
   const renderCards = () => {
     return batches?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
@@ -288,12 +300,12 @@ const Batch = () => {
                       icon: <Icon icon="tabler:eye" fontSize={20} />,
                       menuItemProps: {
                         component: Link,
-                        to: `view`
+                        to: `view`,
+                        state:{id:item.batch_id}
                       }
                     },
                     {
                       text: 'Edit',
-
                       icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
                       menuItemProps: {
                         onClick: () => {
@@ -303,12 +315,9 @@ const Batch = () => {
                     },
                     {
                       text: 'Delete',
-
                       icon: <Icon color="primary" icon="tabler:archive-filled" fontSize={20} />,
                       menuItemProps: {
-                        onClick: () => {
-                          handleDelete();
-                        }
+                        onClick: () => handleDelete(item.batch?.id)
                       }
                     }
                   ]}
@@ -335,7 +344,8 @@ const Batch = () => {
               <Icon fontSize="1.25rem" icon="tabler:book" />
 
               <Typography sx={{ ml: 1 }} variant="h5">
-                {item?.batch?.batch_name}
+                {/* {item?.batch?.course_name} */}
+                {item?.batch?.institute_course?.institute_course_branch?.course_name}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
@@ -358,16 +368,16 @@ const Batch = () => {
               <Icon fontSize="1.25rem" icon="tabler:users" />
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                  50
+                  {item?.students?.length}
                 </Typography>
                 <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Students</Typography>
               </Box>
               <Icon fontSize="1.25rem" icon="tabler:clock" />
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                  3
+                  {item.totalDays}
                 </Typography>
-                <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Months</Typography>
+                <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Days</Typography>
               </Box>
             </Box>
 
@@ -413,8 +423,8 @@ const Batch = () => {
               </Grid>
 
               {/* BatchEditModal  Modal */}
-
               <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+
               {/* Status Change Modal */}
               <StatusChangeDialog
                 open={statusChangeDialogOpen}
@@ -423,13 +433,14 @@ const Batch = () => {
                 title="Status"
                 handleSubmit={handleStatusChangeApi}
               />
-              {/* DeleteDialog  Modal */}
 
-              <DeleteDialog
-                open={isDeleteDialogOpen}
-                setOpen={setDeleteDialogOpen}
+              {/* DeleteDialog  Modal */}
+              <BatchDeleteModel
+                open={batchDeleteModelOpen}
+                setOpen={setBatchDeleteModelOpen}
                 description="Are you sure you want to delete this item?"
                 title="Delete"
+                handleSubmit={handleBatchDelete}
               />
             </Grid>
           )}

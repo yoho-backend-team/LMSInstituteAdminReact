@@ -122,7 +122,7 @@ export const userChangePassword = async (data) => {
 };
 export const updateUser = async (data) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${USER_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -130,12 +130,12 @@ export const updateUser = async (data) => {
     });
     console.log(response);
     if (response.data.status) {
-      return { success: true, message: 'User created successfully' };
+      return { success: true, message: 'User updated successfully' };
     } else {
       return { success: false, message: response.data.message };
     }
   } catch (error) {
-    console.error('Error in addUser:', error);
+    console.error('Error in editUser:', error);
     throw error;
   }
 };
@@ -204,29 +204,7 @@ export const checkUserName = async (userName) => {
   }
 };
 
-export const getAllActiveGroups = async () => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
 
-    // Check if the response status is successful
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch Groups' };
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllGroups:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
 
 export const FilterUsersByRole = async (id) => {
   try {
@@ -288,6 +266,32 @@ export const deleteUsers = async (userId) => {
     }
   } catch (error) {
     console.error('Error in deleteUser:', error);
+    throw error;
+  }
+};
+
+
+
+export const getAllActiveGroups = async () => {
+  try {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-active-roles`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    // Check if the response status is successful
+    if (response.data) {
+      return { success: true, data: response.data };
+    } else {
+      return { success: false, message: 'Failed to fetch Groups' };
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllGroups:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
