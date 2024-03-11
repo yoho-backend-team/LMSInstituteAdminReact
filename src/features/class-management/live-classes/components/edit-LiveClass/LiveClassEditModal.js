@@ -51,23 +51,21 @@ const schema = yup.object().shape({
     .string()
     .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
     .required('Course field is required'),
-  batch: yup.string().required('Batch field is required'),
-  selectcourse: yup.string().required('Course field is required'),
   classDate: yup.date().nullable().required('Class Date field is required'),
   startTime: yup.date().nullable().required('Start Time field is required'),
   endTime: yup.date().nullable().required('End Time field is required'),
   instructor: yup.string().required('Instructor field is required'),
+  coordinates: yup.string().required('coordinates field is required'),
   videoUrl: yup.string().required('VideoUrl field is required')
 });
 
 const defaultValues = {
   course: '',
-  batch: '',
-  selectcourse: '',
   classDate: new Date(),
   startTime: null,
   endTime: null,
   instructor: '',
+  coordinates: '',
   videoUrl: ''
 };
 
@@ -78,7 +76,7 @@ const handleCopyLink = () => {
   });
 };
 
-const LiveClassEditModal = ({ open, handleEditClose }) => {
+const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -87,6 +85,8 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
   const [endTime, setEndTime] = useState(null);
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+  const [selectedTeachers, setSelectedTeachers] = useState([]);
+
   const instructors = [
     { instructor_id: '1', instructor_name: 'Instructor 1' },
     { instructor_id: '2', instructor_name: 'Instructor 2' },
@@ -105,6 +105,7 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
     setEndTime(time);
   };
 
+
   const handleOnChangeRange = (dates) => {
     const [start] = dates;
     if (start !== null) {
@@ -117,7 +118,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
     setPersonName(event.target.value);
   };
 
-  const [selectedTeachers, setSelectedTeachers] = useState([]);
 
   const handleTeacherChange = (event) => {
     setSelectedTeachers(event.target.value);
@@ -137,14 +137,12 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
 
   const handleClose = () => {
     setValue('course', '');
-    setValue('selectcourse', '');
     setValue('videoUrl', '');
-    setValue('batch', '');
     setValue('classDate', null);
     setValue('startTime', null);
     setValue('endTime', null);
     setValue('instructor', '');
-    setValue('teacher', []);
+    setValue('coordinates', '');
     handleEditClose();
     reset();
   };
@@ -161,19 +159,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
     }
   };
 
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ];
-
   const onSubmit = async (data) => {
     console.log(data);
     const dummyData = {
@@ -189,7 +174,6 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
 
     try {
       const result = await updateLiveClass(dummyData);
-
       if (result.success) {
         toast.success(result.message);
         navigate(-1);
@@ -237,7 +221,7 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
         }}
       >
         <DatePickerWrapper>
-          <form onSubmit={handleSubmit()}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Controller
@@ -247,6 +231,7 @@ const LiveClassEditModal = ({ open, handleEditClose }) => {
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
+                      defaultValue={modalData?.class_name}
                       value={value}
                       label="Course Name"
                       onChange={onChange}

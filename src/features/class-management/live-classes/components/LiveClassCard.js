@@ -1,4 +1,5 @@
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import { useCallback } from 'react';
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -12,18 +13,30 @@ import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
+import toast from 'react-hot-toast';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
+import { deleteLiveClass } from '../services/liveClassServices';
 
 const LiveClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [selectedBranchDeleteId, setSelectedBranchDeleteId] = useState(null);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedclass,setSelectedClass]=useState({})
+
   const dispatch = useDispatch();
   console.log(liveClasses);
+
+  const handleDelete = useCallback((itemId) => {
+    setSelectedBranchDeleteId(itemId);
+    setDeleteDialogOpen(true);
+  }, []);
+
   useEffect(() => {
     const data = {
       type: 'live',
@@ -39,7 +52,16 @@ const LiveClassCard = () => {
     setEditModalOpen(true);
   };
 
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const handleDeleteClass = async () => {
+    const data = { class_id: selectedBranchDeleteId };
+    const result = await deleteLiveClass(data);
+    if (result.success) {
+      toast.success(result.message);
+      setRefetchBranch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   const handleCopyLink = (index) => {
     console.log(`Link copied for card at index ${index}`);
@@ -123,7 +145,9 @@ const LiveClassCard = () => {
                           icon: <Icon icon="tabler:edit" />,
                           menuItemProps: {
                             onClick: () => {
+                              setSelectedClass(card);
                               handleEdit();
+
                             }
                           }
                         },
@@ -132,9 +156,7 @@ const LiveClassCard = () => {
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
-                            onClick: () => {
-                              setDeleteDialogOpen(true);
-                            }
+                            onClick: () => handleDelete(card?.class_id)
                           }
                         }
                       ]}
@@ -166,21 +188,24 @@ const LiveClassCard = () => {
                     <Typography>{card?.class_link}</Typography>
                   </Box>
                 </Grid>
-                <Grid container p={2} justifyContent="center">
-                  <Button variant="tonal" size="small" href="view">
-                    View More
-                  </Button>
+                <Grid container justifyContent="space-between" display="flex" alignItems="center">
+                  <Grid item xs={12} display="flex" justifyContent="center">
+                    <Button variant="tonal" size="small" href="view">
+                      View More
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Card>
           </Grid>
         ))}
-        <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+        <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} class={selectedclass} />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}
           description="Are you sure you want to delete this item?"
           title="Delete"
+          handleSubmit={handleDeleteClass}
         />
       </Grid>
       <Grid container justifyContent="flex-end" mt={2}>

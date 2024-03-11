@@ -301,7 +301,7 @@ const Batch = () => {
                       menuItemProps: {
                         component: Link,
                         to: `view`,
-                        state:{id:item.batch_id}
+                        state:{id:item?.batch?.batch_id}
                       }
                     },
                     {
