@@ -10,9 +10,12 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
 // import { getAllActiveGroups, updateUser } from '../../../user-view/services/viewUserServices';
-import { getAllActiveGroups,updateUser } from '../../services/userServices';
+import { useCallback } from 'react';
 import toast from 'react-hot-toast';
+import {  updateUser } from '../../services/userServices';
+import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -39,7 +42,7 @@ const schema = yup.object().shape({
     .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
     .required(),
   designation: yup.string().required(),
-  role: yup.string().required()
+  // role: yup.string().required()
 });
 
 const defaultValues = {
@@ -52,6 +55,8 @@ const defaultValues = {
 };
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
+  const [role, setRole] = useState('');
+
   const {
     reset,
     control,
@@ -125,18 +130,34 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     }
   };
 
-  const onSubmit = (data) => {
+  const dispatch = useDispatch();
+
+  const handleRoleChange = useCallback(
+    async (e) => {
+      try {
+        setRole(e.target.value);
+      
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [dispatch]
+  );
+
+  console.log(groups)
+
+  const onSubmit =async (data) => {
     const InputData = new FormData();
     InputData.append('full_name', data.full_name);
     InputData.append('user_name', data.user_name);
     InputData.append('email', data.email);
     InputData.append('contact', data.contact);
     InputData.append('designation', data.designation);
-    InputData.append('role', data.role);
+    InputData.append('role', role);
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
 
-    const result = updateUser(InputData);
+    const result =await updateUser(InputData);
 
     if (result.success) {
       toast.success(result.message);
@@ -144,6 +165,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
       toast.error(result.message);
     }
   };
+
+
+
 
   return (
     <Dialog
@@ -289,17 +313,18 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                 name="role"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+                render={() => (
                   <TextField
                     select
                     fullWidth
-                    value={value}
-                    label="Select Role"
-                    onChange={onChange}
-                    SelectProps={{ value: value, onChange: onChange }}
-                    error={Boolean(errors.role)}
-                    {...(errors.role && { helperText: errors.role.message })}
+                    defaultValue="Select Role"
+                    SelectProps={{
+                      value: role,
+                      displayEmpty: true,
+                      onChange: (e) => handleRoleChange(e)
+                    }}
                   >
+                    <MenuItem value="">Select Role</MenuItem>
                     {groups?.map((group, index) => (
                       <MenuItem key={index} value={group?.role?.id}>
                         {group?.role?.name}
@@ -326,7 +351,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
           </Button>
         </DialogActions>
       </form>
-    </Dialog >
+    </Dialog>
   );
 };
 

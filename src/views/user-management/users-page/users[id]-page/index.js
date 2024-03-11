@@ -51,7 +51,7 @@ const UserView = () => {
           ) : (
             <Grid container spacing={3}>
               <Grid item xs={12} md={5} lg={4}>
-                <UserViewLeft id={userId} userData={userData} />
+                <UserViewLeft id={userId} userData={userData}  />
               </Grid>
               <Grid item xs={12} md={7} lg={8}>
                 <UserViewRight id={userId} userData={userData} />
