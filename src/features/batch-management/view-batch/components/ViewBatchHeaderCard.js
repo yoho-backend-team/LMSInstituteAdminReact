@@ -20,15 +20,16 @@ const EcommerceStatistics = ({ batchData }) => {
         <Grid container>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={batchData.batch_name}/>
+              <CardHeader title={batchData.batch_name} />
               <CardContent sx={{ mt: 0, pt: 0 }}>
                 <Grid container spacing={4}>
                   <Grid item>
                     <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                      Batch Name
+                      Course Name
                     </Typography>
                     <Typography variant="h4" sx={{ mt: 1 }}>
-                      {batchData.batch_name}
+                      {/* {batchData?.institute_course?.institute_course_branch?.course_name} */}
+                      fsdg
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -47,7 +48,7 @@ const EcommerceStatistics = ({ batchData }) => {
                       1:24:36
                     </Typography>
                   </Grid>
-                 
+
                   <Grid item>
                     <Typography variant="h5" sx={{ color: 'grey.500' }}>
                       Sarted Date
