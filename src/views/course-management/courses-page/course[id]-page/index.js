@@ -23,7 +23,7 @@ import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import CourseEditModal from 'features/course-management/courses-page/course-overview-page/components/CourseEditModal';
 import { useState } from 'react';
-// import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
+import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
 import Notes from 'features/course-management/courses-page/course-overview-page/components/view-course/notes';
 import { useLocation } from 'react-router-dom';
 import { getCourseDetails } from 'features/course-management/courses-page/services/courseServices';
@@ -43,14 +43,14 @@ const CourseViewPage = () => {
     getCourseData(courseId);
   }, [courseId]);
 
-  console.log(courseId);
+  console.log('course', course);
 
   const getCourseData = async (id) => {
     const data = {
       course_id: id
     };
     const result = await getCourseDetails(data);
-    setCourse(result?.data);
+    setCourse(result?.data?.data);
   };
 
   const handleSwitch = (event, newValue) => {
@@ -166,7 +166,9 @@ const CourseViewPage = () => {
               <Tab value="1" label="Study Materials" />
               <Tab value="2" label="Notes" />
             </TabList>
-            <TabPanel value="1"></TabPanel>
+            <TabPanel value="1">
+              <StudyMaterials materials={course?.course_study_materials} />
+            </TabPanel>
             <TabPanel value="2">
               <Notes />
             </TabPanel>
