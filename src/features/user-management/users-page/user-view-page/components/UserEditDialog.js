@@ -10,9 +10,6 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
-// import { getAllActiveGroups, updateUser } from '../../../user-view/services/viewUserServices';
-import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { updateUser } from '../../services/userServices';
 import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
@@ -46,9 +43,8 @@ const schema = yup.object().shape({
 });
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
-  const [role, setRole] = useState('');
   const defaultValues = {
-    full_name: userData ? userData?.name : '',
+    full_name: '',
     user_name: '',
     email: '',
     contact: Number(''),
@@ -74,7 +70,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
       setValue('email', userData?.institution_users?.email || '');
       setValue('contact', userData?.institution_users?.mobile || '');
       setValue('designation', userData?.institution_users?.designation || '');
-      setValue('role', userData?.role_groups?.role.id || '');
+      setValue('role', userData?.role_groups?.role?.id || '');
     }
   }, [userData, setValue]);
   const handleClose = () => {
@@ -83,7 +79,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     setValue('email', '');
     setValue('contact', Number(''));
     setValue('designation', '');
-    setValue('role', '');
+    setValue('role', Number(''));
     handleEditClose();
     reset();
   };
@@ -94,7 +90,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [groups, setGroups] = useState([]);
 
-  console.log(selectedImage);
   useEffect(() => {
     getAllGroups();
   }, []);
@@ -140,29 +135,17 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     }
   };
 
-  const dispatch = useDispatch();
-
-  const handleRoleChange = useCallback(
-    async (e) => {
-      try {
-        setRole(e.target.value);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
-
   console.log(groups);
 
   const onSubmit = async (data) => {
+    console.log(data);
     const InputData = new FormData();
     InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);
     InputData.append('email', data.email);
     InputData.append('mobile', data.contact);
     InputData.append('designation', data.designation);
-    InputData.append('role_id', role);
+    InputData.append('role_id', data.role);
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
 
@@ -243,10 +226,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                 name="user_name"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={userData?.username}
+                    defaultValue={value}
                     label="User Name"
                     onChange={onChange}
                     placeholder="John Doe"
@@ -261,12 +244,12 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                 name="email"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
                     type="email"
                     label="Email"
-                    defaultValue={userData?.institution_users?.email}
+                    defaultValue={value}
                     onChange={onChange}
                     error={Boolean(errors.email)}
                     placeholder="johndoe@email.com"
@@ -280,11 +263,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                 name="contact"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
                     type="number"
-                    defaultValue={userData?.institution_users?.mobile}
+                    defaultValue={value}
                     label="Contact"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
@@ -300,10 +283,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                 name="designation"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={userData?.institution_users?.designation}
+                    defaultValue={value}
                     label="Designation"
                     onChange={onChange}
                     placeholder="Business Development Executive"
@@ -323,14 +306,12 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                   <TextField
                     select
                     fullWidth
-                    defaultValue="Select Role"
-                    SelectProps={{
-                      value: role,
-                      displayEmpty: true,
-                      onChange: (e) => handleRoleChange(e)
+                    defaultValue={userData?.role_groups?.role?.id}
+                    onChange={(e) => {
+                      setValue('role', e.target.value);
                     }}
                   >
-                    <MenuItem value="">Select Role</MenuItem>
+                    {/* <MenuItem value="">Select Role</MenuItem> */}
                     {groups?.map((group, index) => (
                       <MenuItem key={index} value={group?.role?.id}>
                         {group?.role?.name}
