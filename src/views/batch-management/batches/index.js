@@ -300,7 +300,8 @@ const Batch = () => {
                       icon: <Icon icon="tabler:eye" fontSize={20} />,
                       menuItemProps: {
                         component: Link,
-                        to: `view`
+                        to: `view`,
+                        state:{id:item.batch_id}
                       }
                     },
                     {
@@ -343,7 +344,8 @@ const Batch = () => {
               <Icon fontSize="1.25rem" icon="tabler:book" />
 
               <Typography sx={{ ml: 1 }} variant="h5">
-                {item?.batch?.batch_name}
+                {/* {item?.batch?.course_name} */}
+                {item?.batch?.institute_course?.institute_course_branch?.course_name}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
@@ -366,16 +368,16 @@ const Batch = () => {
               <Icon fontSize="1.25rem" icon="tabler:users" />
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                  50
+                  {item?.students?.length}
                 </Typography>
                 <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Students</Typography>
               </Box>
               <Icon fontSize="1.25rem" icon="tabler:clock" />
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                  3
+                  {item.totalDays}
                 </Typography>
-                <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Months</Typography>
+                <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Days</Typography>
               </Box>
             </Box>
 
