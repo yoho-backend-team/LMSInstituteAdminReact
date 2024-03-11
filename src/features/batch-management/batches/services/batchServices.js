@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/batch-management/institute-batches`;
 
-export const getAllBatches = async (selectedBranchId) => {
+export const getAllBatches = async (data) => {
   try {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -127,6 +127,28 @@ export const updateBatch = async (data) => {
 
     if (response.data.status) {
       console.log(response);
+      return { success: true, message: 'Batch updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update batch' };
+    }
+  } catch (error) {
+    console.error('Error in updateBatch:', error);
+    throw error;
+  }
+};
+
+
+export const updateBatchStatus = async (data) => {
+  try {
+    const response = await axios.post(`${BATCH_API_ENDPOINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
       return { success: true, message: 'Batch updated successfully' };
     } else {
       return { success: false, message: 'Failed to update batch' };

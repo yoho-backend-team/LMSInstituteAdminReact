@@ -113,6 +113,7 @@ export const deleteCourseCategory = async (courseCategoryId) => {
       params: { id: courseCategoryId }
     });
 
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'CourseCategory deleted successfully' };
     } else {

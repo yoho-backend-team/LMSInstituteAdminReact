@@ -5,9 +5,8 @@ import OptionsMenu from 'components/option-menu';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
 import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
-import { setGroups } from 'features/user-management/groups-page/redux/groupSlice';
 import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
-import { deleteGroup, searchGroups, updateStatus } from 'features/user-management/groups-page/services/groupService';
+import { deleteGroup, updateStatus } from 'features/user-management/groups-page/services/groupService';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,7 +26,10 @@ const GroupManagement = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllGroups(selectedBranchId));
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllGroups(data));
   }, [dispatch, selectedBranchId]);
 
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
@@ -68,14 +70,10 @@ const GroupManagement = () => {
   const handleSearch = async (value) => {
     try {
       setSearchQuery(value);
-      const result = await searchGroups(value);
-
-      if (result.success) {
-        console.log('Search results:', result.data);
-        dispatch(setGroups(result.data));
-      } else {
-        console.log(result.message);
-      }
+      const data = {
+        search: value
+      };
+      dispatch(getAllGroups(data));
     } catch (error) {
       console.log(error);
     }

@@ -12,7 +12,7 @@ export const getAllGroups = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
