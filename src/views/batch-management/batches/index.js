@@ -301,7 +301,7 @@ const Batch = () => {
                       menuItemProps: {
                         component: Link,
                         to: `view`,
-                        state:{id:item?.batch?.batch_id}
+                        state: { id: item?.batch?.batch_id }
                       }
                     },
                     {
@@ -423,7 +423,12 @@ const Batch = () => {
               </Grid>
 
               {/* BatchEditModal  Modal */}
-              <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+              <BatchEditModal
+                open={isEditModalOpen}
+                handleEditClose={handleEditClose}
+                setBatchRefetch={setBatchRefetch}
+                batches={batches}
+              />
 
               {/* Status Change Modal */}
               <StatusChangeDialog

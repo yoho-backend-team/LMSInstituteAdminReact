@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 // ** React Imports
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState ,useCallback} from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -25,7 +25,7 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object().shape({
-  batchName: yup.string().required('Batch Name is required'),
+  batch_name: yup.string().required('Batch Name is required'),
   startDate: yup.date().required('Start Date is required'),
   endDate: yup.date().required('End Date is required'),
 
@@ -53,7 +53,7 @@ const names = [
   'Kelly Snyder'
 ];
 
-const BatchEditModal = ({ open, handleEditClose }) => {
+const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => {
   // ** States
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -62,20 +62,15 @@ const BatchEditModal = ({ open, handleEditClose }) => {
 
   console.log(setSelectedStudents);
 
-  const defaultValues = {
-    startDate: null,
-    endDate: null,
-    students: [],
-    batchName: ''
-  };
-
   const {
-    handleSubmit,
+    reset,
     control,
-    formState: { errors },
-    reset
+    setValue,
+    handleSubmit,
+    formState: { errors }
   } = useForm({
-    defaultValues,
+    mode: 'onChange',
+
     resolver: yupResolver(validationSchema)
   });
 
@@ -84,29 +79,58 @@ const BatchEditModal = ({ open, handleEditClose }) => {
     reset();
   };
 
-  const onSubmit = async (data) => {
-    const inputData = {
-      batchName: data.batchName,
-      startDate: data.startDate,
-      endDate: data.endDate,
+  // const onSubmit = async (data) => {
+  //   const inputData = {
+  //     batch_name: data?.data?.batch_name,
+  //     startDate: data.startDate,
+  //     endDate: data.endDate,
 
-      students: data.students
-    };
-    const result = await updateBatch(inputData);
+  //     students: data.students
+  //   };
+  //   const result = await updateBatch(inputData);
 
-    if (result.success) {
-      toast.success(result.message);
-    } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
-      // toast.error(result.message);
-    }
-  };
+  //   if (result.success) {
+  //     toast.success(result.message);
+  //   } else {
+  //     let errorMessage = '';
+  //     Object.values(result.message).forEach((errors) => {
+  //       errors.forEach((error) => {
+  //         errorMessage += `${error}\n`; // Concatenate errors with newline
+  //       });
+  //     });
+  //     toast.error(errorMessage.trim());
+  //     // toast.error(result.message);
+  //   }
+  //   [batches, setBatchRefetch];
+  // };
+
+
+
+
+    // Form submission handler
+    const onSubmit = useCallback(
+      async (data) => {
+        // const inputData = new FormData();
+        inputData.append('batch_name', batches?.batch?.batch_name);
+        // inputData.append('logo', selectedImage);
+        inputData.append('category_name', data?.batch_name);
+  
+        try {
+          const result = await updateBatch(inputData);
+          if (result.success) {
+            setBatchRefetch((state) => !state);
+            toast.success(result.message);
+          } else {
+            toast.error(result.message);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      [batches, setBatchRefetch]
+      );
+
+
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -150,20 +174,24 @@ const BatchEditModal = ({ open, handleEditClose }) => {
                   <Grid container spacing={5}>
                     <Grid item xs={12} sm={12}>
                       <Controller
-                        name="batchName"
+                        name="batch_name"
                         control={control}
-                        render={({ field }) => (
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
                           <CustomTextField
-                            {...field}
                             fullWidth
+                            value={value}
+                            defaultValue={batches?.batch?.batch_name}
                             label="Batch Name"
+                            onChange={onChange}
                             placeholder="carterLeonard"
-                            error={Boolean(errors.batchName)}
-                            helperText={errors.batchName?.message}
+                            error={Boolean(errors.batch_name)}
+                            helperText={errors.batch_name?.message}
                           />
                         )}
                       />
                     </Grid>
+
                     <Grid item xs={12} sm={6}>
                       <DatePicker
                         selected={startDate}
