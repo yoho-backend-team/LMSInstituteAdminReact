@@ -8,9 +8,9 @@ import { gridSpacing } from 'store/constant';
 const GroupSkeleton = () => (
   <Grid container spacing={2}>
     <Grid item xs={12} sm={12}>
-      <Card sx={{mt:2.75}}>
+      <Card sx={{mt:2.75,px:1,ml:3}}>
         <CardContent>
-          <Grid container spacing={gridSpacing}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
                 <Grid item xs zeroMinWidth>
