@@ -64,7 +64,7 @@ export const addGroup = async (data) => {
     if (response.data.status) {
       return { success: true, message: 'Group created successfully' };
     } else {
-      return { success: false, message: 'Failed to create group' };
+      return { success: false, message: response?.data?.message };
     }
   } catch (error) {
     console.error('Error in addGroup:', error);
