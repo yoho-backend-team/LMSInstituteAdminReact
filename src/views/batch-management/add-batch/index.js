@@ -1,6 +1,6 @@
 // material-ui
 import { Button, Grid, Typography } from '@mui/material';
-import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
+// import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
 import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
@@ -374,13 +374,13 @@ const AddBatchPage = () => {
           </Card>
         </DatePickerWrapper>
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Typography variant="h4">Students List</Typography>
         <Typography sx={{ color: 'text.secondary' }}>Check, remove student</Typography>
-      </Grid>
-      <Grid item xs={12}>
+      </Grid> */}
+      {/* <Grid item xs={12}>
         <StudentTableList />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
