@@ -1,5 +1,5 @@
 import { Grid, TextField } from '@mui/material';
-import Box from '@mui/material/Box';
+// import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import { useDispatch } from 'react-redux';
@@ -31,30 +31,18 @@ const TableHeader = (props) => {
   );
 
   return (
-    <Box
-      sx={{
-        py: 2,
-        px: 3,
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}
-    >
-      <Grid></Grid>
-      <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-        <Grid item sm={6} xs={12}></Grid>
-        <Grid item sm={4} xs={12}>
-          <TextField value={searchValue} fullWidth placeholder="Search User" onChange={(e) => handleSearch(e)} />
-        </Grid>
-        <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-          <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
-            <Icon fontSize="1.125rem" icon="tabler:plus" />
-            Add User
-          </Button>
-        </Grid>
+    <Grid container spacing={2} sx={{ alignItems: 'center', mt: 2 }}>
+      <Grid item sm={6} xs={12}></Grid>
+      <Grid item sm={4} xs={12}>
+        <TextField value={searchValue} fullWidth placeholder="Search User" onChange={(e) => handleSearch(e)} />
       </Grid>
-    </Box>
+      <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+        <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Icon fontSize="1.125rem" icon="tabler:plus" />
+          Add User
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

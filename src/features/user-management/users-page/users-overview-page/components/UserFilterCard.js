@@ -10,8 +10,9 @@ import { getAllUsers } from 'features/user-management/users-page/redux/userThunk
 import { useDispatch } from 'react-redux';
 import { useCallback, useState } from 'react';
 // import { FilterUsersByStatus } from 'features/user-management/users-page/services/userServices';
+import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
 
-const UserFilterCard = ({ selectedBranchId, groups }) => {
+const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) => {
   const [role, setRole] = useState('');
 
   const [filterstatusValue, setFilterStatusValue] = useState('');
@@ -21,7 +22,7 @@ const UserFilterCard = ({ selectedBranchId, groups }) => {
     async (e) => {
       try {
         setRole(e.target.value);
-        const data = { role: e.target.value, branch_id: selectedBranchId };
+        const data = { role_id: e.target.value, branch_id: selectedBranchId };
         dispatch(getAllUsers(data));
       } catch (error) {
         console.log(error);
@@ -39,7 +40,7 @@ const UserFilterCard = ({ selectedBranchId, groups }) => {
   return (
     <>
       <Card>
-        <CardHeader title="Search Filters" />
+        <CardHeader title="Admin Users" />
         <CardContent>
           <Grid container spacing={2}>
             <Grid item sm={6} xs={12}>
@@ -76,6 +77,7 @@ const UserFilterCard = ({ selectedBranchId, groups }) => {
               </TextField>
             </Grid>
           </Grid>
+          <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggle} selectedBranchId={selectedBranchId} />
         </CardContent>
       </Card>
     </>

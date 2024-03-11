@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, Typography, TextField, MenuItem } from '@mui/material';
+import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, Typography, TextField, MenuItem, Tooltip } from '@mui/material';
 import Header from 'components/Header';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
 import OptionsMenu from 'components/option-menu';
@@ -94,7 +94,9 @@ const GroupManagement = () => {
                 }}
               >
                 {item?.users?.map((user, index) => (
-                  <Avatar key={index} alt={item?.name} src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${user?.name}`} />
+                  <Tooltip key={index} title={user?.name}>
+                    <Avatar alt={item?.name} src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${user?.name}`} />
+                  </Tooltip>
                 ))}
               </AvatarGroup>
             </Box>

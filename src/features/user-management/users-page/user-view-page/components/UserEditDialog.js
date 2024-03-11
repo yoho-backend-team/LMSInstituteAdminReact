@@ -42,7 +42,7 @@ const schema = yup.object().shape({
   // role: yup.string().required()
 });
 
-const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
+const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => {
   const defaultValues = {
     full_name: '',
     user_name: '',
@@ -82,6 +82,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     setValue('role', Number(''));
     handleEditClose();
     reset();
+    setSelectedImage(null);
   };
 
   const image = require('assets/images/avatar/1.png');
@@ -135,7 +136,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     }
   };
 
-  console.log(groups);
+  console.log(selectedImage);
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -153,6 +154,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
 
     if (result.success) {
       toast.success(result.message);
+      setRefetch((state) => !state);
+      handleEditClose();
     } else {
       toast.error(result.message);
     }
@@ -187,7 +190,18 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ImgStyled src={imgSrc} alt="Profile Pic" />
+                {!selectedImage && (
+                  <ImgStyled
+                    src={
+                      userData?.institution_users?.image
+                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`
+                        : imgSrc
+                    }
+                    alt="Profile Pic"
+                  />
+                )}
+
+                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload New Image

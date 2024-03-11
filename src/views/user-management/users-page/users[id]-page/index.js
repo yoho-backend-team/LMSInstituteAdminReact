@@ -15,19 +15,19 @@ const UserView = () => {
 
   const [userId, setUserId] = useState(location?.state?.id);
   const [loading, setLoading] = useState(false);
+  const [refetch, setRefetch] = useState(false);
   const [userData, setUserData] = useState([]);
-
 
   useEffect(() => {
     getUserData(userId);
-  }, [userId]);
+  }, [userId,refetch]);
 
   const getUserData = async (id) => {
     try {
       const data = {
         id: id
       };
-      setLoading(false);
+      setLoading(true);
       const result = await getUserById(data);
       if (result.success) {
         console.log('User:', result.data);
@@ -51,7 +51,7 @@ const UserView = () => {
           ) : (
             <Grid container spacing={3}>
               <Grid item xs={12} md={5} lg={4}>
-                <UserViewLeft id={userId} userData={userData}  />
+                <UserViewLeft id={userId} userData={userData} setRefetch={setRefetch} />
               </Grid>
               <Grid item xs={12} md={7} lg={8}>
                 <UserViewRight id={userId} userData={userData} />

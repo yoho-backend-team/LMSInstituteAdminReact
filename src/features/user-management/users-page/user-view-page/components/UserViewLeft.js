@@ -23,7 +23,7 @@ import { getInitials } from 'utils/get-initials';
 import UserEditDialog from './UserEditDialog';
 // import { MenuItem, TextField } from '@mui/material';
 
-const UserViewLeft = ({ userData, id }) => {
+const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
     1: 'success',
     pending: 'warning',
@@ -42,9 +42,9 @@ const UserViewLeft = ({ userData, id }) => {
       <Grid item xs={12}>
         <Card>
           <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {userData?.image ? (
+            {userData?.institution_users?.image ? (
               <CustomAvatar
-                src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${userData?.image}`}
+                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`}
                 variant="rounded"
                 alt={userData?.name}
                 sx={{ width: 100, height: 100, mb: 4 }}
@@ -61,8 +61,8 @@ const UserViewLeft = ({ userData, id }) => {
               rounded
               skin="light"
               size="small"
-              label={userData?.institution_users?.designation}
-              // color={'success'}
+              label={userData?.role_groups?.role?.name}
+              color={'warning'}
               sx={{ textTransform: 'capitalize' }}
             />
           </CardContent>
@@ -82,22 +82,22 @@ const UserViewLeft = ({ userData, id }) => {
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.email}</Typography>
               </Box>
+              <Box sx={{ display: 'flex', mb: 3 }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Designation:</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.designation}</Typography>
+              </Box>
               <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
                 <CustomChip
                   rounded
                   skin="light"
                   size="small"
-                  label={userData.status == '1' ? 'Active' : 'InActive'}
-                  color={statusColors[userData.status]}
+                  label={userData.is_active == '1' ? 'Active' : 'InActive'}
+                  color={statusColors[userData.is_active]}
                   sx={{
                     textTransform: 'capitalize'
                   }}
                 />
-              </Box>
-              <Box sx={{ display: 'flex', mb: 3 }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{userData?.role_groups?.role?.name}</Typography>
               </Box>
 
               <Box sx={{ display: 'flex' }}>
@@ -113,7 +113,7 @@ const UserViewLeft = ({ userData, id }) => {
             </Button>
           </CardActions>
         </Card>
-        <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} />
+        <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
       </Grid>
     </Grid>
   );

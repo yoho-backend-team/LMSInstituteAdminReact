@@ -26,8 +26,13 @@ const userStatusObj = {
 };
 
 const renderClient = (row) => {
-  if (row?.profile_image) {
-    return <CustomAvatar src={row?.profile_image} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.institution_users?.image) {
+    return (
+      <CustomAvatar
+        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.institution_users?.image}`}
+        sx={{ mr: 2.5, width: 38, height: 38 }}
+      />
+    );
   } else {
     return (
       <CustomAvatar
