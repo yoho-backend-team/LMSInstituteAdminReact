@@ -28,8 +28,8 @@ const EcommerceStatistics = ({ batchData }) => {
                       Course Name
                     </Typography>
                     <Typography variant="h4" sx={{ mt: 1 }}>
-                      {/* {batchData?.institute_course?.institute_course_branch?.course_name} */}
-                      fsdg
+                      {batchData?.institute_course?.institute_course_branch?.course_name}
+                      {/* fsdg */}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -45,7 +45,7 @@ const EcommerceStatistics = ({ batchData }) => {
                       Duration
                     </Typography>
                     <Typography variant="h4" sx={{ mt: 1 }}>
-                      1:24:36
+                      {batchData?.institute_course?.institute_course_branch?.course_duration}
                     </Typography>
                   </Grid>
 
