@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/class`;
 
-export const getAllLiveClasses = async (selectedBranchId) => {
+export const getAllLiveClasses = async (data) => {
   try {
-    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/get-all`, {
+    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/get-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
@@ -79,9 +79,9 @@ export const deleteLiveClass = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
-console.log(response)
+    console.log(response)
     if (response.data.status) {
       return { success: true, message: 'LiveClass deleted successfully' };
     } else {

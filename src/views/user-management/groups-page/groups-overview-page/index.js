@@ -61,7 +61,7 @@ const GroupManagement = () => {
     const response = await updateStatus(data);
     if (response.success) {
       toast.success(response.message);
-      dispatch(getAllGroups(selectedBranchId));
+      dispatch(getAllGroups({ branch_id: selectedBranchId }));
     } else {
       toast.error(response.message);
     }
@@ -95,7 +95,7 @@ const GroupManagement = () => {
               >
                 {item?.users?.map((user, index) => (
                   <Tooltip key={index} title={user?.name}>
-                    <Avatar alt={item?.name} src={`${process.env.REACT_APP_PUBLIC_API_URL}/public/${user?.name}`} />
+                    <Avatar alt={item?.name} src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${user?.institution_users?.image}`} />
                   </Tooltip>
                 ))}
               </AvatarGroup>

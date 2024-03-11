@@ -120,7 +120,7 @@ const GroupEditDialog = () => {
 
       if (result.success) {
         setPermissions(result.data);
-        setPermissionCount(result.permissionsCount);
+        setPermissionCount(result.permissions);
       } else {
         console.log(result.message);
       }
@@ -158,6 +158,7 @@ const GroupEditDialog = () => {
   const handleSelectAllCheckbox = () => {
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
+      setIsIndeterminateCheckbox(false);
     } else {
       const arr = [];
       permissionCount?.forEach((permission) => {
