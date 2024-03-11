@@ -48,7 +48,7 @@ const schema = yup.object().shape({
 const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
   const [role, setRole] = useState('');
   const defaultValues = {
-    full_name: '',
+    full_name: userData ? userData?.name : '',
     user_name: '',
     email: '',
     contact: Number(''),
@@ -66,6 +66,17 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (userData) {
+      setValue('full_name', userData.name || '');
+      setValue('user_name', userData.username || '');
+      setValue('email', userData?.institution_users?.email || '');
+      setValue('contact', userData?.institution_users?.mobile || '');
+      setValue('designation', userData?.institution_users?.designation || '');
+      setValue('role', userData?.role_groups?.role.id || '');
+    }
+  }, [userData, setValue]);
   const handleClose = () => {
     setValue('full_name', '');
     setValue('user_name', '');
@@ -214,10 +225,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData }) => {
                 name="full_name"
                 control={control}
                 rules={{ required: true }}
-                render={({ field: { onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={userData?.name}
+                    value={value}
                     label="Full Name"
                     onChange={onChange}
                     placeholder="John Doe"
