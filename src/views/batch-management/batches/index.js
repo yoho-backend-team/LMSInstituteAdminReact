@@ -87,7 +87,7 @@ const Batch = () => {
   console.log(batches);
 
   useEffect(() => {
-    dispatch(getAllBatches(selectedBranchId));
+    dispatch(getAllBatches({branch_id:selectedBranchId}));
   }, [dispatch, selectedBranchId, batchRefetch]);
 
   // const groups = [

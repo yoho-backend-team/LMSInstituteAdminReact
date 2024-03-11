@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/batch-management/institute-batches`;
 
-export const getAllBatches = async (selectedBranchId) => {
+export const getAllBatches = async (data) => {
   try {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful

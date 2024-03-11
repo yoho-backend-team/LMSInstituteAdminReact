@@ -22,6 +22,7 @@ import { getAllCourses } from 'features/course-management/courses-page/redux/cou
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 
 import { getAllBatches } from '../redux/batchThunks';
+// import { searchBatches } from '../services/batchServices';
 // import { getAllActiveBatchesByCourse } from '../services/batchServices';
 
 /* eslint-disable */
@@ -66,13 +67,16 @@ const InvoiceList = (props) => {
 
   // ** State
   const [dates, setDates] = useState([]);
-  const [statusValue, setStatusValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [startDateRange, setStartDateRange] = useState(null);
   const [searchValue, setSearchValue] = useState('');
 
+  const [filterstatusValue, setFilterStatusValue] = useState('');
+
   const handleFilterByStatus = (e) => {
-    setStatusValue(e.target.value);
+    setFilterStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllBatches(data));
   };
 
   const handleOnChangeRange = (dates) => {
@@ -92,7 +96,7 @@ const InvoiceList = (props) => {
       branch_id: selectedBranchId
     };
     dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId, ]);
+  }, [dispatch, selectedBranchId]);
 
   // Callback function to handle search
   const handleSearch = useCallback(
@@ -114,9 +118,16 @@ const InvoiceList = (props) => {
             <CardContent>
               <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Grid item xs={12} sm={3}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="0">Active</MenuItem>
-                    <MenuItem value="1">Deactive</MenuItem>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Status"
+                    defaultValue={''}
+                    SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
+                  >
+                    <MenuItem value="">Select Status</MenuItem>
+                    <MenuItem value="1">Active</MenuItem>
+                    <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
