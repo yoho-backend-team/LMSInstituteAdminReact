@@ -70,7 +70,7 @@ const GroupViewPage = () => {
           {screen?.permissions?.map((permission, index) => (
             <TableCell key={index}>
               <FormControlLabel
-                label={permission?.name}
+                label={permission}
                 sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
                 control={<Checkbox size="small" id={`${index}-write`} checked={true} />}
               />

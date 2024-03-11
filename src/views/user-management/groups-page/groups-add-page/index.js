@@ -108,20 +108,13 @@ const GroupAddPage = () => {
   };
 
   useEffect(() => {
-    if (selectedCheckbox.length > 0 && selectedCheckbox.length < permissions.length * 8) {
-      setIsIndeterminateCheckbox(true);
-    } else {
-      setIsIndeterminateCheckbox(false);
-    }
-  }, [selectedCheckbox, permissions]);
-
-  useEffect(() => {
     getPermissions();
   }, []);
 
   const handleSelectAllCheckbox = () => {
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
+      setIsIndeterminateCheckbox(false);
     } else {
       permissions.forEach((screens) => {
         screens?.screens?.forEach((permissions) => {
@@ -130,6 +123,7 @@ const GroupAddPage = () => {
           });
         });
       });
+      setIsIndeterminateCheckbox(true);
     }
   };
 

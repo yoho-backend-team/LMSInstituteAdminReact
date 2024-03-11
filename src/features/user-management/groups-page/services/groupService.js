@@ -64,7 +64,7 @@ export const addGroup = async (data) => {
     if (response.data.status) {
       return { success: true, message: 'Group created successfully' };
     } else {
-      return { success: false, message: 'Failed to create group' };
+      return { success: false, message: response?.data?.message };
     }
   } catch (error) {
     console.error('Error in addGroup:', error);
@@ -96,7 +96,7 @@ export const deleteGroup = async (groupId) => {
 };
 export const changeStatusGroup = async (data) => {
   try {
-    const response = await axios.put(`${GROUP_API_ENDPOINT}/status-update`, {
+    const response = await axios.put(`${GROUP_API_ENDPOINT}/status`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -117,7 +117,7 @@ export const changeStatusGroup = async (data) => {
 
 export const updateStatus = async (data) => {
   try {
-    const response = await axios.put(`${GROUP_API_ENDPOINT}/status-update`, data, {
+    const response = await axios.put(`${GROUP_API_ENDPOINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -191,7 +191,7 @@ export const getAllPermissions = async () => {
     console.log(response);
 
     if (response.data) {
-      return { success: true, data: response?.data?.data, permissionsCount: response.data?.data?.length };
+      return { success: true, data: response?.data?.data, permissions: response.data?.permissions};
     } else {
       return { success: false, message: 'Failed to fetch permissions' };
     }
