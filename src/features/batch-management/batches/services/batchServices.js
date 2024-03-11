@@ -41,7 +41,9 @@ export const getBatchDetails = async (data) => {
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return response;
+      return{
+        success:true ,data:response?.data?.data
+      } 
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch batch. Status: ${response.status}`);
