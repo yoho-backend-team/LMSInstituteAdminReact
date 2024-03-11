@@ -2,24 +2,27 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useState, useCallback } from 'react';
 // ** Third Party Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Box } from '@mui/material';
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 // ** Custom Components Imports
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
+
+import { getAllBatches } from '../redux/batchThunks';
+// import { getAllActiveBatchesByCourse } from '../services/batchServices';
 
 /* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
@@ -57,18 +60,16 @@ const names = [
   'Kelly Snyder'
 ];
 
-const courses = [
-  { course_id: '1', course_name: 'Course 1' },
-  { course_id: '2', course_name: 'Course 2' },
-  { course_id: '3', course_name: 'Course 3' }
-];
 /* eslint-enable */
 const InvoiceList = (props) => {
+  const { selectedBranchId } = props;
+
   // ** State
   const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [startDateRange, setStartDateRange] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -83,8 +84,26 @@ const InvoiceList = (props) => {
     setEndDateRange(end);
   };
 
-  const [selectedCourses, setSelectedCourses] = useState([]);
-  const { value, handleFilter } = props;
+  const dispatch = useDispatch();
+  const courses = useSelector(selectCourses);
+
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllCourses(data));
+  }, [dispatch, selectedBranchId, ]);
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllBatches({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
 
   return (
     <DatePickerWrapper>
@@ -116,74 +135,30 @@ const InvoiceList = (props) => {
                     }
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     multiple
-                    disableCloseOnSelect
-                    id="select-multiple-chip"
-                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
-                    getOptionLabel={(option) => option.course_name}
-                    value={selectedCourses}
+                    fullWidth
+                    options={courses}
+                    filterSelectedOptions
                     onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-                      } else {
-                        setSelectedCourses(newValue);
-                      }
+                      const courseId = newValue.map((item) => item.course_id);
+                      const data = {
+                        course_id: courseId,
+                        branch_id: selectedBranchId
+                      };
+                      dispatch(getAllBatches(data));
                     }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Courses"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.course_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.course_id}
-                            label={option.course_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedCourses(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                    // defaultValue={[top100Films[13]]}
+                    id="autocomplete-multiple-outlined"
+                    getOptionLabel={(option) => option.course_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    value={value}
-                    sx={{
-                      width: '100%'
-                    }}
-                    placeholder="Search Batch"
-                    onChange={(e) => handleFilter(e.target.value)}
-                  />
+                  <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
                 </Grid>
 
                 <Grid item xs={12} sm={3} sx={{ mt: 1 }}>

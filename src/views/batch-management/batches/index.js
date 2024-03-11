@@ -12,14 +12,19 @@ import { styled } from '@mui/material/styles';
 import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
+
 import OptionsMenu from 'components/option-menu';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
 import { selectBatches, selectLoading } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { useDispatch, useSelector } from 'react-redux';
-
+// import { updateBatch } from 'features/batch-management/batches/services/batchServices';
+import { updateBatchStatus } from 'features/batch-management/batches/services/batchServices';
 // ** Toast Import
+import toast from 'react-hot-toast';
+
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
   borderRadius: 5,
@@ -33,11 +38,27 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 const Batch = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
 
-  const handleStatusValue = (event) => {
-    setStatusValue(event.target.value);
-    setDeleteDialogOpen(true);
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateBatchStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setBatchRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+    console.log(response);
+  };
+
+  const handleStatusValue = (event, batch) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(batch);
   };
 
   const handleEditClose = () => {
@@ -61,12 +82,13 @@ const Batch = () => {
   const batches = useSelector(selectBatches);
   const batchLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [batchRefetch, setBatchRefetch] = useState(false);
 
   console.log(batches);
 
   useEffect(() => {
     dispatch(getAllBatches(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId, batchRefetch]);
 
   // const groups = [
   //   {
@@ -355,12 +377,12 @@ const Batch = () => {
                 <TextField
                   size="small"
                   select
-                  fullWidth
+                  width={100}
                   label="Status"
-                  SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+                  SelectProps={{ value: item.batch?.is_active, onChange: (e) => handleStatusValue(e, item.batch) }}
                 >
-                  <MenuItem value="Active">Active</MenuItem>
-                  <MenuItem value="Deactive">Deactive</MenuItem>
+                  <MenuItem value="1">Active</MenuItem>
+                  <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
               </Box>
             </Box>
@@ -374,11 +396,13 @@ const Batch = () => {
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
+          <Grid>
+            <BatchFilterCard selectedBranchId={selectedBranchId} setBatchRefetch={setBatchRefetch} />
+          </Grid>
           {batchLoading ? (
             <BatchSkeleton />
           ) : (
             <Grid>
-              <BatchFilterCard />
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {renderCards()}
               </Grid>
@@ -387,7 +411,20 @@ const Batch = () => {
                   <Pagination count={10} color="primary" />
                 </div>
               </Grid>
+
+              {/* BatchEditModal  Modal */}
+
               <BatchEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+              {/* Status Change Modal */}
+              <StatusChangeDialog
+                open={statusChangeDialogOpen}
+                setOpen={setStatusChangeDialogOpen}
+                description="Are you sure you want to Change Status"
+                title="Status"
+                handleSubmit={handleStatusChangeApi}
+              />
+              {/* DeleteDialog  Modal */}
+
               <DeleteDialog
                 open={isDeleteDialogOpen}
                 setOpen={setDeleteDialogOpen}

@@ -136,3 +136,25 @@ export const updateBatch = async (data) => {
     throw error;
   }
 };
+
+
+export const updateBatchStatus = async (data) => {
+  try {
+    const response = await axios.post(`${BATCH_API_ENDPOINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Batch updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update batch' };
+    }
+  } catch (error) {
+    console.error('Error in updateBatch:', error);
+    throw error;
+  }
+};

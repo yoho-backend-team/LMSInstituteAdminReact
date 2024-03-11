@@ -1,7 +1,6 @@
 import { Skeleton } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 // import CardActions from '@mui/material/CardActions';
 import Box from '@mui/material/Box';
@@ -10,40 +9,6 @@ import Typography from '@mui/material/Typography';
 const BatchSkeleton = () => {
   return (
     <>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title={<Skeleton height={25} width={200} />} />
-            <CardContent>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={3}>
-                  <Skeleton variant="rounded" height={50} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                  <Skeleton variant="rounded" height={50} animation="wave" />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Skeleton variant="rounded" height={50} animation="wave" />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={2} sx={{ mt: 1 }}>
-        <Grid item xs={12}>
-          <Grid container justifyContent={'space-between'}>
-            <Grid item xs={12} sm={3}>
-              <Skeleton variant="rectangular" height={50} width={450} animation="wave" />
-            </Grid>
-            <Grid container display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
-              <Skeleton variant="rectangular" height={40} width={150} animation="wave" />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-
       <Grid container spacing={2} sx={{ mt: 1 }}>
         {[...Array(6)].map((_, index) => (
           <Grid item xs={12} sm={6} lg={4} key={index}>
