@@ -1,4 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
@@ -18,6 +20,8 @@ import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateLiveClass } from '../../services/liveClassServices';
+import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import toast from 'react-hot-toast';
 
 /* eslint-disable */
 const DateCustomInput = forwardRef((props, ref) => {
@@ -55,7 +59,6 @@ const schema = yup.object().shape({
   startTime: yup.date().nullable().required('Start Time field is required'),
   endTime: yup.date().nullable().required('End Time field is required'),
   instructor: yup.string().required('Instructor field is required'),
-  coordinates: yup.string().required('coordinates field is required'),
   videoUrl: yup.string().required('VideoUrl field is required')
 });
 
@@ -70,13 +73,11 @@ const defaultValues = {
 };
 
 const handleCopyLink = () => {
-  const link = 'Your generated link';
-  navigator.clipboard.writeText(link).then(() => {
-    console.log('Link copied to clipboard');
-  });
+  const link = 'your Generated Link';
+  navigator.clipboard.writeText(link).then(() => {});
 };
 
-const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
+const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -86,17 +87,10 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
   const [selectedTeachers, setSelectedTeachers] = useState([]);
+  const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
+  const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  const instructors = [
-    { instructor_id: '1', instructor_name: 'Instructor 1' },
-    { instructor_id: '2', instructor_name: 'Instructor 2' },
-    { instructor_id: '3', instructor_name: 'Instructor 3' }
-  ];
-  const coordinates = [
-    { coordinate_id: '1', coordinate_name: 'Coordinate 1' },
-    { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
-    { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
-  ];
   const handleStartTimeChange = (time) => {
     setStartTime(time);
   };
@@ -104,7 +98,6 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
   const handleEndTimeChange = (time) => {
     setEndTime(time);
   };
-
 
   const handleOnChangeRange = (dates) => {
     const [start] = dates;
@@ -117,7 +110,6 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
   const handleChange = (event) => {
     setPersonName(event.target.value);
   };
-
 
   const handleTeacherChange = (event) => {
     setSelectedTeachers(event.target.value);
@@ -134,6 +126,19 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    if (selectedClass) {
+      setValue('course', selectedClass?.class_name || '');
+      setValue('videoUrl', selectedClass?.class_link || '');
+      setValue('classDate', selectedClass?.classDate || '');
+      setValue('startTime', selectedClass?.startTime || '');
+      setValue('endTime', selectedClass?.endTime || '');
+      setValue('instructor', selectedClass?.instructor || '');
+      setValue('coordinates', selectedClass?.coordinates || '');
+    }
+  }, [selectedClass, setValue]);
+  // console.log(selectedClass, 'selectedClasses');
 
   const handleClose = () => {
     setValue('course', '');
@@ -162,12 +167,13 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
   const onSubmit = async (data) => {
     console.log(data);
     const dummyData = {
-      selectcourse: data.selectcourse,
+      // selectcourse: data.selectcourse,
       course: data.course,
       batch: data.batch,
       classDate: data.classDate,
       startTime: data.startTime,
       endTime: data.endTime,
+      coordinates: data.coordinates,
       instructor: data.instructor,
       videoUrl: data.videoUrl
     };
@@ -185,14 +191,27 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
     }
   };
 
-  const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
+  const getActiveTeachingStaffs = async (selectedBranchId) => {
+    const data = { type: 'teaching', branch_id: selectedBranchId };
+    const result = await getAllActiveStaffs(data);
 
-  const courses = [
-    { id: 1, name: 'Course 1' },
-    { id: 2, name: 'Course 2' },
-    { id: 3, name: 'Course 3' }
-  ];
+    console.log('active teaching staffs : ', result.data);
+    setActiveTeachingStaff(result.data.data);
+  };
+  const getActiveNonTeachingStaffs = async (selectedBranchId) => {
+    const data = { type: 'non_teaching', branch_id: selectedBranchId };
+    const result = await getAllActiveStaffs(data);
 
+    console.log('active non teaching staffs : ', result.data);
+    setActiveNonTeachingStaff(result.data.data);
+  };
+
+  useEffect(() => {
+    getActiveTeachingStaffs(selectedBranchId);
+    getActiveNonTeachingStaffs(selectedBranchId);
+  }, [selectedBranchId]);
+
+  // console.log(handleSubmit(onSubmit),'submitted')
   return (
     <Dialog
       open={open}
@@ -231,11 +250,11 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
-                      defaultValue={modalData?.class_name}
-                      value={value}
-                      label="Course Name"
+                      defaultValue={value}
+                      // value={value}
+                      label="Class Name"
                       onChange={onChange}
-                      placeholder="John Doe"
+                      placeholder="React FullStack"
                       error={Boolean(errors.course)}
                       {...(errors.course && { helperText: errors.course.message })}
                     />
@@ -324,14 +343,19 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ instructor_id: 'selectAll', instructor_name: 'Select All' }, ...instructors]}
-                  getOptionLabel={(option) => option.instructor_name}
+                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.staff_name}
                   value={selectedInstructors}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.instructor_id === 'selectAll')) {
-                      setSelectedInstructors(instructors.filter((option) => option.instructor_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                      setValue(
+                        'instructor',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedInstructors(newValue);
+                      setValue('instructor', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -353,19 +377,20 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.instructor_name}
+                      {option.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.instructor_id}
-                          label={option.instructor_name}
+                          key={option.staff_id}
+                          label={option.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
+                            setValue('instructor', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -373,7 +398,7 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.instructor_id === value.instructor_id}
+                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
@@ -384,14 +409,19 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ coordinate_id: 'selectAll', coordinate_name: 'Select All' }, ...coordinates]}
-                  getOptionLabel={(option) => option.coordinate_name}
+                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
+                  getOptionLabel={(option) => option?.coordinate_name}
                   value={selectedCoordinates}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.coordinate_id === 'selectAll')) {
-                      setSelectedCoordinates(coordinates.filter((option) => option.coordinate_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option?.staff_id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option?.staff_id !== 'selectAll'));
+                      setValue(
+                        'coordinator',
+                        activeTeachingStaff.filter((option) => option?.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedCoordinates(newValue);
+                      setValue('coordinator', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -413,19 +443,20 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.coordinate_name}
+                      {option?.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.coordinate_id}
-                          label={option.coordinate_name}
+                          key={option?.staff_id}
+                          label={option?.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
+                            setValue('coordinator', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -433,7 +464,7 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.coordinate_id === value.coordinate_id}
+                  isOptionEqualToValue={(option, value) => option?.staff_id === value?.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
@@ -442,8 +473,7 @@ const LiveClassEditModal = ({ open, handleEditClose, modalData}) => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  value="Your generated link"
-                  readOnly
+                  defaultValue={selectedClass?.class_link}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

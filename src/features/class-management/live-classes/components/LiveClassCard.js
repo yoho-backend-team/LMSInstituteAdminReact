@@ -27,7 +27,7 @@ const LiveClassCard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedBranchDeleteId, setSelectedBranchDeleteId] = useState(null);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedclass,setSelectedClass]=useState({})
+  const [selectedClass,setSelectedClass]=useState('')
 
   const dispatch = useDispatch();
   console.log(liveClasses);
@@ -65,6 +65,7 @@ const LiveClassCard = () => {
 
   const handleCopyLink = (index) => {
     console.log(`Link copied for card at index ${index}`);
+    toast.success('Link copied to clipboard')
   };
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
@@ -84,6 +85,7 @@ const LiveClassCard = () => {
     // Return the formatted time string
     return hours + ':' + minutes + ' ' + meridiem;
   }
+  console.log(selectedClass,'selectedClassxx')
 
   // function calculateDuration(startTimestamp, endTimestamp) {
   //   // Convert the timestamps to Date objects
@@ -108,7 +110,6 @@ const LiveClassCard = () => {
   //   return hours + ' HR ' + minutes + ' MIN';
 
   // }
-
   return (
     <>
       <Grid container spacing={2}>
@@ -199,7 +200,7 @@ const LiveClassCard = () => {
             </Card>
           </Grid>
         ))}
-        <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} class={selectedclass} />
+        <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} selectedClass={selectedClass} />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}
