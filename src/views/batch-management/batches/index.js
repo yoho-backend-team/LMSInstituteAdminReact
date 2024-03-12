@@ -45,6 +45,9 @@ const Batch = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [batchRefetch, setBatchRefetch] = useState(false);
 
+
+  const [selectedBatch, setSelectedBatch] =  useState(null);
+
   console.log(batches);
 
   useEffect(() => {
@@ -309,6 +312,7 @@ const Batch = () => {
                       icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
                       menuItemProps: {
                         onClick: () => {
+                          setSelectedBatch(item)
                           handleEdit();
                         }
                       }
@@ -427,7 +431,7 @@ const Batch = () => {
                 open={isEditModalOpen}
                 handleEditClose={handleEditClose}
                 setBatchRefetch={setBatchRefetch}
-                batches={batches}
+                selectedBatch ={selectedBatch}
               />
 
               {/* Status Change Modal */}
