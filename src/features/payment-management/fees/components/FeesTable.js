@@ -85,6 +85,9 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [refetch, setRefetch] = useState(false);
+  console.log(setRefetch);
+  console.log(selectedRows);
 
   const dispatch = useDispatch();
   const StudentFees = useSelector(selectStudentFees);
@@ -94,7 +97,7 @@ const FeesTable = () => {
 
   useEffect(() => {
     dispatch(getAllStudentFees(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -266,7 +269,7 @@ const FeesTable = () => {
                     value={selectedbatch}
                     onChange={(e, newValue) => {
                       if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
-                        setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
+                        setSelectedbatch(batch?.filter((option) => option.batch_id !== 'selectAll'));
                       } else {
                         setSelectedbatch(newValue);
                       }
@@ -424,7 +427,7 @@ const FeesTable = () => {
       </Grid>
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <FeesEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} selectedRows={selectedRows} handleRowClick={handleRowClick} />
+      <FeesEditDrawer setRefetch={setRefetch} open={editUserOpen} toggle={toggleEditUserDrawer} selectedRows={selectedRows} handleRowClick={handleRowClick} />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
