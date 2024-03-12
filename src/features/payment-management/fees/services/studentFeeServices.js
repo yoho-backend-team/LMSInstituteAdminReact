@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const STUDENT_FEE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/student-fees`;
 
-export const getAllStudentFees = async (selectedBranchId) => {
+export const getAllStudentFees = async (data) => {
   try {
     const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -93,13 +93,13 @@ export const deleteStudentFee = async (StudentFeeId) => {
 
 export const updateStudentFee = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_FEE_API_ENDPOINT}/update`, data, {
+    const response = await axios.post(`${STUDENT_FEE_API_ENDPOINT}/update`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+console.log(response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'StudentFee updated successfully' };

@@ -17,20 +17,18 @@ import DatePicker from 'react-datepicker';
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
-import Checkbox from '@mui/material/Checkbox';
 import DeleteDialog from 'components/modal/DeleteModel';
-import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 // ** Styled Components
+import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
+import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -86,6 +84,24 @@ const FeesTable = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
+  console.log(convertDateFormat(startDateRange));
+  console.log(endDateRange);
+
   console.log(setRefetch);
   console.log(selectedRows);
 
@@ -96,8 +112,12 @@ const FeesTable = () => {
   console.log(StudentFees);
 
   useEffect(() => {
-    dispatch(getAllStudentFees(selectedBranchId));
-  }, [dispatch, selectedBranchId,refetch]);
+    dispatch(
+      getAllStudentFees({
+        branch_id: selectedBranchId
+      })
+    );
+  }, [dispatch, selectedBranchId, refetch]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -117,25 +137,26 @@ const FeesTable = () => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
       setDates(dates);
+      const data = {
+        start_date: convertDateFormat(start),
+        end_date: convertDateFormat(end),
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllStudentFees(data));
     }
     setStartDateRange(start);
     setEndDateRange(end);
   };
 
-  const students = [
-    { students_id: '1', students_name: 'students 1' },
-    { students_id: '2', students_name: 'students 2' },
-    { students_id: '3', students_name: 'students 3' }
-  ];
+  useEffect(() => {
+    dispatch(
+      getAllBatches({
+        branch_id: selectedBranchId
+      })
+    );
+  }, [dispatch, selectedBranchId]);
 
-  const [selectedstudents, setSelectedstudents] = useState([]);
-  const [selectedbatch, setSelectedbatch] = useState([]);
-
-  const batch = [
-    { batch_id: '1', batch_name: 'batch 1' },
-    { batch_id: '2', batch_name: 'batch 2' },
-    { batch_id: '3', batch_name: 'batch 3' }
-  ];
+  const batch = useSelector(selectBatches);
 
   const defaultColumns = [
     {
@@ -259,127 +280,29 @@ const FeesTable = () => {
             <CardHeader title="Fee" />
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <Autocomplete
-                    disableCloseOnSelect
-                    multiple
-                    id="select-multiple-chip"
-                    options={[{ batch_id: 'selectAll', batch_name: 'Select All' }, ...batch]}
-                    getOptionLabel={(option) => option.batch_name}
-                    value={selectedbatch}
+                    // multiple
+                    fullWidth
+                    options={batch}
+                    filterSelectedOptions
                     onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
-                        setSelectedbatch(batch?.filter((option) => option.batch_id !== 'selectAll'));
-                      } else {
-                        setSelectedbatch(newValue);
-                      }
+                      // const batchId = newValue.map((item) => item.batch.batch_id);
+                      console.log(newValue);
+                      const data = {
+                        batch_id: newValue.batch.batch_id,
+                        branch_id: selectedBranchId
+                      };
+                      dispatch(getAllStudentFees(data));
                     }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Batch"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.batch_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.batch_id}
-                            label={option.batch_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedbatch(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.batch_id === value.batch_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                    // defaultValue={[top100Films[13]]}
+                    id="autocomplete-multiple-outlined"
+                    getOptionLabel={(option) => option.batch.batch_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    disableCloseOnSelect
-                    multiple
-                    id="select-multiple-chip"
-                    options={[{ students_id: 'selectAll', students_name: 'Select All' }, ...students]}
-                    getOptionLabel={(option) => option.students_name}
-                    value={selectedstudents}
-                    onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.students_id === 'selectAll')) {
-                        setSelectedstudents(students.filter((option) => option.students_id !== 'selectAll'));
-                      } else {
-                        setSelectedstudents(newValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Students"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.students_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.students_id}
-                            label={option.students_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedstudents(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.students_id === value.students_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <DatePicker
                     isClearable
                     selectsRange
@@ -427,7 +350,13 @@ const FeesTable = () => {
       </Grid>
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <FeesEditDrawer setRefetch={setRefetch} open={editUserOpen} toggle={toggleEditUserDrawer} selectedRows={selectedRows} handleRowClick={handleRowClick} />
+      <FeesEditDrawer
+        setRefetch={setRefetch}
+        open={editUserOpen}
+        toggle={toggleEditUserDrawer}
+        selectedRows={selectedRows}
+        handleRowClick={handleRowClick}
+      />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
