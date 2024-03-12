@@ -21,16 +21,16 @@ import NotificationTableHeader from './NotificationTableHeader';
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row.avatar.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.avatar?.length) {
+    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
         skin="light"
-        color={row.avatarColor || 'primary'}
+        color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row.name || 'John Doe')}
+        {getInitials(row?.first_name || 'John Doe')}
       </Avatar>
     );
   }
@@ -86,11 +86,11 @@ const NotificationBodySection = ({ studentNotifications }) => {
       flex: 0.1,
       minWidth: 120,
       headerName: 'Id',
-      field: 'employee_id',
+      field: 'student_id',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
+            {row?.notification_id}
           </Typography>
         );
       }
@@ -117,8 +117,8 @@ const NotificationBodySection = ({ studentNotifications }) => {
     {
       flex: 0.25,
       minWidth: 280,
-      field: 'fullName',
       headerName: 'User',
+      field: 'first_name',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -134,10 +134,10 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
+                {row?.students?.first_name}  {row?.students?.last_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.email}
+                {row?.students?.email}
               </Typography>
             </Box>
           </Box>
@@ -147,26 +147,26 @@ const NotificationBodySection = ({ studentNotifications }) => {
     {
       flex: 0.15,
       minWidth: 190,
-      field: 'designation',
+      field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.balance}
+            {row?.institute_notifications?.title}
           </Typography>
         );
       }
     },
     {
       flex: 0.15,
-      field: 'role',
+      field: 'body',
       minWidth: 170,
       headerName: 'Description',
-      renderCell: ({ row }) => {
+      renderCell: ({ row}) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.total}
+              {row?.institute_notifications?.body}
             </Typography>
           </Box>
         );
