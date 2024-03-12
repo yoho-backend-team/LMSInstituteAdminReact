@@ -112,9 +112,11 @@ const FeesTable = () => {
   console.log(StudentFees);
 
   useEffect(() => {
-    dispatch(getAllStudentFees({
-      branch_id: selectedBranchId
-  }));
+    dispatch(
+      getAllStudentFees({
+        branch_id: selectedBranchId
+      })
+    );
   }, [dispatch, selectedBranchId, refetch]);
 
   const toggleEditUserDrawer = () => {
@@ -135,6 +137,12 @@ const FeesTable = () => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
       setDates(dates);
+      const data = {
+        start_date: convertDateFormat(start),
+        end_date: convertDateFormat(end),
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllStudentFees(data));
     }
     setStartDateRange(start);
     setEndDateRange(end);
@@ -285,7 +293,7 @@ const FeesTable = () => {
                         batch_id: newValue.batch.batch_id,
                         branch_id: selectedBranchId
                       };
-                      dispatch(getAllBatches(data));
+                      dispatch(getAllStudentFees(data));
                     }}
                     // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"

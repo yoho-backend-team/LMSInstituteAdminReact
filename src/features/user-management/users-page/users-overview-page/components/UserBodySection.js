@@ -246,20 +246,18 @@ const UserBodySection = ({ users, setUserRefetch }) => {
         onPaginationModelChange={setPaginationModel}
       />
 
-      {/* <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleChangeStatus} /> */}
-
       <StatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
         description="Are you sure you want to Change Status"
-        title="Status"
+        title="Change Status"
         handleSubmit={handleStatusChangeApi}
       />
 
       <UserDeleteModel
         open={userDeleteModelOpen}
         setOpen={setUserDeleteModelOpen}
-        description="Are you sure you want to delete this item?"
+        description="Are you sure you want to delete this user?"
         title="Delete"
         handleSubmit={handleUserDelete}
       />
