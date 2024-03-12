@@ -3,7 +3,7 @@ import StaffNotificationHeaderCard from './StaffNotificationHeaderCard';
 
 const StaffNotificationHeaderSection = () => {
   return (
-    <Grid container spacing={2}>
+    <>
       <Grid container spacing={2}>
         <Grid item xs={12} md={4} sm={6}>
           <StaffNotificationHeaderCard title={'Total Notification'} stats={55} icon={'tabler:user'} />
@@ -15,7 +15,7 @@ const StaffNotificationHeaderSection = () => {
           <StaffNotificationHeaderCard title={'Unseen Notification'} stats={5} avatarColor={'success'} icon={'tabler:user-check'} />
         </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Button,
@@ -21,91 +22,77 @@ import {
 } from '@mui/material';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import { getAllPermissions, getPermissionsByRole, updateGroup } from 'features/user-management/groups-page/services/groupService';
-import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
-const schema = yup.object().shape({
-  roleName: yup
-    .string()
-    .min(3, (obj) => showErrors('Role Name', obj.value.length, obj.min))
-    .required()
-});
+import { editGroupYupSchema } from 'features/user-management/groups-page/utills';
 
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
 
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
+
+
 
 const GroupEditDialog = () => {
+  // State variables
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
   const [permissionCount, setPermissionCount] = useState('');
+  const [loading, setLoading] = useState(true);
+
   const location = useLocation();
   const navigate = useNavigate();
   const groupId = location?.state?.id;
   const groupName = location?.state?.name;
-  const [loading, setLoading] = useState(true);
 
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
+  // Default form values
   const defaultValues = {
     roleName: groupName
   };
 
+  // Form methods using react-hook-form
   const {
     reset,
     control,
-    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(editGroupYupSchema)
   });
 
-  const handleClose = () => {
-    setValue('roleName', '');
+  // Function to handle form closure
+  const handleClose = useCallback(() => {
+    navigate(-1);
     reset();
-  };
-  const onSubmit = async (data) => {
-    try {
-      const inputData = {
-        id: groupId,
-        name: data.roleName,
-        permission_id: selectedCheckbox
-      };
-      const result = await updateGroup(inputData);
+  }, [reset]);
 
-      if (result.success) {
-        navigate(-1);
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
+  // Function to handle form submission
+  const onSubmit = useCallback(
+    async (data) => {
+      try {
+        const inputData = {
+          id: groupId,
+          name: data.roleName,
+          permission_id: selectedCheckbox
+        };
+        const result = await updateGroup(inputData);
+
+        if (result.success) {
+          navigate(-1);
+          toast.success(result.message);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    [groupId, navigate, selectedCheckbox]
+  );
 
+  // Fetch permissions and permission count on component mount
   useEffect(() => {
     getPermissions();
   }, []);
@@ -114,10 +101,10 @@ const GroupEditDialog = () => {
     getAllPermissionsIdByRole(groupId);
   }, [groupId]);
 
-  const getPermissions = async () => {
+  // Fetch all permissions
+  const getPermissions = useCallback(async () => {
     try {
       const result = await getAllPermissions();
-
       if (result.success) {
         setPermissions(result.data);
         setPermissionCount(result.permissions);
@@ -127,35 +114,42 @@ const GroupEditDialog = () => {
     } catch (error) {
       console.log(error);
     }
-  };
-  const getAllPermissionsIdByRole = async (id) => {
+  }, []);
+
+  // Fetch permissions by role id
+  const getAllPermissionsIdByRole = useCallback(async (id) => {
     try {
+      setLoading(true);
       const result = await getPermissionsByRole(id);
 
       if (result.success) {
         result.data?.forEach((permission) => {
           togglePermission(permission);
         });
+        setLoading(false);
       } else {
         console.log(result.message);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const togglePermission = (id) => {
-    const arr = selectedCheckbox;
-    if (selectedCheckbox?.includes(id)) {
-      arr.splice(arr.indexOf(id), 1);
-      setSelectedCheckbox([...arr]);
-    } else {
-      arr.push(id);
-      setSelectedCheckbox([...arr]);
-    }
-  };
+  // Function to toggle permission selection
+  const togglePermission = useCallback((id) => {
+    setSelectedCheckbox((prevState) => {
+      if (prevState.includes(id)) {
+        return prevState.filter((item) => item !== id);
+      } else {
+        return [...prevState, id];
+      }
+    });
+  }, []);
 
-  const handleSelectAllCheckbox = () => {
+  // Function to handle select all checkbox
+  const handleSelectAllCheckbox = useCallback(() => {
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
@@ -167,9 +161,10 @@ const GroupEditDialog = () => {
       setSelectedCheckbox(arr);
       setIsIndeterminateCheckbox(true);
     }
-  };
+  }, [isIndeterminateCheckbox, permissionCount]);
 
-  const renderPermissions = () => {
+  // Render permissions table rows
+  const renderPermissions = useMemo(() => {
     return permissions?.map((module) =>
       module?.screens?.map((screen, index) => (
         <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
@@ -191,7 +186,6 @@ const GroupEditDialog = () => {
                   <Checkbox
                     size="small"
                     id={`${index}-write`}
-                    // disabled/
                     onChange={() => togglePermission(permission?.id)}
                     checked={selectedCheckbox?.includes(permission?.id)}
                   />
@@ -202,14 +196,14 @@ const GroupEditDialog = () => {
         </TableRow>
       ))
     );
-  };
+  }, [permissions, selectedCheckbox, togglePermission]);
 
   return (
     <>
       {loading ? (
         <AddGroupSkeleton />
       ) : (
-        <Card fullWidth maxWidth="md" scroll="body">
+        <Card>
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardHeader
               sx={{
@@ -285,7 +279,7 @@ const GroupEditDialog = () => {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>{renderPermissions()}</TableBody>
+                  <TableBody>{renderPermissions}</TableBody>
                 </Table>
               </TableContainer>
             </CardContent>
@@ -301,7 +295,7 @@ const GroupEditDialog = () => {
                 <Button type="submit" variant="contained">
                   Submit
                 </Button>
-                <Button variant="tonal" color="error" onClick={handleClose}>
+                <Button sx={{ ml: 3 }} variant="tonal" color="error" onClick={handleClose}>
                   Cancel
                 </Button>
               </Box>

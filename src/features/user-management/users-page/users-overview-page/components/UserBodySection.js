@@ -269,8 +269,7 @@ const UserBodySection = ({ users, setUserRefetch }) => {
 
 UserBodySection.propTypes = {
   groups: PropTypes.array.isRequired,
-  users: PropTypes.array.isRequired,
-  setLoading: PropTypes.func.isRequired
+  users: PropTypes.array.isRequired
 };
 
 export default UserBodySection;

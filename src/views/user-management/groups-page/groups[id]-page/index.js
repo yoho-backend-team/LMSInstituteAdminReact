@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Typography,
   Table,
@@ -17,76 +17,72 @@ import { getAllPermissionsByRoleId } from 'features/user-management/groups-page/
 import { useLocation } from 'react-router';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
-
 const GroupViewPage = () => {
   const [permissions, setPermissions] = useState([]);
   const location = useLocation();
   const group = location?.state?.group;
   const [loading, setLoading] = useState(true);
 
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
+  // Effect to fetch permissions when the group ID changes
   useEffect(() => {
-    getPermissions(group?.id);
+    if (group?.id) {
+      getPermissions(group.id);
+    }
   }, [group?.id]);
-  console.log(group);
 
+  // Function to fetch permissions by group ID
   const getPermissions = async (id) => {
     try {
+      setLoading(true);
       const result = await getAllPermissionsByRoleId(id);
       if (result.success) {
         setPermissions(result.data);
-        console.log(result.data);
       } else {
         console.log(result.message);
       }
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
-  const renderPermissions = () => {
-    return permissions?.map((module) =>
-      module?.screens?.map((screen, index) => (
-        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-          <TableCell
-            sx={{
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              fontSize: (theme) => theme.typography.h6.fontSize
-            }}
-          >
-            {screen?.screen_name}
-          </TableCell>
-          {screen?.permissions?.map((permission, index) => (
-            <TableCell key={index}>
-              <FormControlLabel
-                label={permission}
-                sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
-                control={<Checkbox size="small" id={`${index}-write`} checked={true} />}
-              />
+  // Memoized rendering of permissions to prevent unnecessary re-renders
+  const renderPermissions = useMemo(() => {
+    return permissions?.map((module, moduleIndex) => (
+      <React.Fragment key={moduleIndex}>
+        {module?.screens?.map((screen, screenIndex) => (
+          <TableRow key={screenIndex} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
+            <TableCell
+              sx={{
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                fontSize: (theme) => theme.typography.h6.fontSize
+              }}
+            >
+              {screen?.screen_name}
             </TableCell>
-          ))}
-        </TableRow>
-      ))
-    );
-  };
+            {screen?.permissions?.map((permission, permissionIndex) => (
+              <TableCell key={permissionIndex}>
+                <FormControlLabel
+                  label={permission}
+                  sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                  control={<Checkbox size="small" id={`${permissionIndex}-write`} checked={true} />}
+                />
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </React.Fragment>
+    ));
+  }, [permissions]);
 
   return (
     <>
       {loading ? (
         <AddGroupSkeleton />
       ) : (
-        <Card fullWidth maxWidth="md" scroll="body">
+        <Card>
           <CardHeader
             component="div"
             sx={{
@@ -108,7 +104,7 @@ const GroupViewPage = () => {
             <TableContainer>
               <Table size="small">
                 <TableHead></TableHead>
-                <TableBody>{renderPermissions()}</TableBody>
+                <TableBody>{renderPermissions}</TableBody>
               </Table>
             </TableContainer>
           </CardContent>

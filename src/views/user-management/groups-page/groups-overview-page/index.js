@@ -137,7 +137,6 @@ const GroupManagement = () => {
                   },
                   {
                     text: 'Delete',
-
                     menuItemProps: {
                       onClick: () => {
                         setSelectedDeleteGroupId(item?.role?.id);
@@ -215,7 +214,9 @@ const GroupManagement = () => {
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
         description="Are you sure you want to Change Status"
-        title="Status"
+        title="Change Status"
+        successDescription="Group status changed successfully"
+        failureDescription="Failed to change group status"
         handleSubmit={handleStatusChangeApi}
       />
     </Grid>

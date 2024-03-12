@@ -11,29 +11,27 @@ import { DataGrid } from '@mui/x-data-grid';
 // ** React Router Import
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
-import ImageIcon from '@mui/icons-material/Image';
+// import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import StaffNotificationAddDrawer from './StaffNotificationAddDrawer';
 import StaffNotificationTableHeader from './StaffNotificationTableHeader';
-import { getAllStaffNotifications } from '../redux/staffNotificationThunks';
-import { selectStaffNotifications } from '../redux/staffNotificationSelectors';
-import { useEffect } from 'react';
+
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row.avatar.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.avatar?.length) {
+    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
         skin="light"
-        color={row.avatarColor || 'primary'}
+        color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row.name || 'John Doe')}
+        {getInitials(row?.staff?.image || 'John Doe')}
       </Avatar>
     );
   }
@@ -51,7 +49,10 @@ const RowOptions = ({ id }) => {
   );
 };
 
-const StaffNotificationBodySection = () => {
+const StaffNotificationBodySection = ({staffNotifications}) => {
+
+  console.log(staffNotifications);
+
   // ** State
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -59,12 +60,7 @@ const StaffNotificationBodySection = () => {
 
   // ** Hooks
   const dispatch = useDispatch();
-  const staffNotifications = useSelector(selectStaffNotifications);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(staffNotifications);
-  useEffect(() => {
-    dispatch(getAllStaffNotifications(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const handleFilter = useCallback(
@@ -90,39 +86,39 @@ const StaffNotificationBodySection = () => {
       flex: 0.1,
       minWidth: 120,
       headerName: 'Id',
-      field: 'employee_id',
+      field: 'staff_id',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
+            {row?.notification_id}
           </Typography>
         );
       }
     },
 
-    {
-      flex: 0.1,
-      minWidth: 120,
-      field: 'image',
-      headerName: 'Image',
-      renderCell: ({ row }) => {
-        return (
-          <Avatar sx={{ width: 38, height: 38 }}>
-            {row?.profile_image ? (
-              <img src={row.profile_image} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <ImageIcon />
-            )}
-          </Avatar>
-        );
-      }
-    },
+    // {
+    //   flex: 0.1,
+    //   minWidth: 120,
+    //   field: 'image',
+    //   headerName: 'Image',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <Avatar sx={{ width: 38, height: 38 }}>
+    //         {row?.profile_image ? (
+    //           <img src={row.profile_image} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    //         ) : (
+    //           <ImageIcon />
+    //         )}
+    //       </Avatar>
+    //     );
+    //   }
+    // },
 
     {
       flex: 0.25,
       minWidth: 280,
-      field: 'fullName',
       headerName: 'User',
+      field: 'first_name',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -138,10 +134,10 @@ const StaffNotificationBodySection = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
+                {row?.staff?.staff_name}  
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.email}
+                {row?.staff?.email}
               </Typography>
             </Box>
           </Box>
@@ -151,26 +147,26 @@ const StaffNotificationBodySection = () => {
     {
       flex: 0.15,
       minWidth: 190,
-      field: 'designation',
+      field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.balance}
+            {row?.institute_notifications?.title}
           </Typography>
         );
       }
     },
     {
       flex: 0.15,
-      field: 'role',
+      field: 'body',
       minWidth: 170,
       headerName: 'Description',
-      renderCell: ({ row }) => {
+      renderCell: ({ row}) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.total}
+              {row?.institute_notifications?.body}
             </Typography>
           </Box>
         );
@@ -187,63 +183,63 @@ const StaffNotificationBodySection = () => {
     }
   ];
 
-  const notification = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
+  // const notification = [
+  //   {
+  //     id: 1,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 100,
+  //     issuedDate: '2025-01-01',
+  //     balance: 55,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 2,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'arunbalaji.com',
+  //     total: 200,
+  //     issuedDate: '2000-01-01',
+  //     balance: 50,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 3,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 300,
+  //     issuedDate: '25-01-01',
+  //     balance: 40,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 4,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 40,
+  //     issuedDate: '202-01-01',
+  //     balance: 30,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 5,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 50,
+  //     issuedDate: '20-01-01',
+  //     balance: 0,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   }
+  // ];
 
   return (
     <Card>
@@ -253,7 +249,7 @@ const StaffNotificationBodySection = () => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={notification}
+        rows={staffNotifications}
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[10, 25, 50]}
