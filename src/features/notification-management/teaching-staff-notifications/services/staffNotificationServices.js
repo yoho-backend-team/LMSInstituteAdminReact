@@ -1,7 +1,7 @@
 // StaffNotificationservice.js
 import axios from 'axios';
 
-const STAFF_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/teaching-staff-notifications`;
+const STAFF_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/staff-notifications`;
 
 export const getAllStaffNotifications = async (data) => {
   try {
