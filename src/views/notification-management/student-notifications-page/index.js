@@ -43,6 +43,7 @@ const StudentNotification = () => {
         ) : (
           <Grid item xs={12}>
             <NotificationBodySection
+              studentNotifications={studentNotifications}
               // setLoading={setLoading}
               setStudentNotificationRefetch={setStudentNotificationRefetch}
               selectedBranchId={selectedBranchId}
