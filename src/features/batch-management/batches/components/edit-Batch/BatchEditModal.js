@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 // ** React Imports
-import { forwardRef, useState ,useCallback} from 'react';
+import { forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -53,7 +53,7 @@ const names = [
   'Kelly Snyder'
 ];
 
-const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => {
+const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch }) => {
   // ** States
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -74,63 +74,74 @@ const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => 
     resolver: yupResolver(validationSchema)
   });
 
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (selectedBatch) {
+      setValue('batch_name', selectedBatch.batch.batch_name || '');
+      setValue('start_date', selectedBatch.batch.start_date || '');
+      setValue('end_date', selectedBatch.batch.end_date || '');
+      setValue('students', selectedBatch.batch.students || '');
+    }
+  }, [selectedBatch, setValue]);
   const handleClose = () => {
+    setValue('batch_name', '');
+    setValue('start_date', '');
+    setValue('end_date', '');
+    setValue('students', '');
     handleEditClose();
     reset();
   };
 
-  // const onSubmit = async (data) => {
-  //   const inputData = {
-  //     batch_name: data?.data?.batch_name,
-  //     startDate: data.startDate,
-  //     endDate: data.endDate,
+ 
 
-  //     students: data.students
-  //   };
-  //   const result = await updateBatch(inputData);
+  const onSubmit = async (data) => {
+    console.log(data);
 
-  //   if (result.success) {
-  //     toast.success(result.message);
-  //   } else {
-  //     let errorMessage = '';
-  //     Object.values(result.message).forEach((errors) => {
-  //       errors.forEach((error) => {
-  //         errorMessage += `${error}\n`; // Concatenate errors with newline
-  //       });
-  //     });
-  //     toast.error(errorMessage.trim());
-  //     // toast.error(result.message);
-  //   }
-  //   [batches, setBatchRefetch];
-  // };
+    const inputData = {
+      batch_name: data?.batch_name,
+      start_date: data?.start_date,
+      end_date: data?.end_date,
+      students: data?.students
+    };
+    const result = await updateBatch(inputData);
 
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
+    [batches, setBatchRefetch];
+  };
 
+  // Form submission handler
+  // const onSubmit = useCallback(
+  //   async (data) => {
+  //     // const inputData = new FormData();
+  //     inputData.append('batch_name', batches?.batch?.batch_name);
+  //     // inputData.append('logo', selectedImage);
+  //     inputData.append('category_name', data?.batch_name);
 
-
-    // Form submission handler
-    const onSubmit = useCallback(
-      async (data) => {
-        // const inputData = new FormData();
-        inputData.append('batch_name', batches?.batch?.batch_name);
-        // inputData.append('logo', selectedImage);
-        inputData.append('category_name', data?.batch_name);
-  
-        try {
-          const result = await updateBatch(inputData);
-          if (result.success) {
-            setBatchRefetch((state) => !state);
-            toast.success(result.message);
-          } else {
-            toast.error(result.message);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      [batches, setBatchRefetch]
-      );
-
-
+  //     try {
+  //       const result = await updateBatch(inputData);
+  //       if (result.success) {
+  //         setBatchRefetch((state) => !state);
+  //         toast.success(result.message);
+  //       } else {
+  //         toast.error(result.message);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   [batches, setBatchRefetch]
+  //   );
 
   const handleStartDateChange = (date) => {
     setStartDate(date);
@@ -180,8 +191,8 @@ const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => 
                         render={({ field: { value, onChange } }) => (
                           <CustomTextField
                             fullWidth
-                            value={value}
-                            defaultValue={batches?.batch?.batch_name}
+                            defaultValue={value}
+                            // defaultValue={selectedBatch?.batch?.batch_name}
                             label="Batch Name"
                             onChange={onChange}
                             placeholder="carterLeonard"
@@ -199,7 +210,12 @@ const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => 
                         showMonthDropdown
                         placeholderText="MM-DD-YYYY"
                         customInput={
-                          <CustomInput label="Start Date" error={Boolean(errors.startDate)} helperText={errors.startDate?.message} />
+                          <CustomInput
+                            label="Start Date"
+                            defaultValue={selectedBatch?.batch?.start_date}
+                            error={Boolean(errors.startDate)}
+                            helperText={errors.startDate?.message}
+                          />
                         }
                         id="form-layouts-separator-date"
                         onChange={handleStartDateChange}
@@ -208,10 +224,18 @@ const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => 
                     <Grid item xs={12} sm={6}>
                       <DatePicker
                         selected={endDate}
+                        defaultValue={''}
                         showYearDropdown
                         showMonthDropdown
                         placeholderText="MM-DD-YYYY"
-                        customInput={<CustomInput label="End Date" error={Boolean(errors.endDate)} helperText={errors.endDate?.message} />}
+                        customInput={
+                          <CustomInput
+                            label="End Date"
+                            defaultValue={''}
+                            error={Boolean(errors.endDate)}
+                            helperText={errors.endDate?.message}
+                          />
+                        }
                         id="form-layouts-separator-date"
                         onChange={handleEndDateChange}
                       />
@@ -221,9 +245,9 @@ const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => 
                       <Controller
                         name="students"
                         control={control}
-                        render={({ field }) => (
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
                           <Autocomplete
-                            {...field}
                             multiple
                             id="students-autocomplete"
                             options={names}
@@ -231,6 +255,8 @@ const BatchEditModal = ({ open, handleEditClose, batches, setBatchRefetch }) => 
                             renderInput={(params) => (
                               <CustomTextField
                                 {...params}
+                                value={value}
+                                onChange={onChange}
                                 label="Students"
                                 fullWidth
                                 error={Boolean(errors.students)}
