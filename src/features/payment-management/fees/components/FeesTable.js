@@ -34,6 +34,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectStudentFees } from '../redux/studentFeeSelectors';
 import { getAllStudentFees } from '../redux/studentFeeThunks';
+import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -74,7 +75,6 @@ const CustomInput = forwardRef((props, ref) => {
 const FeesTable = () => {
   // ** State
   const [dates, setDates] = useState([]);
-  const [value, setValue] = useState('');
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -124,10 +124,7 @@ const FeesTable = () => {
     console.log('Toggle drawer');
   };
 
-  // ** Hooks
-  const handleFilter = (val) => {
-    setValue(val);
-  };
+
 
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
@@ -272,12 +269,22 @@ const FeesTable = () => {
     }
   ];
 
+  const [loading, setLoading] = useState(true);
+  // Simulate loading delay with useEffect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <DatePickerWrapper>
+      <CardHeader title="Fee" />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Fee" />
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -329,22 +336,28 @@ const FeesTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
+          <FeesCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} />
+        </Grid>
+        <Grid item xs={12}>
           <Card>
-            <FeesCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-            <DataGrid
-              sx={{ p: 2 }}
-              autoHeight
-              pagination
-              rowHeight={62}
-              // rows={StudentFees}
-              rows={StudentFees}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
-            />
+            {loading ? (
+              <FeesTableSkeleton />
+            ) : (
+              <DataGrid
+                sx={{ p: 2 }}
+                autoHeight
+                pagination
+                rowHeight={62}
+                // rows={StudentFees}
+                rows={StudentFees}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+              />
+            )}
           </Card>
         </Grid>
       </Grid>
