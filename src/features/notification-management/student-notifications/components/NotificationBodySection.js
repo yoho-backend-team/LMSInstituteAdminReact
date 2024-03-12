@@ -11,7 +11,7 @@ import { DataGrid } from '@mui/x-data-grid';
 // ** React Router Import
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
-import ImageIcon from '@mui/icons-material/Image';
+// import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useDispatch } from 'react-redux';
@@ -48,8 +48,11 @@ const RowOptions = ({ id }) => {
   );
 };
 
-const NotificationBodySection = () => {
+const NotificationBodySection = ({ studentNotifications }) => {
+  
+  console.log(studentNotifications);
   // ** State
+
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -93,23 +96,23 @@ const NotificationBodySection = () => {
       }
     },
 
-    {
-      flex: 0.1,
-      minWidth: 120,
-      field: 'image',
-      headerName: 'Image',
-      renderCell: ({ row }) => {
-        return (
-          <Avatar sx={{ width: 38, height: 38 }}>
-            {row?.profile_image ? (
-              <img src={row.profile_image} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <ImageIcon />
-            )}
-          </Avatar>
-        );
-      }
-    },
+    // {
+    //   flex: 0.1,
+    //   minWidth: 120,
+    //   field: 'image',
+    //   headerName: 'Image',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <Avatar sx={{ width: 38, height: 38 }}>
+    //         {row?.profile_image ? (
+    //           <img src={row.profile_image} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    //         ) : (
+    //           <ImageIcon />
+    //         )}
+    //       </Avatar>
+    //     );
+    //   }
+    // },
 
     {
       flex: 0.25,
@@ -180,63 +183,63 @@ const NotificationBodySection = () => {
     }
   ];
 
-  const notification = [
-    {
-      id: 1,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 100,
-      issuedDate: '2025-01-01',
-      balance: 55,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 2,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'arunbalaji.com',
-      total: 200,
-      issuedDate: '2000-01-01',
-      balance: 50,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 3,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 300,
-      issuedDate: '25-01-01',
-      balance: 40,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 4,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 40,
-      issuedDate: '202-01-01',
-      balance: 30,
-      avatar: '',
-      avatarColor: 'primary'
-    },
-    {
-      id: 5,
-      invoiceStatus: 'Sent',
-      name: 'John Doe',
-      companyEmail: 'john.doe@example.com',
-      total: 50,
-      issuedDate: '20-01-01',
-      balance: 0,
-      avatar: '',
-      avatarColor: 'primary'
-    }
-  ];
+  // const notification = [
+  //   {
+  //     id: 1,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 100,
+  //     issuedDate: '2025-01-01',
+  //     balance: 55,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 2,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'arunbalaji.com',
+  //     total: 200,
+  //     issuedDate: '2000-01-01',
+  //     balance: 50,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 3,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 300,
+  //     issuedDate: '25-01-01',
+  //     balance: 40,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 4,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 40,
+  //     issuedDate: '202-01-01',
+  //     balance: 30,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   },
+  //   {
+  //     id: 5,
+  //     invoiceStatus: 'Sent',
+  //     name: 'John Doe',
+  //     companyEmail: 'john.doe@example.com',
+  //     total: 50,
+  //     issuedDate: '20-01-01',
+  //     balance: 0,
+  //     avatar: '',
+  //     avatarColor: 'primary'
+  //   }
+  // ];
 
   return (
     <Card>
@@ -246,7 +249,7 @@ const NotificationBodySection = () => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={notification}
+        rows={studentNotifications}
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[10, 25, 50]}
