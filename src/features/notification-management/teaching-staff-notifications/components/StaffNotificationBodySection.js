@@ -31,7 +31,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.first_name || 'John Doe')}
+        {getInitials(row?.staff?.image || 'John Doe')}
       </Avatar>
     );
   }
@@ -134,10 +134,10 @@ const StaffNotificationBodySection = ({staffNotifications}) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.staff?.first_name}  {row?.staff?.last_name}
+                {row?.staff?.staff_name}  
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.students?.email}
+                {row?.staff?.email}
               </Typography>
             </Box>
           </Box>
