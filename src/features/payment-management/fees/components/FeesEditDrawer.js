@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect, useState , forwardRef } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -12,12 +12,13 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
+import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFee } from '../services/studentFeeServices';
-import { useCallback } from 'react';
+import DatePicker from 'react-datepicker';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -27,11 +28,15 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  course: yup.string().required('Course is required'),
-  batch: yup.string().required('Batch is required'),
-  students: yup.array().required('Students is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+});
+
+const CustomInput = forwardRef(({ ...props }, ref) => {
+  // ** Props
+  const { label, readOnly } = props;
+
+  return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
 // const defaultValues = {
@@ -47,26 +52,22 @@ const schema = yup.object().shape({
 
 const FeesEditDrawer = (props) => {
   // ** Props
-  const { open, toggle, selectedRows,setRefetch } = props;
-  const [inputValue, setInputValue] = useState('');
+  const { open, toggle, selectedRows, setRefetch } = props;
   const image = require('assets/images/avatar/1.png');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-
-
+  const [imgSrc, setImgSrc] = useState(image);
+  const [selectedStatus, setSelectedStatus] = useState(null);
+  console.log(selectedStatus);
   console.log(selectedRows);
 
   const defaultValues = {
-    full_name: '',
-    user_name: '',
-    email: '',
-    contact: Number(''),
-    designation: '',
-    role: ''
+    transaction_id: '',
+    paid_amount: '',
+    selectedImage: ''
   };
 
   // console.log(defaultValues);
-
 
   const {
     reset,
@@ -80,39 +81,36 @@ const FeesEditDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-     // Set form values when selectedBranch changes
-     useEffect(() => {
-      if (selectedRows) {
-        setValue('logo', selectedRows.selectedImage || '');
-        setValue('batch', selectedRows.batch || '');
-        setValue('students', selectedRows?.students || '');
-        setValue('paymentId', selectedRows?.paymentId || '');
-        setValue('paidAmount', selectedRows?.paidAmount || '');
-      }
-    }, [selectedRows, setValue]);
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (selectedRows) {
+      setValue('logo', selectedRows.selectedImage || '');
+      setValue('paymentId', selectedRows?.transaction_id || '');
+      setValue('paidAmount', selectedRows?.paid_amount || '');
+      setValue('payment_date', new Date(selectedRows?.payment_date) || '');
+      
+    }
+  }, [selectedRows, setValue]);
 
   // Form submission handler
-  const onSubmit = useCallback(
-    async (data) => {
-      const inputData = new FormData();
-      inputData.append('student_id', student?.student_id);
-      inputData.append('logo', selectedImage);
-      inputData.append('batch', data.batch);
-      inputData.append('students', data.students);
-      inputData.append('paymentId', data.paymentId);
-      inputData.append('paidAmount', data.paidAmount);
+  const onSubmit = useCallback(async (data) => {
+    const inputData = new FormData();
+    inputData.append('logo', selectedImage);
+    inputData.append('paymentId', data.transaction_id);
+    inputData.append('paid_amount', data.paid_amount);
+    inputData.append('payment_date', data.payment_date);
+    inputData.append('id', selectedRows.id);
 
-      const result = await updateStudentFee(InputData);
+    const result = await updateStudentFee(inputData);
 
-      if (result.success) {
-        toast.success(result.message);
-        setRefetch((state) => !state);
-        handleEditClose();
-      } else {
-        toast.error(result.message);
-      }
-    },
-  );
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+      handleEditClose();
+    } else {
+      toast.error(result.message);
+    }
+  });
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -128,10 +126,10 @@ const FeesEditDrawer = (props) => {
     }
   }));
 
-  // Function to handle image input change
-  const handleInputImageChange = useCallback((file) => {
+  const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    console.log(setImgSrc);
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);
@@ -140,12 +138,18 @@ const FeesEditDrawer = (props) => {
         setInputValue(reader.result);
       }
     }
-  }, []);
+  };
+
+  console.log(selectedImage);
 
   const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
+    setSelectedImage(null);
     reset();
+    toggle();
+  };
+
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
   };
 
   return (
@@ -178,72 +182,38 @@ const FeesEditDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
-              <ImgStyled src={imgSrc} alt="Profile Pic" />
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
+              {!selectedImage && (
+                <ImgStyled
+                  src={
+                    selectedRows?.payment_proof ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.payment_proof}` : imgSrc
+                  }
+                  alt="Profile Pic"
+                />
+              )}
+
+              {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
               <div>
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                  Upload
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-payment">
+                  Upload New Image
                   <input
                     hidden
                     type="file"
                     value={inputValue}
                     accept="image/png, image/jpeg"
                     onChange={handleInputImageChange}
-                    id="account-settings-upload-image"
+                    id="account-settings-upload-payment"
                   />
                 </ButtonStyled>
               </div>
             </Box>
 
             <Grid item xs={12} sm={12}>
-              <Controller
-                name="batch"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    value={value}
-                    onChange={(event, newValue) => onChange(newValue)}
-                    options={['Batch 1', 'Batch 2']}
-                    renderInput={(params) => (
-                      <TextField
-                        sx={{ mb: 2 }}
-                        {...params}
-                        label="Select Batch"
-                        error={Boolean(errors.batch)}
-                        helperText={errors.batch?.message}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="students"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    multiple
-                    value={value}
-                    onChange={(event, newValue) => onChange(newValue)}
-                    options={['Student 1', 'Student 2']}
-                    renderInput={(params) => (
-                      <TextField
-                        sx={{ mb: 2 }}
-                        {...params}
-                        label="Select Students"
-                        error={Boolean(errors.students)}
-                        helperText={errors.students?.message}
-                      />
-                    )}
-                  />
-                )}
-              />
+              <TextField sx={{ mb: 2 }} defaultValue={"0"} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
+                <MenuItem value="0">Paid</MenuItem>
+                <MenuItem value="1">Refund</MenuItem>
+                <MenuItem value="2">Pending</MenuItem>
+              </TextField>
             </Grid>
 
             <Grid item xs={12} sm={12}>
@@ -251,16 +221,16 @@ const FeesEditDrawer = (props) => {
                 name="paymentId"
                 rules={{ required: true }}
                 control={control}
-                render={({ field: { onChange } }) => (
+                render={({ field: { onChange, value } }) => (
                   <TextField
                     // defaultValue={selectedRows? selectedRows?.total :5556}
-                    value={selectedRows ? selectedRows.total : ''}
+                    value={value}
                     sx={{ mb: 2 }}
                     fullWidth
                     // value={value}
                     onChange={onChange}
                     // label={selectedRows?.total}
-                    label="Payment Id"
+                    label="transaction Id"
                     type="number"
                     error={Boolean(errors.paymentId)}
                     helperText={errors.paymentId?.message}
@@ -274,11 +244,11 @@ const FeesEditDrawer = (props) => {
                 name="paidAmount"
                 rules={{ required: true }}
                 control={control}
-                render={({ field: { onChange } }) => (
+                render={({ field: { onChange, value } }) => (
                   <TextField
                     sx={{ mb: 2 }}
                     fullWidth
-                    value={selectedRows ? selectedRows.balance : ''}
+                    value={value}
                     onChange={onChange}
                     label="Paid Amount"
                     type="number"
@@ -287,6 +257,28 @@ const FeesEditDrawer = (props) => {
                   />
                 )}
               />
+            </Grid>
+
+            <Grid item xs={12} sm={12} sx={{ mb: 2 }}>
+              <Controller
+                name="payment_date"
+                control={control}
+                rules={{ required: 'Payment Date field is required' }}
+                render={({ field: {  onChange } }) => (
+                  <DatePicker
+                    // selected={value}
+                    id="basic-input"
+                    dateFormat={'yyyy-MM-dd'}
+                    className="full-width-datepicker"
+                    onChange={onChange}
+                    placeholderText="Click to select a date"
+                    customInput={<CustomInput label="Payment Date" />}
+                  />
+                )}
+              />
+              {errors.payment_date && (
+                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
+              )}
             </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
