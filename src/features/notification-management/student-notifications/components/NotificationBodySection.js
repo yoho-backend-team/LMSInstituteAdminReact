@@ -14,15 +14,10 @@ import { Link } from 'react-router-dom';
 import ImageIcon from '@mui/icons-material/Image';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-
+import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import NotificationAddDrawer from './NotificationAddDrawer';
 import NotificationTableHeader from './NotificationTableHeader';
-
-import { getAllStudentNotifications } from '../redux/studentNotificationThunks';
-import { selectStudentNotifications } from '../redux/studentNotificationSelectors';
 
 // ** renders client column
 const renderClient = (row) => {
@@ -59,17 +54,8 @@ const NotificationBodySection = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
 
-
-
   const dispatch = useDispatch();
-  const StudentNotifications = useSelector(selectStudentNotifications);
 
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(StudentNotifications);
-  useEffect(() => {
-    dispatch(getAllStudentNotifications(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
   // ** Hooks
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
@@ -91,7 +77,6 @@ const NotificationBodySection = () => {
     },
     [dispatch]
   );
-
 
   const columns = [
     {

@@ -21,25 +21,16 @@ const StudentNotification = () => {
 
   const [studentNotificationRefetch, setStudentNotificationRefetch] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-
   // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
     dispatch(getAllStudentNotifications(data));
-  }, [dispatch, selectedBranchId, studentNotificationRefetch, loading]);
+  }, [dispatch, selectedBranchId, studentNotificationRefetch]);
 
   console.log(studentNotifications);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  console.log(setStudentNotificationRefetch);
 
   return (
     <>
@@ -52,7 +43,7 @@ const StudentNotification = () => {
         ) : (
           <Grid item xs={12}>
             <NotificationBodySection
-              setLoading={setLoading}
+              // setLoading={setLoading}
               setStudentNotificationRefetch={setStudentNotificationRefetch}
               selectedBranchId={selectedBranchId}
             />
