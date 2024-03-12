@@ -33,22 +33,16 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
-  branch: yup.string().required('Branch is required'),
   batch: yup.string().required('Batch is required'),
   student: yup.string().required('Students is required'),
-  payment_date: yup.string().required('Payment Date is required'),
-  paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  amount: yup.number().typeError('Amount must be a number').required('Paid Amount is required')
 });
 
 const defaultValues = {
-  branch: '',
   course: '',
   batch: '',
   student: '',
-  payment_date: '',
-  paymentId: Number('0'),
-  paidAmount: Number('0')
+  amount: Number('0')
 };
 
 
@@ -69,10 +63,10 @@ const RefundAddDrawer = (props) => {
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
-
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
+  
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId };
     const result = await getAllActiveBatchesByCourse(data);
@@ -105,7 +99,9 @@ const RefundAddDrawer = (props) => {
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('student_id', data.student);
-    bodyFormData.append('paid_amount', data.paidAmount);
+    bodyFormData.append('course_id', data.course);
+    bodyFormData.append('batch_id', data.batch);
+    bodyFormData.append('amount', data.amount);
 
     const result = await addStudentFeeRefund(bodyFormData);
 
@@ -159,8 +155,6 @@ const RefundAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-      
-         
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="course"
@@ -238,8 +232,8 @@ const RefundAddDrawer = (props) => {
                     fullWidth
                     label="Amount"
                     type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
+                    error={Boolean(errors.amount)}
+                    helperText={errors.amount?.message}
                   />
                 )}
               />
