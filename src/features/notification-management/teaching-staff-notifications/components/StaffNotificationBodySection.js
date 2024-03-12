@@ -22,16 +22,16 @@ import StaffNotificationTableHeader from './StaffNotificationTableHeader';
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row.avatar.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.avatar?.length) {
+    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
         skin="light"
-        color={row.avatarColor || 'primary'}
+        color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row.name || 'John Doe')}
+        {getInitials(row?.first_name || 'John Doe')}
       </Avatar>
     );
   }
