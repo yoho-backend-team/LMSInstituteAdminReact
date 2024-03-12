@@ -29,9 +29,6 @@ const StudentNotification = () => {
     dispatch(getAllStudentNotifications(data));
   }, [dispatch, selectedBranchId, studentNotificationRefetch]);
 
-  console.log(studentNotifications);
-  console.log(setStudentNotificationRefetch);
-
   return (
     <>
       <Grid container spacing={3}>

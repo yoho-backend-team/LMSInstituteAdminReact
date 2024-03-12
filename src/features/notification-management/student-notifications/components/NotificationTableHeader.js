@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 // ** Icon Imports
 import Icon from 'components/icon';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStudentNotifications } from '../redux/studentNotificationThunks';
 
@@ -18,18 +18,6 @@ const NotificationTableHeader = (props) => {
   const dispatch = useDispatch();
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  const [studentNotificationRefetch, setStudentNotificationRefetch] = useState(false);
-
-  // Fetch course categories on component mount or when dependencies change
-  useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllStudentNotifications(data));
-  }, [dispatch, selectedBranchId, studentNotificationRefetch]);
-
-  console.log(setStudentNotificationRefetch);
 
   // Callback function to handle search
   const handleSearch = useCallback(
