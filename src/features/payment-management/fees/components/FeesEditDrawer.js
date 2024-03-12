@@ -17,6 +17,7 @@ import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFee } from '../services/studentFeeServices';
+import { useCallback } from 'react';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -46,26 +47,26 @@ const schema = yup.object().shape({
 
 const FeesEditDrawer = (props) => {
   // ** Props
-  const { open, toggle, selectedRows } = props;
+  const { open, toggle, selectedRows,setRefetch } = props;
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  const [defaultValues, setDefaultValues] = useState('');
+
 
   console.log(selectedRows);
 
-  useEffect(() => {
-    setDefaultValues({
-      course: selectedRows.course,
-      batch: selectedRows.batch,
-      students: selectedRows.students,
-      paymentId: Number(selectedRows.transactionid),
-      paidAmount: selectedRows.balance
-    });
-  }, [selectedRows]);
+  const defaultValues = {
+    full_name: '',
+    user_name: '',
+    email: '',
+    contact: Number(''),
+    designation: '',
+    role: ''
+  };
 
-  console.log(defaultValues);
+  // console.log(defaultValues);
+
 
   const {
     reset,
@@ -79,31 +80,39 @@ const FeesEditDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('course', data.course);
-    bodyFormData.append('batch', data.batch);
-    bodyFormData.append('students', data.students);
-    bodyFormData.append('paymentId', data.paymentId);
-    bodyFormData.append('paidAmount', data.paidAmount);
-    console.log(bodyFormData);
+     // Set form values when selectedBranch changes
+     useEffect(() => {
+      if (selectedRows) {
+        setValue('logo', selectedRows.selectedImage || '');
+        setValue('batch', selectedRows.batch || '');
+        setValue('students', selectedRows?.students || '');
+        setValue('paymentId', selectedRows?.paymentId || '');
+        setValue('paidAmount', selectedRows?.paidAmount || '');
+      }
+    }, [selectedRows, setValue]);
 
-    const result = await updateStudentFee(bodyFormData);
+  // Form submission handler
+  const onSubmit = useCallback(
+    async (data) => {
+      const inputData = new FormData();
+      inputData.append('student_id', student?.student_id);
+      inputData.append('logo', selectedImage);
+      inputData.append('batch', data.batch);
+      inputData.append('students', data.students);
+      inputData.append('paymentId', data.paymentId);
+      inputData.append('paidAmount', data.paidAmount);
 
-    if (result.success) {
-      toast.success(result.message);
-    } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
-      // toast.error(result.message);
-    }
-  };
+      const result = await updateStudentFee(InputData);
+
+      if (result.success) {
+        toast.success(result.message);
+        setRefetch((state) => !state);
+        handleEditClose();
+      } else {
+        toast.error(result.message);
+      }
+    },
+  );
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -119,7 +128,8 @@ const FeesEditDrawer = (props) => {
     }
   }));
 
-  const handleInputImageChange = (file) => {
+  // Function to handle image input change
+  const handleInputImageChange = useCallback((file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
@@ -130,7 +140,7 @@ const FeesEditDrawer = (props) => {
         setInputValue(reader.result);
       }
     }
-  };
+  }, []);
 
   const handleClose = () => {
     setValue('contact', Number(''));
@@ -197,7 +207,13 @@ const FeesEditDrawer = (props) => {
                     onChange={(event, newValue) => onChange(newValue)}
                     options={['Batch 1', 'Batch 2']}
                     renderInput={(params) => (
-                      <TextField  sx={{ mb: 2 }} {...params} label="Select Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      <TextField
+                        sx={{ mb: 2 }}
+                        {...params}
+                        label="Select Batch"
+                        error={Boolean(errors.batch)}
+                        helperText={errors.batch?.message}
+                      />
                     )}
                   />
                 )}
@@ -218,7 +234,7 @@ const FeesEditDrawer = (props) => {
                     options={['Student 1', 'Student 2']}
                     renderInput={(params) => (
                       <TextField
-                      sx={{ mb: 2 }}
+                        sx={{ mb: 2 }}
                         {...params}
                         label="Select Students"
                         error={Boolean(errors.students)}
