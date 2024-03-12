@@ -1,5 +1,5 @@
 // ** React Imports
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 // ** MUI Imports
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -11,10 +11,7 @@ import { DataGrid } from '@mui/x-data-grid';
 // ** React Router Import
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
-// import ImageIcon from '@mui/icons-material/Image';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
-import { searchUsers } from 'features/user-management/users-page/services/userServices';
-import { useDispatch } from 'react-redux';
+
 import { getInitials } from 'utils/get-initials';
 import NotificationAddDrawer from './NotificationAddDrawer';
 import NotificationTableHeader from './NotificationTableHeader';
@@ -49,37 +46,15 @@ const RowOptions = ({ id }) => {
 };
 
 const NotificationBodySection = ({ studentNotifications }) => {
-  
   console.log(studentNotifications);
   // ** State
 
-  const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
-
-  const dispatch = useDispatch();
 
   // ** Hooks
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
 
   const columns = [
     {
@@ -134,7 +109,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.students?.first_name}  {row?.students?.last_name}
+                {row?.students?.first_name} {row?.students?.last_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
                 {row?.students?.email}
@@ -162,7 +137,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       field: 'body',
       minWidth: 170,
       headerName: 'Description',
-      renderCell: ({ row}) => {
+      renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -244,7 +219,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-      <NotificationTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+      <NotificationTableHeader toggle={toggleAddUserDrawer} />
       <DataGrid
         sx={{ p: 2 }}
         autoHeight

@@ -4,10 +4,44 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 // ** Icon Imports
 import Icon from 'components/icon';
+import { useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllStudentNotifications } from '../redux/studentNotificationThunks';
 
 const NotificationTableHeader = (props) => {
   // ** Props
-  const { handleFilter, toggle, value } = props;
+  const { toggle } = props;
+
+  const [searchValue, setSearchValue] = useState('');
+
+  // Dispatch function
+  const dispatch = useDispatch();
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  const [studentNotificationRefetch, setStudentNotificationRefetch] = useState(false);
+
+  // Fetch course categories on component mount or when dependencies change
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllStudentNotifications(data));
+  }, [dispatch, selectedBranchId, studentNotificationRefetch]);
+
+  console.log(setStudentNotificationRefetch);
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentNotifications({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
+
   return (
     <Box
       sx={{
@@ -23,7 +57,7 @@ const NotificationTableHeader = (props) => {
       <Grid container spacing={2} sx={{ alignItems: 'center' }}>
         <Grid item sm={6} xs={12}></Grid>
         <Grid item sm={4} xs={12}>
-          <TextField fullWidth value={value} sx={{}} placeholder="Search User" onChange={(e) => handleFilter(e.target.value)} />
+          <TextField value={searchValue} fullWidth placeholder="Search Course" onChange={(e) => handleSearch(e)} />
         </Grid>
         <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
           <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
