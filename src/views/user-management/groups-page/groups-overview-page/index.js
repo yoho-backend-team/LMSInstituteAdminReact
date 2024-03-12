@@ -1,3 +1,6 @@
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, Typography, TextField, MenuItem, Tooltip } from '@mui/material';
 import Header from 'components/Header';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
@@ -7,33 +10,30 @@ import GroupDeleteDialog from 'features/user-management/groups-page/components/G
 import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
 import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
 import { deleteGroup, updateStatus } from 'features/user-management/groups-page/services/groupService';
-import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 const GroupManagement = () => {
+  // State variables
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
   const [statusValue, setStatusValue] = useState('');
 
+  // Redux
   const dispatch = useDispatch();
   const groups = useSelector(selectGroups);
   const groupLoading = useSelector(selectGroupLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const AddRoleAvatar = require('assets/images/avatar/add-role.png');
 
+  // Fetch groups when selectedBranchId changes
   useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllGroups(data));
+    dispatch(getAllGroups({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId]);
 
-  const AddRoleAvatar = require('assets/images/avatar/add-role.png');
-  const handleDeleteGroup = async () => {
+  // Memoized callback for deleting a group
+  const handleDeleteGroup = useCallback(async () => {
     try {
       const result = await deleteGroup(selectedDeleteGroupId);
 
@@ -46,14 +46,16 @@ const GroupManagement = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [dispatch, selectedDeleteGroupId]);
 
-  const handleStatusValue = (event, item) => {
+  // Callback for handling status value change
+  const handleStatusValue = useCallback((event, item) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(item);
-  };
+  }, []);
 
-  const handleStatusChangeApi = async () => {
+  // Callback for handling status change via API
+  const handleStatusChangeApi = useCallback(async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
@@ -65,23 +67,27 @@ const GroupManagement = () => {
     } else {
       toast.error(response.message);
     }
-  };
+  }, [dispatch, selectedBranchId, statusValue]);
 
-  const handleSearch = async (value) => {
-    try {
-      setSearchQuery(value);
-      const data = {
-        search: value
-      };
-      dispatch(getAllGroups(data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // Callback for handling search
+  const handleSearch = useCallback(
+    async (value) => {
+      try {
+        setSearchQuery(value);
+        const data = { search: value };
+        dispatch(getAllGroups(data));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [dispatch]
+  );
 
-  const renderCards = () => {
+  // Memoized render function for group cards
+  const renderCards = useMemo(() => {
     return groups?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
+        {/* Card content here */}
         <Card sx={{ minHeight: 175 }}>
           <CardContent>
             <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 32 }}>
@@ -154,15 +160,20 @@ const GroupManagement = () => {
         </Card>
       </Grid>
     ));
-  };
+  }, [groups]);
 
   return (
     <Grid>
+      {/* Header */}
       <Header title="Groups" handleSearch={handleSearch} searchQuery={searchQuery} />
+
+      {/* Render loading skeleton or group cards */}
       {groupLoading ? (
         <GroupSkeleton />
       ) : (
         <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+          {/* Add New Group card */}
+
           <Grid item xs={12} sm={6} lg={4}>
             <Card sx={{ cursor: 'pointer' }}>
               <Grid container sx={{ height: '100%' }}>
@@ -192,10 +203,14 @@ const GroupManagement = () => {
               </Grid>
             </Card>
           </Grid>
-          {renderCards()}
+          {renderCards}
         </Grid>
       )}
+
+      {/* Group delete dialog */}
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
+
+      {/* Status change dialog */}
       <StatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
@@ -206,4 +221,5 @@ const GroupManagement = () => {
     </Grid>
   );
 };
+
 export default GroupManagement;
