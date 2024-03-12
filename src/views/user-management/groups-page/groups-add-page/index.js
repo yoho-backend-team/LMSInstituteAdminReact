@@ -1,4 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Box,
   Button,
@@ -22,96 +22,84 @@ import {
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
 import { addGroup, getAllPermissions } from 'features/user-management/groups-page/services/groupService';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
-import * as yup from 'yup';
-
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
-
-const schema = yup.object().shape({
-  groupName: yup
-    .string()
-    .min(3, (obj) => showErrors('Group Name', obj.value.length, obj.min))
-    .required()
-});
-
-const defaultValues = {
-  groupName: '',
-  branch: []
-};
-
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
+import { yupResolver } from '@hookform/resolvers/yup';
+import { addGroupYupSchema } from 'features/user-management/groups-page/utills';
 
 const GroupAddPage = () => {
+  // State variables
   const [loading, setLoading] = useState(true);
+  const [selectedCheckbox, setSelectedCheckbox] = useState([]);
+  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
+  const [permissions, setPermissions] = useState([]);
 
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
+  const navigate = useNavigate();
 
+  // Fetch permissions on component mount
+  useEffect(() => {
+    getPermissions();
+  }, []);
+
+  // Default form values
+  const defaultValues = {
+    groupName: '',
+    branch: []
+  };
+
+  // Form methods using react-hook-form
   const {
-    reset,
     control,
-    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
-    resolver: yupResolver(schema)
+    resolver: yupResolver(addGroupYupSchema)
   });
 
-  const handleClose = () => {
-    setValue('groupName', '');
-    setValue('branch', '');
-    reset();
-  };
+  // Function to handle form submission
+  const onSubmit = useCallback(
+    async (data) => {
+      try {
+        const inputData = {
+          name: data.groupName,
+          permissions: selectedCheckbox
+        };
+        const result = await addGroup(inputData);
 
-  const [selectedCheckbox, setSelectedCheckbox] = React.useState([]);
-  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = React.useState(false);
-  const [permissions, setPermissions] = React.useState([]);
-  const navigate = useNavigate();
-
-  const onSubmit = async (data) => {
-    try {
-      const inputData = {
-        name: data.groupName,
-        permissions: selectedCheckbox
-      };
-      const result = await addGroup(inputData);
-
-      if (result.success) {
-        navigate(-1);
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
+        if (result.success) {
+          navigate(-1);
+          toast.success(result.message);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    },
+    [selectedCheckbox, navigate]
+  );
 
-  useEffect(() => {
-    getPermissions();
-  }, []);
+  // Function to toggle permission selection
+  const togglePermission = useCallback(
+    (id) => {
+      const arr = selectedCheckbox;
+      if (selectedCheckbox.includes(id)) {
+        arr.splice(arr.indexOf(id), 1);
+        setSelectedCheckbox([...arr]);
+      } else {
+        arr.push(id);
+        setSelectedCheckbox([...arr]);
+      }
+    },
+    [selectedCheckbox]
+  );
 
-  const handleSelectAllCheckbox = () => {
+  // Function to handle select all checkbox
+  const handleSelectAllCheckbox = useCallback(() => {
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
@@ -125,36 +113,31 @@ const GroupAddPage = () => {
       });
       setIsIndeterminateCheckbox(true);
     }
-  };
+  }, [isIndeterminateCheckbox, permissions, togglePermission]);
 
-  const togglePermission = (id) => {
-    const arr = selectedCheckbox;
-    if (selectedCheckbox.includes(id)) {
-      arr.splice(arr.indexOf(id), 1);
-      setSelectedCheckbox([...arr]);
-    } else {
-      arr.push(id);
-      setSelectedCheckbox([...arr]);
-    }
-  };
-
-  const getPermissions = async () => {
+  // Fetch permissions from API
+  const getPermissions = useCallback(async () => {
     try {
+      setLoading(true);
       const result = await getAllPermissions();
       if (result.success) {
         setPermissions(result.data);
+        setLoading(false);
       } else {
         console.log(result.message);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
-  };
+  }, []);
 
-  const renderPermissions = () => {
+  // Render permissions table rows
+  const renderPermissions = useMemo(() => {
     return permissions.map((module) =>
       module.screens.map((screen, index) => (
-        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
+        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-child': { pl: '0 !important' } }}>
           <TableCell
             sx={{
               fontWeight: 600,
@@ -183,14 +166,14 @@ const GroupAddPage = () => {
         </TableRow>
       ))
     );
-  };
+  }, [permissions, selectedCheckbox, togglePermission]);
 
   return (
     <>
       {loading ? (
         <AddGroupSkeleton />
       ) : (
-        <Card fullWidth maxWidth="md" scroll="body">
+        <Card scroll="body">
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardHeader
               sx={{
@@ -208,7 +191,7 @@ const GroupAddPage = () => {
               }}
             >
               <Grid sx={{ my: 4, gap: 2 }} container>
-                <Grid xs={12} sm={5.9}>
+                <Grid item xs={12} sm={5.9}>
                   <Controller
                     name="groupName"
                     control={control}
@@ -268,7 +251,7 @@ const GroupAddPage = () => {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>{renderPermissions()}</TableBody>
+                  <TableBody>{renderPermissions}</TableBody>
                 </Table>
               </TableContainer>
             </CardContent>
@@ -284,7 +267,7 @@ const GroupAddPage = () => {
                 <Button type="submit" variant="contained">
                   Submit
                 </Button>
-                <Button variant="tonal" sx={{ ml: 5 }} color="error" onClick={handleClose}>
+                <Button variant="tonal" sx={{ ml: 5 }} color="error" onClick={() => navigate(-1)}>
                   Cancel
                 </Button>
               </Box>

@@ -101,7 +101,7 @@ const DeleteDialog = (props) => {
           >
             <Icon fontSize="5.5rem" icon={userInput === 'yes' ? 'tabler:circle-check' : 'tabler:circle-x'} />
             <Typography variant="h4" sx={{ mb: 3 }}>
-              {userInput === 'yes' ? 'Rejected!' : 'Cancelled'}
+              {userInput === 'yes' ? 'Success!' : 'Cancelled'}
             </Typography>
             <Typography>{userInput === 'yes' ? successDescription : `${failureDescription} :)`}</Typography>
           </Box>

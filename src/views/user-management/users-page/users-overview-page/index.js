@@ -6,7 +6,7 @@ import UserBodySection from 'features/user-management/users-page/users-overview-
 import UserHeaderSection from 'features/user-management/users-page/users-overview-page/components/UserHeaderSection';
 import { selectLoading as selectUserLoading, selectUsers } from 'features/user-management/users-page/redux/userSelectors';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import UserAddDrawer from 'features/user-management/users-page/users-overview-page/components/UserAddDrawer';
 import UserFilterCard from 'features/user-management/users-page/users-overview-page/components/UserFilterCard';
@@ -17,48 +17,61 @@ const UserList = () => {
   const userLoading = useSelector(selectUserLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const groups = useSelector(selectGroups);
-  const [loading, setLoading] = useState(true);
 
+  // Fetch groups when selectedBranchId changes
   useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllGroups(data));
-  }, [selectedBranchId]);
+    dispatch(getAllGroups({ branch_id: selectedBranchId }));
+  }, [dispatch, selectedBranchId]);
 
+  // State for controlling the visibility of the Add User Drawer
   const [addUserOpen, setAddUserOpen] = useState(false);
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-  // Local state
+  const toggleAddUserDrawer = useCallback(() => {
+    setAddUserOpen((prev) => !prev);
+  }, []);
+
+  // State for triggering user data refetch
   const [userRefetch, setUserRefetch] = useState(false);
 
-  // Fetch course categories on component mount or when dependencies change
+  // Fetch users when selectedBranchId or userRefetch changes
   useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllUsers(data));
-  }, [dispatch, selectedBranchId, userRefetch, loading]);
-
-  console.log(users);
+    dispatch(getAllUsers({ branch_id: selectedBranchId }));
+  }, [dispatch, selectedBranchId, userRefetch]);
 
   return (
     <>
       <Grid container spacing={3}>
+        {/* User Header Section */}
         <Grid item xs={12}>
-          <UserHeaderSection users={users} groups={groups} setLoading={setLoading} />
+          <UserHeaderSection users={users} groups={groups} />
         </Grid>
+
+        {/* User Filter Card */}
         <Grid item xs={12}>
-          <UserFilterCard users={users} groups={groups} setLoading={setLoading} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} toggle={toggleAddUserDrawer} />
+          <UserFilterCard
+            users={users}
+            groups={groups}
+            setUserRefetch={setUserRefetch}
+            selectedBranchId={selectedBranchId}
+            toggle={toggleAddUserDrawer}
+          />
         </Grid>
+
+        {/* Display Skeleton or User Body Section based on loading state */}
         {userLoading ? (
           <UserSkeleton />
         ) : (
           <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users} setLoading={setLoading} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId}/>
+            <UserBodySection
+              groups={groups}
+              users={users}
+              setUserRefetch={setUserRefetch}
+              selectedBranchId={selectedBranchId}
+            />
           </Grid>
         )}
 
-        <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} setLoading={setLoading} />
+        {/* Add User Drawer */}
+        <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups}  />
       </Grid>
     </>
   );
