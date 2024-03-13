@@ -23,6 +23,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
+import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -35,14 +36,16 @@ const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
   batch: yup.string().required('Batch is required'),
   student: yup.string().required('Students is required'),
-  amount: yup.number().typeError('Amount must be a number').required('Paid Amount is required')
+  amount: yup.number().typeError('Amount must be a number').required('Paid Amount is required'),
+  studentfee:yup.object().required('Student Fee is required'),
 });
 
 const defaultValues = {
   course: '',
   batch: '',
   student: '',
-  amount: Number('0')
+  amount: Number('0'),
+  studentfee:''
 };
 
 
@@ -56,6 +59,9 @@ const RefundAddDrawer = (props) => {
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
   const [activeStudents, setActiveStudents] = useState([]);
+  const [activeStudentsFee, setActiveStudentsFee] = useState([]);
+
+console.log(activeStudentsFee);
 
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
@@ -74,12 +80,21 @@ const RefundAddDrawer = (props) => {
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
+
   const getActiveStudentByBatch = async (courseId) => {
     const data = { batch_id: courseId };
     const result = await getAllStudentsByBatch(data);
 
     console.log('active students : ', result.data);
     setActiveStudents(result.data.data);
+  };
+
+  const getStudentByStudentFee = async (studentId) => {
+    const data = { student_id: studentId };
+    const result = await getFeeByStudentId(data);
+
+    console.log('student fees : ', result.data);
+    setActiveStudentsFee(result.data.data);
   };
 
   const {
@@ -102,6 +117,9 @@ const RefundAddDrawer = (props) => {
     bodyFormData.append('course_id', data.course);
     bodyFormData.append('batch_id', data.batch);
     bodyFormData.append('amount', data.amount);
+    bodyFormData.append('institute_student_fee_id', data.studentfee.fee_id);
+    bodyFormData.append('branch_id', selectedBranchId);
+
 
     const result = await addStudentFeeRefund(bodyFormData);
 
@@ -111,7 +129,7 @@ const RefundAddDrawer = (props) => {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`; 
         });
       });
       toast.error(errorMessage.trim());
@@ -211,10 +229,33 @@ const RefundAddDrawer = (props) => {
                     fullWidth
                     options={activeStudents}
                     getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
-                    onChange={(event, newValue) => onChange(newValue?.student_id)}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.student_id);
+                      getStudentByStudentFee(newValue?.student_id);
+                    }}
                     value={activeStudents.find((student) => student.student_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sx={{ mb: 2 }}>
+              <Controller
+                name="studentFee"
+                control={control}
+                rules={{ required: 'Student Fee field is required' }}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    fullWidth
+                    options={activeStudentsFee}
+                    getOptionLabel={(student) => `${student.fee_id}`}
+                    onChange={(event, newValue) => {onChange(newValue?.student_id),setValue("studentfee",newValue)}}
+                    value={activeStudentsFee.find((student) => student.student_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Student Fee" error={Boolean(errors.studentfee)} helperText={errors.studentfee?.message} />
                     )}
                   />
                 )}

@@ -33,7 +33,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  course: yup.string().required('Course is required'),
+  course: yup.object().required('Course is required'),
   branch: yup.string().required('Branch is required'),
   batch: yup.string().required('Batch is required'),
   student: yup.string().required('Students is required'),
