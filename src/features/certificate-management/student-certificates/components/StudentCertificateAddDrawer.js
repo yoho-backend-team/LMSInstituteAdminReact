@@ -33,7 +33,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  course: yup.object().required('Course is required'),
+  course: yup.string().required('Course is required'),
   branch: yup.string().required('Branch is required'),
   batch: yup.string().required('Batch is required'),
   student: yup.string().required('Students is required'),
@@ -182,16 +182,16 @@ const StudentCertificateAddDrawer = (props) => {
                 name="branch"
                 control={control}
                 rules={{ required: 'Branch field is required' }}
-                render={({ field: { value } }) => (
+                render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
                     options={activeBranches}
                     getOptionLabel={(branch) => branch.branch_name}
-                    value={value}
-                    onChange={(e, newValue) => {
-                      setValue('branch', newValue);
-                      getActiveCoursesByBranch(newValue);
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.branch_id);
+                      getActiveCoursesByBranch(newValue?.branch_id);
                     }}
+                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
                     )}
@@ -205,16 +205,16 @@ const StudentCertificateAddDrawer = (props) => {
                 name="course"
                 control={control}
                 rules={{ required: 'Course field is required' }}
-                render={({ field: { value } }) => (
+                render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
                     options={activeCourse}
                     getOptionLabel={(course) => course.course_name}
-                    value={value}
-                    onChange={(e, newValue) => {
-                      setValue('course', newValue);
-                      getActiveBatchesByCourse(newValue);
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.course_id);
+                      getActiveBatchesByCourse(newValue?.course_id);
                     }}
+                    value={activeCourse.find((course) => course.course_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                     )}
@@ -228,16 +228,16 @@ const StudentCertificateAddDrawer = (props) => {
                 name="batch"
                 control={control}
                 rules={{ required: 'Batch field is required' }}
-                render={({ field: { value } }) => (
+                render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
                     options={activeBatches}
                     getOptionLabel={(batch) => batch.batch_name}
-                    value={value}
-                    onChange={(e, newValue) => {
-                      setValue('batch', newValue);
-                      getActiveStudentByBatch(newValue);
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.batch_id);
+                      getActiveStudentByBatch(newValue?.batch_id);
                     }}
+                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
                     )}
@@ -256,8 +256,8 @@ const StudentCertificateAddDrawer = (props) => {
                     fullWidth
                     options={activeStudents}
                     getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
-                    value={value}
-                    onChange={(e, newValue) => onChange(newValue)}
+                    onChange={(event, newValue) => onChange(newValue?.student_id)}
+                    value={activeStudents.find((student) => student.student_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
                     )}
