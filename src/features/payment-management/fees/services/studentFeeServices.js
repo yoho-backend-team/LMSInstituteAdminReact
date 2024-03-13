@@ -28,6 +28,31 @@ export const getAllStudentFees = async (data) => {
     throw error;
   }
 };
+export const getFeeByStudentId = async (data) => {
+  try {
+    const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/read-by-student-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch StudentFees. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllStudentFees:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
 
 export const searchStudentFees = async (searchQuery) => {
   try {
@@ -99,7 +124,7 @@ export const updateStudentFee = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-console.log(response);
+    console.log(response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'StudentFee updated successfully' };

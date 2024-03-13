@@ -272,7 +272,7 @@ const AddCoursePage = () => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ branch_id: 'selectAll', branch_name: 'Select All' }, ...branches]}
+                  options={branches}
                   getOptionLabel={(option) => option.branch_name}
                   value={selectedBranches}
                   onChange={(e, newValue) => {

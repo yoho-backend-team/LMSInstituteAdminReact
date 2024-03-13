@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 // ** MUI Imports
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -17,7 +17,6 @@ import { DataGrid } from '@mui/x-data-grid';
 // ** Icon Imports
 import Icon from 'components/icon';
 // ** Third Party Imports
-import format from 'date-fns/format';
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
@@ -55,9 +54,14 @@ const invoiceStatusObj = {
   Downloaded: { color: 'info', icon: 'tabler:arrow-down-circle' }
 };
 
+
+const handleRowClick = (rowData) => {
+  setSelectedRows(rowData);
+};
+
 // ** renders client column
 const renderClient = (row) => {
-  if (row.avatar.length) {
+  if (row?.avatar && row?.avatar?.length) {
     return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
@@ -171,16 +175,6 @@ const defaultColumns = [
   }
 ];
 
-/* eslint-disable */
-const CustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
-  const value = `${startDate}${endDate !== null ? endDate : ''}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
 
 /* eslint-enable */
 const RefundTable = () => {
@@ -193,20 +187,27 @@ const RefundTable = () => {
     return () => clearTimeout(timer);
   }, []);
   // ** State
-  const [value, setValue] = useState('');
+
   const [selectedRows, setSelectedRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
+  const [refetch, setRefetch] = useState(false);
 
   const dispatch = useDispatch();
   const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
   console.log(studentFeeRefunds);
+
   useEffect(() => {
-    dispatch(getAllStudentFeeRefunds(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+    dispatch(
+      getAllStudentFeeRefunds({
+        branch_id: selectedBranchId
+      })
+    );
+  }, [dispatch, selectedBranchId, refetch]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -218,10 +219,6 @@ const RefundTable = () => {
     setDeleteDialogOpen(true);
   };
 
-  // ** Hooks
-  const handleFilter = (val) => {
-    setValue(val);
-  };
 
   const columns = [
     ...defaultColumns,
@@ -346,6 +343,9 @@ const RefundTable = () => {
   ];
 
   const [selectedstudents, setSelectedstudents] = useState([]);
+
+  // console.log(studentFeeRefunds)
+
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -478,11 +478,13 @@ const RefundTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
+        <RefundCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} />
+        </Grid>
+        <Grid item xs={12}>
           {loading ? (
             <FeesTableSkeleton />
           ) : (
             <Card>
-              <RefundCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -499,7 +501,14 @@ const RefundTable = () => {
             </Card>
           )}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-          <RefundEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+
+          <RefundEditDrawer
+            setRefetch={setRefetch}
+            selectedRows={selectedRows}
+            handleRowClick={handleRowClick}
+            open={editUserOpen}
+            toggle={toggleEditUserDrawer}
+          />
 
           <DeleteDialog
             open={isDeleteDialogOpen}

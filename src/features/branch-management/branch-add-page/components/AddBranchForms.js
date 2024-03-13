@@ -9,29 +9,29 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { addBranch } from 'features/branch-management/services/branchServices';
 import toast from 'react-hot-toast';
 
-const initialValues = {
-  branchName: '',
-  phone: Number(''),
-  alternatePhone: Number(''),
-  address: '',
-  pinCode: Number(''),
-  landmark: '',
-  city: '',
-  state: ''
-};
-const branchSchema = yup.object().shape({
-  branchName: yup.string().required('Branch Name is required'),
-  phone: yup.number().required('Phone No. is required'),
-  alternatePhone: yup.number().required('Alternate Phone No. is required'),
-  address: yup.string().required('Address is required'),
-  pinCode: yup.number().required('PIN Code is required'),
-  landmark: yup.string().required('Landmark is required'),
-  city: yup.string().required('City is required'),
-  state: yup.string().required('State is required')
-});
-
 const AddBranchForms = () => {
   const navigate = useNavigate();
+
+  const initialValues = {
+    branchName: '',
+    phone: Number(''),
+    alternatePhone: Number(''),
+    address: '',
+    pinCode: Number(''),
+    landmark: '',
+    city: '',
+    state: ''
+  };
+  const branchSchema = yup.object().shape({
+    branchName: yup.string().required('Branch Name is required'),
+    phone: yup.number().required('Phone No. is required'),
+    alternatePhone: yup.number().required('Alternate Phone No. is required'),
+    address: yup.string().required('Address is required'),
+    pinCode: yup.number().required('PIN Code is required'),
+    landmark: yup.string().required('Landmark is required'),
+    city: yup.string().required('City is required'),
+    state: yup.string().required('State is required')
+  });
 
   const {
     handleSubmit,
@@ -43,8 +43,7 @@ const AddBranchForms = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-    const dummyData = {
+    const inputData = {
       branch_name: data.branchName,
       address: data.address,
       city: data.city,
@@ -56,7 +55,7 @@ const AddBranchForms = () => {
     };
 
     try {
-      const result = await addBranch(dummyData);
+      const result = await addBranch(inputData);
 
       if (result.success) {
         toast.success(result.message);
