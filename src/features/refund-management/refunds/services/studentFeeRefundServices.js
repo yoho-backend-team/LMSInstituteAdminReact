@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/refund-management/student-fee-refunds`;
 
-export const getAllStudentFeeRefunds = async (selectedBranchId) => {
+export const getAllStudentFeeRefunds = async (data) => {
   try {
     const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
