@@ -52,7 +52,7 @@ export const searchStudentNotifications = async (searchQuery) => {
 
 export const addStudentNotification = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student-notification-send`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
