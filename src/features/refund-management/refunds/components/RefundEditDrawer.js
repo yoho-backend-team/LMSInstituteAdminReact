@@ -16,6 +16,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFeeRefund } from '../services/studentFeeRefundServices';
+import { useCallback } from 'react';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -30,15 +31,11 @@ const schema = yup.object().shape({
   amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
-const defaultValues = {
-  batch: '',
-  students: '',
-  amount: ''
-};
+
 
 const RefundEditDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle,selectedRows, setRefetch } = props;
   // ** State
   const [inputValue, setInputValue] = useState('');
   const image = require('assets/images/avatar/1.png');
@@ -47,12 +44,18 @@ const RefundEditDrawer = (props) => {
 
   useEffect(() => {}, []);
 
+  const defaultValues = {
+    batch: '',
+    students: '',
+    amount: ''
+  };
+
   const {
-    handleSubmit,
+    reset,
     control,
     setValue,
-    formState: { errors },
-    reset
+    handleSubmit,
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -73,9 +76,10 @@ const RefundEditDrawer = (props) => {
     }
   }));
 
-  const handleInputImageChange = (file) => {
+   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    console.log(setImgSrc);
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);
@@ -85,30 +89,38 @@ const RefundEditDrawer = (props) => {
       }
     }
   };
-  const onSubmit = async (data) => {
-    console.log(data);
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    const dummyData = {
-      batch: data.batch,
-      students: data.students,
-      amount: data.amount
-    };
 
-    try {
-      const result = await updateStudentFeeRefund(dummyData);
-
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
+    // Set form values when selectedBranch changes
+    useEffect(() => {
+      if (selectedRows) {
+        setValue('logo', selectedRows.selectedImage || '');
+        setValue('paymentId', selectedRows?.transaction_id || '');
+        setValue('paidAmount', selectedRows?.paid_amount || '');
+        setValue('payment_date', new Date(selectedRows?.payment_date) || '');
+        
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    }, [selectedRows, setValue]);
+  
 
+  // Form submission handler
+  const onSubmit = useCallback(async (data) => {
+    const inputData = new FormData();
+    inputData.append('logo', selectedImage);
+    inputData.append('paymentId', data.transaction_id);
+    inputData.append('paid_amount', data.paid_amount);
+    inputData.append('payment_date', data.payment_date);
+    inputData.append('id', selectedRows.id);
+
+    const result = await updateStudentFeeRefund(inputData);
+
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+      handleEditClose();
+    } else {
+      toast.error(result.message);
+    }
+  });
   const handleClose = () => {
     setValue('amount', '');
     setValue('students', '');
