@@ -1,5 +1,5 @@
 // ** React Imports
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 // ** MUI Imports
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -12,13 +12,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 // import ImageIcon from '@mui/icons-material/Image';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
-import { searchUsers } from 'features/user-management/users-page/services/userServices';
-import { useDispatch } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-import StaffNotificationAddDrawer from './StaffNotificationAddDrawer';
-import StaffNotificationTableHeader from './StaffNotificationTableHeader';
-
 
 // ** renders client column
 const renderClient = (row) => {
@@ -49,37 +43,14 @@ const RowOptions = ({ id }) => {
   );
 };
 
-const StaffNotificationBodySection = ({staffNotifications}) => {
-
+const StaffNotificationBodySection = ({ staffNotifications }) => {
   console.log(staffNotifications);
 
   // ** State
-  const [value, setValue] = useState('');
+
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-  const [addUserOpen, setAddUserOpen] = useState(false);
 
   // ** Hooks
-  const dispatch = useDispatch();
-
-
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
 
   const columns = [
     {
@@ -134,7 +105,7 @@ const StaffNotificationBodySection = ({staffNotifications}) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.staff?.staff_name}  
+                {row?.staff?.staff_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
                 {row?.staff?.email}
@@ -162,7 +133,7 @@ const StaffNotificationBodySection = ({staffNotifications}) => {
       field: 'body',
       minWidth: 170,
       headerName: 'Description',
-      renderCell: ({ row}) => {
+      renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -244,7 +215,6 @@ const StaffNotificationBodySection = ({staffNotifications}) => {
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-      <StaffNotificationTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
       <DataGrid
         sx={{ p: 2 }}
         autoHeight
@@ -256,7 +226,6 @@ const StaffNotificationBodySection = ({staffNotifications}) => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <StaffNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </Card>
   );
 };

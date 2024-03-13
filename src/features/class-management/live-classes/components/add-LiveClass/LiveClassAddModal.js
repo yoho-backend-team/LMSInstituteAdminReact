@@ -14,7 +14,8 @@ import CustomChip from 'components/mui/chip';
 import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -77,14 +78,14 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   };
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveStaffs(data);
+    const result = await getAllActiveTeachingStaffs(data);
 
     console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveStaffs(data);
+    const result = await getAllActiveNonTeachingStaffs(data);
 
     console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);

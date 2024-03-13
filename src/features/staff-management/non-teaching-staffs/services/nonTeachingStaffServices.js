@@ -1,17 +1,19 @@
 // NonTeachingStaffservice.js
 import axios from 'axios';
 
-const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/TeachingStaff-management/TeachingStaff`;
+const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/non-teaching-staff`;
 
-export const getAllNonTeachingStaffs = async (selectedBranchId) => {
+export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
+
+    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -23,6 +25,33 @@ export const getAllNonTeachingStaffs = async (selectedBranchId) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllNonTeachingStaffs:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+export const getAllActiveNonTeachingStaffs = async (data) => {
+  try {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllTeachingStaffs:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
