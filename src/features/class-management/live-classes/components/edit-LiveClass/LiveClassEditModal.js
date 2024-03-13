@@ -20,7 +20,8 @@ import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateLiveClass } from '../../services/liveClassServices';
-import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import toast from 'react-hot-toast';
 
 /* eslint-disable */
@@ -193,14 +194,14 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
 
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveStaffs(data);
+    const result = await getAllActiveTeachingStaffs(data);
 
     console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveStaffs(data);
+    const result = await getAllActiveNonTeachingStaffs(data);
 
     console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);

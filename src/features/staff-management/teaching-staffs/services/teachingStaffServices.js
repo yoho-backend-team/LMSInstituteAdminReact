@@ -30,7 +30,7 @@ export const getAllTeachingStaffs = async (data) => {
     throw error;
   }
 };
-export const getAllActiveStaffs = async (data) => {
+export const getAllActiveTeachingStaffs = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
       headers: {

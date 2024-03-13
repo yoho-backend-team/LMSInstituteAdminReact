@@ -18,7 +18,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 // import { addStudentFee } from '../services/studentFeeServices';
 import Autocomplete from '@mui/material/Autocomplete';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
@@ -49,7 +49,6 @@ const defaultValues = {
   paidAmount: Number('0')
 };
 
-
 const FeesAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
@@ -59,7 +58,7 @@ const FeesAddDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const [activeCourse, setActiveCourse] = useState([]);
-console.log(activeCourse);
+  console.log(activeCourse);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeStaffs, setActiveStaffs] = useState([]);
@@ -83,18 +82,18 @@ console.log(activeCourse);
       type: type,
       branch_id: selectedBranchId
     };
-    const result = await getAllActiveStaffs(data);
+    const result = await getAllActiveTeachingStaffs(data);
 
     console.log('active staffs : ', result.data);
     setActiveStaffs(result.data.data);
   };
 
-const getActiveCoursesByBranch = async (selectedBranchId) => {
-  const result = await getAllActiveCourses(selectedBranchId);
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
 
-  console.log('active courses : ', result.data);
-  setActiveCourse(result.data.data);
-};
+    console.log('active courses : ', result.data);
+    setActiveCourse(result.data.data);
+  };
 
   const {
     handleSubmit,
@@ -234,7 +233,6 @@ const getActiveCoursesByBranch = async (selectedBranchId) => {
               </div>
             </Box>
 
-         
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="branch"
