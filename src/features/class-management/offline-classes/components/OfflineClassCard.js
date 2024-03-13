@@ -11,7 +11,8 @@ import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
-import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
+// import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
+import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LiveClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
@@ -27,7 +28,7 @@ const LiveClassCard = () => {
       type: 'offline',
       branch_id: selectedBranchId
     };
-    dispatch(getAllLiveClasses(data));
+    dispatch(getAllOfflineClasses(data));
   }, [dispatch, selectedBranchId]);
 
   const handleEditClose = () => {
