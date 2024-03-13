@@ -73,7 +73,7 @@ const NotificationAddDrawer = (props) => {
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId };
     const result = await getAllStudentsByBatch(data);
-    setStudents(result.data); // Assuming result.data contains the list of students
+    setStudents(result.data.data); // Assuming result.data contains the list of students
   };
 
   const Header = styled(Box)(({ theme }) => ({
@@ -315,11 +315,7 @@ const NotificationAddDrawer = (props) => {
               getOptionLabel={(option) => option?.first_name}
               value={selectedStudents}
               onChange={(e, newValue) => {
-                if (newValue && newValue?.some((option) => option?.first_name === 'selectAll')) {
-                 setSelectedStudents(students?.filter((option) => option?.first_name !== 'selectAll'));
-                } else {
-                  setSelectedStudents(newValue);
-                }
+                setSelectedStudents(newValue);
               }}
               renderInput={(params) => (
                 <Controller
