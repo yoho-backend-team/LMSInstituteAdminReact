@@ -1,7 +1,7 @@
 // TeachingStaffservice.js
 import axios from 'axios';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/staff`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/teaching-staff`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {

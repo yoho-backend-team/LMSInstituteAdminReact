@@ -1,7 +1,7 @@
 // liveClassService.js
 import axios from 'axios';
 
-const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/class`;
+const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/live-class`;
 
 export const getAllLiveClasses = async (data) => {
   try {
@@ -54,7 +54,7 @@ export const searchLiveClasses = async (searchQuery) => {
 
 export const addLiveClass = async (data) => {
   try {
-    const response = await axios.post(`${LIVE_CLASS_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${LIVE_CLASS_API_END_POINT}/create-live-class`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
