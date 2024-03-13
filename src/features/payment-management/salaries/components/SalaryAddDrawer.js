@@ -22,6 +22,7 @@ import { getAllActiveStaffs } from 'features/staff-management/teaching-staffs/se
 import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -31,9 +32,9 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  branch: yup.object().required('Branch is required'),
+  branch: yup.string().required('Branch is required'),
   staff_type: yup.string().required('Batch is required'),
-  staff: yup.string().required('Students is required'),
+  staff: yup.object().required('Students is required'),
   payment_date: yup.string().required('Payment Date is required'),
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
@@ -57,7 +58,8 @@ const FeesAddDrawer = (props) => {
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-
+  const [activeCourse, setActiveCourse] = useState([]);
+console.log(activeCourse);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeStaffs, setActiveStaffs] = useState([]);
@@ -86,6 +88,13 @@ const FeesAddDrawer = (props) => {
     console.log('active staffs : ', result.data);
     setActiveStaffs(result.data.data);
   };
+
+const getActiveCoursesByBranch = async (selectedBranchId) => {
+  const result = await getAllActiveCourses(selectedBranchId);
+
+  console.log('active courses : ', result.data);
+  setActiveCourse(result.data.data);
+};
 
   const {
     handleSubmit,
@@ -225,6 +234,7 @@ const FeesAddDrawer = (props) => {
               </div>
             </Box>
 
+         
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="branch"
@@ -233,13 +243,13 @@ const FeesAddDrawer = (props) => {
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
-                    value={value}
-                    onChange={(e, newValue) => {
-                      onChange(newValue);
-                      getActiveCoursesByBranch(newValue);
-                    }}
                     options={activeBranches}
                     getOptionLabel={(branch) => branch.branch_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.branch_id);
+                      getActiveCoursesByBranch(newValue?.branch_id);
+                    }}
+                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
                     )}

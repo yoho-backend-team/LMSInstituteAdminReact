@@ -1,10 +1,12 @@
+
 // ** React Imports
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
+// import MenuItem from '@mui/material/MenuItem'; 
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,6 +16,11 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
+import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
 
@@ -25,23 +32,55 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
+  course: yup.string().required('Course is required'),
   batch: yup.string().required('Batch is required'),
-  students: yup.string().required('Student is required'),
-  amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required'),
-  course: yup.string().required('Course is required')
+  student: yup.string().required('Students is required'),
+  amount: yup.number().typeError('Amount must be a number').required('Paid Amount is required')
 });
 
 const defaultValues = {
+  course: '',
   batch: '',
-  students: '',
-  amount: '',
-  course: ''
+  student: '',
+  amount: Number('0')
 };
+
 
 const RefundAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
-  useEffect(() => {}, []);
+  // ** State
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  const [activeCourse, setActiveCourse] = useState([]);
+  const [activeBatches, setActiveBatches] = useState([]);
+  const [activeStudents, setActiveStudents] = useState([]);
+
+  useEffect(() => {
+    getActiveCoursesByBranch(selectedBranchId);
+  }, [selectedBranchId]);
+
+  const getActiveCoursesByBranch = async (selectedBranchId) => {
+    const result = await getAllActiveCourses(selectedBranchId);
+    console.log('active courses : ', result.data);
+    setActiveCourse(result.data.data);
+  };
+  
+  const getActiveBatchesByCourse = async (courseId) => {
+    const data = { course_id: courseId };
+    const result = await getAllActiveBatchesByCourse(data);
+
+    console.log('active batches : ', result.data);
+    setActiveBatches(result.data.data);
+  };
+  const getActiveStudentByBatch = async (courseId) => {
+    const data = { batch_id: courseId };
+    const result = await getAllStudentsByBatch(data);
+
+    console.log('active students : ', result.data);
+    setActiveStudents(result.data.data);
+  };
 
   const {
     handleSubmit,
@@ -55,28 +94,28 @@ const RefundAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
+
   const onSubmit = async (data) => {
     console.log(data);
     var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    const dummyData = {
-      batch: data.batch,
-      students: data.students,
-      amount: data.amount,
-      course: data.course
-    };
+    bodyFormData.append('student_id', data.student);
+    bodyFormData.append('course_id', data.course);
+    bodyFormData.append('batch_id', data.batch);
+    bodyFormData.append('amount', data.amount);
 
-    try {
-      const result = await addStudentFeeRefund(dummyData);
+    const result = await addStudentFeeRefund(bodyFormData);
 
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      Object.values(result.message).forEach((errors) => {
+        errors.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
     }
   };
 
@@ -94,7 +133,7 @@ const RefundAddDrawer = (props) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '80%', sm: 500 } } }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
           <Typography variant="h5">Add Fees</Typography>
@@ -114,65 +153,69 @@ const RefundAddDrawer = (props) => {
             <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Header>
-        <Box sx={{ p: (theme) => theme.spacing(6, 6, 6) }}>
+        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="course"
                 control={control}
-                render={({ field }) => (
+                rules={{ required: 'Course field is required' }}
+                render={({ field: { value, onChange } }) => (
                   <Autocomplete
-                    {...field}
-                    sx={{ mb: 2 }}
                     fullWidth
-                    options={['USA', 'Australia', 'Germany']}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
-                    )}
-                    onChange={(e, value) => {
-                      field.onChange(value);
+                    options={activeCourse}
+                    getOptionLabel={(course) => course.course_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.course_id);
+                      getActiveBatchesByCourse(newValue?.course_id);
                     }}
+                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                    )}
                   />
                 )}
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
                 name="batch"
                 control={control}
-                render={({ field }) => (
+                rules={{ required: 'Batch field is required' }}
+                render={({ field: { value, onChange } }) => (
                   <Autocomplete
-                    {...field}
-                    sx={{ mb: 2 }}
                     fullWidth
-                    options={['UK', 'USA', 'Australia', 'Germany']}
+                    options={activeBatches}
+                    getOptionLabel={(batch) => batch.batch_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.batch_id);
+                      getActiveStudentByBatch(newValue?.batch_id);
+                    }}
+                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
                     )}
-                    onChange={(e, value) => {
-                      field.onChange(value);
-                    }}
                   />
                 )}
               />
             </Grid>
-            <Grid item xs={12} sm={12}>
+
+            <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
-                name="students"
+                name="student"
                 control={control}
-                render={({ field }) => (
+                rules={{ required: 'Student field is required' }}
+                render={({ field: { value, onChange } }) => (
                   <Autocomplete
-                    {...field}
-                    sx={{ mb: 2 }}
                     fullWidth
-                    options={['UK', 'USA', 'Australia', 'Germany']}
+                    options={activeStudents}
+                    getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
+                    onChange={(event, newValue) => onChange(newValue?.student_id)}
+                    value={activeStudents.find((student) => student.student_id === value) || null}
                     renderInput={(params) => (
-                      <TextField {...params} label="Student" error={Boolean(errors.students)} helperText={errors.students?.message} />
+                      <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
                     )}
-                    onChange={(e, value) => {
-                      field.onChange(value);
-                    }}
                   />
                 )}
               />
@@ -180,7 +223,7 @@ const RefundAddDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="amount"
+                name="Amount"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -212,3 +255,4 @@ const RefundAddDrawer = (props) => {
 };
 
 export default RefundAddDrawer;
+

@@ -13,8 +13,6 @@ import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 
 import { getInitials } from 'utils/get-initials';
-import NotificationAddDrawer from './NotificationAddDrawer';
-import NotificationTableHeader from './NotificationTableHeader';
 
 // ** renders client column
 const renderClient = (row) => {
@@ -50,11 +48,9 @@ const NotificationBodySection = ({ studentNotifications }) => {
   // ** State
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-  const [addUserOpen, setAddUserOpen] = useState(false);
 
   // ** Hooks
 
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const columns = [
     {
@@ -219,7 +215,6 @@ const NotificationBodySection = ({ studentNotifications }) => {
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-      <NotificationTableHeader toggle={toggleAddUserDrawer} />
       <DataGrid
         sx={{ p: 2 }}
         autoHeight
@@ -231,7 +226,6 @@ const NotificationBodySection = ({ studentNotifications }) => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </Card>
   );
 };

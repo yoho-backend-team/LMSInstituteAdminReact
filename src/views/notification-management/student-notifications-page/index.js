@@ -1,17 +1,19 @@
 // ** React Imports
 import Grid from '@mui/material/Grid';
-import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import { useEffect, useState } from 'react';
 // ** Components Imports
 import NotificationBodySection from 'features/notification-management/student-notifications/components/NotificationBodySection';
 import NotificationHeaderSection from 'features/notification-management/student-notifications/components/NotificationHeaderSection';
 import { useDispatch, useSelector } from 'react-redux';
-
+import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 import { getAllStudentNotifications } from 'features/notification-management/student-notifications/redux/studentNotificationThunks';
 import {
   selectLoading,
   selectStudentNotifications
 } from 'features/notification-management/student-notifications/redux/studentNotificationSelectors';
+import NotificationTableHeader from 'features/notification-management/student-notifications/components/NotificationTableHeader';
+import NotificationAddDrawer from 'features/notification-management/student-notifications/components/NotificationAddDrawer';
+
 
 const StudentNotification = () => {
   const dispatch = useDispatch();
@@ -29,14 +31,22 @@ const StudentNotification = () => {
     dispatch(getAllStudentNotifications(data));
   }, [dispatch, selectedBranchId, studentNotificationRefetch]);
 
+  const [addUserOpen, setAddUserOpen] = useState(false);
+
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <NotificationHeaderSection />
         </Grid>
+        <Grid item xs={12}>
+          <NotificationTableHeader toggle={toggleAddUserDrawer} />
+        </Grid>
         {studentLoading ? (
-          <UserSkeleton />
+          <NotificationSkeleton />
         ) : (
           <Grid item xs={12}>
             <NotificationBodySection
@@ -47,6 +57,8 @@ const StudentNotification = () => {
             />
           </Grid>
         )}
+      <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+
       </Grid>
     </>
   );
