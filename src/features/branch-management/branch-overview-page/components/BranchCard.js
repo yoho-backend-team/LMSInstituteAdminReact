@@ -4,7 +4,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Icon from 'components/icon';
 import BranchDeleteModel from 'components/modal/DeleteModel';
 import StatusChangeDialog from 'components/modal/DeleteModel';
-import BranchEditModal from './edit-Branch/BranchEditModal';
+import BranchEditModal from './BranchEditModal';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 import { deleteBranch } from 'features/branch-management/services/branchServices';
