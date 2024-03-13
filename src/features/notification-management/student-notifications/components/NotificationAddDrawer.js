@@ -112,11 +112,13 @@ const NotificationAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+    console.log(data)
     var bodyFormData = new FormData();
+    data?.students?.forEach((student)=> { bodyFormData.append('student_ids[]', student?.student_id)})
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('course', data.course.course_id); // Accessing course_id from selected object
-    bodyFormData.append('batch', data.batch.batch_id); // Accessing batch_id from selected object
-    bodyFormData.append('students', JSON.stringify(data.students)); // Serializing array
+    bodyFormData.append('branch_id', selectedBranchId); // Accessing batch_id from selected object
+    bodyFormData.append('student_ids', data.students); // Serializing array
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
 
@@ -271,42 +273,7 @@ const NotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          {/* <Grid item xs={12} sm={12}>
-            <Controller
-              name="students"
-              control={control}
-              // defaultValue={[]}
-              rules={{ required: true }}
-              render={({ value, onChange }) => (
-                <Autocomplete
-                  // {...field}
-                  multiple
-                  limitTags={2}
-                  sx={{ mb: 2 }}
-                  options={students}
-                  getOptionLabel={(option) => option?.first_name} // Adjust this based on the structure of student object
-                  value={students.find((student) => student.student_id === value) || null}
-                  onChange={(event, newValue) => {
-                    onChange(newValue ? newValue.student_id : ''); // This will update the form state
-                    setValue('student', newValue); // Set the selected value in the form state
-                    // Optionally, you can fetch students here based on the selected batch
-                    // getStudentsByBatch(newValue?.batch_id);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Students"
-                      placeholder="Favorites"
-                      error={Boolean(errors.students)}
-                      helperText={errors.students?.message}
-                    />
-                  )}
-                />
-              )}
-            />
-          </Grid> */}
-
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
             <Autocomplete
               multiple
               disableCloseOnSelect
@@ -316,6 +283,7 @@ const NotificationAddDrawer = (props) => {
               value={selectedStudents}
               onChange={(e, newValue) => {
                 setSelectedStudents(newValue);
+                setValue("students" , newValue)
               }}
               renderInput={(params) => (
                 <Controller
@@ -325,13 +293,18 @@ const NotificationAddDrawer = (props) => {
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       {...params}
+                      sx={{ mb: 2 }}
                       fullWidth
                       label="Students"
                       value={value}
                       onChange={onChange}
                       error={Boolean(errors.students)}
+                      helperText={errors.students ? errors.students.message : null}
+    
+                    
                       aria-describedby="stepper-linear-personal-branches"
-                      {...(errors.students && { helperText: 'This field is required' })}
+                      // {...(errors.students['Students'] && { helperText: 'This field is required' })}
+                      // {...(errors.students && { helperText: 'This field is required' })}
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }

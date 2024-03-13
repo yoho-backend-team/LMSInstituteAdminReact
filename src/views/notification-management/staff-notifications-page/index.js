@@ -1,7 +1,7 @@
 // ** React Imports
 import Grid from '@mui/material/Grid';
-import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import { useEffect, useState } from 'react';
+import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 
 // ** Components Imports
 import StaffNotificationBodySection from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationBodySection';
@@ -9,6 +9,9 @@ import StaffNotificationHeaderSection from 'features/notification-management/tea
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getAllStaffNotifications } from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationThunks';
+
+import StaffNotificationAddDrawer from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationAddDrawer';
+import StaffNotificationTableHeader from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationTableHeader';
 
 import {
   selectLoading,
@@ -36,24 +39,31 @@ const StaffNotification = () => {
   console.log(staffNotifications);
   console.log(setStaffNotificationRefetch);
 
+  const [addUserOpen, setAddUserOpen] = useState(false);
+
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <StaffNotificationHeaderSection />
         </Grid>
+        <Grid item xs={12}>
+          <StaffNotificationTableHeader toggle={toggleAddUserDrawer} />
+        </Grid>
         {staffLoading ? (
-          <UserSkeleton />
+          <NotificationSkeleton />
         ) : (
           <Grid item xs={12}>
             <StaffNotificationBodySection
               staffNotifications={staffNotifications}
-              // setLoading={setLoading}
               setStaffNotificationRefetch={setStaffNotificationRefetch}
               selectedBranchId={selectedBranchId}
             />
           </Grid>
         )}
+        <StaffNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       </Grid>
     </>
   );
