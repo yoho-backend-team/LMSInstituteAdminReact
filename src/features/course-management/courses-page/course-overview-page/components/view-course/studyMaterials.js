@@ -7,7 +7,7 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 
-const Notes = ({ materials }) => {
+const StudyMaterials = ({ materials }) => {
   const [statusValue, setStatusValue] = useState(0);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusOpen, setStatusDialogOpen] = useState(false);
@@ -148,4 +148,4 @@ const Notes = ({ materials }) => {
   );
 };
 
-export default Notes;
+export default StudyMaterials;

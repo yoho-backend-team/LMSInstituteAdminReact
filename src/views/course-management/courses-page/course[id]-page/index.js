@@ -175,7 +175,7 @@ const CourseViewPage = () => {
             </TabPanel>
 
             <TabPanel value="2">
-              <Notes />
+              <Notes notes={course?.course_notes} />
             </TabPanel>
           </TabContext>
         </Card>
