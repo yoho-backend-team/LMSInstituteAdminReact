@@ -738,7 +738,7 @@ const Notes = () => {
       flex: 0.125,
       field: 'actions',
       minWidth: 80,
-      headerName: 'Actions',
+      headerName: 'Actions', 
       renderCell: () => (
         <OptionsMenu
         sx={{'& .MuiButtonBase-root':{p:0}}}
