@@ -1,16 +1,11 @@
-// ** React Import
 import { useState } from 'react';
 import Typography from '@mui/material/Typography';
-// import CardHeader from '@mui/material/CardHeader';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, TextField, MenuItem, Button } from '@mui/material';
-import OptionsMenu from 'components/option-menu';
+import { Box, Button, MenuItem, TextField } from '@mui/material';
 import Icon from 'components/icon';
-// ** renders client column
 import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
-
-const renderClient = () => { };
+import OptionsMenu from 'components/option-menu';
 
 const Notes = ({ materials }) => {
   const [statusValue, setStatusValue] = useState(0);
@@ -29,23 +24,20 @@ const Notes = ({ materials }) => {
   const columns = [
     {
       flex: 0.25,
-      minWidth: 290,
-      field: 's_material_title',
+      minWidth: 150,
+      field: 'title',
       headerName: 'Title',
       renderCell: (params) => {
         const { row } = params;
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(params)}
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-                {row.course_title}
-              </Typography>
-              <Typography noWrap variant="caption">
-                {row.Subtitle}
-              </Typography>
-            </Box>
+            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
+              {row.title}
+            </Typography>
+            {/* <Typography noWrap variant="caption">
+              {row.description}
+            </Typography> */}
           </Box>
         );
       }
@@ -55,41 +47,41 @@ const Notes = ({ materials }) => {
       type: 'category',
       minWidth: 120,
       headerName: 'Category',
-      field: 's_material_category',
-      // valueGetter: params => new Date(params.value),
-      renderCell: (params) => (
-        <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {params.row.category}
-        </Typography>
-      )
+      field: 'category',
+      renderCell: (params) => {
+        const { row } = params;
+        return (
+          <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            {row.description}
+          </Typography>
+        );
+      }
     },
     {
       flex: 0.15,
       minWidth: 140,
       field: 'status',
       headerName: 'Status',
-      renderCell: () => {
-        return (
-          <Button variant="contained" color="success" size="small" sx={{ '&.MuiButton-root': { boxShadow: 'none' }, p: 0 }}>
-            <TextField
-              select
-              fullWidth
-              label=""
-              SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
-              width={100}
-              size="small"
-              sx={{ border: 'none !important' }}
-            >
-              <MenuItem value="0" sx={{ p: 1 }}>
-                Active
-              </MenuItem>
-              <MenuItem value="1" sx={{ p: 1 }}>
-                Deactive
-              </MenuItem>
-            </TextField>
-          </Button>
-        );
-      }
+      renderCell: () => (
+        <Button variant="contained" color="success" size="small" sx={{ '&.MuiButton-root': { boxShadow: 'none' }, p: 0 }}>
+          <TextField
+            select
+            fullWidth
+            label=""
+            SelectProps={{ value: statusValue, onChange: (e) => handleStatusValue(e) }}
+            width={100}
+            size="small"
+            sx={{ border: 'none !important' }}
+          >
+            <MenuItem value="0" sx={{ p: 1 }}>
+              Active
+            </MenuItem>
+            <MenuItem value="1" sx={{ p: 1 }}>
+              Deactive
+            </MenuItem>
+          </TextField>
+        </Button>
+      )
     },
     {
       flex: 0.125,
@@ -130,6 +122,7 @@ const Notes = ({ materials }) => {
       )
     }
   ];
+
   // ** State
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
 

@@ -130,6 +130,10 @@ const CourseCard = (props) => {
           <Button component={Link} to="view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary">
             View Details
           </Button>
+          {/* <Button component={Link} to={{ pathname: "view", state: { id: course?.course_id } }} size="medium" variant="contained" color="primary">
+            View Details
+          </Button> */}
+
         </CardActions>
       </Card>
 

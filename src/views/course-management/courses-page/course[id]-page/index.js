@@ -1,39 +1,37 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import { Link } from 'react-router-dom';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
+  Card,
+  CardContent,
   CardHeader,
   Grid,
   List,
   ListItem,
-  Typography,
-  Card,
-  CardContent
+  Typography
 } from '@mui/material';
-import Tab from '@mui/material/Tab';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import TabContext from '@mui/lab/TabContext';
-import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Tab from '@mui/material/Tab';
 import Icon from 'components/icon';
 import CourseEditModal from 'features/course-management/courses-page/course-overview-page/components/CourseEditModal';
-import { useState } from 'react';
-import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
 import Notes from 'features/course-management/courses-page/course-overview-page/components/view-course/notes';
-import { useLocation } from 'react-router-dom';
+import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
 import { getCourseDetails } from 'features/course-management/courses-page/services/courseServices';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
 
   const location = useLocation();
-  const courseId = location.state.id;
+  const courseId = location.state?.id;
 
   const [expanded, setExpanded] = useState(null);
   const [course, setCourse] = useState(null);
@@ -72,19 +70,19 @@ const CourseViewPage = () => {
     <Grid container xs={12} sx={{ p: 0, m: 0 }}>
       <Accordion
         key={accordion.id}
-        expanded={expanded === accordion.id}
-        onChange={handleChange(accordion.id)}
+        expanded={expanded === accordion?.id}
+        onChange={handleChange(accordion?.id)}
         sx={{ '&.MuiPaper-root': { borderRadius: '0.5rem', m: 0.5, background: 'none', boxShadow: 'none' } }}
       >
         <Grid item xs={12}>
           <AccordionSummary
             className="course-id-page"
-            id={`customized-panel-header-${accordion.id}`}
+            id={`customized-panel-header-${accordion?.id}`}
             expandIcon={<ExpandMoreIcon />}
-            aria-controls={`customized-panel-content-${accordion.id}`}
+            aria-controls={`customized-panel-content-${accordion?.id}`}
           >
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, p: 0 }}>
-              <Typography variant="p">{accordion.title}</Typography>
+              <Typography variant="p">{accordion?.title}</Typography>
             </Box>
           </AccordionSummary>
           <Divider />
@@ -114,6 +112,12 @@ const CourseViewPage = () => {
       </Accordion>
     </Grid>
   );
+
+  if (!course || !course.course_module) {
+    return null; // Or any other fallback UI
+  }
+
+  console.log(course);
 
   // console.log(course);
 
@@ -169,6 +173,7 @@ const CourseViewPage = () => {
             <TabPanel value="1">
               <StudyMaterials materials={course?.course_study_materials} />
             </TabPanel>
+
             <TabPanel value="2">
               <Notes />
             </TabPanel>
