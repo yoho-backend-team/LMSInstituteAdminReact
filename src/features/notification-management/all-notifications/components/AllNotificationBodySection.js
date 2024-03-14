@@ -12,12 +12,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 import ImageIcon from '@mui/icons-material/Image';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 
-import { selectAllNotifications } from '../redux/allNotificationSelectors';
-import { getAllNotifications } from '../redux/allNotificationThunks';
 
 // ** renders client column
 const renderClient = (row) => {
@@ -109,16 +105,7 @@ const notification = [
 const AllNotificationBodySection = () => {
   // ** State
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-  // ** Hooks
-  const dispatch = useDispatch();
-  const AllNotifications = useSelector(selectAllNotifications);
 
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(AllNotifications);
-  useEffect(() => {
-    dispatch(getAllNotifications(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
 
 
 
