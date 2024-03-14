@@ -117,9 +117,10 @@ const StudentCertificateAddDrawer = (props) => {
     var bodyFormData = new FormData();
     bodyFormData.append('certificate_file', studymaterialPdf);
     bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('student_id', data.student);
+    bodyFormData.append('institute_student_id', data.student);
     bodyFormData.append('name', data.name);
     bodyFormData.append('description', data.description);
+    bodyFormData.append('institute_branch_id', selectedBranchId);
 
     const result = await addStudentCertificate(bodyFormData);
 
@@ -136,6 +137,7 @@ const StudentCertificateAddDrawer = (props) => {
       // toast.error(result.message);
     }
   };
+  
 
   const handleClose = () => {
     setValue('contact', Number(''));

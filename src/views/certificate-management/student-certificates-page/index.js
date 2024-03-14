@@ -240,7 +240,7 @@ const StudenrCertificate = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudentCertificateTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
         </Grid>
         {loading ? (
           <ContentSkeleton />
