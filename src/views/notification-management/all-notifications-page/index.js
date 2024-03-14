@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users-page/redux/userSelectors';
 import { getAllActiveGroups } from 'features/user-management/users-page/services/userServices';
+import AllNotificationTableHeader from 'features/notification-management/all-notifications/components/AllNotificationTableHeader';
+import AllNotificationAddDrawer from 'features/notification-management/all-notifications/components/AllNotificationAddDrawer';
 
 const AllNotification = () => {
   const dispatch = useDispatch();
@@ -38,6 +40,9 @@ const AllNotification = () => {
   }, [dispatch]);
 
   const [groups, setGroups] = useState([]);
+  const [addUserOpen, setAddUserOpen] = useState(false);
+
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   return (
     <>
@@ -49,10 +54,14 @@ const AllNotification = () => {
             <AllNotificationHeaderSection />
           </Grid>
           <Grid item xs={12}>
+            <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
+          </Grid>
+          <Grid item xs={12}>
             <AllNotificationBodySection groups={groups} users={users} />
           </Grid>
         </Grid>
       )}
+      <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </>
   );
 };

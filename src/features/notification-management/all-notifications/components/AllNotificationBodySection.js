@@ -1,5 +1,5 @@
 // ** React Imports
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 // ** MUI Imports
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -12,13 +12,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 import ImageIcon from '@mui/icons-material/Image';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
-import { searchUsers } from 'features/user-management/users-page/services/userServices';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-import { useEffect } from 'react';
-import AllNotificationAddDrawer from './AllNotificationAddDrawer';
-import AllNotificationTableHeader from './AllNotificationTableHeader';
 
 import { selectAllNotifications } from '../redux/allNotificationSelectors';
 import { getAllNotifications } from '../redux/allNotificationThunks';
@@ -112,9 +108,7 @@ const notification = [
 
 const AllNotificationBodySection = () => {
   // ** State
-  const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-  const [addUserOpen, setAddUserOpen] = useState(false);
   // ** Hooks
   const dispatch = useDispatch();
   const AllNotifications = useSelector(selectAllNotifications);
@@ -126,24 +120,7 @@ const AllNotificationBodySection = () => {
     dispatch(getAllNotifications(selectedBranchId));
   }, [dispatch, selectedBranchId]);
 
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
+
 
   const columns = [
     {
@@ -250,7 +227,6 @@ const AllNotificationBodySection = () => {
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-      <AllNotificationTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
       <DataGrid
         sx={{ p: 2 }}
         autoHeight
@@ -262,7 +238,6 @@ const AllNotificationBodySection = () => {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
       />
-      <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </Card>
   );
 };
