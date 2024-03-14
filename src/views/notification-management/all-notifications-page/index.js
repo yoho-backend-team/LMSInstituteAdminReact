@@ -1,67 +1,62 @@
 // ** React Imports
-import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
+import { useEffect, useState } from 'react';
 // ** Components Imports
-import AllNotificationHeaderSection from 'features/notification-management/all-notifications/components/AllNotificationHeaderSection';
-import AllNotificationBodySection from 'features/notification-management/all-notifications/components/AllNotificationBodySection';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
-import { selectUsers, selectLoading as selectUserLoading } from 'features/user-management/users-page/redux/userSelectors';
-import { getAllActiveGroups } from 'features/user-management/users-page/services/userServices';
-import AllNotificationTableHeader from 'features/notification-management/all-notifications/components/AllNotificationTableHeader';
+import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 import AllNotificationAddDrawer from 'features/notification-management/all-notifications/components/AllNotificationAddDrawer';
+import AllNotificationBodySection from 'features/notification-management/all-notifications/components/AllNotificationBodySection';
+import AllNotificationHeaderSection from 'features/notification-management/all-notifications/components/AllNotificationHeaderSection';
+import AllNotificationTableHeader from 'features/notification-management/all-notifications/components/AllNotificationTableHeader';
+
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getAllNotifications } from 'features/notification-management/all-notifications/redux/allNotificationThunks';
+
+import { selectAllNotifications, selectLoading } from 'features/notification-management/all-notifications/redux/allNotificationSelectors';
 
 const AllNotification = () => {
   const dispatch = useDispatch();
-  const users = useSelector(selectUsers);
-  const userLoading = useSelector(selectUserLoading);
+  const allNotifications = useSelector(selectAllNotifications);
+  const allNotificationsLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  console.log(selectedBranchId);
+  const [allNotificationRefetch, setAllNotificationRefetch] = useState(false);
 
+  // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllNotifications(data));
+  }, [dispatch, selectedBranchId, allNotificationRefetch]);
 
-  const getAllGroups = async () => {
-    try {
-      const result = await getAllActiveGroups();
-      if (result.success) {
-        console.log('Search results:', result.data);
-        setGroups(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
-
-  const [groups, setGroups] = useState([]);
   const [addUserOpen, setAddUserOpen] = useState(false);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   return (
     <>
-      {userLoading ? (
-        <UserSkeleton />
-      ) : (
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <AllNotificationHeaderSection />
-          </Grid>
-          <Grid item xs={12}>
-            <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
-          </Grid>
-          <Grid item xs={12}>
-            <AllNotificationBodySection groups={groups} users={users} />
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <AllNotificationHeaderSection />
         </Grid>
-      )}
-      <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        <Grid item xs={12}>
+          <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
+        </Grid>
+        {allNotificationsLoading ? (
+          <NotificationSkeleton />
+        ) : (
+          <Grid item xs={12}>
+            <AllNotificationBodySection
+              allNotifications={allNotifications}
+              // setLoading={setLoading}
+              setStudentNotificationRefetch={setAllNotificationRefetch}
+              selectedBranchId={selectedBranchId}
+            />
+          </Grid>
+        )}
+        <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      </Grid>
     </>
   );
 };
