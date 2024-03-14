@@ -48,7 +48,7 @@ const NotificationTableHeader = (props) => {
           <TextField 
             value={searchValue}
             fullWidth 
-            placeholder="Search Sudent"
+            placeholder="Search"
             onChange={(e) => handleSearch(e)} />
         </Grid>
         <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
