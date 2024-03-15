@@ -116,7 +116,7 @@ const StudentCertificateAddDrawer = (props) => {
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('certificate_file', studymaterialPdf);
-    bodyFormData.append('branch_id', data.branch);
+    // bodyFormData.append('branch_id', data.branch);
     bodyFormData.append('institute_student_id', data.student);
     bodyFormData.append('name', data.name);
     bodyFormData.append('description', data.description);
