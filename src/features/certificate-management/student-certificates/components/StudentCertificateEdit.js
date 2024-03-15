@@ -1,12 +1,11 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -37,64 +36,29 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  course: yup.string().required(),
-  title: yup
+  name: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required()
 });
 
-
 const defaultValues = {
   description: '',
-  title: '',
-  branch: '',
-  course: ''
+  name: ''
 };
 
 const StudentCertificateEdit = (props) => {
   // ** Props
   const { open, toggle } = props;
-  console.log('StudyMaterialEdit - open:', props.open);
-  console.log('StudyMaterialEdit - toggle:', props.toggle);
+  console.log('StudentCertificateEdit - open:', props.open);
+  console.log('StudentCertificateEdit - toggle:', props.toggle);
   // ** State
-  
-  const [groups, setGroups] = useState([]);
-
-
-
-  useEffect(() => {
-    getAllGroups();
-  }, []);
-
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/course/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
-
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  console.log(groups);
 
   const {
     reset,
     control,
     setValue,
+    // setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -113,24 +77,24 @@ const StudentCertificateEdit = (props) => {
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    bodyFormData.append('name', data.title);
+    bodyFormData.append('name', data.name);
     bodyFormData.append('description', data.description);
-    bodyFormData.append('course_id', data.course);
-    bodyFormData.append('branch_id', data.branch);
-
+    bodyFormData.append('id', props.initialValues.id);
     console.log(bodyFormData);
 
-    try {
-      const result = await updateStudentCertificate(data);
+    const result = await updateStudentCertificate(bodyFormData);
 
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
     }
   };
 
@@ -150,7 +114,7 @@ const StudentCertificateEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Edit Certificate</Typography>
+        <Typography variant="h5">Edit Study Material</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -174,7 +138,7 @@ const StudentCertificateEdit = (props) => {
           </Grid>
 
           <Controller
-            name="title"
+            name="name"
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
@@ -185,8 +149,8 @@ const StudentCertificateEdit = (props) => {
                 label="Title"
                 onChange={onChange}
                 placeholder="John Doe"
-                error={Boolean(errors.title)}
-                {...(errors.title && { helperText: errors.title.message })}
+                error={Boolean(errors.name)}
+                {...(errors.name && { helperText: errors.name.message })}
               />
             )}
           />

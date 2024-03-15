@@ -64,7 +64,8 @@ const FeesEditDrawer = (props) => {
   const defaultValues = {
     transaction_id: '',
     paid_amount: '',
-    selectedImage: ''
+    selectedImage: '',
+    payment_date:""
   };
 
   // console.log(defaultValues);
@@ -259,16 +260,15 @@ const FeesEditDrawer = (props) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={12} sx={{ mb: 2 }}>
+            <Grid item xs={6} sx={{ mb: 2 }}>
               <Controller
                 name="payment_date"
                 control={control}
                 rules={{ required: 'Payment Date field is required' }}
-                render={({ field: {  onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <DatePicker
-                    // selected={value}
+                    selected={value}
                     id="basic-input"
-                    dateFormat={'yyyy-MM-dd'}
                     className="full-width-datepicker"
                     onChange={onChange}
                     placeholderText="Click to select a date"

@@ -154,7 +154,7 @@ const CourseViewPage = () => {
               <source src={videoUrl} type="video/mp4" />
             </CardMedia>
 
-            {/* <iframe
+                  {/* <iframe
                     title="Your iFrame Title"
                     width="100%"
                     height="300"
@@ -163,6 +163,8 @@ const CourseViewPage = () => {
                     allowFullScreen
                     style={{ borderRadius: '10px' }}
                   ></iframe> */}
+
+            
           </Box>
           <CardContent>
             {course?.institute_course_branch?.description}
@@ -186,7 +188,7 @@ const CourseViewPage = () => {
           </Button>
           {course?.course_module?.map(createAccordion)}
 
-          <CourseEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+          <CourseEditModal  course={course}  open={isEditModalOpen} handleEditClose={handleEditClose} />
         </Card>
       </Grid>
       <Grid item xs={12}>
