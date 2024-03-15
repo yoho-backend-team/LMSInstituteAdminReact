@@ -1,11 +1,8 @@
-import { useState } from 'react';
+import { Box, Button, MenuItem, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Button, MenuItem, TextField } from '@mui/material';
-import Icon from 'components/icon';
-import DeleteDialog from 'components/modal/DeleteModel';
-import StatusDialog from 'components/modal/DeleteModel';
-import OptionsMenu from 'components/option-menu';
+import { default as DeleteDialog, default as StatusDialog } from 'components/modal/DeleteModel';
+import { useState } from 'react';
 
 const StudyMaterials = ({ materials }) => {
   const [statusValue, setStatusValue] = useState(0);
@@ -17,13 +14,10 @@ const StudyMaterials = ({ materials }) => {
     setStatusDialogOpen(true);
   };
 
-  const handleDelete = () => {
-    setDeleteDialogOpen(true);
-  };
 
   const columns = [
     {
-      flex: 0.25,
+      flex: 0.155,
       minWidth: 150,
       field: 'title',
       headerName: 'Title',
@@ -43,7 +37,7 @@ const StudyMaterials = ({ materials }) => {
       }
     },
     {
-      flex: 0.175,
+      flex: 0.155,
       type: 'category',
       minWidth: 120,
       headerName: 'Category',
@@ -58,7 +52,7 @@ const StudyMaterials = ({ materials }) => {
       }
     },
     {
-      flex: 0.15,
+      flex: 0.125,
       minWidth: 140,
       field: 'status',
       headerName: 'Status',
@@ -83,44 +77,7 @@ const StudyMaterials = ({ materials }) => {
         </Button>
       )
     },
-    {
-      flex: 0.125,
-      field: 'actions',
-      minWidth: 80,
-      headerName: 'Actions',
-      renderCell: () => (
-        <OptionsMenu
-          sx={{ '& .MuiButtonBase-root': { p: 0 } }}
-          menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-          iconButtonProps={{ size: 'small', sx: { color: 'text.secondary', '& .MuiButtonBase-root': { p: 0 } } }}
-          options={[
-            {
-              text: 'View',
-              icon: <Icon icon="tabler:eye" fontSize={20} />,
-              menuItemProps: {
-                onClick: () => handleView()
-              }
-            },
-            {
-              text: 'Edit',
-              icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
-              menuItemProps: {
-                onClick: () => toggleEditUserDrawer()
-              }
-            },
-            {
-              text: 'Delete',
-              icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
-              menuItemProps: {
-                onClick: () => {
-                  handleDelete();
-                }
-              }
-            }
-          ]}
-        />
-      )
-    }
+   
   ];
 
   // ** State
