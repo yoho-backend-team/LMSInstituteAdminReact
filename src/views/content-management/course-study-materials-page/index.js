@@ -53,7 +53,9 @@ const StudyMaterials = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseStudyMaterials(selectedBranchId));
+    dispatch(getAllCourseStudyMaterials(
+      {branch_id:selectedBranchId}
+    ));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -272,7 +274,7 @@ const StudyMaterials = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <StudyMaterialHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         {StudyMaterialsLoading ? (
           <ContentSkeleton />
