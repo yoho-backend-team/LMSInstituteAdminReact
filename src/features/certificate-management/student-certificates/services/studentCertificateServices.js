@@ -72,14 +72,15 @@ export const addStudentCertificate = async (data) => {
   }
 };
 
-export const deleteStudentCertificate = async (StudentCertificateId) => {
+export const deleteStudentCertificate = async (data) => {
   try {
     const response = await axios.delete(`${STUDENT_CERTIFICATE_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: StudentCertificateId }
+      params: { id: data }
+
     });
 
     if (response.data.status) {
@@ -95,7 +96,7 @@ export const deleteStudentCertificate = async (StudentCertificateId) => {
 
 export const updateStudentCertificate = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_CERTIFICATE_API_ENDPOINT}/update`, data, {
+    const response = await axios.post(`${STUDENT_CERTIFICATE_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -110,6 +111,27 @@ export const updateStudentCertificate = async (data) => {
     }
   } catch (error) {
     console.error('Error in updateStudentCertificate:', error);
+    throw error;
+  }
+};
+
+export const updateStudentCertificateStatus = async (data) => {
+  try {
+    const response = await axios.put(`${STUDENT_CERTIFICATE_API_ENDPOINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'StudentCertificate status updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addStudentCertificate:', error);
     throw error;
   }
 };
