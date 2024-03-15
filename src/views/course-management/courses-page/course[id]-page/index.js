@@ -26,15 +26,19 @@ import StudyMaterials from 'features/course-management/courses-page/course-overv
 import { getCourseDetails } from 'features/course-management/courses-page/services/courseServices';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { CardMedia } from '@mui/material';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
 
   const location = useLocation();
   const courseId = location.state?.id;
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   const [expanded, setExpanded] = useState(null);
   const [course, setCourse] = useState(null);
+
+  const [videoUrl, setVideoUrl] = useState(null);
 
   useEffect(() => {
     console.log('hello');
@@ -58,10 +62,15 @@ const CourseViewPage = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  // const handlePreview = (url) => {
+  //   setVideoUrl(url);
+  // };
+
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
+
   const handleEdit = () => {
     setEditModalOpen(true);
   };
@@ -82,7 +91,9 @@ const CourseViewPage = () => {
             aria-controls={`customized-panel-content-${accordion?.id}`}
           >
             <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, p: 0 }}>
-              <Typography variant="p">{accordion?.title}</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 100, textAlign: 'justify' }}>
+                {accordion?.title}
+              </Typography>
             </Box>
           </AccordionSummary>
           <Divider />
@@ -93,15 +104,20 @@ const CourseViewPage = () => {
             <Grid item xs={12}>
               <List>
                 <ListItem>
-                  <Typography variant="subtitle1" sx={{ color: 'dark.main', fontWeight: 50, textAlign: 'justify' }}>
+                  <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'justify' }}>
                     {accordion?.description}
+                  </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 50, textAlign: 'justify' }}>
+                    {accordion?.video_url}
                   </Typography>
                 </ListItem>
               </List>
             </Grid>
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                <Button variant="tonal" color="primary" fullWidth>
+                <Button onClick={() => setVideoUrl(accordion?.video_url)} variant="tonal" color="primary" fullWidth>
                   <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
                   Preview
                 </Button>
@@ -117,9 +133,7 @@ const CourseViewPage = () => {
     return null; // Or any other fallback UI
   }
 
-  console.log(course);
-
-  // console.log(course);
+  console.log(videoUrl);
 
   return (
     <Grid container xs={12} spacing={2}>
@@ -127,16 +141,28 @@ const CourseViewPage = () => {
         <Card>
           <CardHeader title={course?.institute_course_branch?.course_name} />{' '}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <video
-              controls
-              autoPlay
+            {/* <video
+              // controls
+              autoPlay 
               loop
-              muted
-              poster="https://assets.codepen.io/6093409/river.jpg"
-              style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%' }}
+              muted 
+              // style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%' }}
             >
-              <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4" />
-            </video>
+              <source src={videoUrl} type="video/mp4" />
+            </video> */}
+            <CardMedia component="video" controls autoPlay loop muted width="100%" height="auto">
+              <source src={videoUrl} type="video/mp4" />
+            </CardMedia>
+
+            {/* <iframe
+                    title="Your iFrame Title"
+                    width="100%"
+                    height="300"
+                    src= {videoUrl}
+                    frameBorder="0"
+                    allowFullScreen
+                    style={{ borderRadius: '10px' }}
+                  ></iframe> */}
           </Box>
           <CardContent>
             {course?.institute_course_branch?.description}
