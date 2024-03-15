@@ -90,14 +90,8 @@ const AddCoursePage = () => {
     getActiveCourseCategories(filteredBranchId);
   }, [selectedBranches, setSelectedBranches]);
 
-  const getAllBranches = async () => {
-    const result = await getActiveBranches();
 
-    if (result.data.data) {
-      setBranches(result.data.data);
-    }
-  };
-
+  
   const getActiveCourseCategories = async (branchIds) => {
     const data = {
       branch_id: branchIds
@@ -109,6 +103,15 @@ const AddCoursePage = () => {
       setActiveCategories(result.data.data);
     }
   };
+  
+  const getAllBranches = async () => {
+    const result = await getActiveBranches();
+
+    if (result.data.data) {
+      setBranches(result.data.data);
+    }
+  };
+
 
   useEffect(() => {
     getAllCategories();

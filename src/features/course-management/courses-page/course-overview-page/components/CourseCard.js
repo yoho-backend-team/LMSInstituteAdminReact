@@ -43,7 +43,7 @@ const CourseCard = (props) => {
   };
 
   return (
-    <Grid item xs={12} sm={12} lg={4}>
+    <Grid item xs={12} sm={12} md={6}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
           <CardMedia

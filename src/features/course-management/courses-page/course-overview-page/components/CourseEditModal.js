@@ -1,8 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, TextField as CustomTextField, Grid, styled } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+import { TextField as CustomTextField, Grid, styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,47 +7,47 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import CustomChip from 'components/mui/chip';
 import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-const schema = yup.object().shape({
-  Course_duration: yup.number().required(),
-  course_name: yup.string().required(),
-  Course_Price: yup.number().required(),
-  description: yup.string().required(),
-  course_overview: yup.string().required(),
-  Learning_Format: yup.array().min(1, 'Select at least one Learning Format').required(),
-  Course_Category: yup.string().required()
-});
+import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
 
-const defaultValues = {
-  Course_duration: '',
-  course_name: '',
-  Course_Price: '',
-  description: '',
-  course_overview: '',
-  Learning_Format: [],
-  Course_Category: ''
-};
+import { updateCourse } from '../../services/courseServices';
 
-const groups = [
-  { id: '1', name: 'Offline Class' },
-  { id: '2', name: 'Online class' },
-  { id: '3', name: 'Hybrid' }
-];
+const CourseEditModal = ({ open, handleEditClose, course }) => {
+  const [activeCategories, setActiveCategories] = useState([]);
 
-const CourseEditModal = ({ open, handleEditClose }) => {
   const image =
     'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
 
+  const schema = yup.object().shape({
+    course_duration: yup.number().required(),
+    course_name: yup.string().required(),
+    course_price: yup.number().required(),
+    description: yup.string().required(),
+    course_overview: yup.string().required(),
+    learning_format: yup.string().required(),
+    course_category: yup.string().required()
+  });
+
+  const defaultValues = {
+    course_duration: '',
+    course_name: '',
+    course_price: '',
+    description: '',
+    course_overview: '',
+    learning_format: '',
+    course_category: ''
+  };
+
+
   const {
-    reset,
-    control,
-    setValue,
     handleSubmit,
+    control,
+    reset,
+    setValue,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -58,16 +55,23 @@ const CourseEditModal = ({ open, handleEditClose }) => {
     resolver: yupResolver(schema)
   });
 
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (course) {
+      setValue('course_duration', course?.institute_course_branch?.course_duration || '');
+      setValue('course_name', course?.institute_course_branch?.course_name || '');
+      setValue('course_price', course?.institute_course_branch?.course_price || '');
+      setValue('description', course?.institute_course_branch?.description || '');
+      setValue('course_overview', course?.institute_course_branch?.course_overview || '');
+      setValue('learning_format', course?.institute_course_branch?.learning_format || '');
+      setValue('course_category', course?.institute_category_id || '');
+    }
+  }, [course, setValue]);
+
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   console.log(selectedImage);
-  const handleClose = () => {
-    setValue('course', '');
-    setValue('status', '');
-    handleEditClose();
-    reset();
-  };
 
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
@@ -96,18 +100,59 @@ const CourseEditModal = ({ open, handleEditClose }) => {
     }
   }));
 
-  const onSubmit = (data) => {
-    const formData = new FormData();
-    formData.append('course_name', data.course_name);
-    formData.append('Course_duration', data.Course_duration);
-    formData.append('Course_Price', data.Course_Price);
-    formData.append('Course_Category', data.Course_Category);
-    formData.append('Learning_Format', data.Learning_Format);
-    formData.append('course_overview', data.course_overview);
-    formData.append('description', data.description);
-    console.log(formData);
-  };
+  // Handle form submission
+  const onSubmit = useCallback(
+    async (data) => {
+      const formData = new FormData();
+      formData.append('course_name', data.course_name);
+      formData.append('course_duration', data.course_duration);
+      formData.append('course_price', data.course_price);
+      formData.append('course_category', data.course_category);
+      formData.append('learning_format', data.learning_format);
+      formData.append('course_overview', data.course_overview);
+      formData.append('description', data.description);
+
+      try {
+        const result = await updateCourse(formData);
+
+        if (result.success) {
+          toast.success(result.message);
+          // setRefetchBranch((state) => !state);
+          handleClose();
+        } else {
+          toast.error(result.message);
+        }
+        console.log(formData); // Just logging the FormData for now
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [course] // Add dependencies if needed
+  );
+
   console.log(onSubmit);
+
+  // Close the modal
+  const handleClose = useCallback(() => {
+    handleEditClose();
+    reset();
+  }, [handleEditClose, course]);
+
+  useEffect(() => {
+    getActiveCourseCategories();
+  }, []);
+
+  const getActiveCourseCategories = async (branchIds) => {
+    const data = {
+      branch_id: branchIds
+    };
+    console.log(data);
+    const result = await getActiveCategoriesByBranch(data);
+
+    if (result.data.data) {
+      setActiveCategories(result.data.data);
+    }
+  };
 
   return (
     <div>
@@ -138,11 +183,22 @@ const CourseEditModal = ({ open, handleEditClose }) => {
         >
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-                <ImgStyled src={imgSrc} alt="Profile Pic" />
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,mb:2 }}>
+                {!selectedImage && (
+                  <ImgStyled
+                    src={
+                      course?.institute_course_branch?.logo
+                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.logo}`
+                        : imgSrc
+                    }
+                    alt="Profile Pic"
+                  />
+                )}
+
+                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload
+                    update New logo
                     <input
                       hidden
                       type="file"
@@ -161,10 +217,11 @@ const CourseEditModal = ({ open, handleEditClose }) => {
                   name="course_name"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={course?.institute_course_branch?.course_name}
                       label="Course Name"
                       onChange={onChange}
                       placeholder="Leonard"
@@ -177,26 +234,27 @@ const CourseEditModal = ({ open, handleEditClose }) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Course_duration"
+                  name="course_duration"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
+                      // defaultValue={course?.institute_course_branch?.duration}
                       value={value}
                       label="Course Duration"
                       type="number"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(errors.Course_duration)}
-                      {...(errors.Course_duration && { helperText: 'This field is required' })}
+                      error={Boolean(errors.course_duration)}
+                      {...(errors.course_duration && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Course_Price"
+                  name="course_price"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -207,15 +265,15 @@ const CourseEditModal = ({ open, handleEditClose }) => {
                       label="Course Price"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(errors.Course_Price)}
-                      {...(errors.Course_Price && { helperText: 'This field is required' })}
+                      error={Boolean(errors.course_price)}
+                      {...(errors.course_price && { helperText: 'This field is required' })}
                     />
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="Course_Category"
+                  name="course_category"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -224,75 +282,36 @@ const CourseEditModal = ({ open, handleEditClose }) => {
                       fullWidth
                       label="Course Category"
                       id="validation-billing-select"
-                      error={Boolean(errors.Course_Category)}
-                      {...(errors.Course_Category && { helperText: 'This field is required' })}
+                      error={Boolean(errors.course_category)}
+                      {...(errors.course_category && { helperText: 'This field is required' })}
                       onChange={onChange}
                       value={value}
                     >
-                      <MenuItem value="price">Price</MenuItem>
-                      <MenuItem value="percentage">Percentage</MenuItem>
+                      {activeCategories?.map((item, index) => (
+                        <MenuItem key={index} value={item.category_id}>
+                          {item.category_name}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
                 <Controller
-                  name="Learning_Format"
+                  name="learning_format"
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      multiple
-                      disableCloseOnSelect
-                      id="select-multiple-chip"
-                      options={groups}
-                      getOptionLabel={(option) => option.name}
+                    <CustomTextField
+                      fullWidth
                       value={value}
-                      onChange={(e, newValue) => {
-                        if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                          onChange(groups.filter((option) => option.id !== 'selectAll'));
-                        } else {
-                          onChange(newValue);
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          label="Learning Format"
-                          error={Boolean(errors.Learning_Format)}
-                          {...(errors.Learning_Format && { helperText: errors.Learning_Format.message })}
-                        />
-                      )}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                            checkedIcon={<CheckBoxIcon fontSize="small" />}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                          {option.name}
-                        </li>
-                      )}
-                      renderTags={(value) =>
-                        value.map((option, index) => (
-                          <CustomChip
-                            key={option.id}
-                            label={option.name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              onChange(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))
-                      }
-                      isOptionEqualToValue={(option, value) => option.id === value.id}
-                      selectAllText="Select All"
-                      SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                      multiline
+                      rows={3}
+                      label="learning_format"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(errors.learning_format)}
+                      {...(errors.learning_format && { helperText: 'This field is required' })}
                     />
                   )}
                 />
