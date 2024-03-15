@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/certificate-management/student-certificates`;
 
-export const getAllStudentCertificates = async (selectedBranchId) => {
+export const getAllStudentCertificates = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/read-all-student-notifications`, {
+    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful

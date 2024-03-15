@@ -71,15 +71,17 @@ const StudenrCertificate = () => {
     console.log('Toggle drawer');
   };
 
-  
   const dispatch = useDispatch();
   const studentCertificates = useSelector(selectStudentCertificates);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   useEffect(() => {
-    dispatch(getAllStudentCertificates(selectedBranchId));
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllStudentCertificates(data));
   }, [dispatch, selectedBranchId]);
 
-  console.log(studentCertificates);
+  console.log('certificate', studentCertificates);
   const handleFilter = useCallback(
     async (val) => {
       try {
@@ -240,7 +242,12 @@ const StudenrCertificate = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <StudentCertificateTableHeader
+            selectedBranchId={selectedBranchId}
+            value={value}
+            handleFilter={handleFilter}
+            toggle={toggleAddUserDrawer}
+          />
         </Grid>
         {loading ? (
           <ContentSkeleton />
