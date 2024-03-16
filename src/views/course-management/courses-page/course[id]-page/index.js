@@ -11,6 +11,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardMedia,
   Grid,
   List,
   ListItem,
@@ -25,8 +26,9 @@ import Notes from 'features/course-management/courses-page/course-overview-page/
 import StudyMaterials from 'features/course-management/courses-page/course-overview-page/components/view-course/studyMaterials';
 import { getCourseDetails } from 'features/course-management/courses-page/services/courseServices';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { CardMedia } from '@mui/material';
+
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
@@ -34,6 +36,9 @@ const CourseViewPage = () => {
   const location = useLocation();
   const courseId = location.state?.id;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  // const [courseRefetch, setCourseRefetch] = useState(false);
 
   const [expanded, setExpanded] = useState(null);
   const [course, setCourse] = useState(null);
@@ -43,7 +48,7 @@ const CourseViewPage = () => {
   useEffect(() => {
     console.log('hello');
     getCourseData(courseId);
-  }, [courseId]);
+  }, [courseId, selectedBranchId]);
 
   console.log('course', course);
 
@@ -154,7 +159,7 @@ const CourseViewPage = () => {
               <source src={videoUrl} type="video/mp4" />
             </CardMedia>
 
-                  {/* <iframe
+            {/* <iframe
                     title="Your iFrame Title"
                     width="100%"
                     height="300"
@@ -163,8 +168,6 @@ const CourseViewPage = () => {
                     allowFullScreen
                     style={{ borderRadius: '10px' }}
                   ></iframe> */}
-
-            
           </Box>
           <CardContent>
             {course?.institute_course_branch?.description}
@@ -188,7 +191,13 @@ const CourseViewPage = () => {
           </Button>
           {course?.course_module?.map(createAccordion)}
 
-          <CourseEditModal  course={course}  open={isEditModalOpen} handleEditClose={handleEditClose} />
+          <CourseEditModal
+            selectedBranchId={selectedBranchId}
+            // setCourseRefetch={setCourseRefetch}
+            course={course}
+            open={isEditModalOpen}
+            handleEditClose={handleEditClose}
+          />
         </Card>
       </Grid>
       <Grid item xs={12}>

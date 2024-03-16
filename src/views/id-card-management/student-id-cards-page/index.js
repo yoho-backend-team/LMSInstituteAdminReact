@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 // ** MUI Imports
 import { Avatar as CustomAvatar } from '@mui/material';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
@@ -9,15 +10,17 @@ import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import StudentFilterCard from 'features/id-card-management/student-id-cards/components/StudentFilterCard';
 import { selectLoading, selectStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardSelectors';
+import toast from 'react-hot-toast';
 
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-import CustomTextField from 'components/mui/text-field';
+import StatusChangeDialog from 'components/modal/DeleteModel';
+
+import { updateStudentIdCardStatus } from 'features/id-card-management/student-id-cards/services/studentIdcardServices';
 
 const roleColors = {
   admin: 'error',
@@ -34,43 +37,85 @@ const statusColors = {
 };
 
 const StudentIdCard = () => {
+  const dispatch = useDispatch();
+  const StudentIdCards = useSelector(selectStudentIdCards);
+  const StudentIdCardsLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [studentIdRefetch, setStudentIdRefetch] = useState(false);
+
+  console.log('id cards', StudentIdCards);
+
+  useEffect(() => {
+    dispatch(getAllStudentIdCards(selectedBranchId));
+  }, [dispatch, selectedBranchId, studentIdRefetch]);
+
   const [flipped, setFlipped] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+  const [filterstatusValue, setFilterStatusValue] = useState('');
+
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateStudentIdCardStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setStudentIdRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  const handleStatusValue = (event, student) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(student);
+  };
 
   const flip = (index) => {
     setFlippedIndex(index);
     setFlipped(!flipped);
   };
 
-  // const [statusValue, setStatusValue] = useState('');
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentIdCards({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
 
-  const handleFilterByStatus = () => {
-    setDeleteDialogOpen(true);
+  const handleFilterByStatus = (e) => {
+    setFilterStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStudentIdCards(data));
   };
 
-  const dispatch = useDispatch();
-  const StudentIdCards = useSelector(selectStudentIdCards);
-  const StudentIdCardsLoading = useSelector(selectLoading);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log('id cards', StudentIdCards);
-
-  useEffect(() => {
-    dispatch(getAllStudentIdCards(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  // const [statusValue, setStatusValue] = useState('');
 
   return (
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
+          <Grid item xs={12} sm={12}>
+            <StudentFilterCard
+              selectedBranchId={selectedBranchId}
+              searchValue={searchValue}
+              handleSearch={handleSearch}
+              filterstatusValue={filterstatusValue}
+              handleFilterByStatus={handleFilterByStatus}
+            />
+          </Grid>
           {StudentIdCardsLoading ? (
             <IdCardSkeleton />
           ) : (
             <Grid>
-              <Grid item xs={12} sm={12}>
-                <StudentFilterCard />
-              </Grid>
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {StudentIdCards.map((item, index) => (
                   <Grid
@@ -183,15 +228,16 @@ const StudentIdCard = () => {
                           </Box>
 
                           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                            <CustomTextField
+                            <TextField
+                              size="small"
                               select
-                              fullWidth
+                              width={100}
                               label="Status"
-                              SelectProps={{ value: item.is_active, onChange: (e) => handleFilterByStatus(e) }}
+                              SelectProps={{ value: item?.student?.is_active, onChange: (e) => handleStatusValue(e, item?.student) }}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>
-                            </CustomTextField>
+                            </TextField>
                           </Box>
                         </CardContent>
                       </Card>
@@ -208,12 +254,22 @@ const StudentIdCard = () => {
           )}
         </Grid>
       </Grid>
-      <DeleteDialog
+
+      {/* Status Change Modal */}
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+
+      {/* <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
         description="Are you sure you want to delete this item?"
         title="Delete"
-      />
+      /> */}
     </>
   );
 };
