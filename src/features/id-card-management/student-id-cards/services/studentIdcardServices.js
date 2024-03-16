@@ -111,3 +111,25 @@ export const updateStudentIdCard = async (data) => {
     throw error;
   }
 };
+
+
+export const updateStudentIdCardStatus = async (data) => {
+  try {
+    const response = await axios.put(`${STUDENT_ID_CARDS_API_ENDPOINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Student updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update Student' };
+    }
+  } catch (error) {
+    console.error('Error in updateStudent:', error);
+    throw error;
+  }
+};
