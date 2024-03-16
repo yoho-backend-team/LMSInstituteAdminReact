@@ -251,7 +251,7 @@ const Notes = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId}/>
         </Grid>
 
         {NotesLoading ? (

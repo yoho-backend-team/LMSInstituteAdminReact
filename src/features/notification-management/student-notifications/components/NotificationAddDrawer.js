@@ -112,9 +112,11 @@ const NotificationAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.log(data);
     var bodyFormData = new FormData();
-    data?.students?.forEach((student)=> { bodyFormData.append('student_ids[]', student?.student_id)})
+    data?.students?.forEach((student) => {
+      bodyFormData.append('student_ids[]', student?.student_id);
+    });
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('course', data.course.course_id); // Accessing course_id from selected object
     bodyFormData.append('branch_id', selectedBranchId); // Accessing batch_id from selected object
@@ -127,13 +129,13 @@ const NotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
+      // let errorMessage = '';
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(result.message);
     }
   };
 
@@ -283,7 +285,7 @@ const NotificationAddDrawer = (props) => {
               value={selectedStudents}
               onChange={(e, newValue) => {
                 setSelectedStudents(newValue);
-                setValue("students" , newValue)
+                setValue('students', newValue);
               }}
               renderInput={(params) => (
                 <Controller
@@ -300,8 +302,6 @@ const NotificationAddDrawer = (props) => {
                       onChange={onChange}
                       error={Boolean(errors.students)}
                       helperText={errors.students ? errors.students.message : null}
-    
-                    
                       aria-describedby="stepper-linear-personal-branches"
                       // {...(errors.students['Students'] && { helperText: 'This field is required' })}
                       // {...(errors.students && { helperText: 'This field is required' })}

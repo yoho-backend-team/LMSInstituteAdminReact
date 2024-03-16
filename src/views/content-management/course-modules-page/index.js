@@ -249,7 +249,7 @@ const Modules = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId}/>
         </Grid>
         {ModuleLoading ? (
           <ContentSkeleton />

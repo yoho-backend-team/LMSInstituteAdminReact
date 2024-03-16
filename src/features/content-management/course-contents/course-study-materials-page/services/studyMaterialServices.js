@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-study-materials`;
 
-export const getAllStudyMaterials = async (selectedBranchId) => {
+export const getAllStudyMaterials = async (data) => {
   try {
     const response = await axios.get(`${COURSE_STUDY_MATERIALS_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params:data
     });
     console.log(response);
     // Check if the response status is successful
