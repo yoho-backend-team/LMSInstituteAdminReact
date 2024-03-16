@@ -3,21 +3,19 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const StudentFilterCard = (props) => {
   const dispatch = useDispatch();
 
-  const { handleSearchFilter, value, selectedBranchId } = props;
-
-  const [statusValue, setStatusValue] = useState('');
+  const { handleSearch, selectedBranchId, searchValue, filterstatusValue, handleFilterByStatus } = props;
 
   const batch = useSelector(selectBatches);
 
@@ -28,12 +26,6 @@ const StudentFilterCard = (props) => {
       })
     );
   }, [dispatch, selectedBranchId]);
-
-  const handleFilterByStatus = (e) => {
-    setStatusValue(e.target.value);
-  };
-
-
 
   return (
     <DatePickerWrapper>
@@ -66,21 +58,21 @@ const StudentFilterCard = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="0">Active</MenuItem>
-                    <MenuItem value="1">Deactive</MenuItem>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Status"
+                    defaultValue={''}
+                    SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
+                  >
+                    <MenuItem value="">Select Status</MenuItem>
+                    <MenuItem value="1">Active</MenuItem>
+                    <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                  <TextField
-                    fullWidth
-                    value={value}
-                    label="Search Student"
-                    sx={{}}
-                    placeholder="Search Student"
-                    onChange={(e) => handleSearchFilter(e.target.value)}
-                  />
+                  <TextField value={searchValue} fullWidth placeholder="Search Student" onChange={(e) => handleSearch(e)} />
                 </Grid>
               </Grid>
             </CardContent>

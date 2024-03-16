@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 // ** MUI Imports
 import { Avatar as CustomAvatar } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -53,6 +53,8 @@ const StudentIdCard = () => {
   const [flippedIndex, setFlippedIndex] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+  const [filterstatusValue, setFilterStatusValue] = useState('');
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -78,6 +80,23 @@ const StudentIdCard = () => {
     setFlipped(!flipped);
   };
 
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentIdCards({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
+
+  const handleFilterByStatus = (e) => {
+    setFilterStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStudentIdCards(data));
+  };
+
   // const [statusValue, setStatusValue] = useState('');
 
   return (
@@ -85,7 +104,13 @@ const StudentIdCard = () => {
       <Grid>
         <Grid spacing={1} className="match-height">
           <Grid item xs={12} sm={12}>
-            <StudentFilterCard selectedBranchId={selectedBranchId} />
+            <StudentFilterCard
+              selectedBranchId={selectedBranchId}
+              searchValue={searchValue}
+              handleSearch={handleSearch}
+              filterstatusValue={filterstatusValue}
+              handleFilterByStatus={handleFilterByStatus}
+            />
           </Grid>
           {StudentIdCardsLoading ? (
             <IdCardSkeleton />
