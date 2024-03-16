@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const COURSE_MODULE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-modules`;
 
-export const getAllCourseModules = async (selectedBranchId) => {
+export const getAllCourseModules = async (data) => {
   try {
     const response = await axios.get(`${COURSE_MODULE_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
@@ -75,14 +75,14 @@ export const addCourseModule = async (data) => {
   }
 };
 
-export const deleteCourseModule = async (courseModuleId) => {
+export const deleteCourseModule = async (data) => {
   try {
     const response = await axios.delete(`${COURSE_MODULE_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: courseModuleId }
+      params: data
     });
 
     if (response.data.status) {

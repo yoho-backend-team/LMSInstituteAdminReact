@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const COURSE_NOTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-notes`;
 
-export const getAllCourseNotes = async (selectedBranchId) => {
+export const getAllCourseNotes = async (data) => {
   try {
     const response = await axios.get(`${COURSE_NOTE_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -70,14 +70,14 @@ export const addCourseNote = async (data) => {
   }
 };
 
-export const deleteCourseNote = async (courseNoteId) => {
+export const deleteCourseNote = async (data) => {
   try {
     const response = await axios.delete(`${COURSE_NOTE_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: courseNoteId }
+      params: data
     });
 
     if (response.data.status) {

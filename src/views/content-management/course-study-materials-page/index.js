@@ -5,14 +5,15 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
+import { TextField } from '@mui/material';
 import { useEffect } from 'react';
 // ** Custom Components Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
-import CustomTextField from 'components/mui/text-field';
+// import DeleteDialog from 'components/modal/DeleteModel';
+// import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import StudyMaterialAddDrawer from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialAddDrawer';
@@ -29,7 +30,8 @@ import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import StatusDialog from 'components/modal/DeleteModel';
+import { default as StatusChangeDialog, default as StudyMaterialDeletemodal } from 'components/modal/DeleteModel';
+import { deleteCourseStudyMaterial } from 'features/content-management/course-contents/course-study-materials-page/services/studyMaterialServices';
 
 const StudyMaterials = () => {
   const [value, setValue] = useState('');
@@ -38,14 +40,16 @@ const StudyMaterials = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [selectedModule, setSelectedModule] = useState(null);
-  const [selectedModuleStatus, setSelectedModuleStatus] = useState(null);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletingItemId, setDeletingItemId] = useState(null);
+  // const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  // const [deletingItemId, setDeletingItemId] = useState(null);
   const [refetch, setRefetch] = useState(false);
-  const [statusOpen, setStatusDialogOpen] = useState(false);
+  // const [statusOpen, setStatusDialogOpen] = useState(false);
+  const [StudyMaterialDeletemodalOpen, setStudyMaterialDeletemodalOpen] = useState(false);
+  const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue,setStatusValue]=useState({})
 
-  console.log(deletingItemId);
+  console.log(selectedDeleteId);
 
   const dispatch = useDispatch();
   const StudyMaterials = useSelector(selectCourseStudyMaterials);
@@ -53,9 +57,7 @@ const StudyMaterials = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseStudyMaterials(
-      {branch_id:selectedBranchId}
-    ));
+    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -75,16 +77,38 @@ const StudyMaterials = () => {
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  const handleStatusChange = (e, row) => {
-    setSelectedModule(row);
-    setSelectedModuleStatus(e.target.value);
-    setStatusDialogOpen(true);
+  //delete
+  const handleDelete = useCallback((itemId) => {
+    SetSelectedDeleteId(itemId);
+    setStudyMaterialDeletemodalOpen(true);
+  }, []);
+
+  const handleContentDelete = async () => {
+    const data = { id: selectedRow.id };
+    const result = await deleteCourseStudyMaterial(data);
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
+  ////
+  const userStatusObj = {
+    1: 'success',
+    0: 'error'
+  };
+
+  const handleStatusValue = (event, users) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(users);
   };
 
   const handleStatusChangeApi = async () => {
+    console.log('entered',statusValue);
     const data = {
-      status: selectedModuleStatus,
-      id: selectedModule?.id
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
     };
     const response = await updateCourseStudyMaterialStatus(data);
     if (response.success) {
@@ -95,6 +119,7 @@ const StudyMaterials = () => {
     }
   };
 
+
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
@@ -102,18 +127,12 @@ const StudyMaterials = () => {
     setViewModalOpen(true);
   };
 
-  const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId);
-    setDeleteDialogOpen(true);
-  };
-
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
   };
 
-  const RowOptions = () => {
+  const RowOptions = (id) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -137,7 +156,7 @@ const StudyMaterials = () => {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleDelete()
+              onClick: () => handleDelete(id)
             }
           }
         ]}
@@ -253,10 +272,26 @@ const StudyMaterials = () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
-            </CustomTextField>
+            <TextField
+              size="small"
+              select
+              value={row?.is_active}
+              label="status"
+              id="custom-select"
+              sx={{
+                color: userStatusObj[row?.is_active]
+              }}
+              onChange={(e) => handleStatusValue(e, row)}
+              SelectProps={{
+                sx: {
+                  borderColor: row.is_active === '1' ? 'success' : 'error',
+                  color: userStatusObj[row?.is_active]
+                }
+              }}
+            >
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={0}>Inactive</MenuItem>
+            </TextField>
           </div>
         );
       }
@@ -297,14 +332,21 @@ const StudyMaterials = () => {
         )}
         <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          description="Are you sure you want to delete this item?"
+        <StudyMaterialDeletemodal
+          open={StudyMaterialDeletemodalOpen}
+          setOpen={setStudyMaterialDeletemodalOpen}
+          description="Are you sure you want to delete this user?"
           title="Delete"
+          handleSubmit={handleContentDelete}
+        />
+        <StatusChangeDialog
+          open={statusChangeDialogOpen}
+          setOpen={setStatusChangeDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Change Status"
           handleSubmit={handleStatusChangeApi}
         />
-        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+
         <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
     </>

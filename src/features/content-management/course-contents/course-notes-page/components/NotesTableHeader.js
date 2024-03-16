@@ -12,7 +12,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Icon from 'components/icon';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+// import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 // import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
 import { getAllCourseNotes } from '../redux/noteThunks';
 const NotesHeader = (props) => {
@@ -26,7 +26,7 @@ const NotesHeader = (props) => {
     const data = {
       branch_id: selectedBranchId
     };
-    dispatch(getAllCourses(data));
+    dispatch(getAllCourseNotes(data));
   }, [dispatch, selectedBranchId]);
 
   const handleFilterByStatus = (e) => {
@@ -71,6 +71,7 @@ const NotesHeader = (props) => {
                       // value={value}
                       onChange={(e, newValue) => {
                         // const courseId = newValue?.map((item) => item?.course_id);
+                        console.log('selectedBranchid:',selectedBranchId)
                         const data = {
                           course_id: newValue.course_id,
                           branch_id: selectedBranchId
