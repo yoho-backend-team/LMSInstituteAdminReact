@@ -58,7 +58,7 @@ export const addStaffNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+console.log(response)
     if (response.data.status) {
       return { success: true, message: 'StaffNotification created successfully' };
     } else {
