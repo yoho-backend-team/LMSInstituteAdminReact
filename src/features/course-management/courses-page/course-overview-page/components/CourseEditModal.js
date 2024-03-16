@@ -17,7 +17,7 @@ import { getActiveCategoriesByBranch } from 'features/course-management/categori
 
 import { updateCourse } from '../../services/courseServices';
 
-const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => {
+const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) => {
   const [activeCategories, setActiveCategories] = useState([]);
 
   const image =
@@ -42,7 +42,6 @@ const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => 
     learning_format: '',
     course_category: ''
   };
-
 
   const {
     handleSubmit,
@@ -74,6 +73,12 @@ const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => 
   const [selectedImage, setSelectedImage] = useState('');
   console.log(selectedImage);
 
+
+  const [inputTemplateValue, setInputTemplateValue] = useState('');
+  const [template, setTemplate] = useState(image);
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+  console.log(selectedTemplate);
+
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -86,6 +91,22 @@ const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => 
       }
     }
   };
+
+
+  const handleInputTemplateChange = (file) => {
+    const reader = new FileReader();
+    const { files } = file.target;
+    if (files && files.length !== 0) {
+      reader.onload = () => setTemplate(reader.result);
+      setSelectedTemplate(files[0]);
+      reader.readAsDataURL(files[0]);
+      if (reader.result !== null) {
+        setInputTemplateValue(reader.result);
+      }
+    }
+  };
+
+
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -185,35 +206,6 @@ const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => 
           }}
         >
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,mb:2 }}>
-                {!selectedImage && (
-                  <ImgStyled
-                    src={
-                      course?.institute_course_branch?.logo
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.logo}`
-                        : imgSrc
-                    }
-                    alt="Profile Pic"
-                  />
-                )}
-
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    update New logo
-                    <input
-                      hidden
-                      type="file"
-                      value={inputValue}
-                      accept="image/png, image/jpeg"
-                      onChange={handleInputImageChange}
-                      id="account-settings-upload-image"
-                    />
-                  </ButtonStyled>
-                </div>
-              </Box>
-            </Grid>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <Controller
@@ -359,6 +351,77 @@ const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => 
                   )}
                 />
               </Grid>
+
+              <Grid container xs={12} sx={{ mt: 5 }} spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+                    {!selectedImage && (
+                      <ImgStyled
+                        src={
+                          course?.institute_course_branch?.logo
+                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.logo}`
+                            : imgSrc
+                        }
+                        alt="Profile Pic"
+                      />
+                    )}
+
+                    {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                    <div>
+                      <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+                        update New logo
+                        <input
+                          hidden
+                          type="file"
+                          value={inputValue}
+                          accept="image/png, image/jpeg"
+                          onChange={handleInputImageChange}
+                          id="account-settings-upload-image"
+                        />
+                      </ButtonStyled>
+                    </div>
+                  </Box>
+                </Grid>
+
+                {/*  */}
+
+                <Grid item xs={12} md={6}>
+                  <Box sx={{ mb: 2 }}>
+                    {!selectedTemplate && (
+                      <ImgStyled
+                        sx={{ width: '100%', height: 200 }}
+                        src={
+                          course?.institute_course_branch?.template
+                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.template}`
+                            : imgSrc
+                        }
+                        alt="Profile Pic"
+                      />
+                    )}
+
+                    {selectedTemplate && <ImgStyled src={template} alt="Profile Pic" />}
+                    <div>
+                      <ButtonStyled
+                        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        component="label"
+                        variant="contained"
+                        htmlFor="account-settings-upload-image"
+                      >
+                        update New Template
+                        <input
+                          hidden
+                          type="file"
+                          value={inputTemplateValue}
+                          accept="image/png, image/jpeg"
+                          onChange={handleInputTemplateChange}
+                          id="account-settings-upload-image"
+                        />
+                      </ButtonStyled>
+                    </div>
+                  </Box>
+                </Grid>
+              </Grid>
+
               <CourseValidate />
             </Grid>
 
