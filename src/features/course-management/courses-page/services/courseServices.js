@@ -170,7 +170,7 @@ export const getStudentByCourse = async (courseId) => {
 };
 export const deleteCourse = async (courseId) => {
   try {
-    const response = await axios.delete(`${COURSE_CATEGORY_END_POINT}/delete`, {
+    const response = await axios.delete(`${COURSE_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -191,7 +191,7 @@ export const deleteCourse = async (courseId) => {
 
 export const updateCourse = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_END_POINT}/update`, data, {
+    const response = await axios.post(`${COURSE_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

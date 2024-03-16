@@ -9,14 +9,15 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
 import { useCallback, useEffect, useState } from 'react';
+
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
+import toast from 'react-hot-toast';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
 
 import { updateCourse } from '../../services/courseServices';
 
-const CourseEditModal = ({ open, handleEditClose, course }) => {
+const CourseEditModal = ({ open, handleEditClose, course ,selectedBranchId}) => {
   const [activeCategories, setActiveCategories] = useState([]);
 
   const image =
@@ -111,6 +112,8 @@ const CourseEditModal = ({ open, handleEditClose, course }) => {
       formData.append('learning_format', data.learning_format);
       formData.append('course_overview', data.course_overview);
       formData.append('description', data.description);
+      formData.append('course_id', course.institute_course_branch.course_id);
+      formData.append('branch_id', selectedBranchId);
 
       try {
         const result = await updateCourse(formData);
