@@ -10,7 +10,7 @@ import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import Icon from 'components/icon';
 // ** Custom Components Imports
 import MenuItem from '@mui/material/MenuItem';
-import DeleteDialog from 'components/modal/DeleteModel';
+import { default as ModulesDeleteModal } from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
@@ -25,7 +25,8 @@ import { searchUsers } from 'features/user-management/users-page/services/userSe
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDialog from 'components/modal/DeleteModel';
-
+import { deleteCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+import toast from 'react-hot-toast';
 const Modules = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -33,10 +34,15 @@ const Modules = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletingItemId, setDeletingItemId] = useState(null);
+  // const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  // const [deletingItemId, setDeletingItemId] = useState(null);
   const [activeBranches, setActiveBranches] = useState([]);
   const [statusOpen, setStatusDialogOpen] = useState(false);
+  const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
+  const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
+  const [refetch,setrefetch] =useState(null)
+console.log(selectedDeleteId)
+
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -49,7 +55,7 @@ const Modules = () => {
     setActiveBranches(result.data.data);
   };
 
-  console.log(deletingItemId);
+  // console.log(deletingItemId); 
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
@@ -70,11 +76,24 @@ const Modules = () => {
     setEditUserOpen(!editUserOpen);
     console.log('toogle pressed');
   };
-  const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId);
-    setDeleteDialogOpen(true);
-  };
+//delete
+const handleDelete = useCallback((itemId) => {
+  SetSelectedDeleteId(itemId);
+  setModulesDeleteModalOpen(true);
+}, []);
+
+const handleContentDelete = async () => {
+  const data = { id: selectedRow.id };
+  const result = await deleteCourseModule(data);
+  if (result.success) {
+    toast.success(result.message);
+    setrefetch((state) => !state);
+  } else {
+    toast.error(result.message);
+  }
+};
+////
+
 
   const dispatch = useDispatch();
   const Module = useSelector(selectCourseModules);
@@ -82,10 +101,11 @@ const Modules = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(Module);
-
   useEffect(() => {
     dispatch(getAllCourseModules(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
+
+  
 
   const RowOptions = () => {
     return (
@@ -272,11 +292,12 @@ const Modules = () => {
         )}
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          description="Are you sure you want to delete this item?"
+        <ModulesDeleteModal
+          open={ModulesDeleteModalOpen}
+          setOpen={setModulesDeleteModalOpen}
+          description="Are you sure you want to delete this user?"
           title="Delete"
+          handleSubmit={handleContentDelete}
         />
         <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
         <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} />

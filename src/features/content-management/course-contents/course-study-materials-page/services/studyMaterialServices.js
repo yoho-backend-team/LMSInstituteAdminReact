@@ -70,15 +70,16 @@ export const addCourseStudyMaterial = async (data) => {
   }
 };
 
-export const deleteCourseStudyMaterial = async (courseStudyMaterialId) => {
+export const deleteCourseStudyMaterial = async (data) => {
   try {
     const response = await axios.delete(`${COURSE_STUDY_MATERIALS_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: courseStudyMaterialId }
+      params: data
     });
+console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'CourseStudyMaterial deleted successfully' };
@@ -119,7 +120,7 @@ export const updateCourseStudyMaterialStatus = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+   console.log('studymaterialresponse:',response)
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseStudyMaterial status updated successfully' };

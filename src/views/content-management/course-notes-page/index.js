@@ -10,7 +10,6 @@ import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
@@ -25,7 +24,9 @@ import { searchUsers } from 'features/user-management/users-page/services/userSe
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDialog from 'components/modal/DeleteModel';
-
+import { default as NotesDeleteModal } from 'components/modal/DeleteModel';
+import { deleteCourseNote } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
+import toast from 'react-hot-toast';
 const Notes = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -33,11 +34,13 @@ const Notes = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
+  const [NotesDeleteModalOpen, setNotesDeleteModalOpen] = useState(false);
+  const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
+  const [refetch, setRefetch] = useState(false);
 
-  console.log(deletingItemId);
+  console.log(selectedDeleteId);
+
 
   const handleStatusChange = () => {
     setStatusDialogOpen(true);
@@ -50,11 +53,23 @@ const Notes = () => {
     setViewModalOpen(true);
   };
 
-  const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId);
-    setDeleteDialogOpen(true);
-  };
+//delete
+const handleDelete = useCallback((itemId) => {
+  SetSelectedDeleteId(itemId);
+  setNotesDeleteModalOpen(true);
+}, []);
+
+const handleContentDelete = async () => {
+  const data = { id: selectedRow.id };
+  const result = await deleteCourseNote(data);
+  if (result.success) {
+    toast.success(result.message);
+    setRefetch((state) => !state);
+  } else {
+    toast.error(result.message);
+  }
+};
+////
 
   const dispatch = useDispatch();
   const Notes = useSelector(selectCourseNotes);
@@ -65,7 +80,7 @@ const Notes = () => {
 
   useEffect(() => {
     dispatch(getAllCourseNotes(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
@@ -276,11 +291,12 @@ const Notes = () => {
 
         <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          description="Are you sure you want to delete this item?"
+        <NotesDeleteModal
+          open={NotesDeleteModalOpen}
+          setOpen={setNotesDeleteModalOpen}
+          description="Are you sure you want to delete this user?"
           title="Delete"
+          handleSubmit={handleContentDelete}
         />
         <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
         <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />

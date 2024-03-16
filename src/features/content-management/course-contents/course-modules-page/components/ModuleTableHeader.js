@@ -11,7 +11,6 @@ import CardHeader from '@mui/material/CardHeader';
 import Icon from 'components/icon';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { getAllCourseModules } from '../redux/moduleThunks';
 
 const ModuleHeader = (props) => {
@@ -25,7 +24,7 @@ const ModuleHeader = (props) => {
     const data = {
       branch_id: selectedBranchId
     };
-    dispatch(getAllCourses(data));
+    dispatch(getAllCourseModules(data));
   }, [dispatch, selectedBranchId]);
 
   const handleFilterByStatus = (e) => {
