@@ -10,19 +10,18 @@ import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
 import DeleteDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
-// import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
+import { selectOfflineClasses } from '../redux/offlineClassSelectors';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import LiveClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
+import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 
-const LiveClassCard = () => {
+const OfflineClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const liveClasses = useSelector(selectLiveClasses);
+  const offlineClasses = useSelector(selectOfflineClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
-  console.log(liveClasses);
+  console.log(offlineClasses);
   useEffect(() => {
     const data = {
       type: 'offline',
@@ -86,7 +85,7 @@ const LiveClassCard = () => {
   return (
     <>
       <Grid container spacing={2}>
-        {liveClasses?.map((card, index) => (
+        {offlineClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3 }}>
               <Grid container direction="column" spacing={1}>
@@ -163,7 +162,8 @@ const LiveClassCard = () => {
             </Card>
           </Grid>
         ))}
-        <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} />
+        <OfflineClassEditModal  selectedBranchId={selectedBranchId}
+            offlineClasses={offlineClasses} open={isEditModalOpen} handleEditClose={handleEditClose} />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}
@@ -180,4 +180,4 @@ const LiveClassCard = () => {
   );
 };
 
-export default LiveClassCard;
+export default OfflineClassCard;

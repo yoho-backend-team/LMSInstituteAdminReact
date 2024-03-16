@@ -1,11 +1,11 @@
 // CustomerSupportService.js
 import axios from 'axios';
 
-const CUSTOMER_SUPPORT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/help-faq-modules`;
+const CUSTOMER_SUPPORT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/support`;
 
 export const getAllFaqCategorywithFaq = async () => {
   try {
-    const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/read-all`, {
+    const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/show-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

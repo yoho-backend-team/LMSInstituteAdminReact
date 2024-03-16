@@ -52,7 +52,7 @@ export const searchOfflineClasses = async (searchQuery) => {
 
 export const addOfflineClass = async (data) => {
   try {
-    const response = await axios.post(`${OFFLINE_CLASS_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${OFFLINE_CLASS_API_END_POINT}/create-offline-class`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -93,13 +93,14 @@ export const deleteOfflineClass = async (OfflineClassId) => {
 
 export const updateOfflineClass = async (data) => {
   try {
-    const response = await axios.put(`${OFFLINE_CLASS_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${OFFLINE_CLASS_API_END_POINT}/update-offline-class`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params:data
     });
-
+    console.log(response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'OfflineClass updated successfully' };
