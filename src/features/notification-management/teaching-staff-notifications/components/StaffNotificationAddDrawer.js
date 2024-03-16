@@ -84,12 +84,21 @@ const StaffNotificationAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    toggle();
+    reset();
+  };
+
   const onSubmit = async (data) => {
     console.log(data);
     var bodyFormData = new FormData();
+    data?.staff?.forEach((staff) => {
+      bodyFormData.append('staff_ids[]', staff?.staff_id);
+    });
     bodyFormData.append('payment_proof', selectedImage);
-    bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('institute_staff_id', data.staff.staff_id);
+    bodyFormData.append('branch_id', selectedBranchId);
+    // bodyFormData.append('institute_staff_id', data.staff.staff_id);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
 
@@ -97,14 +106,15 @@ const StaffNotificationAddDrawer = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
+      // let errorMessage = '';
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(result.message);
       // toast.error(result.message);
     }
   };
@@ -136,11 +146,7 @@ const StaffNotificationAddDrawer = (props) => {
     }
   };
 
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
-  };
+
 
   return (
     <Drawer

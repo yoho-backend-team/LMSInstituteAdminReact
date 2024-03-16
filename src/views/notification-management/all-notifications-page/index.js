@@ -50,7 +50,7 @@ const AllNotification = () => {
             <AllNotificationBodySection
               allNotifications={allNotifications}
               // setLoading={setLoading}
-              setStudentNotificationRefetch={setAllNotificationRefetch}
+              setAllNotificationRefetch={setAllNotificationRefetch}
               selectedBranchId={selectedBranchId}
             />
           </Grid>

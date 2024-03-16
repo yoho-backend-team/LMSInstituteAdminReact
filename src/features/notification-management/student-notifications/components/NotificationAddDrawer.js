@@ -100,16 +100,23 @@ const NotificationAddDrawer = (props) => {
   };
 
   const {
-    reset,
+    handleSubmit,
     control,
     setValue,
-    handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset,
   } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    toggle();
+    reset(); // Reset form values
+  };
+
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -120,7 +127,6 @@ const NotificationAddDrawer = (props) => {
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('course', data.course.course_id); // Accessing course_id from selected object
     bodyFormData.append('branch_id', selectedBranchId); // Accessing batch_id from selected object
-    bodyFormData.append('student_ids', data.students); // Serializing array
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
 
@@ -128,6 +134,7 @@ const NotificationAddDrawer = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
     } else {
       // let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {
@@ -166,10 +173,6 @@ const NotificationAddDrawer = (props) => {
     }
   };
 
-  const handleClose = () => {
-    reset(); // Reset form values
-    toggle();
-  };
 
   return (
     <Drawer

@@ -111,3 +111,25 @@ export const updateStaffIdCard = async (data) => {
     throw error;
   }
 };
+
+
+export const updateStaffIdCardStatus = async (data) => {
+  try {
+    const response = await axios.post(`${STAFF_ID_CARDS_API_ENDPOINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Staff updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update Staff' };
+    }
+  } catch (error) {
+    console.error('Error in updateStaff:', error);
+    throw error;
+  }
+};

@@ -18,11 +18,11 @@ export const getAllNotifications = async (selectedBranchId) => {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StaffNotifications. Status: ${response.status}`);
+      throw new Error(`Failed to fetch AllNotifications. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllStaffNotifications:', error);
+    console.error('Error in getAllNotifications:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
