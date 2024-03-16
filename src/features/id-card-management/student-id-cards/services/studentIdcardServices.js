@@ -115,7 +115,7 @@ export const updateStudentIdCard = async (data) => {
 
 export const updateStudentIdCardStatus = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_ID_CARDS_API_ENDPOINT}/status`, data, {
+    const response = await axios.post(`${STUDENT_ID_CARDS_API_ENDPOINT}/status-update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -1,28 +1,25 @@
-import { useEffect, useState } from 'react';
-
+import { useEffect, useState, useCallback } from 'react';
 // ** MUI Imports
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import { Box, TextField, Grid } from '@mui/material';
 // import Card from '@mui/material/Card';
-import { Avatar as CustomAvatar, } from '@mui/material';
+import { Avatar as CustomAvatar } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import StaffFilterCard from 'features/id-card-management/staff-id-cards/components/StaffFilterCard';
 
 import { getAllStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardThunks';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectStaffIdCards, selectLoading } from 'features/id-card-management/staff-id-cards/redux/staffIdcardSelectors';
-
+import { selectLoading, selectStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardSelectors';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import { getInitials } from 'utils/get-initials';
-import CustomTextField from 'components/mui/text-field';
-
+import { updateStaffIdCardStatus } from 'features/id-card-management/staff-id-cards/services/staffIdcardServices';
+import toast from 'react-hot-toast';
 
 const roleColors = {
   admin: 'error',
@@ -39,36 +36,67 @@ const statusColors = {
 };
 
 const TeachingIdCard = () => {
+  const dispatch = useDispatch();
+  const StaffIdCards = useSelector(selectStaffIdCards);
+  const StaffIdCardsLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [staffIdRefetch, setStaffIdRefetch] = useState(false);
 
+  console.log('id cards', StaffIdCards);
 
+  useEffect(() => {
+    dispatch(getAllStaffIdCards(selectedBranchId));
+  }, [dispatch, selectedBranchId, staffIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+  const [filterstatusValue, setFilterStatusValue] = useState('');
+
+
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateStaffIdCardStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setStaffIdRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  const handleStatusValue = (event, staff) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(staff);
+  };
 
   const flip = (index) => {
     setFlippedIndex(index);
     setFlipped(!flipped);
   };
 
-  // const [statusValue, setStatusValue] = useState('');
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStaffIdCards({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
 
-  const handleFilterByStatus = () => {
-    // setStatusValue(e.target.value);
-    setDeleteDialogOpen(true);
+
+  const handleFilterByStatus = (e) => {
+    setFilterStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStaffIdCards(data));
   };
-
-  const dispatch = useDispatch();
-  const StaffIdCards = useSelector(selectStaffIdCards);
-  const StaffIdCardsLoading = useSelector(selectLoading);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(StaffIdCards);
-
-  useEffect(() => {
-    dispatch(getAllStaffIdCards(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
-
 
   // const data = [
   //   {
@@ -160,13 +188,19 @@ const TeachingIdCard = () => {
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
+          <Grid item xs={12} sm={12}>
+            <StaffFilterCard
+              selectedBranchId={selectedBranchId}
+              searchValue={searchValue}
+              handleSearch={handleSearch}
+              filterstatusValue={filterstatusValue}
+              handleFilterByStatus={handleFilterByStatus}
+            />
+          </Grid>
           {StaffIdCardsLoading ? (
             <IdCardSkeleton />
           ) : (
             <Grid>
-              <Grid item xs={12} sm={12}>
-                <StaffFilterCard />
-              </Grid>
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {StaffIdCards.map((item, index) => (
                   <Grid
@@ -248,7 +282,9 @@ const TeachingIdCard = () => {
                           <Box sx={{ pt: 2 }}>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.staff.first_name} {item.staff.last_name}</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>
+                                {item.staff.first_name} {item.staff.last_name}
+                              </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -269,20 +305,24 @@ const TeachingIdCard = () => {
 
                             <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.staff.address_line_1}, {item.staff.address_line_2}, {item.staff.city}, {item.staff.state}, {item.staff.pincode},</Typography>
+                              <Typography sx={{ color: 'text.secondary' }}>
+                                {item.staff.address_line_1}, {item.staff.address_line_2}, {item.staff.city}, {item.staff.state},{' '}
+                                {item.staff.pincode},
+                              </Typography>
                             </Box>
                           </Box>
 
                           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
-                            <CustomTextField
+                            <TextField
+                              size="small"
                               select
-                              fullWidth
+                              width={100}
                               label="Status"
-                              SelectProps={{ value: item.is_active, onChange: (e) => handleFilterByStatus(e) }}
+                              SelectProps={{ value: item?.staff?.is_active, onChange: (e) => handleStatusValue(e, item?.staff) }}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>
-                            </CustomTextField>
+                            </TextField>
                           </Box>
                         </CardContent>
                       </Card>
@@ -296,15 +336,17 @@ const TeachingIdCard = () => {
                 </div>
               </Grid>
             </Grid>
-          )
-          }
+          )}
         </Grid>
       </Grid>
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
+
+      {/* Status Change Modal */}
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
       />
     </>
   );
