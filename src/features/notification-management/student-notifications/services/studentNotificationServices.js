@@ -59,6 +59,8 @@ export const addStudentNotification = async (data) => {
       }
     });
 
+    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'StudentNotification created successfully' };
     } else {
