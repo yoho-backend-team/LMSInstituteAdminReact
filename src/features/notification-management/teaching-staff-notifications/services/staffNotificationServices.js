@@ -52,9 +52,9 @@ export const searchStaffNotifications = async (searchQuery) => {
 
 export const addStaffNotification = async (data) => {
   try {
-    const response = await axios.post(`${STAFF_NOTIFICATION_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${STAFF_NOTIFICATION_API_ENDPOINT}/staff-notification-send`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });

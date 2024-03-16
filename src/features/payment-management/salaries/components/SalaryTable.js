@@ -36,6 +36,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
 import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
+import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
+import MenuItem from '@mui/material/MenuItem';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -75,12 +77,12 @@ const CustomInput = forwardRef((props, ref) => {
 /* eslint-enable */
 const SalaryTable = () => {
   // ** State
-  const [value, setValue] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
+  const [refetch, setRefetch] = useState(false);
 
   const dispatch = useDispatch();
   const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
@@ -89,7 +91,7 @@ const SalaryTable = () => {
   console.log(TeachingStaffSalaries);
   useEffect(() => {
     dispatch(getAllStaffSalaries(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -98,8 +100,21 @@ const SalaryTable = () => {
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const handleFilter = (val) => {
-    setValue(val);
+  const [loading, setLoading] = useState(true);
+  const [statusValue, setStatusValue] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleFilterByStatus = (e) => {
+    setStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStaffSalaries(data));
   };
 
   const staff = [
@@ -108,13 +123,17 @@ const SalaryTable = () => {
     { staff_id: '3', staff_name: 'staff 3' }
   ];
 
-  const [selectedstaff, setSelectedstaff] = useState([]);
   const [selectedstafftype, setSelectedstafftype] = useState([]);
   const stafftype = [
     { staff_id: '1', staff_name: 'stafftype 1' },
     { staff_id: '2', staff_name: 'stafftype 2' },
     { staff_id: '3', staff_name: 'stafftype 3' }
   ];
+
+  
+  const handleRowClick = (rowData) => {
+    setSelectedRows(rowData);
+  };
 
   const defaultColumns = [
     {
@@ -212,7 +231,12 @@ const SalaryTable = () => {
                 text: 'Edit',
                 to: `/apps/invoice/edit/${row.id}`,
                 icon: <Icon icon="tabler:edit" fontSize={20} />,
-                menuItemProps: { onClick: toggleEditUserDrawer }
+                menuItemProps: {
+                  onClick: () => {
+                    handleRowClick(row);
+                    toggleEditUserDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                  }
+                }
               },
               {
                 text: 'Download',
@@ -291,6 +315,7 @@ const SalaryTable = () => {
   //     avatarColor: 'primary'
   //   }
   // ];
+ 
 
   return (
     <DatePickerWrapper>
@@ -300,6 +325,19 @@ const SalaryTable = () => {
             <CardHeader title="Salary" />
             <CardContent>
               <Grid container spacing={6}>
+              <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Status"
+                    defaultValue={''}
+                    SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                  >
+                    <MenuItem value="">Select Status</MenuItem>
+                    <MenuItem value="1">Active</MenuItem>
+                    <MenuItem value="0">Inactive</MenuItem>
+                  </TextField>
+                </Grid>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     disableCloseOnSelect
@@ -359,72 +397,17 @@ const SalaryTable = () => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    disableCloseOnSelect
-                    multiple
-                    id="select-multiple-chip"
-                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...staff]}
-                    getOptionLabel={(option) => option.staff_name}
-                    value={selectedstaff}
-                    onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                        setSelectedstaff(staff.filter((option) => option.staff_id !== 'selectAll'));
-                      } else {
-                        setSelectedstaff(newValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Staffs"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.staff_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.staff_id}
-                            label={option.staff_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedstaff(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                  />
-                </Grid>
+
               </Grid>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12}>
+        <SalaryCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} />
+        </Grid>
+        <Grid item xs={12}>
           <Card>
-            <SalaryCardHeader value={value} selectedRows={selectedRows} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          {loading ? <PaymentSalarySkeleton /> :(
             <DataGrid
               sx={{ p: 2 }}
               autoHeight
@@ -439,11 +422,16 @@ const SalaryTable = () => {
               onPaginationModelChange={setPaginationModel}
               onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
             />
+            )}
           </Card>
         </Grid>
       </Grid>
       <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <SalaryEditDrawer open={editUserOpen} toggle={toggleEditUserDrawer} />
+      <SalaryEditDrawer      setRefetch={setRefetch}
+        open={editUserOpen}
+        toggle={toggleEditUserDrawer}
+        selectedRows={selectedRows}
+        handleRowClick={handleRowClick} />
       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}

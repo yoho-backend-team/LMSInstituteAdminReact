@@ -125,7 +125,7 @@ const FeesAddDrawer = (props) => {
     var bodyFormData = new FormData();
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('institute_staff_id', data.staff);
+    bodyFormData.append('institute_staff_id', data.staff.staff_id);
     bodyFormData.append('transaction_id', data.paymentId);
     bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
     bodyFormData.append('salary_amount', data.paidAmount);

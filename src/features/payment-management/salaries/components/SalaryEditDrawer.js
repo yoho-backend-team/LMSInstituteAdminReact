@@ -12,11 +12,12 @@ import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import { useCallback } from 'react';
+
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -27,35 +28,26 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required'),
-  type: yup.string().required('Type is required'),
-  staff: yup.string().required('Staff is required')
+  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
 
-const defaultValues = {
-  email: '',
-  password: '',
-  confirm_password: '',
-  designation: '',
-  fullName: '',
-  userName: '',
-  role: '',
-  contact: Number('')
-};
-
 const SalaryEditDrawer = (props) => {
-  // ** Props
-  const { open, toggle } = props;
-  // ** State
-  const [inputValue, setInputValue] = useState('');
+
+  const { open, toggle, selectedRows, setRefetch } = props;
   const image = require('assets/images/avatar/1.png');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+  const [imgSrc, setImgSrc] = useState(image);
+  console.log(selectedRows);
 
 
-
-  useEffect(() => {}, []);
+  const defaultValues = {
+    transaction_id: '',
+    salary_amount: '',
+    selectedImage: '',
+    payment_date:""
+  };
 
   const {
     handleSubmit,
@@ -69,30 +61,35 @@ const SalaryEditDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('type', data.type);
-    bodyFormData.append('staff', data.staff);
-    bodyFormData.append('paymentId', data.paymentId);
-    bodyFormData.append('paidAmount', data.paidAmount);
-    console.log(bodyFormData);
+    // Set form values when selectedBranch changes
+    useEffect(() => {
+      if (selectedRows) {
+        setValue('logo', selectedRows.selectedImage || '');
+        setValue('paymentId', selectedRows?.transaction_id || '');
+        setValue('salary_amount', selectedRows?.salary_amount || '');
+        setValue('payment_date', new Date(selectedRows?.payment_date) || '');
+        
+      }
+    }, [selectedRows, setValue]);
 
-    const result = await updateTeachingStaffSalary(bodyFormData);
+  const onSubmit = useCallback(async (data) => {
+    const inputData = new FormData();
+    inputData.append('logo', selectedImage);
+    inputData.append('paymentId', data.transaction_id);
+    inputData.append('salary_amount', data.salary_amount);
+    inputData.append('payment_date', data.payment_date);
+    inputData.append('id', selectedRows.id);
+
+    const result = await updateTeachingStaffSalary(inputData);
 
     if (result.success) {
       toast.success(result.message);
+      setRefetch((state) => !state);
+      handleEditClose();
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
-      // toast.error(result.message);
+      toast.error(result.message);
     }
-  };
+  });
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -111,6 +108,7 @@ const SalaryEditDrawer = (props) => {
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    console.log(setImgSrc);
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);
@@ -157,74 +155,47 @@ const SalaryEditDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-              <ImgStyled src={imgSrc} alt="Profile Pic" />
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
+              {!selectedImage && (
+                <ImgStyled
+                  src={
+                    selectedRows?.payment_proof ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.payment_proof}` : imgSrc
+                  }
+                  alt="Profile Pic"
+                />
+              )}
+
+              {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
               <div>
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                  Upload
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-payment">
+                  Upload New Image
                   <input
                     hidden
                     type="file"
                     value={inputValue}
                     accept="image/png, image/jpeg"
                     onChange={handleInputImageChange}
-                    id="account-settings-upload-image"
+                    id="account-settings-upload-payment"
                   />
                 </ButtonStyled>
               </div>
             </Box>
 
-      
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="type"
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    fullWidth
-                    options={['Ten', 'Twenty', 'Thirty']}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Type" sx={{ mb: 2 }} error={Boolean(errors.type)} helperText={errors.type?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="staff"
-                control={control}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    fullWidth
-                    options={['Ten', 'Twenty', 'Thirty']}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Staff"
-                        sx={{ mb: 2 }}
-                        error={Boolean(errors.staff)}
-                        helperText={errors.staff?.message}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
             <Grid item xs={12} sm={12}>
               <Controller
                 name="paymentId"
+                rules={{ required: true }}
                 control={control}
-                render={({ field }) => (
+                render={({ field: { onChange, value } }) => (
                   <TextField
-                    {...field}
+                    // defaultValue={selectedRows? selectedRows?.total :5556}
+                    value={value}
                     sx={{ mb: 2 }}
                     fullWidth
-                    label="Payment Id"
+                    // value={value}
+                    onChange={onChange}
+                    // label={selectedRows?.total}
+                    label="transaction Id"
                     type="number"
                     error={Boolean(errors.paymentId)}
                     helperText={errors.paymentId?.message}
@@ -235,17 +206,19 @@ const SalaryEditDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paidAmount"
+                name="salary_amount"
+                rules={{ required: true }}
                 control={control}
-                render={({ field }) => (
+                render={({ field: { onChange, value } }) => (
                   <TextField
-                    {...field}
                     sx={{ mb: 2 }}
                     fullWidth
-                    label="Paid Amount"
+                    value={value}
+                    onChange={onChange}
+                    label="Salary Amount"
                     type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
+                    error={Boolean(errors.salary_amount)}
+                    helperText={errors.salary_amount?.message}
                   />
                 )}
               />

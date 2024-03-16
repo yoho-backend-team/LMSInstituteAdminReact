@@ -1,12 +1,15 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
 // ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography, Checkbox } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CustomChip from 'components/mui/chip';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -15,8 +18,9 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import toast from 'react-hot-toast';
-
+import { useSelector } from 'react-redux';
 import { addStaffNotification } from '../services/staffNotificationServices';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -27,19 +31,11 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  type: yup.string().required('Type is required'),
-  staffs: yup.array().required('Students is required').min(1, 'Select at least one student'),
-  title: yup.string().required('Title is required'),
-  body: yup.string().required('Body is required')
+  // type: yup.string().required('Type is required'),
+  // staffs: yup.array().required('Students is required').min(1, 'Select at least one student'),
+  // title: yup.string().required('Title is required'),
+  // body: yup.string().required('Body is required')
 });
-
-const staffs = [
-  { title: 'Das Boot', year: 1981 },
-  { title: 'Citizen Kane', year: 1941 },
-  { title: 'North by Northwest', year: 1959 },
-  { title: 'Vertigo', year: 1958 },
-  { title: 'Star Wars: Episode VI - Return of the Jedi', year: 1983 }
-];
 
 const defaultValues = {
   type: '',
@@ -57,38 +53,31 @@ const StaffNotificationAddDrawer = (props) => {
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+  const [activeStaffs, setActiveStaffs] = useState([]);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [selectedStaff, setSelectedStaff] = useState([]);
 
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    getActiveStaffsByBranch(selectedBranchId);
+  }, [selectedBranchId]);
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+  const getActiveStaffsByBranch = async (selectedBranchId, type) => {
+    const data = {
+      type: type,
+      branch_id: selectedBranchId
     };
+    const result = await getAllActiveTeachingStaffs(data);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    console.log('active staffs : ', result.data);
+    setActiveStaffs(result.data.data);
   };
 
   const {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -96,14 +85,13 @@ const StaffNotificationAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+    console.log(data);
     var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('type', data.type);
-    bodyFormData.append('staffs', data.staffs);
+    bodyFormData.append('payment_proof', selectedImage);
+    bodyFormData.append('branch_id', data.branch);
+    bodyFormData.append('institute_staff_id', data.staff.staff_id);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
-
-    console.log(bodyFormData);
 
     const result = await addStaffNotification(bodyFormData);
 
@@ -183,7 +171,7 @@ const StaffNotificationAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -200,26 +188,26 @@ const StaffNotificationAddDrawer = (props) => {
             </div>
           </Box>
 
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sx={{ mb: 2 }}>
             <Controller
-              name="type"
+              name="staff_type"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: 'Staff Type field is required' }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'type' field
-                  }}
-                  options={['Web Development', 'Android Development']}
                   fullWidth
+                  value={value}
+                  onChange={(e, newValue) => {
+                    onChange(newValue);
+                    getActiveStaffsByBranch(selectedBranchId, newValue);
+                  }}
+                  options={['Teaching', 'Non Teaching']}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select Type"
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.type)}
-                      helperText={errors.type?.message}
+                      label="Select Staff Type"
+                      error={Boolean(errors.staff_type)}
+                      helperText={errors.staff_type?.message}
                     />
                   )}
                 />
@@ -228,36 +216,96 @@ const StaffNotificationAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Controller
-              name="staffs"
-              control={control}
-              defaultValue={[]}
-              rules={{ validate: (value) => value.length > 0 || 'Select at least one student' }}
-              render={({ field }) => (
-                <Autocomplete
-                  {...field}
-                  multiple
-                  limitTags={2}
-                  sx={{ mb: 2 }}
-                  options={staffs}
-                  id="autocomplete-limit-tags-students"
-                  getOptionLabel={(option) => option.title || ''}
-                  onChange={(event, newValue) => {
-                    field.onChange(newValue); // Update the value of the 'students' field
-                  }}
-                  renderInput={(params) => (
+            <Autocomplete
+              multiple
+              disableCloseOnSelect
+              id="select-multiple-chip"
+              options={activeStaffs}
+              getOptionLabel={(option) => option?.staff_name || ''}
+              value={selectedStaff}
+              onChange={(e, newValue) => {
+                setSelectedStaff(newValue);
+                setValue('staff', newValue);
+              }}
+              renderInput={(params) => (
+                <Controller
+                  name="staff"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
                     <TextField
                       {...params}
-                      label="Staffs"
-                      placeholder="Favorites"
-                      error={Boolean(errors.staffs)}
-                      helperText={errors.staffs?.message}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label="Staff"
+                      value={value}
+                      onChange={onChange}
+                      error={Boolean(errors.staff)}
+                      helperText={errors.staff ? errors.staff.message : null}
+                      aria-describedby="stepper-linear-personal-branches"
+                      // {...(errors.students['Students'] && { helperText: 'This field is required' })}
+                      // {...(errors.students && { helperText: 'This field is required' })}
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
                     />
                   )}
                 />
               )}
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                    checkedIcon={<CheckBoxIcon fontSize="small" />}
+                    style={{ marginRight: 8 }}
+                    checked={selected}
+                  />
+                  {option?.staff_name}
+                </li>
+              )}
+              renderTags={(value) => (
+                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                  {value?.map((option, index) => (
+                    <CustomChip
+                      key={option?.staff_id}
+                      label={option?.staff_name}
+                      onDelete={() => {
+                        const updatedValue = [...value];
+                        updatedValue?.splice(index, 1);
+                        setSelectedStaff(updatedValue);
+                      }}
+                      color="primary"
+                      sx={{ m: 0.75 }}
+                    />
+                  ))}
+                </div>
+              )}
+              isOptionEqualToValue={(option, value) => option?.staff_id === value?.staff_id}
+              selectAllText="Select All"
+              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
             />
           </Grid>
+
+          {/* <Grid item xs={12} sx={{ mb: 2 }}>
+              <Controller
+                name="staff"
+                control={control}
+                rules={{ required: 'Staff field is required' }}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    fullWidth
+                    value={value}
+                    onChange={(event, newValue) => onChange(newValue)}
+                    options={activeStaffs}
+                    getOptionLabel={(staff) => staff.staff_name}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
+                    )}
+                  />
+                )}
+              />
+            </Grid> */}
 
           <Grid item xs={12} sm={12}>
             <Controller
@@ -265,22 +313,15 @@ const StaffNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'title' field
-                  }}
-                  options={['Web Development', 'Android Development']}
+                <TextField
                   fullWidth
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Title"
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.title)}
-                      helperText={errors.title?.message}
-                    />
-                  )}
+                  sx={{ mb: 2 }}
+                  label="Title"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Placeholder"
+                  error={Boolean(errors.title)}
+                  helperText={errors.title ? errors.title.message : null}
                 />
               )}
             />
@@ -292,22 +333,15 @@ const StaffNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'body' field
-                  }}
-                  options={['Web Development', 'Android Development']}
+                <TextField
                   fullWidth
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Body"
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.body)}
-                      helperText={errors.body?.message}
-                    />
-                  )}
+                  sx={{ mb: 2 }}
+                  label="Body"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Placeholder"
+                  error={Boolean(errors.body)}
+                  helperText={errors.body ? errors.body.message : null}
                 />
               )}
             />

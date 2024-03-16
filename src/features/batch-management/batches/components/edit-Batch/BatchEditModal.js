@@ -80,9 +80,14 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       setValue('batch_name', selectedBatch.batch.batch_name || '');
       setValue('start_date', selectedBatch.batch.start_date || '');
       setValue('end_date', selectedBatch.batch.end_date || '');
-      setValue('students', selectedBatch.batch.students || '');
+
+      setStartDate(new Date(selectedBatch.batch.start_date || null));
+      setEndDate(new Date(selectedBatch.batch.end_date || null));
+
     }
   }, [selectedBatch, setValue]);
+
+
   const handleClose = () => {
     setValue('batch_name', '');
     setValue('start_date', '');
