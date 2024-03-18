@@ -115,16 +115,19 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   };
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+
   const instructors = [
     { instructor_id: '1', instructor_name: 'Instructor 1' },
     { instructor_id: '2', instructor_name: 'Instructor 2' },
     { instructor_id: '3', instructor_name: 'Instructor 3' }
   ];
+
   const coordinates = [
     { coordinate_id: '1', coordinate_name: 'Coordinate 1' },
     { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
     { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
   ];
+  
   const courses = [
     { id: '1', name: 'Course 1' },
     { id: '2', name: 'Course 2' },
