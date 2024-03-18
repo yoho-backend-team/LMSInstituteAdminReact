@@ -41,7 +41,7 @@ export const getAllFaqs = async (selectedBranchId) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       params: { branch_id: selectedBranchId }
-    });
+    }); 
 
     console.log(response);
 
