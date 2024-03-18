@@ -70,16 +70,16 @@ export const addOfflineClass = async (data) => {
   }
 };
 
-export const deleteOfflineClass = async (OfflineClassId) => {
+export const deleteOfflineClass = async (data) => {
   try {
-    const response = await axios.delete(`${OFFLINE_CLASS_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${OFFLINE_CLASS_API_END_POINT}/offline-class-delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: OfflineClassId }
+      params:data
     });
-
+    console.log(data);
     if (response.data.status) {
       return { success: true, message: 'OfflineClass deleted successfully' };
     } else {
@@ -98,7 +98,7 @@ export const updateOfflineClass = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
     console.log(response);
     if (response.data.status) {
