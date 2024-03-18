@@ -118,13 +118,13 @@ const ModuleEdit = (props) => {
     if (result.success) {
       toast.success(result.message);
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
+      // let errorMessage = '';
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(result.message);
       // toast.error(result.message);
     }
   };
@@ -201,7 +201,7 @@ const ModuleEdit = (props) => {
           />
 
           <Controller
-            name="title"
+            name="url"
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (

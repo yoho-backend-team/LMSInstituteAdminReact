@@ -16,7 +16,6 @@ import TeacherFilter from '../../../../features/staff-management/teaching-staffs
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-
 const useTimeout = (callback, delay) => {
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
@@ -56,7 +55,7 @@ const Teaching = () => {
         <StaffManagement />
       ) : (
         <Grid>
-          <TeacherFilter />
+          <TeacherFilter selectedBranchId ={selectedBranchId} />
           <Grid container xs={12} spacing={2} mt={2}>
             {teachingStaffs.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4}>

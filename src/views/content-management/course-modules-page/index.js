@@ -25,7 +25,7 @@ import { searchUsers } from 'features/user-management/users-page/services/userSe
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDialog from 'components/modal/DeleteModel';
-import { deleteCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+import { deleteCourseModule, updateCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
 import toast from 'react-hot-toast';
 const Modules = () => {
   const [value, setValue] = useState('');
@@ -41,6 +41,8 @@ const Modules = () => {
   const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [refetch,setrefetch] =useState(null)
+  const [statusValue, setStatusValue] = useState({});
+  
 console.log(selectedDeleteId)
 
 
@@ -55,14 +57,28 @@ console.log(selectedDeleteId)
     setActiveBranches(result.data.data);
   };
 
-  // console.log(deletingItemId); 
+  const handleStatusChangeApi = async () => {
+    console.log('entered', statusValue);
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateCourseModule(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
+  };
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
   };
 
-  const handleStatusChange = () => {
+  const handleStatusValue = (event, users) => {
     setStatusDialogOpen(true);
+    setStatusValue(users);
   };
 
   const handleViewClose = () => {
@@ -248,7 +264,7 @@ const handleContentDelete = async () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusChange(e, row.id)}>
+            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusValue(e, row)}>
               <MenuItem value="1">Active</MenuItem>
               <MenuItem value="0">Inactive</MenuItem>
             </CustomTextField>
@@ -299,7 +315,7 @@ const handleContentDelete = async () => {
           title="Delete"
           handleSubmit={handleContentDelete}
         />
-        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" handleSubmit={handleStatusChangeApi}/>
         <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} />
       </Grid>
     </>

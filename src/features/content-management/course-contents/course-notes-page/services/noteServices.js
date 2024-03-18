@@ -93,13 +93,13 @@ export const deleteCourseNote = async (data) => {
 
 export const updateCourseNote = async (data) => {
   try {
-    const response = await axios.put(`${COURSE_NOTE_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${COURSE_NOTE_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+console.log('updatenotes:',response)
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseNote updated successfully' };

@@ -23,9 +23,9 @@ import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import StatusDialog from 'components/modal/DeleteModel';
-import { default as NotesDeleteModal } from 'components/modal/DeleteModel';
+import { default as NotesDeleteModal, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import { deleteCourseNote } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
+import { updateCourseNote } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
 import toast from 'react-hot-toast';
 const Notes = () => {
   const [value, setValue] = useState('');
@@ -34,16 +34,32 @@ const Notes = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [statusOpen, setStatusDialogOpen] = useState(false);
   const [NotesDeleteModalOpen, setNotesDeleteModalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [refetch, setRefetch] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState({});
 
   console.log(selectedDeleteId);
 
+  const handleStatusValue = (event, users) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(users);
+  };
 
-  const handleStatusChange = () => {
-    setStatusDialogOpen(true);
+  const handleStatusChangeApi = async () => {
+    console.log('entered', statusValue);
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateCourseNote(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   const handleViewClose = () => {
@@ -53,23 +69,23 @@ const Notes = () => {
     setViewModalOpen(true);
   };
 
-//delete
-const handleDelete = useCallback((itemId) => {
-  SetSelectedDeleteId(itemId);
-  setNotesDeleteModalOpen(true);
-}, []);
+  //delete
+  const handleDelete = useCallback((itemId) => {
+    SetSelectedDeleteId(itemId);
+    setNotesDeleteModalOpen(true);
+  }, []);
 
-const handleContentDelete = async () => {
-  const data = { id: selectedRow.id };
-  const result = await deleteCourseNote(data);
-  if (result.success) {
-    toast.success(result.message);
-    setRefetch((state) => !state);
-  } else {
-    toast.error(result.message);
-  }
-};
-////
+  const handleContentDelete = async () => {
+    const data = { id: selectedRow.id };
+    const result = await deleteCourseNote(data);
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
+  ////
 
   const dispatch = useDispatch();
   const Notes = useSelector(selectCourseNotes);
@@ -80,7 +96,7 @@ const handleContentDelete = async () => {
 
   useEffect(() => {
     dispatch(getAllCourseNotes(selectedBranchId));
-  }, [dispatch, selectedBranchId,refetch]);
+  }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
@@ -245,9 +261,9 @@ const handleContentDelete = async () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusChange(e, row.id)}>
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
+            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusValue(e, row)}>
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={0}>Inactive</MenuItem>
             </CustomTextField>
           </div>
         );
@@ -266,7 +282,7 @@ const handleContentDelete = async () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId}/>
+          <NotesHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
 
         {NotesLoading ? (
@@ -298,7 +314,13 @@ const handleContentDelete = async () => {
           title="Delete"
           handleSubmit={handleContentDelete}
         />
-        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" />
+        <StatusChangeDialog
+          open={statusChangeDialogOpen}
+          setOpen={setStatusChangeDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Change Status"
+          handleSubmit={handleStatusChangeApi}
+        />
         <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
     </>
