@@ -9,20 +9,47 @@ import UserViewRight from './UserViewRight';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+// import { getUserById } from 'features/user-management/users-page/services/userServices';
 
-const useTimeout = (callback, delay) => {
+
+import { getUserProfileById } from 'features/user-management/users-page/services/userServices';
+
+const UserView = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
+    setUserId(location);
+  }, [location]);
 
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
-const UserView = ({ tab, invoiceData }) => {
-  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(location);
+  const [loading, setLoading] = useState(false);
+  const [refetch, setRefetch] = useState(false);
+  const [userData, setUserData] = useState([]);
 
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
+  useEffect(() => {
+    getUserData(userId);
+  }, [userId, refetch]);
+
+  const getUserData = async (id) => {
+    try {
+      const data = {
+        id: id
+      };
+      setLoading(false);
+      const result = await getUserProfileById(data);
+      if (result.success) {
+        console.log('User:', result.data);
+        setUserData(result.data);
+        setLoading(false);
+      } else {
+        console.log(result.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -30,14 +57,14 @@ const UserView = ({ tab, invoiceData }) => {
         <StaffManagementView />
       ) : (
         <Grid container spacing={2}>
-          <Grid item xs={12} md={12} lg={12}>
-            <UserViewLeft />
+          <Grid item xs={12} md={5} lg={4}>
+            <UserViewLeft id={userId} userData={userData} setRefetch={setRefetch} />
           </Grid>
           {/* <div>
 helloo
         </div> */}
-          <Grid item xs={12} md={12} lg={12}>
-            <UserViewRight tab={tab} invoiceData={invoiceData} />
+          <Grid item xs={12} md={7} lg={8}>
+            <UserViewRight id={userId} userData={userData} setRefetch={setRefetch} />
           </Grid>
         </Grid>
       )}

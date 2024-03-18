@@ -13,7 +13,7 @@ export const getAllNonTeachingStaffs = async (data) => {
       params: data
     });
 
-    console.log(response);
+    console.log('Non-teachingStaffs:',response);
 
     // Check if the response status is successful
     if (response.data.status) {
