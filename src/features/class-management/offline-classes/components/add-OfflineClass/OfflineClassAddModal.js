@@ -13,7 +13,7 @@ import CustomChip from 'components/mui/chip';
 // import format from 'date-fns/format';
 import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { addLiveClass } from 'features/class-management/live-classes/services/liveClassServices';
+import { addOfflineClass } from '../../services/offlineClassServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
@@ -149,7 +149,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
       .required('Course field is required'),
     branch: yup.string().required('Branch field is required'),
-    course: yup.object().required('Course field is required'),
+    course: yup.string().required('Course field is required'),
     batch: yup.string().required('Batch field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     startTime: yup.date().nullable().required('Start Time field is required'),
@@ -255,7 +255,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     };
 
     try {
-      const result = await addLiveClass(dummyData);
+      const result = await addOfflineClass(dummyData);
 
       if (result.success) {
         toast.success(result.message);
@@ -337,34 +337,28 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="course"
-                  control={control}
-                  rules={{ required: 'Course field is required' }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={activeCourse}
-                      getOptionLabel={(option) => option.course_name}
-                      onChange={(event, newValue) => {
-                        onChange(newValue);
-                        getActiveBatchesByCourse(newValue?.course_id);
-                      }}
-                      value={activeCourse.find((course) => course.course_id === value) || null}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Course"
-                          id="select-single-course-extra"
-                          error={Boolean(errors.course)}
-                          helperText={errors.course?.message}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
+              <Grid item xs={12} sx={{ mb: 2 }}>
+              <Controller
+                name="course"
+                control={control}
+                rules={{ required: 'Course field is required' }}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    fullWidth
+                    options={activeCourse}
+                    getOptionLabel={(course) => course.course_name}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.course_id);
+                      getActiveBatchesByCourse(newValue?.course_id);
+                    }}
+                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
               <Grid item xs={12}>
                 <Controller
                   name="batch"

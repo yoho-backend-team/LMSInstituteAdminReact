@@ -11,14 +11,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import format from 'date-fns/format';
-import { forwardRef, useState } from 'react';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
+import { useSelector } from 'react-redux';
 import { updateOfflineClass } from '../../services/offlineClassServices';
-
+import toast from 'react-hot-toast';
 /* eslint-disable */
+
 const DateCustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
   const value = `${startDate}`;
@@ -46,16 +50,12 @@ const showErrors = (field, valueLen, min) => {
 };
 
 const schema = yup.object().shape({
-  course: yup
-    .string()
-    .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-    .required('Course field is required'),
-  batch: yup.string().required('Batch field is required'),
-  selectcourse: yup.string().required('Course field is required'),
-  classDate: yup.date().nullable().required('Class Date field is required'),
-  startTime: yup.date().nullable().required('Start Time field is required'),
-  endTime: yup.date().nullable().required('End Time field is required'),
-  instructor: yup.string().required('Instructor field is required')
+  // class_name: yup.string().required('Class Name field is required'),
+  // class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
+  // classDate: yup.date().nullable().required('Class Date field is required'),
+  // startTime: yup.date().nullable().required('Start Time field is required'),
+  // endTime: yup.date().nullable().required('End Time field is required'),
+  // instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required')
 });
 
 const defaultValues = {
@@ -69,13 +69,15 @@ const defaultValues = {
   teacher: []
 };
 
-const OfflineClassEditModal = ({ open, handleEditClose }) => {
+const OfflineClassEditModal = ({ open, handleEditClose,offlineClasses }) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+
+
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);
@@ -96,6 +98,9 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
   const handleChange = (event) => {
     setPersonName(event.target.value);
   };
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
+
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
@@ -122,6 +127,21 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
     resolver: yupResolver(schema)
   });
 
+    // Set form values when selectedBranch changes
+    useEffect(() => {
+      if (offlineClasses) {
+       
+        setValue('class_date', offlineClasses?.class_date|| '');
+        setValue('class_name', offlineClasses?.class_name|| '');
+        setValue('start_time', offlineClasses?.start_time|| '');
+        setValue('end_time', offlineClasses?.end_time || '');
+        setValue('instructor_staff_ids', offlineClasses?.instructor_staff_ids || '');
+        setValue('coordinator_staff_ids', offlineClasses?.coordinator_staff_ids || '');
+      }
+    }, [offlineClasses, setValue]);
+
+console.log(offlineClasses);
+
   const handleClose = () => {
     setValue('course', '');
     setValue('selectcourse', '');
@@ -134,63 +154,78 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
     handleEditClose();
     reset();
   };
+  const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+  const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
+  const getActiveTeachingStaffs = async (selectedBranchId) => {
+    const data = { type: 'teaching', branch_id: selectedBranchId };
+    const result = await getAllActiveTeachingStaffs(data);
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
+    console.log('active teaching staffs : ', result.data);
+    setActiveTeachingStaff(result.data.data);
+  };
+  const getActiveNonTeachingStaffs = async (selectedBranchId) => {
+    const data = { type: 'non_teaching', branch_id: selectedBranchId };
+    const result = await getAllActiveNonTeachingStaffs(data);
 
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        width: 250,
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-      }
-    }
+    console.log('active non teaching staffs : ', result.data);
+    setActiveNonTeachingStaff(result.data.data);
   };
 
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ];
+  useEffect(() => {
+    getActiveTeachingStaffs(selectedBranchId);
+    getActiveNonTeachingStaffs(selectedBranchId);
+  }, [selectedBranchId]);
+
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
   const onSubmit = async (data) => {
-    console.log(data);
-    const dummyData = {
-      selectcourse: data.selectcourse,
-      course: data.course,
-      batch: data.batch,
-      classDate: data.classDate,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      instructor: data.instructor
-    };
+    const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
+    const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
+    var bodyFormData = new FormData();
+    bodyFormData.append('class_name', data.class_name);
+    bodyFormData.append('class_id', data.class_id);
+    // bodyFormData.append('class_id', data.selectedClassId);
+    // bodyFormData.append('branch_id', data.selectedBranchId);
+    bodyFormData.append('branch_id', selectedBranchId);
+    bodyFormData.append('course_id', data.course_id);
+    bodyFormData.append('batch_id', data.batch_id);
+    bodyFormData.append('class_date', convertDateFormat(data.classDate));
+    bodyFormData.append('start_time', data.start_time);
+    bodyFormData.append('end_time', data.end_time);
+    bodyFormData.append('instructor_staff_ids', filteredInstructorId);
+    bodyFormData.append('coordinator_staff_ids', filteredCoordinatorId);
+    // type: 'offline',
+    // status: 'pending'
 
-    try {
-      const result = await updateOfflineClass(dummyData);
+    console.log(bodyFormData);
 
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
+    const result = await updateOfflineClass(bodyFormData);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      let errorMessage = '';
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
     }
   };
-  const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
-
-  const courses = [
-    { id: 1, name: 'Course 1' },
-    { id: 2, name: 'Course 2' },
-    { id: 3, name: 'Course 3' }
-  ];
 
   return (
     <Dialog
@@ -223,19 +258,19 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                <Controller
-                  name="course"
+              <Controller
+                  name="class_name"
                   control={control}
-                  rules={{ required: 'Course field is required' }}
+                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
                       value={value}
-                      label="Course Name"
+                      label="Class Name"
                       onChange={onChange}
                       placeholder="John Doe"
-                      error={Boolean(errors.course)}
-                      {...(errors.course && { helperText: errors.course.message })}
+                      error={Boolean(errors.class_name)}
+                      {...(errors.class_name && { helperText: errors.class_name.message })}
                     />
                   )}
                 />
@@ -322,14 +357,19 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ instructor_id: 'selectAll', instructor_name: 'Select All' }, ...instructors]}
-                  getOptionLabel={(option) => option.instructor_name}
+                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.staff_name}
                   value={selectedInstructors}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.instructor_id === 'selectAll')) {
-                      setSelectedInstructors(instructors.filter((option) => option.instructor_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                      setValue(
+                        'instructor',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedInstructors(newValue);
+                      setValue('instructor', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -351,19 +391,20 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.instructor_name}
+                      {option.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.instructor_id}
-                          label={option.instructor_name}
+                          key={option.staff_id}
+                          label={option.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
+                            setValue('instructor', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -371,7 +412,7 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.instructor_id === value.instructor_id}
+                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
@@ -382,14 +423,19 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ coordinate_id: 'selectAll', coordinate_name: 'Select All' }, ...coordinates]}
+                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
                   getOptionLabel={(option) => option.coordinate_name}
                   value={selectedCoordinates}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.coordinate_id === 'selectAll')) {
-                      setSelectedCoordinates(coordinates.filter((option) => option.coordinate_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                      setValue(
+                        'coordinator',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedCoordinates(newValue);
+                      setValue('coordinator', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -411,19 +457,20 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.coordinate_name}
+                      {option.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.coordinate_id}
-                          label={option.coordinate_name}
+                          key={option.staff_id}
+                          label={option.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
+                            setValue('coordinator', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -431,7 +478,7 @@ const OfflineClassEditModal = ({ open, handleEditClose }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.coordinate_id === value.coordinate_id}
+                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
