@@ -10,7 +10,8 @@ import Typography from '@mui/material/Typography';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
 import DeleteDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
-import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+
+import { selectNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nonTeachingStaffSelectors';
 
 import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nontTeachingStaffThunks';
 import { useEffect, useState } from 'react';
@@ -28,7 +29,7 @@ const useTimeout = (callback, delay) => {
 const NonTeaching = () => {
   const [loading, setLoading] = useState(true);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const nonTeachingStaffs = useSelector(selectTeachingStaffs);
+  const nonTeachingStaffs = useSelector(selectNonTeachingStaffs);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
