@@ -22,7 +22,7 @@ import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
-import DeleteDialog from 'components/modal/DeleteModel';
+import SalariesDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
@@ -38,6 +38,8 @@ import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingSt
 import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
 import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
 import MenuItem from '@mui/material/MenuItem';
+import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import { useCallback } from 'react';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -90,7 +92,7 @@ const SalaryTable = () => {
 
   console.log(TeachingStaffSalaries);
   useEffect(() => {
-    dispatch(getAllStaffSalaries(selectedBranchId));
+    dispatch(getAllStaffSalaries({branch_id:selectedBranchId}));
   }, [dispatch, selectedBranchId,refetch]);
 
   const toggleEditUserDrawer = () => {
@@ -98,7 +100,9 @@ const SalaryTable = () => {
     console.log('Toggle drawer');
   };
 
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [salariesDeleteModelOpen, setSalariesDeleteModelOpen] = useState(false);
+
+  const [selectedSalariesDeleteId, setSelectedSalariesDeleteId] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [statusValue, setStatusValue] = useState('');
@@ -134,6 +138,23 @@ const SalaryTable = () => {
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
   };
+  
+    // Memoize the handleDelete function to prevent unnecessary re-renders
+    const handleDelete = useCallback((itemId) => {
+      setSelectedSalariesDeleteId(itemId);
+      setSalariesDeleteModelOpen(true);
+    }, []);
+  
+    // Handle branch deletion
+    const handleSalariesDelete = async () => {
+      const result = await deleteTeachingStaffSalary({id:selectedSalariesDeleteId});
+      if (result.success) {
+        toast.success(result.message);
+        setRefetch((state) => !state);
+      } else {
+        toast.error(result.message);
+      }
+    };
 
   const defaultColumns = [
     {
@@ -241,6 +262,14 @@ const SalaryTable = () => {
               {
                 text: 'Download',
                 icon: <Icon icon="tabler:download" fontSize={20} />
+              },
+              {
+                // to: `/apps/invoice/delete/${row.id}`,
+                text: 'Delete',
+                icon: <Icon icon="mdi:delete-outline" />,
+                menuItemProps: {
+                  onClick: () => handleDelete(row.id)
+                }
               }
             ]}
           />
@@ -334,8 +363,8 @@ const SalaryTable = () => {
                     SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
                     <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="paid">Paid</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -432,12 +461,13 @@ const SalaryTable = () => {
         toggle={toggleEditUserDrawer}
         selectedRows={selectedRows}
         handleRowClick={handleRowClick} />
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
-      />
+           <SalariesDeleteModel
+          open={salariesDeleteModelOpen}
+          setOpen={setSalariesDeleteModelOpen}
+          description="Are you sure you want to delete this studentCertificate?"
+          title="Delete"
+          handleSubmit={handleSalariesDelete}
+        />
     </DatePickerWrapper>
   );
 };
