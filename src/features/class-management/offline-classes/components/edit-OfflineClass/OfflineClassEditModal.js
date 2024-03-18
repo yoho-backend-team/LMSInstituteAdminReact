@@ -69,7 +69,7 @@ const defaultValues = {
   teacher: []
 };
 
-const OfflineClassEditModal = ({ open, handleEditClose,offlineClasses }) => {
+const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -127,20 +127,20 @@ const OfflineClassEditModal = ({ open, handleEditClose,offlineClasses }) => {
     resolver: yupResolver(schema)
   });
 
-    // Set form values when selectedBranch changes
-    useEffect(() => {
-      if (offlineClasses) {
-       
-        setValue('class_date', offlineClasses?.class_date|| '');
-        setValue('class_name', offlineClasses?.class_name|| '');
-        setValue('start_time', offlineClasses?.start_time|| '');
-        setValue('end_time', offlineClasses?.end_time || '');
-        setValue('instructor_staff_ids', offlineClasses?.instructor_staff_ids || '');
-        setValue('coordinator_staff_ids', offlineClasses?.coordinator_staff_ids || '');
-      }
-    }, [offlineClasses, setValue]);
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (offlineClasses) {
 
-console.log(offlineClasses);
+      setValue('class_date', offlineClasses?.class_date || '');
+      setValue('class_name', offlineClasses?.class_name || '');
+      setValue('start_time', offlineClasses?.start_time || '');
+      setValue('end_time', offlineClasses?.end_time || '');
+      setValue('instructor_staff_ids', offlineClasses?.instructor_staff_ids || '');
+      setValue('coordinator_staff_ids', offlineClasses?.coordinator_staff_ids || '');
+    }
+  }, [offlineClasses, setValue]);
+
+  console.log("selected ", offlineClasses);
 
   const handleClose = () => {
     setValue('course', '');
@@ -195,7 +195,7 @@ console.log(offlineClasses);
     const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
     var bodyFormData = new FormData();
     bodyFormData.append('class_name', data.class_name);
-    bodyFormData.append('class_id', data.class_id);
+    bodyFormData.append('class_id', offlineClasses.class_id);
     // bodyFormData.append('class_id', data.selectedClassId);
     // bodyFormData.append('branch_id', data.selectedBranchId);
     bodyFormData.append('branch_id', selectedBranchId);
@@ -258,7 +258,7 @@ console.log(offlineClasses);
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-              <Controller
+                <Controller
                   name="class_name"
                   control={control}
                   rules={{ required: 'Class Name field is required' }}
