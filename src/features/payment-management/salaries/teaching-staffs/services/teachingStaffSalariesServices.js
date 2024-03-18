@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/staff-salaries`;
 
-export const getAllStaffSalaries = async (selectedBranchId) => {
+export const getAllStaffSalaries = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_SALARIES_API_END_POINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -70,16 +70,16 @@ export const addTeachingStaffSalary = async (data) => {
   }
 };
 
-export const deleteTeachingStaffSalary = async (TeachingStaffSalaryId) => {
+export const deleteTeachingStaffSalary = async (data) => {
   try {
     const response = await axios.delete(`${TEACHING_STAFF_SALARIES_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: TeachingStaffSalaryId }
+      params: data
     });
-
+    console.log(data);
     if (response.data.status) {
       return { success: true, message: 'TeachingStaffSalary deleted successfully' };
     } else {
@@ -93,7 +93,7 @@ export const deleteTeachingStaffSalary = async (TeachingStaffSalaryId) => {
 
 export const updateTeachingStaffSalary = async (data) => {
   try {
-    const response = await axios.put(`${TEACHING_STAFF_SALARIES_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_SALARIES_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

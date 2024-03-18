@@ -18,7 +18,6 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import { useCallback } from 'react';
 
-
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -27,13 +26,11 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  transaction_id: yup.number().typeError('Transaction id must be a number').required('Transaction id is required'),
+  salary_amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
-
 const SalaryEditDrawer = (props) => {
-
   const { open, toggle, selectedRows, setRefetch } = props;
   const image = require('assets/images/avatar/1.png');
   const [inputValue, setInputValue] = useState('');
@@ -41,12 +38,10 @@ const SalaryEditDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   console.log(selectedRows);
 
-
   const defaultValues = {
     transaction_id: '',
     salary_amount: '',
-    selectedImage: '',
-    payment_date:""
+    selectedImage: ''
   };
 
   const {
@@ -61,27 +56,24 @@ const SalaryEditDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-    // Set form values when selectedBranch changes
-    useEffect(() => {
-      if (selectedRows) {
-        setValue('logo', selectedRows.selectedImage || '');
-        setValue('paymentId', selectedRows?.transaction_id || '');
-        setValue('salary_amount', selectedRows?.salary_amount || '');
-        setValue('payment_date', new Date(selectedRows?.payment_date) || '');
-        
-      }
-    }, [selectedRows, setValue]);
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (selectedRows) {
+      setValue('image', selectedRows?.selectedImage || '');
+      setValue('transaction_id', selectedRows?.transaction_id || '');
+      setValue('salary_amount', selectedRows?.salary_amount || '');
+    }
+  }, [selectedRows, setValue]);
 
   const onSubmit = useCallback(async (data) => {
     const inputData = new FormData();
-    inputData.append('logo', selectedImage);
-    inputData.append('paymentId', data.transaction_id);
+    inputData.append('image', selectedImage);
+    inputData.append('transaction_id', data.transaction_id);
     inputData.append('salary_amount', data.salary_amount);
-    inputData.append('payment_date', data.payment_date);
     inputData.append('id', selectedRows.id);
 
     const result = await updateTeachingStaffSalary(inputData);
-
+    console.log(data);
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -155,7 +147,7 @@ const SalaryEditDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
               {!selectedImage && (
                 <ImgStyled
                   src={
@@ -183,7 +175,7 @@ const SalaryEditDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paymentId"
+                name="transaction_id"
                 rules={{ required: true }}
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -197,8 +189,8 @@ const SalaryEditDrawer = (props) => {
                     // label={selectedRows?.total}
                     label="transaction Id"
                     type="number"
-                    error={Boolean(errors.paymentId)}
-                    helperText={errors.paymentId?.message}
+                    error={Boolean(errors.transaction_id)}
+                    helperText={errors.transaction_id?.message}
                   />
                 )}
               />

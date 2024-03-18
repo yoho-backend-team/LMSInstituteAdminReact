@@ -54,7 +54,7 @@ const NonTeachingStaffFilterCard = (props) => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
+                  <TextField value={searchValue} fullWidth placeholder="Search Non-Teaching Staff" onChange={(e) => handleSearch(e)} />
                 </Grid>
               </Grid>
             </CardContent>
