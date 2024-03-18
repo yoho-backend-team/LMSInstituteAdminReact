@@ -8,13 +8,16 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
-import DeleteDialog from 'components/modal/DeleteModel';
+import OfflineClassDeleteModel from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import { selectOfflineClasses } from '../redux/offlineClassSelectors';
-import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { selectOfflineClasses } from '../redux/offlineClassSelectors';
+import { getAllOfflineClasses } from '../redux/offlineClassThunks';
+import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
+import { useCallback } from 'react';
+import toast from 'react-hot-toast';
 
 const OfflineClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -22,6 +25,12 @@ const OfflineClassCard = () => {
   const offlineClasses = useSelector(selectOfflineClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
+
+  const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
+
+  const [selectedOfflineClassDeleteId, setSelectedOfflineClassDeleteId] = useState(null);
+  const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
+
   console.log(offlineClasses);
   useEffect(() => {
     const data = {
@@ -29,7 +38,7 @@ const OfflineClassCard = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllOfflineClasses(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,offlineClassRefetch]);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -38,8 +47,6 @@ const OfflineClassCard = () => {
     setSelectedClass(data);
     setEditModalOpen(true);
   };
-
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
@@ -83,6 +90,24 @@ const OfflineClassCard = () => {
   //   return hours + ' HR ' + minutes + ' MIN';
 
   // }
+
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedOfflineClassDeleteId(itemId);
+    setOfflineClassDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleOfflineClassDelete = async () => {
+    const data = { class_id: selectedOfflineClassDeleteId };
+    const result = await deleteOfflineClass(data);
+    if (result.success) {
+      toast.success(result.message);
+      setofflineClassRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   return (
     <>
@@ -129,9 +154,7 @@ const OfflineClassCard = () => {
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
-                            onClick: () => {
-                              setDeleteDialogOpen(true);
-                            }
+                            onClick: () => handleDelete(card?.class_id)
                           }
                         }
                       ]}
@@ -170,11 +193,12 @@ const OfflineClassCard = () => {
           open={isEditModalOpen}
           handleEditClose={handleEditClose}
         />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
+        <OfflineClassDeleteModel
+          open={offlineClassDeleteModelOpen}
+          setOpen={setOfflineClassDeleteModelOpen}
           description="Are you sure you want to delete this item?"
           title="Delete"
+          handleSubmit={handleOfflineClassDelete}
         />
       </Grid>
       <Grid container justifyContent="flex-end" mt={2}>

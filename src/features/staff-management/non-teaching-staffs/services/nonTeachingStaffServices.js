@@ -58,7 +58,6 @@ export const getAllActiveNonTeachingStaffs = async (data) => {
   }
 };
 
-
 export const searchNonTeachingStaffs = async (searchQuery) => {
   try {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
@@ -88,6 +87,7 @@ export const addNonTeachingStaff = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'NonTeachingStaff created successfully' };

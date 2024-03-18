@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState , forwardRef } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -57,7 +57,8 @@ const FeesEditDrawer = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
-  const [selectedStatus, setSelectedStatus] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(selectedRows?.payment_date ? new Date(selectedRows?.payment_date) : new Date());
+  const [selectedDate, setSelectedDate] = useState();
   console.log(selectedStatus);
   console.log(selectedRows);
 
@@ -65,7 +66,7 @@ const FeesEditDrawer = (props) => {
     transaction_id: '',
     paid_amount: '',
     selectedImage: '',
-    payment_date:""
+    payment_date: ''
   };
 
   // console.log(defaultValues);
@@ -88,10 +89,10 @@ const FeesEditDrawer = (props) => {
       setValue('logo', selectedRows.selectedImage || '');
       setValue('paymentId', selectedRows?.transaction_id || '');
       setValue('paidAmount', selectedRows?.paid_amount || '');
-      setValue('payment_date', new Date(selectedRows?.payment_date) || '');
-      
+      setValue('payment_date', new Date(`${selectedRows?.payment_date}`));
+      setSelectedDate(selectedRows?.payment_date ? new Date(selectedRows?.payment_date) : new Date());
     }
-  }, [selectedRows, setValue]);
+  }, [selectedRows]);
 
   // Form submission handler
   const onSubmit = useCallback(async (data) => {
@@ -141,7 +142,7 @@ const FeesEditDrawer = (props) => {
     }
   };
 
-  console.log(selectedImage);
+  console.log(selectedDate);
 
   const handleClose = () => {
     setSelectedImage(null);
@@ -210,7 +211,7 @@ const FeesEditDrawer = (props) => {
             </Box>
 
             <Grid item xs={12} sm={12}>
-              <TextField sx={{ mb: 2 }} defaultValue={"0"} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
+              <TextField sx={{ mb: 2 }} defaultValue={'0'} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
                 <MenuItem value="0">Paid</MenuItem>
                 <MenuItem value="1">Refund</MenuItem>
                 <MenuItem value="2">Pending</MenuItem>
@@ -259,18 +260,21 @@ const FeesEditDrawer = (props) => {
                 )}
               />
             </Grid>
-
+            {/* {selectedDate && ( */}
             <Grid item xs={6} sx={{ mb: 2 }}>
               <Controller
                 name="payment_date"
                 control={control}
                 rules={{ required: 'Payment Date field is required' }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: { onChange } }) => (
                   <DatePicker
-                    selected={value}
+                    selected={selectedDate}
                     id="basic-input"
                     className="full-width-datepicker"
-                    onChange={onChange}
+                    onChange={(date) => {
+                      onChange;
+                      setSelectedDate(date);
+                    }}
                     placeholderText="Click to select a date"
                     customInput={<CustomInput label="Payment Date" />}
                   />
@@ -280,6 +284,7 @@ const FeesEditDrawer = (props) => {
                 <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
               )}
             </Grid>
+            {/* )} */}
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>

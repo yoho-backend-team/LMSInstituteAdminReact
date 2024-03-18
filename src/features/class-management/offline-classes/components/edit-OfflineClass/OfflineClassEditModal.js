@@ -59,14 +59,12 @@ const schema = yup.object().shape({
 });
 
 const defaultValues = {
-  course: '',
-  batch: '',
-  selectcourse: '',
+  class_name: '',
   classDate: new Date(),
   startTime: null,
   endTime: null,
   instructor: '',
-  teacher: []
+  coordinator:''
 };
 
 const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
@@ -143,14 +141,11 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   console.log("selected ", offlineClasses);
 
   const handleClose = () => {
-    setValue('course', '');
-    setValue('selectcourse', '');
-    setValue('batch', '');
     setValue('classDate', null);
     setValue('startTime', null);
     setValue('endTime', null);
     setValue('instructor', '');
-    setValue('teacher', []);
+    setValue('coordinator', '');
     handleEditClose();
     reset();
   };

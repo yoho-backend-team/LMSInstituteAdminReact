@@ -5,7 +5,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-// import MenuItem from '@mui/material/MenuItem'; 
+// import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,11 +47,10 @@ const defaultValues = {
   course: '',
   batch: '',
   student: '',
-  payment_date: '',
+  payment_date: new Date(),
   paymentId: Number('0'),
   paidAmount: Number('0')
 };
-
 
 const FeesAddDrawer = (props) => {
   // ** Props
@@ -113,6 +112,7 @@ const FeesAddDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -334,10 +334,11 @@ const FeesAddDrawer = (props) => {
                 name="payment_date"
                 control={control}
                 rules={{ required: 'Payment Date field is required' }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field: {value, onChange } }) => (
                   <DatePicker
                     selected={value}
-                    id="basic-input"
+                    id="date-time-picker"
+                    timeFormat="HH:mm"
                     className="full-width-datepicker"
                     onChange={onChange}
                     placeholderText="Click to select a date"
