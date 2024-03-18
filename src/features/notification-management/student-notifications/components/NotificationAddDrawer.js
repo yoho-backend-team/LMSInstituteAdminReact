@@ -105,7 +105,7 @@ const NotificationAddDrawer = (props) => {
     setValue,
     formState: { errors },
     reset,
-  } = useForm({
+  } = useForm({ 
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)

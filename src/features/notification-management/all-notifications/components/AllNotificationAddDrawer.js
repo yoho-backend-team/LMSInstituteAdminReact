@@ -1,12 +1,12 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
+// import axios from 'axios';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,27 +16,10 @@ import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 import { addNotification } from '../services/allNotificationServices';
-
-const Header = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(6),
-  justifyContent: 'space-between'
-}));
-
-const schema = yup.object().shape({
-  branch: yup.string().required('Branch is required'),
-  title: yup.string().required('Title is required'),
-  body: yup.string().required('Body is required')
-});
-
-const defaultValues = {
-  title: '',
-  body: '',
-  branch: ''
-};
 
 const AllNotificationAddDrawer = (props) => {
   // ** Props
@@ -48,65 +31,80 @@ const AllNotificationAddDrawer = (props) => {
   const image = require('assets/images/avatar/1.png');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [activeBranches, setActiveBranches] = useState([]);
 
   useEffect(() => {
-    getAllGroups();
-  }, []);
+    getActiveBranchesByUser();
+  }, [selectedBranchId]);
 
-  const getAllGroups = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/role/get-all`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    };
+  // useEffect(() => {
+  //   getActiveStaffsByBranch(selectedBranchId);
+  // }, [selectedBranchId]);
 
-    await axios
-      .request(config)
-      .then((response) => {
-        console.log('Groups : ', response.data);
-        setGroups(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const getActiveBranchesByUser = async () => {
+    const result = await getActiveBranches();
+
+    console.log('active branches : ', result.data);
+    setActiveBranches(result.data.data);
+  };
+
+  const Header = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(6),
+    justifyContent: 'space-between'
+  }));
+
+  const schema = yup.object().shape({
+    branch: yup.string().required('Branch is required'),
+    title: yup.string().required('Title is required'),
+    body: yup.string().required('Body is required')
+  });
+
+  const defaultValues = {
+    title: '',
+    body: '',
+    branch: ''
   };
 
   const {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
+    formState: { errors },
+    reset,
   } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
 
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    toggle();
+    reset();
+  };
+
   const onSubmit = async (data) => {
+    console.log(data);
     var bodyFormData = new FormData();
+    // data?.students?.forEach((student) => {
+    //   bodyFormData.append('student_ids[]', student?.student_id);
+    // });
     bodyFormData.append('image', selectedImage);
-    bodyFormData.append('branch', data.branch);
+    bodyFormData.append('branch', data.branch); // Accessing course_id from selected object
+    bodyFormData.append('branch_id', selectedBranchId); // Accessing batch_id from selected object
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
-    console.log(bodyFormData);
 
     const result = await addNotification(bodyFormData);
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
-      // toast.error(result.message);
+      toast.error(result.message);
     }
   };
 
@@ -135,12 +133,6 @@ const AllNotificationAddDrawer = (props) => {
         setInputValue(reader.result);
       }
     }
-  };
-
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
   };
 
   return (
@@ -193,20 +185,22 @@ const AllNotificationAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: 'Branch field is required' }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'branch' field
-                  }}
-                  options={['Web Development', 'Android Development']}
                   fullWidth
+                  options={activeBranches}
+                  getOptionLabel={(branch) => branch.branch_name}
+                  onChange={(event, newValue) => {
+                    onChange(newValue?.branch_id);
+                    // getActiveCoursesByBranch(newValue?.branch_id);
+                  }}
+                  value={activeBranches.find((branch) => branch.branch_id === value) || null}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select Branch"
                       sx={{ mb: 4 }}
+                      label="Select Branch"
                       error={Boolean(errors.branch)}
                       helperText={errors.branch?.message}
                     />
@@ -222,22 +216,15 @@ const AllNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'title' field
-                  }}
-                  options={['Web Development', 'Android Development']}
+                <TextField
                   fullWidth
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Title"
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.title)}
-                      helperText={errors.title?.message}
-                    />
-                  )}
+                  sx={{ mb: 2 }}
+                  label="Title"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Placeholder"
+                  error={Boolean(errors.title)}
+                  helperText={errors.title ? errors.title.message : null}
                 />
               )}
             />
@@ -249,22 +236,15 @@ const AllNotificationAddDrawer = (props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  value={value}
-                  onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'body' field
-                  }}
-                  options={['Web Development', 'Android Development']}
+                <TextField
                   fullWidth
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Body"
-                      sx={{ mb: 4 }}
-                      error={Boolean(errors.body)}
-                      helperText={errors.body?.message}
-                    />
-                  )}
+                  sx={{ mb: 2 }}
+                  label="Body"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Placeholder"
+                  error={Boolean(errors.body)}
+                  helperText={errors.body ? errors.body.message : null}
                 />
               )}
             />
