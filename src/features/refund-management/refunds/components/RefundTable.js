@@ -18,14 +18,16 @@ import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
 import { TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import DeleteDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
+
 import RefundAddDrawer from './RefundAddDrawer';
 import RefundCardHeader from './RefundCardHeader';
 // ** Styled Components
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
+import RefundDeleteModel from 'components/modal/DeleteModel';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { useEffect } from 'react';
@@ -33,6 +35,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
 import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
+import toast from 'react-hot-toast';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -209,9 +212,25 @@ const RefundTable = () => {
     console.log('Toggle drawer');
   };
 
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const handleDelete = () => {
-    setDeleteDialogOpen(true);
+  const [refundDeleteModelOpen, setRefundDeleteModelOpen] = useState(false);
+
+  const [selectedRefundDeleteId, setSelectedRefundDeleteId] = useState(null);
+
+  const handleDelete = useCallback((itemId) => {
+    setSelectedRefundDeleteId(itemId);
+    setRefundDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleRefundDelete = async () => {
+    const data = { id: selectedRefundDeleteId };
+    const result = await deleteCourseCategory(data);
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
   };
 
   const columns = [
@@ -468,11 +487,12 @@ const RefundTable = () => {
             toggle={toggleEditUserDrawer}
           /> */}
 
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
+          <RefundDeleteModel
+            open={refundDeleteModelOpen}
+            setOpen={setRefundDeleteModelOpen}
             description="Are you sure you want to delete this item?"
             title="Delete"
+            handleSubmit={handleRefundDelete}
           />
         </Grid>
       </Grid>
