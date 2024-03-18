@@ -7,9 +7,8 @@ import NonTeachingStaffCard from 'features/attandence-management/non-teaching-st
 import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
-import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-
+import { selectNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nonTeachingStaffSelectors';
+import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nontTeachingStaffThunks';
 const useTimeout = (callback, delay) => {
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
@@ -23,7 +22,7 @@ const NonTeachingStaffs = () => {
     setLoading(false);
   }, 1000);
 
-  const nonTeachingStaffs = useSelector(selectTeachingStaffs);
+  const nonTeachingStaffs = useSelector(selectNonTeachingStaffs);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -33,15 +32,16 @@ const NonTeachingStaffs = () => {
       type: 'non_teaching',
       branch_id: selectedBranchId
     };
-    dispatch(getAllTeachingStaffs(data));
+    dispatch(getAllNonTeachingStaffs(data));
   }, [dispatch, selectedBranchId]);
+  
   return (
     <>
       {loading ? (
         <TeachingStaffSkeleton />
       ) : (
         <Grid>
-          <NonTeachingStaffFilterCard />
+          <NonTeachingStaffFilterCard selectedBranchId={selectedBranchId}/>
           <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs} />
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination count={10} color="primary" />

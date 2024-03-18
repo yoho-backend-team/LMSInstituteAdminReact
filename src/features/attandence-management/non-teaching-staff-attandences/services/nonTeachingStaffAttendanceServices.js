@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/attendance-management/non-teaching-staff`;
 
-export const getAllNonTeachingStaffAttendances = async (selectedBranchId) => {
+export const getAllNonTeachingStaffAttendances = async (data) => {
   try {
     const response = await axios.get(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     // Check if the response status is successful

@@ -13,11 +13,12 @@ import { Link } from 'react-router-dom';
 // import { selectnONTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceSelectors';
 
 const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
+  console.log(nonTeachingStaffs)
   return (
     <>
       <Grid>
         <Grid container xs={12} spacing={2} mt={2} sx={{ display: 'flex' }}>
-          {nonTeachingStaffs.map((item, i) => (
+          {nonTeachingStaffs?.map((item, i) => (
             <Grid key={i} item xs={12} sm={6} md={4}>
               <Card sx={{ position: 'relative', p: 1.5 }}>
                 <CardContent sx={{ pt: 2.5 }}>
