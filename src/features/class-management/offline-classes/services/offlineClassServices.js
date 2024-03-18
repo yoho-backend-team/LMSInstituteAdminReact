@@ -77,9 +77,9 @@ export const deleteOfflineClass = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
-    console.log(data);
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'OfflineClass deleted successfully' };
     } else {

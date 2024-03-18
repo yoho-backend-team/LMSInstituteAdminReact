@@ -99,7 +99,7 @@ const OfflineClassCard = () => {
 
   // Handle branch deletion
   const handleOfflineClassDelete = async () => {
-    const data = { id: selectedOfflineClassDeleteId };
+    const data = { class_id: selectedOfflineClassDeleteId };
     const result = await deleteOfflineClass(data);
     if (result.success) {
       toast.success(result.message);
@@ -154,7 +154,7 @@ const OfflineClassCard = () => {
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
-                            onClick: () => handleDelete(card?.id)
+                            onClick: () => handleDelete(card?.class_id)
                           }
                         }
                       ]}

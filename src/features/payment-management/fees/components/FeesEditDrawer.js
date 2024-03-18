@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState , forwardRef } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -65,7 +65,7 @@ const FeesEditDrawer = (props) => {
     transaction_id: '',
     paid_amount: '',
     selectedImage: '',
-    payment_date:""
+    payment_date: ''
   };
 
   // console.log(defaultValues);
@@ -88,8 +88,7 @@ const FeesEditDrawer = (props) => {
       setValue('logo', selectedRows.selectedImage || '');
       setValue('paymentId', selectedRows?.transaction_id || '');
       setValue('paidAmount', selectedRows?.paid_amount || '');
-      setValue('payment_date', new Date(selectedRows?.payment_date) || '');
-      
+      setValue('payment_date', new Date(`${selectedRows?.payment_date}T07:59:13.619Z`));
     }
   }, [selectedRows, setValue]);
 
@@ -210,7 +209,7 @@ const FeesEditDrawer = (props) => {
             </Box>
 
             <Grid item xs={12} sm={12}>
-              <TextField sx={{ mb: 2 }} defaultValue={"0"} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
+              <TextField sx={{ mb: 2 }} defaultValue={'0'} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
                 <MenuItem value="0">Paid</MenuItem>
                 <MenuItem value="1">Refund</MenuItem>
                 <MenuItem value="2">Pending</MenuItem>
@@ -259,27 +258,28 @@ const FeesEditDrawer = (props) => {
                 )}
               />
             </Grid>
-
-            <Grid item xs={6} sx={{ mb: 2 }}>
-              <Controller
-                name="payment_date"
-                control={control}
-                rules={{ required: 'Payment Date field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <DatePicker
-                    selected={value}
-                    id="basic-input"
-                    className="full-width-datepicker"
-                    onChange={onChange}
-                    placeholderText="Click to select a date"
-                    customInput={<CustomInput label="Payment Date" />}
-                  />
+            {selectedRows?.payment_date && (
+              <Grid item xs={6} sx={{ mb: 2 }}>
+                <Controller
+                  name="payment_date"
+                  control={control}
+                  rules={{ required: 'Payment Date field is required' }}
+                  render={({ field: { onChange } }) => (
+                    <DatePicker
+                      selected={new Date(`${selectedRows?.payment_date}T07:59:13.619Z`)}
+                      id="basic-input"
+                      className="full-width-datepicker"
+                      onChange={onChange}
+                      placeholderText="Click to select a date"
+                      customInput={<CustomInput label="Payment Date" />}
+                    />
+                  )}
+                />
+                {errors.payment_date && (
+                  <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
                 )}
-              />
-              {errors.payment_date && (
-                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
-              )}
-            </Grid>
+              </Grid>
+            )}
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
