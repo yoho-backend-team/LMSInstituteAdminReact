@@ -38,19 +38,23 @@ const TeachingStaff = () => {
 
   return (
     <>
-      {loading ? (
-        <TeachingStaffSkeleton />
-      ) : (
+      <Grid>
         <Grid>
           <TeachingStaffFilterCard />
-          <Grid className="match-height">
-            <TeachingStaffCard teachingStaffs={teachingStaffs} />
-          </Grid>
-          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination count={10} color="primary" />
-          </Grid>
         </Grid>
-      )}
+        {loading ? (
+          <TeachingStaffSkeleton />
+        ) : (
+          <Grid>
+            <Grid className="match-height">
+              <TeachingStaffCard teachingStaffs={teachingStaffs} />
+            </Grid>
+            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination count={10} color="primary" />
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
     </>
   );
 };

@@ -1,7 +1,7 @@
 // Notificationservice.js
 import axios from 'axios';
 
-const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/student-notifications`;
+const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management`;
 
 export const getAllNotifications = async (selectedBranchId) => {
   try {
@@ -52,7 +52,7 @@ export const searchNotifications = async (searchQuery) => {
 
 export const addNotification = async (data) => {
   try {
-    const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/create`, data, {
+    const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
