@@ -6,12 +6,8 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import { useCallback, useEffect, useState } from 'react';
 // ** Third Party Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import CustomChip from 'components/mui/chip';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { useDispatch, useSelector } from 'react-redux';
@@ -30,15 +26,15 @@ const TeachingStaffFilterCard = (props) => {
   const [searchValue, setSearchValue] = useState('');
 
   // const [selectedCourses, setSelectedCourses] = useState([]);
-  const [selectedstaff, setSelectedstaff] = useState([]);
+  // const [selectedstaff, setSelectedstaff] = useState([]);
 
   const courses = useSelector(selectCourses);
 
-  const staff = [
-    { staff_id: '1', staff_name: 'Staff 1' },
-    { staff_id: '2', staff_name: 'Staff 2' },
-    { staff_id: '3', staff_name: 'Staff 3' }
-  ];
+  // const staff = [
+  //   { staff_id: '1', staff_name: 'Staff 1' },
+  //   { staff_id: '2', staff_name: 'Staff 2' },
+  //   { staff_id: '3', staff_name: 'Staff 3' }
+  // ];
 
   useEffect(() => {
     const data = {
@@ -73,13 +69,13 @@ const TeachingStaffFilterCard = (props) => {
             <CardHeader title="Teaching Staff Attendance" />
             <CardContent>
               <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="1">Active</MenuItem>
                     <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <Autocomplete
                     multiple
                     fullWidth
@@ -101,7 +97,7 @@ const TeachingStaffFilterCard = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                   <Autocomplete
                     multiple
                     id="select-multiple-chip"
@@ -158,8 +154,8 @@ const TeachingStaffFilterCard = (props) => {
                     selectAllText="Select All"
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
-                </Grid>
-                <Grid item xs={12} sm={3}>
+                </Grid> */}
+                <Grid item xs={12} sm={4}>
                   <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
                 </Grid>
               </Grid>
