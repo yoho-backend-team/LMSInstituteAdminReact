@@ -194,6 +194,8 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
     const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
     var bodyFormData = new FormData();
+    filteredInstructorId?.forEach((id) => { bodyFormData.append('instructor_staff_ids[]', id) })
+    filteredCoordinatorId?.forEach((id) => { bodyFormData.append('coordinator_staff_ids[]', id) })
     bodyFormData.append('class_name', data.class_name);
     bodyFormData.append('class_id', offlineClasses.class_id);
     // bodyFormData.append('class_id', data.selectedClassId);
@@ -204,8 +206,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
     bodyFormData.append('end_time', data.end_time);
-    bodyFormData.append('instructor_staff_ids', filteredInstructorId);
-    bodyFormData.append('coordinator_staff_ids', filteredCoordinatorId);
+
     // type: 'offline',
     // status: 'pending'
 
