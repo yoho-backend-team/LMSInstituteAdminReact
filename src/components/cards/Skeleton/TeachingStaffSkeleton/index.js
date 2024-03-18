@@ -34,14 +34,14 @@ const TeachingStaffSkeleton = () => {
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Skeleton variant="rectangular" height={32} width={80} />
+                      <Skeleton variant="rectangular" height={28} width={90} />
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Skeleton variant="rectangular" height={32} width={80} />
+                      <Skeleton variant="rectangular" height={28} width={90} />
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                    <Skeleton variant="rectangular" height={36} width={120} />
+                    <Skeleton variant="rectangular" height={33} width={120} />
                   </Box>
                 </Box>
               </CardContent>
