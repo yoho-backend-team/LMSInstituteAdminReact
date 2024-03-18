@@ -18,6 +18,7 @@ import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 
 const OfflineClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState({});
   const offlineClasses = useSelector(selectOfflineClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -33,7 +34,8 @@ const OfflineClassCard = () => {
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
-  const handleEdit = () => {
+  const handleEdit = (data) => {
+    setSelectedClass(data);
     setEditModalOpen(true);
   };
 
@@ -89,11 +91,11 @@ const OfflineClassCard = () => {
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3 }}>
               <Grid container direction="column" spacing={1}>
-                <Grid item sx={{alignItems:"center", justifyContent: 'space-between', display: 'flex', mt: 1 }}>
-                  <Box sx={{display:"flex",alignItems:"center"}}>
+                <Grid item sx={{ alignItems: 'center', justifyContent: 'space-between', display: 'flex', mt: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography
                       sx={{
-                        mb:0,
+                        mb: 0,
                         flexShrink: 1,
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
@@ -118,7 +120,7 @@ const OfflineClassCard = () => {
                           icon: <Icon icon="tabler:edit" />,
                           menuItemProps: {
                             onClick: () => {
-                              handleEdit();
+                              handleEdit(card);
                             }
                           }
                         },
@@ -136,7 +138,7 @@ const OfflineClassCard = () => {
                     />
                   </Box>
                 </Grid>
-                <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2,mt:1 }}>
+                <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
                   <AvatarGroup className="pull-up" max={4}>
                     {card?.batch_class?.batch_student?.map((student, studentIndex) => (
                       <Avatar key={studentIndex} src={student} alt={student?.first_name} />
@@ -162,8 +164,12 @@ const OfflineClassCard = () => {
             </Card>
           </Grid>
         ))}
-        <OfflineClassEditModal  selectedBranchId={selectedBranchId}
-            offlineClasses={offlineClasses} open={isEditModalOpen} handleEditClose={handleEditClose} />
+        <OfflineClassEditModal
+          selectedBranchId={selectedBranchId}
+          offlineClasses={selectedClass}
+          open={isEditModalOpen}
+          handleEditClose={handleEditClose}
+        />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}

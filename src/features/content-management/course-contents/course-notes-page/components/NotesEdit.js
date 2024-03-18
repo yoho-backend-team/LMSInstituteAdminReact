@@ -47,6 +47,7 @@ const schema = yup.object().shape({
 const defaultValues = {
   description: '',
   title: ''
+  
 };
 
 const NotesEdit = (props) => {
@@ -110,6 +111,7 @@ const NotesEdit = (props) => {
 
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
+    bodyFormData.append('id', props.initialValues.id);
     console.log(bodyFormData);
 
     const result = await updateCourseNote(bodyFormData);
@@ -117,13 +119,13 @@ const NotesEdit = (props) => {
     if (result.success) {
       toast.success(result.message);
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
-        });
-      });
-      toast.error(errorMessage.trim());
+      
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(result.message);
       // toast.error(result.message);
     }
   };

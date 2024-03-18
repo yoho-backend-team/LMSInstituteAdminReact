@@ -98,13 +98,13 @@ export const deleteCourseModule = async (data) => {
 
 export const updateCourseModule = async (data) => {
   try {
-    const response = await axios.put(`${COURSE_MODULE_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${COURSE_MODULE_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+console.log('coursemodules-edit',response)
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseModule updated successfully' };
