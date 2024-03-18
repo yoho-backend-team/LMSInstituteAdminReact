@@ -210,7 +210,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     // type: 'offline',
     // status: 'pending'
 
-    console.log(bodyFormData);
+    console.log(data);
 
     const result = await updateOfflineClass(bodyFormData);
 
