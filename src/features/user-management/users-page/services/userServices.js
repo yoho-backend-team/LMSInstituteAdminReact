@@ -4,6 +4,13 @@ import axios from 'axios';
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
+
+const PROFILE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/profile-management`;
+// const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
+
+
+
+
 export const getAllUsers = async (data) => {
   try {
     const response = await axios.get(`${USER_API_ENDPOINT}/get-all`, {
@@ -290,6 +297,37 @@ export const getAllActiveGroups = async () => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllGroups:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+
+
+
+
+
+export const getUserProfileById = async (data) => {
+  try {
+    const response = await axios.get(`${PROFILE_API_ENDPOINT}/get-by-auth-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log(response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch users. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllUsers:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
