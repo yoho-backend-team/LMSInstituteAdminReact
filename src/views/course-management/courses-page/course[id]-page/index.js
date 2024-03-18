@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardMedia,
   Grid,
+  IconButton,
   List,
   ListItem,
   Typography
@@ -28,7 +29,11 @@ import { getCourseDetails } from 'features/course-management/courses-page/servic
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+// import { deleteCourseCategory } from '../../services/courseCategoryServices';
+import { deleteCourse } from 'features/course-management/courses-page/services/courseServices';
+import { useCallback } from 'react';
 
+import CourseDeleteModel from 'components/modal/DeleteModel';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
@@ -36,6 +41,10 @@ const CourseViewPage = () => {
   const location = useLocation();
   const courseId = location.state?.id;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const [courseDeleteModelOpen, setCourseDeleteModelOpen] = useState(false);
+
+  const [selectedCourseDeleteId, setSelectedCourseDeleteId] = useState(null);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // const [courseRefetch, setCourseRefetch] = useState(false);
@@ -79,6 +88,26 @@ const CourseViewPage = () => {
   const handleEdit = () => {
     setEditModalOpen(true);
   };
+
+  const handleDelete = useCallback((itemId) => {
+    setSelectedCourseDeleteId(itemId);
+    setCourseDeleteModelOpen(true);
+  }, []);
+
+
+  // Handle branch deletion
+  const handleCourseDelete = async () => {
+    const data = { id: selectedCourseDeleteId };
+    const result = await deleteCourse(data);
+    if (result.success) {
+      toast.success(result.message);
+      // setCategoryRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
+
+
 
   const createAccordion = (accordion) => (
     <Grid container xs={12} sx={{ p: 0, m: 0 }}>
@@ -169,11 +198,21 @@ const CourseViewPage = () => {
                     style={{ borderRadius: '10px' }}
                   ></iframe> */}
           </Box>
-          <CardContent>
-            {course?.institute_course_branch?.description}
-            <Link to="" sx={{ TextDecoder: 'none', color: 'primary' }}>
-              View more
-            </Link>
+          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box>
+              {course?.institute_course_branch?.description}
+              <Link to="" sx={{ TextDecoder: 'none', color: 'primary' }}>
+                View more
+              </Link>
+            </Box>
+            <Box>
+              <IconButton
+                onClick={() => handleDelete(course?.id)}
+                color="secondary" // Adjust color as needed
+              >
+                <Icon icon="mdi:delete-outline" />
+              </IconButton>
+            </Box>
           </CardContent>
         </Card>
       </Grid>
@@ -191,12 +230,23 @@ const CourseViewPage = () => {
           </Button>
           {course?.course_module?.map(createAccordion)}
 
+          {/* Edit Modal */}
           <CourseEditModal
             selectedBranchId={selectedBranchId}
             // setCourseRefetch={setCourseRefetch}
             course={course}
             open={isEditModalOpen}
             handleEditClose={handleEditClose}
+          />
+
+          {/* Delete Modal */}
+
+          <CourseDeleteModel
+            open={courseDeleteModelOpen}
+            setOpen={setCourseDeleteModelOpen}
+            description="Are you sure you want to delete this item?"
+            title="Delete"
+            handleSubmit={handleCourseDelete}
           />
         </Card>
       </Grid>
