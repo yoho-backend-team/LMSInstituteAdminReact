@@ -11,6 +11,8 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
+
+
 const CategoryFilter = ({selectedBranchId}) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();

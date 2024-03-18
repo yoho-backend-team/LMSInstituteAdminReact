@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // ** Third Party Imports
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -12,21 +12,27 @@ import { Checkbox } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
+import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
+import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+// import { getAllTeachingStaffAttendances } from '../redux/teachingStaffAttendanceThunks';
+import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 
 /* eslint-enable */
 const TeachingStaffFilterCard = (props) => {
-  const { value, handleFilter } = props;
+  const { selectedBranchId } = props;
+
+  const dispatch = useDispatch();
+
   // ** State
   const [statusValue, setStatusValue] = useState('');
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+
+  // const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedstaff, setSelectedstaff] = useState([]);
 
-  const courses = [
-    { course_id: '1', course_name: 'Course 1' },
-    { course_id: '2', course_name: 'Course 2' },
-    { course_id: '3', course_name: 'Course 3' }
-  ];
+  const courses = useSelector(selectCourses);
 
   const staff = [
     { staff_id: '1', staff_name: 'Staff 1' },
@@ -34,9 +40,30 @@ const TeachingStaffFilterCard = (props) => {
     { staff_id: '3', staff_name: 'Staff 3' }
   ];
 
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+      // type: "teaching"
+    };
+    dispatch(getAllCourses(data));
+  }, [dispatch, selectedBranchId]);
+
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId, type: 'teaching' };
+    dispatch(getAllTeachingStaffs(data));
   };
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'teaching' }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
 
   return (
     <DatePickerWrapper>
@@ -48,69 +75,32 @@ const TeachingStaffFilterCard = (props) => {
               <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Grid item xs={12} sm={3}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="0">Active</MenuItem>
-                    <MenuItem value="1">Inactive</MenuItem>
+                    <MenuItem value="1">Active</MenuItem>
+                    <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Autocomplete
-                    disableCloseOnSelect
                     multiple
-                    id="select-multiple-chip"
-                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...courses]}
-                    getOptionLabel={(option) => option.course_name}
-                    value={selectedCourses}
+                    fullWidth
+                    options={courses}
+                    filterSelectedOptions
                     onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                        setSelectedCourses(courses.filter((option) => option.course_id !== 'selectAll'));
-                      } else {
-                        setSelectedCourses(newValue);
-                      }
+                      const courseId = newValue.map((item) => item.course_id);
+                      const data = {
+                        course_id: courseId,
+                        branch_id: selectedBranchId,
+                        type: 'teaching'
+                      };
+                      dispatch(getAllTeachingStaffs(data));
                     }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Courses"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.course_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.course_id}
-                            label={option.course_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedCourses(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                    // defaultValue={[top100Films[13]]}
+                    id="autocomplete-multiple-outlined"
+                    getOptionLabel={(option) => option.course_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={3}>
                   <Autocomplete
                     multiple
@@ -170,14 +160,7 @@ const TeachingStaffFilterCard = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    value={value}
-                    sx={{
-                      width: '100%'
-                    }}
-                    placeholder="Search Class"
-                    onChange={(e) => handleFilter(e.target.value)}
-                  />
+                  <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
                 </Grid>
               </Grid>
             </CardContent>

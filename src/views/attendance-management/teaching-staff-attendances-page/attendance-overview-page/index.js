@@ -5,28 +5,19 @@ import Pagination from '@mui/material/Pagination';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
 import TeachingStaffCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCard';
 import TeachingStaffFilterCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffFilterCard';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+import { selectLoading, selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// import { selectCourseCategories, selectLoading } from 'features/course-management/categories-page/redux/courseCategorySelectors';
 
 const TeachingStaff = () => {
-  const [loading, setLoading] = useState(true);
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
-  const teachingStaffs = useSelector(selectTeachingStaffs);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  
   const dispatch = useDispatch();
+  const teachingStaffs = useSelector(selectTeachingStaffs);
+  const teachingstaffLoading = useSelector(selectLoading);
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
     const data = {
@@ -40,9 +31,9 @@ const TeachingStaff = () => {
     <>
       <Grid>
         <Grid>
-          <TeachingStaffFilterCard />
+          <TeachingStaffFilterCard selectedBranchId={selectedBranchId} />
         </Grid>
-        {loading ? (
+        {teachingstaffLoading ? (
           <TeachingStaffSkeleton />
         ) : (
           <Grid>
