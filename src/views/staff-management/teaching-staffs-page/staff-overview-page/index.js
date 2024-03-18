@@ -40,11 +40,13 @@ const Teaching = () => {
 
   return (
     <>
+       <TeacherFilter selectedBranchId={selectedBranchId} />
       {loading ? (
         <StaffManagement />
+        
       ) : (
         <Grid>
-          <TeacherFilter selectedBranchId={selectedBranchId} />
+       
           <Grid container xs={12} spacing={2} mt={2}>
             {teachingStaffs &&
               teachingStaffs?.map((item, i) => (

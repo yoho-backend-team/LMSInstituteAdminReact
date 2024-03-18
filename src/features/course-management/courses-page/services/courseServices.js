@@ -78,16 +78,16 @@ export const getAllActiveCourseCategories = async (selectedBranchId) => {
     throw error;
   }
 };
-export const getAllActiveCourses = async (selectedBranchId) => {
+export const getAllActiveCourses = async (data) => {
   try {
     const response = await axios.get(`${COURSE_END_POINT}/get-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
-    console.log(response);
+    console.log('allactiveCourses:',response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;

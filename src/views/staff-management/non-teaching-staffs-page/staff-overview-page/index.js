@@ -49,13 +49,15 @@ const NonTeaching = () => {
     setDeleteDialogOpen(true);
   };
 
+
+
   return (
     <>
       {loading ? (
         <StaffManagement />
       ) : (
         <Grid>
-          <TeacherFilter />
+          <TeacherFilter selectedBranchId={selectedBranchId}/>
           <Grid container xs={12} spacing={2} mt={2}>
             {nonTeachingStaffs?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4}>

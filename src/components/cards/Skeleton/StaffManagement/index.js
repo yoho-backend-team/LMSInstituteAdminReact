@@ -1,5 +1,5 @@
 // material-ui
-import { Card, CardContent, CardHeader, Grid } from '@mui/material';
+import { Card, CardContent, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 
@@ -10,9 +10,9 @@ const StaffManagement = () => {
   return (
     <>
       <Grid container spacing={4}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Card>
-            <CardHeader title={<Skeleton height={25} width={200} />} />
+            <CardHeader title={<Skeleton height={25} width={200}   />} />
             <CardContent>
               <Grid container spacing={3} justifyContent="flex-end">
                 <Grid item xs={12} sm={6}>
@@ -30,7 +30,7 @@ const StaffManagement = () => {
               </Grid>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
 
         <Grid container xs={12} p={2} mt={2} ml={2}>
           {Array.from({ length: 6 }).map((_, i) => (
