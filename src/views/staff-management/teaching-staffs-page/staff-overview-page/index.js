@@ -12,22 +12,15 @@ import DeleteDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import TeacherFilter from '../../../../features/staff-management/teaching-staffs/components/TeacherFilterCard';
+import TeacherFilter from 'features/staff-management/teaching-staffs/components/TeacherFilterCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+import { selectTeachingStaffs, selectLoading } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
 
 const Teaching = () => {
-  const [loading, setLoading] = useState(true);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const teachingStaffs = useSelector(selectTeachingStaffs);
+  const loading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
 
@@ -43,11 +36,7 @@ const Teaching = () => {
     setDeleteDialogOpen(true);
   };
 
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-  console.log(teachingStaffs);
-
+  // console.log(teachingStaffs);
 
   return (
     <>
@@ -55,49 +44,56 @@ const Teaching = () => {
         <StaffManagement />
       ) : (
         <Grid>
-          <TeacherFilter selectedBranchId ={selectedBranchId} />
+          <TeacherFilter selectedBranchId={selectedBranchId} />
           <Grid container xs={12} spacing={2} mt={2}>
-            {teachingStaffs.map((item, i) => (
-              <Grid key={i} item xs={12} sm={6} md={4}>
-                <Card sx={{ position: 'relative' }}>
-                  <CardContent sx={{ pt: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
-                      <Typography variant="h4" sx={{ mb: 1 }}>
-                        {item.staff?.staff_name}
-                      </Typography>
-                      <Typography variant="h5" sx={{ mb: 4 }}>
-                        {item?.staff.email}
-                      </Typography>
+            {teachingStaffs &&
+              teachingStaffs?.map((item, i) => (
+                <Grid key={i} item xs={12} sm={6} md={4}>
+                  <Card sx={{ position: 'relative' }}>
+                    <CardContent sx={{ pt: 3 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                        <Avatar src={item.img} sx={{ mb: 2, width: 100, height: 100 }} />
+                        <Typography variant="h4" sx={{ mb: 1 }}>
+                          {item.staff?.staff_name}
+                        </Typography>
+                        <Typography variant="h5" sx={{ mb: 4 }}>
+                          {item?.staff?.email}
+                        </Typography>
 
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          width: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          textDecoration: 'none'
-                        }}
-                      >
-                        <Grid>
-                          <TextField size="small" select fullWidth label="Status" SelectProps={{ onChange: (e) => handleStatusChange(e) }}>
-                            <MenuItem value="1">Active</MenuItem>
-                            <MenuItem value="0">Inactive</MenuItem>
-                          </TextField>
-                        </Grid>
-                        <Box component={Link} to={item?.staff?.id.toString()} state={{id:item?.staff?.id}}>
-                        {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
-                          <Button variant="tonal" sx={{ p: 1.05 }}>
-                            View Profile
-                          </Button>   
-                          {/* </Link> */}
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            textDecoration: 'none'
+                          }}
+                        >
+                          <Grid>
+                            <TextField
+                              size="small"
+                              select
+                              fullWidth
+                              label="Status"
+                              SelectProps={{ onChange: (e) => handleStatusChange(e) }}
+                            >
+                              <MenuItem value="1">Active</MenuItem>
+                              <MenuItem value="0">Inactive</MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Box component={Link} to={item?.staff?.id.toString()} state={{ id: item?.staff?.id }}>
+                            {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
+                            <Button variant="tonal" sx={{ p: 1.05 }}>
+                              View Profile
+                            </Button>
+                            {/* </Link> */}
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
           </Grid>
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination count={10} color="primary" />
