@@ -6,9 +6,30 @@ import Icon from 'components/icon';
 import { TextField } from '@mui/material';
 import { useState } from 'react';
 import OfflineClassAddModal from './add-OfflineClass/OfflineClassAddModal';
+// ** Custom Component Import
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 
 const OfflineClassCardHeader = (props) => {
-  const { value, handleFilter } = props;
+  const {selectedBranchId } = props;
+
+  // State for search value
+  const [searchValue, setSearchValue] = useState('');
+
+  // Dispatch function
+  const dispatch = useDispatch();
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllOfflineClasses({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
+
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const handleAddClose = () => {
     setAddModalOpen(false);
@@ -32,12 +53,12 @@ const OfflineClassCardHeader = (props) => {
         }}
       >
         <TextField
-          value={value}
+          value={searchValue}
           sx={{
             width: 400
           }}
-          placeholder="Search Class"
-          onChange={(e) => handleFilter(e.target.value)}
+          placeholder="Search Refund"
+          onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>

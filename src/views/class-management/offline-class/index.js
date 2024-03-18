@@ -6,6 +6,7 @@ import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import OfflineClassCard from 'features/class-management/offline-classes/components/OfflineClassCard';
 import OfflineClassCardHeader from 'features/class-management/offline-classes/components/OfflineClassCardHeader';
 import OfflineClassFilterCard from 'features/class-management/offline-classes/components/OfflineClassFilterCard';
+import { useSelector } from 'react-redux';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -21,11 +22,13 @@ const OfflineClass = () => {
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
   return (
     <>
       <Grid>
-        <OfflineClassFilterCard />
-        <OfflineClassCardHeader />
+        <OfflineClassFilterCard selectedBranchId={selectedBranchId}/>
+        <OfflineClassCardHeader selectedBranchId={selectedBranchId}/>
         {loading ? (
           <ClassSkeleton />
         ) : (
