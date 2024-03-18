@@ -2,7 +2,6 @@
 import { useState } from 'react';
 // ** MUI Imports
 import { Button } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
@@ -11,24 +10,6 @@ import { DataGrid } from '@mui/x-data-grid';
 // ** React Router Import
 import { Link } from 'react-router-dom';
 // ** Custom Components Imports
-import { getInitials } from 'utils/get-initials';
-
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <Avatar
-        skin="light"
-        color={row?.avatarColor || 'primary'}
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row?.first_name || 'John Doe')}
-      </Avatar>
-    );
-  }
-};
 
 const RowOptions = ({ id }) => {
   return (
@@ -140,36 +121,6 @@ const AllNotificationBodySection = ({ allNotifications }) => {
     // },
 
     {
-      flex: 0.25,
-      minWidth: 280,
-      headerName: 'User',
-      field: 'first_name',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                noWrap
-                // component={Link}
-                sx={{
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.students?.first_name} {row?.students?.last_name}
-              </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.students?.email}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-    {
       flex: 0.15,
       minWidth: 190,
       field: 'title',
@@ -177,7 +128,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.institute_notifications?.title}
+            {row?.title}
           </Typography>
         );
       }
@@ -191,7 +142,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.institute_notifications?.body}
+              {row?.body}
             </Typography>
           </Box>
         );
