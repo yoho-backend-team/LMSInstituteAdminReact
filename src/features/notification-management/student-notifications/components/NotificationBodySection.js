@@ -9,48 +9,116 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 // ** React Router Import
-import { Link } from 'react-router-dom';
 // ** Custom Components Imports
+import toast from 'react-hot-toast';
 
 import { getInitials } from 'utils/get-initials';
 
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <Avatar
-        skin="light"
-        color={row?.avatarColor || 'primary'}
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row?.first_name || 'John Doe')}
-      </Avatar>
-    );
-  }
-};
 
-const RowOptions = ({ id }) => {
-  return (
-    <>
-      <Link to={`${id}`} state={{ id: id }}>
-        <Button size="small" variant="outlined" color="secondary">
-          Resend
-        </Button>
-      </Link>
-    </>
-  );
-};
+import { resendStudentNotification } from '../services/studentNotificationServices';
 
-const NotificationBodySection = ({ studentNotifications }) => {
+const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => {
   console.log(studentNotifications);
   // ** State
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
-  // ** Hooks
+  // ** renders client column
+  const renderClient = (row) => {
+    if (row?.avatar?.length) {
+      return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    } else {
+      return (
+        <Avatar
+          skin="light"
+          color={row?.avatarColor || 'primary'}
+          sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+        >
+          {getInitials(row?.first_name || 'John Doe')}
+        </Avatar>
+      );
+    }
+  };
 
+  // const handleSubmit = async (id) => {
+  //   try {
+  //     const selectedNotification = studentNotifications.find((notification) => notification.id === id);
+
+  //     if (!selectedNotification) {
+  //       throw new Error('Notification not found');
+  //     }
+
+  //     const { title, body } = selectedNotification.institute_notifications;
+
+  //     const data = {
+  //       id: id,
+  //       body: body,
+  //       branch_id: selectedBranchId,
+  //       title: title
+  //     };
+
+  //     const response = await resendNotification({ id, title, body, selectedBranchId });
+
+  //     if (response.success) {
+  //       // Handle success
+  //       toast.success(response.message);
+  //     } else {
+  //       // Handle failure
+  //       toast.error(response.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in handleSubmit:', error);
+  //     // Handle error
+  //     toast.error('Failed to resend notification');
+  //   }
+  // };
+
+
+  const handleSubmit = async (id) => {
+    try {
+      const selectedNotification = studentNotifications.find((notification) => notification.id === id);
+  
+      if (!selectedNotification) {
+        throw new Error('Notification not found');
+      }
+  
+      const { title, body } = selectedNotification.institute_notifications;
+  
+      const data = {
+        id: id,
+        body: body,
+        branch_id: selectedBranchId,
+        title: title
+      };
+  
+      const response = await resendStudentNotification(data);
+  
+      if (response.success) {
+        // Handle success
+        toast.success(response.message);
+      } else {
+        // Handle failure
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error('Error in handleSubmit:', error);
+      // Handle error
+      toast.error('Failed to resend notification');
+    }
+  };
+
+
+  const RowOptions = ({ id }) => {
+    return (
+      <>
+        <Button onClick={() => handleSubmit(id)} size="small" variant="outlined" color="secondary">
+          Resend
+        </Button>
+      </>
+    );
+  };
+
+  // ** Hooks
 
   const columns = [
     {
