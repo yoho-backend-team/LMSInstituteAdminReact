@@ -29,14 +29,14 @@ export const getAllStudentsByBatch = async (data) => {
     throw error;
   }
 };
-export const getAllStudents = async (selectedBranchId) => {
+export const getAllStudents = async (data) => {
   try {
     const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params:data
     });
 
     console.log(response);
@@ -126,9 +126,10 @@ export const updateStudent = async (data) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params:data
     });
-
+console.log('studentupdate',response)
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'Student updated successfully' };
