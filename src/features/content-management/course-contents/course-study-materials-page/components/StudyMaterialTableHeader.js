@@ -70,7 +70,7 @@ const StudyMaterialHeader = (props) => {
                       <MenuItem value="0">Inactive</MenuItem>
                     </TextField>
                   </Grid>
-
+ 
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       fullWidth
@@ -81,7 +81,6 @@ const StudyMaterialHeader = (props) => {
                           course_id: newValue.course_id,
                           branch_id: selectedBranchId
                         };
-                     
                         dispatch(getAllCourseStudyMaterials(data));
                       }}
                       options={courses}
