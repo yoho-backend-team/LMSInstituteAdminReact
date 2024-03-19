@@ -155,7 +155,7 @@ const StepperLinearWithValidation = () => {
       description: '',
       joining_date: '',
       designation: '',
-      branch: '',
+      branch: ''
     });
   };
 

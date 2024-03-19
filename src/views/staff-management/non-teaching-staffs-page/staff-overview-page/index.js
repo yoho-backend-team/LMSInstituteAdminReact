@@ -91,11 +91,11 @@ const NonTeaching = () => {
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
-                        <Grid>
-                          <Button component={Link} to={'1'} variant="tonal" sx={{ p: 1.05 }}>
+                       <Box  component={Link} to={item?.staff?.id.toString()} state={{ id: item?.staff?.id }}>
+                          <Button>
                             View Profile
                           </Button>
-                        </Grid>
+                        </Box>
                       </Box>
                     </Box>
                   </CardContent>
