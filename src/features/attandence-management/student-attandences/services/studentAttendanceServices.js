@@ -1,11 +1,11 @@
 // groupService.js
 import axios from 'axios';
 
-const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/StudentAttendance-management/StudentAttendance`;
+const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/attendance-management/student`;
 
 export const getAllStudentAttendances = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/read`, {
+    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/get-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -30,6 +30,8 @@ export const getAllStudentAttendances = async (selectedBranchId) => {
     throw error;
   }
 };
+
+
 
 export const searchStudentAttendances = async (searchQuery) => {
   try {
