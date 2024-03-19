@@ -31,7 +31,7 @@ const Courses = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12}>
             <CourseFilter selectedBranchId={selectedBranchId} />
-            <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId}/>
+            <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId} />
           </Grid>
           {courseLoading ? (
             <CourseSkeleton />
@@ -42,7 +42,7 @@ const Courses = () => {
             ))
           )}
         </Grid>
-        <Grid item xs={12} sm={12} sx={{ mt: 2.75 , display: 'flex', justifyContent: 'flex-end' }}>
+        <Grid item xs={12} sm={12} sx={{ mt: 2.75, display: 'flex', justifyContent: 'flex-end' }}>
           <Pagination count={10} color="primary" />
         </Grid>
       </Grid>

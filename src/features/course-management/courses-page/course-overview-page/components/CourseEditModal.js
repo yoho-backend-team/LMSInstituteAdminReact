@@ -73,7 +73,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
   const [selectedImage, setSelectedImage] = useState('');
   console.log(selectedImage);
 
-
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [template, setTemplate] = useState(image);
   const [selectedTemplate, setSelectedTemplate] = useState('');
@@ -92,7 +91,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
     }
   };
 
-
   const handleInputTemplateChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -105,8 +103,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
       }
     }
   };
-
-
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,

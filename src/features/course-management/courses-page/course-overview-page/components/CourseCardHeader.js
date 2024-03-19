@@ -9,10 +9,7 @@ import { useDispatch } from 'react-redux';
 import { useState, useCallback } from 'react';
 import { getAllCourses } from '../../redux/courseThunks';
 
-const CourseCardHeader = ({selectedBranchId}) => {
-  // ** Props
-  // const { value, handleFilter } = props;
-  
+const CourseCardHeader = ({ selectedBranchId }) => {
   // State for search value
   const [searchValue, setSearchValue] = useState('');
 
@@ -23,7 +20,7 @@ const CourseCardHeader = ({selectedBranchId}) => {
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllCourses({ search: searchInput,branch_id:selectedBranchId }));
+      dispatch(getAllCourses({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
       // Dispatch action to fetch branches with search input
     },
@@ -49,7 +46,7 @@ const CourseCardHeader = ({selectedBranchId}) => {
             width: 400
           }}
           placeholder="Search Course"
-          onChange={(e)=>handleSearch(e)}
+          onChange={(e) => handleSearch(e)}
         />
         <Box
           component={Link}
