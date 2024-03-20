@@ -72,16 +72,16 @@ export const addStudentFeeRefund = async (data) => {
   }
 };
 
-export const deleteStudentFeeRefund = async (StudentFeeRefundId) => {
+export const deleteStudentFeeRefund = async (data) => {
   try {
-    const response = await axios.delete(`${STUDENT_FEE_REFUND_API_ENDPOINT}/delete`, {
+    const response = await axios.post(`${STUDENT_FEE_REFUND_API_ENDPOINT}/delete`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: StudentFeeRefundId }
+      data: data
     });
-
+    console.log(response.data);
     if (response.data.status) {
       return { success: true, message: 'StudentFeeRefund deleted successfully' };
     } else {

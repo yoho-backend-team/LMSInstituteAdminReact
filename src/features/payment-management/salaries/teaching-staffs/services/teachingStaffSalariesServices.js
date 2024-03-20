@@ -72,7 +72,7 @@ export const addTeachingStaffSalary = async (data) => {
 
 export const deleteTeachingStaffSalary = async (data) => {
   try {
-    const response = await axios.delete(`${TEACHING_STAFF_SALARIES_API_END_POINT}/delete`, {
+    const response = await axios.get(`${TEACHING_STAFF_SALARIES_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
