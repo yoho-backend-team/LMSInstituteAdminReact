@@ -118,7 +118,7 @@ export const updateStudentNotification = async (data) => {
 
 export const resendStudentNotification = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student-notification-send`, data, {
+    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student-notification-resend`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
