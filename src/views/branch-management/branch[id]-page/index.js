@@ -43,7 +43,7 @@ const BranchViewPage = () => {
       console.log(error);
     }
   };
-  console.log('branchData:', branchData);
+  console.log('branchData:',branchData.StaffCount);
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
@@ -52,34 +52,34 @@ const BranchViewPage = () => {
             <UsersCard branchData={branchData} />
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Coursescard />
+            <Coursescard branchData={branchData}/>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <StaffsCard />
+            <StaffsCard branchData={branchData}/>
           </Grid>
           <Grid item xs={6} sm={3}>
-            <StudentsCard />
+            <StudentsCard branchData={branchData}/>
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardStudentAndTeachers />
+        <CardStudentAndTeachers branchData={branchData}/>
       </Grid>
       <Grid item xs={12} sm={8}>
         <Earningscard />
       </Grid>
 
       <Grid item xs={12} sm={4}>
-        <SupportTicket />
+        <SupportTicket branchData={branchData}/>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardHorizondalCourses />
+        <CardHorizondalCourses branchData={branchData}/>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardHorizondalClasses />
+        <CardHorizondalClasses branchData={branchData}/>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardHorizondalUsers />
+        <CardHorizondalUsers branchData={branchData}/>
       </Grid>
     </Grid>
   );

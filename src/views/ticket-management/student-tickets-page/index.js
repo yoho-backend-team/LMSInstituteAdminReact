@@ -1,7 +1,7 @@
 // ** React Imports
 import { Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
-
+import { useLocation } from 'react-router';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
@@ -11,6 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/ticket-management/student/components/AppChat';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { getAllStudentTickets } from 'features/ticket-management/student/services/studentTicketService';
 // ** Utils Imports
 import { formatDateToMonthShort } from 'utils/format';
 import { getInitials } from 'utils/get-initials';
@@ -22,6 +23,17 @@ import ChatContent from 'features/ticket-management/student/components/ChatConte
 import SidebarLeft from 'features/ticket-management/student/components/SidebarLeft';
 
 const StudentTicket = () => {
+  const location = useLocation();
+  const branchId = location.state.id;
+  console.log('branchId', branchId);
+
+  useEffect(() => {
+    const data = {
+      branch_id: branchId
+    };
+
+    getBranchData(data);
+  }, [dispatch, branchId]);
   // ** States
   const [userStatus, setUserStatus] = useState('online');
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -31,6 +43,7 @@ const StudentTicket = () => {
   // ** Hooks
   const theme = useTheme();
   const dispatch = useDispatch();
+
   const hidden = useMediaQuery(theme.breakpoints.down('lg'));
   const store = useSelector((state) => state.chat);
 
@@ -39,13 +52,40 @@ const StudentTicket = () => {
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
   const sidebarWidth = smAbove ? 400 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
-
+  const [ticketData, setTicketData] = useState({});
   const statusObj = {
     busy: 'error',
     away: 'warning',
     online: 'success',
     offline: 'secondary'
   };
+
+  useEffect(() => {
+    const data = {
+      branch_id: branchId
+    };
+
+    getAllStudentticketData(data);
+  }, [dispatch, branchId]);
+
+  const getAllStudentticketData = async () => {
+    const data = {
+      branch_id: branchId
+    };
+    try {
+      const result = await getAllStudentTickets(data);
+      if (result.success) {
+        console.log(result.data);
+        setTicketData(result.data);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log('ticketData:', ticketData);
+
   useEffect(() => {
     dispatch(fetchUserProfile());
     // dispatch(fetchChatsContacts())
