@@ -17,6 +17,8 @@ import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 import { useCallback } from 'react';
+import { Link } from 'react-router-dom';
+
 import toast from 'react-hot-toast';
 
 const OfflineClassCard = () => {
@@ -38,7 +40,7 @@ const OfflineClassCard = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllOfflineClasses(data));
-  }, [dispatch, selectedBranchId,offlineClassRefetch]);
+  }, [dispatch, selectedBranchId, offlineClassRefetch]);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -139,6 +141,15 @@ const OfflineClassCard = () => {
                       menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
                       iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
                       options={[
+                        {
+                          text: 'View',
+                          icon: <Icon icon="tabler:eye" fontSize={20} />,
+                          menuItemProps: {
+                            component: Link,
+                            to: `view`,
+                            state: { id: card?.class_id }
+                          }
+                        },
                         {
                           // to: `/apps/invoice/edit/${row.id}`,
                           text: 'Edit',

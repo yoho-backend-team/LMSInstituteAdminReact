@@ -8,8 +8,6 @@ import { useState, useCallback } from 'react';
 import CategoryAddModal from './CategoryAddModal';
 import { useDispatch } from 'react-redux';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
-// import { getAllCourseCategories } from '../../services/courseCategoryServices';
-
 
 const CategoryCardHeader = (props) => {
   // ** Props
@@ -60,7 +58,7 @@ const CategoryCardHeader = (props) => {
             width: 400
           }}
           placeholder="Search Category"
-          onChange={(e)=>handleSearch(e)}
+          onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>

@@ -36,6 +36,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
 import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
 import toast from 'react-hot-toast';
+import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -223,8 +224,8 @@ const RefundTable = () => {
 
   // Handle branch deletion
   const handleRefundDelete = async () => {
-    const data = { id: selectedRefundDeleteId };
-    const result = await deleteCourseCategory(data);
+    const data = { student_fee_id: selectedRefundDeleteId };
+    const result = await deleteStudentFeeRefund(data);
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -269,7 +270,7 @@ const RefundTable = () => {
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete();
+                    handleDelete(row.id);
                   }
                 }
               },

@@ -13,41 +13,14 @@ import CardHorizondalCourses from 'features/branch-management/view-branch/compon
 import { gridSpacing } from 'store/constant';
 import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
 import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
-import { getBranchById } from 'features/branch-management/services/branchServices';
-import { useDispatch } from 'react-redux';
-
-const ViewBranch = () => {
-  const dispatch = useDispatch();
-  const [branchData, setBranchData] = useState([]);
+import { useLocation } from 'react-router';
+const BranchViewPage = () => {
   const location = useLocation();
-  const BranchId = location.state.id;
+  const id = location.state.id;
+  console.log(id);
 
-  useEffect(() => {
-    const data = {
-      id: BranchId
-    };
-    getBranchdata(data);
-    console.log('branchIdCheck',data)
-  }, [dispatch, BranchId]);
-
-  const getBranchdata = async (data) => {
-    // const branchLoading = useSelector(selectLoading);
-    try {
-      const result = await getBranchById(data);
-      if (result.success) {
-        console.log('Branches:', result.data);
-        setBranchData(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  console.log('viewSingleBranch:', branchData);
-  console.log('BranchId:',BranchId);
   return (
-    <Grid container spacing={gridSpacing}>
+    <Grid container spacing={ gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={6} sm={3}>
@@ -87,4 +60,4 @@ const ViewBranch = () => {
   );
 };
 
-export default ViewBranch;
+export default index;

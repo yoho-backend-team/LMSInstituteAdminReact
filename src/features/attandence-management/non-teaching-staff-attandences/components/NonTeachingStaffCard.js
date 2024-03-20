@@ -54,7 +54,7 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
                       sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
                     >
                       <Grid>
-                        <Button component={Link} to={item.staff.id} variant="tonal" sx={{ px: 4 }}>
+                        <Button component={Link} to={'1'} variant="tonal" sx={{ px: 4 }}>
                           View Attendance
                         </Button>
                       </Grid>

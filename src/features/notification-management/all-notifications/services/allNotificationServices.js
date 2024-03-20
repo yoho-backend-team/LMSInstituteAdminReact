@@ -111,3 +111,28 @@ export const updateNotification = async (data) => {
     throw error;
   }
 };
+
+
+
+
+export const resendNotification = async (data) => {
+  try {
+    const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+
+    if (response.data.status) {
+      return { success: true, message: 'Notification Resend successfully' };
+    } else {
+      return { success: false, message: 'Failed to resend Notification' };
+    }
+  } catch (error) {
+    console.error('Error in resendStudentNotification:', error);
+    throw error;
+  }
+};

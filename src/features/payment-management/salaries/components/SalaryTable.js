@@ -40,6 +40,7 @@ import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkelet
 import MenuItem from '@mui/material/MenuItem';
 import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import { useCallback } from 'react';
+import toast from 'react-hot-toast';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({

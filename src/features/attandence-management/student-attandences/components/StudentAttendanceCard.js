@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectStudentAttendances } from '../redux/studentAttendanceSelectors';
 import { getAllStudentAttendances } from '../redux/studentAttendanceThunks';
+import { Avatar, AvatarGroup } from '@mui/material';
 
 const StudentAttendanceCard = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,8 @@ const StudentAttendanceCard = () => {
                     mb: 1.85,
                     display: 'flex',
                     flexWrap: 'wrap',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
                   }}
                 >
                   <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column' }}>
@@ -53,7 +55,7 @@ const StudentAttendanceCard = () => {
                     sx={{
                       borderRadius: '10%',
                       border: '1px solid grey',
-                      padding: '3px 9px',
+                      padding: '10px 10px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -79,13 +81,18 @@ const StudentAttendanceCard = () => {
                     alignItems: 'center'
                   }}
                 >
-                  {/* <AvatarGroup max={4} sx={{ width: 40, height: 40, '& .MuiAvatar-root': { width: 32, height: 32 } }}>
-                  {item.friends.map((friend, friendIndex) => (
-                    <Avatar key={friendIndex} src={friend} alt={`Friend ${friendIndex + 1}`} />
-                  ))}
-                </AvatarGroup> */}
+                  <AvatarGroup max={4} sx={{ width: 40, height: 40, '& .MuiAvatar-root': { width: 32, height: 32 } }}>
+                    {item?.batch_class?.batch?.institute_batch_student?.map((student) => (
+                      <Avatar
+                        key={student.id}
+                        src={student?.student?.image}
+                        alt={`${student?.student?.first_name} ${student?.student?.last_name}`}
+                      />
+                    ))}
+                  </AvatarGroup>
+
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CustomChip rounded size="small" skin="light" color={'secondary'} label={'BATPATID00001'} />
+                    <CustomChip rounded size="medium" skin="light" color={'secondary'} label={item?.status} />
                   </Box>
                 </Box>
                 <Divider sx={{ my: 2 }} />

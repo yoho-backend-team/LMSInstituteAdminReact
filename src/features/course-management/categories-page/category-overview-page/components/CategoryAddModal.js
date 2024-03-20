@@ -141,7 +141,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          Add Category Information
+          Add Category
         </DialogTitle>
         <DialogContent
           sx={{

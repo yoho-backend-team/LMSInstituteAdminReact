@@ -8,42 +8,15 @@ import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-// ** React Router Import
-import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
 // ** Custom Components Imports
 // import ImageIcon from '@mui/icons-material/Image';
 import { getInitials } from 'utils/get-initials';
 
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <Avatar
-        skin="light"
-        color={row?.avatarColor || 'primary'}
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row?.staff?.image || 'John Doe')}
-      </Avatar>
-    );
-  }
-};
+import { resendStaffNotification } from '../services/staffNotificationServices';
 
-const RowOptions = ({ id }) => {
-  return (
-    <>
-      <Link to={`${id}`} state={{ id: id }}>
-        <Button size="small" variant="outlined" color="secondary">
-          Resend
-        </Button>
-      </Link>
-    </>
-  );
-};
-
-const StaffNotificationBodySection = ({ staffNotifications }) => {
+const StaffNotificationBodySection = ({ staffNotifications,selectedBranchId }) => {
   console.log(staffNotifications);
 
   // ** State
@@ -51,6 +24,67 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   // ** Hooks
+
+  // ** renders client column
+  const renderClient = (row) => {
+    if (row?.avatar?.length) {
+      return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    } else {
+      return (
+        <Avatar
+          skin="light"
+          color={row?.avatarColor || 'primary'}
+          sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+        >
+          {getInitials(row?.staff?.image || 'John Doe')}
+        </Avatar>
+      );
+    }
+  };
+
+  const handleSubmit = async (id) => {
+    try {
+      const selectedNotification = staffNotifications.find((notification) => notification.id === id);
+
+      if (!selectedNotification) {
+        throw new Error('Notification not found');
+      }
+
+      const { title, body } = selectedNotification.institute_notifications;
+
+      const data = {
+        id: id,
+        notification_id: selectedNotification.notification_id, // Include the notification_id field
+        body: body,
+        branch_id: selectedBranchId,
+        title: title
+      };
+
+      const response = await resendStaffNotification(data);
+
+      if (response.success) {
+        // Handle success
+        toast.success(response.message);
+      } else {
+        // Handle failure
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error('Error in handleSubmit:', error);
+      // Handle error
+      toast.error('Failed to resend notification');
+    }
+  };
+
+  const RowOptions = ({ id }) => {
+    return (
+      <>
+        <Button onClick={() => handleSubmit(id)} size="small" variant="outlined" color="secondary">
+          Resend
+        </Button>
+      </>
+    );
+  };
 
   const columns = [
     {

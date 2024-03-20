@@ -18,7 +18,7 @@ import toast from 'react-hot-toast';
 import { updateCourseStatus } from '../../services/courseServices';
 
 const CourseCard = (props) => {
-  const { sx, personName, course, setCourseRefetch } = props;
+  const { sx, course, setCourseRefetch } = props;
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
@@ -47,7 +47,7 @@ const CourseCard = (props) => {
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
           <CardMedia
-            sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'cover' }}
+            sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }}
             image={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.logo}`}
           >
             <CustomChip
@@ -72,7 +72,7 @@ const CourseCard = (props) => {
               variant="outlined"
             />
           </Box>
-          <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column' }}>
             <Typography
               variant="h4"
               sx={{
@@ -85,9 +85,6 @@ const CourseCard = (props) => {
               }}
             >
               {course?.course_name}
-            </Typography>
-            <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
-              {personName}
             </Typography>
           </Box>
           <Box
@@ -107,7 +104,7 @@ const CourseCard = (props) => {
               }}
             >
               <Icon icon="ic:twotone-person" fontSize={20} />
-              <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{course?.course?.course_module?.length} Modules</Typography>
             </Grid>
             <Grid>
               <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
@@ -130,10 +127,6 @@ const CourseCard = (props) => {
           <Button component={Link} to="view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary">
             View Details
           </Button>
-          {/* <Button component={Link} to={{ pathname: "view", state: { id: course?.course_id } }} size="medium" variant="contained" color="primary">
-            View Details
-          </Button> */}
-
         </CardActions>
       </Card>
 
