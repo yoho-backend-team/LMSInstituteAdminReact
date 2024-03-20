@@ -29,12 +29,12 @@ const BranchViewPage = () => {
 
     getBranchData(data);
   }, [dispatch, branchId]);
-  
+
   const getBranchData = async (data) => {
     try {
       const result = await getBranchById(data);
       if (result.success) {
-        console.log( result.data);
+        console.log(result.data);
         setBranchData(result.data);
       } else {
         console.log(result.message);

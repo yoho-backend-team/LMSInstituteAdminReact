@@ -31,7 +31,7 @@ export const getAllBranches = async (data) => {
   }
 };
 
-console.log('getAllBranches:',getAllBranches)
+console.log('getAllBranches:', getAllBranches);
 
 export const getActiveBranches = async () => {
   try {
@@ -169,7 +169,6 @@ export const updateBranchStatus = async (data) => {
 };
 
 export const getBranchById = async (data) => {
-
   try {
     const response = await axios.get(`${BRANCH_API_ENDPOINT}/get-by-branch-id`, {
       headers: {
@@ -178,10 +177,10 @@ export const getBranchById = async (data) => {
       },
       params: data
     });
-    console.log('getBranchById:',response)
+    console.log('getBranchById:', response);
     // Check if the response status is successful
     if (response.data.status) {
-      return response;
+      return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch BranchesById. Status: ${response.status}`);
@@ -192,5 +191,4 @@ export const getBranchById = async (data) => {
     // Throw the error again to propagate it to the calling function/component
     throw error;
   }
-
 };
