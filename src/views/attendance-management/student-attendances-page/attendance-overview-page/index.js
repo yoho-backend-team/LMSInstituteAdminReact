@@ -23,19 +23,23 @@ const Students = () => {
   }, 1000);
   return (
     <>
-      {loading ? (
-        <StudentAttendanceSkeleton />
-      ) : (
+      <Grid>
         <Grid>
           <StudentAttendanceFilterCard />
-          <Grid item spacing={2} className="match-height" sx={{ marginTop: 3 }}>
-            <StudentAttendanceCard />
-          </Grid>
-          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination count={10} color="primary" />
-          </Grid>
         </Grid>
-      )}
+        {loading ? (
+          <StudentAttendanceSkeleton />
+        ) : (
+          <Grid>
+            <Grid item spacing={2} className="match-height" sx={{ marginTop: 3 }}>
+              <StudentAttendanceCard />
+            </Grid>
+            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination count={10} color="primary" />
+            </Grid>
+          </Grid>
+        )} 
+      </Grid>
     </>
   );
 };

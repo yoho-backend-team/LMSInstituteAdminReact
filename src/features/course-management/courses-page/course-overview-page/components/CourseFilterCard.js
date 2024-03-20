@@ -68,7 +68,6 @@ const CourseFilter = ({ selectedBranchId }) => {
                       };
                       dispatch(getAllCourses(data));
                     }}
-                    // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.category_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Categories" placeholder="Favorites" />}

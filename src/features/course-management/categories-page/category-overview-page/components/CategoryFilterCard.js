@@ -6,27 +6,23 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
 
-
-const CategoryFilter = ({selectedBranchId}) => {
+const CategoryFilter = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
-
 
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
     dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId,]);
-
-
+  }, [dispatch, selectedBranchId]);
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -63,7 +59,6 @@ const CategoryFilter = ({selectedBranchId}) => {
                       };
                       dispatch(getAllCourseCategories(data));
                     }}
-                    // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.course_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}

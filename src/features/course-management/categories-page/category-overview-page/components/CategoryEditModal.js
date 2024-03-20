@@ -152,11 +152,18 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
         >
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-                <ImgStyled src={imgSrc} alt="Profile Pic" />
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                {!selectedImage && (
+                  <ImgStyled
+                    src={category?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}` : imgSrc}
+                    alt="Profile Pic"
+                  />
+                )}
+
+                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload
+                    Upload New Image
                     <input
                       hidden
                       type="file"

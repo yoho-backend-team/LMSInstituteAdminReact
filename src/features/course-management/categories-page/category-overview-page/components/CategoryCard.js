@@ -1,6 +1,5 @@
 import { Avatar, Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Icon from 'components/icon';
-// import DeleteDialog from 'components/modal/DeleteModel';
 import CategoryDeleteModel from 'components/modal/DeleteModel';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
@@ -19,12 +18,8 @@ const CategoryCard = (props) => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
-
   const [categoryDeleteModelOpen, setCategoryDeleteModelOpen] = useState(false);
-
   const [selectedCategoryDeleteId, setSelectedCategoryDeleteId] = useState(null);
-
-  // console.log(deletingItemId);
 
   // Memoized variables
   const categoryLogoSrc = useMemo(() => `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}`, [category]);
@@ -166,13 +161,6 @@ const CategoryCard = (props) => {
         title="Delete"
         handleSubmit={handleCategoryDelete}
       />
-      {/* Delete Dialog */}
-      {/* <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
-      /> */}
     </Grid>
   );
 };

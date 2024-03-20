@@ -13,7 +13,7 @@ export const getAllLiveClasses = async (data) => {
       params: data
     });
 
-    console.log(response);
+    console.log('getAllLiveClasses:',response);
 
     // Check if the response status is successful
     if (response.data.status) {

@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 // ** Custom Components
 import CustomAvatar from 'components/mui/avatar';
@@ -19,10 +20,11 @@ import { getInitials } from 'utils/get-initials';
 
 // import { getUserById } from '../services/viewUserServices';
 
-// import UserEditDialog from './UserEditDialog';
+import UserEditDialog from '../UserEditDialog';
+
 // import { MenuItem, TextField } from '@mui/material';
 
-const UserViewLeft = ({ userData, }) => {
+const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
     1: 'success',
     pending: 'warning',
@@ -30,11 +32,11 @@ const UserViewLeft = ({ userData, }) => {
   };
 
   // ** States
-  // const [openEdit, setOpenEdit] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true);
-  // const handleEditClose = () => setOpenEdit(false);
+  const handleEditClose = () => setOpenEdit(false);
 
   return (
     <Grid container spacing={3}>
@@ -112,7 +114,7 @@ const UserViewLeft = ({ userData, }) => {
             </Button>
           </CardActions>
         </Card>
-        {/* <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} /> */}
+        <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
       </Grid>
     </Grid>
   );
