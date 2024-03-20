@@ -36,7 +36,7 @@ export const getAllStudents = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
 
     console.log(response);
@@ -127,9 +127,9 @@ export const updateStudent = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
-console.log('studentupdate',response)
+    console.log('studentupdate', response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'Student updated successfully' };
@@ -167,5 +167,3 @@ export const studentById = async (data) => {
     throw error;
   }
 };
-
-

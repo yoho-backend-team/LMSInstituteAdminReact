@@ -6,11 +6,11 @@ import { selectLoading, selectStudents } from 'features/student-management/stude
 import { getAllStudents } from 'features/student-management/students/redux/studentThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import StudentFilter from '../../../../features/student-management/students/components/studentFilterCard';
-import SocialsButton from '../../../../features/student-management/students/components/SocialButton';
-import cssStyles from '../../../../features/student-management/students/components/cssStyles';
-import Image from '../../../../features/student-management/students/components/image';
-import SvgIconStyle from '../../../../features/student-management/students/components/svgIconStyle';
+import StudentFilter from 'features/student-management/students/components/studentFilterCard';
+import SocialsButton from 'features/student-management/students/components/SocialButton';
+import cssStyles from 'features/student-management/students/components/cssStyles';
+import Image from 'features/student-management/students/components/image';
+import SvgIconStyle from 'features/student-management/students/components/svgIconStyle';
 
 const OverlayStyle = styled('div')(({ theme }) => ({
   ...cssStyles().bgBlur({ blur: 2, color: theme.palette.primary.main }),
@@ -31,7 +31,7 @@ const Students = () => {
   console.log(Students);
 
   useEffect(() => {
-    dispatch(getAllStudents(selectedBranchId));
+    dispatch(getAllStudents({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId]);
 
   return (
@@ -43,7 +43,7 @@ const Students = () => {
           ) : (
             <Grid container spacing={2}>
               <Grid item xs={12} md={12} lg={12} mb={2}>
-                <StudentFilter selectedBranchId={selectedBranchId}/>
+                <StudentFilter selectedBranchId={selectedBranchId} />
               </Grid>
               {Students.map((item, index) => (
                 <Grid key={index} item xs={12} sm={6} md={3} lg={3}>
@@ -93,7 +93,7 @@ const Students = () => {
                     </Typography>
 
                     <Stack alignItems="center">
-                      <SocialsButton initialColor sx={{ my: 2.5 }} item={item}/>
+                      <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
                     </Stack>
                   </Card>
                 </Grid>
