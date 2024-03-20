@@ -171,7 +171,7 @@ export const updateBranchStatus = async (data) => {
 export const getBranchById = async (data) => {
 
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}/read-by-id`, {
+    const response = await axios.get(`${BRANCH_API_ENDPOINT}/get-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -49,9 +49,9 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const UsersCard = ({ isLoading }) => {
+const UsersCard = ({ isLoading,branchData }) => {
   const theme = useTheme();
-
+console.log('dataCheck',branchData)
   return (
     <>
       {isLoading ? (

@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 // import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
-import {React,useState,useEffect} from 'react';
+import { React, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Coursescard from 'features/branch-management/view-branch/components/headerCards/Coursescard';
 import UsersCard from 'features/branch-management/view-branch/components/headerCards/usersCard';
@@ -18,22 +18,23 @@ import { getBranchById } from 'features/branch-management/services/branchService
 const BranchViewPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const id = location.state.id;
-  console.log(id);
+  const branchId = location.state.id;
+  console.log('branchId', branchId);
   const [branchData, setBranchData] = useState([]);
 
   useEffect(() => {
     const data = {
-      id:id
+      branch_id: branchId
     };
-    getBatchData(data);
-  }, [dispatch, id]);
 
-  const getBatchData = async (data) => {
+    getBranchData(data);
+  }, [dispatch, branchId]);
+  
+  const getBranchData = async (data) => {
     try {
       const result = await getBranchById(data);
       if (result.success) {
-        console.log('Batches:', result.data);
+        console.log( result.data);
         setBranchData(result.data);
       } else {
         console.log(result.message);
@@ -42,13 +43,13 @@ const BranchViewPage = () => {
       console.log(error);
     }
   };
-console.log('branchData',branchData)
+  console.log('branchData:', branchData);
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={6} sm={3}>
-            <UsersCard />
+            <UsersCard branchData={branchData} />
           </Grid>
           <Grid item xs={6} sm={3}>
             <Coursescard />
