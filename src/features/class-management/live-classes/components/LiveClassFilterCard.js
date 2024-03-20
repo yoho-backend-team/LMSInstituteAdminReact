@@ -43,8 +43,8 @@ const LiveClassFilterCard = (props) => {
   const [endDateRange, setEndDateRange] = useState(null);
   // const [activecourses,setActiveCourses]=useState('')
   const [startDateRange, setStartDateRange] = useState(null);
-  const [filterBatches,setFilterBatches]=useState({})
-  const [filterCourses,setfilterCourses]=useState({})
+  const [filterBatches, setFilterBatches] = useState({});
+  const [filterCourses, setfilterCourses] = useState({});
   console.log('dummy', setStatusValue);
 
   useEffect(() => {
@@ -74,24 +74,23 @@ const LiveClassFilterCard = (props) => {
     };
     const courses = await getAllCourses(data);
     setfilterCourses(courses);
-  }
+  };
 
   useEffect(() => {
-    getFilteredCourses() 
+    getFilteredCourses();
   }, [dispatch, selectedBranchId]);
-  
+
   const getAllbatches = async () => {
     const data = {
       branch_id: selectedBranchId
     };
     const activeBatches = await getAllActiveBatchesByCourse(data);
     setFilterBatches(activeBatches);
-  }
+  };
 
   useEffect(() => {
-    getAllbatches() 
+    getAllbatches();
   }, [dispatch, selectedBranchId]);
-
 
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
@@ -151,25 +150,25 @@ const LiveClassFilterCard = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  // multiple
-                  fullWidth
-                  options={batch}
-                  filterSelectedOptions
-                  onChange={(e, newValue) => {
-                    // const batchId = newValue.map((item) => item.batch.batch_id);
-                    console.log(newValue);
-                    const data = {
-                      batch_id: newValue.batch.batch_id,
-                      branch_id: selectedBranchId
-                    };
-                    filterBatches(getAllLiveClasses(data));
-                  }}
-                  // defaultValue={[top100Films[13]]}
-                  id="autocomplete-multiple-outlined"
-                  getOptionLabel={(option) => option.batch.batch_name || ''}
-                  renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
-                />
+                  <Autocomplete
+                    // multiple
+                    fullWidth
+                    options={batch}
+                    filterSelectedOptions
+                    onChange={(e, newValue) => {
+                      // const batchId = newValue.map((item) => item.batch.batch_id);
+                      console.log(newValue);
+                      const data = {
+                        batch_id: newValue.batch.batch_id,
+                        branch_id: selectedBranchId
+                      };
+                      filterBatches(getAllLiveClasses(data));
+                    }}
+                    // defaultValue={[top100Films[13]]}
+                    id="autocomplete-multiple-outlined"
+                    getOptionLabel={(option) => option.batch.batch_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <DatePicker

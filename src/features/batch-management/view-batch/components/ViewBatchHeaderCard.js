@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 // import * as source from 'src/views/components/avatars/AvatarsSourceCode'
 
 const EcommerceStatistics = ({ batchData }) => {
-  console.log(batchData);
+  console.log('batchData2:',batchData);
 
   const renderStats = () => {
     return (
@@ -20,7 +20,9 @@ const EcommerceStatistics = ({ batchData }) => {
         <Grid container>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={batchData.batch_name} />
+              <CardHeader 
+              title={batchData.batch_name} 
+              />
               <CardContent sx={{ mt: 0, pt: 0 }}>
                 <Grid container spacing={4}>
                   <Grid item>

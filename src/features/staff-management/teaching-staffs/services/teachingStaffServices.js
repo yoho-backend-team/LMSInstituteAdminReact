@@ -123,7 +123,7 @@ export const deleteTeachingStaff = async (teachingStaffId) => {
 
 export const updateTeachingStaff = async (data) => {
   try {
-    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -131,7 +131,7 @@ export const updateTeachingStaff = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
+      console.log('techingedit:',response);
       return { success: true, message: 'TeachingStaff updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TeachingStaff' };

@@ -1,4 +1,6 @@
 import { Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router';
 import React from 'react';
 import Coursescard from 'features/branch-management/view-branch/components/headerCards/Coursescard';
 import UsersCard from 'features/branch-management/view-branch/components/headerCards/usersCard';
@@ -11,7 +13,39 @@ import CardHorizondalCourses from 'features/branch-management/view-branch/compon
 import { gridSpacing } from 'store/constant';
 import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
 import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
-const index = () => {
+import { getBranchById } from 'features/branch-management/services/branchServices';
+import { useDispatch } from 'react-redux';
+
+const ViewBranch = () => {
+  const dispatch = useDispatch();
+  const [branchData, setBranchData] = useState([]);
+  const location = useLocation();
+  const BranchId = location.state.id;
+
+  useEffect(() => {
+    const data = {
+      id: BranchId
+    };
+    getBranchdata(data);
+    console.log('branchIdCheck',data)
+  }, [dispatch, BranchId]);
+
+  const getBranchdata = async (data) => {
+    // const branchLoading = useSelector(selectLoading);
+    try {
+      const result = await getBranchById(data);
+      if (result.success) {
+        console.log('Branches:', result.data);
+        setBranchData(result.data);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log('viewSingleBranch:', branchData);
+  console.log('BranchId:',BranchId);
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
@@ -53,4 +87,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ViewBranch;

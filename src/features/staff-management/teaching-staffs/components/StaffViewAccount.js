@@ -85,7 +85,8 @@ const UserViewAccount = ({ staff }) => {
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
               <Box component={Link} to={'edit'}>
-                <Button variant="contained" sx={{ mr: 2 }}>
+                <Button
+                variant="contained" sx={{ mr: 2 }}>
                   Edit
                 </Button>
               </Box>

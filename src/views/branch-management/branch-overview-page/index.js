@@ -23,6 +23,8 @@ const BranchesOverviewPage = () => {
     getAllBranchesCallback();
   }, [getAllBranchesCallback, refetchBranch]);
 
+
+  
   return (
     <Grid container spacing={1} className="match-height">
       <Grid container spacing={2}>

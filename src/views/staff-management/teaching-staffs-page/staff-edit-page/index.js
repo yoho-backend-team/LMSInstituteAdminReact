@@ -28,7 +28,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
-import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import {updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
 import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
@@ -245,7 +245,7 @@ const StepperLinearWithValidation = () => {
       data.append('education_qualification', personalData?.education_qualification);
 
       try {
-        const result = await addTeachingStaff(data);
+        const result = await updateTeachingStaff(data);
 
         if (result.success) {
           toast.success(result.message);

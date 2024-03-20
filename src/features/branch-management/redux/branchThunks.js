@@ -10,9 +10,12 @@ export const getAllBranches = (data) => async (dispatch) => {
     dispatch(setBranches(response.data.data.data));
     dispatch(updateAuthBranch(response.data.data.data));
     localStorage.setItem('branches', JSON.stringify(response.data.data.data));
+    
   } catch (error) {
     console.error(error);
   } finally {
     dispatch(setLoading(false));
   }
+ 
 };
+
