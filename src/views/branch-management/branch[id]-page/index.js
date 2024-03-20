@@ -1,7 +1,8 @@
 import { Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
-import React from 'react';
+import {React,useState,useEffect} from 'react';
+import { useDispatch } from 'react-redux';
 import Coursescard from 'features/branch-management/view-branch/components/headerCards/Coursescard';
 import UsersCard from 'features/branch-management/view-branch/components/headerCards/usersCard';
 import StaffsCard from 'features/branch-management/view-branch/components/headerCards/staffsCard';
@@ -13,14 +14,37 @@ import CardHorizondalCourses from 'features/branch-management/view-branch/compon
 import { gridSpacing } from 'store/constant';
 import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
 import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
-import { useLocation } from 'react-router';
+import { getBranchById } from 'features/branch-management/services/branchServices';
 const BranchViewPage = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const id = location.state.id;
   console.log(id);
+  const [branchData, setBranchData] = useState([]);
 
+  useEffect(() => {
+    const data = {
+      id:id
+    };
+    getBatchData(data);
+  }, [dispatch, id]);
+
+  const getBatchData = async (data) => {
+    try {
+      const result = await getBranchById(data);
+      if (result.success) {
+        console.log('Batches:', result.data);
+        setBranchData(result.data);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+console.log('branchData',branchData)
   return (
-    <Grid container spacing={ gridSpacing}>
+    <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
         <Grid container spacing={gridSpacing}>
           <Grid item xs={6} sm={3}>
@@ -60,4 +84,4 @@ const BranchViewPage = () => {
   );
 };
 
-export default index;
+export default BranchViewPage;

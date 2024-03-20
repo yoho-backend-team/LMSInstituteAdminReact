@@ -55,7 +55,6 @@ const ViewBatch = () => {
     }
   };
  
-  console.log('batchData:',batchData)
 
   return (
     <>
