@@ -11,7 +11,12 @@ import CardHorizondalCourses from 'features/branch-management/view-branch/compon
 import { gridSpacing } from 'store/constant';
 import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
 import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
-const index = () => {
+import { useLocation } from 'react-router';
+const BranchViewPage = () => {
+  const location = useLocation();
+  const id = location.state.id;
+  console.log(id);
+
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
@@ -53,4 +58,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default BranchViewPage;
