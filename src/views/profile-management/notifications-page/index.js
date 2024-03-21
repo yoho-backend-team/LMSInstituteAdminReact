@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect  } from 'react';
 import Tab from '@mui/material/Tab';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -9,25 +9,44 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from 'components/mui/avatar';
 import { Box, Grid } from '@mui/material';
+import { getAllNotifications } from 'features/notification-management/all-notifications/services/allNotificationServices';
+import { useDispatch,useSelector } from 'react-redux';
 
 const AllNotifications = () => {
+  const dispatch = useDispatch();
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // ** State
   const [value, setValue] = useState('1');
+  const [allNotifications,setAllNotifications]=useState('')
+  // const [readNotifications,setreadnotifications]=useState('')
+  // const [unreadNotifications,setUnreadNotifications]=useState('')
+
+
+  // Fetch course categories on component mount or when dependencies change
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    setAllNotifications(getAllNotifications(data));
+  }, [dispatch, selectedBranchId]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  console.log('allNotifications:',allNotifications)
   return (
     <>
       <Card>
-        <CardHeader title="Notifications" />
+        <CardHeader title="Notifications"/>
         <CardContent sx={{ mt: 0, pt: 0 }}>
           <TabContext value={value}>
             <TabList onChange={handleChange} aria-label="nav tabs example">
-              <Tab value="1" label="Tab 1" />
-              <Tab value="2" label="Tab 2" />
-              <Tab value="3" label="Tab 3" />
+              <Tab value="1" label="Read" />
+              <Tab value="2" label="Unread" />
+              <Tab value="3" label="All"  allNotifications={allNotifications}
+              // setLoading={setLoading}
+           
+              selectedBranchId={selectedBranchId}/>
             </TabList>
 
             <TabPanel value="1">

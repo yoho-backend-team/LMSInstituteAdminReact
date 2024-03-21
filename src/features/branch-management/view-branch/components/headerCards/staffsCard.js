@@ -49,7 +49,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const StaffsCard = ({ isLoading }) => {
+const StaffsCard = ({ isLoading,branchData }) => {
   const theme = useTheme();
 
   return (
@@ -81,7 +81,7 @@ const StaffsCard = ({ isLoading }) => {
                 <Grid container alignItems="center">
                   <Grid item>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      57
+                    {branchData.StaffCount}
                     </Typography>
                   </Grid>
                 </Grid>

@@ -59,7 +59,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
 
   return (
     <Grid item xs={12} sm={6} md={3}>
-      <Card sx={{ position: 'relative' }}>
+      <Card sx={{ position: 'relative', minHeight: 300 }}>
         {/* Options menu */}
         <Grid
           sx={{
@@ -77,7 +77,8 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
                 icon: <Icon icon="tabler:eye" fontSize={20} />,
                 menuItemProps: {
                   component: Link,
-                  to: `${branch?.branch_id}`
+                  to: `${branch?.branch_id}`,
+                  state: { id: branch?.branch_id }
                 }
               },
               {

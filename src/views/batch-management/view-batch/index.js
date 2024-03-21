@@ -55,7 +55,6 @@ const ViewBatch = () => {
     }
   };
  
-  console.log(batchData)
 
   return (
     <>
@@ -64,7 +63,7 @@ const ViewBatch = () => {
       ) : (
         <Grid container spacing={3} sx={{ p: 1 }}>
           <Grid item xs={12} sm={12}>
-            <HeaderCard batchData={batchData}/>
+            <HeaderCard batchData={batchData} />
           </Grid>
 
           <Grid item xs={12}>

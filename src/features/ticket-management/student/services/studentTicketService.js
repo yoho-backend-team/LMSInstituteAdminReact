@@ -1,19 +1,18 @@
 // groupService.js
 import axios from 'axios';
 
-const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/StudentTicket-management/StudentTickets`;
+const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket/get-all`;
 
-export const getAllStudentTickets = async (selectedBranchId) => {
+export const getAllStudentTickets = async (data) => {
   try {
     const response = await axios.get(`${STUDENT_TICKET_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
-
-    console.log(response);
+    console.log('getAllStudentTickets:',response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -21,6 +20,7 @@ export const getAllStudentTickets = async (selectedBranchId) => {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch StudentTickets. Status: ${response.status}`);
     }
+  
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentTickets:', error);

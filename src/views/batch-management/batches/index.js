@@ -54,6 +54,8 @@ const Batch = () => {
     dispatch(getAllBatches({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, batchRefetch]);
 
+// console.log('getAllBatches:',getAllBatches)
+
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
@@ -70,7 +72,7 @@ const Batch = () => {
     } else {
       toast.error(response.message);
     }
-    console.log(response);
+    console.log('getAllBatches',response);
   };
 
   const handleStatusValue = (event, batch) => {
@@ -303,7 +305,7 @@ const Batch = () => {
                       icon: <Icon icon="tabler:eye" fontSize={20} />,
                       menuItemProps: {
                         component: Link,
-                        to: `view`,
+                        to: `${item?.batch?.batch_id}`,
                         state: { id: item?.batch?.batch_id }
                       }
                     },

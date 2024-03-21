@@ -54,6 +54,7 @@ const StaffNotificationBodySection = ({ staffNotifications,selectedBranchId }) =
 
       const data = {
         id: id,
+        notification_id: selectedNotification.notification_id, // Include the notification_id field
         body: body,
         branch_id: selectedBranchId,
         title: title

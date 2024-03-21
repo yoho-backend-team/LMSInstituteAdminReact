@@ -14,7 +14,6 @@ import toast from 'react-hot-toast';
 
 import { getInitials } from 'utils/get-initials';
 
-
 import { resendStudentNotification } from '../services/studentNotificationServices';
 
 const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => {
@@ -73,26 +72,26 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
   //   }
   // };
 
-
   const handleSubmit = async (id) => {
     try {
       const selectedNotification = studentNotifications.find((notification) => notification.id === id);
-  
+
       if (!selectedNotification) {
         throw new Error('Notification not found');
       }
-  
+
       const { title, body } = selectedNotification.institute_notifications;
-  
+
       const data = {
         id: id,
+        notification_id: selectedNotification.notification_id, // Include the notification_id field
         body: body,
         branch_id: selectedBranchId,
         title: title
       };
-  
+
       const response = await resendStudentNotification(data);
-  
+
       if (response.success) {
         // Handle success
         toast.success(response.message);
@@ -106,7 +105,6 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
       toast.error('Failed to resend notification');
     }
   };
-
 
   const RowOptions = ({ id }) => {
     return (
