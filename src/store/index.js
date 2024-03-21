@@ -44,6 +44,8 @@ import staffTicketsReducer from 'features/ticket-management/staff/redux/staffTic
 
 import faqCategoryReducer from 'features/faq-management/faq-categories/redux/faqCategorySlice';
 import faqReducer from 'features/faq-management/faqs/redux/faqSlice';
+
+import SubscriptionReducer from 'features/payment-management/subscriptions/redux/slices';
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -84,7 +86,8 @@ const store = configureStore({
     staffTickets: staffTicketsReducer,
     studentTickets: studentTicketsReducer,
     faqCategories: faqCategoryReducer,
-    faqs: faqReducer
+    faqs: faqReducer,
+    subscriptions: SubscriptionReducer
   }
 });
 // configureStore(reducer);
