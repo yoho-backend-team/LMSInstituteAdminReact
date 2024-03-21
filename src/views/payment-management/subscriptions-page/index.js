@@ -217,7 +217,7 @@ const Subscription = () => {
     const fetchData = async () => {
       try {
         const subscriptions = await getAllSubscriptionPlans();
-        setSubscriptions(subscriptions);
+        setSubscriptions(subscriptions?.data?.data);
       } catch (error) {
         console.error('Error fetching subscription plans:', error);
       }
@@ -245,7 +245,7 @@ const Subscription = () => {
 
         <SubscriptionDataTable Subscription={Subscription} />
 
-        <SubscriptionPlans data={data.pricingTable} Subscriptions={subscriptions} plan={plan}  />
+        <SubscriptionPlans data={data.pricingTable} Subscriptions={subscriptions} plan={plan} />
       </CardContent>
       <SubscriptionCTA />
       <CardContent>
