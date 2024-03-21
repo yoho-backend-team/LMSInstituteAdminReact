@@ -28,17 +28,18 @@ const AllNotifications = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      status: 'read'
     };
     getAllNotificationDataByAuth(data);
   }, [selectedBranchId]);
 
-  const getAllNotificationDataByAuth = async () => {
+  const getAllNotificationDataByAuth = async (data) => {
     // setLoading(true)
-    const data = { branch_id: selectedBranchId };
+
     const result = await getAllNotificationsByAuth(data);
     if (result.success) {
-      setAllNotifications(result.data);
+      setAllNotifications(result?.data);
       // setLoading(false)
     }
     // setLoading(false)
