@@ -1,23 +1,16 @@
 // ** React Imports
 import { forwardRef, useState } from 'react';
 // ** MUI Imports
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 // ** Icon Imports
-import Icon from 'components/icon';
 // ** Third Party Imports
 import format from 'date-fns/format';
 // ** Utils Import
 // ** Custom Components Imports
 import { TextField } from '@mui/material';
-import CustomChip from 'components/mui/chip';
-import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 // ** Styled Components
 
@@ -27,7 +20,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   color: `${theme.palette.primary.main} !important`
 }));
-
 
 /* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
@@ -39,8 +31,6 @@ const CustomInput = forwardRef((props, ref) => {
   delete updatedProps.setDates;
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
-
-
 
 // const rows = [
 //     {
@@ -299,7 +289,7 @@ const CustomInput = forwardRef((props, ref) => {
 //       id: 20,
 //       transactionId:21235,
 //       avatar: '7.png',
-     
+
 //       post: 'Actuary',
 //       email: 'llewteyj@sun.com',
 //       city: 'Hougong',
@@ -312,20 +302,14 @@ const CustomInput = forwardRef((props, ref) => {
 //     },
 //   ];
 /* eslint-enable */
-const SubscriptionDataTable = ({Subscription}) => {
+const SubscriptionDataTable = ({ Subscription }) => {
   // ** State
-console.log("Subscription :", Subscription);
+  console.log('Subscription :', Subscription);
 
- 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
-  const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
-  };
 
-
-
-  const defaultColumns = [
+  const Columns = [
     {
       flex: 0.1,
       minWidth: 100,
@@ -340,8 +324,8 @@ console.log("Subscription :", Subscription);
     {
       flex: 1.25,
       minWidth: 140,
-      field: 'transactionId',
-      headerName: 'Transaction ID',
+      field: 'plan',
+      headerName: 'Plan',
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.transaction_id}</Typography>
     },
     {
@@ -349,96 +333,45 @@ console.log("Subscription :", Subscription);
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.total || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.issuedDate}</Typography>
-    },
-    {
-      flex: 1,
-      minWidth: 130,
-      field: 'balance',
-      headerName: 'Balance',
-      renderCell: ({ row }) =>
-        row.balance !== 0 ? (
-          <Typography sx={{ color: 'text.secondary' }}>{row.balance}</Typography>
-        ) : (
-          <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-        )
+      renderCell: ({ row }) => (
+        <Typography sx={{ color: 'text.secondary' }}>
+          {row.start_date} - {row.end_date}
+        </Typography>
+      )
     },
     {
       flex: 1.25,
-      minWidth: 150,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <TextField size="small" select defaultValue="" label="status" id="custom-select" onChange={(e) => handleStatusChange(e, row)}>
-            <MenuItem value={10}>{row.balance}</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </TextField>
-        );
-      }
-    }
-  ];
-
-  const columns = [
-    ...defaultColumns,
-    {
-      flex: 0.1,
       minWidth: 120,
-      sortable: false,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: ({ row }) => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title="View">
-            <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon="tabler:eye" />
-            </IconButton>
-          </Tooltip>
-          <OptionsMenu
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-            options={[
-              {
-                text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
-              },
-              {
-                text: 'Edit',
-                to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon="tabler:edit" fontSize={20} />,
-                // menuItemProps: { onClick: toggleEditUserDrawer }
-              }
-            ]}
-          />
-        </Box>
-      )
-    }
+      field: 'price',
+      headerName: 'price',
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.price || 0}`}</Typography>
+    },
+
   ];
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-          <DataGrid
-            sx={{ p: 2 }}
-            autoHeight
-            pagination
-            rowHeight={62}
-            rows={Subscription}
-            columns={columns}
-            disableRowSelectionOnClick
-            pageSizeOptions={[10, 25, 50]}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
-          />
+        <DataGrid
+          sx={{ p: 2 }}
+          autoHeight
+          pagination
+          rowHeight={62}
+          rows={Subscription}
+          columns={Columns}
+          disableRowSelectionOnClick
+          pageSizeOptions={[10, 25, 50]}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+        />
       </Grid>
     </Grid>
   );

@@ -28,7 +28,8 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 
 const SubscriptionDetails = (props) => {
   // ** Props
-  const { plan, data } = props;
+  const { plan,data} = props;
+  console.log("Subscriptions Plan",data?.plan_name);
   const renderFeatures = () => {
     return data?.planBenefits.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -75,7 +76,7 @@ const SubscriptionDetails = (props) => {
         />
       </Box>
       <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.title}</Typography>
+        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.plan_name}</Typography>
         <Typography sx={{ color: 'text.secondary' }}>{data?.subtitle}</Typography>
         <Box sx={{ my: 7, position: 'relative' }}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>

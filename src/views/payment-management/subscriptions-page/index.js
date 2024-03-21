@@ -16,7 +16,7 @@ import { selectSubscriptions } from 'features/payment-management/subscriptions/r
 import { getSubscriptions } from 'features/payment-management/subscriptions/redux/thunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-
+import { getAllSubscriptionPlans } from 'features/payment-management/subscriptions/services';
 // ** Styled Components
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: `${theme.spacing(2, 2)} !important`,
@@ -205,12 +205,25 @@ const Subscription = () => {
       setPlan('monthly');
     }
   };
-  
+
   const [refetch, setRefetch] = useState(false);
 
   const dispatch = useDispatch();
   const Subscription = useSelector(selectSubscriptions);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const subscriptions = await getAllSubscriptionPlans();
+        setSubscriptions(subscriptions);
+      } catch (error) {
+        console.error('Error fetching subscription plans:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -221,20 +234,22 @@ const Subscription = () => {
   }, [dispatch, selectedBranchId, refetch]);
 
   console.log(setRefetch);
-console.log(Subscription);
+  console.log(Subscription);
+
+  console.log(subscriptions);
 
   return (
     <Card>
       <CardContent>
         <SubscriptionHeader plan={plan} handleChange={handleChange} />
 
-        <SubscriptionDataTable Subscription={Subscription}/>
+        <SubscriptionDataTable Subscription={Subscription} />
 
-        <SubscriptionPlans plan={plan} data={data.pricingPlans} />
+        <SubscriptionPlans data={data.pricingTable} Subscriptions={subscriptions} plan={plan}  />
       </CardContent>
       <SubscriptionCTA />
       <CardContent>
-        <SubscriptionTable  data={data.pricingTable} />
+        <SubscriptionTable data={data.pricingTable} />
       </CardContent>
       <CardContent sx={{ backgroundColor: 'action.hover' }}>
         <SubscriptionFooter data={yourFaqData} />

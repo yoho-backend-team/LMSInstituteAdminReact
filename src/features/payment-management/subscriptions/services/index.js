@@ -31,7 +31,7 @@ export const getAllSubscriptions = async (data) => {
 
 export const getAllSubscriptionPlans = async (data) => {
     try {
-        const response = await axios.get(`${SUBSCRIPTIONS_API_END_POINT}/read-by-branch-id`, {
+        const response = await axios.get(`${SUBSCRIPTIONS_API_END_POINT}/get-all-subscriptions`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
