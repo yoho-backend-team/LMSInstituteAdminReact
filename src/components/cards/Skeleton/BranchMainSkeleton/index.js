@@ -11,10 +11,11 @@ const BranchMainSkeleton = () => {
     <Grid container spacing={2} sx={{ mt: 0.5, ml: 0.5 }}>
       {[...Array(8)].map((_, index) => (
         <Grid item xs={12} sm={6} lg={3} key={index}>
-          <Card sx={{ position: 'relative' }}>
-            <Box sx={{ position: 'absolute', display: 'flex', top: 5, right: 3, gap: 2, p: 1 }}>
-              <Skeleton variant="rectangular" width={30} height={30} animation="wave" />
-              <Skeleton variant="rectangular" width={30} height={30} animation="wave" />
+          <Card sx={{ position: 'relative', minHeight: 300 }}>
+            <Box sx={{ position: 'absolute', top: 0, right: 2, p: 1, gap: 2 }}>
+              <Skeleton variant="circular" width={8} height={8} animation="wave" />
+              <Skeleton variant="circular" width={8} height={8} animation="wave" />
+              <Skeleton variant="circular" width={8} height={8} animation="wave" />
             </Box>
 
             <CardMedia
@@ -37,9 +38,10 @@ const BranchMainSkeleton = () => {
               </Typography>
               <Typography variant="h5" sx={{ mt: 1 }}>
                 <Skeleton width="80%" animation="wave" />
+                <Skeleton width="80%" animation="wave" />
               </Typography>
               <Typography variant="h6">
-                <Skeleton width="60%" animation="wave" />
+                <Skeleton width="60%" height={45} animation="wave" />
               </Typography>
             </CardContent>
           </Card>

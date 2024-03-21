@@ -161,19 +161,12 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
           </Box>
         </CardContent>
       </Card>
-      {/* Delete branch modal */}
-      <BranchDeleteModel
-        open={branchDeleteModelOpen}
-        setOpen={setBranchDeleteModelOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
-        handleSubmit={handleBranchDelete}
-      />
+
       {/* Status Change Modal */}
       <StatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
-        description="Are you sure you want to Change Status"
+        description="Are you sure you want to Change the Status"
         title="Status"
         handleSubmit={handleStatusChangeApi}
       />
@@ -185,6 +178,14 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
         selectedBranch={selectedBranch}
         setSelectedBranch={setSelectedBranch}
         setRefetchBranch={setRefetchBranch}
+      />
+      {/* Delete branch modal */}
+      <BranchDeleteModel
+        open={branchDeleteModelOpen}
+        setOpen={setBranchDeleteModelOpen}
+        description="Are you sure you want to delete this branch?"
+        title="Delete"
+        handleSubmit={handleBranchDelete}
       />
     </Grid>
   );

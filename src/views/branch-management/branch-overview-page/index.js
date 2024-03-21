@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react'; // Importing necessary hooks
-import BranchMainSkeleton from 'components/cards/Skeleton/BranchMainSkeleton';
 import { Grid } from '@mui/material';
+import BranchMainSkeleton from 'components/cards/Skeleton/BranchMainSkeleton';
 import BranchHeader from 'features/branch-management/branch-overview-page/components/BrachesCardHeader';
-import { useDispatch, useSelector } from 'react-redux';
+import BranchCard from 'features/branch-management/branch-overview-page/components/BranchCard';
 import { selectBranches, selectLoading } from 'features/branch-management/redux/branchSelectors';
 import { getAllBranches } from 'features/branch-management/redux/branchThunks';
-import BranchCard from 'features/branch-management/branch-overview-page/components/BranchCard';
+import { useCallback, useEffect, useState } from 'react'; // Importing necessary hooks
+import { useDispatch, useSelector } from 'react-redux';
 
 const BranchesOverviewPage = () => {
   const dispatch = useDispatch();
   const branches = useSelector(selectBranches);
   const branchLoading = useSelector(selectLoading);
+  // const branchLoading = useState(true);
   const [refetchBranch, setRefetchBranch] = useState(false);
 
   // Using useCallback to memoize the dispatch function to prevent unnecessary re-renders
@@ -23,8 +24,6 @@ const BranchesOverviewPage = () => {
     getAllBranchesCallback();
   }, [getAllBranchesCallback, refetchBranch]);
 
-
-  
   return (
     <Grid container spacing={1} className="match-height">
       <Grid container spacing={2}>
