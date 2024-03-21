@@ -13,10 +13,10 @@ const UserHeaderSection = ({ users, groups }) => {
         <UserHeaderCard title={'Total Groups'} stats={groups?.length} avatarColor={'error'} icon={'tabler:user-plus'} />
       </Grid>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Active Users'} stats={users?.activeUserCount} avatarColor={'success'} icon={'tabler:user-check'} />
+        <UserHeaderCard title={'Active Users'} stats={users?.data?.activeUserCount} avatarColor={'success'} icon={'tabler:user-check'} />
       </Grid>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Blocked Users'} stats={users?.inActiveUserCount} avatarColor={'warning'} icon={'tabler:user-exclamation'} />
+        <UserHeaderCard title={'Blocked Users'} stats={users?.data?.inActiveUserCount} avatarColor={'warning'} icon={'tabler:user-exclamation'} />
       </Grid>
     </Grid>
   );
