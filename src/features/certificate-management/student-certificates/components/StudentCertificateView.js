@@ -4,18 +4,19 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { PDFViewer } from 'react-view-pdf';
-const StudentCertificateView = ({ open, handleViewClose,setSelectedRow }) => {
-  const savedPdfUrl =`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${setSelectedRow.certificate_file }`
+const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
+  const savedPdfUrl = `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`;
+  console.log(savedPdfUrl);
 
   return (
     <div>
       <Dialog
-      fullScreen
+        fullScreen
         open={open}
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+      // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -42,7 +43,7 @@ const StudentCertificateView = ({ open, handleViewClose,setSelectedRow }) => {
           }}
         >
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-          <PDFViewer url={savedPdfUrl} />
+            <PDFViewer url={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`} />
           </Grid>
         </DialogContent>
       </Dialog>

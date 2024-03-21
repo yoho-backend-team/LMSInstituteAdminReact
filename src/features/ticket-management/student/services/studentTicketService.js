@@ -15,7 +15,7 @@ export const getAllStudentTickets = async (data) => {
     console.log('getAllStudentTickets:', response);
     // Check if the response status is successful
     if (response.data.status) {
-      return { success: true, data: response.data.data };
+      return response;
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch StudentTickets. Status: ${response.status}`);
