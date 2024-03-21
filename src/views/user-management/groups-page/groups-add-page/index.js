@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
   Button,
@@ -21,22 +21,33 @@ import {
 } from '@mui/material';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
+import { selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
+import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
 import { addGroup, getAllPermissions } from 'features/user-management/groups-page/services/groupService';
-import React from 'react';
+import { addGroupYupSchema } from 'features/user-management/groups-page/utills';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { addGroupYupSchema } from 'features/user-management/groups-page/utills';
 
 const GroupAddPage = () => {
   // State variables
+  const dispatch = useDispatch();
+
+  const groups = useSelector(selectGroups);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
   const [loading, setLoading] = useState(true);
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(getAllGroups({ branch_id: selectedBranchId }));
+  }, [dispatch, selectedBranchId]);
 
   // Fetch permissions on component mount
   useEffect(() => {
@@ -68,9 +79,19 @@ const GroupAddPage = () => {
           name: data.groupName,
           permissions: selectedCheckbox
         };
+
+        // Check if the group name already exists
+        const existingGroup = groups.find((group) => group.name === data.groupName);
+        if (existingGroup) {
+          toast.error('Group already exists');
+          return; // Exit the function if group already exists
+        }
+
         const result = await addGroup(inputData);
 
         if (result.success) {
+          // Update groups after adding a new group
+          dispatch(getAllGroups({ branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
         } else {
@@ -78,25 +99,22 @@ const GroupAddPage = () => {
         }
       } catch (error) {
         console.log(error);
+        toast.error('Group Name Already Exists');
       }
     },
-    [selectedCheckbox, navigate]
+    [dispatch, selectedCheckbox, navigate, groups, selectedBranchId]
   );
 
   // Function to toggle permission selection
-  const togglePermission = useCallback(
-    (id) => {
-      const arr = selectedCheckbox;
-      if (selectedCheckbox.includes(id)) {
-        arr.splice(arr.indexOf(id), 1);
-        setSelectedCheckbox([...arr]);
+  const togglePermission = useCallback((id) => {
+    setSelectedCheckbox((prevSelectedCheckbox) => {
+      if (prevSelectedCheckbox.includes(id)) {
+        return prevSelectedCheckbox.filter((itemId) => itemId !== id);
       } else {
-        arr.push(id);
-        setSelectedCheckbox([...arr]);
+        return [...prevSelectedCheckbox, id];
       }
-    },
-    [selectedCheckbox]
-  );
+    });
+  }, []);
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
@@ -104,16 +122,13 @@ const GroupAddPage = () => {
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
     } else {
-      permissions.forEach((screens) => {
-        screens?.screens?.forEach((permissions) => {
-          permissions?.permissions?.forEach((permission) => {
-            togglePermission(permission.id);
-          });
-        });
-      });
+      const allPermissionsIds = permissions.flatMap((module) =>
+        module.screens.flatMap((screen) => screen.permissions.map((permission) => permission.id))
+      );
+      setSelectedCheckbox(allPermissionsIds);
       setIsIndeterminateCheckbox(true);
     }
-  }, [isIndeterminateCheckbox, permissions, togglePermission]);
+  }, [isIndeterminateCheckbox, permissions]);
 
   // Fetch permissions from API
   const getPermissions = useCallback(async () => {
@@ -122,13 +137,13 @@ const GroupAddPage = () => {
       const result = await getAllPermissions();
       if (result.success) {
         setPermissions(result.data);
-        setLoading(false);
       } else {
-        console.log(result.message);
-        setLoading(false);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
+      toast.error('An error occurred while fetching permissions');
+    } finally {
       setLoading(false);
     }
   }, []);

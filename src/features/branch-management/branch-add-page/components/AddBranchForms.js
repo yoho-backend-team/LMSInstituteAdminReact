@@ -1,13 +1,13 @@
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import { useNavigate } from 'react-router-dom';
-import CardContent from '@mui/material/CardContent';
-import { Button, TextField as CustomTextField } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, TextField as CustomTextField } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
 import { addBranch } from 'features/branch-management/services/branchServices';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
 
 const AddBranchForms = () => {
   const navigate = useNavigate();
@@ -22,15 +22,47 @@ const AddBranchForms = () => {
     city: '',
     state: ''
   };
+  // const branchSchema = yup.object().shape({
+  //   branchName: yup.string().required('Branch Name is required'),
+  //   phone: yup.number().required('Phone No. is required'),
+  //   alternatePhone: yup.number().required('Alternate Phone No. is required'),
+  //   address: yup.string().required('Address is required'),
+  //   pinCode: yup.number().required('PIN Code is required'),
+  //   landmark: yup.string().required('Landmark is required'),
+  //   city: yup.string().required('City is required'),
+  //   state: yup.string().required('State is required')
+  // });
+
   const branchSchema = yup.object().shape({
-    branchName: yup.string().required('Branch Name is required'),
-    phone: yup.number().required('Phone No. is required'),
-    alternatePhone: yup.number().required('Alternate Phone No. is required'),
+    branchName: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Branch Name should not contain special characters')
+      .required('Branch Name is required'),
+    phone: yup
+      .string()
+      .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits')
+      .required('Phone No. is required'),
+    alternatePhone: yup
+      .string()
+      .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits')
+      .required('Alternate Phone No. is required'),
     address: yup.string().required('Address is required'),
-    pinCode: yup.number().required('PIN Code is required'),
-    landmark: yup.string().required('Landmark is required'),
-    city: yup.string().required('City is required'),
-    state: yup.string().required('State is required')
+    pinCode: yup
+      .string()
+      .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits')
+      .required('PIN Code is required'),
+    landmark: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Landmark should not contain special characters')
+      .required('Landmark is required'),
+    city: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters')
+      .required('city is required'),
+    state: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters')
+      .required('state is required')
   });
 
   const {
