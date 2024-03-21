@@ -28,6 +28,7 @@ const StudentTicket = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
   const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
+  // const [studentTicketData,setStudentTicketdata]=useState()
 
   // ** Hooks
   const theme = useTheme();
@@ -55,7 +56,6 @@ const StudentTicket = () => {
       branch_id: selectedBranchId,
       type: 'open'
     };
-
     dispatch(getAllStudentTickets(data));
   }, [dispatch, selectedBranchId]);
 
@@ -63,11 +63,12 @@ const StudentTicket = () => {
     dispatch(fetchUserProfile());
     // dispatch(fetchChatsContacts())
   }, [dispatch]);
+
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
-  console.log(selectChat);
-  console.log(studentTickets);
+  console.log('selectChat:', selectChat);
+  console.log('studentTickets', studentTickets);
 
   return (
     <>
@@ -92,6 +93,7 @@ const StudentTicket = () => {
               }}
             >
               <SidebarLeft
+                tickets={studentTickets}
                 store={store}
                 hidden={hidden}
                 mdAbove={mdAbove}

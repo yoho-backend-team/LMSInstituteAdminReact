@@ -46,7 +46,8 @@ const SidebarLeft = (props) => {
     removeSelectedChat,
     userProfileLeftOpen,
     handleLeftSidebarToggle,
-    handleUserProfileLeftSidebarToggle
+    handleUserProfileLeftSidebarToggle,
+    tickets
   } = props;
 
   // ** States
@@ -76,59 +77,57 @@ const SidebarLeft = (props) => {
   }, []);
 
   const renderContacts = () => {
-    if (store && store.contacts && store.contacts.length) {
+    if (tickets && tickets && tickets?.length) {
       if (query.length && !filteredContacts.length) {
         return (
           <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
+            <Typography sx={{ color: 'text.secondary' }}>No Tickets Found</Typography>
           </ListItem>
         );
       } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
-
-        return arrToMap !== null
-          ? arrToMap.map((contact, index) => {
-              return (
-                <Card key={index} sx={{ mb: 2 }}>
-                  <CardContent sx={{}}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Avatar
-                        alt={contact.fullName}
-                        src={contact.avatar ? contact.avatar : undefined}
-                        sx={{ width: 40, height: 40, bgcolor: contact.avatarColor }}
-                      >
-                        {!contact.avatar && getInitials(contact.fullName)}
-                      </Avatar>
-                      <Box sx={{ ml: 1 }}>
-                        <Typography variant="h5">{contact.fullName}</Typography>
-                      </Box>
-                      <Box sx={{ flexGrow: 1 }} />
-                      <Box>
-                        <Typography variant="body3" color="text.secondary">
-                          2 mins
-                        </Typography>
-                      </Box>
+        return tickets !== null
+          ? tickets?.map((contact, index) => {
+            return (
+              <Card key={index} sx={{ mb: 2 }}>
+                <CardContent sx={{}}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Avatar
+                      alt={contact?.fullName}
+                      src={contact?.avatar ? contact?.avatar : undefined}
+                      sx={{ width: 40, height: 40, bgcolor: contact?.avatarColor }}
+                    >
+                      {!contact?.avatar && getInitials(contact?.fullName)}
+                    </Avatar>
+                    <Box sx={{ ml: 1 }}>
+                      <Typography variant="h5">{contact?.fullName}</Typography>
                     </Box>
-
-                    <Box style={{ ml: 2, mt: 2 }}>
-                      <Typography
-                        variant="h6"
-                        color="text.secondary"
-                        noWrap
-                        sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                      >
-                        {contact.about}
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Box>
+                      <Typography variant="body3" color="text.secondary">
+                        2 mins
                       </Typography>
-
-                      <Box sx={{ display: 'flex', mt: 2, gap: 2 }}>
-                        <CustomChip rounded size="small" skin="light" color={'info'} label={'Open'} />
-                        <CustomChip rounded size="small" skin="light" color={'error'} label={'• High Priority'} />
-                      </Box>
                     </Box>
-                  </CardContent>
-                </Card>
-              );
-            })
+                  </Box>
+
+                  <Box style={{ ml: 2, mt: 2 }}>
+                    <Typography
+                      variant="h6"
+                      color="text.secondary"
+                      noWrap
+                      sx={{ mt: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
+                      {contact?.about}
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', mt: 2, gap: 2 }}>
+                      <CustomChip rounded size="small" skin="light" color={'info'} label={'Open'} />
+                      <CustomChip rounded size="small" skin="light" color={'error'} label={'• High Priority'} />
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            );
+          })
           : null;
       }
     }
@@ -241,15 +240,15 @@ const SidebarLeft = (props) => {
                 Chats
               </Typography> */}
               {/* <List sx={{ mb: 5, p: 0 }}>{renderChats()}</List> */}
-              <Box sx={{display:"flex",justifyContent:"space-between"}}>
-              <Typography variant="h5" sx={{ ml: 1, mb: 3.5, color: 'primary.main' }}>
-                My Open tickets (6)
-              </Typography>
-              <Box>
-              <Icon icon="mingcute:down-fill" color="primary.main" />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="h5" sx={{ ml: 1, mb: 3.5, color: 'primary.main' }}>
+                  My Open tickets (6)
+                </Typography>
+                <Box>
+                  <Icon icon="mingcute:down-fill" color="primary.main" />
+                </Box>
               </Box>
-              </Box>
-        
+
               <List sx={{ p: 0 }}>{renderContacts()}</List>
             </Box>
           </ScrollWrapper>

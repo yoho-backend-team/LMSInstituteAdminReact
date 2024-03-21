@@ -1,11 +1,11 @@
 // groupService.js
 import axios from 'axios';
 
-const SUBSCRIPTIONS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/staff-salaries`;
+const SUBSCRIPTIONS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/subscription-management`;
 
 export const getAllSubscriptions = async (data) => {
     try {
-        const response = await axios.get(`${SUBSCRIPTIONS_API_END_POINT}/read-by-branch-id`, {
+        const response = await axios.get(`${SUBSCRIPTIONS_API_END_POINT}/get-all-institute-subscription`, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -54,6 +54,3 @@ export const getAllSubscriptionPlans = async (data) => {
         throw error;
     }
 };
-
-
-
