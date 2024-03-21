@@ -12,6 +12,11 @@ import SubscriptionTable from 'features/payment-management/subscriptions/compone
 import SubscriptionFooter from 'features/payment-management/subscriptions/components/SubscriptionFooter';
 import SubscriptionDataTable from 'features/payment-management/subscriptions/components/SubscriptionDataTable';
 
+import { selectSubscriptions } from 'features/payment-management/subscriptions/redux/selectors';
+import { getSubscriptions } from 'features/payment-management/subscriptions/redux/thunks';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+
 // ** Styled Components
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: `${theme.spacing(2, 2)} !important`,
@@ -200,19 +205,36 @@ const Subscription = () => {
       setPlan('monthly');
     }
   };
+  
+  const [refetch, setRefetch] = useState(false);
+
+  const dispatch = useDispatch();
+  const Subscription = useSelector(selectSubscriptions);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  useEffect(() => {
+    dispatch(
+      getSubscriptions({
+        branch_id: selectedBranchId
+      })
+    );
+  }, [dispatch, selectedBranchId, refetch]);
+
+  console.log(setRefetch);
+console.log(Subscription);
 
   return (
     <Card>
       <CardContent>
         <SubscriptionHeader plan={plan} handleChange={handleChange} />
 
-        <SubscriptionDataTable />
+        <SubscriptionDataTable Subscription={Subscription}/>
 
         <SubscriptionPlans plan={plan} data={data.pricingPlans} />
       </CardContent>
       <SubscriptionCTA />
       <CardContent>
-        <SubscriptionTable data={data.pricingTable} />
+        <SubscriptionTable  data={data.pricingTable} />
       </CardContent>
       <CardContent sx={{ backgroundColor: 'action.hover' }}>
         <SubscriptionFooter data={yourFaqData} />
