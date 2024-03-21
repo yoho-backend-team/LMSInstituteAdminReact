@@ -1,7 +1,6 @@
 // ** React Imports
 import { Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
@@ -11,7 +10,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/ticket-management/student/components/AppChat';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { getAllStudentTickets } from 'features/ticket-management/student/services/studentTicketService';
 // ** Utils Imports
 import { formatDateToMonthShort } from 'utils/format';
 import { getInitials } from 'utils/get-initials';
@@ -21,19 +19,10 @@ import { getInitials } from 'utils/get-initials';
 import TicketSkeleton from 'components/cards/Skeleton/TicketSkeleton';
 import ChatContent from 'features/ticket-management/student/components/ChatContent';
 import SidebarLeft from 'features/ticket-management/student/components/SidebarLeft';
+import { getAllStudentTickets } from 'features/ticket-management/student/redux/studentTicketThunks';
+import { selectStudentTickets, selectLoading } from 'features/ticket-management/student/redux/studentTicketSelectors';
 
 const StudentTicket = () => {
-  const location = useLocation();
-  const branchId = location.state.id;
-  console.log('branchId', branchId);
-
-  useEffect(() => {
-    const data = {
-      branch_id: branchId
-    };
-
-    getBranchData(data);
-  }, [dispatch, branchId]);
   // ** States
   const [userStatus, setUserStatus] = useState('online');
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -52,39 +41,23 @@ const StudentTicket = () => {
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
   const sidebarWidth = smAbove ? 400 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
-  const [ticketData, setTicketData] = useState({});
   const statusObj = {
     busy: 'error',
     away: 'warning',
     online: 'success',
     offline: 'secondary'
   };
-
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const studentTickets = useSelector(selectStudentTickets);
+  const studentLoading = useSelector(selectLoading);
   useEffect(() => {
     const data = {
-      branch_id: branchId
+      branch_id: selectedBranchId,
+      type: 'open'
     };
 
-    getAllStudentticketData(data);
-  }, [dispatch, branchId]);
-
-  const getAllStudentticketData = async () => {
-    const data = {
-      branch_id: branchId
-    };
-    try {
-      const result = await getAllStudentTickets(data);
-      if (result.success) {
-        console.log(result.data);
-        setTicketData(result.data);
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  console.log('ticketData:', ticketData);
+    dispatch(getAllStudentTickets(data));
+  }, [dispatch, selectedBranchId]);
 
   useEffect(() => {
     dispatch(fetchUserProfile());
@@ -94,23 +67,13 @@ const StudentTicket = () => {
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
   console.log(selectChat);
-
-  const [loading, setLoading] = useState(true);
-
-  // Simulate loading delay with useEffect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  console.log(studentTickets);
 
   return (
     <>
       <Grid>
         <Grid spacing={1} className="match-height">
-          {loading ? (
+          {studentLoading ? (
             <TicketSkeleton />
           ) : (
             <Box
