@@ -132,7 +132,7 @@ const SidebarAddUser = (props) => {
       const result = await addUser(bodyFormData);
 
       if (result.success) {
-        setLoading((loading) => !loading);
+        // setLoading((loading) => !loading);
         setError('');
         toggle();
         reset();

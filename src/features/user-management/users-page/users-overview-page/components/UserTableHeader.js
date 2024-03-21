@@ -34,12 +34,12 @@ const TableHeader = (props) => {
     <Grid container spacing={2} sx={{ alignItems: 'center', mt: 2 }}>
       <Grid item sm={6} xs={12}></Grid>
       <Grid item sm={4} xs={12}>
-        <TextField value={searchValue} fullWidth placeholder="Search User" onChange={(e) => handleSearch(e)} />
+        <TextField value={searchValue} fullWidth placeholder="Search Admin User" onChange={(e) => handleSearch(e)} />
       </Grid>
       <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
         <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
           <Icon fontSize="1.125rem" icon="tabler:plus" />
-          Add User
+          Add Admin User
         </Button>
       </Grid>
     </Grid>
