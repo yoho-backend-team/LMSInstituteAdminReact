@@ -17,19 +17,62 @@ const AllNotifications = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // ** State
   const [value, setValue] = useState('1');
-  const [allNotifications, setAllNotifications] = useState('');
+  const [allreadNotifications, setAllreadNotifications] = useState('');
   // const [readNotifications,setreadnotifications]=useState('')
-  // const [unreadNotifications,setUnreadNotifications]=useState('')
+  const [unreadNotifications, setUnreadNotifications] = useState('');
+  const [allNotifcations, setAllNotifcations] = useState('');
 
   // Fetch course categories on component mount or when dependencies change
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId,
       status: 'read'
+    };
+    getAllReadNotificationDataByAuth(data);
+  }, [selectedBranchId]);
+
+  const getAllReadNotificationDataByAuth = async (data) => {
+    // setLoading(true)
+
+    const result = await getAllNotificationsByAuth(data);
+    if (result.success) {
+      setAllreadNotifications(result?.data);
+      // setLoading(false)
+    }
+    // setLoading(false)
+  };
+  console.log('allreadNotifications', allreadNotifications);
+
+  //unreadNotifications
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId,
+      status: 'un-read'
+    };
+    getAllUnreadNotificationDataByAuth(data);
+  }, [selectedBranchId]);
+
+  const getAllUnreadNotificationDataByAuth = async (data) => {
+    // setLoading(true)
+
+    const result = await getAllNotificationsByAuth(data);
+    if (result.success) {
+      setUnreadNotifications(result?.data);
+      // setLoading(false)
+    }
+    // setLoading(false)
+  };
+  console.log('unreadNotifications', unreadNotifications);
+
+  //allNotifications
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId,
+      status: 'un-read'
     };
     getAllNotificationDataByAuth(data);
   }, [selectedBranchId]);
@@ -39,12 +82,12 @@ const AllNotifications = () => {
 
     const result = await getAllNotificationsByAuth(data);
     if (result.success) {
-      setAllNotifications(result?.data);
+      setAllNotifcations(result?.data);
       // setLoading(false)
     }
     // setLoading(false)
   };
-  console.log('allNotifications', allNotifications);
+  console.log('unreadNotifications', unreadNotifications);
 
   return (
     <>
@@ -58,7 +101,7 @@ const AllNotifications = () => {
               <Tab
                 value="3"
                 label="All"
-                allNotifications={allNotifications}
+                // allNotifications={allNotifications}
                 // setLoading={setLoading}
 
                 selectedBranchId={selectedBranchId}
@@ -67,16 +110,15 @@ const AllNotifications = () => {
 
             <TabPanel value="1">
               <Grid container spacing={3}>
-                {[...Array(10).keys()].map((item) => (
+                {[...allreadNotifications]?.map((item) => (
                   <Grid item xs={12} key={item}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
                         <Box>
-                          <Typography variant="h4">Michael just purchased</Typography>
+                          <Typography variant="h4">{item?.title}</Typography>
                           <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly
-                            cake caramels brownie gummies.
+                            {item?.body}
                           </Typography>
                         </Box>
                       </Box>
@@ -91,16 +133,15 @@ const AllNotifications = () => {
 
             <TabPanel value="2">
               <Grid container spacing={3}>
-                {[...Array(5).keys()].map((item) => (
+                {[...unreadNotifications]?.map((item) => (
                   <Grid item xs={12} key={item}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
                         <Box>
-                          <Typography variant="h4">Michael just purchased</Typography>
+                          <Typography variant="h4">{item?.title}</Typography>
                           <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly
-                            cake caramels brownie gummies.
+                            {item?.body}
                           </Typography>
                         </Box>
                       </Box>
@@ -115,16 +156,15 @@ const AllNotifications = () => {
 
             <TabPanel value="3">
               <Grid container spacing={3}>
-                {[...Array(5).keys()].map((item) => (
+                {[...allNotifcations].map((item) => (
                   <Grid item xs={12} key={item}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
                         <Box>
-                          <Typography variant="h4">Michael just purchased</Typography>
+                          <Typography variant="h4">{item.title}</Typography>
                           <Typography fontSize={12} variant="body2" sx={{ color: 'grey.500', mt: 1 }}>
-                            Cake apple pie chupa chups biscuit liquorice tootsie roll liquorice sugar plum. Cotton candy wafer wafer jelly
-                            cake caramels brownie gummies.
+                            {item.body}
                           </Typography>
                         </Box>
                       </Box>
