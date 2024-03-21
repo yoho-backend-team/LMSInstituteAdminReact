@@ -370,7 +370,7 @@ const StudenrCertificate = () => {
           handleSubmit={handleStatusChangeApi}
         />
 
-        <StudentCertificateView open={isViewModalOpen} handleViewClose={handleViewClose} />
+        <StudentCertificateView certificate={selectedRow} open={isViewModalOpen} handleViewClose={handleViewClose} />
       </Grid>
     </>
   );
