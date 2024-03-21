@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management`;
-
+// const NOTIFICATION_AUTHBYUSER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/get-notification-by-auth`;
 export const getAllNotifications = async (data) => {
   try {
     const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read-all-notifications`, {
@@ -12,7 +12,7 @@ export const getAllNotifications = async (data) => {
       },
       params: data
     });
-    console.log('getAllNotifications:',response);
+    console.log('getAllNotifications:', response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -112,9 +112,6 @@ export const updateNotification = async (data) => {
   }
 };
 
-
-
-
 export const resendNotification = async (data) => {
   try {
     const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
@@ -133,6 +130,32 @@ export const resendNotification = async (data) => {
     }
   } catch (error) {
     console.error('Error in resendStudentNotification:', error);
+    throw error;
+  }
+};
+
+export const getAllNotificationsByAuth = async (data) => {
+  try {
+    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/get-notification-by-auth`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log('getAllNotificationsByAuth:', response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch AllNotifications. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllNotifications:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

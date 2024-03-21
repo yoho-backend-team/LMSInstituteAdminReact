@@ -5,15 +5,15 @@ import SubscriptionDetails from './SubscriptionDetails';
 
 const SubscriptionPlans = (props) => {
   // ** Props
-  const { plan, data } = props;
+  const { plan,Subscriptions } = props;
   return (
     <Grid container spacing={6}>
-      {data?.map((item) => (
-        <Grid item xs={12} md={4} key={item.title.toLowerCase()}>
-          <SubscriptionDetails plan={plan} data={item} />
-        </Grid>
-      ))}
-    </Grid>
+    {Subscriptions?.map((item) => (
+      <Grid item xs={12} md={4} key={item?.id}>
+        <SubscriptionDetails plan={plan} data={item} />
+      </Grid>
+    ))}
+  </Grid>
   );
 };
 

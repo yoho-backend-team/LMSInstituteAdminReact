@@ -28,14 +28,17 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 
 const SubscriptionDetails = (props) => {
   // ** Props
-  const { plan, data } = props;
+  const { data } = props;
+
+  console.log('Subscriptions Plan', data);
+
   const renderFeatures = () => {
-    return data?.planBenefits.map((item, index) => (
+    return data?.features?.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Box component="span" sx={{ display: 'inline-flex', color: 'text.secondary', mr: 2.5 }}>
           <Icon icon="tabler:circle" fontSize="0.875rem" />
         </Box>
-        <Typography sx={{ color: 'text.secondary' }}>{item}</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>{item?.description}</Typography>
       </Box>
     ));
   };
@@ -67,37 +70,19 @@ const SubscriptionDetails = (props) => {
         />
       ) : null}
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
-        <img
-          width={data?.imgWidth}
-          src={`${data?.imgSrc}`}
-          height={data?.imgHeight}
-          alt={`${data?.title.toLowerCase().replace(' ', '-')}-plan-img`}
-        />
+        <img width={data?.imgWidth} src={`${data?.imgSrc}`} height={data?.imgHeight} alt={`${data?.plan_name}-plan-img`} />
       </Box>
       <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.title}</Typography>
-        <Typography sx={{ color: 'text.secondary' }}>{data?.subtitle}</Typography>
+        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.plan_name}</Typography>
+        <Typography sx={{ color: 'text.secondary' }}>{data?.description}</Typography>
         <Box sx={{ my: 7, position: 'relative' }}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Typography sx={{ mt: 2.5, mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>$</Typography>
             <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight: 1.4168 }}>
-              {plan === 'monthly' ? data?.monthlyPrice : data?.yearlyPlan.perMonth}
+              {data?.plan_price}
             </Typography>
-            <Typography sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>/month</Typography>
+            <Typography sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>/{data?.plan_duration_type}</Typography>
           </Box>
-          {plan !== 'monthly' && data?.monthlyPrice !== 0 ? (
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 4,
-                top: 52,
-                left: '50%',
-                position: 'absolute',
-                color: 'text.disabled',
-                transform: 'translateX(-50%)'
-              }}
-            >{`USD ${data?.yearlyPlan.totalAnnual}/year`}</Typography>
-          ) : null}
         </Box>
       </Box>
       <BoxFeature>{renderFeatures()}</BoxFeature>

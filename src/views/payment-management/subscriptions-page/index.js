@@ -2,21 +2,18 @@
 import { useState } from 'react';
 // ** MUI Imports
 import Card from '@mui/material/Card';
-import { styled } from '@mui/material/styles';
 import MuiCardContent from '@mui/material/CardContent';
+import { styled } from '@mui/material/styles';
 // ** Third Party Imports
-import SubscriptionHeader from 'features/payment-management/subscriptions/components/SubscriptionHeader';
-import SubscriptionCTA from 'features/payment-management/subscriptions/components/SubscriptionCTA';
-import SubscriptionPlans from 'features/payment-management/subscriptions/components/SubscriptionPlans';
-import SubscriptionTable from 'features/payment-management/subscriptions/components/SubscriptionTable';
-import SubscriptionFooter from 'features/payment-management/subscriptions/components/SubscriptionFooter';
 import SubscriptionDataTable from 'features/payment-management/subscriptions/components/SubscriptionDataTable';
+import SubscriptionHeader from 'features/payment-management/subscriptions/components/SubscriptionHeader';
+import SubscriptionPlans from 'features/payment-management/subscriptions/components/SubscriptionPlans';
 
 import { selectSubscriptions } from 'features/payment-management/subscriptions/redux/selectors';
 import { getSubscriptions } from 'features/payment-management/subscriptions/redux/thunks';
-import { useDispatch, useSelector } from 'react-redux';
+import { getAllSubscriptionPlans } from 'features/payment-management/subscriptions/services';
 import { useEffect } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 // ** Styled Components
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: `${theme.spacing(2, 2)} !important`,
@@ -163,54 +160,59 @@ const data = {
   }
 };
 
-const yourFaqData = {
-  faq: [
-    {
-      id: 'responses-limit',
-      question: 'What counts towards the 100 responses limit?',
-      answer:
-        'We count all responses submitted through all your forms in a month. If you already received 100 responses this month, you won’t be able to receive any more of them until next month when the counter resets.'
-    },
-    {
-      id: 'process-payments',
-      question: 'How do you process payments?',
-      answer:
-        'We accept Visa®, MasterCard®, American Express®, and PayPal®. So you can be confident that your credit card information will be kept safe and secure.'
-    },
-    {
-      id: 'payment-methods',
-      question: 'What payment methods do you accept?',
-      answer: '2Checkout accepts all types of credit and debit cards.'
-    },
-    {
-      id: 'money-back-guarantee',
-      question: 'Do you have a money-back guarantee?',
-      answer: 'Yes. You may request a refund within 30 days of your purchase without any additional explanations.'
-    },
-    {
-      id: 'more-questions',
-      question: 'I have more questions. Where can I get help?',
-      answer: 'Please contact us if you have any other questions or concerns. We’re here to help!'
-    }
-  ]
-};
+// const yourFaqData = {
+//   faq: [
+//     {
+//       id: 'responses-limit',
+//       question: 'What counts towards the 100 responses limit?',
+//       answer:
+//         'We count all responses submitted through all your forms in a month. If you already received 100 responses this month, you won’t be able to receive any more of them until next month when the counter resets.'
+//     },
+//     {
+//       id: 'process-payments',
+//       question: 'How do you process payments?',
+//       answer:
+//         'We accept Visa®, MasterCard®, American Express®, and PayPal®. So you can be confident that your credit card information will be kept safe and secure.'
+//     },
+//     {
+//       id: 'payment-methods',
+//       question: 'What payment methods do you accept?',
+//       answer: '2Checkout accepts all types of credit and debit cards.'
+//     },
+//     {
+//       id: 'money-back-guarantee',
+//       question: 'Do you have a money-back guarantee?',
+//       answer: 'Yes. You may request a refund within 30 days of your purchase without any additional explanations.'
+//     },
+//     {
+//       id: 'more-questions',
+//       question: 'I have more questions. Where can I get help?',
+//       answer: 'Please contact us if you have any other questions or concerns. We’re here to help!'
+//     }
+//   ]
+// };
 
 const Subscription = () => {
-  // ** States
-  const [plan, setPlan] = useState('annually');
-  const handleChange = (e) => {
-    if (e.target.checked) {
-      setPlan('annually');
-    } else {
-      setPlan('monthly');
-    }
-  };
-  
+
+
   const [refetch, setRefetch] = useState(false);
 
   const dispatch = useDispatch();
   const Subscription = useSelector(selectSubscriptions);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const subscriptions = await getAllSubscriptionPlans();
+        setSubscriptions(subscriptions?.data?.data);
+      } catch (error) {
+        console.error('Error fetching subscription plans:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -221,23 +223,18 @@ const Subscription = () => {
   }, [dispatch, selectedBranchId, refetch]);
 
   console.log(setRefetch);
-console.log(Subscription);
+  console.log(Subscription);
+
+  console.log(subscriptions);
 
   return (
     <Card>
       <CardContent>
-        <SubscriptionHeader plan={plan} handleChange={handleChange} />
+        <SubscriptionHeader  />
 
-        <SubscriptionDataTable Subscription={Subscription}/>
+        <SubscriptionDataTable Subscription={Subscription} />
 
-        <SubscriptionPlans plan={plan} data={data.pricingPlans} />
-      </CardContent>
-      <SubscriptionCTA />
-      <CardContent>
-        <SubscriptionTable  data={data.pricingTable} />
-      </CardContent>
-      <CardContent sx={{ backgroundColor: 'action.hover' }}>
-        <SubscriptionFooter data={yourFaqData} />
+        <SubscriptionPlans data={data.pricingTable} Subscriptions={subscriptions} />
       </CardContent>
     </Card>
   );

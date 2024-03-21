@@ -1,4 +1,4 @@
-import { useState,useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import Tab from '@mui/material/Tab';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -9,44 +9,59 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from 'components/mui/avatar';
 import { Box, Grid } from '@mui/material';
-import { getAllNotifications } from 'features/notification-management/all-notifications/services/allNotificationServices';
-import { useDispatch,useSelector } from 'react-redux';
+import { getAllNotificationsByAuth } from 'features/notification-management/all-notifications/services/allNotificationServices';
+import { useSelector } from 'react-redux';
 
 const AllNotifications = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // ** State
   const [value, setValue] = useState('1');
-  const [allNotifications,setAllNotifications]=useState('')
+  const [allNotifications, setAllNotifications] = useState('');
   // const [readNotifications,setreadnotifications]=useState('')
   // const [unreadNotifications,setUnreadNotifications]=useState('')
 
-
   // Fetch course categories on component mount or when dependencies change
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    setAllNotifications(getAllNotifications(data));
-  }, [dispatch, selectedBranchId]);
+    getAllNotificationDataByAuth(data);
+  }, [selectedBranchId]);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const getAllNotificationDataByAuth = async () => {
+    // setLoading(true)
+    const data = { branch_id: selectedBranchId };
+    const result = await getAllNotificationsByAuth(data);
+    if (result.success) {
+      setAllNotifications(result.data);
+      // setLoading(false)
+    }
+    // setLoading(false)
   };
-  console.log('allNotifications:',allNotifications)
+  console.log('allNotifications', allNotifications);
+
   return (
     <>
       <Card>
-        <CardHeader title="Notifications"/>
+        <CardHeader title="Notifications" />
         <CardContent sx={{ mt: 0, pt: 0 }}>
           <TabContext value={value}>
             <TabList onChange={handleChange} aria-label="nav tabs example">
               <Tab value="1" label="Read" />
               <Tab value="2" label="Unread" />
-              <Tab value="3" label="All"  allNotifications={allNotifications}
-              // setLoading={setLoading}
-           
-              selectedBranchId={selectedBranchId}/>
+              <Tab
+                value="3"
+                label="All"
+                allNotifications={allNotifications}
+                // setLoading={setLoading}
+
+                selectedBranchId={selectedBranchId}
+              />
             </TabList>
 
             <TabPanel value="1">
