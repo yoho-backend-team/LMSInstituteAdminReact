@@ -64,11 +64,10 @@ const StudentTicket = () => {
     // dispatch(fetchChatsContacts())
   }, [dispatch]);
 
-
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
-  console.log('selectChat:',selectChat);
+  console.log('selectChat:', selectChat);
   console.log('studentTickets', studentTickets);
 
   return (
@@ -94,6 +93,7 @@ const StudentTicket = () => {
               }}
             >
               <SidebarLeft
+                tickets={studentTickets}
                 store={store}
                 hidden={hidden}
                 mdAbove={mdAbove}
