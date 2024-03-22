@@ -48,7 +48,7 @@ const defaultValues = {
 };
 
 const SidebarAddUser = (props) => {
-  const { open, toggle, groups, setLoading } = props;
+  const { open, toggle, groups } = props;
   const branches = useSelector((state) => state.auth.branches);
   const [inputValue, setInputValue] = useState('');
   // const image = require('assets/images/avatar/1.png');

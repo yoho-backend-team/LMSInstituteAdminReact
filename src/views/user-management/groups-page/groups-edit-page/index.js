@@ -26,7 +26,6 @@ import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
 import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
 import { editGroupYupSchema } from 'features/user-management/groups-page/utills';
 
@@ -35,7 +34,6 @@ const GroupEditDialog = () => {
 
   const dispatch = useDispatch();
 
-  const groups = useSelector(selectGroups);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
@@ -48,10 +46,6 @@ const GroupEditDialog = () => {
   const navigate = useNavigate();
   const groupId = location?.state?.id;
   const groupName = location?.state?.name;
-
-  useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId }));
-  }, [dispatch, selectedBranchId]);
 
   // Default form values
   const defaultValues = {
@@ -85,21 +79,20 @@ const GroupEditDialog = () => {
           name: data.roleName,
           permission_ids: selectedCheckbox
         };
-  
+
         const result = await updateGroup(inputData);
-  
+
         if (result.success) {
           dispatch(getAllGroups({ branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
         } else {
           // Handle the error response here
-          const errorMessage = result.data.message; // Assuming the error message is under `message` property
-          toast.error(errorMessage);
+
+          toast.error(result.message.name[0]);
         }
       } catch (error) {
         console.log(error);
-        toast.error('Group Name Already Exists');
       }
     },
     [dispatch, selectedCheckbox, navigate, groupId, selectedBranchId]
