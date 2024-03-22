@@ -42,7 +42,7 @@ const UserList = () => {
       <Grid container spacing={3}>
         {/* User Header Section */}
         <Grid item xs={12}>
-          <UserHeaderSection users={users?.users} groups={groups} />
+          <UserHeaderSection users={users} groups={groups} />
         </Grid>
 
         {/* User Filter Card */}
