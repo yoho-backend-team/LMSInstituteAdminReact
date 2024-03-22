@@ -35,13 +35,13 @@ const statusColors = {
   inactive: 'secondary'
 };
 
-const UserViewAccount = () => {
+const UserViewAccount = ({staff}) => {
   // ** States
 
   // const [openPlans, setOpenPlans] = useState(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-
+console.log('nonteaching:',staff)
   if (data) {
     return (
       <Grid container spacing={4}>
