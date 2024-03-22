@@ -138,7 +138,7 @@ const UserBodySection = ({ users, setUserRefetch }) => {
       flex: 0.25,
       minWidth: 280,
       field: 'fullName',
-      headerName: 'User',
+      headerName: 'ADMIN USER',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -222,8 +222,8 @@ const UserBodySection = ({ users, setUserRefetch }) => {
       }
     },
     {
-      flex: 0.1,
-      minWidth: 100,
+      flex: 1.00,
+      minWidth: 150,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',

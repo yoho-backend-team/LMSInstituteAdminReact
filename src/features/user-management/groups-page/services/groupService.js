@@ -148,7 +148,7 @@ export const updateGroup = async (data) => {
     if (response.data.status) {
       return { success: true, message: 'Group updated successfully' };
     } else {
-      return { success: false, message: 'Failed to update group' };
+      return { success: false, message: response?.data?.message };
     }
   } catch (error) {
     console.error('Error in updateGroup:', error);
@@ -191,7 +191,7 @@ export const getAllPermissions = async () => {
     console.log(response);
 
     if (response.data) {
-      return { success: true, data: response?.data?.data, permissions: response.data?.permissions};
+      return { success: true, data: response?.data?.data, permissions: response.data?.permissions };
     } else {
       return { success: false, message: 'Failed to fetch permissions' };
     }
@@ -245,4 +245,3 @@ export const getAllActiveGroups = async () => {
     throw error;
   }
 };
-

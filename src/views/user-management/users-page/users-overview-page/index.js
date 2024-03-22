@@ -63,7 +63,7 @@ const UserList = () => {
           <Grid item xs={12}>
             <UserBodySection
               groups={groups}
-              users={users}
+              users={users?.users}
               setUserRefetch={setUserRefetch}
               selectedBranchId={selectedBranchId}
             />

@@ -25,15 +25,17 @@ import { getAllPermissions, getPermissionsByRole, updateGroup } from 'features/u
 import { useForm, Controller } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
 import { editGroupYupSchema } from 'features/user-management/groups-page/utills';
-
-
-
-
 
 const GroupEditDialog = () => {
   // State variables
+
+  const dispatch = useDispatch();
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
@@ -75,23 +77,26 @@ const GroupEditDialog = () => {
         const inputData = {
           id: groupId,
           name: data.roleName,
-          permission_id: selectedCheckbox
+          permission_ids: selectedCheckbox
         };
+
         const result = await updateGroup(inputData);
 
         if (result.success) {
+          dispatch(getAllGroups({ branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
         } else {
-          toast.error(result.message);
+          // Handle the error response here
+
+          toast.error(result.message.name[0]);
         }
       } catch (error) {
         console.log(error);
       }
     },
-    [groupId, navigate, selectedCheckbox]
+    [dispatch, selectedCheckbox, navigate, groupId, selectedBranchId]
   );
-
   // Fetch permissions and permission count on component mount
   useEffect(() => {
     getPermissions();
