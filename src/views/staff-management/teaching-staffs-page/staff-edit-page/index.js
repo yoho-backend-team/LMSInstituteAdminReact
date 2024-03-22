@@ -35,8 +35,13 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useLocation } from 'react-router';
 
 const StepperLinearWithValidation = () => {
+const location=useLocation();
+const staffData = location.state.staff
+console.log('staffData:',staffData)
+
   const steps = [
     {
       title: 'Personal Info',
@@ -305,10 +310,11 @@ const StepperLinearWithValidation = () => {
                   name="name"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.name}
                       label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
@@ -325,10 +331,11 @@ const StepperLinearWithValidation = () => {
                   name="email"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.name}
                       label="Email"
                       onChange={onChange}
                       placeholder="Carter"
@@ -351,6 +358,7 @@ const StepperLinearWithValidation = () => {
                       dateFormat={'dd/MM/yyyy'}
                       value={value}
                       selected={value}
+                      defaultValue={staffData.staff.dob}
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
@@ -369,12 +377,13 @@ const StepperLinearWithValidation = () => {
                   name="gender"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value,onChange } }) => (
                     <CustomTextField
                       select
                       fullWidth
                       value={value}
                       onChange={onChange}
+                      defaultValue={staffData.staff.gender}
                       label="Gender"
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
@@ -407,7 +416,7 @@ const StepperLinearWithValidation = () => {
                         <TextField
                           {...params}
                           label="Branch"
-                          value={value}
+                          // defaultValue={value}
                           onChange={onChange}
                           error={Boolean(personalErrors['branch'])}
                           aria-describedby="stepper-linear-personal-branch"
@@ -484,10 +493,11 @@ const StepperLinearWithValidation = () => {
                   name="designation"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,  onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.staff.designation}
                       label="designation"
                       onChange={onChange}
                       error={Boolean(personalErrors.designation)}
@@ -502,10 +512,11 @@ const StepperLinearWithValidation = () => {
                   name="education_qualification"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.staff.education_qualification}
                       label="Qualification"
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
@@ -520,10 +531,11 @@ const StepperLinearWithValidation = () => {
                   name="state"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.staff.state}
                       label="State"
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
@@ -538,10 +550,11 @@ const StepperLinearWithValidation = () => {
                   name="city"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.staff.city}
                       label="City"
                       onChange={onChange}
                       error={Boolean(personalErrors.city)}
@@ -556,10 +569,11 @@ const StepperLinearWithValidation = () => {
                   name="pin_code"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,  onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.staff.pin_code}
                       label="Pin Code"
                       type="number"
                       onChange={onChange}
@@ -576,10 +590,11 @@ const StepperLinearWithValidation = () => {
                   name="address_line_one"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,  onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData.staff.address_line_1}
                       label="Address Line One"
                       onChange={onChange}
                       placeholder="Carter"
@@ -599,6 +614,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData?.staff?.address_line_2}
                       label="Address Line Two"
                       onChange={onChange}
                       placeholder="Carter"
@@ -614,11 +630,12 @@ const StepperLinearWithValidation = () => {
                   name="phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       type="number"
                       value={value}
+                      defaultValue={staffData?.staff?.phone_number}
                       label="Phone Number"
                       onChange={onChange}
                       placeholder="Carter"
@@ -638,6 +655,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData?.staff?.alternate_number}
                       type="number"
                       label="Alt Phone Number"
                       onChange={onChange}
@@ -655,10 +673,11 @@ const StepperLinearWithValidation = () => {
                   name="username"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value,onChange } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
+                      defaultValue={staffData?.username}
                       label="Username"
                       onChange={onChange}
                       placeholder="carterLeonard"
