@@ -1,17 +1,13 @@
 // ** React Imports
 import MenuItem from '@mui/material/MenuItem';
-import { Fragment, forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 // ** MUI Imports
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,7 +18,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
 
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
@@ -31,13 +26,12 @@ import { addStudent } from 'features/student-management/students/services/studen
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import StepperWrapper from 'styles/mui/stepper';
 
 const StepperLinearWithValidation = () => {
   const steps = [
     {
-      title: 'Personal Info',
-      subtitle: 'Setup Informion'
+      title: 'Student Information',
+      subtitle: 'Add Student Details'
     }
   ];
 
@@ -46,20 +40,48 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    first_name: yup.string().required(),
-    last_name: yup.string().required(),
-    email: yup.string().email().required(),
-    phone: yup.number().required(),
-    alt_phone: yup.number().required(),
-    state: yup.string().required(),
-    city: yup.string().required(),
-    pin_code: yup.number().required(),
-    address_line_one: yup.string().required(),
-    address_line_two: yup.string().required(),
+    first_name: yup
+      .string()
+      .required('First Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'First Name should not contain special characters'),
+    last_name: yup
+      .string()
+      .required('Last Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Last Name should not contain special characters'),
+    email: yup.string().email().required('Email is required'),
+    phone: yup
+      .string()
+      .required('Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
+    alt_phone: yup
+      .string()
+      .required('Alternate Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
+    state: yup
+      .string()
+      .required('state is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters'),
+    city: yup
+      .string()
+      .required('city is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters'),
+    pin_code: yup
+      .string()
+      .required('PIN Code is required')
+      .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
+    qualification: yup
+      .string()
+      .required('Qualification is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Qualification should not contain special characters'),
+    address_line_one: yup.string().required('Address Line One is required'),
+    address_line_two: yup.string().required('Address Line Two is required'),
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
     branch: yup.string().required('Branch is required'),
-    username: yup.string().required(),
+    username: yup
+      .string()
+      .required('User Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
     course: yup.string().required()
   });
 
@@ -95,7 +117,7 @@ const StepperLinearWithValidation = () => {
   };
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
@@ -116,7 +138,6 @@ const StepperLinearWithValidation = () => {
   // ** Hooks
 
   const {
-    reset: personalReset,
     control: personalControl,
     setValue,
     handleSubmit: handlePersonalSubmit,
@@ -129,25 +150,6 @@ const StepperLinearWithValidation = () => {
   // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    personalReset({
-      state: '',
-      city: '',
-      pin_code: Number(''),
-      address_line_one: '',
-      address_line_two: '',
-      date_of_birth: '',
-      first_name: '',
-      last_name: '',
-      gender: '',
-      course: '',
-      email: '',
-      phone: Number(''),
-      alt_phone: Number('')
-    });
   };
 
   function convertDateFormat(input) {
@@ -207,6 +209,7 @@ const StepperLinearWithValidation = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
+
   console.log(logo);
 
   const onSubmit = async () => {
@@ -248,456 +251,390 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-  const getStepContent = (step) => {
-    switch (step) {
-      case 0:
-        return (
-          <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
-            <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[0].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={12}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Profile Picture
-                </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload here
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <ImgStyled src={logoSrc} alt="Profile Pic" />
-                  <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                      Upload your Logo
-                      <input
-                        hidden
-                        type="file"
-                        accept="image/png, image/jpeg"
-                        onChange={handleInputImageChange}
-                        id="account-settings-upload-image"
-                      />
-                    </ButtonStyled>
-                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
-                      Reset
-                    </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
-                  </div>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="first_name"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="First Name"
-                      onChange={onChange}
-                      placeholder="Leonard"
-                      error={Boolean(personalErrors['first_name'])}
-                      aria-describedby="stepper-linear-personal-institute_first_name"
-                      {...(personalErrors['first_name'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="last_name"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Last Name"
-                      onChange={onChange}
-                      error={Boolean(personalErrors.last_name)}
-                      aria-describedby="stepper-linear-personal-last_name-helper"
-                      {...(personalErrors.last_name && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="email"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Email"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['email'])}
-                      aria-describedby="stepper-linear-personal-official_email"
-                      {...(personalErrors['email'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="date_of_birth"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      id="issue-date"
-                      dateFormat={'dd/MM/yyyy'}
-                      value={value}
-                      selected={value}
-                      customInput={
-                        <CustomInput
-                          label="Date Of Birth"
-                          error={Boolean(personalErrors['date_of_birth'])}
-                          aria-describedby="stepper-linear-personal-date_of_birth"
-                          {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
-                        />
-                      }
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="gender"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      select
-                      fullWidth
-                      value={value}
-                      onChange={onChange}
-                      label="Gender"
-                      placeholder="Select Gender"
-                      error={Boolean(personalErrors['gender'])}
-                      aria-describedby="stepper-linear-personal-gender"
-                      {...(personalErrors['gender'] && { helperText: 'This field is required' })}
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                      <MenuItem value="other">Other</MenuItem>
-                    </CustomTextField>
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="branch"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={activeBranches}
-                      getOptionLabel={(option) => option.branch_name}
-                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
-                      onChange={(event, newValue) => {
-                        setValue('branch', newValue ? newValue.branch_id : '');
-                        getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Branch"
-                          error={Boolean(personalErrors['branch'])}
-                          helperText={personalErrors['branch'] ? 'This field is required' : ''}
-                          id="custom-select"
-                          aria-describedby="stepper-linear-personal-branch"
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="course"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={activeCourse}
-                      getOptionLabel={(option) => option.course_name}
-                      value={activeCourse.find((course) => course.course_id === value) || null}
-                      onChange={(event, newValue) => {
-                        onChange(newValue ? newValue.course_id : '');
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Course"
-                          error={Boolean(personalErrors['course'])}
-                          helperText={personalErrors['course'] ? 'This field is required' : ''}
-                          id="custom-select"
-                          aria-describedby="stepper-linear-personal-course"
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="education_qualification"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Qualification"
-                      onChange={onChange}
-                      error={Boolean(personalErrors.state)}
-                      aria-describedby="stepper-linear-personal-qualification-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="state"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="State"
-                      onChange={onChange}
-                      error={Boolean(personalErrors.state)}
-                      aria-describedby="stepper-linear-personal-state-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="city"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="City"
-                      onChange={onChange}
-                      error={Boolean(personalErrors.city)}
-                      aria-describedby="stepper-linear-personal-city-helper"
-                      {...(personalErrors.city && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="pin_code"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Pin Code"
-                      type="number"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['pin_code'])}
-                      aria-describedby="stepper-linear-personal-pin_code"
-                      {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="address_line_one"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Address Line One"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['address_line_one'])}
-                      aria-describedby="stepper-linear-personal-address_line_one"
-                      {...(personalErrors['address_line_one'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="address_line_two"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Address Line Two"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['address_line_two'])}
-                      aria-describedby="stepper-linear-personal-address_line_two"
-                      {...(personalErrors['address_line_two'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="phone"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      type="number"
-                      value={value}
-                      label="Phone Number"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['phone'])}
-                      aria-describedby="stepper-linear-personal-phone"
-                      {...(personalErrors['phone'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="alt_phone"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      type="number"
-                      label="Alt Phone Number"
-                      onChange={onChange}
-                      placeholder="Carter"
-                      error={Boolean(personalErrors['alt_phone'])}
-                      aria-describedby="stepper-linear-personal-alt_phone"
-                      {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="username"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Username"
-                      onChange={onChange}
-                      placeholder="carterLeonard"
-                      error={Boolean(personalErrors['username'])}
-                      aria-describedby="stepper-linear-account-username"
-                      {...(personalErrors['username'] && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  Next
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  const renderContent = () => {
-    if (activeStep === steps.length) {
-      return (
-        <Fragment>
-          <Typography>All steps are completed!</Typography>
-          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="contained" onClick={handleReset}>
-              Reset
-            </Button>
-          </Box>
-        </Fragment>
-      );
-    } else {
-      return getStepContent(activeStep);
-    }
-  };
-
   return (
     <Card>
       <CardContent>
-        <StepperWrapper>
-          <Stepper activeStep={activeStep}>
-            {steps.map((step, index) => {
-              const labelProps = {};
-              if (index === activeStep) {
-                labelProps.error = false;
-                if ((personalErrors['date_of_birth'] || personalErrors['first-name']) && activeStep === 0) {
-                  labelProps.error = true;
-                } else {
-                  labelProps.error = false;
-                }
-              }
+        <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+          <Grid container spacing={5}>
+            <Grid item xs={12}>
+              <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                {steps[0].title}
+              </Typography>
+              <Typography variant="caption" component="p">
+                {steps[0].subtitle}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <ImgStyled src={logoSrc} alt="Profile Pic" />
+                <div>
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+                    Upload your Logo
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputImageChange}
+                      id="account-settings-upload-image"
+                    />
+                  </ButtonStyled>
+                  <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
+                    Reset
+                  </ResetButtonStyled>
+                  <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                </div>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="first_name"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="First Name"
+                    onChange={onChange}
+                    placeholder="Leonard"
+                    error={Boolean(personalErrors['first_name'])}
+                    aria-describedby="stepper-linear-personal-institute_first_name"
+                    helperText={personalErrors.first_name?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="last_name"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Last Name"
+                    onChange={onChange}
+                    error={Boolean(personalErrors.last_name)}
+                    aria-describedby="stepper-linear-personal-last_name-helper"
+                    helperText={personalErrors.last_name?.message}
+                  />
+                )}
+              />
+            </Grid>
 
-              return (
-                <Step key={index}>
-                  <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}>
-                    <div className="step-label">
-                      <Typography className="step-number">{`0${index + 1}`}</Typography>
-                      <div>
-                        <Typography className="step-title">{step.title}</Typography>
-                        <Typography className="step-subtitle">{step.subtitle}</Typography>
-                      </div>
-                    </div>
-                  </StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
-        </StepperWrapper>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="email"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Email"
+                    onChange={onChange}
+                    placeholder="Carter"
+                    error={Boolean(personalErrors['email'])}
+                    aria-describedby="stepper-linear-personal-official_email"
+                    helperText={personalErrors.email?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="date_of_birth"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <DatePicker
+                    id="issue-date"
+                    dateFormat={'dd/MM/yyyy'}
+                    value={value}
+                    selected={value}
+                    customInput={
+                      <CustomInput
+                        label="Date Of Birth"
+                        error={Boolean(personalErrors['date_of_birth'])}
+                        aria-describedby="stepper-linear-personal-date_of_birth"
+                        {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
+                      />
+                    }
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="gender"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    select
+                    fullWidth
+                    value={value}
+                    onChange={onChange}
+                    label="Gender"
+                    placeholder="Select Gender"
+                    error={Boolean(personalErrors['gender'])}
+                    aria-describedby="stepper-linear-personal-gender"
+                    helperText={personalErrors.gender?.message}
+                  >
+                    <MenuItem value="male">Male</MenuItem>
+                    <MenuItem value="female">Female</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </CustomTextField>
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="branch"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value } }) => (
+                  <Autocomplete
+                    fullWidth
+                    options={activeBranches}
+                    getOptionLabel={(option) => option.branch_name}
+                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                    onChange={(event, newValue) => {
+                      setValue('branch', newValue ? newValue.branch_id : '');
+                      getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Branch"
+                        error={Boolean(personalErrors['branch'])}
+                        helperText={personalErrors.branch?.message}
+                        id="custom-select"
+                        aria-describedby="stepper-linear-personal-branch"
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="course"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    fullWidth
+                    options={activeCourse}
+                    getOptionLabel={(option) => option.course_name}
+                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    onChange={(event, newValue) => {
+                      onChange(newValue ? newValue.course_id : '');
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Course"
+                        error={Boolean(personalErrors['course'])}
+                        helperText={personalErrors.course?.message}
+                        id="custom-select"
+                        aria-describedby="stepper-linear-personal-course"
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="education_qualification"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Qualification"
+                    onChange={onChange}
+                    error={Boolean(personalErrors.state)}
+                    aria-describedby="stepper-linear-personal-qualification-helper"
+                    helperText={personalErrors.qualification?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="state"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="State"
+                    onChange={onChange}
+                    error={Boolean(personalErrors.state)}
+                    aria-describedby="stepper-linear-personal-state-helper"
+                    helperText={personalErrors.state?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="city"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="City"
+                    onChange={onChange}
+                    error={Boolean(personalErrors.city)}
+                    aria-describedby="stepper-linear-personal-city-helper"
+                    helperText={personalErrors.city?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="pin_code"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Pin Code"
+                    type="number"
+                    onChange={onChange}
+                    placeholder="Carter"
+                    error={Boolean(personalErrors['pin_code'])}
+                    aria-describedby="stepper-linear-personal-pin_code"
+                    helperText={personalErrors.pin_code?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="address_line_one"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Address Line One"
+                    onChange={onChange}
+                    placeholder="Carter"
+                    error={Boolean(personalErrors['address_line_one'])}
+                    aria-describedby="stepper-linear-personal-address_line_one"
+                    helperText={personalErrors.address_line_one?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="address_line_two"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Address Line Two"
+                    onChange={onChange}
+                    placeholder="Carter"
+                    error={Boolean(personalErrors['address_line_two'])}
+                    aria-describedby="stepper-linear-personal-address_line_two"
+                    helperText={personalErrors.address_line_two?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="phone"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    type="number"
+                    value={value}
+                    label="Phone Number"
+                    onChange={onChange}
+                    placeholder="Carter"
+                    error={Boolean(personalErrors['phone'])}
+                    aria-describedby="stepper-linear-personal-phone"
+                    helperText={personalErrors.phone?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="alt_phone"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    type="number"
+                    label="Alt Phone Number"
+                    onChange={onChange}
+                    placeholder="Carter"
+                    error={Boolean(personalErrors['alt_phone'])}
+                    aria-describedby="stepper-linear-personal-alt_phone"
+                    helperText={personalErrors.alt_phone?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="username"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <CustomTextField
+                    fullWidth
+                    value={value}
+                    label="Username"
+                    onChange={onChange}
+                    placeholder="carterLeonard"
+                    error={Boolean(personalErrors['username'])}
+                    aria-describedby="stepper-linear-account-username"
+                    helperText={personalErrors.username?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button variant="tonal" color="secondary" onClick={handleBack}>
+                Cancel
+              </Button>
+
+              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
       </CardContent>
-
-      <Divider sx={{ m: '0 !important' }} />
-
-      <CardContent>{renderContent()}</CardContent>
     </Card>
   );
 };

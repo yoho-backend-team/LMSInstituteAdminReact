@@ -111,3 +111,24 @@ console.log('updatenotes:',response)
     throw error;
   }
 };
+
+export const updateCourseNotesStatus = async (data) => {
+  try {
+    const response = await axios.post(`${COURSE_NOTE_API_END_POINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log('Notesresponse:', response);
+    if (response.data.status) {
+      console.log(response);
+      return { success: true, message: 'CourseNotes status updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update CourseNotes status' };
+    }
+  } catch (error) {
+    console.error('Error in updateCourseNotes:', error);
+    throw error;
+  }
+};

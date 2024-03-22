@@ -34,6 +34,7 @@ const OfflineClassCard = () => {
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
 
   console.log(offlineClasses);
+  
   useEffect(() => {
     const data = {
       type: 'offline',
@@ -157,7 +158,8 @@ const OfflineClassCard = () => {
                           menuItemProps: {
                             onClick: () => {
                               handleEdit(card);
-                              
+                            // state: { id: card?.class_id }
+
                             }
                           }
                         },

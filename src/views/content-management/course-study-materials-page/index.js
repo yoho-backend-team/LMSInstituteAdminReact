@@ -335,7 +335,7 @@ const StudyMaterials = () => {
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
           setOpen={setStudyMaterialDeletemodalOpen}
-          description="Are you sure you want to delete this item?"
+          description="Are you sure you want to delete this StudyMaterials?"
           title="Delete"
           handleSubmit={handleContentDelete}
         />

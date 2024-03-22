@@ -40,16 +40,6 @@ const CourseModuleAddDrawer = (props) => {
     setActiveCourse(result.data.data);
   };
 
-  const showErrors = (field, valueLen, min) => {
-    if (valueLen === 0) {
-      return `${field} field is required`;
-    } else if (valueLen > 0 && valueLen < min) {
-      return `${field} must be at least ${min} characters`;
-    } else {
-      return '';
-    }
-  };
-
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -58,14 +48,24 @@ const CourseModuleAddDrawer = (props) => {
   }));
 
   const schema = yup.object().shape({
-    description: yup.string().required(),
+    description: yup
+      .string()
+      .required('Description is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
     title: yup
       .string()
-      .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-      .required(),
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     branch: yup.object().required(),
     course: yup.object().required(),
-    video_url: yup.string().required()
+    video_url: yup
+      .string()
+      .required('Video URL is required')
+      .matches(
+        // Regular expression for validating URLs (supports common video hosting platforms)
+        /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|playlist\?list=)|youtu\.be\/|vimeo\.com\/|dai\.ly\/|dailymotion\.com\/video\/|twitch\.tv\/|bitchute\.com\/)/,
+        'Invalid video URL'
+      )
   });
 
   const defaultValues = {
@@ -221,7 +221,7 @@ const CourseModuleAddDrawer = (props) => {
                   onChange={onChange}
                   placeholder="John Doe"
                   error={Boolean(errors.title)}
-                  {...(errors.title && { helperText: errors.title.message })}
+                  helperText={errors.title?.message}
                 />
               )}
             />
@@ -249,7 +249,7 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="video_url"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: 'Video URL is required' }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -257,9 +257,9 @@ const CourseModuleAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Video URL"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="e.g., https://www.youtube.com/watch?v=example"
                   error={Boolean(errors.video_url)}
-                  {...(errors.video_url && { helperText: errors.video_url.message })}
+                  helperText={errors.video_url ? errors.video_url.message : ''}
                 />
               )}
             />
