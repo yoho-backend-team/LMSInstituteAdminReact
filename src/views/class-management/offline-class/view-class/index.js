@@ -41,15 +41,12 @@ const ViewOfflineClass = () => {
 
   const getOfflineClassData = async (data) => {
     try {
-      // setLoading(false);
       const result = await getOfflineClassDetails(data);
       if (result.success) {
         console.log('Offline Class:', result.data);
-        setOfflineClassData(result.data);
-        // setLoading(false);
+        setOfflineClassData(result.data); // Assuming result.data is an array
       } else {
         console.log(result.message);
-        // setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -91,7 +88,7 @@ const ViewOfflineClass = () => {
       field: 'student_id',
       renderCell: (params) => (
         <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {params?.row?.batch_class?.batch?.institute_batch_student?.student?.student?.student_id}
+          {params?.row?.studentattendance?.student?.student?.student?.student_id}
         </Typography>
       )
     },
@@ -105,8 +102,8 @@ const ViewOfflineClass = () => {
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {params?.row?.batch_class?.batch?.institute_batch_student?.student?.student?.first_name}{' '}
-              {params?.row?.batch_class?.batch?.institute_batch_student?.student?.student?.last_name}
+              {params?.row?.studentattendance?.student?.student?.first_name}
+              {params?.row?.studentattendance?.student?.student?.last_name}
             </Typography>
           </Box>
         );
@@ -145,11 +142,13 @@ const ViewOfflineClass = () => {
     }
   ];
 
+  const offlineClassArray = [offlineClassData];
+
   return (
     <Box>
       <Grid container>
         {/* header */}
-        {Object.values(offlineClassData).map((card, index) => (
+        {offlineClassArray?.map((card, index) => (
           <Grid item xs={12} key={index}>
             <Card>
               <CardHeader title={card?.class_name} />

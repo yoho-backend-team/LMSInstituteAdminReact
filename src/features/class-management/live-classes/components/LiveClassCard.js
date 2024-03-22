@@ -27,7 +27,7 @@ const LiveClassCard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedBranchDeleteId, setSelectedBranchDeleteId] = useState(null);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedClass,setSelectedClass]=useState('')
+  const [selectedClass, setSelectedClass] = useState('');
 
   const dispatch = useDispatch();
   console.log(liveClasses);
@@ -65,7 +65,7 @@ const LiveClassCard = () => {
 
   const handleCopyLink = (index) => {
     console.log(`Link copied for card at index ${index}`);
-    toast.success('Link copied to clipboard')
+    toast.success('Link copied to clipboard');
   };
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
@@ -85,7 +85,7 @@ const LiveClassCard = () => {
     // Return the formatted time string
     return hours + ':' + minutes + ' ' + meridiem;
   }
-  console.log(selectedClass,'selectedClassxx')
+  console.log(selectedClass, 'selectedClassxx');
 
   // function calculateDuration(startTimestamp, endTimestamp) {
   //   // Convert the timestamps to Date objects
@@ -148,7 +148,6 @@ const LiveClassCard = () => {
                             onClick: () => {
                               setSelectedClass(card);
                               handleEdit();
-
                             }
                           }
                         },
@@ -166,13 +165,19 @@ const LiveClassCard = () => {
                 </Grid>
                 <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
                   <AvatarGroup className="pull-up" max={4}>
-                    {card?.batch_class?.batch_student?.map((student, studentIndex) => (
-                      <Avatar key={studentIndex} src={student} alt={student?.first_name} />
-                    ))}
+                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                      return (
+                        <Avatar
+                          key={studentIndex}
+                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
+                          alt={student?.student?.first_name}
+                        />
+                      );
+                    })}
                   </AvatarGroup>
                 </Grid>
                 <Grid item justifyContent="center" display="flex">
-                  <Typography>8+ Students on this class</Typography>
+                  <Typography>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
                 </Grid>
                 <Grid item justifyContent="center" display="flex" mb={3}>
                   <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
