@@ -52,7 +52,7 @@ const StaffTicketsPage = () => {
   console.log(studentClosedTickets);
 
   return (
-    <MainCard title="Staff Tickets">
+    <MainCard title="Staff Tickets" sx={{ minHeight: '100vh' }}>
       <TabContext value={value}>
         <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
           <Tab value="open" label="Opened Tickets" />
