@@ -154,7 +154,7 @@ export const TeachingStaffById = async (data) => {
       },
       params: data
     });
-    console.log(response);
+    console.log('teachingStaff:',response);
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response.data.data };

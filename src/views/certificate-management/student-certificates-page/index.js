@@ -20,8 +20,8 @@ import StudentCertificateTableHeader from 'features/certificate-management/stude
 import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
 import { selectStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
-import { setStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSlice';
-import { searchStudentCertificates } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
+// import { setStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSlice';
+// import { searchStudentCertificates } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateStudentCertificateStatus } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import { deleteStudentCertificate } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
@@ -44,6 +44,7 @@ const userStatusObj = {
 
 const StudenrCertificate = () => {
   const [value, setValue] = useState('');
+  console.log(setValue)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);

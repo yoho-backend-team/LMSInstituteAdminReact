@@ -14,6 +14,7 @@ import TeacherAttendance from '../../../../features/staff-management/non-teachin
 import UserViewAccount from '../../../../features/staff-management/non-teaching-staffs/components/StaffViewAccount';
 import { useLocation } from 'react-router';
 import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
@@ -59,31 +60,27 @@ const UserViewRight = ({ tab }) => {
       setActiveTab(tab);
     }
   }, [tab]);
-  // const [loading, setLoading] = useState(false);
-  const [staff, setStaff] = useState({});
+
+  const [loading, setLoading] = useState(false);
+  const [staff, setStaff] = useState('');
   const location = useLocation();
   const staffID = location.state.id;
-console.log('staffID:',staffID)
 
   useEffect(() => {
     getStaffData(staffID);
-  
   }, [staffID]);
 
   const getStaffData = async (staffID) => {
-    setLoading(true)
+    setLoading(true);
     const data = { id: staffID };
     const result = await TeachingStaffById(data);
     if (result.success) {
       setStaff(result.data);
-      // setLoading(false)
+      setLoading(false);
     }
-    // setLoading(false)
+    setLoading(false);
   };
-  console.log('nonteachingviewbyid:',staff);
-
-
-
+  console.log('staff:', staff);
 
   return (
     <TabContext value={activeTab}>
@@ -98,14 +95,18 @@ console.log('staffID:',staffID)
         <Tab value="attendance" label="Attendance" icon={<Icon fontSize="1.125rem" icon="tabler:calendar-plus" />} />
       </TabList>
       <Box sx={{ mt: 4 }}>
-        <>
-          <TabPanel sx={{ p: 0 }} value="account" staff={staff}>
-            <UserViewAccount />
-          </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="attendance">
-            <TeacherAttendance />
-          </TabPanel>
-        </>
+        {loading ? (
+          <StaffManagementView />
+        ) : (
+          <>
+            <TabPanel sx={{ p: 0 }} value="account">
+              <UserViewAccount staff={staff} />
+            </TabPanel>
+            <TabPanel sx={{ p: 0 }} value="attendance">
+              <TeacherAttendance />
+            </TabPanel>
+          </>
+        )}
       </Box>
     </TabContext>
   );

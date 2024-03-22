@@ -29,7 +29,8 @@ const UserView = () => {
     }
     setLoading(false)
   };
-  console.log('staff:',staff);
+  console.log('nonteaching:',staff);
+  // console.log('staffid:',staffID);
   return (
     <>
       {loading ? (

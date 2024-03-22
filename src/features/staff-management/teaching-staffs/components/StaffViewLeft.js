@@ -20,6 +20,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }));
 
 const UserViewLeft = ({ staff }) => {
+ 
   return (
     <Card>
       <CardMedia
