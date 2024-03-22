@@ -4,9 +4,9 @@ import { useTheme } from '@mui/material/styles';
 import AuthFooter from 'components/cards/AuthFooter';
 import Logo from 'components/logo';
 import { useState } from 'react';
-import AuthCardWrapper from '../../../features/authentication/components/AuthCardWrapper';
-import AuthWrapper1 from '../../../features/authentication/components/AuthWrapper1';
-import AuthLogin from '../../../features/authentication/components/AuthLogin';
+import AuthCardWrapper from 'features/authentication/components/AuthCardWrapper';
+import AuthWrapper1 from 'features/authentication/components/AuthWrapper1';
+import AuthLogin from 'features/authentication/components/AuthLogin';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MuiCard from '@mui/material/Card';
@@ -18,7 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import CleaveWrapper from 'styles/libs/react-cleave';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 import 'cleave.js/dist/addons/cleave-phone.us';
-import AuthIllustrationV1Wrapper from '../../../features/authentication/components/AuthIllustrationV1Wrapper';
+import AuthIllustrationV1Wrapper from 'features/authentication/components/AuthIllustrationV1Wrapper';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({
