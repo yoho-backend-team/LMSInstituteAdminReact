@@ -35,6 +35,11 @@ const ViewOfflineClass = () => {
     getOfflineClassData(data);
   }, [dispatch, offlineClassId]);
 
+  const userStatusObj = {
+    1: 'success',
+    0: 'error'
+  };
+
   const getOfflineClassData = async (data) => {
     try {
       // setLoading(false);
