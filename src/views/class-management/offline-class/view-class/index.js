@@ -13,13 +13,12 @@ import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 // ** Custom Components
+import { TextField } from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
 import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
-import MenuItem from '@mui/material/MenuItem';
-import { TextField } from '@mui/material';
-
 
 const ViewOfflineClass = () => {
   const theme = useTheme();
@@ -61,14 +60,14 @@ const ViewOfflineClass = () => {
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
 
-  const [statusValue,setStatusValue]=useState({})
+  const [statusValue, setStatusValue] = useState({});
 
   const handleStatusValue = (event, users) => {
     setStatusValue(users);
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered',statusValue);
+    console.log('entered', statusValue);
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
@@ -89,10 +88,10 @@ const ViewOfflineClass = () => {
       flex: 0.2,
       minWidth: 120,
       headerName: 'Student ID',
-      field: 'start_date',
+      field: 'student_id',
       renderCell: (params) => (
         <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {params?.row?.batch_class?.batch?.institute_batch_student?.student?.id}
+          {params?.row?.batch_class?.batch?.institute_batch_student?.student?.student?.student_id}
         </Typography>
       )
     },
@@ -106,8 +105,8 @@ const ViewOfflineClass = () => {
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {params?.row?.batch_class?.batch?.institute_batch_student?.student?.first_name}{' '}
-              {params?.row?.batch_class?.batch?.institute_batch_student?.student?.last_name}
+              {params?.row?.batch_class?.batch?.institute_batch_student?.student?.student?.first_name}{' '}
+              {params?.row?.batch_class?.batch?.institute_batch_student?.student?.student?.last_name}
             </Typography>
           </Box>
         );
@@ -143,14 +142,14 @@ const ViewOfflineClass = () => {
           </div>
         );
       }
-    },
+    }
   ];
 
   return (
     <Box>
       <Grid container>
         {/* header */}
-        {offlineClassData?.map((card, index) => (
+        {Object.values(offlineClassData).map((card, index) => (
           <Grid item xs={12} key={index}>
             <Card>
               <CardHeader title={card?.class_name} />
@@ -212,30 +211,13 @@ const ViewOfflineClass = () => {
                     <Typography variant="h5" sx={{ color: 'grey.500' }}>
                       Instructor
                     </Typography>
-                    {offlineClassData.class_staff?.map((card, index) => (
-                      <Box key={index} sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                        <Box>
-                          <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Tooltip title="Olivia Sparks">
-                              <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
-                            </Tooltip>
-                            <Tooltip title="Howard Lloyd">
-                              <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
-                            </Tooltip>
-                            <Tooltip title="Hallie Richards">
-                              <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
-                            </Tooltip>
-                            <Tooltip title="Alice Cobb">
-                              <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
-                            </Tooltip>
-                          </AvatarGroup>
-                        </Box>
-
-                        <Box>
-                          <Typography variant="h4">Jerome Bell</Typography>
-                        </Box>
-                      </Box>
-                    ))}
+                    {/* <Box sx={{ mt: 1 }}>
+                      {card?.class_staff.map((staff, index) => (
+                        <Typography key={index} variant="h4">
+                          {staff?.staff?.staff_name}
+                        </Typography>
+                      ))}
+                    </Box> */}
                   </Grid>
                   <Grid item>
                     <Typography variant="h5" sx={{ color: 'grey.500' }}>
@@ -283,6 +265,8 @@ const ViewOfflineClass = () => {
         <Grid item xs={12} mt={3}>
           <DataGrid
             autoHeight
+            rowHeight={80}
+            disableRowSelectionOnClick
             rows={offlineClassData}
             columns={columns}
             pageSizeOptions={[7, 10, 25, 50]}

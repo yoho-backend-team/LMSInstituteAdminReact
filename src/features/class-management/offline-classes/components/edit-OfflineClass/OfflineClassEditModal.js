@@ -1,3 +1,4 @@
+import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -39,45 +40,8 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
-
-const schema = yup.object().shape({
-  class_name: yup
-    .string()
-    .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
-    .required('Class Name field is required'),
-  class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
-  classDate: yup.date().nullable().required('Class Date field is required'),
-  startTime: yup.date().nullable().required('Start Time field is required'),
-  endTime: yup.date().nullable().required('End Time field is required'),
-  instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-  coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
-});
-
-const defaultValues = {
-  class_name: '',
-  classDate: new Date(),
-  startTime: null,
-  endTime: null,
-  instructor: '',
-  coordinator: ''
-};
-
 const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   console.log(offlineClasses);
-
-  const [personName, setPersonName] = useState([]);
-  const [dates, setDates] = useState([]);
-  const [startDateRange, setStartDateRange] = useState(null);
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -90,32 +54,31 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     setEndTime(time);
   };
 
-  const handleOnChangeRange = (dates) => {
-    const [start] = dates;
-    if (start !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-  };
-
-  const handleChange = (event) => {
-    setPersonName(event.target.value);
-  };
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
-  const [selectedInstructors, setSelectedInstructors] = useState([]);
-  const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-  const instructors = [
-    { instructor_id: '1', instructor_name: 'Instructor 1' },
-    { instructor_id: '2', instructor_name: 'Instructor 2' },
-    { instructor_id: '3', instructor_name: 'Instructor 3' }
-  ];
-  const coordinates = [
-    { coordinate_id: '1', coordinate_name: 'Coordinate 1' },
-    { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
-    { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
-  ];
+  const schema = yup.object().shape({
+    class_name: yup
+      .string()
+      .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
+      .required('Class Name field is required'),
+    class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
+    classDate: yup.date().nullable().required('Class Date field is required'),
+    startTime: yup.date().nullable().required('Start Time field is required'),
+    endTime: yup.date().nullable().required('End Time field is required'),
+    instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
+    coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+  });
+
+  const defaultValues = {
+    class_name: '',
+    classDate: new Date(),
+    startTime: null,
+    endTime: null,
+    instructor: [],
+    coordinator: []
+  };
 
   const {
     reset,
@@ -129,20 +92,46 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     resolver: yupResolver(schema)
   });
 
-  // Set form values when selectedBranch changes
+  const [selectedInstructors, setSelectedInstructors] = useState([]);
+  const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+
+  const showErrors = (field, valueLen, min) => {
+    if (valueLen === 0) {
+      return `${field} field is required`;
+    } else if (valueLen > 0 && valueLen < min) {
+      return `${field} must be at least ${min} characters`;
+    } else {
+      return '';
+    }
+  };
+
   useEffect(() => {
     if (offlineClasses) {
-      setValue('class_name', offlineClasses?.class_name || '');
-      setValue('class_id', offlineClasses?.class_id || '');
-      setValue('classDate', offlineClasses?.classDate || new Date());
+      setValue('class_name', offlineClasses.class_name || ''); // Set class name
+      setValue('class_id', offlineClasses.class_id || ''); // Set class ID
+      setValue('classDate', new Date(offlineClasses.class_date) || new Date()); // Set class date
       setValue('startTime', offlineClasses?.startTime || null);
-      setValue('endTime', offlineClasses?.endTime || null);
-      setValue('instructor', offlineClasses?.instructor || []);
-      setValue('coordinator', offlineClasses?.coordinator || []);
+      setValue('endTime', offlineClasses?.endTime || null); // Set end time
+      setValue('instructor', offlineClasses.instructor || []); // Set instructors
+      setValue('coordinator', offlineClasses.coordinator || []); // Set coordinators
     }
   }, [offlineClasses, setValue]);
 
   console.log('selected ', offlineClasses);
+
+  useEffect(() => {
+    if (offlineClasses && offlineClasses.instructor) {
+      setSelectedInstructors(offlineClasses.instructor);
+      setValue('instructor', offlineClasses.instructor); // Set default value for instructor field
+    }
+  }, [offlineClasses, setValue]);
+
+  useEffect(() => {
+    if (offlineClasses && offlineClasses.coordinator) {
+      setSelectedCoordinates(offlineClasses.coordinator);
+      setValue('coordinator', offlineClasses.coordinator); // Set default value for coordinator field
+    }
+  }, [offlineClasses, setValue]);
 
   const handleClose = () => {
     handleEditClose();
@@ -156,6 +145,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
+
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
@@ -207,10 +197,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     bodyFormData.append('batch_id', data.batch_id);
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time);
-
-    // type: 'offline',
-    // status: 'pending'
+    bodyFormData.append('end_time', data.end_time); // Fixed field name
 
     console.log(data);
 
@@ -230,7 +217,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
       // toast.error(result.message);
     }
   };
-
   return (
     <Dialog
       open={open}
