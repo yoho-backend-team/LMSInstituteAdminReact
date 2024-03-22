@@ -12,7 +12,7 @@ export const getAllCourses = async (data) => {
       },
       params: data
     });
-    console.log('getAllCourses',response);
+    console.log('getAllCourses', response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -87,7 +87,7 @@ export const getAllActiveCourses = async (data) => {
       },
       params: data
     });
-    console.log('allactiveCourses:',response);
+    console.log('allactiveCourses:', response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -168,16 +168,16 @@ export const getStudentByCourse = async (courseId) => {
     throw error;
   }
 };
-export const deleteCourse = async (courseId) => {
+export const deleteCourse = async (data) => {
   try {
     const response = await axios.delete(`${COURSE_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: courseId }
+      params: data
     });
-
+    console.log(data);
     if (response.data.status) {
       return { success: true, message: 'Course deleted successfully' };
     } else {

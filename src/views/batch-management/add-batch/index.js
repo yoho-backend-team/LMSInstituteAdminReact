@@ -24,10 +24,14 @@ import { getAllActiveCourses } from 'features/course-management/courses-page/ser
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
 import Autocomplete from '@mui/material/Autocomplete';
+import { useNavigate } from 'react-router';
+
 // import { top100Films } from '_mock';
 
 const AddBatchPage = () => {
   // ** States
+  const navigate = useNavigate();
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -51,7 +55,10 @@ const AddBatchPage = () => {
   };
 
   const validationSchema = yup.object().shape({
-    batchName: yup.string().required('Batch Name is required'),
+    batchName: yup
+    .string()
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
+    .required('Batch Name is required'),
     startDate: yup.date().required('Start Date is required'),
     endDate: yup.date().required('End Date is required'),
     branch: yup.string().required('Branch is required'),
@@ -128,9 +135,9 @@ const AddBatchPage = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  const handleClose = () => {
-    reset();
-  };
+  // const handleClose = () => {
+  //   reset();
+  // };
 
   const handleStudentsChange = (event) => {
     setValue('students', event.target.value);
@@ -219,7 +226,7 @@ const AddBatchPage = () => {
                           placeholder="Leonard"
                           error={Boolean(errors['batchName'])}
                           aria-describedby="stepper-linear-personal-institute_batchName"
-                          {...(errors['batchName'] && { helperText: 'This field is required' })}
+                          helperText={errors.batchName?.message}
                         />
                       )}
                     />
@@ -365,7 +372,7 @@ const AddBatchPage = () => {
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                     Update
                   </Button>
-                  <Button variant="tonal" color="error" onClick={handleClose}>
+                  <Button variant="tonal" color="error" onClick={() => navigate(-1)}>
                     Cancel
                   </Button>
                 </Box>

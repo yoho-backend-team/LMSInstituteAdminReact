@@ -29,19 +29,17 @@ const data = {
   avatar: '/images/avatars/14.png'
 };
 
-const statusColors = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
-};
+// const statusColors = {
+//   active: 'success',
+//   pending: 'warning',
+//   inactive: 'secondary'
+// };
 
-const UserViewAccount = () => {
+const UserViewAccount = ({ staff }) => {
   // ** States
-
   // const [openPlans, setOpenPlans] = useState(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-
   if (data) {
     return (
       <Grid container spacing={4}>
@@ -54,11 +52,11 @@ const UserViewAccount = () => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>@{data.username}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>@{staff?.users?.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.email}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
@@ -66,8 +64,8 @@ const UserViewAccount = () => {
                     rounded
                     skin="light"
                     size="small"
-                    label={data.status}
-                    color={statusColors[data.status]}
+                    label={staff.is_active === '1' ? 'Active' : 'inactive'}
+                    color={staff.is_active === '1' ? 'success' : 'error'}
                     sx={{
                       textTransform: 'capitalize'
                     }}
@@ -75,23 +73,31 @@ const UserViewAccount = () => {
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{data.role}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff.designation}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Tax ID:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>Tax-8894</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Phone:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+1 {staff.phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+1 {data.contact}</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Phone:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+1 {staff.alternate_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Language:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>English</Typography>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>gender:</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff.gender}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
+                <Box sx={{ mb: 3 }}>
+                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
+                  <Box sx={{display:'flex'}} gap={1}>
+                    <Typography sx={{ color: 'text.secondary' }}>{staff.address_line_1},</Typography>
+                    <Typography sx={{ color: 'text.secondary' }}> {staff.address_line_2}</Typography>
+                  </Box>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff.city}</Typography>
+
+                  <Typography sx={{ color: 'text.secondary' }}>
+                    {staff.state}-{staff.pin_code}
+                  </Typography>
                 </Box>
               </Box>
             </CardContent>

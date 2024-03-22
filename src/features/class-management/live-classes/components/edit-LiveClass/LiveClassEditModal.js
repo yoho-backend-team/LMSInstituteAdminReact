@@ -168,15 +168,19 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
   const onSubmit = async (data) => {
     console.log(data);
     const dummyData = {
-      // selectcourse: data.selectcourse,
-      course: data.course,
-      batch: data.batch,
-      classDate: data.classDate,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      coordinates: data.coordinates,
-      instructor: data.instructor,
-      videoUrl: data.videoUrl
+      selectcourse: data.selectcourse,
+      class_name: data.class_name,
+      branch_id: data.branch,
+      course_id: data.course,
+      batch_id: data.batch,
+      class_date: convertDateFormat(data.classDate),
+      start_time: data.startTime,
+      end_time: data.endTime,
+      instructor_staff_ids: filteredInstructorId,
+      coordinator_staff_ids: filteredCoordinatorId,
+      class_link: data.videoUrl,
+      type: 'live',
+      status: 'pending'
     };
 
     try {
@@ -212,7 +216,7 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
     getActiveNonTeachingStaffs(selectedBranchId);
   }, [selectedBranchId]);
 
-  // console.log(handleSubmit(onSubmit),'submitted')
+  console.log(handleSubmit(onSubmit), 'submitted');
   return (
     <Dialog
       open={open}

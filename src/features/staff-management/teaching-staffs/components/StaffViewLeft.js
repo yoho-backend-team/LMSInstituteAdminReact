@@ -20,6 +20,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }));
 
 const UserViewLeft = ({ staff }) => {
+ 
   return (
     <Card>
       <CardMedia
@@ -61,13 +62,13 @@ const UserViewLeft = ({ staff }) => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                {staff?.staff?.staff_name}
+                {staff?.staff_name}
               </Typography>
             </Box>
           </Box>
-          <Button color={staff?.staff?.is_active === '1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={staff?.is_active ==='1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            {staff?.staff?.is_active === '1' ? 'Active' : 'Inactive'}
+            {staff?.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>

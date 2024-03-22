@@ -18,15 +18,15 @@ const UserViewAccount = ({ staff }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-
-  //dateFormat
-  // function formattedDate(inputDate) {
-  //   const dateObject = new Date(inputDate);
-  //   const day = dateObject.getDate();
-  //   const month = dateObject.getMonth() + 1;
-  //   const year = dateObject.getFullYear();
-  //   return `${day}/${month}/${year}`;
-  // }
+console.log('staffID:',staff.id)
+  // dateFormat
+  function formattedDate(inputDate) {
+    const dateObject = new Date(inputDate);
+    const day = String(dateObject.getDate()).padStart(2, '0');
+    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const year = dateObject.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
   if (staff) {
     return (
@@ -44,47 +44,47 @@ const UserViewAccount = ({ staff }) => {
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.email}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.staff?.designation}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.designation}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.gender}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.gender}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>
-                    {staff?.staff?.dob}
+                    {formattedDate(`${staff?.dob}`)}
 
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.staff?.phone_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.staff?.alternate_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.alternate_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.education_qualification}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.education_qualification}</Typography>
                 </Box>
                 <Box>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>
-                    {staff?.staff?.address_line_1}, {staff?.staff?.address_line_2}
+                    {staff?.address_line_1}, {staff?.address_line_2}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.staff?.city}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.city}</Typography>
                 </Box>
               </Box>
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Box component={Link} to={'edit'}>
+              <Box component={Link} to={'edit'} state={{staff:staff,id:staff.id}}>
                 <Button
                 variant="contained" sx={{ mr: 2 }}>
                   Edit

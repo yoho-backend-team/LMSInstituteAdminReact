@@ -441,7 +441,7 @@ const Batch = () => {
                 open={statusChangeDialogOpen}
                 setOpen={setStatusChangeDialogOpen}
                 description="Are you sure you want to Change Status"
-                title="Status"
+                title="Change Status"
                 handleSubmit={handleStatusChangeApi}
               />
 
@@ -449,7 +449,7 @@ const Batch = () => {
               <BatchDeleteModel
                 open={batchDeleteModelOpen}
                 setOpen={setBatchDeleteModelOpen}
-                description="Are you sure you want to delete this item?"
+                description="Are you sure you want to delete this Batch?"
                 title="Delete"
                 handleSubmit={handleBatchDelete}
               />

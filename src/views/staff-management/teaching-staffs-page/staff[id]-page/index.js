@@ -19,9 +19,9 @@ const UserView = () => {
   
   }, [staffID]);
 
-  const getStaffData = async (id) => {
+  const getStaffData = async (staffID) => {
     setLoading(true)
-    const data = { id: id };
+    const data = { id: staffID };
     const result = await TeachingStaffById(data);
     if (result.success) {
       setStaff(result.data);
@@ -29,7 +29,8 @@ const UserView = () => {
     }
     setLoading(false)
   };
-  console.log(staff);
+  console.log('nonteaching:',staff);
+  // console.log('staffid:',staffID);
   return (
     <>
       {loading ? (

@@ -57,7 +57,7 @@ const OfflineClassCardHeader = (props) => {
           sx={{
             width: 400
           }}
-          placeholder="Search Refund"
+          placeholder="Search Class"
           onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>

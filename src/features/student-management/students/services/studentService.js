@@ -129,7 +129,9 @@ export const updateStudent = async (data) => {
       },
       params: data
     });
+
     console.log('studentupdate', response);
+    
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'Student updated successfully' };

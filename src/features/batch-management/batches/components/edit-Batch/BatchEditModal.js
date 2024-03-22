@@ -25,7 +25,10 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object().shape({
-  batch_name: yup.string().required('Batch Name is required'),
+  batchName: yup
+  .string()
+  .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
+  .required('Batch Name is required'),
   startDate: yup.date().required('Start Date is required'),
   endDate: yup.date().required('End Date is required'),
 
@@ -189,23 +192,23 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                 <CardContent>
                   <Grid container spacing={5}>
                     <Grid item xs={12} sm={12}>
-                      <Controller
-                        name="batch_name"
-                        control={control}
-                        rules={{ required: true }}
-                        render={({ field: { value, onChange } }) => (
-                          <CustomTextField
-                            fullWidth
-                            defaultValue={value}
-                            // defaultValue={selectedBatch?.batch?.batch_name}
-                            label="Batch Name"
-                            onChange={onChange}
-                            placeholder="carterLeonard"
-                            error={Boolean(errors.batch_name)}
-                            helperText={errors.batch_name?.message}
-                          />
-                        )}
-                      />
+                    <Controller
+                      name="batchName"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          fullWidth
+                          value={value}
+                          label="Batch Name"
+                          onChange={onChange}
+                          placeholder="Leonard"
+                          error={Boolean(errors['batchName'])}
+                          aria-describedby="stepper-linear-personal-institute_batchName"
+                          helperText={errors.batchName?.message}
+                        />
+                      )}
+                    />
                     </Grid>
 
                     <Grid item xs={12} sm={6}>

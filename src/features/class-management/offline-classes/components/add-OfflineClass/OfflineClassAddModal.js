@@ -13,10 +13,9 @@ import CustomChip from 'components/mui/chip';
 // import format from 'date-fns/format';
 import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { addOfflineClass } from '../../services/offlineClassServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -24,6 +23,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
+import { addOfflineClass } from '../../services/offlineClassServices';
 /* eslint-disable */
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -33,19 +33,16 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-
-
 const LiveClassAddModal = ({ open, handleAddClose }) => {
-  const [personName, setPersonName] = useState([]);
-  const [dates, setDates] = useState([]);
-  const [startDateRange, setStartDateRange] = useState(null);
-
+  // States
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -53,7 +50,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log("active branches : ", result.data);
+    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -65,32 +62,31 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     getActiveNonTeachingStaffs(selectedBranchId);
   }, [selectedBranchId]);
 
-
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id:selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
-    console.log("active courses : ", result.data);
+    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
   const getActiveTeachingStaffs = async (selectedBranchId) => {
-    const data = { type: 'teaching', branch_id: selectedBranchId }
+    const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
 
-    console.log("active teaching staffs : ", result.data);
+    console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
-    const data = { type: 'non_teaching', branch_id: selectedBranchId }
+    const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveNonTeachingStaffs(data);
 
-    console.log("active non teaching staffs : ", result.data);
+    console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId }
+    const data = { course_id: courseId };
     const result = await getAllActiveBatchesByCourse(data);
 
-    console.log("active batches : ", result.data);
+    console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
 
@@ -102,39 +98,8 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     setEndTime(time);
   };
 
-  const handleOnChangeRange = (dates) => {
-    const [start] = dates;
-    if (start !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-  };
-
-  const handleChange = (event) => {
-    setPersonName(event.target.value);
-  };
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-
-  const instructors = [
-    { instructor_id: '1', instructor_name: 'Instructor 1' },
-    { instructor_id: '2', instructor_name: 'Instructor 2' },
-    { instructor_id: '3', instructor_name: 'Instructor 3' }
-  ];
-
-  const coordinates = [
-    { coordinate_id: '1', coordinate_name: 'Coordinate 1' },
-    { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
-    { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
-  ];
-  
-  const courses = [
-    { id: '1', name: 'Course 1' },
-    { id: '2', name: 'Course 2' },
-    { id: '3', name: 'Course 3' }
-  ];
-
-
 
   const showErrors = (field, valueLen, min) => {
     if (valueLen === 0) {
@@ -147,16 +112,18 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   };
 
   const schema = yup.object().shape({
+  
     class_name: yup
       .string()
-      .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-      .required('Course field is required'),
+      .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
+      .required('Class Name field is required'),
     branch: yup.string().required('Branch field is required'),
     course: yup.string().required('Course field is required'),
     batch: yup.string().required('Batch field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     startTime: yup.date().nullable().required('Start Time field is required'),
-    endTime: yup.date().nullable().required('End Time field is required'),
+    endTime: yup.date().nullable().required('End Time field is required')
     // instructor: yup.array().required('Instructor field is required'),
     // coordinator: yup.array().required('Instructor field is required'),
   });
@@ -164,13 +131,13 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   const defaultValues = {
     class_name: '',
     branch: selectedBranchId,
-    course: "",
+    course: '',
     batch: '',
     classDate: new Date(),
     startTime: null,
     endTime: null,
     instructor: [],
-    coordinator: [],
+    coordinator: []
   };
   const {
     reset,
@@ -185,6 +152,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   });
 
   const handleClose = () => {
+    handleAddClose();
     setValue('class_name', '');
     setValue('branch', '');
     setValue('course', '');
@@ -194,36 +162,9 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     setValue('endTime', null);
     setValue('instructor', []);
     setValue('coordinator', []);
-    handleAddClose();
     reset();
   };
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        width: 250,
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-      }
-    }
-  };
-
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ];
-
-  const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -254,13 +195,15 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       instructor_staff_ids: filteredInstructorId,
       coordinator_staff_ids: filteredCoordinatorId,
       type: 'offline',
-      status: 'pending',
+      status: 'pending'
     };
 
     try {
       const result = await addOfflineClass(dummyData);
 
       if (result.success) {
+        handleClose();
+        reset();
         toast.success(result.message);
       } else {
         toast.error(result.message);
@@ -341,27 +284,27 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                 />
               </Grid>
               <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="course"
-                control={control}
-                rules={{ required: 'Course field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeCourse}
-                    getOptionLabel={(course) => course.course_name}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?.course_id);
-                      getActiveBatchesByCourse(newValue?.course_id);
-                    }}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
+                <Controller
+                  name="course"
+                  control={control}
+                  rules={{ required: 'Course field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeCourse}
+                      getOptionLabel={(course) => course.course_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.course_id);
+                        getActiveBatchesByCourse(newValue?.course_id);
+                      }}
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <Controller
                   name="batch"
@@ -469,10 +412,13 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   onChange={(e, newValue) => {
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
-                      setValue('instructor', activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'))
+                      setValue(
+                        'instructor',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedInstructors(newValue);
-                      setValue('instructor', newValue)
+                      setValue('instructor', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -507,7 +453,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
-                            setValue('instructor', updatedValue)
+                            setValue('instructor', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -532,11 +478,13 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   onChange={(e, newValue) => {
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
-                      setValue('coordinator', activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'))
-
+                      setValue(
+                        'coordinator',
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                      );
                     } else {
                       setSelectedCoordinates(newValue);
-                      setValue('coordinator', newValue)
+                      setValue('coordinator', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -571,7 +519,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
-                            setValue('coordinator', updatedValue)
+                            setValue('coordinator', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -586,7 +534,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
               </Grid>
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
-                  <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+                  <Button type="submit" onClick={handleSubmit(onSubmit)} variant="contained" sx={{ mr: 3 }}>
                     Submit
                   </Button>
                   <Button variant="tonal" color="error" onClick={handleClose}>

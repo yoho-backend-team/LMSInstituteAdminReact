@@ -150,14 +150,14 @@ const CategoryCard = (props) => {
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
         description="Are you sure you want to Change Status"
-        title="Status"
+        title="Change Status"
         handleSubmit={handleStatusChangeApi}
       />
 
       <CategoryDeleteModel
         open={categoryDeleteModelOpen}
         setOpen={setCategoryDeleteModelOpen}
-        description="Are you sure you want to delete this item?"
+        description="Are you sure you want to delete this Category? "
         title="Delete"
         handleSubmit={handleCategoryDelete}
       />

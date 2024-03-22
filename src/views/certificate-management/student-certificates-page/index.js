@@ -20,8 +20,8 @@ import StudentCertificateTableHeader from 'features/certificate-management/stude
 import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
 import { selectStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
-import { setStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSlice';
-import { searchStudentCertificates } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
+// import { setStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSlice';
+// import { searchStudentCertificates } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateStudentCertificateStatus } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import { deleteStudentCertificate } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
@@ -44,6 +44,7 @@ const userStatusObj = {
 
 const StudenrCertificate = () => {
   const [value, setValue] = useState('');
+  console.log(setValue)
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -127,23 +128,6 @@ const StudenrCertificate = () => {
 
   console.log('certificate', studentCertificates);
 
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchStudentCertificates(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setStudentCertificates(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -328,7 +312,7 @@ const StudenrCertificate = () => {
           <StudentCertificateTableHeader
             selectedBranchId={selectedBranchId}
             value={value}
-            handleFilter={handleFilter}
+            // handleFilter={handleFilter}
             toggle={toggleAddUserDrawer}
           />
         </Grid>

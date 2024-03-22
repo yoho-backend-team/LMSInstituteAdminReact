@@ -45,16 +45,6 @@ const StudyMaterialAddDrawer = (props) => {
     setActiveCourse(result.data.data);
   };
 
-  const showErrors = (field, valueLen, min) => {
-    if (valueLen === 0) {
-      return `${field} field is required`;
-    } else if (valueLen > 0 && valueLen < min) {
-      return `${field} must be at least ${min} characters`;
-    } else {
-      return '';
-    }
-  };
-
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -63,13 +53,21 @@ const StudyMaterialAddDrawer = (props) => {
   }));
 
   const schema = yup.object().shape({
-    description: yup.string().required(),
-    title: yup
-      .string()
-      .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-      .required(),
+    description: yup
+    .string()
+    .required('Description is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
+    title:yup
+    .string()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     branch: yup.object().required(),
-    course: yup.object().required()
+    course: yup.object().required(),
+    pdf_file: yup
+    .mixed()
+    .required('PDF file is required')
+    // .test('fileSize', 'File size is too large', (value) => value && value[0].size <= 5000000),
+
   });
 
   const defaultValues = {
@@ -95,6 +93,7 @@ const StudyMaterialAddDrawer = (props) => {
   console.log(studymaterialPdf);
 
   const onSubmit = async (data) => {
+    
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('branch_id', data.branch?.branch_id);
@@ -125,6 +124,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   const handleSetPdf = (data) => {
     setstudymaterialPdf(data);
+    setValue("pdf_file",data)
   };
 
   const handleClose = () => {
@@ -163,7 +163,9 @@ const StudyMaterialAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf} />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf}  className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+            {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
+
           </Grid>
 
           <Grid item xs={12} sm={12}>
@@ -236,7 +238,7 @@ const StudyMaterialAddDrawer = (props) => {
                   onChange={onChange}
                   placeholder="John Doe"
                   error={Boolean(errors.title)}
-                  {...(errors.title && { helperText: errors.title.message })}
+                  helperText={errors.title?.message}
                 />
               )}
             />

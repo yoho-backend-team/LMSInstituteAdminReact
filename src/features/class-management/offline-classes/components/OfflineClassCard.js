@@ -34,6 +34,7 @@ const OfflineClassCard = () => {
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
 
   console.log(offlineClasses);
+  
   useEffect(() => {
     const data = {
       type: 'offline',
@@ -157,6 +158,8 @@ const OfflineClassCard = () => {
                           menuItemProps: {
                             onClick: () => {
                               handleEdit(card);
+                            // state: { id: card?.class_id }
+
                             }
                           }
                         },
@@ -172,15 +175,23 @@ const OfflineClassCard = () => {
                     />
                   </Box>
                 </Grid>
+
                 <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
                   <AvatarGroup className="pull-up" max={4}>
-                    {card?.batch_class?.batch_student?.map((student, studentIndex) => (
-                      <Avatar key={studentIndex} src={student} alt={student?.first_name} />
-                    ))}
+                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                      return (
+                        <Avatar
+                          key={studentIndex}
+                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
+                          alt={student?.student?.first_name}
+                        />
+                      );
+                    })}
                   </AvatarGroup>
                 </Grid>
+
                 <Grid item justifyContent="center" display="flex">
-                  <Typography>8+ Students on this class</Typography>
+                  <Typography>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
                 </Grid>
                 <Grid item justifyContent="center" display="flex" mb={2}>
                   <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
@@ -190,7 +201,7 @@ const OfflineClassCard = () => {
                   </Typography>
                 </Grid>
                 <Grid container p={2} justifyContent="center">
-                  <Button variant="tonal" size="small" href="view">
+                  <Button variant="tonal" size="small" component={Link} to={`/view/${card?.class_id}`}>
                     View More
                   </Button>
                 </Grid>

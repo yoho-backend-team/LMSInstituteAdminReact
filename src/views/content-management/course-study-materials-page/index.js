@@ -149,7 +149,7 @@ const StudyMaterials = () => {
             text: 'Edit',
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
-              onClick: () => toggleEditUserDrawer()
+              onClick: () => toggleEditUserDrawer(id)
             }
           },
           {
@@ -331,11 +331,11 @@ const StudyMaterials = () => {
           </Grid>
         )}
         <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <StudyMaterialEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <StudyMaterialEdit StudyMaterials={selectedRow} open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
           setOpen={setStudyMaterialDeletemodalOpen}
-          description="Are you sure you want to delete this user?"
+          description="Are you sure you want to delete this StudyMaterials?"
           title="Delete"
           handleSubmit={handleContentDelete}
         />
@@ -343,7 +343,7 @@ const StudyMaterials = () => {
           open={statusChangeDialogOpen}
           setOpen={setStatusChangeDialogOpen}
           description="Are you sure you want to Change Status"
-          title="Change Status"
+          title="Status"
           handleSubmit={handleStatusChangeApi}
         />
 

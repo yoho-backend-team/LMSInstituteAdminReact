@@ -9,16 +9,30 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getAllStudentAttendances } from '../redux/studentAttendanceThunks';
+
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 /* eslint-enable */
-const StudentAttendanceFilterCard = (props) => {
+const StudentAttendanceFilterCard = () => {
   // ** State
+
+  const dispatch = useDispatch();
+  
+  const [searchValue, setSearchValue] = useState('');
   const [selectedstudent, setSelectedstudent] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedbatch, setSelectedbatch] = useState([]);
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  useEffect(() => {
+    dispatch(getAllStudentAttendances(selectedBranchId));
+  }, [dispatch, selectedBranchId]);
 
   const batch = [
     { batch_id: '1', batch_name: 'batch 1' },
@@ -37,9 +51,18 @@ const StudentAttendanceFilterCard = (props) => {
     { student_id: '3', student_name: 'Student 3' }
   ];
 
+  // const { value, handleFilter } = props;
 
-
-  const { value, handleFilter } = props;
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentAttendances({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
 
   return (
     <DatePickerWrapper>
@@ -49,7 +72,7 @@ const StudentAttendanceFilterCard = (props) => {
             <CardHeader title="Student Attendance" />
             <CardContent>
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={3}>
                   <Autocomplete
                     disableCloseOnSelect
                     multiple
@@ -227,14 +250,7 @@ const StudentAttendanceFilterCard = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    value={value}
-                    sx={{
-                      width: '100%'
-                    }}
-                    placeholder="Search Student"
-                    onChange={(e) => handleFilter(e.target.value)}
-                  />
+                  <TextField value={searchValue} fullWidth placeholder="Search Certificate" onChange={(e) => handleSearch(e)} />
                 </Grid>
               </Grid>
             </CardContent>

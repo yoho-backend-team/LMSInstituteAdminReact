@@ -33,9 +33,9 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
     () =>
       yup.object().shape({
         category_name: yup
-          .string()
-          .min(3, (obj) => showErrors('Category Name', obj.value.length, obj.min))
-          .required()
+        .string()
+        .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
+        .required('Category Name is required'),
       }),
     [showErrors]
   );

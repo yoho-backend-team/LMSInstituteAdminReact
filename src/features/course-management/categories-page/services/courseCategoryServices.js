@@ -103,14 +103,14 @@ export const addCourseCategory = async (data) => {
   }
 };
 
-export const deleteCourseCategory = async (courseCategoryId) => {
+export const deleteCourseCategory = async (data) => {
   try {
     const response = await axios.delete(`${COURSE_CATEGORY_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: courseCategoryId }
+      params: data
     });
 
     console.log(response);

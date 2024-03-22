@@ -36,7 +36,7 @@ const Teaching = () => {
     setDeleteDialogOpen(true);
   };
 
-  // console.log(teachingStaffs);
+  console.log('overview-teachingstaffs:',teachingStaffs);
 
   return (
     <>

@@ -25,11 +25,23 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
 
   const schema = yup.object().shape({
     course_duration: yup.number().required(),
-    course_name: yup.string().required(),
+    course_name: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Name should not contain special characters')
+      .required('Course Name is required'),
     course_price: yup.number().required(),
-    description: yup.string().required(),
-    course_overview: yup.string().required(),
-    learning_format: yup.string().required(),
+    description: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters')
+      .required('Description is required'),
+    course_overview: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters')
+      .required('Course Overview is required'),
+    learning_format: yup
+      .string()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'learning Format should not contain special characters')
+      .required('learning Format is required'),
     course_category: yup.string().required()
   });
 
@@ -208,17 +220,18 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                   name="course_name"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { onChange } }) => (
+                  render={({ field: { onChange,value } }) => (
                     <CustomTextField
                       fullWidth
-                      // value={value}
-                      defaultValue={course?.institute_course_branch?.course_name}
+                      value={value}
+                      // defaultValue={course?.institute_course_branch?.course_name}
                       label="Course Name"
                       onChange={onChange}
                       placeholder="Leonard"
                       error={Boolean(errors.course_name)}
                       aria-describedby="stepper-linear-personal-course_name"
-                      {...(errors.course_name && { helperText: 'This field is required' })}
+                      // {...(errors.course_name && { helperText: 'This field is required' })}
+                      helperText={errors.course_name?.message}
                     />
                   )}
                 />
@@ -238,7 +251,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(errors.course_duration)}
-                      {...(errors.course_duration && { helperText: 'This field is required' })}
+                      helperText={errors.course_duration?.message}
                     />
                   )}
                 />
@@ -257,7 +270,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(errors.course_price)}
-                      {...(errors.course_price && { helperText: 'This field is required' })}
+                      helperText={errors.course_price?.message}
                     />
                   )}
                 />
@@ -274,7 +287,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                       label="Course Category"
                       id="validation-billing-select"
                       error={Boolean(errors.course_category)}
-                      {...(errors.course_category && { helperText: 'This field is required' })}
+                      helperText={errors.course_category?.message}
                       onChange={onChange}
                       value={value}
                     >
@@ -302,7 +315,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(errors.learning_format)}
-                      {...(errors.learning_format && { helperText: 'This field is required' })}
+                      helperText={errors.learning_format?.message}
                     />
                   )}
                 />
@@ -322,7 +335,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(errors.course_overview)}
-                      {...(errors.course_overview && { helperText: 'This field is required' })}
+                      helperText={errors.course_overview?.message}
                     />
                   )}
                 />
@@ -342,7 +355,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(errors.description)}
-                      {...(errors.description && { helperText: 'This field is required' })}
+                      helperText={errors.description?.message}
                     />
                   )}
                 />

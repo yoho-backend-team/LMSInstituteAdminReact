@@ -149,22 +149,19 @@ const InvoiceList = (props) => {
 
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
-                    multiple
                     fullWidth
-                    options={courses}
-                    filterSelectedOptions
+                    // value={value}
                     onChange={(e, newValue) => {
-                      const courseId = newValue.map((item) => item.course_id);
+                      // const courseId = newValue?.map((item) => item?.course_id);
                       const data = {
-                        course_id: courseId,
+                        course_id: newValue.course_id,
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllBatches(data));
                     }}
-                    // defaultValue={[top100Films[13]]}
-                    id="autocomplete-multiple-outlined"
+                    options={courses}
                     getOptionLabel={(option) => option.course_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
+                    renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                   />
                 </Grid>
 
