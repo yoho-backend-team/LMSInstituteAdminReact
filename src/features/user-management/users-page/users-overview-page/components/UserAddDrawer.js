@@ -51,7 +51,10 @@ const SidebarAddUser = (props) => {
   const { open, toggle, groups, setLoading } = props;
   const branches = useSelector((state) => state.auth.branches);
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
+  // const image = require('assets/images/avatar/1.png');
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -67,8 +70,12 @@ const SidebarAddUser = (props) => {
 
   const schema = yup.object().shape({
     password: yup.string().required(),
-    designation: yup.string().required(),
-    email: yup.string().email().required(),
+    designation: yup
+      .string()
+      .required()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
+      .max(50, `Designation can't exceed 50 characters`),
+    email: yup.string().email('Invalid email format').required('Email is required'),
     role: yup.number().required(),
     contact: yup
       .number()
@@ -78,11 +85,13 @@ const SidebarAddUser = (props) => {
     fullName: yup
       .string()
       .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
       .required(),
     userName: yup
       .string()
+      .required()
       .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
-      .required(),
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
     confirm_password: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match')
@@ -132,7 +141,7 @@ const SidebarAddUser = (props) => {
       const result = await addUser(bodyFormData);
 
       if (result.success) {
-        setLoading((loading) => !loading);
+        // setLoading((loading) => !loading);
         setError('');
         toggle();
         reset();
@@ -212,7 +221,7 @@ const SidebarAddUser = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">

@@ -22,17 +22,7 @@ const AddBranchForms = () => {
     city: '',
     state: ''
   };
-  // const branchSchema = yup.object().shape({
-  //   branchName: yup.string().required('Branch Name is required'),
-  //   phone: yup.number().required('Phone No. is required'),
-  //   alternatePhone: yup.number().required('Alternate Phone No. is required'),
-  //   address: yup.string().required('Address is required'),
-  //   pinCode: yup.number().required('PIN Code is required'),
-  //   landmark: yup.string().required('Landmark is required'),
-  //   city: yup.string().required('City is required'),
-  //   state: yup.string().required('State is required')
-  // });
-
+ 
   const branchSchema = yup.object().shape({
     branchName: yup
       .string()

@@ -20,7 +20,7 @@ export const getAllUsers = async (data) => {
       },
       params: data
     });
-    console.log(response);
+    console.log('users',response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;

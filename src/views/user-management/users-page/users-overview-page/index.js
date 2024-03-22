@@ -42,7 +42,7 @@ const UserList = () => {
       <Grid container spacing={3}>
         {/* User Header Section */}
         <Grid item xs={12}>
-          <UserHeaderSection users={users} groups={groups} />
+          <UserHeaderSection users={users?.users} groups={groups} />
         </Grid>
 
         {/* User Filter Card */}
@@ -63,7 +63,7 @@ const UserList = () => {
           <Grid item xs={12}>
             <UserBodySection
               groups={groups}
-              users={users}
+              users={users?.users}
               setUserRefetch={setUserRefetch}
               selectedBranchId={selectedBranchId}
             />
