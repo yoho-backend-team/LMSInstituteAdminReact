@@ -7,6 +7,7 @@ export const getAllTeachingStaffs = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-branch-id`, {
       headers: {
+       
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
@@ -109,7 +110,7 @@ export const deleteTeachingStaff = async (teachingStaffId) => {
       },
       params: { id: teachingStaffId }
     });
-
+console.log('updateTeachingStaff:',response)
     if (response.data.status) {
       return { success: true, message: 'TeachingStaff deleted successfully' };
     } else {
@@ -127,11 +128,12 @@ export const updateTeachingStaff = async (data) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      },
+      params:data
     });
-
+console.log('teachingedit:',response)
     if (response.data.status) {
-      console.log('techingedit:',response);
+      
       return { success: true, message: 'TeachingStaff updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TeachingStaff' };
@@ -141,6 +143,7 @@ export const updateTeachingStaff = async (data) => {
     throw error;
   }
 };
+
 
 export const TeachingStaffById = async (data) => {
   try {

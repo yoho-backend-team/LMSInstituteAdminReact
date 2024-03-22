@@ -28,7 +28,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
-import {updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
 import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
@@ -38,9 +38,10 @@ import { getActiveBranches } from 'features/branch-management/services/branchSer
 import { useLocation } from 'react-router';
 
 const StepperLinearWithValidation = () => {
-const location=useLocation();
-const staffData = location.state.staff
-console.log('staffData:',staffData)
+  const location = useLocation();
+  const staffData = location.state.staff;
+  const staffId = location.state.id;
+  console.log('staffData:', staffData);
 
   const steps = [
     {
@@ -48,15 +49,6 @@ console.log('staffData:',staffData)
       subtitle: 'Setup Informion'
     }
   ];
-
-// useEffect(() => {
-//   first
-
-//   return () => {
-//     second
-//   }
-// }, [])
-
 
   const defaultPersonalValues = {
     name: '',
@@ -138,7 +130,8 @@ console.log('staffData:',staffData)
     control: personalControl,
     // setValue,
     handleSubmit: handlePersonalSubmit,
-    formState: { errors: personalErrors }
+    formState: { errors: personalErrors },
+    setValue
   } = useForm({
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
@@ -168,7 +161,7 @@ console.log('staffData:',staffData)
       description: '',
       joining_date: '',
       designation: '',
-      branch: '',
+      branch: ''
     });
   };
 
@@ -210,6 +203,8 @@ console.log('staffData:',staffData)
     }
   }));
 
+  useEffect(() => {}, []);
+
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
     'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
@@ -231,8 +226,40 @@ console.log('staffData:',staffData)
   };
   console.log(logo);
 
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (staffId) {
+      // setValue('branchName', selectedBranch.branch_name || '');
+      // setValue('name', selectedBranch.phone_number || '');
+      // setValue('email', selectedBranch.alternate_number || '');
+      // setValue('phone_number', selectedBranch.address || '');
+      // setValue('alternate_number', selectedBranch.pin_code || '');
+      // setValue('designation', selectedBranch.landmark || '');
+      // setValue('branch_id', selectedBranch.city || '');
+      // setValue('state', selectedBranch.state || '');
+      setValue('id', staffId);
+      setValue('name', staffData.name);
+      setValue('email', staffData?.dob);
+      setValue('phone_number',staffData?.phone_number);
+      setValue('alternate_number',staffData?.alternate_number);
+      setValue('designation', staffData?.designation);
+      setValue('branch_id', staffData?.staff_course?.courses?.branch_id);
+      setValue('image', logo);
+      setValue('gender', staffData?.gender);
+      setValue('address_line_1',staffData?.address_line_1);
+      setValue('address_line_2',staffData?.address_line_2);
+      setValue('city', staffData?.city);
+      setValue('state', staffData?.state);
+      setValue('pin_code', staffData?.pin_code);
+      setValue('dob', convertDateFormat(staffData?.dob));
+      setValue('username', staffData?.username);
+      setValue('education_qualification', staffData?.education_qualification);
+    }
+  }, [staffId, setValue]);
+
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
+    console.log('personalData:', personalData);
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
@@ -240,13 +267,14 @@ console.log('staffData:',staffData)
       filteredCourseId.forEach((id) => {
         data.append(`course_ids[]`, id);
       });
+
+      data.append('id', staffId);
       data.append('name', personalData?.name);
       data.append('email', personalData?.email);
       data.append('phone_number', personalData?.phone);
       data.append('alternate_number', personalData?.alt_phone);
       data.append('designation', personalData?.designation);
-      data.append('type', 'teaching');
-      data.append('branch_id', personalData?.branch.branch_id);
+      data.append('branch_id', personalData?.branch?.branch_id);
       data.append('image', logo);
       data.append('gender', personalData?.gender);
       data.append('address_line_1', personalData?.address_line_one);
@@ -271,8 +299,10 @@ console.log('staffData:',staffData)
         console.log(error);
       }
     }
+    [staffId];
   };
 
+  console.log('onsubmit:', onSubmit);
   const getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -319,11 +349,11 @@ console.log('staffData:',staffData)
                   name="name"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.name}
+                      defaultValue={staffData?.name}
                       label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
@@ -344,7 +374,7 @@ console.log('staffData:',staffData)
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.name}
+                      defaultValue={staffData?.email}
                       label="Email"
                       onChange={onChange}
                       placeholder="Carter"
@@ -361,13 +391,13 @@ console.log('staffData:',staffData)
                   name="date_of_birth"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value, onChange } }) => (
+                  render={({ field: { value, onChange } }) => (
                     <DatePicker
                       id="issue-date"
                       dateFormat={'dd/MM/yyyy'}
                       // value={value}
                       selected={value}
-                      defaultValue={staffData.staff.dob}
+                      defaultValue={staffData?.dob}
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
@@ -386,13 +416,13 @@ console.log('staffData:',staffData)
                   name="gender"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       select
                       fullWidth
                       // value={value}
                       onChange={onChange}
-                      defaultValue={staffData.staff.gender}
+                      defaultValue={staffData?.gender}
                       label="Gender"
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
@@ -412,10 +442,10 @@ console.log('staffData:',staffData)
                   name="branch"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <Autocomplete
                       fullWidth
-                      defaultValue={staffData?.staff?.staff_course?.courses?.branch_id}
+                      defaultValue={staffData?.staff_course?.courses?.branch_id}
                       // value={value || null}
                       onChange={(event, newValue) => {
                         onChange(newValue); // Update the value of the branch field
@@ -504,11 +534,11 @@ console.log('staffData:',staffData)
                   name="designation"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.staff.designation}
+                      defaultValue={staffData?.designation}
                       label="designation"
                       onChange={onChange}
                       error={Boolean(personalErrors.designation)}
@@ -523,11 +553,11 @@ console.log('staffData:',staffData)
                   name="education_qualification"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.staff.education_qualification}
+                      defaultValue={staffData?.education_qualification}
                       label="Qualification"
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
@@ -542,11 +572,11 @@ console.log('staffData:',staffData)
                   name="state"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.staff.state}
+                      defaultValue={staffData?.state}
                       label="State"
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
@@ -561,11 +591,11 @@ console.log('staffData:',staffData)
                   name="city"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.staff.city}
+                      defaultValue={staffData?.city}
                       label="City"
                       onChange={onChange}
                       error={Boolean(personalErrors.city)}
@@ -580,11 +610,11 @@ console.log('staffData:',staffData)
                   name="pin_code"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.staff.pin_code}
+                      defaultValue={staffData?.pin_code}
                       label="Pin Code"
                       type="number"
                       onChange={onChange}
@@ -601,11 +631,11 @@ console.log('staffData:',staffData)
                   name="address_line_one"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData.staff.address_line_1}
+                      defaultValue={staffData?.address_line_1}
                       label="Address Line One"
                       onChange={onChange}
                       placeholder="Carter"
@@ -621,11 +651,11 @@ console.log('staffData:',staffData)
                   name="address_line_two"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData?.staff?.address_line_2}
+                      defaultValue={staffData?.address_line_2}
                       label="Address Line Two"
                       onChange={onChange}
                       placeholder="Carter"
@@ -641,12 +671,12 @@ console.log('staffData:',staffData)
                   name="phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       type="number"
                       // value={value}
-                      defaultValue={staffData?.staff?.phone_number}
+                      defaultValue={staffData?.phone_number}
                       label="Phone Number"
                       onChange={onChange}
                       placeholder="Carter"
@@ -662,11 +692,11 @@ console.log('staffData:',staffData)
                   name="alt_phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData?.staff?.alternate_number}
+                      defaultValue={staffData?.alternate_number}
                       type="number"
                       label="Alt Phone Number"
                       onChange={onChange}
@@ -684,7 +714,7 @@ console.log('staffData:',staffData)
                   name="username"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       // value={value}
