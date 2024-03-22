@@ -17,15 +17,6 @@ import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import { updateCourseModule } from '../services/moduleServices';
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -35,29 +26,38 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
-
-  title: yup
-    .string()
-    .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required(),
-  Videourl: yup.string().required()
+  description: yup
+      .string()
+      .required('Description is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
+    title: yup
+      .string()
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+    video_url: yup
+      .string()
+      .required('Video URL is required')
+      .matches(
+        // Regular expression for validating URLs (supports common video hosting platforms)
+        /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|playlist\?list=)|youtu\.be\/|vimeo\.com\/|dai\.ly\/|dailymotion\.com\/video\/|twitch\.tv\/|bitchute\.com\/)/,
+        'Invalid video URL'
+      )
 });
 
 const defaultValues = {
   description: '',
   title: '',
-
   Videourl: ''
 };
 
 const ModuleEdit = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle,modules } = props;
 
   // ** State
 
   const [groups, setGroups] = useState([]);
+
 
   useEffect(() => {
     getAllGroups();
@@ -100,35 +100,41 @@ const ModuleEdit = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
+  
   useEffect(() => {
-    if (open) {
-      reset(props.initialValues || defaultValues);
+    if (modules) {
+      setValue('title', modules?.title || '');
+      setValue('description', modules?.description || '');
+      setValue('video_url', modules?.video_url || '');
     }
-  }, [open, reset, props.initialValues]);
+  }, [modules, setValue]);
+
+  console.log("modules",modules);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    const dummyData = {
-      title: data.title,
-      description: data.description,
-      videourl: data.Videourl
-    };
-    const result = await updateCourseModule(dummyData);
+    var bodyFormData = new FormData();
+    bodyFormData.append('title', data.title);
+    bodyFormData.append('description', data.description);
+    bodyFormData.append('video_url', data.videourl);
+    bodyFormData.append('id',modules.id);
+    console.log(bodyFormData);
+
+    const result = await updateCourseModule(bodyFormData);
 
     if (result.success) {
       toast.success(result.message);
     } else {
-      // let errorMessage = '';
+      let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {
       //   errors.forEach((error) => {
       //     errorMessage += `${error}\n`; // Concatenate errors with newline
       //   });
       // });
-      toast.error(result.message);
+      toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
   };
-
   const handleClose = () => {
     setValue('contact', Number(''));
     toggle();
@@ -200,23 +206,25 @@ const ModuleEdit = (props) => {
             )}
           />
 
-          <Controller
-            name="url"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Video URL"
-                onChange={onChange}
-                placeholder="Video URL"
-                error={Boolean(errors.Videourl)}
-                {...(errors.Videourl && { helperText: errors.Videourl.message })}
-              />
-            )}
-          />
+
+            <Controller
+              name="video_url"
+              control={control}
+              rules={{ required: 'Video URL is required' }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  value={value}
+                  sx={{ mb: 4 }}
+                  label="Video URL"
+                  onChange={onChange}
+                  placeholder="e.g., https://www.youtube.com/watch?v=example"
+                  error={Boolean(errors.video_url)}
+                  helperText={errors.video_url ? errors.video_url.message : ''}
+                />
+              )}
+            />
+
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>

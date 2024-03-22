@@ -281,6 +281,7 @@ const handleContentDelete = async () => {
     }
   ];
 
+  console.log(selectedRow);
   return (
     <>
       <Grid container spacing={2}>
@@ -307,11 +308,11 @@ const handleContentDelete = async () => {
           </Grid>
         )}
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow} />
         <ModulesDeleteModal
           open={ModulesDeleteModalOpen}
           setOpen={setModulesDeleteModalOpen}
-          description="Are you sure you want to delete this user?"
+          description="Are you sure you want to delete this Modules?"
           title="Delete"
           handleSubmit={handleContentDelete}
         />

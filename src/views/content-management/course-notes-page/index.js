@@ -6,11 +6,12 @@ import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 // ** Custom Components Imports
+import { TextField } from '@mui/material';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-import CustomTextField from 'components/mui/text-field';
+import { default as NotesDeleteModal, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import NotesAddDrawer from 'features/content-management/course-contents/course-notes-page/components/NotesAddDrawer';
@@ -19,14 +20,13 @@ import NotesHeader from 'features/content-management/course-contents/course-note
 import NotesView from 'features/content-management/course-contents/course-notes-page/components/NotesView';
 import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/course-notes-page/redux/noteSelectors';
 import { getAllCourseNotes } from 'features/content-management/course-contents/course-notes-page/redux/noteThunks';
+import { deleteCourseNote, updateCourseNotesStatus } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { default as NotesDeleteModal, default as StatusChangeDialog } from 'components/modal/DeleteModel';
-import { deleteCourseNote } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
-import { updateCourseNote } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+
 const Notes = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -42,6 +42,11 @@ const Notes = () => {
 
   console.log(selectedDeleteId);
 
+  const userStatusObj = {
+    1: 'success',
+    0: 'error'
+  };
+
   const handleStatusValue = (event, users) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(users);
@@ -53,7 +58,7 @@ const Notes = () => {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
     };
-    const response = await updateCourseNote(data);
+    const response = await updateCourseNotesStatus(data);
     if (response.success) {
       toast.success(response.message);
       setRefetch((state) => !state);
@@ -95,7 +100,7 @@ const Notes = () => {
   console.log(Notes);
 
   useEffect(() => {
-    dispatch(getAllCourseNotes(selectedBranchId));
+    dispatch(getAllCourseNotes({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -261,10 +266,26 @@ const Notes = () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusValue(e, row)}>
+            <TextField
+              size="small"
+              select
+              value={row?.is_active}
+              label="status"
+              id="custom-select"
+              sx={{
+                color: userStatusObj[row?.is_active]
+              }}
+              onChange={(e) => handleStatusValue(e, row)}
+              SelectProps={{
+                sx: {
+                  borderColor: row.is_active === '1' ? 'success' : 'error',
+                  color: userStatusObj[row?.is_active]
+                }
+              }}
+            >
               <MenuItem value={1}>Active</MenuItem>
               <MenuItem value={0}>Inactive</MenuItem>
-            </CustomTextField>
+            </TextField>
           </div>
         );
       }
@@ -306,11 +327,11 @@ const Notes = () => {
         )}
 
         <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} notes={selectedRow} />
         <NotesDeleteModal
           open={NotesDeleteModalOpen}
           setOpen={setNotesDeleteModalOpen}
-          description="Are you sure you want to delete this user?"
+          description="Are you sure you want to delete this Notes?"
           title="Delete"
           handleSubmit={handleContentDelete}
         />
