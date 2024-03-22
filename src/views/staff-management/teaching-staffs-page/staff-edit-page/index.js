@@ -49,6 +49,15 @@ console.log('staffData:',staffData)
     }
   ];
 
+// useEffect(() => {
+//   first
+
+//   return () => {
+//     second
+//   }
+// }, [])
+
+
   const defaultPersonalValues = {
     name: '',
     email: '',
@@ -310,10 +319,10 @@ console.log('staffData:',staffData)
                   name="name"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.name}
                       label="FullName"
                       onChange={onChange}
@@ -331,10 +340,10 @@ console.log('staffData:',staffData)
                   name="email"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value,onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.name}
                       label="Email"
                       onChange={onChange}
@@ -352,11 +361,11 @@ console.log('staffData:',staffData)
                   name="date_of_birth"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {value, onChange } }) => (
                     <DatePicker
                       id="issue-date"
                       dateFormat={'dd/MM/yyyy'}
-                      value={value}
+                      // value={value}
                       selected={value}
                       defaultValue={staffData.staff.dob}
                       customInput={
@@ -377,11 +386,11 @@ console.log('staffData:',staffData)
                   name="gender"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       select
                       fullWidth
-                      value={value}
+                      // value={value}
                       onChange={onChange}
                       defaultValue={staffData.staff.gender}
                       label="Gender"
@@ -403,10 +412,11 @@ console.log('staffData:',staffData)
                   name="branch"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <Autocomplete
                       fullWidth
-                      value={value || null}
+                      defaultValue={staffData?.staff?.staff_course?.courses?.branch_id}
+                      // value={value || null}
                       onChange={(event, newValue) => {
                         onChange(newValue); // Update the value of the branch field
                       }}
@@ -471,6 +481,7 @@ console.log('staffData:',staffData)
                         <CustomChip
                           key={option.course_id}
                           label={option.course_name}
+                          // defaultValue={}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -493,10 +504,10 @@ console.log('staffData:',staffData)
                   name="designation"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,  onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.staff.designation}
                       label="designation"
                       onChange={onChange}
@@ -512,10 +523,10 @@ console.log('staffData:',staffData)
                   name="education_qualification"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.staff.education_qualification}
                       label="Qualification"
                       onChange={onChange}
@@ -531,10 +542,10 @@ console.log('staffData:',staffData)
                   name="state"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.staff.state}
                       label="State"
                       onChange={onChange}
@@ -550,10 +561,10 @@ console.log('staffData:',staffData)
                   name="city"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.staff.city}
                       label="City"
                       onChange={onChange}
@@ -569,10 +580,10 @@ console.log('staffData:',staffData)
                   name="pin_code"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,  onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.staff.pin_code}
                       label="Pin Code"
                       type="number"
@@ -590,10 +601,10 @@ console.log('staffData:',staffData)
                   name="address_line_one"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,  onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData.staff.address_line_1}
                       label="Address Line One"
                       onChange={onChange}
@@ -610,10 +621,10 @@ console.log('staffData:',staffData)
                   name="address_line_two"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData?.staff?.address_line_2}
                       label="Address Line Two"
                       onChange={onChange}
@@ -630,11 +641,11 @@ console.log('staffData:',staffData)
                   name="phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
                       type="number"
-                      value={value}
+                      // value={value}
                       defaultValue={staffData?.staff?.phone_number}
                       label="Phone Number"
                       onChange={onChange}
@@ -651,10 +662,10 @@ console.log('staffData:',staffData)
                   name="alt_phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData?.staff?.alternate_number}
                       type="number"
                       label="Alt Phone Number"
@@ -673,10 +684,10 @@ console.log('staffData:',staffData)
                   name="username"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value,onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
                       defaultValue={staffData?.username}
                       label="Username"
                       onChange={onChange}

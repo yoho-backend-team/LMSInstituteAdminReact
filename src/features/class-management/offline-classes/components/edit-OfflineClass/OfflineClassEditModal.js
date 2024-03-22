@@ -50,12 +50,17 @@ const showErrors = (field, valueLen, min) => {
 };
 
 const schema = yup.object().shape({
-  // class_name: yup.string().required('Class Name field is required'),
-  // class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
-  // classDate: yup.date().nullable().required('Class Date field is required'),
-  // startTime: yup.date().nullable().required('Start Time field is required'),
-  // endTime: yup.date().nullable().required('End Time field is required'),
-  // instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required')
+  class_name: yup
+    .string()
+    .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
+    .required('Class Name field is required'),
+  class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
+  classDate: yup.date().nullable().required('Class Date field is required'),
+  startTime: yup.date().nullable().required('Start Time field is required'),
+  endTime: yup.date().nullable().required('End Time field is required'),
+  instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
+  coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
 });
 
 const defaultValues = {
@@ -64,18 +69,18 @@ const defaultValues = {
   startTime: null,
   endTime: null,
   instructor: '',
-  coordinator:''
+  coordinator: ''
 };
 
 const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
+  console.log(offlineClasses);
+
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-
-
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);
@@ -98,7 +103,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   };
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
-
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
@@ -128,26 +132,27 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (offlineClasses) {
-
-      setValue('class_date', offlineClasses?.class_date || '');
       setValue('class_name', offlineClasses?.class_name || '');
-      setValue('start_time', offlineClasses?.start_time || '');
-      setValue('end_time', offlineClasses?.end_time || '');
-      setValue('instructor_staff_ids', offlineClasses?.instructor_staff_ids || '');
-      setValue('coordinator_staff_ids', offlineClasses?.coordinator_staff_ids || '');
+      setValue('class_id', offlineClasses?.class_id || '');
+      setValue('classDate', offlineClasses?.classDate || new Date());
+      setValue('startTime', offlineClasses?.startTime || null);
+      setValue('endTime', offlineClasses?.endTime || null);
+      setValue('instructor', offlineClasses?.instructor || []);
+      setValue('coordinator', offlineClasses?.coordinator || []);
     }
   }, [offlineClasses, setValue]);
 
-  console.log("selected ", offlineClasses);
+  console.log('selected ', offlineClasses);
 
   const handleClose = () => {
-    setValue('classDate', null);
-    setValue('startTime', null);
-    setValue('endTime', null);
-    setValue('instructor', '');
-    setValue('coordinator', '');
     handleEditClose();
-    reset();
+    // setValue('class_name', null);
+    // setValue('classDate', null);
+    // setValue('startTime', null);
+    // setValue('endTime', null);
+    // setValue('instructor', '');
+    // setValue('coordinator', '');
+    reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
@@ -189,12 +194,14 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
     const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
     var bodyFormData = new FormData();
-    filteredInstructorId?.forEach((id) => { bodyFormData.append('instructor_staff_ids[]', id) })
-    filteredCoordinatorId?.forEach((id) => { bodyFormData.append('coordinator_staff_ids[]', id) })
+    filteredInstructorId?.forEach((id) => {
+      bodyFormData.append('instructor_staff_ids[]', id);
+    });
+    filteredCoordinatorId?.forEach((id) => {
+      bodyFormData.append('coordinator_staff_ids[]', id);
+    });
     bodyFormData.append('class_name', data.class_name);
     bodyFormData.append('class_id', offlineClasses.class_id);
-    // bodyFormData.append('class_id', data.selectedClassId);
-    // bodyFormData.append('branch_id', data.selectedBranchId);
     bodyFormData.append('branch_id', selectedBranchId);
     bodyFormData.append('course_id', data.course_id);
     bodyFormData.append('batch_id', data.batch_id);
@@ -211,6 +218,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
     } else {
       let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {
@@ -484,7 +492,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                     Submit
                   </Button>
-                  <Button variant="tonal" color="error" onClick={handleClose}>
+                  <Button onClick={handleClose} variant="tonal" color="error">
                     Cancel
                   </Button>
                 </Box>
