@@ -45,25 +45,24 @@ const CategoryFilter = ({ selectedBranchId }) => {
                   </TextField>
                 </Grid>
 
+  
                 <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    multiple
-                    fullWidth
-                    options={courses}
-                    filterSelectedOptions
-                    onChange={(e, newValue) => {
-                      const courseId = newValue.map((item) => item.course_id);
-                      const data = {
-                        course_id: courseId,
-                        branch_id: selectedBranchId
-                      };
-                      dispatch(getAllCourseCategories(data));
-                    }}
-                    id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.course_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
-                  />
-                </Grid>
+                    <Autocomplete
+                      fullWidth
+                      // value={value}
+                      onChange={(e, newValue) => {
+                        // const courseId = newValue?.map((item) => item?.course_id);
+                        const data = {
+                          course_id: newValue.course_id,
+                          branch_id: selectedBranchId
+                        };
+                        dispatch(getAllCourseCategories(data));
+                      }}
+                      options={courses}
+                      getOptionLabel={(option) => option.course_name || ''}
+                      renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
+                    />
+                  </Grid>
               </Grid>
             </CardContent>
           </Card>
