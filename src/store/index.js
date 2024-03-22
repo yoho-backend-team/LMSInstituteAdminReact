@@ -39,13 +39,16 @@ import technicalSupportsReducer from 'features/help-center/technical-support/red
 
 import chats from 'features/chat/redux/chatSlicees';
 
-import studentTicketsReducer from 'features/ticket-management/student/redux/studentTicketSlice';
-import staffTicketsReducer from 'features/ticket-management/staff/redux/staffTicketSlice';
+import studentOpenTickets from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketSlice';
+import studentClosedTickets from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketSlice';
+import staffOpenTicketSlice from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketSlice';
+import staffClosedTicketSlice from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketSlice';
 
 import faqCategoryReducer from 'features/faq-management/faq-categories/redux/faqCategorySlice';
 import faqReducer from 'features/faq-management/faqs/redux/faqSlice';
 
 import SubscriptionReducer from 'features/payment-management/subscriptions/redux/slices';
+
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
@@ -83,8 +86,10 @@ const store = configureStore({
     technicalSupport: technicalSupportsReducer,
     calendar: calendar,
     auth: auth,
-    staffTickets: staffTicketsReducer,
-    studentTickets: studentTicketsReducer,
+    staffOpenTickets: staffOpenTicketSlice,
+    staffClosedTickets: staffClosedTicketSlice,
+    studentOpenTickets: studentOpenTickets,
+    studentClosedTickets: studentClosedTickets,
     faqCategories: faqCategoryReducer,
     faqs: faqReducer,
     subscriptions: SubscriptionReducer

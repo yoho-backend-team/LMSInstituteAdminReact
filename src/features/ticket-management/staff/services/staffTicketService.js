@@ -1,16 +1,17 @@
 // groupService.js
 import axios from 'axios';
 
-const STAFF_TICKET_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/StaffTicket-management/StaffTickets`;
+const STAFF_TICKET_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/staff-ticket`;
+const STAFF_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/ticket`;
 
-export const getAllStaffTickets = async (selectedBranchId) => {
+export const getAllStaffTickets = async (data) => {
   try {
-    const response = await axios.get(`${STAFF_TICKET_API_END_POINT}/read`, {
+    const response = await axios.get(`${STAFF_TICKET_API_END_POINT}/get-by-type`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
@@ -30,71 +31,9 @@ export const getAllStaffTickets = async (selectedBranchId) => {
   }
 };
 
-export const searchStaffTickets = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchStaffTickets:', error);
-    throw error;
-  }
-};
-
-export const addStaffTicket = async (data) => {
-  try {
-    const response = await axios.post(`${STAFF_TICKET_API_END_POINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'StaffTicket created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StaffTicket' };
-    }
-  } catch (error) {
-    console.error('Error in addStaffTicket:', error);
-    throw error;
-  }
-};
-
-export const deleteStaffTicket = async (StaffTicketId) => {
-  try {
-    const response = await axios.delete(`${STAFF_TICKET_API_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: StaffTicketId }
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'StaffTicket deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete StaffTicket' };
-    }
-  } catch (error) {
-    console.error('Error in deleteStaffTicket:', error);
-    throw error;
-  }
-};
-
 export const updateStaffTicket = async (data) => {
   try {
-    const response = await axios.put(`${STAFF_TICKET_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${STAFF_TICKET_UPDATE_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -29,68 +29,6 @@ export const getAllStudentTickets = async (data) => {
   }
 };
 
-export const searchStudentTickets = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchStudentTickets:', error);
-    throw error;
-  }
-};
-
-export const addStudentTicket = async (data) => {
-  try {
-    const response = await axios.post(`${STUDENT_TICKET_END_POINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'StudentTicket created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StudentTicket' };
-    }
-  } catch (error) {
-    console.error('Error in addStudentTicket:', error);
-    throw error;
-  }
-};
-
-export const deleteStudentTicket = async (StudentTicketId) => {
-  try {
-    const response = await axios.delete(`${STUDENT_TICKET_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: StudentTicketId }
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'StudentTicket deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete StudentTicket' };
-    }
-  } catch (error) {
-    console.error('Error in deleteStudentTicket:', error);
-    throw error;
-  }
-};
-
 export const updateStudentTicket = async (data) => {
   try {
     const response = await axios.put(`${STUDENT_TICKET_END_POINT}/update`, data, {

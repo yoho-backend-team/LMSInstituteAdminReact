@@ -1,136 +1,84 @@
-// ** React Imports
+// React Imports
+import { useState } from 'react';
+
+// MUI Imports
+import Tab from '@mui/material/Tab';
+import TabPanel from '@mui/lab/TabPanel';
+import TabContext from '@mui/lab/TabContext';
+import MainCard from 'components/cards/MainCard';
+// Component Imports
+import CustomTabList from '@mui/lab/TabList';
+import { getAllStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketThunks';
+
+import { useEffect } from 'react';
+import { selectStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketSelectors';
+import { selectStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketSelectors';
+import { useSelector, useDispatch } from 'react-redux';
 import { Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-
-// ** Store & Actions Imports
-import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/ticket-management/student/components/AppChat';
-import { useDispatch, useSelector } from 'react-redux';
-
-// ** Utils Imports
-import { formatDateToMonthShort } from 'utils/format';
-import { getInitials } from 'utils/get-initials';
-
-// ** Chat App Components Imports
-
-import TicketSkeleton from 'components/cards/Skeleton/TicketSkeleton';
-import ChatContent from 'features/ticket-management/student/components/ChatContent';
-import SidebarLeft from 'features/ticket-management/student/components/SidebarLeft';
-import { getAllStudentTickets } from 'features/ticket-management/student/redux/studentTicketThunks';
-import { selectStudentTickets, selectLoading } from 'features/ticket-management/student/redux/studentTicketSelectors';
-
-const StudentTicket = () => {
-  // ** States
-  const [userStatus, setUserStatus] = useState('online');
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
-  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
-  const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
-  // const [studentTicketData,setStudentTicketdata]=useState()
-
-  // ** Hooks
-  const theme = useTheme();
+import OpenTicketCard from 'features/ticket-management/student/components/OpenTicketCard';
+import ClosedTicketCard from 'features/ticket-management/student/components/ClosedTicketCard';
+import TicketResolveDrawer from 'features/ticket-management/student/components/ResolveTicketDrawer';
+import { getAllStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketThunks';
+const StudentTicketsPage = () => {
+  // States
+  const [value, setValue] = useState('open');
   const dispatch = useDispatch();
-
-  const hidden = useMediaQuery(theme.breakpoints.down('lg'));
-  const store = useSelector((state) => state.chat);
-
-  // ** Vars
-  const skin = 'default';
-  const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
-  const sidebarWidth = smAbove ? 400 : 300;
-  const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
-  const statusObj = {
-    busy: 'error',
-    away: 'warning',
-    online: 'success',
-    offline: 'secondary'
-  };
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const studentTickets = useSelector(selectStudentTickets);
-  const studentLoading = useSelector(selectLoading);
-  useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId,
-      type: 'open'
-    };
-    dispatch(getAllStudentTickets(data));
-  }, [dispatch, selectedBranchId]);
+  const studentOpenTickets = useSelector(selectStudentOpenTickets);
+  const studentClosedTickets = useSelector(selectStudentClosedTickets);
+  const [openResolveDrawer, setOpenResolveDrawer] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState({});
 
   useEffect(() => {
-    dispatch(fetchUserProfile());
-    // dispatch(fetchChatsContacts())
-  }, [dispatch]);
+    dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, type: 'opened' }));
+  }, [selectedBranchId, dispatch]);
+  useEffect(() => {
+    dispatch(getAllStudentClosedTickets({ branch_id: selectedBranchId, type: 'closed' }));
+  }, [selectedBranchId, dispatch]);
 
-  const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
-  const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
-  const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
-  console.log('selectChat:', selectChat);
-  console.log('studentTickets', studentTickets);
+  const handleCloseDrawer = () => {
+    setOpenResolveDrawer((state) => !state);
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleSelectedTicket = (data) => {
+    setSelectedTicket(data);
+  };
+  console.log(studentClosedTickets);
 
   return (
-    <>
-      <Grid>
-        <Grid spacing={1} className="match-height">
-          {studentLoading ? (
-            <TicketSkeleton />
-          ) : (
-            <Box
-              className="app-chat"
-              sx={{
-                width: '100%',
-                display: 'flex',
-                height: '82vh',
-                flexDirection: 'row',
-                borderRadius: 1,
-                overflow: 'hidden',
-                position: 'relative',
-                backgroundColor: 'background.paper',
-                boxShadow: skin === 'bordered' ? 0 : 6,
-                ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
-              }}
-            >
-              <SidebarLeft
-                tickets={studentTickets}
-                store={store}
-                hidden={hidden}
-                mdAbove={mdAbove}
-                dispatch={dispatch}
-                statusObj={statusObj}
-                userStatus={userStatus}
-                selectChat={selectChat}
-                getInitials={getInitials}
-                sidebarWidth={sidebarWidth}
-                setUserStatus={setUserStatus}
-                leftSidebarOpen={leftSidebarOpen}
-                removeSelectedChat={removeSelectedChat}
-                userProfileLeftOpen={userProfileLeftOpen}
-                formatDateToMonthShort={formatDateToMonthShort}
-                handleLeftSidebarToggle={handleLeftSidebarToggle}
-                handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+    <MainCard title="Student Tickets">
+      <TabContext value={value}>
+        <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
+          <Tab value="open" label="Opened Tickets" />
+          <Tab value="close" label="Closed Tickets" />
+        </CustomTabList>
+        <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
+          <Grid container spacing={2}>
+            {studentOpenTickets?.map((ticket, index) => (
+              <OpenTicketCard
+                key={index}
+                ticket={ticket}
+                handleSelectedTicket={handleSelectedTicket}
+                onClick={() => setOpenResolveDrawer(true)}
               />
-              <ChatContent
-                store={store}
-                hidden={hidden}
-                sendMsg={sendMsg}
-                mdAbove={mdAbove}
-                dispatch={dispatch}
-                statusObj={statusObj}
-                getInitials={getInitials}
-                sidebarWidth={sidebarWidth}
-                userProfileRightOpen={userProfileRightOpen}
-                handleLeftSidebarToggle={handleLeftSidebarToggle}
-                handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
-              />
-            </Box>
-          )}
-        </Grid>
-      </Grid>
-    </>
+            ))}
+          </Grid>
+        </TabPanel>
+        <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
+          <Grid container spacing={2}>
+            {studentClosedTickets?.map((ticket, index) => (
+              <ClosedTicketCard key={index} ticket={ticket} />
+            ))}
+          </Grid>
+        </TabPanel>
+      </TabContext>
+      <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} ticket={selectedTicket} />
+    </MainCard>
   );
 };
-StudentTicket.contentHeightFixed = true;
 
-export default StudentTicket;
+export default StudentTicketsPage;

@@ -1,14 +1,14 @@
 // studentSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-const staffTicketSlice = createSlice({
-  name: 'staffTickets',
+const studentOpenTicketSlice = createSlice({
+  name: 'studentOpenTickets',
   initialState: {
     data: [],
     loading: true
   },
   reducers: {
-    setStaffTickets: (state, action) => {
+    setStudentOpenTickets: (state, action) => {
       state.data = action.payload;
     },
     setLoading: (state, action) => {
@@ -17,5 +17,5 @@ const staffTicketSlice = createSlice({
   }
 });
 
-export const { setStaffTickets, setLoading } = staffTicketSlice.actions;
-export default staffTicketSlice.reducer;
+export const { setStudentOpenTickets, setLoading } = studentOpenTicketSlice.actions;
+export default studentOpenTicketSlice.reducer;
