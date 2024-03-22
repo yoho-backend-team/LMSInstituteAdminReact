@@ -10,7 +10,7 @@ export const getAllStudyMaterials = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -58,7 +58,7 @@ export const addCourseStudyMaterial = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'CourseStudyMaterial created successfully' };
     } else {
@@ -79,7 +79,7 @@ export const deleteCourseStudyMaterial = async (data) => {
       },
       params: data
     });
-console.log(response);
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'CourseStudyMaterial deleted successfully' };
@@ -120,7 +120,7 @@ export const updateCourseStudyMaterialStatus = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-   console.log('studymaterialresponse:',response)
+    console.log('studymaterialresponse:', response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseStudyMaterial status updated successfully' };

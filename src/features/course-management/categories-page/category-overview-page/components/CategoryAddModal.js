@@ -14,7 +14,7 @@ import { addCourseCategory } from '../../services/courseCategoryServices';
 
 const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const image =
-    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
 
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
@@ -31,10 +31,10 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const schema = useMemo(
     () =>
       yup.object().shape({
-        course: yup
-          .string()
-          .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-          .required()
+        category: yup
+        .string()
+        .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
+        .required('Category Name is required'),
       }),
     [showErrors]
   );
@@ -107,7 +107,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
     async (data) => {
       var bodyFormData = new FormData();
       bodyFormData.append('logo', selectedImage);
-      bodyFormData.append('category_name', data.course);
+      bodyFormData.append('category_name', data.category);
 
       const result = await addCourseCategory(bodyFormData);
 
@@ -170,7 +170,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
               </Box>
 
               <Controller
-                name="course"
+                name="category"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -178,11 +178,11 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
                     fullWidth
                     value={value}
                     sx={{ mb: 4 }}
-                    label="Course Name"
+                    label="Category Name"
                     onChange={onChange}
                     placeholder="John Doe"
-                    error={Boolean(errors.course)}
-                    {...(errors.course && { helperText: errors.course.message })}
+                    error={Boolean(errors.category)}
+                    {...(errors.category && { helperText: errors.category.message })}
                   />
                 )}
               />

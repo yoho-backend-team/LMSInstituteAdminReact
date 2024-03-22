@@ -32,6 +32,7 @@ import { Link, useLocation } from 'react-router-dom';
 // import { deleteCourseCategory } from '../../services/courseCategoryServices';
 import { deleteCourse } from 'features/course-management/courses-page/services/courseServices';
 import { useCallback } from 'react';
+import toast from 'react-hot-toast';
 
 import CourseDeleteModel from 'components/modal/DeleteModel';
 
@@ -244,7 +245,7 @@ const CourseViewPage = () => {
           <CourseDeleteModel
             open={courseDeleteModelOpen}
             setOpen={setCourseDeleteModelOpen}
-            description="Are you sure you want to delete this item?"
+            description="Are you sure you want to delete this Course? "
             title="Delete"
             handleSubmit={handleCourseDelete}
           />
