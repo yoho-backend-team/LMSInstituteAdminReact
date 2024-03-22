@@ -3,17 +3,19 @@ import { Grid, IconButton } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import { PDFViewer } from 'react-view-pdf';
 const StudyMaterialView = ({ open, handleViewClose }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
+
   return (
     <div>
       <Dialog
+        fullScreen
         open={open}
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -27,7 +29,7 @@ const StudyMaterialView = ({ open, handleViewClose }) => {
             alignItems: 'center'
           }}
         >
-          View StudyMaterial Information
+          View StudyMaterial Informations
           <IconButton onClick={handleViewClose}>
             <CloseIcon />
           </IconButton>
@@ -40,7 +42,7 @@ const StudyMaterialView = ({ open, handleViewClose }) => {
           }}
         >
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <iframe title="PDF Viewer" src={savedPdfUrl} width="100%" height="500px" />
+            <PDFViewer url={savedPdfUrl} />
           </Grid>
         </DialogContent>
       </Dialog>

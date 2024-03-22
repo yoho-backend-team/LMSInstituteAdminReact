@@ -16,16 +16,8 @@ import Icon from 'components/icon';
 import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import toast from 'react-hot-toast';
 import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
-
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
+import { useState } from 'react';
+import { PDFViewer } from 'react-view-pdf';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -35,11 +27,15 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
+  description: yup
+    .string()
+    .required('Description is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
   title: yup
     .string()
-    .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+  pdf_file: yup.mixed().required('PDF file is required')
 });
 
 const defaultValues = {
@@ -49,37 +45,41 @@ const defaultValues = {
 
 const StudyMaterialEdit = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, StudyMaterials } = props;
   console.log('StudyMaterialEdit - open:', props.open);
   console.log('StudyMaterialEdit - toggle:', props.toggle);
   // ** State
+  const [studymaterialPdf, setstudymaterialPdf] = useState('');
+  const savedPdfUrl = require('assets/pdf.pdf');
 
   const {
-    reset,
-    control,
-    setValue,
-    // setError,
     handleSubmit,
+    control,
+    reset,
+    setValue,
     formState: { errors }
   } = useForm({
-    defaultValues: props.initialValues || defaultValues,
+    defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
 
-  console.log(defaultValues);
+  console.log('StudyMaterials :', StudyMaterials);
 
   useEffect(() => {
-    if (open) {
-      reset(props.initialValues || defaultValues);
+    if (StudyMaterials) {
+      setValue('title', StudyMaterials?.title || '');
+      setValue('description', StudyMaterials?.description || '');
+      setValue('pdf_file', StudyMaterials?.studymaterialPdf || '');
     }
-  }, [open, reset, props.initialValues]);
+  }, [StudyMaterials, setValue]);
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', props.initialValues.id);
+    bodyFormData.append('document', studymaterialPdf);
     console.log(bodyFormData);
 
     const result = await updateCourseStudyMaterial(bodyFormData);
@@ -103,7 +103,10 @@ const StudyMaterialEdit = (props) => {
     toggle();
     reset();
   };
-
+  const handleSetPdf = (data) => {
+    setstudymaterialPdf(data);
+    setValue('pdf_file', data);
+  };
   return (
     <Drawer
       open={open}
@@ -111,78 +114,86 @@ const StudyMaterialEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { md:1100,xs: 300, sm: 500 } } }}
     >
-      <Header>
-        <Typography variant="h5">Edit Study Material</Typography>
-        <IconButton
-          size="small"
-          onClick={handleClose}
-          sx={{
-            p: '0.438rem',
-            borderRadius: 1,
-            color: 'text.primary',
-            backgroundColor: 'action.selected',
-            '&:hover': {
-              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-            }
-          }}
-        >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
-        </IconButton>
-      </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
-          </Grid>
+      <Grid container spacing={1}>
+        <Grid item md={6} sm={12} sx={{mt:5,pl:2,height:"100%"}}>
+        <PDFViewer url={savedPdfUrl} />
+        </Grid>
+        <Grid item  md={6} sm={12}>
+          <Header>
+            <Typography variant="h5">Edit Study Material</Typography>
+            <IconButton
+              size="small"
+              onClick={handleClose}
+              sx={{
+                p: '0.438rem',
+                borderRadius: 1,
+                color: 'text.primary',
+                backgroundColor: 'action.selected',
+                '&:hover': {
+                  backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
+                }
+              }}
+            >
+              <Icon icon="tabler:x" fontSize="1.125rem" />
+            </IconButton>
+          </Header>
+          <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
+                <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+                {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
+              </Grid>
 
-          <Controller
-            name="title"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Title"
-                onChange={onChange}
-                placeholder="John Doe"
-                error={Boolean(errors.title)}
-                {...(errors.title && { helperText: errors.title.message })}
+              <Controller
+                name="title"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 4 }}
+                    label="Title"
+                    onChange={onChange}
+                    placeholder="John Doe"
+                    error={Boolean(errors.title)}
+                    helperText={errors.title?.message}
+                  />
+                )}
               />
-            )}
-          />
 
-          <Controller
-            name="description"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="description"
-                onChange={onChange}
-                placeholder="Business Development Executive"
-                error={Boolean(errors.description)}
-                {...(errors.description && { helperText: errors.description.message })}
+              <Controller
+                name="description"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 4 }}
+                    label="description"
+                    onChange={onChange}
+                    placeholder="Business Development Executive"
+                    error={Boolean(errors.description)}
+                    {...(errors.description && { helperText: errors.description.message })}
+                  />
+                )}
               />
-            )}
-          />
 
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+                  Submit
+                </Button>
+                <Button variant="tonal" color="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Box>
+            </form>
           </Box>
-        </form>
-      </Box>
+        </Grid>
+      </Grid>
     </Drawer>
   );
 };

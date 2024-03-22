@@ -127,23 +127,6 @@ const StudenrCertificate = () => {
 
   console.log('certificate', studentCertificates);
 
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchStudentCertificates(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setStudentCertificates(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -328,7 +311,7 @@ const StudenrCertificate = () => {
           <StudentCertificateTableHeader
             selectedBranchId={selectedBranchId}
             value={value}
-            handleFilter={handleFilter}
+            // handleFilter={handleFilter}
             toggle={toggleAddUserDrawer}
           />
         </Grid>
