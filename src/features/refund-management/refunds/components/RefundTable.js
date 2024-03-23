@@ -48,9 +48,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
-// const handleRowClick = (rowData) => {
-//   setSelectedRows(rowData);
-// };
 
 
 
@@ -168,6 +165,11 @@ const RefundTable = () => {
 
   const [refundViewOpen, setRefundViewUserOpen] = useState(false);
 
+  const [selectedRowDetails, setSelectedRowDetails] = useState(null);
+
+  const handleRowClick = (rowData) => {
+    setSelectedRowDetails(rowData);
+  };
 
   const toggleRefundViewDrawer = () => {
     setRefundViewUserOpen(!refundViewOpen); // This line toggles the editUserOpen state
@@ -364,6 +366,7 @@ const RefundTable = () => {
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+                onRowClick={(params) => handleRowClick(params.row)} // Handle row click
               />
             </Card>
           )}
@@ -372,6 +375,7 @@ const RefundTable = () => {
           <RefundViewDrawer
             open={refundViewOpen}
             toggle={toggleRefundViewDrawer}
+            selectedRowDetails={selectedRowDetails}
           />
 
           <RefundDeleteModel
