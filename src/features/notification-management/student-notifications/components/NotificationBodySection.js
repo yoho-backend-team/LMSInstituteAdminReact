@@ -80,14 +80,14 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
         throw new Error('Notification not found');
       }
 
-      const { title, body } = selectedNotification.institute_notifications;
+      // const { title, body } = selectedNotification.institute_notifications;
 
       const data = {
         id: id,
         notification_id: selectedNotification.notification_id, // Include the notification_id field
-        body: body,
-        branch_id: selectedBranchId,
-        title: title
+        // body: body,
+        // branch_id: selectedBranchId,
+        // title: title
       };
 
       const response = await resendStudentNotification(data);

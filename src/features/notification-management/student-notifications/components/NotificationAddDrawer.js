@@ -34,7 +34,9 @@ const NotificationAddDrawer = (props) => {
   // ** State
 
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -51,7 +53,7 @@ const NotificationAddDrawer = (props) => {
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({branch_id:selectedBranchId});
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
@@ -85,8 +87,14 @@ const NotificationAddDrawer = (props) => {
 
   const schema = yup.object().shape({
     students: yup.array().required('Students is required').min(1, 'Select at least one student'),
-    title: yup.string().required('Title is required'),
-    body: yup.string().required('Body is required'),
+    title: yup
+    .string()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+    body: yup
+    .string()
+    .required('Body is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
     course: yup.object().required('Course is required'),
     batch: yup.object().required('Batch is required')
   });
@@ -100,23 +108,25 @@ const NotificationAddDrawer = (props) => {
   };
 
   const {
-    handleSubmit,
+    reset,
     control,
     setValue,
+    handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm({ 
+  } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
 
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset(); // Reset form values
-  };
 
+  const handleClose = () => {
+    setInputValue(''); // Reset input value
+    setImgSrc(image); // Reset image source
+    setSelectedImage(''); // Reset selected image
+    reset(); // Reset form values
+    toggle(); // Close the drawer
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -172,7 +182,6 @@ const NotificationAddDrawer = (props) => {
       }
     }
   };
-
 
   return (
     <Drawer
@@ -385,6 +394,8 @@ const NotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
+                  multiline // Add multiline prop
+                  rows={4} // Set rows to 4
                 />
               )}
             />

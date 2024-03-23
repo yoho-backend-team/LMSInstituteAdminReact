@@ -11,9 +11,11 @@ import { DataGrid } from '@mui/x-data-grid';
 // import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 import toast from 'react-hot-toast';
-import { resendNotification } from '../services/allNotificationServices';
+// import { resendNotification } from '../services/allNotificationServices';
 
-const AllNotificationBodySection = ({ allNotifications, selectedBranchId }) => {
+import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
+
+const AllNotificationBodySection = ({ allNotifications }) => {
   console.log(allNotifications);
 
   // ** State
@@ -27,12 +29,17 @@ const AllNotificationBodySection = ({ allNotifications, selectedBranchId }) => {
         throw new Error('Notification not found');
       }
 
+      // const { title, body } = selectedNotification.institute_notifications;
+
       const data = {
         id: id,
-        branch_id: selectedBranchId
+        notification_id: selectedNotification.notification_id // Include the notification_id field
+        // body: body,
+        // branch_id: selectedBranchId,
+        // title: title
       };
 
-      const response = await resendNotification(data);
+      const response = await resendStudentNotification(data);
 
       if (response.success) {
         // Handle success

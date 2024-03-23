@@ -128,12 +128,12 @@ export const resendStudentNotification = async (data) => {
     console.log(response);
 
     if (response.data.status) {
-      return { success: true, message: 'StudentNotification Resend successfully' };
+      return { success: true, message: 'Notification Resend successfully' };
     } else {
-      return { success: false, message: 'Failed to resend StudentNotification' };
+      return { success: false, message: 'Failed to resend Notification' };
     }
   } catch (error) {
-    console.error('Error in resendStudentNotification:', error);
+    console.error('Error in resendNotification:', error);
     throw error;
   }
 };
