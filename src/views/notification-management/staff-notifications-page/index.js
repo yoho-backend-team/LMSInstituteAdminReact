@@ -47,7 +47,7 @@ const StaffNotification = () => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <StaffNotificationHeaderSection />
+          <StaffNotificationHeaderSection staffNotifications={staffNotifications} />
         </Grid>
         <Grid item xs={12}>
           <StaffNotificationTableHeader toggle={toggleAddUserDrawer} />
