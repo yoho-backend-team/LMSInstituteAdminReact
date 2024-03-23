@@ -88,7 +88,7 @@ const ViewOfflineClass = () => {
       field: 'student_id',
       renderCell: (params) => (
         <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {params?.row?.studentattendance?.student?.student?.student?.student_id}
+         {params?.row?.studentattendance[0]?.attendance?.student?.student_id}
         </Typography>
       )
     },
@@ -102,8 +102,8 @@ const ViewOfflineClass = () => {
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {params?.row?.studentattendance?.student?.student?.first_name}
-              {params?.row?.studentattendance?.student?.student?.last_name}
+            {params?.row?.studentattendance[0]?.student?.first_name} 
+            {params?.row?.studentattendance[0]?.student?.last_name}
             </Typography>
           </Box>
         );
