@@ -36,17 +36,17 @@ const schema = yup.object().shape({
   staff_type: yup.string().required('Batch is required'),
   staff: yup.object().required('Students is required'),
   payment_date: yup.string().required('Payment Date is required'),
-  paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
+  salary_amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
 const defaultValues = {
   branch: '',
   staff_type: '',
   staff: '',
-  payment_date: '',
-  paymentId: Number('0'),
-  paidAmount: Number('0')
+  payment_date: ''
+  // paymentId: Number('0'),
+  // salary_amount: Number('0')
 };
 
 const FeesAddDrawer = (props) => {
@@ -54,7 +54,8 @@ const FeesAddDrawer = (props) => {
   const { open, toggle } = props;
   // ** State
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const [activeCourse, setActiveCourse] = useState([]);
@@ -106,6 +107,7 @@ const FeesAddDrawer = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
+
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -121,17 +123,17 @@ const FeesAddDrawer = (props) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
+    
     var bodyFormData = new FormData();
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);
     bodyFormData.append('institute_staff_id', data.staff.staff_id);
-    bodyFormData.append('transaction_id', data.paymentId);
+    bodyFormData.append('transaction_id', data.transaction_id);
+    bodyFormData.append('salary_amount', data.salary_amount);
     bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
-    bodyFormData.append('salary_amount', data.paidAmount);
 
     const result = await addTeachingStaffSalary(bodyFormData);
-
+    console.log(data)
     if (result.success) {
       toast.success(result.message);
     } else {
@@ -167,7 +169,7 @@ const FeesAddDrawer = (props) => {
     }
   }));
 
-  const handleInputImageChange = (file) => {
+    const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
@@ -197,7 +199,7 @@ const FeesAddDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h5">Edit Salaries</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -216,7 +218,7 @@ const FeesAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -326,17 +328,17 @@ const FeesAddDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paymentId"
+                name="transaction_id"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     sx={{ mb: 2 }}
                     fullWidth
-                    label="Payment Id"
+                    label="Transaction Id"
                     type="number"
-                    error={Boolean(errors.paymentId)}
-                    helperText={errors.paymentId?.message}
+                    error={Boolean(errors.transaction_id)}
+                    helperText={errors.transaction_id?.message}
                   />
                 )}
               />
@@ -344,17 +346,35 @@ const FeesAddDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paidAmount"
+                name="salary_amount"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     sx={{ mb: 2 }}
                     fullWidth
-                    label="Paid Amount"
+                    label="salary amount"
                     type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
+                    error={Boolean(errors.salary_amount)}
+                    helperText={errors.salary_amount?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="balance"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    sx={{ mb: 2 }}
+                    fullWidth
+                    label="Balance"
+                    type="number"
+                    error={Boolean(errors.balance)}
+                    helperText={errors.balance?.message}
                   />
                 )}
               />

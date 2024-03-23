@@ -71,9 +71,9 @@ const StepperLinearWithValidation = () => {
     //   .string()
     //   .required('city is required')
     //   .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters'),
-    // pin_code: yup
+    // pincode: yup
     //   .string()
-    //   .required('PIN Code is required')
+    //   .required('Pin Code is required')
     //   .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
     // qualification: yup
     //   .string()
@@ -106,13 +106,13 @@ console.log(activeStep);
     last_name:'',
     name: '',
     email: '',
-    phone: '',
+    phone_no: '',
     alt_phone: '',
     state: '',
     city: '',
-    pin_code: '',
-    address_line_one: '',
-    address_line_two: '',
+    pincode: '',
+    address_line_1: '',
+    address_line_2: '',
     date_of_birth: '',
     gender: '',
     course: '',
@@ -160,13 +160,13 @@ console.log(activeStep);
         first_name,
         last_name,
         email,
-        phone,
-        alt_phone,
+        phone_no,
+        alternate_number,
         state,
         city,
-        pin_code,
-        address_line_one,
-        address_line_two,
+        pincode,
+        address_line_1,
+        address_line_2,
         date_of_birth,
         gender,
         branch,
@@ -178,13 +178,13 @@ console.log(activeStep);
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
-      setValue('phone_no', phone || '');
-      setValue('alt_phone', alt_phone || '');
+      setValue('phone_no', phone_no || '');
+      setValue('alternate_number', alternate_number || '');
       setValue('state', state || '');
       setValue('city', city || '');
-      setValue('pincode', pin_code || '');
-      setValue('address_line_one', address_line_one || '');
-      setValue('address_line_two', address_line_two || '');
+      setValue('pincode', pincode || '');
+      setValue('address_line_1 ', address_line_1 || '');
+      setValue('address_line_2', address_line_2 || '');
       setValue('date_of_birth', date_of_birth || '');
       setValue('gender', gender || '');
       setValue('branch', branch || '');
@@ -267,17 +267,17 @@ console.log(activeStep);
     data.append('first_name', personalData?.first_name);
     data.append('last_name', personalData?.last_name);
     data.append('email', personalData?.email);
-    data.append('phone_no', personalData?.phone);
-    data.append('alternate_number', personalData?.alt_phone);
+    data.append('phone_no', personalData?.phone_no);
+    data.append('alternate_number', personalData?.alternate_number);
     data.append('branch_id', personalData?.branch);
     data.append('course_id', personalData?.course);
     data.append('image', logo);
     data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_one);
-    data.append('address_line_2', personalData?.address_line_two);
+    data.append('address_line_1', personalData?.address_line_1 );
+    data.append('address_line_2', personalData?.address_line_2);
     data.append('city', personalData?.city);
     data.append('state', personalData?.state);
-    data.append('pincode', personalData?.pin_code);
+    data.append('pincode', personalData?.pincode);
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
@@ -642,16 +642,16 @@ console.log(activeStep);
                     type="number"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['pin_code'])}
+                    error={Boolean(personalErrors['pincode'])}
                     aria-describedby="stepper-linear-personal-pin_code"
-                    helperText={personalErrors.pin_code?.message}
+                    helperText={personalErrors.pincode?.message}
                   />
                 )}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="address_line_one"
+                name="address_line_1 "
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -670,7 +670,7 @@ console.log(activeStep);
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="address_line_two"
+                name="address_line_2"
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -689,7 +689,7 @@ console.log(activeStep);
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="phone"
+                name="phone_no"
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -709,7 +709,7 @@ console.log(activeStep);
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="alt_phone"
+                name="alternate_number"
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (

@@ -1,7 +1,7 @@
 // ** React Imports
 import { useEffect, useState, forwardRef } from 'react';
 // ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography, Avatar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -28,7 +28,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
+  transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
@@ -53,7 +53,8 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 const FeesEditDrawer = (props) => {
   // ** Props
   const { open, toggle, selectedRows, setRefetch } = props;
-  const image = require('assets/images/avatar/1.png');
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
@@ -87,20 +88,34 @@ const FeesEditDrawer = (props) => {
   useEffect(() => {
     if (selectedRows) {
       setValue('logo', selectedRows.selectedImage || '');
-      setValue('paymentId', selectedRows?.transaction_id || '');
-      setValue('paidAmount', selectedRows?.paid_amount || '');
+      setValue('transaction_id', selectedRows?.transaction_id || '');
+      setValue('paid_amount', selectedRows?.paid_amount || '');
       setValue('payment_date', new Date(`${selectedRows?.payment_date}`));
       setSelectedDate(selectedRows?.payment_date ? new Date(selectedRows?.payment_date) : new Date());
     }
   }, [selectedRows]);
 
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
   // Form submission handler
   const onSubmit = useCallback(async (data) => {
     const inputData = new FormData();
     inputData.append('logo', selectedImage);
-    inputData.append('paymentId', data.transaction_id);
+    inputData.append('transaction_id', data.transaction_id);
     inputData.append('paid_amount', data.paid_amount);
-    inputData.append('payment_date', data.payment_date);
+    inputData.append('payment_date', convertDateFormat(data.payment_date));
     inputData.append('id', selectedRows.id);
 
     const result = await updateStudentFee(inputData);
@@ -184,6 +199,27 @@ const FeesEditDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Avatar
+                  src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.students?.image}`}
+                  sx={{ mr: 2.5, height: 42, width: 42 }}
+                />
+                <Box>
+                  <Typography variant="h5" sx={{ fontSize: '18px' }}>
+                    {selectedRows?.students?.first_name}
+                    {selectedRows?.students?.last_name}
+                  </Typography>
+                  <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: '14px' }}>
+                    {selectedRows?.students?.email}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography sx={{ fontSize: 12, color: 'primary.main' }}>{selectedRows?.ago}</Typography>
+              </Box>
+            </Box>
+
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
               {!selectedImage && (
                 <ImgStyled
@@ -220,22 +256,17 @@ const FeesEditDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paymentId"
-                rules={{ required: true }}
+                name="transaction_id"
                 control={control}
-                render={({ field: { onChange, value } }) => (
+                render={({ field }) => (
                   <TextField
-                    // defaultValue={selectedRows? selectedRows?.total :5556}
-                    value={value}
+                    {...field}
                     sx={{ mb: 2 }}
                     fullWidth
-                    // value={value}
-                    onChange={onChange}
-                    // label={selectedRows?.total}
-                    label="transaction Id"
+                    label="Transaction Id"
                     type="number"
-                    error={Boolean(errors.paymentId)}
-                    helperText={errors.paymentId?.message}
+                    error={Boolean(errors.transaction_id)}
+                    helperText={errors.transaction_id?.message}
                   />
                 )}
               />
@@ -243,7 +274,7 @@ const FeesEditDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paidAmount"
+                name="paid_amount"
                 rules={{ required: true }}
                 control={control}
                 render={({ field: { onChange, value } }) => (

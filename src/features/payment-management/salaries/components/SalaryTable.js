@@ -51,8 +51,10 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.staff?.image) {
+    return (
+      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.staff?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
+    );
   } else {
     return (
       <Avatar
@@ -64,6 +66,12 @@ const renderClient = (row) => {
       </Avatar>
     );
   }
+};
+
+const userStatusObj = {
+  paid: 'success',
+  pending: 'warning',
+  refund: 'secondary'
 };
 
 /* eslint-disable */
@@ -93,8 +101,8 @@ const SalaryTable = () => {
 
   console.log(TeachingStaffSalaries);
   useEffect(() => {
-    dispatch(getAllStaffSalaries({branch_id:selectedBranchId}));
-  }, [dispatch, selectedBranchId,refetch]);
+    dispatch(getAllStaffSalaries({ branch_id: selectedBranchId }));
+  }, [dispatch, selectedBranchId, refetch]);
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -135,27 +143,26 @@ const SalaryTable = () => {
     { staff_id: '3', staff_name: 'stafftype 3' }
   ];
 
-  
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
   };
-  
-    // Memoize the handleDelete function to prevent unnecessary re-renders
-    const handleDelete = useCallback((itemId) => {
-      setSelectedSalariesDeleteId(itemId);
-      setSalariesDeleteModelOpen(true);
-    }, []);
-  
-    // Handle branch deletion
-    const handleSalariesDelete = async () => {
-      const result = await deleteTeachingStaffSalary({id:selectedSalariesDeleteId});
-      if (result.success) {
-        toast.success(result.message);
-        setRefetch((state) => !state);
-      } else {
-        toast.error(result.message);
-      }
-    };
+
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedSalariesDeleteId(itemId);
+    setSalariesDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleSalariesDelete = async () => {
+    const result = await deleteTeachingStaffSalary({ id: selectedSalariesDeleteId });
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   const defaultColumns = [
     {
@@ -217,7 +224,14 @@ const SalaryTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return <Typography sx={{ color: 'text.secondary' }}>{row.status}</Typography>;
+        return  <CustomChip
+        rounded
+        skin="light"
+        size="small"
+        label={row.status}
+        color={userStatusObj[row.status]}
+        sx={{ textTransform: 'capitalize' }}
+      />;
       }
     }
   ];
@@ -345,7 +359,6 @@ const SalaryTable = () => {
   //     avatarColor: 'primary'
   //   }
   // ];
- 
 
   return (
     <DatePickerWrapper>
@@ -355,7 +368,7 @@ const SalaryTable = () => {
             <CardHeader title="Salary" />
             <CardContent>
               <Grid container spacing={6}>
-              <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     select
                     fullWidth
@@ -427,48 +440,51 @@ const SalaryTable = () => {
                     SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                   />
                 </Grid>
-
               </Grid>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12}>
-        <SalaryCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} />
+          <SalaryCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
         </Grid>
         <Grid item xs={12}>
           <Card>
-          {loading ? <PaymentSalarySkeleton /> :(
-            <DataGrid
-              sx={{ p: 2 }}
-              autoHeight
-              pagination
-              rowHeight={62}
-              // rows={TeachingStaffSalaries}
-              rows={TeachingStaffSalaries}
-              columns={columns}
-              disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
-              onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
-            />
+            {loading ? (
+              <PaymentSalarySkeleton />
+            ) : (
+              <DataGrid
+                sx={{ p: 2 }}
+                autoHeight
+                pagination
+                rowHeight={62}
+                // rows={TeachingStaffSalaries}
+                rows={TeachingStaffSalaries}
+                columns={columns}
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                paginationModel={paginationModel}
+                onPaginationModelChange={setPaginationModel}
+                onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+              />
             )}
           </Card>
         </Grid>
       </Grid>
       <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-      <SalaryEditDrawer      setRefetch={setRefetch}
+      <SalaryEditDrawer
+        setRefetch={setRefetch}
         open={editUserOpen}
         toggle={toggleEditUserDrawer}
         selectedRows={selectedRows}
-        handleRowClick={handleRowClick} />
-           <SalariesDeleteModel
-          open={salariesDeleteModelOpen}
-          setOpen={setSalariesDeleteModelOpen}
-          description="Are you sure you want to delete this studentCertificate?"
-          title="Delete"
-          handleSubmit={handleSalariesDelete}
-        />
+        handleRowClick={handleRowClick}
+      />
+      <SalariesDeleteModel
+        open={salariesDeleteModelOpen}
+        setOpen={setSalariesDeleteModelOpen}
+        description="Are you sure you want to delete this Salaries?"
+        title="Delete"
+        handleSubmit={handleSalariesDelete}
+      />
     </DatePickerWrapper>
   );
 };

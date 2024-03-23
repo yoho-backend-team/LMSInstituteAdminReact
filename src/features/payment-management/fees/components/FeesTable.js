@@ -20,7 +20,7 @@ import { getInitials } from 'utils/get-initials';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
-import DeleteDialog from 'components/modal/DeleteModel';
+import FeeDeleteModel from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 import FeesAddDrawer from './FeesAddDrawer';
@@ -35,6 +35,9 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectStudentFees } from '../redux/studentFeeSelectors';
 import { getAllStudentFees } from '../redux/studentFeeThunks';
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
+import CustomChip from 'components/mui/chip';
+import { deleteStudentFee } from '../services/studentFeeServices';
+import { useCallback } from 'react';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -45,8 +48,10 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 const renderClient = (row) => {
-  if (row?.avatar?.length) {
-    return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+  if (row?.students?.image) {
+    return (
+      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.students?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
+    );
   } else {
     return (
       <Avatar
@@ -71,6 +76,11 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
+const userStatusObj = {
+  paid: 'success',
+  pending: 'warning',
+  refund: 'secondary'
+};
 /* eslint-enable */
 const FeesTable = () => {
   // ** State
@@ -82,7 +92,6 @@ const FeesTable = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
 
   function convertDateFormat(input) {
@@ -124,8 +133,6 @@ const FeesTable = () => {
     console.log('Toggle drawer');
   };
 
-
-
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
   };
@@ -153,7 +160,27 @@ const FeesTable = () => {
     );
   }, [dispatch, selectedBranchId]);
 
+  const [feeDeleteModelOpen, setFeeDeleteModelOpen] = useState(false);
+
+  const [selectedFeeDeleteId, setSelectedFeeDeleteId] = useState(null);
   const batch = useSelector(selectBatches);
+
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedFeeDeleteId(itemId);
+    setFeeDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleFeeDelete = async () => {
+    const result = await deleteStudentFee({ id: selectedFeeDeleteId });
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   const defaultColumns = [
     {
@@ -215,7 +242,16 @@ const FeesTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return <Typography>{row.status}</Typography>;
+        return (
+          <CustomChip
+            rounded
+            skin="light"
+            size="small"
+            label={row.status}
+            color={userStatusObj[row.status]}
+            sx={{ textTransform: 'capitalize' }}
+          />
+        );
       }
     }
   ];
@@ -259,6 +295,14 @@ const FeesTable = () => {
                 }
               },
               {
+                // to: `/apps/invoice/delete/${row.id}`,
+                text: 'Delete',
+                icon: <Icon icon="mdi:delete-outline" />,
+                menuItemProps: {
+                  onClick: () => handleDelete(row.id)
+                }
+              },
+              {
                 text: 'Download',
                 icon: <Icon icon="tabler:download" fontSize={20} />
               }
@@ -281,10 +325,10 @@ const FeesTable = () => {
 
   return (
     <DatePickerWrapper>
-      <CardHeader title="Fee" />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
+            <CardHeader title="Fee" />
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -336,7 +380,7 @@ const FeesTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
-          <FeesCardHeader selectedBranchId={selectedBranchId}  selectedRows={selectedRows}  toggle={toggleAddUserDrawer} />
+          <FeesCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -370,11 +414,12 @@ const FeesTable = () => {
         selectedRows={selectedRows}
         handleRowClick={handleRowClick}
       />
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
+      <FeeDeleteModel
+        open={feeDeleteModelOpen}
+        setOpen={setFeeDeleteModelOpen}
+        description="Are you sure you want to delete this studentFee?"
         title="Delete"
+        handleSubmit={handleFeeDelete}
       />
     </DatePickerWrapper>
   );

@@ -32,32 +32,34 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }));
 
-const schema = yup.object().shape({
-  course: yup.string().required('Course is required'),
-  branch: yup.string().required('Branch is required'),
-  batch: yup.string().required('Batch is required'),
-  student: yup.string().required('Students is required'),
-  payment_date: yup.string().required('Payment Date is required'),
-  paymentId: yup.number().typeError('Payment Id must be a number').required('Payment Id is required'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
-});
-
 const defaultValues = {
   branch: '',
   course: '',
   batch: '',
   student: '',
   payment_date: new Date(),
-  paymentId: Number('0'),
-  paidAmount: Number('0')
+  // transaction_id: Number(''),
+  // paidAmount: Number('')
 };
+
+const schema = yup.object().shape({
+  course: yup.string().required('Course is required'),
+  branch: yup.string().required('Branch is required'),
+  batch: yup.string().required('Batch is required'),
+  student: yup.string().required('Students is required'),
+  payment_date: yup.string().required('Payment Date is required'),
+  transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
+  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+});
+
 
 const FeesAddDrawer = (props) => {
   // ** Props
   const { open, toggle } = props;
   // ** State
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
@@ -81,7 +83,7 @@ const FeesAddDrawer = (props) => {
     setActiveBranches(result.data.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({branch_id:selectedBranchId});
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
@@ -133,9 +135,9 @@ const FeesAddDrawer = (props) => {
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);
     bodyFormData.append('student_id', data.student);
-    bodyFormData.append('transaction_id', data.paymentId);
-    bodyFormData.append('payment_date', convertDateFormat(data.payment_date));
+    bodyFormData.append('transaction_id', data.transaction_id);
     bodyFormData.append('paid_amount', data.paidAmount);
+    bodyFormData.append('payment_date', convertDateFormat(data.payment_date));
 
     const result = await addStudentFee(bodyFormData);
 
@@ -334,7 +336,7 @@ const FeesAddDrawer = (props) => {
                 name="payment_date"
                 control={control}
                 rules={{ required: 'Payment Date field is required' }}
-                render={({ field: {value, onChange } }) => (
+                render={({ field: { value, onChange } }) => (
                   <DatePicker
                     selected={value}
                     id="date-time-picker"
@@ -347,23 +349,23 @@ const FeesAddDrawer = (props) => {
                 )}
               />
               {errors.payment_date && (
-                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
+                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date?.message}</p>
               )}
             </Grid>
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="paymentId"
+                name="transaction_id"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     sx={{ mb: 2 }}
                     fullWidth
-                    label="Payment Id"
+                    label="Transaction Id"
                     type="number"
-                    error={Boolean(errors.paymentId)}
-                    helperText={errors.paymentId?.message}
+                    error={Boolean(errors.transaction_id)}
+                    helperText={errors.transaction_id?.message}
                   />
                 )}
               />
@@ -382,6 +384,24 @@ const FeesAddDrawer = (props) => {
                     type="number"
                     error={Boolean(errors.paidAmount)}
                     helperText={errors.paidAmount?.message}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="balance"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    sx={{ mb: 2 }}
+                    fullWidth
+                    label="Balance"
+                    type="number"
+                    error={Boolean(errors.balance)}
+                    helperText={errors.balance?.message}
                   />
                 )}
               />
