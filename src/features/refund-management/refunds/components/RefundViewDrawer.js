@@ -32,7 +32,7 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
           <Typography variant="h5">Refund Details</Typography>
           <IconButton
             size="small"
-            // onClick={handleClose}
+            onClick={handleClose}
             sx={{
               p: '0.438rem',
               borderRadius: 1,

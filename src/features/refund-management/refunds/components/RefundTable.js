@@ -48,9 +48,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
-
-
-
 const defaultColumns = [
   {
     flex: 0.3,
@@ -145,7 +142,6 @@ const RefundTable = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
 
   const [refetch, setRefetch] = useState(false);
   console.log(setRefetch);
@@ -324,22 +320,22 @@ const RefundTable = () => {
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
-                    // multiple
                     fullWidth
                     options={batch}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
-                      // const batchId = newValue.map((item) => item.batch.batch_id);
-                      console.log(newValue);
-                      const data = {
-                        batch_id: newValue.batch.batch_id,
-                        branch_id: selectedBranchId
-                      };
+                      let data = { branch_id: selectedBranchId };
+                      if (newValue) {
+                        data = {
+                          batch_id: newValue.batch.batch_id,
+                          branch_id: selectedBranchId
+                        };
+                      }
                       dispatch(getAllStudentFeeRefunds(data));
                     }}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                    renderInput={(params) => <TextField {...params} label="Batches" placeholder="Favorites" />}
                   />
                 </Grid>
               </Grid>
@@ -372,11 +368,7 @@ const RefundTable = () => {
           )}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
 
-          <RefundViewDrawer
-            open={refundViewOpen}
-            toggle={toggleRefundViewDrawer}
-            selectedRowDetails={selectedRowDetails}
-          />
+          <RefundViewDrawer open={refundViewOpen} toggle={toggleRefundViewDrawer} selectedRowDetails={selectedRowDetails} />
 
           <RefundDeleteModel
             open={refundDeleteModelOpen}
