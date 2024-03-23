@@ -16,7 +16,7 @@ import { getInitials } from 'utils/get-initials';
 
 import { resendStudentNotification } from '../services/studentNotificationServices';
 
-const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => {
+const NotificationBodySection = ({ studentNotifications }) => {
   console.log(studentNotifications);
   // ** State
 

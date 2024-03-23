@@ -48,7 +48,7 @@ const AllNotification = () => {
         ) : (
           <Grid item xs={12}>
             <AllNotificationBodySection
-              allNotifications={allNotifications}
+              allNotifications={allNotifications?.data}
               // setLoading={setLoading}
               setAllNotificationRefetch={setAllNotificationRefetch}
               selectedBranchId={selectedBranchId}

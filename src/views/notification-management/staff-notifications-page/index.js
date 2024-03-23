@@ -57,7 +57,7 @@ const StaffNotification = () => {
         ) : (
           <Grid item xs={12}>
             <StaffNotificationBodySection
-              staffNotifications={staffNotifications}
+              staffNotifications={staffNotifications?.data}
               setStaffNotificationRefetch={setStaffNotificationRefetch}
               selectedBranchId={selectedBranchId}
             />
