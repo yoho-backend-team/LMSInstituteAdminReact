@@ -14,7 +14,6 @@ import {
 import NotificationTableHeader from 'features/notification-management/student-notifications/components/NotificationTableHeader';
 import NotificationAddDrawer from 'features/notification-management/student-notifications/components/NotificationAddDrawer';
 
-
 const StudentNotification = () => {
   const dispatch = useDispatch();
   const studentNotifications = useSelector(selectStudentNotifications);
@@ -35,15 +34,14 @@ const StudentNotification = () => {
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <NotificationHeaderSection />
+          <NotificationHeaderSection studentNotifications={studentNotifications} />
         </Grid>
         <Grid item xs={12}>
-          <NotificationTableHeader toggle={toggleAddUserDrawer} />
+          <NotificationTableHeader studentNotifications={studentNotifications} toggle={toggleAddUserDrawer} />
         </Grid>
         {studentLoading ? (
           <NotificationSkeleton />
@@ -57,8 +55,7 @@ const StudentNotification = () => {
             />
           </Grid>
         )}
-      <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-
+        <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
       </Grid>
     </>
   );

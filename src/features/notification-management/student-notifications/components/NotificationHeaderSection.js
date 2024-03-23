@@ -1,11 +1,14 @@
 import Grid from '@mui/material/Grid';
 import NotificationHeaderCard from './NotificationHeaderCard';
-const NotificationHeaderSection = () => {
+
+const NotificationHeaderSection = ({ studentNotifications }) => {
+  console.log(studentNotifications);
+
   return (
     <>
       <Grid container spacing={2}>
         <Grid item xs={12} md={4} sm={6}>
-          <NotificationHeaderCard title={'Total Notification'} stats={55} icon={'tabler:user'} />
+          <NotificationHeaderCard title={'Total Notification'} stats={studentNotifications?.length} icon={'tabler:user'} />
         </Grid>
         <Grid item xs={12} md={4} sm={6}>
           <NotificationHeaderCard title={'Seen Notification'} stats={5} avatarColor={'error'} icon={'tabler:user-plus'} />
