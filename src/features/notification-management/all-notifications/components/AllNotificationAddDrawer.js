@@ -60,8 +60,14 @@ const AllNotificationAddDrawer = (props) => {
 
   const schema = yup.object().shape({
     branch: yup.string().required('Branch is required'),
-    title: yup.string().required('Title is required'),
-    body: yup.string().required('Body is required')
+    title: yup
+    .string()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+    body: yup
+    .string()
+    .required('Body is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
   });
 
   const defaultValues = {
@@ -73,9 +79,9 @@ const AllNotificationAddDrawer = (props) => {
   const {
     reset,
     control,
-    // setValue,
+    setValue,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -249,6 +255,8 @@ const AllNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
+                  multiline // Add multiline prop
+                  rows={4} // Set rows to 4
                 />
               )}
             />
