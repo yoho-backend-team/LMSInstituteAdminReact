@@ -346,6 +346,7 @@ const NotificationAddDrawer = (props) => {
                         const updatedValue = [...value];
                         updatedValue?.splice(index, 1);
                         setSelectedStudents(updatedValue);
+                        setValue('students', updatedValue);
                       }}
                       color="primary"
                       sx={{ m: 0.75 }}

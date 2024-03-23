@@ -259,8 +259,8 @@ const StaffNotificationAddDrawer = (props) => {
                       error={Boolean(errors.staff)}
                       helperText={errors.staff ? errors.staff.message : null}
                       aria-describedby="stepper-linear-personal-branches"
-                      // {...(errors.students['Students'] && { helperText: 'This field is required' })}
-                      // {...(errors.students && { helperText: 'This field is required' })}
+                      // {...(errors.staff['staff'] && { helperText: 'This field is required' })}
+                      // {...(errors.staff && { helperText: 'This field is required' })}
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -290,8 +290,7 @@ const StaffNotificationAddDrawer = (props) => {
                         const updatedValue = [...value];
                         updatedValue?.splice(index, 1);
                         setSelectedStaff(updatedValue);
-                setValue('staff', updatedValue);
-
+                        setValue('staff', updatedValue);
                       }}
                       color="primary"
                       sx={{ m: 0.75 }}
