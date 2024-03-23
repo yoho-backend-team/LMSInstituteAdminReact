@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
 import { deleteLiveClass } from '../services/liveClassServices';
+import { Link } from 'react-router-dom';
 
 const LiveClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -140,6 +141,15 @@ const LiveClassCard = () => {
                       menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
                       iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
                       options={[
+                        {
+                          text: 'View',
+                          icon: <Icon icon="tabler:eye" fontSize={20} />,
+                          menuItemProps: {
+                            component: Link,
+                            to: `view`,
+                            state: { id: card?.class_id }
+                          }
+                        },
                         {
                           // to: `/apps/invoice/edit/${row.id}`,
                           text: 'Edit',

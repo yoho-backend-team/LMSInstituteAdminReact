@@ -44,7 +44,8 @@ const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-ma
 
 // Class Management
 const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class')));
-const ViewLiveClass = Loadable(lazy(() => import('views/class-management/live-class/view-class')));
+// const ViewLiveClass = Loadable(lazy(() => import('views/class-management/live-class/view-class')));
+const ViewLiveClass = Loadable(lazy(() => import('views/class-management/offline-class/view-class')));
 // const OnlineClassesPage = Loadable(lazy(() => import('views/class-management/online-class')));
 const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class')));
 const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offline-class/view-class')));
