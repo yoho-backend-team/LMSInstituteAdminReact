@@ -186,7 +186,7 @@ const AddCoursePage = () => {
       data.append('image', courseTemplate);
       data.append('syllabus', courseSyllabus);
       // data.append('branch_id', filteredBranchId);
-
+console.log(personalData);
       const result = await addCourse(data);
 
       if (result.success) {

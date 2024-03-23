@@ -95,14 +95,14 @@ export const addStudentFee = async (data) => {
   }
 };
 
-export const deleteStudentFee = async (StudentFeeId) => {
+export const deleteStudentFee = async (data) => {
   try {
     const response = await axios.delete(`${STUDENT_FEE_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: StudentFeeId }
+      params: data
     });
 
     if (response.data.status) {

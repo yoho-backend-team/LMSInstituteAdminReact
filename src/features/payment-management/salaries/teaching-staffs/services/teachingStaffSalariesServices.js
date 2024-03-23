@@ -54,7 +54,7 @@ export const addTeachingStaffSalary = async (data) => {
   try {
     const response = await axios.post(`${TEACHING_STAFF_SALARIES_API_END_POINT}/create`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
@@ -79,7 +79,7 @@ export const deleteTeachingStaffSalary = async (data) => {
       },
       params: data
     });
-    console.log(data);
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'TeachingStaffSalary deleted successfully' };
     } else {
