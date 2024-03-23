@@ -38,7 +38,7 @@ const AllNotification = () => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <AllNotificationHeaderSection />
+          <AllNotificationHeaderSection  allNotifications={allNotifications}/>
         </Grid>
         <Grid item xs={12}>
           <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
