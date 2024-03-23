@@ -28,7 +28,9 @@ const AllNotificationAddDrawer = (props) => {
   // ** State
 
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -58,8 +60,14 @@ const AllNotificationAddDrawer = (props) => {
 
   const schema = yup.object().shape({
     branch: yup.string().required('Branch is required'),
-    title: yup.string().required('Title is required'),
-    body: yup.string().required('Body is required')
+    title: yup
+    .string()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+    body: yup
+    .string()
+    .required('Body is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
   });
 
   const defaultValues = {
@@ -69,11 +77,11 @@ const AllNotificationAddDrawer = (props) => {
   };
 
   const {
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
     reset,
+    control,
+    // setValue,
+    handleSubmit,
+    formState: { errors },
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -81,9 +89,11 @@ const AllNotificationAddDrawer = (props) => {
   });
 
   const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
+    setInputValue(''); // Reset input value
+    setImgSrc(image); // Reset image source
+    setSelectedImage(''); // Reset selected image
+    reset(); // Reset form values
+    toggle(); // Close the drawer
   };
 
   const onSubmit = async (data) => {
@@ -245,6 +255,8 @@ const AllNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
+                  multiline // Add multiline prop
+                  rows={4} // Set rows to 4
                 />
               )}
             />
