@@ -39,6 +39,8 @@ import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
 import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
 // import RefundEditDrawer from './RefundEditDrawer';
 
+import RefundViewDrawer from './RefundViewDrawer';
+
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
@@ -50,27 +52,12 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 //   setSelectedRows(rowData);
 // };
 
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.avatar && row?.avatar?.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <Avatar
-        skin="light"
-        color={row.avatarColor || 'primary'}
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row.name || 'John Doe')}
-      </Avatar>
-    );
-  }
-};
+
 
 const defaultColumns = [
   {
-    flex: 0.20,
-    minWidth: 180,
+    flex: 0.3,
+    minWidth: 190,
     field: 'refundId',
     headerName: 'Refund ID',
     renderCell: ({ row }) => (
@@ -80,8 +67,8 @@ const defaultColumns = [
     )
   },
   {
-    flex: 0.20,
-    minWidth: 180,
+    flex: 0.3,
+    minWidth: 190,
     field: 'studentId',
     headerName: 'Student ID',
     renderCell: ({ row }) => (
@@ -91,8 +78,8 @@ const defaultColumns = [
     )
   },
   {
-    flex: 0.25,
-    minWidth: 250,
+    flex: 0.35,
+    minWidth: 245,
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
@@ -113,30 +100,35 @@ const defaultColumns = [
     }
   },
   {
-    flex: 0.1,
-    minWidth: 100,
+    flex: 0.2,
+    minWidth: 120,
     field: 'paidAmount',
     headerName: 'Paid Amount',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.paid_amount}</Typography>
   },
   {
     flex: 0.15,
-    minWidth: 140,
+    minWidth: 150,
     field: 'paymentDate',
     headerName: 'Payment Date',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.payment_date}</Typography>
   },
   {
-    flex: 0.1,
-    minWidth: 100,
+    flex: 0.2,
+    minWidth: 160,
     field: 'status',
     headerName: 'Status',
-    renderCell: ({ row }) =>
-      row.balance !== 0 ? (
-        <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.status}</Typography>
-      ) : (
-        <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-      )
+    renderCell: ({ row }) => (
+      <>
+        <CustomChip
+          rounded
+          size="medium"
+          skin="light"
+          color={row.status === 'success' ? 'success' : 'error'} // Dynamically set chip color based on status
+          label={row.status}
+        />
+      </>
+    )
   }
 ];
 
@@ -156,7 +148,8 @@ const RefundTable = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-  const [editUserOpen, setEditUserOpen] = useState(false);
+
+
   const [refetch, setRefetch] = useState(false);
   console.log(setRefetch);
   const dispatch = useDispatch();
@@ -173,10 +166,14 @@ const RefundTable = () => {
     );
   }, [dispatch, selectedBranchId, refetch]);
 
-  // const toggleEditUserDrawer = () => {
-  //   setEditUserOpen(!editUserOpen); // This line toggles the editUserOpen state
-  //   console.log('Toggle drawer');
-  // };
+  const [refundViewOpen, setRefundViewUserOpen] = useState(false);
+
+
+  const toggleRefundViewDrawer = () => {
+    setRefundViewUserOpen(!refundViewOpen); // This line toggles the editUserOpen state
+    console.log('Toggle drawer');
+  };
+
   const [refundDeleteModelOpen, setRefundDeleteModelOpen] = useState(false);
 
   const [selectedRefundDeleteId, setSelectedRefundDeleteId] = useState(null);
@@ -188,7 +185,7 @@ const RefundTable = () => {
 
   // Handle branch deletion
   const handleRefundDelete = async () => {
-    const data = { student_fee_id: selectedRefundDeleteId };
+    const data = { refund_id: selectedRefundDeleteId };
     // const data = { id: selectedRefundDeleteId };
     const result = await deleteStudentFeeRefund(data);
     if (result.success) {
@@ -225,9 +222,9 @@ const RefundTable = () => {
               // },
               {
                 text: 'View',
-                to: `/apps/invoice/view/${row.id}`,
-                icon: <Icon icon="tabler:eye" />
-                // menuItemProps: { onClick: toggleEditUserDrawer }
+                // to: `/apps/invoice/view/${row.id}`,
+                icon: <Icon icon="tabler:eye" />,
+                menuItemProps: { onClick: toggleRefundViewDrawer }
               },
               {
                 text: 'Delete',
@@ -235,11 +232,10 @@ const RefundTable = () => {
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row.institute_student_fee_id);
+                    handleDelete(row.refund_id);
                   }
                 }
               }
-             
             ]}
           />
         </Box>
@@ -339,7 +335,6 @@ const RefundTable = () => {
                       };
                       dispatch(getAllStudentFeeRefunds(data));
                     }}
-                    // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
@@ -361,7 +356,7 @@ const RefundTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 pagination
-                rowHeight={70}
+                rowHeight={80}
                 rows={studentFeeRefunds}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -374,13 +369,10 @@ const RefundTable = () => {
           )}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
 
-          {/* <RefundEditDrawer
-            setRefetch={setRefetch}
-            selectedRows={selectedRows}
-            handleRowClick={handleRowClick}
-            open={editUserOpen}
-            toggle={toggleEditUserDrawer}
-          /> */}
+          <RefundViewDrawer
+            open={refundViewOpen}
+            toggle={toggleRefundViewDrawer}
+          />
 
           <RefundDeleteModel
             open={refundDeleteModelOpen}
