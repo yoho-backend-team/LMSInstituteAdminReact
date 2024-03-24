@@ -14,10 +14,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 // ** Third Party Imports
 // ** Utils Import
-import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
 import { TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import { useCallback } from 'react';
