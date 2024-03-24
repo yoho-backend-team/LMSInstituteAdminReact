@@ -36,17 +36,17 @@ const Teaching = () => {
     setDeleteDialogOpen(true);
   };
 
-  console.log('overview-teachingstaffs:',teachingStaffs);
+  console.log('overview-teachingstaffs:', teachingStaffs);
 
   return (
     <>
-       <TeacherFilter selectedBranchId={selectedBranchId} />
+      <TeacherFilter selectedBranchId={selectedBranchId} />
       {loading ? (
         <StaffManagement />
-        
+
       ) : (
         <Grid>
-       
+
           <Grid container xs={12} spacing={2} mt={2}>
             {teachingStaffs &&
               teachingStaffs?.map((item, i) => (
@@ -83,7 +83,7 @@ const Teaching = () => {
                               <MenuItem value="0">Inactive</MenuItem>
                             </TextField>
                           </Grid>
-                          <Box component={Link} to={item?.staff?.id.toString()} state={{ id: item?.staff?.id }}>
+                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
                             {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
                             <Button variant="tonal" sx={{ p: 1.05 }}>
                               View Profile

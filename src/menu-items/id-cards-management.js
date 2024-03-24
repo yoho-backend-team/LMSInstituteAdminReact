@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash ,IconId,IconIdBadge,IconIdBadge2} from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconId, IconIdBadge, IconIdBadge2 } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -12,7 +12,7 @@ const icons = {
   IconIdBadge,
   IconIdBadge2
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -34,7 +34,8 @@ const pages = {
           url: '/id-card-management/student-id-cards',
           icon: icons.IconIdBadge,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_id_cards_view')
         },
         {
           id: 'staff-id-cards',
@@ -43,7 +44,8 @@ const pages = {
           url: '/id-card-management/staff-id-cards',
           icon: icons.IconIdBadge2,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_staff_id_cards_view')
         }
       ]
     }

@@ -81,11 +81,11 @@ const GroupAddPage = () => {
         };
 
         // Check if the group name already exists
-          // const existingGroup = groups.find((group) => group.name === data.groupName);
-          // if (existingGroup) {
-          //   toast.error('Group already exists');
-          //   return; // Exit the function if group already exists
-          // }
+        // const existingGroup = groups.find((group) => group.name === data.groupName);
+        // if (existingGroup) {
+        //   toast.error('Group already exists');
+        //   return; // Exit the function if group already exists
+        // }
 
         const result = await addGroup(inputData);
 

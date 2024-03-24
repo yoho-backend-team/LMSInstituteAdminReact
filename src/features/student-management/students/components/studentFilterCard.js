@@ -109,16 +109,11 @@ const StudentFilter = (props) => {
                 </TextField>
               </Grid>
               <Grid item sm={3} xs={12}>
-                <TextField
-                  value={searchValue}
-             
-                  placeholder="Search Student"
-                  onChange={(e) => handleSearch(e)}
-                />
+                <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} />
               </Grid>
 
               <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
-                <Box component={Link} to={'add'}>
+                <Box component={Link} to={'students/add'}>
                   <Button variant="contained" size="medium" fullWidth>
                     Add New Student
                   </Button>

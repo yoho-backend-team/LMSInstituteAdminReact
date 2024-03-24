@@ -146,7 +146,7 @@ const LiveClassCard = () => {
                           icon: <Icon icon="tabler:eye" fontSize={20} />,
                           menuItemProps: {
                             component: Link,
-                            to: `view`,
+                            to: `live-classes/view`,
                             state: { id: card?.class_id }
                           }
                         },

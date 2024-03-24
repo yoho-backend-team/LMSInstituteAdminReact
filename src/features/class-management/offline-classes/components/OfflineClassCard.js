@@ -34,7 +34,7 @@ const OfflineClassCard = () => {
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
 
   console.log(offlineClasses);
-  
+
   useEffect(() => {
     const data = {
       type: 'offline',
@@ -147,7 +147,7 @@ const OfflineClassCard = () => {
                           icon: <Icon icon="tabler:eye" fontSize={20} />,
                           menuItemProps: {
                             component: Link,
-                            to: `view`,
+                            to: `offline-classes/view`,
                             state: { id: card?.class_id }
                           }
                         },
@@ -158,8 +158,7 @@ const OfflineClassCard = () => {
                           menuItemProps: {
                             onClick: () => {
                               handleEdit(card);
-                            // state: { id: card?.class_id }
-
+                              // state: { id: card?.class_id }
                             }
                           }
                         },

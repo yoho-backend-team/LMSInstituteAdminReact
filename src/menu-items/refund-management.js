@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconReceiptRefund } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconReceiptRefund } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -10,7 +10,7 @@ const icons = {
   IconCash,
   IconReceiptRefund
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -32,7 +32,8 @@ const pages = {
           url: '/refund-management/refunds',
           icon: icons.IconReceiptRefund,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_fees_refund_management_view')
         }
       ]
     }

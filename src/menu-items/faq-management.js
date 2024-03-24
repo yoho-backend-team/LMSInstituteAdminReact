@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconHelp } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconHelp } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -10,7 +10,7 @@ const icons = {
   IconCash,
   IconHelp
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -31,7 +31,8 @@ const pages = {
           url: '/faq-management/categories',
           icon: icons.IconHelp,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_faq_categories_view')
         },
         {
           id: 'Faqs',
@@ -40,7 +41,8 @@ const pages = {
           url: '/faq-management/faqs',
           icon: icons.IconHelp,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_faqs_view')
         }
       ]
     }

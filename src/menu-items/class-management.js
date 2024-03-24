@@ -9,7 +9,7 @@ const icons = {
   IconUsers,
   IconChalkboard
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -31,8 +31,8 @@ const pages = {
           type: 'item',
           url: '/class-management/offline-classes',
           target: false,
-
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_offline_classes_view')
         },
         {
           id: 'live-classes',
@@ -41,8 +41,8 @@ const pages = {
           type: 'item',
           url: '/class-management/live-classes',
           target: false,
-
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_live_classes_view')
         }
       ]
     }

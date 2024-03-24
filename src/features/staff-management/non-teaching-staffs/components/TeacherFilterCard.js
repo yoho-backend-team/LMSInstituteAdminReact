@@ -5,7 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useState,useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { getAllNonTeachingStaffs } from '../redux/nontTeachingStaffThunks';
@@ -16,10 +16,10 @@ const TeacherFilter = (props) => {
   const [searchValue, setSearchValue] = useState('');
 
   const dispatch = useDispatch();
- 
+
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId, type:'non_teaching' };
+    const data = { status: e.target.value, branch_id: selectedBranchId, type: 'non_teaching' };
     dispatch(getAllNonTeachingStaffs(data));
   };
 
@@ -43,7 +43,7 @@ const TeacherFilter = (props) => {
           <CardContent>
             <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Status"  SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
@@ -60,7 +60,7 @@ const TeacherFilter = (props) => {
               </Grid>
 
               <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
-                <Box component={Link} to={'add'}>
+                <Box component={Link} to={'non-teaching-staffs/add'}>
                   <Button variant="contained" size="medium" fullWidth>
                     Add New Staff
                   </Button>

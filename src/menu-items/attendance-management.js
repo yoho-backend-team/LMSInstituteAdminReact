@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers,IconCalendarEvent } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCalendarEvent } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -9,7 +9,7 @@ const icons = {
   IconUsers,
   IconCalendarEvent
 };
-
+import { hasPermission } from './../hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -31,7 +31,8 @@ const pages = {
           url: '/attendance-management/student-attendances',
           icon: icons.IconCalendarEvent,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_attendances_view')
         },
         {
           id: 'teaching-staff-attendances',
@@ -40,7 +41,8 @@ const pages = {
           type: 'item',
           url: '/attendance-management/teaching-staff-attendances',
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_teaching_staff_attendance_view')
         },
         {
           id: 'non-teaching-staff-attendances',
@@ -50,7 +52,8 @@ const pages = {
           url: '/attendance-management/non-teaching-staff-attendances',
           target: false,
 
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_non_teaching_staff_attendance_view')
         }
       ]
     }

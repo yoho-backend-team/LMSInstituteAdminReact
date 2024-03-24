@@ -1,6 +1,6 @@
 // assets
 import { IconKey, IconShieldLock, IconUser, IconUsers } from '@tabler/icons';
-
+import { hasPermission } from 'hooks/hasPermissions';
 // constant
 const icons = {
   IconKey,
@@ -10,6 +10,7 @@ const icons = {
 };
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
+
 
 const pages = {
   id: 'user-management',
@@ -30,7 +31,8 @@ const pages = {
           url: '/user-management/groups',
           icon: icons.IconUsers,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_group_view')
         },
         {
           id: 'users',
@@ -39,8 +41,8 @@ const pages = {
           type: 'item',
           url: '/user-management/users',
           target: false,
-
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_admin_users_view')
         }
       ]
     }

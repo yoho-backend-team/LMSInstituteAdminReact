@@ -9,6 +9,7 @@ const icons = {
   IconUsers,
   IconGitBranch
 };
+import { hasPermission } from 'hooks/hasPermissions';
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
@@ -31,7 +32,8 @@ const pages = {
           url: '/batch-management/batches',
           icon: icons.IconGitBranch,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_batches_view')
         }
       ]
     }

@@ -47,7 +47,7 @@ const TableHeader = () => {
       {/* Add new branch button */}
       <Box
         component={Link}
-        to="add"
+        to="branches/add"
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', textDecoration: 'none', mt: { xs: 3, sm: 0 } }}
       >
         <Button variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
