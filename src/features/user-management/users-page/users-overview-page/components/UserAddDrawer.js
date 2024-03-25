@@ -78,10 +78,10 @@ const SidebarAddUser = (props) => {
     email: yup.string().email('Invalid email format').required('Email is required'),
     role: yup.number().required(),
     contact: yup
-      .number()
-      .typeError('Contact Number field is required')
-      .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
-      .required(),
+      .string()
+      .matches(/^[0-9]+$/, 'Contact number must contain only digits')
+      .max(10, 'Contact number cannot exceed 10 digits')
+      .required('Contact Number field is required'),
     fullName: yup
       .string()
       .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
@@ -91,7 +91,7 @@ const SidebarAddUser = (props) => {
       .string()
       .required()
       .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
+      .matches(/^[a-zA-Z0-9\s]+$/, ' User Name should not contain special characters'),
     confirm_password: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match')

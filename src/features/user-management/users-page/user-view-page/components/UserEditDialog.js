@@ -34,10 +34,10 @@ const schema = yup.object().shape({
     .required(),
   email: yup.string().email().required(),
   contact: yup
-    .number()
-    .typeError('Contact Number field is required')
-    .min(10, (obj) => showErrors('Contact Number', obj.value.length, obj.min))
-    .required(),
+    .string()
+    .matches(/^[0-9]+$/, 'Contact number must contain only digits')
+    .max(10, 'Contact number cannot exceed 10 digits')
+    .required('Contact Number field is required'),
   designation: yup.string().required()
   // role: yup.string().required()
 });
@@ -87,7 +87,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
 
   // const image = require('assets/images/avatar/1.png');
   const image =
-  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
 
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
