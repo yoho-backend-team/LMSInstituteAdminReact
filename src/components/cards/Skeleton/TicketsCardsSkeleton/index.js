@@ -4,7 +4,7 @@ const TicketsCardsSkeleton = () => {
   return (
     <>
       <Grid container spacing={2}>
-        {[...Array(3)].map((_, index) => (
+        {[...Array(6)].map((_, index) => (
           <Grid item xs={12} md={6} lg={4} key={index}>
             <Card sx={{ minHeight: 220, mt: 4 }}>
               <CardContent>

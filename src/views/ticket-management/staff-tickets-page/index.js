@@ -2,9 +2,9 @@
 import { useState } from 'react';
 
 // MUI Imports
-import Tab from '@mui/material/Tab';
-import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
+import TabPanel from '@mui/lab/TabPanel';
+import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
 // Component Imports
 import CustomTabList from '@mui/lab/TabList';
@@ -12,34 +12,26 @@ import CustomTabList from '@mui/lab/TabList';
 import { getAllStaffClosedTickets } from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketThunks';
 import { getAllStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketThunks';
 
-import { useEffect } from 'react';
-import { selectStaffClosedTickets } from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketSelectors';
-import { selectStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketSelectors';
-import { useSelector, useDispatch } from 'react-redux';
 import { Grid } from '@mui/material';
-import OpenTicketCard from 'features/ticket-management/staff/components/OpenTicketCard';
 import ClosedTicketCard from 'features/ticket-management/staff/components/ClosedTicketCard';
+import OpenTicketCard from 'features/ticket-management/staff/components/OpenTicketCard';
 import TicketResolveDrawer from 'features/ticket-management/staff/components/ResolveTicketDrawer';
+import { selectLoading, selectStaffClosedTickets } from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketSelectors';
+import { selectStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketSelectors';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 
 const StaffTicketsPage = () => {
   // States
 
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const [value, setValue] = useState('open');
   const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const studentOpenTickets = useSelector(selectStaffOpenTickets);
   const studentClosedTickets = useSelector(selectStaffClosedTickets);
+  const staffLoading = useSelector(selectLoading);
   const [openResolveDrawer, setOpenResolveDrawer] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
 
@@ -65,7 +57,7 @@ const StaffTicketsPage = () => {
 
   return (
     <MainCard title="Staff Tickets" sx={{ minHeight: '100vh' }}>
-      {loading ? (
+      {staffLoading ? (
         <TicketsCardsSkeleton />
       ) : (
         <TabContext value={value}>
