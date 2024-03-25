@@ -16,7 +16,8 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { addCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+
+import { updateStudentTicket } from '../services/studentTicketService';
 
 const TicketResolveDrawer = (props) => {
   // ** Props
@@ -58,12 +59,13 @@ const TicketResolveDrawer = (props) => {
 
   const onSubmit = async (data) => {
     const inputData = {
-      solution: data.solution
+      solution: data.solution,
+      ticket_id: ticket.ticket_id
     };
 
     console.log(inputData);
 
-    const result = await addCourseModule(inputData);
+    const result = await updateStudentTicket(inputData);
 
     if (result.success) {
       toast.success(result.message);

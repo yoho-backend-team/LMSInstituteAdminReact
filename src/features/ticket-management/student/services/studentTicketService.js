@@ -2,6 +2,8 @@
 import axios from 'axios';
 
 const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket`;
+const STUDENT_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket`;
+
 
 export const getAllStudentTickets = async (data) => {
   try {
