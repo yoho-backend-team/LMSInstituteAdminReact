@@ -15,9 +15,7 @@ import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton
 import ClosedTicketCard from 'features/ticket-management/student/components/ClosedTicketCard';
 import OpenTicketCard from 'features/ticket-management/student/components/OpenTicketCard';
 import TicketResolveDrawer from 'features/ticket-management/student/components/ResolveTicketDrawer';
-import {
-  selectStudentClosedTickets
-} from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketSelectors';
+import { selectStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketSelectors';
 import { getAllStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketThunks';
 import { selectLoading, selectStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketSelectors';
 import { useEffect } from 'react';
@@ -36,12 +34,14 @@ const StudentTicketsPage = () => {
   const [openResolveDrawer, setOpenResolveDrawer] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
 
+  const [refetch, setRefetch] = useState(false);
+
   useEffect(() => {
     dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, type: 'opened' }));
-  }, [selectedBranchId, dispatch]);
+  }, [selectedBranchId, dispatch, refetch]);
   useEffect(() => {
     dispatch(getAllStudentClosedTickets({ branch_id: selectedBranchId, type: 'closed' }));
-  }, [selectedBranchId, dispatch]);
+  }, [selectedBranchId, dispatch, refetch]);
 
   const handleCloseDrawer = () => {
     setOpenResolveDrawer((state) => !state);
@@ -88,7 +88,7 @@ const StudentTicketsPage = () => {
         </TabContext>
       )}
 
-      <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} ticket={selectedTicket} />
+      <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} setRefetch={setRefetch} ticket={selectedTicket} />
     </MainCard>
   );
 };
