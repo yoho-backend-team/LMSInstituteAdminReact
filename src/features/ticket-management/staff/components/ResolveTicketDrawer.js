@@ -16,11 +16,15 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { addCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+// import { addCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+
+import { updateStaffTicket } from '../services/staffTicketService';
 
 const TicketResolveDrawer = (props) => {
   // ** Props
   const { open, toggle, ticket } = props;
+
+  console.log(ticket);
 
   // ** State
 
@@ -41,6 +45,7 @@ const TicketResolveDrawer = (props) => {
 
   const defaultValues = {
     solution: ''
+    // solution: `Ticket ID: ${ticket?.ticket_id}\n\n`,
   };
 
   // ** Hooks
@@ -58,26 +63,19 @@ const TicketResolveDrawer = (props) => {
 
   const onSubmit = async (data) => {
     const inputData = {
-      solution: data.solution
+      solution: data.solution,
+      ticket_id: ticket.ticket_id
     };
 
     console.log(inputData);
 
-    const result = await addCourseModule(inputData);
+    const result = await updateStaffTicket(inputData);
 
     if (result.success) {
       toast.success(result.message);
       reset();
       toggle();
     } else {
-      // let errorMessage = '';
-      // Object?.values(result.message)?.forEach((errors) => {
-      //   errors?.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
-      // toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 

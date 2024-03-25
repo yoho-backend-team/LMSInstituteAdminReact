@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const STAFF_TICKET_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/staff-ticket`;
-const STAFF_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/ticket`;
+const STAFF_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/staff-ticket`;
 
 export const getAllStaffTickets = async (data) => {
   try {

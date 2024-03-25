@@ -55,9 +55,15 @@ const CourseViewPage = () => {
 
   const [videoUrl, setVideoUrl] = useState(null);
 
+  // useEffect(() => {
+  //   console.log('hello');
+  //   getCourseData(courseId);
+  // }, [courseId, selectedBranchId]);
+
   useEffect(() => {
-    console.log('hello');
-    getCourseData(courseId);
+    if (courseId && selectedBranchId) {
+      getCourseData(courseId);
+    }
   }, [courseId, selectedBranchId]);
 
   console.log('course', course);
@@ -93,8 +99,8 @@ const CourseViewPage = () => {
   const handleDelete = useCallback((itemId) => {
     setSelectedCourseDeleteId(itemId);
     setCourseDeleteModelOpen(true);
+    setVideoUrl(null); // Reset video URL when deleting
   }, []);
-
 
   // Handle branch deletion
   const handleCourseDelete = async () => {
@@ -107,8 +113,6 @@ const CourseViewPage = () => {
       toast.error(result.message);
     }
   };
-
-
 
   const createAccordion = (accordion) => (
     <Grid container xs={12} sx={{ p: 0, m: 0 }}>
@@ -185,9 +189,11 @@ const CourseViewPage = () => {
             >
               <source src={videoUrl} type="video/mp4" />
             </video> */}
-            <CardMedia component="video" controls autoPlay loop muted width="100%" height="auto">
-              <source src={videoUrl} type="video/mp4" />
-            </CardMedia>
+            {videoUrl && (
+              <CardMedia component="video" controls autoPlay loop muted width="100%" height="auto">
+                <source src={videoUrl} type="video/mp4" />
+              </CardMedia>
+            )}
 
             {/* <iframe
                     title="Your iFrame Title"
