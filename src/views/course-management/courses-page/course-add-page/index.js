@@ -108,11 +108,18 @@ const AddCoursePage = () => {
   };
 
   const courseSchema = yup.object().shape({
-    course_duration: yup.number().required(),
-    course_name: yup.string().required(),
-    course_price: yup.number().required(),
-    description: yup.string().required(),
-    course_overview: yup.string().required(),
+    course_duration:yup
+    .string().required('Course Duration is required')
+    .matches(/^[0-9]{10}$/, 'Course Duration should be digits'),
+    course_name: yup
+    .string().required('Course Name is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Name should not contain special characters'),
+    course_price:yup
+    .string().required('Course Price is required')
+    .matches(/^[0-9]{10}$/, 'Course Price should be digits'),
+    description: yup
+    .string().required('Course Description is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
+    course_overview: yup
+    .string().required('Course Overview is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
     learning_format: yup.string().required(),
     course_category: yup.object().required('Course Category is required').nullable(true),
     branches: yup
@@ -251,7 +258,7 @@ const AddCoursePage = () => {
                       placeholder="Leonard"
                       error={Boolean(courseErrors['course_name'])}
                       aria-describedby="stepper-linear-personal-course_name"
-                      {...(courseErrors['course_name'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_name?.message}
                     />
                   )}
                 />
@@ -271,7 +278,7 @@ const AddCoursePage = () => {
                       placeholder="Carter"
                       error={Boolean(courseErrors['course_duration'])}
                       aria-describedby="stepper-linear-personal-course_duration"
-                      {...(courseErrors['course_duration'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_duration?.message}
                     />
                   )}
                 />
@@ -291,7 +298,7 @@ const AddCoursePage = () => {
                       placeholder="Carter"
                       error={Boolean(courseErrors['course_price'])}
                       aria-describedby="stepper-linear-personal-course_price"
-                      {...(courseErrors['course_price'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_price?.message}
                     />
                   )}
                 />
@@ -439,7 +446,7 @@ const AddCoursePage = () => {
                       placeholder="Carter"
                       error={Boolean(courseErrors['course_overview'])}
                       aria-describedby="stepper-linear-personal-course_overview"
-                      {...(courseErrors['course_overview'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_overview?.message}
                     />
                   )}
                 />
@@ -455,12 +462,12 @@ const AddCoursePage = () => {
                       value={value}
                       multiline
                       rows={3}
-                      label="Description"
+                      label="Course Description"
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(courseErrors['description'])}
                       aria-describedby="stepper-linear-personal-description"
-                      {...(courseErrors['description'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.description?.message}
                     />
                   )}
                 />

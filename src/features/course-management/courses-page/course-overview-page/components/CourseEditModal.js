@@ -204,7 +204,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          Edit Category Information
+          Edit Course Information
         </DialogTitle>
         <DialogContent
           sx={{
