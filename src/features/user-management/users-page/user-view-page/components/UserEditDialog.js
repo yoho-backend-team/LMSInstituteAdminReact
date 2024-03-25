@@ -26,19 +26,25 @@ const showErrors = (field, valueLen, min) => {
 const schema = yup.object().shape({
   full_name: yup
     .string()
-    .min(3, (obj) => showErrors('Full name', obj.value.length, obj.min))
+    .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
     .required(),
   user_name: yup
     .string()
-    .min(3, (obj) => showErrors('User name', obj.value.length, obj.min))
-    .required(),
+    .required()
+    .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
+    .matches(/^[a-zA-Z0-9\s]+$/, ' User Name should not contain special characters'),
   email: yup.string().email().required(),
   contact: yup
     .string()
     .matches(/^[0-9]+$/, 'Contact number must contain only digits')
     .max(10, 'Contact number cannot exceed 10 digits')
     .required('Contact Number field is required'),
-  designation: yup.string().required()
+  designation: yup
+    .string()
+    .required()
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
+    .max(50, `Designation can't exceed 50 characters`)
   // role: yup.string().required()
 });
 
