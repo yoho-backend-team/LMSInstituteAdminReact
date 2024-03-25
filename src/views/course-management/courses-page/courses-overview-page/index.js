@@ -30,7 +30,7 @@ const Courses = () => {
       <Grid container spacing={1} className="match-height">
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12}>
-            <CourseFilter selectedBranchId={selectedBranchId} />
+            <CourseFilter  selectedBranchId={selectedBranchId} />
             <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId} />
           </Grid>
           {courseLoading ? (

@@ -1,4 +1,5 @@
 // ** React Imports
+import { useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -6,11 +7,26 @@ import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
 // ** Third Party Imports
 import Grid from '@mui/material/Grid';
+import { useDropzone } from 'react-dropzone';
 
-const CoursePdfInput = ({ pdfUrl }) => {
+const CoursePdfInput = ({ setCourseSyllabus }) => {
+  // ** State
+  const [files, setFiles] = useState([]);
+  // ** Hooks
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    accept: {
+      'file/*': ['.pdf']
+    },
+    onDrop: (acceptedFiles) => {
+      setFiles(acceptedFiles.map((file) => Object.assign(file)));
+      setCourseSyllabus(acceptedFiles[0]);
+    }
+  });
+
   const renderMedia = () => {
-    if (pdfUrl) {
-      return <iframe title="PDF Viewer" src={pdfUrl} width="100%" height="500px" />;
+    if (files.length) {
+      return files.map((file) => <iframe title={file.name} key={file.name} src={URL.createObjectURL(file)} width="100%" height="500px" />);
     }
 
     return (
@@ -51,7 +67,10 @@ const CoursePdfInput = ({ pdfUrl }) => {
 
   return (
     <Grid>
-      <Box sx={{ minHeight: 150 }}>{renderMedia()}</Box>
+      <Box {...getRootProps({ className: 'dropzone' })} sx={files.length ? { minHeight: 150 } : {}}>
+        <input {...getInputProps()} />
+        {renderMedia()}
+      </Box>
     </Grid>
   );
 };
