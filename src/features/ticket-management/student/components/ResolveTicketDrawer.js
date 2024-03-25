@@ -21,7 +21,7 @@ import { updateStudentTicket } from '../services/studentTicketService';
 
 const TicketResolveDrawer = (props) => {
   // ** Props
-  const { open, toggle, ticket } = props;
+  const { open, toggle, ticket, setRefetch } = props;
 
   // ** State
 
@@ -71,6 +71,7 @@ const TicketResolveDrawer = (props) => {
       toast.success(result.message);
       reset();
       toggle();
+      setRefetch();
     } else {
       // let errorMessage = '';
       // Object?.values(result.message)?.forEach((errors) => {

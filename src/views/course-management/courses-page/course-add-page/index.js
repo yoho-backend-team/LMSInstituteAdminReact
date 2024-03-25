@@ -9,27 +9,24 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
 import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
-import StepperCustomDot from 'features/course-management/courses-page/course-add-page/components/StepperCustomDot';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
 import { Fragment, useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import StepperWrapper from 'styles/mui/stepper';
+import { useNavigate } from 'react-router';
+
 import * as yup from 'yup';
 
 const AddCoursePage = () => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
-
   const [courseSyllabus, setCourseSyllabus] = useState('');
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedBranches, setSelectedBranches] = useState([]);
@@ -49,8 +46,8 @@ const AddCoursePage = () => {
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
 
-  console.log("selectedLogo",selectedLogo);
-  console.log("selectedTemplate",selectedTemplate);
+  console.log('selectedLogo', selectedLogo);
+  console.log('selectedTemplate', selectedTemplate);
 
   const handleInputLogoImageChange = (file) => {
     const reader = new FileReader();
@@ -96,10 +93,6 @@ const AddCoursePage = () => {
     {
       title: 'Course Information',
       subtitle: 'Setup Information'
-    },
-    {
-      title: 'Course Files',
-      subtitle: 'Add Logo, Template, Syllabus'
     }
   ];
 
@@ -114,14 +107,19 @@ const AddCoursePage = () => {
     branches: []
   };
 
-  const defaultCourseFileValues = {};
-
   const courseSchema = yup.object().shape({
-    course_duration: yup.number().required(),
-    course_name: yup.string().required(),
-    course_price: yup.number().required(),
-    description: yup.string().required(),
-    course_overview: yup.string().required(),
+    course_duration:yup
+    .string().required('Course Duration is required')
+    .matches(/^[0-9]{10}$/, 'Course Duration should be digits'),
+    course_name: yup
+    .string().required('Course Name is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Name should not contain special characters'),
+    course_price:yup
+    .string().required('Course Price is required')
+    .matches(/^[0-9]{10}$/, 'Course Price should be digits'),
+    description: yup
+    .string().required('Course Description is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
+    course_overview: yup
+    .string().required('Course Overview is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
     learning_format: yup.string().required(),
     course_category: yup.object().required('Course Category is required').nullable(true),
     branches: yup
@@ -133,8 +131,6 @@ const AddCoursePage = () => {
         return !value.some((branch) => specialCharRegex.test(branch));
       })
   });
-
-  const courseFileSchema = yup.object().shape({});
 
   useEffect(() => {
     getAllBranches();
@@ -186,18 +182,7 @@ const AddCoursePage = () => {
     resolver: yupResolver(courseSchema)
   });
 
-  const {
-    reset: courseFileReset,
-    handleSubmit: handleCourseFileSubmit,
-    formState: { errors: courseFileErrors }
-  } = useForm({
-    defaultValues: defaultCourseFileValues,
-    resolver: yupResolver(courseFileSchema)
-  });
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
 
   const handleReset = () => {
     setActiveStep(0);
@@ -254,12 +239,10 @@ const AddCoursePage = () => {
           <form key={1} onSubmit={handleCourseSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[1].title}
+                 <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  Add Course
                 </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[1].subtitle}
-                </Typography>
+                
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
@@ -275,7 +258,7 @@ const AddCoursePage = () => {
                       placeholder="Leonard"
                       error={Boolean(courseErrors['course_name'])}
                       aria-describedby="stepper-linear-personal-course_name"
-                      {...(courseErrors['course_name'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_name?.message}
                     />
                   )}
                 />
@@ -295,7 +278,7 @@ const AddCoursePage = () => {
                       placeholder="Carter"
                       error={Boolean(courseErrors['course_duration'])}
                       aria-describedby="stepper-linear-personal-course_duration"
-                      {...(courseErrors['course_duration'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_duration?.message}
                     />
                   )}
                 />
@@ -315,7 +298,7 @@ const AddCoursePage = () => {
                       placeholder="Carter"
                       error={Boolean(courseErrors['course_price'])}
                       aria-describedby="stepper-linear-personal-course_price"
-                      {...(courseErrors['course_price'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_price?.message}
                     />
                   )}
                 />
@@ -463,7 +446,7 @@ const AddCoursePage = () => {
                       placeholder="Carter"
                       error={Boolean(courseErrors['course_overview'])}
                       aria-describedby="stepper-linear-personal-course_overview"
-                      {...(courseErrors['course_overview'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.course_overview?.message}
                     />
                   )}
                 />
@@ -479,38 +462,38 @@ const AddCoursePage = () => {
                       value={value}
                       multiline
                       rows={3}
-                      label="Description"
+                      label="Course Description"
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(courseErrors['description'])}
                       aria-describedby="stepper-linear-personal-description"
-                      {...(courseErrors['description'] && { helperText: 'This field is required' })}
+                      helperText={courseErrors?.description?.message}
                     />
                   )}
                 />
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
-                    <ImgStyled src={imgSrcLogo} alt="Profile Pic" />
-                    <div>
-                      <ButtonStyled component="label" variant="contained" htmlFor="logo-settings-upload-image">
-                        update New logo
-                        <input
-                          hidden
-                          type="file"
-                          value={inputLogoValue}
-                          accept="image/png, image/jpeg"
-                          onChange={handleInputLogoImageChange}
-                          id="logo-settings-upload-image"
-                        />
-                      </ButtonStyled>
-                    </div>
-                  </Box>
-                </Grid>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+                  <ImgStyled src={imgSrcLogo} alt="Profile Pic" />
+                  <div>
+                    <ButtonStyled component="label" variant="contained" htmlFor="logo-settings-upload-image">
+                      update New logo
+                      <input
+                        hidden
+                        type="file"
+                        value={inputLogoValue}
+                        accept="image/png, image/jpeg"
+                        onChange={handleInputLogoImageChange}
+                        id="logo-settings-upload-image"
+                      />
+                    </ButtonStyled>
+                  </div>
+                </Box>
+              </Grid>
 
-                {/*  */}
-                <Grid item xs={12} sm={6}>
+              {/*  */}
+              <Grid item xs={12} sm={6}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
                   <ImgStyled src={imgSrcTemplate} alt="Profile Pic" />
                   <div>
@@ -527,35 +510,23 @@ const AddCoursePage = () => {
                     </ButtonStyled>
                   </div>
                 </Box>
-                </Grid>
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
+              </Grid>
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
+                <Button variant="tonal" color="secondary" onClick={() => navigate(-1)}>
                   Back
                 </Button>
                 <Button type="submit" variant="contained">
-                  Next
+                  Submit
                 </Button>
               </Grid>
             </Grid>
           </form>
         );
-      case 1:
-        return (
-          <form key={2} onSubmit={handleCourseFileSubmit(onSubmit)}>
-            <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-              <Button variant="tonal" color="secondary" onClick={handleBack}>
-                Back
-              </Button>
-              <Button type="submit" variant="contained">
-                Next
-              </Button>
-            </Grid>
-          </form>
-        );
-      default:
-        return null;
     }
   }
 
@@ -578,45 +549,6 @@ const AddCoursePage = () => {
 
   return (
     <Card>
-      <CardContent>
-        <StepperWrapper>
-          <Stepper activeStep={activeStep}>
-            {steps.map((step, index) => {
-              const labelProps = {};
-              if (index === activeStep) {
-                labelProps.error = false;
-                if (activeStep === 3) {
-                  labelProps.error = true;
-                } else if ((courseErrors['registered_date'] || courseErrors['first-name']) && activeStep === 0) {
-                  labelProps.error = true;
-                } else if (
-                  (courseFileErrors.instagram || courseFileErrors.twitter || courseFileErrors.facebook || courseFileErrors.linkedIn) &&
-                  activeStep === 2
-                ) {
-                  labelProps.error = true;
-                } else {
-                  labelProps.error = false;
-                }
-              }
-
-              return (
-                <Step key={index}>
-                  <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}>
-                    <div className="step-label">
-                      <Typography className="step-number">{`0${index + 1}`}</Typography>
-                      <div>
-                        <Typography className="step-title">{step.title}</Typography>
-                        <Typography className="step-subtitle">{step.subtitle}</Typography>
-                      </div>
-                    </div>
-                  </StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
-        </StepperWrapper>
-      </CardContent>
-
       <Divider sx={{ m: '0 !important' }} />
 
       <CardContent>{renderContent()}</CardContent>

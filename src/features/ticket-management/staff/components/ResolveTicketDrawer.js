@@ -22,7 +22,7 @@ import { updateStaffTicket } from '../services/staffTicketService';
 
 const TicketResolveDrawer = (props) => {
   // ** Props
-  const { open, toggle, ticket } = props;
+  const { open, toggle, ticket, setRefetch } = props;
 
   console.log(ticket);
 
@@ -75,6 +75,7 @@ const TicketResolveDrawer = (props) => {
       toast.success(result.message);
       reset();
       toggle();
+      setRefetch();
     } else {
     }
   };
