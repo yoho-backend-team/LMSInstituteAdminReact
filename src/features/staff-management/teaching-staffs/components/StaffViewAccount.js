@@ -5,12 +5,12 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-// import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-// import Icon from 'components/icon';
 import { Link } from 'react-router-dom';
-// import CustomChip from 'components/mui/chip';
+import CustomChip from 'components/mui/chip';
+import Icon from 'components/icon';
+import CardMedia from '@mui/material/CardMedia';
 
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
@@ -102,20 +102,21 @@ console.log('staffID:',staff.id)
           </Card>
         </Grid>
 
-        {/* <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {staff.staff.course.map((course, index) => (
+            {staff?.staff_course?.map((course, index) => (
               <Grid item spacing={2} key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
                       sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                      image={course.image}
+                      image={course?.courses?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.courses.logo}` : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'}
                     >
                       <CustomChip
                         sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
                         skin="light"
-                        label={course?.learning_format}
+                        label={course?.courses
+                          ?.learning_format}
                         rounded
                         color="primary"
                         size="small"
@@ -127,7 +128,7 @@ console.log('staffID:',staff.id)
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.course_categories?.course_category_name}
+                        label={course?.courses?.course_category_name}
                         rounded
                         color="secondary"
                         size="small"
@@ -135,9 +136,9 @@ console.log('staffID:',staff.id)
                       />
                     </Box>
                     <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="h4">{course?.course_name}</Typography>
+                      <Typography variant="h4">{course?.courses?.course_name}</Typography>
                       <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
-                        {course.personName}
+                        {course.courses?.course_overview}
                       </Typography>
                     </Box>
                     <Box
@@ -160,7 +161,7 @@ console.log('staffID:',staff.id)
                         <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
                       </Grid>
                       <Grid>
-                        <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>₹ {course?.courses?.course_price}</Typography>
                       </Grid>
                     </Box>
                   </CardContent>
@@ -186,7 +187,7 @@ console.log('staffID:',staff.id)
               </Grid>
             ))}
           </Grid>
-        </Grid> */}
+        </Grid>
       </Grid>
     );
   } else {

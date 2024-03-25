@@ -4,8 +4,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-const NotesView = ({ open, handleViewClose }) => {
+const NotesView = ({ open, handleViewClose
+// ,Notes
+ }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
+  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${Notes.document} `);
 
   return (
     <div>

@@ -317,7 +317,7 @@ const handleContentDelete = async () => {
           handleSubmit={handleContentDelete}
         />
         <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" handleSubmit={handleStatusChangeApi}/>
-        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} />
+        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} Module={Module}/>
       </Grid>
     </>
   );

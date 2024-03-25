@@ -48,6 +48,7 @@ const StudyMaterials = () => {
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue,setStatusValue]=useState({})
+  // const [viewMaterial,setViewMaterial]=useState({})
 
   console.log(selectedDeleteId);
 
@@ -59,11 +60,17 @@ const StudyMaterials = () => {
   useEffect(() => {
     dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
+console.log('getAllCourseStudyMaterialsss',StudyMaterials)
+
+
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
+
+
+
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
@@ -76,6 +83,14 @@ const StudyMaterials = () => {
     setSelectedRow(params.row);
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+// viewById
+
+// useEffect(() => {
+//   dispatch(getStudy({ branch_id: selectedBranchId }));
+// }, [dispatch, selectedBranchId, refetch]);
+
+
 
   //delete
   const handleDelete = useCallback((itemId) => {
@@ -124,6 +139,7 @@ const StudyMaterials = () => {
     setViewModalOpen(false);
   };
   const handleView = () => {
+
     setViewModalOpen(true);
   };
 
@@ -142,7 +158,7 @@ const StudyMaterials = () => {
             text: 'View',
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleView()
+              onClick: () => handleView(id)
             }
           },
           {
@@ -347,7 +363,7 @@ const StudyMaterials = () => {
           handleSubmit={handleStatusChangeApi}
         />
 
-        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} />
+        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={StudyMaterials}/>
       </Grid>
     </>
   );

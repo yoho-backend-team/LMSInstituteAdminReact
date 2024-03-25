@@ -95,15 +95,15 @@ export const deleteLiveClass = async (data) => {
 
 export const updateLiveClass = async (data) => {
   try {
-    const response = await axios.put(`${LIVE_CLASS_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${LIVE_CLASS_API_END_POINT}/update-live-class`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+console.log('updateLiveClass:',response)
     if (response.data.status) {
-      console.log(response);
+      // console.log(response);
       return { success: true, message: 'LiveClass updated successfully' };
     } else {
       return { success: false, message: 'Failed to update LiveClass' };
