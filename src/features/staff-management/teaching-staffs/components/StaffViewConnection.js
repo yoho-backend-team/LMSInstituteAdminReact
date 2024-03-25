@@ -1,4 +1,5 @@
 import MuiTimeline from '@mui/lab/Timeline';
+import { useState,useEffect } from 'react';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
@@ -16,7 +17,7 @@ import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 // ** Custom Components Imports
 import OptionsMenu from 'components/option-menu';
-
+import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
 // Styled Timeline component
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -24,7 +25,37 @@ const Timeline = styled(MuiTimeline)({
   }
 });
 
-const UserViewConnection = () => {
+const UserViewConnection = ({id}) => {
+  // console.log('hhh',id);
+// const id=id
+  const [activityLog, setActivityLog] = useState([]);
+  
+  useEffect(() => {
+    getUserLog(id);
+  }, [id]);
+
+  const getUserLog = async ( userId) => {
+    try {
+      const data = {
+        user_id: userId
+      };
+      const result = await getUserActivityLog(data);
+      if (result.success) {
+        console.log('ActivityLog:', result.data);
+        setActivityLog(result.data);
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(activityLog);
+  
+
+
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

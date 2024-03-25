@@ -41,7 +41,7 @@ const UserView = () => {
             <UserViewLeft staff={staff} />
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <UserViewRight staff={staff} />
+            <UserViewRight staff={staff} staffID={staffID} />
           </Grid>
         </Grid>
       )}

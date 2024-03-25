@@ -83,7 +83,7 @@ const Teaching = () => {
                               <MenuItem value="0">Inactive</MenuItem>
                             </TextField>
                           </Grid>
-                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
+                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id:item?.staff?.id }}>
                             {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
                             <Button variant="tonal" sx={{ p: 1.05 }}>
                               View Profile
@@ -107,6 +107,7 @@ const Teaching = () => {
         setOpen={setDeleteDialogOpen}
         description="Are you sure you want to delete this item?"
         title="Delete"
+        // submit={handleSubmit}
       />
     </>
   );

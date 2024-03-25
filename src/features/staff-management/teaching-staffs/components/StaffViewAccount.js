@@ -18,7 +18,8 @@ const UserViewAccount = ({ staff }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  console.log('staffID:', staff.id);
+  console.log('staffID:',staff?.teachingStaff?.id);
+  console.log('teachingStaff:',staff?.teachingStaff)
   // dateFormat
   function formattedDate(inputDate) {
     const dateObject = new Date(inputDate);
@@ -40,48 +41,48 @@ const UserViewAccount = ({ staff }) => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.username}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.email}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.designation}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.teachingStaff?.designation}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.gender}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.gender}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{formattedDate(`${staff?.dob}`)}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{formattedDate(`${staff?.teachingStaff?.dob}`)}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.phone_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.teachingStaff?.phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.alternate_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.teachingStaff?.alternate_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.education_qualification}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.education_qualification}</Typography>
                 </Box>
                 <Box>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>
-                    {staff?.address_line_1}, {staff?.address_line_2}
+                    {staff?.teachingStaff?.address_line_1}, {staff?.teachingStaff?.address_line_2}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.city}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.city}</Typography>
                 </Box>
               </Box>
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Box component={Link} to={`teaching-staffs/${staff?.staff_id}/edit`} state={{ staff: staff, id: staff.id }}>
+              <Box component={Link} to={`teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`} state={{ staff: staff?.teachingStaff, id: staff.teachingStaff?.id }}>
                 <Button variant="contained" sx={{ mr: 2 }}>
                   Edit
                 </Button>
@@ -100,13 +101,13 @@ const UserViewAccount = ({ staff }) => {
 
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {staff?.staff_course?.map((course, index) => (
+            {staff?.teachingStaff?.staff_course?.map((course, index) => (
               <Grid item spacing={2} key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
                       sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                      image={course?.courses?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.courses.logo}` : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'}
+                      image={course?.courses?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.courses?.logo}` : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'}
                     >
                       <CustomChip
                         sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
@@ -124,7 +125,7 @@ const UserViewAccount = ({ staff }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.courses?.course_category_name}
+                        label={course?.courses?.course?.course_categories?.category_name}
                         rounded
                         color="secondary"
                         size="small"
@@ -168,11 +169,11 @@ const UserViewAccount = ({ staff }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.course_categories?.course_category_name}
+                        label={course?.courses?.course?.is_active===1?'Active':'Inactive'}
                         rounded
-                        color="secondary"
-                        size="medium"
-                        variant="outlined"
+                        color={course?.courses?.course?.is_active===1?'success':'error'}
+                        size="large"
+                       
                       />
                     </Box>
                     <Button component={Link} to="view " size="medium" variant="contained" color="primary">

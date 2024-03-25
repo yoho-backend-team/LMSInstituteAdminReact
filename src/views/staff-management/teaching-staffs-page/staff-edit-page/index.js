@@ -75,20 +75,20 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    phone: yup.number().required(),
-    alt_phone: yup.number().required(),
-    designation: yup.string().required(),
-    state: yup.string().required(),
-    city: yup.string().required(),
-    pin_code: yup.number().required(),
-    address_line_one: yup.string().required(),
-    address_line_two: yup.string().required(),
-    date_of_birth: yup.string().required(),
-    gender: yup.string().required(),
-    branch: yup.object().required(),
-    username: yup.string().required()
+    name: yup.string().matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets').required('Name is required'),
+    email: yup.string().matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format').required('Email is required'),
+    phone: yup.string().matches(/^\d{10,}$/, 'Phone number must be at least 10 digits').required('Phone number is required'),
+    alt_phone: yup.string().matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits').required('Alternate phone number is required'),
+    designation: yup.string().matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets').required('Designation is required'),
+    state: yup.string().matches(/^[a-zA-Z\s]+$/, 'State should only contain alphabets').required('State is required'),
+    city: yup.string().matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets').required('City is required'),
+    pin_code: yup.string().matches(/^\d{6}$/, 'Pin code must be 6 digits').required('Pin code is required'),
+    address_line_one: yup.string().required('Address line one is required'),
+    address_line_two: yup.string().required('Address line two is required'),
+    date_of_birth: yup.string().required('Date of birth is required'),
+    gender: yup.string().required('Gender is required'),
+    branch: yup.object().required('Branch is required'),
+    username: yup.string().matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers').required('Username is required')
   });
 
   // ** States
