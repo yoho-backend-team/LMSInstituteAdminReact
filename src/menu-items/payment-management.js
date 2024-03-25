@@ -9,7 +9,7 @@ const icons = {
   IconUsers,
   IconCash
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -31,7 +31,8 @@ const pages = {
           url: '/payment-management/fees',
           icon: icons.IconCash,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_fees_payment_management_view')
         },
         {
           id: 'salaries',
@@ -40,7 +41,8 @@ const pages = {
           url: '/payment-management/salaries',
           icon: icons.IconCash,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_staff_salaries_view')
         },
         {
           id: 'subscriptions',
@@ -49,7 +51,8 @@ const pages = {
           url: '/payment-management/subscriptions',
           icon: icons.IconCash,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_subscriptions_view')
         }
       ]
     }

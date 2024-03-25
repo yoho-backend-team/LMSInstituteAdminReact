@@ -1,6 +1,6 @@
 // assets
 import { IconKey, IconShieldLock, IconUser, IconUsers, IconGitBranch } from '@tabler/icons';
-
+import { hasPermission } from 'hooks/hasPermissions';
 // constant
 const icons = {
   IconKey,
@@ -31,7 +31,8 @@ const pages = {
           url: '/branch-management/branches',
           icon: icons.IconGitBranch,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_branch_view')
         }
       ]
     }

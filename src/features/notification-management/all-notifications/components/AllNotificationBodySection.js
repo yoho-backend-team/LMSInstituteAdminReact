@@ -11,9 +11,11 @@ import { DataGrid } from '@mui/x-data-grid';
 // import { Link } from 'react-router-dom';
 // ** Custom Components Imports
 import toast from 'react-hot-toast';
-import { resendNotification } from '../services/allNotificationServices';
+// import { resendNotification } from '../services/allNotificationServices';
 
-const AllNotificationBodySection = ({ allNotifications, selectedBranchId }) => {
+import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
+
+const AllNotificationBodySection = ({ allNotifications }) => {
   console.log(allNotifications);
 
   // ** State
@@ -27,12 +29,17 @@ const AllNotificationBodySection = ({ allNotifications, selectedBranchId }) => {
         throw new Error('Notification not found');
       }
 
+      // const { title, body } = selectedNotification.institute_notifications;
+
       const data = {
         id: id,
-        branch_id: selectedBranchId
+        notification_id: selectedNotification.notification_id // Include the notification_id field
+        // body: body,
+        // branch_id: selectedBranchId,
+        // title: title
       };
 
-      const response = await resendNotification(data);
+      const response = await resendStudentNotification(data);
 
       if (response.success) {
         // Handle success
@@ -60,7 +67,7 @@ const AllNotificationBodySection = ({ allNotifications, selectedBranchId }) => {
 
   const columns = [
     {
-      flex: 0.1,
+      flex: 0.25,
       minWidth: 120,
       headerName: 'Id',
       field: 'student_id',
@@ -73,56 +80,55 @@ const AllNotificationBodySection = ({ allNotifications, selectedBranchId }) => {
       }
     },
 
-    // {
-    //   flex: 0.1,
-    //   minWidth: 120,
-    //   field: 'image',
-    //   headerName: 'Image',
-    //   renderCell: ({ row }) => {
-    //     return (
-    //       <Avatar sx={{ width: 38, height: 38 }}>
-    //         {row?.profile_image ? (
-    //           <img src={row.profile_image} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-    //         ) : (
-    //           <ImageIcon />
-    //         )}
-    //       </Avatar>
-    //     );
-    //   }
-    // },
-
     {
-      flex: 0.15,
+      flex: 0.65,
       minWidth: 190,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.title}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 0.15,
-      field: 'body',
-      minWidth: 170,
-      headerName: 'Description',
-      renderCell: ({ row }) => {
-        return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.body}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography
+                noWrap
+                sx={{
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: 'text.secondary',
+                  '&:hover': { color: 'primary.main' },
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {row?.title}
+              </Typography>
+              <Typography
+                noWrap
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  mt: 1,
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {row?.body}
+              </Typography>
+            </Box>
           </Box>
         );
       }
     },
 
     {
-      flex: 0.1,
-      minWidth: 100,
+      flex: 0.15,
+      minWidth: 130,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',

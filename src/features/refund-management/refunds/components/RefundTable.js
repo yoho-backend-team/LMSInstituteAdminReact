@@ -14,10 +14,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 // ** Third Party Imports
 // ** Utils Import
-import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
 import { TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import { useCallback } from 'react';
@@ -31,12 +29,15 @@ import RefundDeleteModel from 'components/modal/DeleteModel';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
 import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
-import toast from 'react-hot-toast';
 import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
+// import RefundEditDrawer from './RefundEditDrawer';
+
+import RefundViewDrawer from './RefundViewDrawer';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -45,42 +46,11 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: `${theme.palette.primary.main} !important`
 }));
 
-// ** Vars
-// const invoiceStatusObj = {
-//   Sent: { color: 'secondary', icon: 'tabler:circle-check' },
-//   Paid: { color: 'success', icon: 'tabler:circle-half-2' },
-//   Draft: { color: 'primary', icon: 'tabler:device-floppy' },
-//   'Partial Payment': { color: 'warning', icon: 'tabler:chart-pie' },
-//   'Past Due': { color: 'error', icon: 'tabler:alert-circle' },
-//   Downloaded: { color: 'info', icon: 'tabler:arrow-down-circle' }
-// };
-
-// const handleRowClick = (rowData) => {
-//   setSelectedRows(rowData);
-// };
-
-// ** renders client column
-const renderClient = (row) => {
-  if (row?.avatar && row?.avatar?.length) {
-    return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
-  } else {
-    return (
-      <Avatar
-        skin="light"
-        color={row.avatarColor || 'primary'}
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
-      >
-        {getInitials(row.name || 'John Doe')}
-      </Avatar>
-    );
-  }
-};
-
 const defaultColumns = [
   {
-    flex: 0.1,
-    minWidth: 100,
-    field: 'id',
+    flex: 0.3,
+    minWidth: 190,
+    field: 'refundId',
     headerName: 'Refund ID',
     renderCell: ({ row }) => (
       <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
@@ -88,90 +58,69 @@ const defaultColumns = [
       </Typography>
     )
   },
-  // {
-  //   flex: 0.1,
-  //   minWidth: 80,
-  //   field: 'invoiceStatus',
-  //   renderHeader: () => <Icon icon="tabler:trending-up" />,
-  //   renderCell: ({ row }) => {
-  //     const { dueDate, balance, invoiceStatus } = row;
-  //     const color = invoiceStatusObj[invoiceStatus] ? invoiceStatusObj[invoiceStatus].color : 'primary';
-
-  //     return (
-  //       <Tooltip
-  //         title={
-  //           <div>
-  //             <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-  //               {invoiceStatus}
-  //             </Typography>
-  //             <br />
-  //             <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-  //               Balance:
-  //             </Typography>{' '}
-  //             {balance}
-  //             <br />
-  //             <Typography variant="caption" sx={{ color: 'common.white', fontWeight: 600 }}>
-  //               Due Date:
-  //             </Typography>{' '}
-  //             {dueDate}
-  //           </div>
-  //         }
-  //       >
-  //         <Avatar skin="light" color={color} sx={{ width: '1.875rem', height: '1.875rem' }}>
-  //           <Icon icon={invoiceStatusObj[invoiceStatus]} />
-  //         </Avatar>
-  //       </Tooltip>
-  //     );
-  //   }
-  // },
   {
-    flex: 0.2,
-    minWidth: 320,
-    field: 'name',
-    headerName: 'Client',
+    flex: 0.3,
+    minWidth: 190,
+    field: 'studentId',
+    headerName: 'Student ID',
+    renderCell: ({ row }) => (
+      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
+        {`#${row.institute_student_fee_id}`}
+      </Typography>
+    )
+  },
+  {
+    flex: 0.35,
+    minWidth: 245,
+    field: 'studentInfo',
+    headerName: 'Student Info',
     renderCell: ({ row }) => {
-      const { name, companyEmail } = row;
+      const { students } = row.student_fees[0];
+      const studentName = `${students.first_name} ${students.last_name}`;
+      const studentEmail = students.email;
 
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-              {name}
-            </Typography>
-            <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-              {companyEmail}
-            </Typography>
-          </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+            {studentName}
+          </Typography>
+          <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
+            {studentEmail}
+          </Typography>
         </Box>
       );
     }
   },
   {
-    flex: 0.1,
-    minWidth: 100,
-    field: 'paid_amount',
+    flex: 0.2,
+    minWidth: 120,
+    field: 'paidAmount',
     headerName: 'Paid Amount',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.paid_amount}</Typography>
   },
   {
     flex: 0.15,
-    minWidth: 140,
-    field: 'payment_date',
+    minWidth: 150,
+    field: 'paymentDate',
     headerName: 'Payment Date',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.payment_date}</Typography>
   },
   {
-    flex: 0.1,
-    minWidth: 100,
+    flex: 0.2,
+    minWidth: 160,
     field: 'status',
     headerName: 'Status',
-    renderCell: ({ row }) =>
-      row.balance !== 0 ? (
-        <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.status}</Typography>
-      ) : (
-        <CustomChip rounded size="small" skin="light" color="success" label="Paid" />
-      )
+    renderCell: ({ row }) => (
+      <>
+        <CustomChip
+          rounded
+          size="medium"
+          skin="light"
+          color={row.status === 'success' ? 'success' : 'error'} // Dynamically set chip color based on status
+          label={row.status}
+        />
+      </>
+    )
   }
 ];
 
@@ -191,7 +140,7 @@ const RefundTable = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-  const [editUserOpen, setEditUserOpen] = useState(false);
+
   const [refetch, setRefetch] = useState(false);
   console.log(setRefetch);
   const dispatch = useDispatch();
@@ -208,8 +157,16 @@ const RefundTable = () => {
     );
   }, [dispatch, selectedBranchId, refetch]);
 
-  const toggleEditUserDrawer = () => {
-    setEditUserOpen(!editUserOpen);
+  const [refundViewOpen, setRefundViewUserOpen] = useState(false);
+
+  const [selectedRowDetails, setSelectedRowDetails] = useState(null);
+
+  const handleRowClick = (rowData) => {
+    setSelectedRowDetails(rowData);
+  };
+
+  const toggleRefundViewDrawer = () => {
+    setRefundViewUserOpen(!refundViewOpen); // This line toggles the editUserOpen state
     console.log('Toggle drawer');
   };
 
@@ -224,7 +181,8 @@ const RefundTable = () => {
 
   // Handle branch deletion
   const handleRefundDelete = async () => {
-    const data = { student_fee_id: selectedRefundDeleteId };
+    const data = { refund_id: selectedRefundDeleteId };
+    // const data = { id: selectedRefundDeleteId };
     const result = await deleteStudentFeeRefund(data);
     if (result.success) {
       toast.success(result.message);
@@ -248,35 +206,31 @@ const RefundTable = () => {
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
-              {
-                text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
-              },
-              {
-                text: 'Edit',
-                to: `/apps/invoice/edit/${row.id}`,
-                icon: <Icon icon="tabler:edit" fontSize={20} />,
-                menuItemProps: { onClick: toggleEditUserDrawer }
-              },
+              // {
+              //   text: 'Download',
+              //   icon: <Icon icon="tabler:download" fontSize={20} />
+              // },
+              // {
+              //   text: 'Edit',
+              //   to: `/apps/invoice/edit/${row.id}`,
+              //   icon: <Icon icon="tabler:edit" fontSize={20} />,
+              //   menuItemProps: { onClick: toggleEditUserDrawer }
+              // },
               {
                 text: 'View',
-                to: `/apps/invoice/view/${row.id}`,
+                // to: `/apps/invoice/view/${row.id}`,
                 icon: <Icon icon="tabler:eye" />,
-                menuItemProps: { onClick: toggleEditUserDrawer }
+                menuItemProps: { onClick: toggleRefundViewDrawer }
               },
               {
                 text: 'Delete',
-                to: `/apps/invoice/delete/${row.id}`,
+                // to: `/apps/invoice/delete/${row.id}`,
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row.id);
+                    handleDelete(row.refund_id);
                   }
                 }
-              },
-              {
-                text: 'Duplicate',
-                icon: <Icon icon="tabler:copy" fontSize={20} />
               }
             ]}
           />
@@ -352,14 +306,6 @@ const RefundTable = () => {
 
   const batch = useSelector(selectBatches);
 
-  // const students = [
-  //   { students_id: '1', students_name: 'students 1' },
-  //   { students_id: '2', students_name: 'students 2' },
-  //   { students_id: '3', students_name: 'students 3' }
-  // ];
-
-  // const [selectedstudents, setSelectedstudents] = useState([]);
-
   console.log(studentFeeRefunds);
 
   return (
@@ -372,85 +318,24 @@ const RefundTable = () => {
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
-                    // multiple
                     fullWidth
                     options={batch}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
-                      // const batchId = newValue.map((item) => item.batch.batch_id);
-                      console.log(newValue);
-                      const data = {
-                        batch_id: newValue.batch.batch_id,
-                        branch_id: selectedBranchId
-                      };
+                      let data = { branch_id: selectedBranchId };
+                      if (newValue) {
+                        data = {
+                          batch_id: newValue.batch.batch_id,
+                          branch_id: selectedBranchId
+                        };
+                      }
                       dispatch(getAllStudentFeeRefunds(data));
                     }}
-                    // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                    renderInput={(params) => <TextField {...params} label="Batches" placeholder="Favorites" />}
                   />
                 </Grid>
-
-                {/* <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    disableCloseOnSelect
-                    multiple
-                    id="select-multiple-chip"
-                    options={[{ students_id: 'selectAll', students_name: 'Select All' }, ...students]}
-                    getOptionLabel={(option) => option.students_name}
-                    value={selectedstudents}
-                    onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.students_id === 'selectAll')) {
-                        setSelectedstudents(students.filter((option) => option.students_id !== 'selectAll'));
-                      } else {
-                        setSelectedstudents(newValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Students"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.students_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.students_id}
-                            label={option.students_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedstudents(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.students_id === value.students_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                  />
-                </Grid> */}
               </Grid>
             </CardContent>
           </Card>
@@ -467,7 +352,7 @@ const RefundTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 pagination
-                rowHeight={62}
+                rowHeight={80}
                 rows={studentFeeRefunds}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -475,18 +360,13 @@ const RefundTable = () => {
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+                onRowClick={(params) => handleRowClick(params.row)} // Handle row click
               />
             </Card>
           )}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-          {/* 
-          <RefundEditDrawer
-            setRefetch={setRefetch}
-            selectedRows={selectedRows}
-            handleRowClick={handleRowClick}
-            open={editUserOpen}
-            toggle={toggleEditUserDrawer}
-          /> */}
+
+          <RefundViewDrawer open={refundViewOpen} toggle={toggleRefundViewDrawer} selectedRowDetails={selectedRowDetails} />
 
           <RefundDeleteModel
             open={refundDeleteModelOpen}

@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconNotification,IconBellRinging } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconNotification, IconBellRinging } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -11,7 +11,7 @@ const icons = {
   IconNotification,
   IconBellRinging
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -33,7 +33,8 @@ const pages = {
           url: '/notification-management/student-notifications',
           icon: icons.IconBellRinging,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_notification_view')
         },
         {
           id: 'staff-notifications',
@@ -42,7 +43,8 @@ const pages = {
           url: '/notification-management/staff-notifications',
           icon: icons.IconBellRinging,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_staff_notification_view')
         },
         {
           id: 'all-notifications',
@@ -51,7 +53,8 @@ const pages = {
           url: '/notification-management/all-notifications',
           icon: icons.IconBellRinging,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_all_notification_view')
         }
       ]
     }

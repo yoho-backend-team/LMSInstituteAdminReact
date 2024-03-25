@@ -1,14 +1,14 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
 // ** MUI Imports
-import { Button, Grid, Typography, Checkbox } from '@mui/material';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { Button, Checkbox, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CustomChip from 'components/mui/chip';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,15 +31,21 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  // type: yup.string().required('Type is required'),
-  // staffs: yup.array().required('Students is required').min(1, 'Select at least one student'),
-  // title: yup.string().required('Title is required'),
-  // body: yup.string().required('Body is required')
+  staff_type: yup.string().required('Type is required'),
+  staff: yup.array().required('staff is required').min(1, 'Select at least one staff'),
+  title: yup
+    .string()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+  body: yup
+    .string()
+    .required('Body is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters')
 });
 
 const defaultValues = {
-  type: '',
-  staffs: [],
+  staff_type: '',
+  staff: [],
   title: '',
   body: ''
 };
@@ -50,7 +56,10 @@ const StaffNotificationAddDrawer = (props) => {
   // ** State
 
   const [inputValue, setInputValue] = useState('');
-  const image = require('assets/images/avatar/1.png');
+
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const [activeStaffs, setActiveStaffs] = useState([]);
@@ -73,11 +82,11 @@ const StaffNotificationAddDrawer = (props) => {
   };
 
   const {
-    handleSubmit,
+    reset,
     control,
     setValue,
-    formState: { errors },
-    reset
+    handleSubmit,
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -85,9 +94,11 @@ const StaffNotificationAddDrawer = (props) => {
   });
 
   const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
+    setInputValue(''); // Reset input value
+    setImgSrc(image); // Reset image source
+    setSelectedImage(''); // Reset selected image
+    reset(); // Reset form values
+    toggle(); // Close the drawer
   };
 
   const onSubmit = async (data) => {
@@ -96,9 +107,10 @@ const StaffNotificationAddDrawer = (props) => {
     data?.staff?.forEach((staff) => {
       bodyFormData.append('staff_ids[]', staff?.staff_id);
     });
-    bodyFormData.append('payment_proof', selectedImage);
+    bodyFormData.append('image', selectedImage);
     bodyFormData.append('branch_id', selectedBranchId);
     // bodyFormData.append('institute_staff_id', data.staff.staff_id);
+    bodyFormData.append('type', data.type);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
 
@@ -146,8 +158,6 @@ const StaffNotificationAddDrawer = (props) => {
     }
   };
 
-
-
   return (
     <Drawer
       open={open}
@@ -158,7 +168,7 @@ const StaffNotificationAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Notification</Typography>
+        <Typography variant="h5">Add Staff Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -177,7 +187,7 @@ const StaffNotificationAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -249,8 +259,8 @@ const StaffNotificationAddDrawer = (props) => {
                       error={Boolean(errors.staff)}
                       helperText={errors.staff ? errors.staff.message : null}
                       aria-describedby="stepper-linear-personal-branches"
-                      // {...(errors.students['Students'] && { helperText: 'This field is required' })}
-                      // {...(errors.students && { helperText: 'This field is required' })}
+                      // {...(errors.staff['staff'] && { helperText: 'This field is required' })}
+                      // {...(errors.staff && { helperText: 'This field is required' })}
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -280,6 +290,7 @@ const StaffNotificationAddDrawer = (props) => {
                         const updatedValue = [...value];
                         updatedValue?.splice(index, 1);
                         setSelectedStaff(updatedValue);
+                        setValue('staff', updatedValue);
                       }}
                       color="primary"
                       sx={{ m: 0.75 }}
@@ -348,6 +359,8 @@ const StaffNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
+                  multiline // Add multiline prop
+                  rows={4} // Set rows to 4
                 />
               )}
             />

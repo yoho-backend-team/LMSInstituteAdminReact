@@ -8,7 +8,17 @@ import menuItem from 'menu-items';
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
-  const navItems = menuItem.items.map((item) => {
+  console.log(menuItem?.items);
+  const filteredSidebarData = menuItem?.items.filter((item) => {
+    var children = item?.children[0]?.children;
+    if (children) {
+      children = children.filter((child) => child.visible !== false);
+      return children.length > 0; // Only keep items with non-empty children
+    }
+    return item.visible !== false; // Keep items with visible set to true
+  });
+  console.log(filteredSidebarData);
+  const navItems = filteredSidebarData.map((item) => {
     switch (item.type) {
       case 'group':
         return <NavGroup key={item.id} item={item} />;

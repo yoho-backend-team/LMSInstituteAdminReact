@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, TextField as CustomTextField, TextField } from '@mui/material';
+import { Checkbox, TextField as CustomTextField, TextField, styled } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
-import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
+import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import StepperCustomDot from 'features/course-management/courses-page/course-add-page/components/StepperCustomDot';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
 import { Fragment, useEffect, useState } from 'react';
@@ -29,13 +29,68 @@ import * as yup from 'yup';
 
 const AddCoursePage = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [courseLogo, setCourseLogo] = useState('');
-  const [courseTemplate, setCourseTemplate] = useState('');
+
   const [courseSyllabus, setCourseSyllabus] = useState('');
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedBranches, setSelectedBranches] = useState([]);
   const [branches, setBranches] = useState([]);
   const [activeCategories, setActiveCategories] = useState([]);
+
+  const imageLogo =
+    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+  const imageTemplate =
+    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+
+  const [imgSrcLogo, setImgSrcLogo] = useState(imageLogo);
+  const [inputLogoValue, setInputLogoValue] = useState('');
+  const [selectedLogo, setSelectedLogo] = useState('');
+
+  const [imgSrcTemplate, setImgSrcTemplate] = useState(imageTemplate);
+  const [inputTemplateValue, setInputTemplateValue] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState('');
+
+  console.log("selectedLogo",selectedLogo);
+  console.log("selectedTemplate",selectedTemplate);
+
+  const handleInputLogoImageChange = (file) => {
+    const reader = new FileReader();
+    const { files } = file.target;
+    if (files && files.length !== 0) {
+      reader.onload = () => setImgSrcLogo(reader.result);
+      setSelectedLogo(files[0]);
+      reader.readAsDataURL(files[0]);
+      if (reader.result !== null) {
+        setInputLogoValue(reader.result);
+      }
+    }
+  };
+
+  const handleInputTemplateImageChange = (file) => {
+    const reader = new FileReader();
+    const { files } = file.target;
+    if (files && files.length !== 0) {
+      reader.onload = () => setImgSrcTemplate(reader.result);
+      setSelectedTemplate(files[0]);
+      reader.readAsDataURL(files[0]);
+      if (reader.result !== null) {
+        setInputTemplateValue(reader.result);
+      }
+    }
+  };
+
+  const ImgStyled = styled('img')(({ theme }) => ({
+    width: 100,
+    height: 100,
+    marginRight: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius
+  }));
+
+  const ButtonStyled = styled(Button)(({ theme }) => ({
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      textAlign: 'center'
+    }
+  }));
 
   const steps = [
     {
@@ -90,8 +145,6 @@ const AddCoursePage = () => {
     getActiveCourseCategories(filteredBranchId);
   }, [selectedBranches, setSelectedBranches]);
 
-
-  
   const getActiveCourseCategories = async (branchIds) => {
     const data = {
       branch_id: branchIds
@@ -103,7 +156,7 @@ const AddCoursePage = () => {
       setActiveCategories(result.data.data);
     }
   };
-  
+
   const getAllBranches = async () => {
     const result = await getActiveBranches();
 
@@ -111,7 +164,6 @@ const AddCoursePage = () => {
       setBranches(result.data.data);
     }
   };
-
 
   useEffect(() => {
     getAllCategories();
@@ -167,8 +219,6 @@ const AddCoursePage = () => {
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
-
-      console.log(personalData);
       console.log(selectedBranches);
 
       let data = new FormData();
@@ -182,11 +232,11 @@ const AddCoursePage = () => {
       data.append('institute_category_id', personalData?.course_category.category_id);
       data.append('course_price', personalData?.course_price);
       data.append('learning_format', personalData?.learning_format);
-      data.append('logo', courseLogo);
-      data.append('image', courseTemplate);
+      data.append('logo', selectedLogo);
+      data.append('image', selectedTemplate);
       data.append('syllabus', courseSyllabus);
       // data.append('branch_id', filteredBranchId);
-
+      console.log(personalData);
       const result = await addCourse(data);
 
       if (result.success) {
@@ -440,6 +490,45 @@ const AddCoursePage = () => {
                 />
               </Grid>
 
+              <Grid item xs={12} sm={6}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+                    <ImgStyled src={imgSrcLogo} alt="Profile Pic" />
+                    <div>
+                      <ButtonStyled component="label" variant="contained" htmlFor="logo-settings-upload-image">
+                        update New logo
+                        <input
+                          hidden
+                          type="file"
+                          value={inputLogoValue}
+                          accept="image/png, image/jpeg"
+                          onChange={handleInputLogoImageChange}
+                          id="logo-settings-upload-image"
+                        />
+                      </ButtonStyled>
+                    </div>
+                  </Box>
+                </Grid>
+
+                {/*  */}
+                <Grid item xs={12} sm={6}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+                  <ImgStyled src={imgSrcTemplate} alt="Profile Pic" />
+                  <div>
+                    <ButtonStyled component="label" variant="contained" htmlFor="template-settings-upload-image">
+                      Upload New Template
+                      <input
+                        hidden
+                        type="file"
+                        value={inputTemplateValue}
+                        accept="image/png, image/jpeg"
+                        onChange={handleInputTemplateImageChange}
+                        id="template-settings-upload-image"
+                      />
+                    </ButtonStyled>
+                  </div>
+                </Box>
+                </Grid>
+
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={handleBack}>
                   Back
@@ -454,7 +543,7 @@ const AddCoursePage = () => {
       case 1:
         return (
           <form key={2} onSubmit={handleCourseFileSubmit(onSubmit)}>
-            <CourseValidate setCourseLogo={setCourseLogo} setCourseSyllabus={setCourseSyllabus} setCourseTemplate={setCourseTemplate} />
+            <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
               <Button variant="tonal" color="secondary" onClick={handleBack}>
                 Back

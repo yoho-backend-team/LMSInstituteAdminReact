@@ -1,7 +1,7 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
 // ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography , Avatar} from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -32,7 +32,8 @@ const schema = yup.object().shape({
 
 const SalaryEditDrawer = (props) => {
   const { open, toggle, selectedRows, setRefetch } = props;
-  const image = require('assets/images/avatar/1.png');
+  const image =
+  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
@@ -59,7 +60,7 @@ const SalaryEditDrawer = (props) => {
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (selectedRows) {
-      setValue('image', selectedRows?.selectedImage || '');
+      setValue('image',selectedRows?.selectedImage || '');
       setValue('transaction_id', selectedRows?.transaction_id || '');
       setValue('salary_amount', selectedRows?.salary_amount || '');
     }
@@ -147,6 +148,25 @@ const SalaryEditDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Avatar
+                  src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.staff?.image}`}
+                  sx={{ mr: 2.5, height: 42, width: 42 }}
+                />
+                <Box>
+                  <Typography variant="h5" sx={{ fontSize: '18px' }}>
+                    {selectedRows?.staff?.staff_name}
+                  </Typography>
+                  <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: '14px' }}>
+                    {selectedRows?.staff?.email}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography sx={{ fontSize: 12, color: 'primary.main' }}>{selectedRows?.ago}</Typography>
+              </Box>
+            </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
               {!selectedImage && (
                 <ImgStyled

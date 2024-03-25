@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconCertificate,IconCertificate2 } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconCertificate, IconCertificate2 } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -11,7 +11,7 @@ const icons = {
   IconCertificate,
   IconCertificate2
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -33,7 +33,8 @@ const pages = {
           url: '/certificate-management/student-certificates',
           icon: icons.IconCertificate2,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_certificates_view')
         }
       ]
     }

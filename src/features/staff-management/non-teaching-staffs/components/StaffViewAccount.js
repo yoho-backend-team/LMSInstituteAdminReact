@@ -89,7 +89,7 @@ const UserViewAccount = ({ staff }) => {
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                  <Box sx={{display:'flex'}} gap={1}>
+                  <Box sx={{ display: 'flex' }} gap={1}>
                     <Typography sx={{ color: 'text.secondary' }}>{staff.address_line_1},</Typography>
                     <Typography sx={{ color: 'text.secondary' }}> {staff.address_line_2}</Typography>
                   </Box>

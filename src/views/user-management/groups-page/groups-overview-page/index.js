@@ -131,7 +131,7 @@ const GroupManagement = () => {
                     text: 'View',
                     menuItemProps: {
                       component: Link,
-                      to: 'view',
+                      to: 'groups/view',
                       state: { group: item.role }
                     }
                   },
@@ -148,7 +148,7 @@ const GroupManagement = () => {
                     text: 'Edit',
                     menuItemProps: {
                       component: Link,
-                      to: `edit/${item.role.id}`,
+                      to: `groups/edit/${item.role.id}`,
                       state: { id: item.role.id, name: item.role.name }
                     }
                   }
@@ -192,7 +192,7 @@ const GroupManagement = () => {
                 <Grid item xs={7}>
                   <CardContent sx={{ pl: 0, height: '100%' }}>
                     <Box sx={{ textAlign: 'right' }}>
-                      <Button variant="contained" component={Link} to={'add'} sx={{ mb: 3, whiteSpace: 'nowrap' }}>
+                      <Button variant="contained" component={Link} to={'groups/add'} sx={{ mb: 3, whiteSpace: 'nowrap' }}>
                         Add New Group
                       </Button>
                       <Typography sx={{ color: 'text.secondary' }}>Add group, if it doesnt exist.</Typography>

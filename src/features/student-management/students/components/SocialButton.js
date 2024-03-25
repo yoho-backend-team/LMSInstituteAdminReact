@@ -36,7 +36,7 @@ export default function SocialsButton({ item, initialColor = false, simple = tru
       name: 'View Profile',
       icon: 'eva:navigation-2-fill',
       socialColor: '#007EBB',
-      path: `${item.student.user_id.toString()}`
+      path: `students/${item.student.user_id.toString()}`
     }
   ];
 

@@ -1,6 +1,6 @@
 // assets
 import { IconKey, IconShieldLock, IconUser, IconUsers, IconHeartHandshake } from '@tabler/icons';
-
+import { hasPermission } from 'hooks/hasPermissions';
 // constant
 const icons = {
   IconKey,
@@ -31,7 +31,8 @@ const pages = {
           url: '/staff-management/teaching-staffs',
           icon: icons.IconHeartHandshake,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_teaching_staff_view')
         },
         {
           id: 'non-teaching-staffs',
@@ -40,8 +41,8 @@ const pages = {
           type: 'item',
           url: '/staff-management/non-teaching-staffs',
           target: false,
-
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_non_teaching_staff_view')
         }
       ]
     }

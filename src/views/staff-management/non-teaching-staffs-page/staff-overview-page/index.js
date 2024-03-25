@@ -50,15 +50,13 @@ const NonTeaching = () => {
     setDeleteDialogOpen(true);
   };
 
-
-
   return (
     <>
       {loading ? (
         <StaffManagement />
       ) : (
         <Grid>
-          <TeacherFilter selectedBranchId={selectedBranchId}/>
+          <TeacherFilter selectedBranchId={selectedBranchId} />
           <Grid container xs={12} spacing={2} mt={2}>
             {nonTeachingStaffs?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4}>
@@ -91,10 +89,8 @@ const NonTeaching = () => {
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
-                       <Box  component={Link} to={item?.staff?.id.toString()} state={{ id: item?.staff?.id }}>
-                          <Button>
-                            View Profile
-                          </Button>
+                        <Box component={Link} to={`non-teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
+                          <Button>View Profile</Button>
                         </Box>
                       </Box>
                     </Box>

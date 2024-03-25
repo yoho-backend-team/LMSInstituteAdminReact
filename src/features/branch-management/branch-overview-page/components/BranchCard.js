@@ -77,7 +77,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
                 icon: <Icon icon="tabler:eye" fontSize={20} />,
                 menuItemProps: {
                   component: Link,
-                  to: `${branch?.branch_id}`,
+                  to: `branches/${branch?.branch_id}`,
                   state: { id: branch?.branch_id }
                 }
               },

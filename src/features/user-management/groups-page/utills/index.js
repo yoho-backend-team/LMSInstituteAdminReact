@@ -15,7 +15,8 @@ export const addGroupYupSchema = yup.object().shape({
   groupName: yup
     .string()
     .min(3, (obj) => showErrors('Group Name', obj.value.length, obj.min))
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Group Name should not contain special characters')
+    // .matches(/^[a-zA-Z0-9\s]+$/, 'Group Name should not contain special characters')
+    .matches(/^[\w\s]+$/, 'Group Name should only contain letters, numbers, and spaces')
     .required()
 });
 
@@ -23,7 +24,7 @@ export const addGroupYupSchema = yup.object().shape({
 export const editGroupYupSchema = yup.object().shape({
   roleName: yup
     .string()
-    .min(3, (obj) => showErrors('Role Name', obj.value.length, obj.min))
+    .min(3, (obj) => showErrors('Group Name', obj.value.length, obj.min))
     .matches(/^[a-zA-Z0-9\s]+$/, 'Role Name should not contain special characters')
     .required()
 });

@@ -76,7 +76,7 @@ const GroupEditDialog = () => {
       try {
         const inputData = {
           id: groupId,
-          name: data.roleName,
+          name: data.roleName === groupName ? '' : data?.roleName,
           permission_ids: selectedCheckbox
         };
 

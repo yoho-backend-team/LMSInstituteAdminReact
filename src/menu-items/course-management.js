@@ -1,6 +1,6 @@
 // assets
 import { IconKey, IconShieldLock, IconUser, IconUsers, IconBook, IconCategory } from '@tabler/icons';
-
+import { hasPermission } from 'hooks/hasPermissions';
 // constant
 const icons = {
   IconKey,
@@ -10,6 +10,8 @@ const icons = {
   IconBook,
   IconCategory
 };
+
+
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
@@ -32,7 +34,8 @@ const pages = {
           url: '/course-management/categories',
           icon: icons.IconCategory,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_categories_view')
         },
         {
           id: 'courses',
@@ -42,7 +45,8 @@ const pages = {
           url: '/course-management/courses',
           target: false,
 
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_course_view')
         }
       ]
     }

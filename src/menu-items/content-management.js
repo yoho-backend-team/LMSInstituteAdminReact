@@ -1,7 +1,6 @@
 // assets
 import { IconKey, IconShieldLock, IconUser, IconUsers, IconNotes, IconNotebook } from '@tabler/icons';
-
-
+import { hasPermission } from 'hooks/hasPermissions';
 // constant
 const icons = {
   IconKey,
@@ -33,7 +32,8 @@ const pages = {
           url: '/content-management/study-materials',
           icon: icons.IconNotebook,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_study_materials_view')
         },
         {
           id: 'notes',
@@ -42,7 +42,8 @@ const pages = {
           type: 'item',
           url: '/content-management/notes',
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_course_notes_view')
         },
         {
           id: 'modules',
@@ -51,7 +52,8 @@ const pages = {
           type: 'item',
           url: '/content-management/modules',
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_course_module_view')
         }
       ]
     }

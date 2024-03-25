@@ -13,7 +13,6 @@ import CustomChip from 'components/mui/chip';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const UserViewAccount = ({ student }) => {
-
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
@@ -122,7 +121,13 @@ const UserViewAccount = ({ student }) => {
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Button  component={Link} state={{  student:student }}  to={'edit'} variant="contained" sx={{ mr: 2 }}>
+              <Button
+                component={Link}
+                state={{ student: student }}
+                to={`students/${student?.student_id}/edit`}
+                variant="contained"
+                sx={{ mr: 2 }}
+              >
                 Edit
               </Button>
               <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>

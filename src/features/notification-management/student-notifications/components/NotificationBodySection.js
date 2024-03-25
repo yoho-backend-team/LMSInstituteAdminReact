@@ -16,7 +16,7 @@ import { getInitials } from 'utils/get-initials';
 
 import { resendStudentNotification } from '../services/studentNotificationServices';
 
-const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => {
+const NotificationBodySection = ({ studentNotifications }) => {
   console.log(studentNotifications);
   // ** State
 
@@ -80,14 +80,14 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
         throw new Error('Notification not found');
       }
 
-      const { title, body } = selectedNotification.institute_notifications;
+      // const { title, body } = selectedNotification.institute_notifications;
 
       const data = {
         id: id,
         notification_id: selectedNotification.notification_id, // Include the notification_id field
-        body: body,
-        branch_id: selectedBranchId,
-        title: title
+        // body: body,
+        // branch_id: selectedBranchId,
+        // title: title
       };
 
       const response = await resendStudentNotification(data);
@@ -120,8 +120,8 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
 
   const columns = [
     {
-      flex: 0.1,
-      minWidth: 120,
+      flex: 0.14,
+      minWidth: 100,
       headerName: 'Id',
       field: 'student_id',
       renderCell: ({ row }) => {
@@ -132,28 +132,9 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
         );
       }
     },
-
-    // {
-    //   flex: 0.1,
-    //   minWidth: 120,
-    //   field: 'image',
-    //   headerName: 'Image',
-    //   renderCell: ({ row }) => {
-    //     return (
-    //       <Avatar sx={{ width: 38, height: 38 }}>
-    //         {row?.profile_image ? (
-    //           <img src={row.profile_image} alt="User" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-    //         ) : (
-    //           <ImageIcon />
-    //         )}
-    //       </Avatar>
-    //     );
-    //   }
-    // },
-
     {
-      flex: 0.25,
-      minWidth: 280,
+      flex: 0.2,
+      minWidth: 180,
       headerName: 'User',
       field: 'first_name',
       renderCell: ({ row }) => {
@@ -163,7 +144,6 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
-                // component={Link}
                 sx={{
                   fontWeight: 500,
                   textDecoration: 'none',
@@ -182,37 +162,53 @@ const NotificationBodySection = ({ studentNotifications, selectedBranchId }) => 
       }
     },
     {
-      flex: 0.15,
-      minWidth: 190,
+      flex: 0.3,
+      minWidth: 280,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.institute_notifications?.title}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 0.15,
-      field: 'body',
-      minWidth: 170,
-      headerName: 'Description',
-      renderCell: ({ row }) => {
-        return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.institute_notifications?.body}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography
+                noWrap
+                sx={{
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: 'text.secondary',
+                  '&:hover': { color: 'primary.main' },
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {row?.institute_notifications?.title}
+              </Typography>
+              <Typography
+                noWrap
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  mt: 1,
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
+                {row?.institute_notifications?.body}
+              </Typography>
+            </Box>
           </Box>
         );
       }
     },
-
     {
       flex: 0.1,
-      minWidth: 100,
+      minWidth: 150,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',

@@ -6,7 +6,7 @@ export const getAllStudentNotifications = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllStudentNotifications(data); // Implement this function in your services
-    dispatch(setStudentNotifications(response?.data?.data));
+    dispatch(setStudentNotifications(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

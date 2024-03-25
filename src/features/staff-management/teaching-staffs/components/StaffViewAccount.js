@@ -18,7 +18,7 @@ const UserViewAccount = ({ staff }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-console.log('staffID:',staff.id)
+  console.log('staffID:', staff.id);
   // dateFormat
   function formattedDate(inputDate) {
     const dateObject = new Date(inputDate);
@@ -56,10 +56,7 @@ console.log('staffID:',staff.id)
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>
-                    {formattedDate(`${staff?.dob}`)}
-
-                  </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{formattedDate(`${staff?.dob}`)}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
@@ -84,9 +81,8 @@ console.log('staffID:',staff.id)
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Box component={Link} to={'edit'} state={{staff:staff,id:staff.id}}>
-                <Button
-                variant="contained" sx={{ mr: 2 }}>
+              <Box component={Link} to={`teaching-staffs/${staff?.staff_id}/edit`} state={{ staff: staff, id: staff.id }}>
+                <Button variant="contained" sx={{ mr: 2 }}>
                   Edit
                 </Button>
               </Box>

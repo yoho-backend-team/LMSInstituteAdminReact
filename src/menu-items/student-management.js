@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers,IconSchool } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconSchool } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -9,6 +9,7 @@ const icons = {
   IconUsers,
   IconSchool
 };
+import { hasPermission } from 'hooks/hasPermissions';
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
@@ -31,7 +32,8 @@ const pages = {
           url: '/student-management/students',
           icon: icons.IconSchool,
           target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_view')
         }
       ]
     }

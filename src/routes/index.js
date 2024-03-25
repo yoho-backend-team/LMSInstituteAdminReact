@@ -4,7 +4,7 @@ import { lazy } from 'react';
 import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
 import MainLayout from 'layout/MainLayout';
-import { Routes, Route, Navigate ,Outlet} from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 // view imports
@@ -32,20 +32,28 @@ const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-ba
 
 // Attendance Management
 const StudentAttendanceViewPage = Loadable(lazy(() => import('views/attendance-management/student-attendances-page/attendance[id]-page')));
-const StudentAttendancesPage = Loadable(lazy(() => import('views/attendance-management/student-attendances-page/attendance-overview-page')));
-const TeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching-staff-attendances-page/attendance-overview-page')));
-const TeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/teaching-staff-attendances-page/attendance[id]-page')));
-const NonTeachingStaffAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staff-attendances-page/attendance-overview-page')));
-const NonTeachingStaffViewAttendancesPage = Loadable(lazy(() => import('views/attendance-management/non-teaching-staff-attendances-page/attendance[id]-page')));
+const StudentAttendancesPage = Loadable(
+  lazy(() => import('views/attendance-management/student-attendances-page/attendance-overview-page'))
+);
+const TeachingStaffAttendancesPage = Loadable(
+  lazy(() => import('views/attendance-management/teaching-staff-attendances-page/attendance-overview-page'))
+);
+const TeachingStaffViewAttendancesPage = Loadable(
+  lazy(() => import('views/attendance-management/teaching-staff-attendances-page/attendance[id]-page'))
+);
+const NonTeachingStaffAttendancesPage = Loadable(
+  lazy(() => import('views/attendance-management/non-teaching-staff-attendances-page/attendance-overview-page'))
+);
+const NonTeachingStaffViewAttendancesPage = Loadable(
+  lazy(() => import('views/attendance-management/non-teaching-staff-attendances-page/attendance[id]-page'))
+);
 
 // Certificate Management
-// const StaffCertificatesPage = Loadable(lazy(() => import('views/certificate-management/staff')));
 const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-management/student-certificates-page')));
 
 // Class Management
 const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class')));
-const ViewLiveClass = Loadable(lazy(() => import('views/class-management/live-class/view-class')));
-// const OnlineClassesPage = Loadable(lazy(() => import('views/class-management/online-class')));
+const ViewLiveClass = Loadable(lazy(() => import('views/class-management/offline-class/view-class')));
 const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class')));
 const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offline-class/view-class')));
 
@@ -55,24 +63,11 @@ const StudyMaterialsPage = Loadable(lazy(() => import('views/content-management/
 const NotesPage = Loadable(lazy(() => import('views/content-management/course-notes-page')));
 const ModulesPage = Loadable(lazy(() => import('views/content-management/course-modules-page')));
 
-// const ClassContentsPage = Loadable(lazy(() => import('views/content-management/class-content')));
-// const ExamContentsPage = Loadable(lazy(() => import('views/content-management/exam-content')));
-// const CreateExamPaper = Loadable(lazy(() => import('views/content-management/exam-content/create-exam-paper/index')));
-// const CreateQuestionPage = Loadable(lazy(() => import('views/content-management/course-content/create-question/index')));
-
 // Course Management
 const CategoriesPage = Loadable(lazy(() => import('views/course-management/categories-page/categories-overview-page')));
 const CoursesPage = Loadable(lazy(() => import('views/course-management/courses-page/courses-overview-page')));
 const AddCoursePage = Loadable(lazy(() => import('views/course-management/courses-page/course-add-page')));
 const ViewCoursePage = Loadable(lazy(() => import('views/course-management/courses-page/course[id]-page')));
-
-// Exam Management
-// const OfflineExamsPage = Loadable(lazy(() => import('views/exam-management/offline-exam')));
-// const OnlineExamsPage = Loadable(lazy(() => import('views/exam-management/online-exam')));
-
-// Result Management
-// const OfflineExamResultPage = Loadable(lazy(() => import('views/result-management/offline-exams')));
-// const OnlineExamResultPage = Loadable(lazy(() => import('views/result-management/online-exams')));
 
 // Help Center
 const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support-page')));
@@ -103,7 +98,6 @@ const RefundsPage = Loadable(lazy(() => import('views/refund-management/student-
 const FaqCategoriesPage = Loadable(lazy(() => import('views/faq-management/categories')));
 const FaqFaqsPage = Loadable(lazy(() => import('views/faq-management/faqs')));
 
-
 // Staff Management
 const TeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/teaching-staffs-page/staff-overview-page')));
 const NonTeachingStaffsPage = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff-overview-page')));
@@ -120,7 +114,7 @@ const AddNewStudent = Loadable(lazy(() => import('views/student-management/stude
 const EditStudent = Loadable(lazy(() => import('views/student-management/students-page/student-edit-page')));
 
 // Faq Management
-const FAQ = Loadable(lazy(()=> import('views/faq-management/')));
+const FAQ = Loadable(lazy(() => import('views/faq-management/')));
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -134,7 +128,6 @@ const CalenderPage = Loadable(lazy(() => import('views/calender')));
 const Community = Loadable(lazy(() => import('views/community/index.js')));
 const AccountSettings = Loadable(lazy(() => import('layout/MainLayout/Header/ProfileSection/AccountSettings')));
 
-
 // Profile management
 const AllNotifications = Loadable(lazy(() => import('views/profile-management/notifications-page')));
 
@@ -142,7 +135,6 @@ const AllNotifications = Loadable(lazy(() => import('views/profile-management/no
 const ForgetPassword = Loadable(lazy(() => import('views/authentication/forget-password-page')));
 
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
-
 const Protected = () => {
   // Access the isAuthenticated state from the Redux store
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -155,16 +147,26 @@ const Protected = () => {
     return <Navigate to="/login" replace />;
   }
 };
-const AdminRoute = () => {
-  const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
+// const AdminRoute = () => {
+//   const isAdmin = useSelector((state) => state.auth.userData?.is_admin);
 
-  if (isAdmin === '1') {
-    return <Outlet />;
-  }
-  return <Navigate to="/un-authorized" />;
-};
-
+//   if (isAdmin === '1') {
+//     return <Outlet />;
+//   }
+//   return <Navigate to="/un-authorized" />;
+// };
 const ApplicationRoutes = () => {
+  const permissions = useSelector((state) => state.auth.permissions);
+
+  const hasPermission = (permissionCode) => {
+    return permissions?.some((obj) => obj.permission_code === permissionCode);
+  };
+  // ProtectedRoute component for route protection and permission checks
+  const ProtectedRoute = ({ element, permissionCode }) => {
+    const hasAccess = hasPermission(permissionCode);
+
+    return hasAccess ? element : <Navigate to="/unauthorized" />;
+  };
   return (
     <Routes>
       <Route element={<Protected />}>
@@ -172,9 +174,269 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/dashboard" />} />
           <Route path="dashboard" element={<DashboardDefault />} />
         </Route>
+
+        <Route path="/branch-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/branch-management/branches" />} />
+          <Route element={<ProtectedRoute element={<BranchesPage />} permissionCode={'inst_perm_branch_view'} />}>
+            <Route path="branches" element={<BranchesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddBranchPage />} permissionCode={'inst_perm_branch_create'} />}>
+            <Route path="branches/add" element={<AddBranchPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewBranchPage />} permissionCode={'inst_perm_branch_view'} />}>
+            <Route path="branches/:id" element={<ViewBranchPage />} />
+          </Route>
+        </Route>
+
+        {/* <Route element={<AdminRoute />}> */}
+        <Route path="/user-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/user-management/groups" />} />
+          <Route element={<ProtectedRoute element={<GroupsPage />} permissionCode={'inst_perm_group_view'} />}>
+            <Route path="groups" element={<GroupsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddGroupPage />} permissionCode={'inst_perm_group_create'} />}>
+            <Route path="groups/add" element={<AddGroupPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewGroupPage />} permissionCode={'inst_perm_group_details_view'} />}>
+            <Route path="groups/view" element={<ViewGroupPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<EditGroupPage />} permissionCode={'inst_perm_group_update'} />}>
+            <Route path="groups/edit/:id" element={<EditGroupPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<UsersPage />} permissionCode={'inst_perm_admin_users_view'} />}>
+            <Route path="users" element={<UsersPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewUserPage />} permissionCode={'inst_perm_admin_user_view'} />}>
+            <Route path="users/:id" element={<ViewUserPage />} />
+          </Route>
+        </Route>
+        {/* </Route> */}
+
+        <Route path="/course-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/course-management/categories" />} />
+          <Route element={<ProtectedRoute element={<CategoriesPage />} permissionCode={'inst_perm_categories_view'} />}>
+            <Route path="categories" element={<CategoriesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<CoursesPage />} permissionCode={'inst_perm_course_view'} />}>
+            <Route path="courses" element={<CoursesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddCoursePage />} permissionCode={'inst_perm_course_create'} />}>
+            <Route path="courses/add" element={<AddCoursePage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewCoursePage />} permissionCode={'inst_perm_course_details_view'} />}>
+            <Route path="courses/:id" element={<ViewCoursePage />} />
+          </Route>
+        </Route>
+
+        <Route path="/content-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/content-management/study-materials" />} />
+          <Route element={<ProtectedRoute element={<StudyMaterialsPage />} permissionCode={'inst_perm_study_materials_view'} />}>
+            <Route path="study-materials" element={<StudyMaterialsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<NotesPage />} permissionCode={'inst_perm_course_notes_view'} />}>
+            <Route path="notes" element={<NotesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ModulesPage />} permissionCode={'inst_perm_course_module_view'} />}>
+            <Route path="modules" element={<ModulesPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/staff-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
+          <Route element={<ProtectedRoute element={<TeachingStaffsPage />} permissionCode={'inst_perm_teaching_staff_view'} />}>
+            <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddNewTeachingStaff />} permissionCode={'inst_perm_teaching_staff_create'} />}>
+            <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<EditTeachingStaff />} permissionCode={'inst_perm_teaching_staff_update_status'} />}>
+            <Route path="teaching-staffs/:id/edit" element={<EditTeachingStaff />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewTeachingProfile />} permissionCode={'inst_perm_teaching_staff_details_view'} />}>
+            <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<NonTeachingStaffsPage />} permissionCode={'inst_perm_non_teaching_staff_view'} />}>
+            <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
+          </Route>
+          <Route
+            element={<ProtectedRoute element={<ViewNonTeachingProfile />} permissionCode={'inst_perm_non_teaching_staff_details_view'} />}
+          >
+            <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddNewNonTeachingStaff />} permissionCode={'inst_perm_non_teaching_staff_create'} />}>
+            <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
+          </Route>
+          <Route
+            element={<ProtectedRoute element={<EditNonTeachingStaff />} permissionCode={'inst_perm_non_teaching_staff_details_update'} />}
+          >
+            <Route path="non-teaching-staffs/:id/edit" element={<EditNonTeachingStaff />} />
+          </Route>
+        </Route>
+
+        <Route path="/student-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/student-management/students" />} />
+          <Route element={<ProtectedRoute element={<StudentsPage />} permissionCode={'inst_perm_student_view'} />}>
+            <Route path="students" element={<StudentsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewStudentProfile />} permissionCode={'inst_perm_student_details_view'} />}>
+            <Route path="students/:id" element={<ViewStudentProfile />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddNewStudent />} permissionCode={'inst_perm_student_create'} />}>
+            <Route path="students/add" element={<AddNewStudent />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<EditStudent />} permissionCode={'inst_perm_student_details_update'} />}>
+            <Route path="students/:id/edit" element={<EditStudent />} />
+          </Route>
+        </Route>
+
+        <Route path="/batch-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/batch-management/batches" />} />
+          <Route element={<ProtectedRoute element={<BatchesPage />} permissionCode={'inst_perm_batches_view'} />}>
+            <Route path="batches" element={<BatchesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<AddBatchPage />} permissionCode={'inst_perm_batches_create'} />}>
+            <Route path="batches/add" element={<AddBatchPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewBatchPage />} permissionCode={'inst_perm_batch_details_view'} />}>
+            <Route path="batches/:id" element={<ViewBatchPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/class-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/class-management/live-classes" />} />
+          <Route element={<ProtectedRoute element={<LiveClassesPage />} permissionCode={'inst_perm_live_classes_view'} />}>
+            <Route path="live-classes" element={<LiveClassesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewLiveClass />} permissionCode={'inst_perm_live_classes_details_view'} />}>
+            <Route path="live-classes/view" element={<ViewLiveClass />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<OfflineClassesPage />} permissionCode={'inst_perm_offline_classes_view'} />}>
+            <Route path="offline-classes" element={<OfflineClassesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<ViewOfflineClass />} permissionCode={'inst_perm_offline_classes_details_view'} />}>
+            <Route path="offline-classes/view" element={<ViewOfflineClass />} />
+          </Route>
+        </Route>
+
+        <Route path="/attendance-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
+          <Route element={<ProtectedRoute element={<StudentAttendancesPage />} permissionCode={'inst_perm_student_attendances_view'} />}>
+            <Route path="student-attendances" element={<StudentAttendancesPage />} />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute element={<StudentAttendanceViewPage />} permissionCode={'inst_perm_student_attendances_details_view'} />
+            }
+          >
+            <Route path="student-attendances/:id" element={<StudentAttendanceViewPage />} />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute element={<TeachingStaffAttendancesPage />} permissionCode={'inst_perm_teaching_staff_attendance_view'} />
+            }
+          >
+            <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                element={<TeachingStaffViewAttendancesPage />}
+                permissionCode={'inst_perm_teaching_staff_attendance_details_view'}
+              />
+            }
+          >
+            <Route path="teaching-staff-attendances/:id" element={<TeachingStaffViewAttendancesPage />} />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                element={<NonTeachingStaffAttendancesPage />}
+                permissionCode={'inst_perm_non_teaching_staff_attendance_view'}
+              />
+            }
+          >
+            <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
+          </Route>
+          <Route
+            element={
+              <ProtectedRoute
+                element={<NonTeachingStaffViewAttendancesPage />}
+                permissionCode={'inst_perm_non_teaching_staff_attendance_details_view'}
+              />
+            }
+          >
+            <Route path="non-teaching-staff-attendances/:id" element={<NonTeachingStaffViewAttendancesPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/payment-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/payment-management/fees" />} />
+          <Route element={<ProtectedRoute element={<FeesPage />} permissionCode={'inst_perm_student_fees_payment_management_view'} />}>
+            <Route path="fees" element={<FeesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<SalariesPage />} permissionCode={'inst_perm_staff_salaries_view'} />}>
+            <Route path="salaries" element={<SalariesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<SubscriptionsPage />} permissionCode={'inst_perm_subscriptions_view'} />}>
+            <Route path="subscriptions" element={<SubscriptionsPage />} />
+          </Route>
+        </Route>
+        <Route path="/refund-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/refund-management/refunds" />} />
+          <Route element={<ProtectedRoute element={<RefundsPage />} permissionCode={'inst_perm_student_fees_refund_management_view'} />}>
+            <Route path="refunds" element={<RefundsPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/notification-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/notification-management/all-notifications" />} />
+          <Route element={<ProtectedRoute element={<AllNotificationsPage />} permissionCode={'inst_perm_all_notification_view'} />}>
+            <Route path="all-notifications" element={<AllNotificationsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_staff_notification_view'} />}>
+            <Route path="staff-notifications" element={<StaffNotificationsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<StudentNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} />}>
+            <Route path="student-notifications" element={<StudentNotificationsPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/certificate-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
+          <Route element={<ProtectedRoute element={<StudentCertificatesPage />} permissionCode={'inst_perm_student_certificates_view'} />}>
+            <Route path="student-certificates" element={<StudentCertificatesPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/id-card-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />
+          <Route element={<ProtectedRoute element={<StudentIdCardsPage />} permissionCode={'inst_perm_student_id_cards_view'} />}>
+            <Route path="student-id-cards" element={<StudentIdCardsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<StaffIdCardsPage />} permissionCode={'inst_perm_student_id_cards_view'} />}>
+            <Route path="staff-id-cards" element={<StaffIdCardsPage />} />
+          </Route>
+        </Route>
+
+        <Route path="/faq-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/faq-management/categories" />} />
+          <Route element={<ProtectedRoute element={<FaqCategoriesPage />} permissionCode={'inst_perm_faq_categories_view'} />}>
+            <Route path="categories" element={<FaqCategoriesPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<FaqFaqsPage />} permissionCode={'inst_perm_faqs_view'} />}>
+            <Route path="faqs" element={<FaqFaqsPage />} />
+          </Route>
+        </Route>
+
+        <Route element={<MinimalLayout />}>
+          <Route path="/unauthorized" element={<Page401 />} />
+        </Route>
+
         <Route path="/community-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/community" />} />
-          <Route path="community" element={<Community />} />
+          <Route element={<ProtectedRoute element={<Community />} permissionCode={'inst_perm_dashboard_view'} />}>
+            <Route path="community" element={<Community />} />
+          </Route>
         </Route>
         <Route path="/profile-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/account-settings" />} />
@@ -183,80 +445,11 @@ const ApplicationRoutes = () => {
         <Route path="/calender" element={<MainLayout />}>
           <Route index element={<CalenderPage />} />
         </Route>
-        {/* <Route element={<AdminRoute />}> */}
-        <Route path="/user-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/user-management/groups" />} />
-          <Route path="groups" element={<GroupsPage />} />
-          <Route path="groups/add" element={<AddGroupPage />} />
-          <Route path="groups/view" element={<ViewGroupPage />} />
-          <Route path="groups/edit/:id" element={<EditGroupPage />} />
-          <Route path="users" element={<UsersPage />} />
-          <Route path="users/:id" element={<ViewUserPage />} />
-        </Route>
-        {/* </Route> */}
-
-        <Route path="/attendance-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
-          <Route path="student-attendances" element={<StudentAttendancesPage />} />
-          <Route path="student-attendances/:id" element={<StudentAttendanceViewPage />} />
-          <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
-          <Route path="teaching-staff-attendances/:id" element={<TeachingStaffViewAttendancesPage />} />
-          <Route path="non-teaching-staff-attendances" element={<NonTeachingStaffAttendancesPage />} />
-          <Route path="non-teaching-staff-attendances/:id" element={<NonTeachingStaffViewAttendancesPage />} />
-        </Route>
-
-        <Route path="/batch-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/batch-management/batches" />} />
-          <Route path="batches" element={<BatchesPage />} />
-          <Route path="batches/add" element={<AddBatchPage />} />
-          <Route path="batches/:id" element={<ViewBatchPage />} />
-        </Route>
-        <Route element={<AdminRoute />}>
-          <Route path="/branch-management" element={<MainLayout />}>
-            <Route index element={<Navigate to="/branch-management/branches" />} />
-            <Route path="branches" element={<BranchesPage />} />
-            <Route path="branches/add" element={<AddBranchPage />} />
-            <Route path="branches/:id" element={<ViewBranchPage />} />
-          </Route>
-        </Route>
-        <Route path="/certificate-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
-          <Route path="student-certificates" element={<StudentCertificatesPage />} />
-        </Route>
-
-        <Route path="/class-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/class-management/live-classes" />} />
-          <Route path="live-classes" element={<LiveClassesPage />} />
-          <Route path="live-classes/view" element={<ViewLiveClass />} />
-          <Route path="offline-classes" element={<OfflineClassesPage />} />
-          <Route path="offline-classes/view" element={<ViewOfflineClass />} />
-        </Route>
-
-        <Route path="/content-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/content-management/study-materials" />} />
-          <Route path="study-materials" element={<StudyMaterialsPage />} />
-          <Route path="notes" element={<NotesPage />} />
-          <Route path="modules" element={<ModulesPage />} />
-        </Route>
-
-        <Route path="/course-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/course-management/categories" />} />
-          <Route path="categories" element={<CategoriesPage />} />
-          <Route path="courses" element={<CoursesPage />} />
-          <Route path="courses/add" element={<AddCoursePage />} />
-          <Route path="courses/:id" element={<ViewCoursePage />} />
-        </Route>
 
         <Route path="/help-center" element={<MainLayout />}>
           <Route index element={<Navigate to="/help-center/customer-support" />} />
           <Route path="customer-support" element={<CustomerSupportPage />} />
           <Route path="technical-support" element={<TechnicalSupportPage />} />
-        </Route>
-
-        <Route path="/faq-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/faq-management/categories" />} />
-          <Route path="categories" element={<FaqCategoriesPage />} />
-          <Route path="faqs" element={<FaqFaqsPage />} />
         </Route>
 
         <Route path="/ticket-management" element={<MainLayout />}>
@@ -265,58 +458,14 @@ const ApplicationRoutes = () => {
           <Route path="student-ticket" element={<StudentTicketPage />} />
         </Route>
 
-        <Route path="/id-card-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />
-          <Route path="student-id-cards" element={<StudentIdCardsPage />} />
-          <Route path="staff-id-cards" element={<StaffIdCardsPage />} />
-        </Route>
-
-        <Route path="/notification-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/notification-management/all-notifications" />} />
-          <Route path="all-notifications" element={<AllNotificationsPage />} />
-          <Route path="staff-notifications" element={<StaffNotificationsPage />} />
-          <Route path="student-notifications" element={<StudentNotificationsPage />} />
-        </Route>
-
-        <Route path="/payment-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/payment-management/fees" />} />
-          <Route path="fees" element={<FeesPage />} />
-          <Route path="salaries" element={<SalariesPage />} />
-          <Route path="subscriptions" element={<SubscriptionsPage />} />
-        </Route>
-
-        <Route path="/refund-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/refund-management/refunds" />} />
-          <Route path="refunds" element={<RefundsPage />} />
-        </Route>
-
         <Route path="/profile-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/profile-management/allnotifications" />} />
           <Route path="allnotifications" element={<AllNotifications />} />
         </Route>
 
-        <Route path="/staff-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
-          <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
-          <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
-          <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
-          <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
-          <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
-          <Route path="non-teaching-staffs/:id/edit" element={<EditNonTeachingStaff />} />
-          <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
-          <Route path="teaching-staffs/:id/edit" element={<EditTeachingStaff />} />
-        </Route>
-
-        <Route path="/student-management" element={<MainLayout />}>
-          <Route index element={<Navigate to="/student-management/students" />} />
-          <Route path="students" element={<StudentsPage />} />
-          <Route path="students/:id" element={<ViewStudentProfile />} />
-          <Route path="students/add" element={<AddNewStudent />} />
-          <Route path="students/:id/edit" element={<EditStudent />} />
-        </Route>
-        <Route path="/faq-management" element={<MainLayout/>}>
-          <Route index element={<Navigate to ="/faq-management/faq"/>}/>
-          <Route path="faq" element={<FAQ/>}/>
+        <Route path="/faq-management" element={<MainLayout />}>
+          <Route index element={<Navigate to="/faq-management/faq" />} />
+          <Route path="faq" element={<FAQ />} />
         </Route>
         <Route element={<MinimalLayout />}>
           <Route path="*" element={<Page404 />} />

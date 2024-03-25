@@ -305,7 +305,7 @@ const Batch = () => {
                       icon: <Icon icon="tabler:eye" fontSize={20} />,
                       menuItemProps: {
                         component: Link,
-                        to: `${item?.batch?.batch_id}`,
+                        to: `batches/${item?.batch?.batch_id}`,
                         state: { id: item?.batch?.batch_id }
                       }
                     },

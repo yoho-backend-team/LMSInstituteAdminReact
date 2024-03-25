@@ -1,4 +1,3 @@
-
 // ** React Imports
 import { useEffect, useState } from 'react';
 // ** MUI Imports
@@ -6,7 +5,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-// import MenuItem from '@mui/material/MenuItem'; 
+// import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,12 +17,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
 import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
-import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -37,7 +36,7 @@ const schema = yup.object().shape({
   batch: yup.string().required('Batch is required'),
   student: yup.string().required('Students is required'),
   amount: yup.number().typeError('Amount must be a number').required('Paid Amount is required'),
-  studentfee:yup.object().required('Student Fee is required'),
+  studentfee: yup.object().required('Student Fee is required')
 });
 
 const defaultValues = {
@@ -45,9 +44,8 @@ const defaultValues = {
   batch: '',
   student: '',
   amount: Number('0'),
-  studentfee:''
+  studentfee: ''
 };
-
 
 const RefundAddDrawer = (props) => {
   // ** Props
@@ -61,18 +59,18 @@ const RefundAddDrawer = (props) => {
   const [activeStudents, setActiveStudents] = useState([]);
   const [activeStudentsFee, setActiveStudentsFee] = useState([]);
 
-console.log(activeStudentsFee);
+  console.log(activeStudentsFee);
 
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
-  
+
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId };
     const result = await getAllActiveBatchesByCourse(data);
@@ -98,17 +96,23 @@ console.log(activeStudentsFee);
   };
 
   const {
-    handleSubmit,
+    reset,
     control,
     setValue,
-    formState: { errors },
-    reset
+    handleSubmit,
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
 
+  const handleClose = () => {
+    setValue('amount', '');
+    setValue(''); // Reset input value
+    reset(); // Reset form values
+    toggle(); // Close the drawer
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -120,27 +124,21 @@ console.log(activeStudentsFee);
     bodyFormData.append('institute_student_fee_id', data.studentfee.fee_id);
     bodyFormData.append('branch_id', selectedBranchId);
 
-
     const result = await addStudentFeeRefund(bodyFormData);
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; 
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
-  };
-
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
   };
 
   return (
@@ -252,10 +250,17 @@ console.log(activeStudentsFee);
                     fullWidth
                     options={activeStudentsFee}
                     getOptionLabel={(student) => `${student.fee_id}`}
-                    onChange={(event, newValue) => {onChange(newValue?.student_id),setValue("studentfee",newValue)}}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.student_id), setValue('studentfee', newValue);
+                    }}
                     value={activeStudentsFee.find((student) => student.student_id === value) || null}
                     renderInput={(params) => (
-                      <TextField {...params} label="Student Fee" error={Boolean(errors.studentfee)} helperText={errors.studentfee?.message} />
+                      <TextField
+                        {...params}
+                        label="Student Fee"
+                        error={Boolean(errors.studentfee)}
+                        helperText={errors.studentfee?.message}
+                      />
                     )}
                   />
                 )}
@@ -296,4 +301,3 @@ console.log(activeStudentsFee);
 };
 
 export default RefundAddDrawer;
-
