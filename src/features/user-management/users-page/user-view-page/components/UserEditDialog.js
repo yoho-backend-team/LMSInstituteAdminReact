@@ -10,8 +10,11 @@ import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { updateUser } from '../../services/userServices';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
 import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
 
 const showErrors = (field, valueLen, min) => {
@@ -23,6 +26,19 @@ const showErrors = (field, valueLen, min) => {
     return '';
   }
 };
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+
+const MenuProps = {
+  PaperProps: {
+    style: {
+      width: 250,
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+};
+
 const schema = yup.object().shape({
   full_name: yup
     .string()
@@ -44,18 +60,22 @@ const schema = yup.object().shape({
     .string()
     .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
-    .max(50, `Designation can't exceed 50 characters`)
-  // role: yup.string().required()
+    .max(50, `Designation can't exceed 50 characters`),
+  // role: yup.string().required(),
+  branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
 });
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => {
+  const branches = useSelector((state) => state.auth.branches);
+
   const defaultValues = {
     full_name: '',
     user_name: '',
     email: '',
     contact: Number(''),
     designation: '',
-    role: ''
+    role: '',
+    branch: []
   };
   const {
     reset,
@@ -76,6 +96,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('email', userData?.institution_users?.email || '');
       setValue('contact', userData?.institution_users?.mobile || '');
       setValue('designation', userData?.institution_users?.designation || '');
+      setValue('branch', userData?.institution_users?.branch || []);
       setValue('role', userData?.role_groups?.role?.id || '');
     }
   }, [userData, setValue]);
@@ -85,6 +106,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     setValue('email', '');
     setValue('contact', Number(''));
     setValue('designation', '');
+    setValue('branch', []);
     setValue('role', Number(''));
     handleEditClose();
     reset();
@@ -149,12 +171,18 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
 
   const onSubmit = async (data) => {
     console.log(data);
+    const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_name));
+
     const InputData = new FormData();
+    filteredBranches.forEach((branch) => {
+      InputData.append('branch_id[]', branch.branch_id);
+    });
     InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);
     InputData.append('email', data.email);
     InputData.append('mobile', data.contact);
     InputData.append('designation', data.designation);
+    // InputData.append('branch_id', data.branch);
     InputData.append('role_id', data.role);
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
@@ -297,6 +325,40 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     error={Boolean(errors.contact)}
                     {...(errors.contact && { helperText: errors.contact.message })}
                   />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="branch"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                  <TextField
+                    sx={{ mb: 2 }}
+                    select
+                    fullWidth
+                    label="Branch"
+                    id="select-multiple-checkbox"
+                    // value={value}
+                    defaultValue={value}
+                    onChange={onChange}
+                    SelectProps={{
+                      MenuProps,
+                      multiple: true,
+                      renderValue: (selected) => selected.join(', ')
+                    }}
+                    error={Boolean(errors.branch)}
+                    helperText={errors.branch?.message}
+                  >
+                    {branches?.map((item, index) => (
+                      <MenuItem key={index} value={item?.branch_name}>
+                        <Checkbox checked={value.includes(item.branch_name)} />
+                        <ListItemText primary={item.branch_name} />
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 )}
               />
             </Grid>
