@@ -2,9 +2,9 @@
 import MenuItem from '@mui/material/MenuItem';
 import { Fragment, forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import Autocomplete from '@mui/material/Autocomplete';
+// import CheckBoxIcon from '@mui/icons-material/CheckBox';
+// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+// import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -15,7 +15,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import CustomChip from 'components/mui/chip';
+// import CustomChip from 'components/mui/chip';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -24,19 +24,26 @@ import * as yup from 'yup';
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
+// import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
-import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+// import { updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
 import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
+// import { useSelector } from 'react-redux';
+// import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+// import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useLocation } from 'react-router';
+import { updateNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 
 const StepperLinearWithValidation = () => {
+  const location = useLocation();
+  const staffData = location.state.staff;
+  const staffId = location.state.id;
+  console.log('staffData:', staffData);
+
   const steps = [
     {
       title: 'Personal Info',
@@ -56,8 +63,8 @@ const StepperLinearWithValidation = () => {
     address_line_two: '',
     date_of_birth: '',
     gender: '',
-    course: '',
-    branch: '',
+    // course: '',
+    // branch: '',
     designation: '',
     education_qualification: '',
     username: '',
@@ -81,41 +88,41 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required(),
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
-    branch: yup.object().required(),
+    // branch: yup.object().required(),
     username: yup.string().required()
   });
 
   // ** States
   const [activeStep, setActiveStep] = useState(0);
 
-  const [activeCourse, setActiveCourse] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  // const [activeCourse, setActiveCourse] = useState([]);
+  // const [selectedCourses, setSelectedCourses] = useState([]);
 
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedCourses);
+  // const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  // console.log(selectedCourses);
 
-  useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
-  }, [selectedBranchId]);
+  // useEffect(() => {
+  //   getActiveCoursesByBranch(selectedBranchId);
+  // }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+  // const getActiveCoursesByBranch = async (selectedBranchId) => {
+  //   const result = await getAllActiveCourses(selectedBranchId);
 
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
-  };
+  //   console.log('active courses : ', result.data);
+  //   setActiveCourse(result.data.data);
+  // };
 
-  const [activeBranches, setActiveBranches] = useState([]);
-  useEffect(() => {
-    getActiveBranchesByUser();
-  }, []);
+  // const [activeBranches, setActiveBranches] = useState([]);
+  // useEffect(() => {
+  //   getActiveBranchesByUser();
+  // }, []);
 
-  const getActiveBranchesByUser = async () => {
-    const result = await getActiveBranches();
+  // const getActiveBranchesByUser = async () => {
+  //   const result = await getActiveBranches();
 
-    console.log(result.data);
-    setActiveBranches(result.data.data);
-  };
+  //   console.log(result.data);
+  //   setActiveBranches(result.data.data);
+  // };
 
   // ** Hooks
 
@@ -124,7 +131,8 @@ const StepperLinearWithValidation = () => {
     control: personalControl,
     // setValue,
     handleSubmit: handlePersonalSubmit,
-    formState: { errors: personalErrors }
+    formState: { errors: personalErrors },
+    setValue
   } = useForm({
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
@@ -147,14 +155,14 @@ const StepperLinearWithValidation = () => {
       name: '',
       Last_name: '',
       gender: '',
-      course: '',
+      // course: '',
       official_email: '',
       phone: Number(''),
       alt_phone: Number(''),
       description: '',
       joining_date: '',
       designation: '',
-      branch: '',
+      // branch: ''
     });
   };
 
@@ -196,6 +204,8 @@ const StepperLinearWithValidation = () => {
     }
   }));
 
+  useEffect(() => {}, []);
+
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
     'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
@@ -217,22 +227,55 @@ const StepperLinearWithValidation = () => {
   };
   console.log(logo);
 
+  // Set form values when selectedBranch changes
+  useEffect(() => {
+    if (staffId) {
+      // setValue('branchName', selectedBranch.branch_name || '');
+      // setValue('name', selectedBranch.phone_number || '');
+      // setValue('email', selectedBranch.alternate_number || '');
+      // setValue('phone_number', selectedBranch.address || '');
+      // setValue('alternate_number', selectedBranch.pin_code || '');
+      // setValue('designation', selectedBranch.landmark || '');
+      // setValue('branch_id', selectedBranch.city || '');
+      // setValue('state', selectedBranch.state || '');
+      setValue('id', staffId);
+      setValue('name', staffData.name);
+      setValue('email', staffData?.dob);
+      setValue('phone_number',staffData?.phone_number);
+      setValue('alternate_number',staffData?.alternate_number);
+      setValue('designation', staffData?.designation);
+      setValue('branch_id', staffData?.staff_course?.courses?.branch_id);
+      setValue('image', logo);
+      setValue('gender', staffData?.gender);
+      setValue('address_line_1',staffData?.address_line_1);
+      setValue('address_line_2',staffData?.address_line_2);
+      setValue('city', staffData?.city);
+      setValue('state', staffData?.state);
+      setValue('pin_code', staffData?.pin_code);
+      setValue('dob', convertDateFormat(staffData?.dob));
+      setValue('username', staffData?.username);
+      setValue('education_qualification', staffData?.education_qualification);
+    }
+  }, [staffId, setValue]);
+
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
-    const filteredCourseId = selectedCourses?.map((course) => course.course_id);
+    console.log('personalData:', personalData);
+    // const filteredCourseId = selectedCourses?.map((course) => course.course_id);
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       let data = new FormData();
-      filteredCourseId.forEach((id) => {
-        data.append(`course_ids[]`, id);
-      });
+      // filteredCourseId.forEach((id) => {
+      //   data.append(`course_ids[]`, id);
+      // });
+
+      data.append('id', staffId);
       data.append('name', personalData?.name);
       data.append('email', personalData?.email);
       data.append('phone_number', personalData?.phone);
       data.append('alternate_number', personalData?.alt_phone);
       data.append('designation', personalData?.designation);
-      data.append('type', 'teaching');
-      data.append('branch_id', personalData?.branch.branch_id);
+      data.append('branch_id', personalData?.branch?.branch_id);
       data.append('image', logo);
       data.append('gender', personalData?.gender);
       data.append('address_line_1', personalData?.address_line_one);
@@ -245,7 +288,7 @@ const StepperLinearWithValidation = () => {
       data.append('education_qualification', personalData?.education_qualification);
 
       try {
-        const result = await addTeachingStaff(data);
+        const result = await updateNonTeachingStaff(data);
 
         if (result.success) {
           toast.success(result.message);
@@ -257,8 +300,10 @@ const StepperLinearWithValidation = () => {
         console.log(error);
       }
     }
+    [staffId];
   };
 
+  console.log('onsubmit:', onSubmit);
   const getStepContent = (step) => {
     switch (step) {
       case 0:
@@ -305,10 +350,11 @@ const StepperLinearWithValidation = () => {
                   name="name"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.staff_name}
                       label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
@@ -325,10 +371,11 @@ const StepperLinearWithValidation = () => {
                   name="email"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.email}
                       label="Email"
                       onChange={onChange}
                       placeholder="Carter"
@@ -349,8 +396,9 @@ const StepperLinearWithValidation = () => {
                     <DatePicker
                       id="issue-date"
                       dateFormat={'dd/MM/yyyy'}
-                      value={value}
+                      // value={value}
                       selected={value}
+                      defaultValue={staffData?.dob}
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
@@ -369,12 +417,13 @@ const StepperLinearWithValidation = () => {
                   name="gender"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       select
                       fullWidth
-                      value={value}
+                      // value={value}
                       onChange={onChange}
+                      defaultValue={staffData?.gender}
                       label="Gender"
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
@@ -389,15 +438,16 @@ const StepperLinearWithValidation = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="branch"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <Autocomplete
                       fullWidth
-                      value={value || null}
+                      defaultValue={staffData?.staff_course?.courses?.branch_id}
+                      // value={value || null}
                       onChange={(event, newValue) => {
                         onChange(newValue); // Update the value of the branch field
                       }}
@@ -407,7 +457,7 @@ const StepperLinearWithValidation = () => {
                         <TextField
                           {...params}
                           label="Branch"
-                          value={value}
+                          // defaultValue={value}
                           onChange={onChange}
                           error={Boolean(personalErrors['branch'])}
                           aria-describedby="stepper-linear-personal-branch"
@@ -417,9 +467,9 @@ const StepperLinearWithValidation = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
 
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
@@ -462,6 +512,7 @@ const StepperLinearWithValidation = () => {
                         <CustomChip
                           key={option.course_id}
                           label={option.course_name}
+                          // defaultValue={}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -477,17 +528,18 @@ const StepperLinearWithValidation = () => {
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="designation"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.designation}
                       label="designation"
                       onChange={onChange}
                       error={Boolean(personalErrors.designation)}
@@ -502,10 +554,11 @@ const StepperLinearWithValidation = () => {
                   name="education_qualification"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.education_qualification}
                       label="Qualification"
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
@@ -520,10 +573,11 @@ const StepperLinearWithValidation = () => {
                   name="state"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.state}
                       label="State"
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
@@ -538,10 +592,11 @@ const StepperLinearWithValidation = () => {
                   name="city"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.city}
                       label="City"
                       onChange={onChange}
                       error={Boolean(personalErrors.city)}
@@ -556,10 +611,11 @@ const StepperLinearWithValidation = () => {
                   name="pin_code"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.pin_code}
                       label="Pin Code"
                       type="number"
                       onChange={onChange}
@@ -576,10 +632,11 @@ const StepperLinearWithValidation = () => {
                   name="address_line_one"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.address_line_1}
                       label="Address Line One"
                       onChange={onChange}
                       placeholder="Carter"
@@ -595,10 +652,11 @@ const StepperLinearWithValidation = () => {
                   name="address_line_two"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.address_line_2}
                       label="Address Line Two"
                       onChange={onChange}
                       placeholder="Carter"
@@ -614,11 +672,12 @@ const StepperLinearWithValidation = () => {
                   name="phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
                       type="number"
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.phone_number}
                       label="Phone Number"
                       onChange={onChange}
                       placeholder="Carter"
@@ -634,10 +693,11 @@ const StepperLinearWithValidation = () => {
                   name="alt_phone"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.alternate_number}
                       type="number"
                       label="Alt Phone Number"
                       onChange={onChange}
@@ -655,10 +715,11 @@ const StepperLinearWithValidation = () => {
                   name="username"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      value={value}
+                      // value={value}
+                      defaultValue={staffData?.users?.username}
                       label="Username"
                       onChange={onChange}
                       placeholder="carterLeonard"

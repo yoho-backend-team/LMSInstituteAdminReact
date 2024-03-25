@@ -342,7 +342,7 @@ const Notes = () => {
           title="Change Status"
           handleSubmit={handleStatusChangeApi}
         />
-        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} />
+        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} Notes={Notes}/>
       </Grid>
     </>
   );

@@ -1,10 +1,8 @@
+import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import { Checkbox, Grid, IconButton, InputAdornment } from '@mui/material';
+import { Checkbox, Grid } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,17 +12,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 import format from 'date-fns/format';
-import { forwardRef, useState } from 'react';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
+import { useSelector } from 'react-redux';
+// import { update } from '../../services/offlineClassServices';
 import { updateLiveClass } from '../../services/liveClassServices';
-import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import toast from 'react-hot-toast';
+import {InputAdornment,IconButton} from '@mui/material';
+import FileCopy from '@mui/icons-material/FileCopy';
 
 /* eslint-disable */
+
 const DateCustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
   const value = `${startDate}`;
@@ -41,56 +44,11 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
-
-const schema = yup.object().shape({
-  course: yup
-    .string()
-    .min(3, (obj) => showErrors('Course', obj.value.length, obj.min))
-    .required('Course field is required'),
-  classDate: yup.date().nullable().required('Class Date field is required'),
-  startTime: yup.date().nullable().required('Start Time field is required'),
-  endTime: yup.date().nullable().required('End Time field is required'),
-  instructor: yup.string().required('Instructor field is required'),
-  videoUrl: yup.string().required('VideoUrl field is required')
-});
-
-const defaultValues = {
-  course: '',
-  classDate: new Date(),
-  startTime: null,
-  endTime: null,
-  instructor: '',
-  coordinates: '',
-  videoUrl: ''
-};
-
-const handleCopyLink = () => {
-  const link = 'your Generated Link';
-  navigator.clipboard.writeText(link).then(() => {});
-};
-
-const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
-  const [personName, setPersonName] = useState([]);
-  const [dates, setDates] = useState([]);
-  const [startDateRange, setStartDateRange] = useState(null);
+const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
+  console.log(liveClasses);
 
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [selectedInstructors, setSelectedInstructors] = useState([]);
-  const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-  const [selectedTeachers, setSelectedTeachers] = useState([]);
-  const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
-  const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);
@@ -100,21 +58,35 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
     setEndTime(time);
   };
 
-  const handleOnChangeRange = (dates) => {
-    const [start] = dates;
-    if (start !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-  };
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
-  const handleChange = (event) => {
-    setPersonName(event.target.value);
-  };
+  const schema = yup.object().shape({
+    class_name: yup
+      .string()
+      .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
+      .required('Class Name field is required'),
+    class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
+    classDate: yup.date().nullable().required('Class Date field is required'),
+    startTime: yup.date().nullable().required('Start Time field is required'),
+    endTime: yup.date().nullable().required('End Time field is required'),
+    instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
+    coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+  });
 
-  const handleTeacherChange = (event) => {
-    setSelectedTeachers(event.target.value);
+  const defaultValues = {
+    class_name: '',
+    classDate: new Date(),
+    startTime: null,
+    endTime: null,
+    instructor: [],
+    coordinator: []
   };
+  const handleCopyLink = () => {
+    const link = 'your Generated Link';
+    navigator.clipboard.writeText(link).then(() => {});
+  }; 
 
   const {
     reset,
@@ -128,73 +100,59 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
     resolver: yupResolver(schema)
   });
 
-  useEffect(() => {
-    if (selectedClass) {
-      setValue('course', selectedClass?.class_name || '');
-      setValue('videoUrl', selectedClass?.class_link || '');
-      setValue('classDate', selectedClass?.classDate || '');
-      setValue('startTime', selectedClass?.startTime || '');
-      setValue('endTime', selectedClass?.endTime || '');
-      setValue('instructor', selectedClass?.instructor || '');
-      setValue('coordinates', selectedClass?.coordinates || '');
+  const [selectedInstructors, setSelectedInstructors] = useState([]);
+  const [selectedCoordinates, setSelectedCoordinates] = useState([]);
+
+  const showErrors = (field, valueLen, min) => {
+    if (valueLen === 0) {
+      return `${field} field is required`;
+    } else if (valueLen > 0 && valueLen < min) {
+      return `${field} must be at least ${min} characters`;
+    } else {
+      return '';
     }
-  }, [selectedClass, setValue]);
-  // console.log(selectedClass, 'selectedClasses');
+  };
+
+  useEffect(() => {
+    if (liveClasses) {
+      setValue('class_name', liveClasses.class_name || ''); // Set class name
+      setValue('class_id', liveClasses.class_id || ''); // Set class ID
+      setValue('classDate', new Date(liveClasses.class_date) || new Date()); // Set class date
+      setValue('startTime', liveClasses?.startTime || null);
+      setValue('endTime', liveClasses?.endTime || null); // Set end time
+      setValue('instructor', liveClasses.instructor || []); // Set instructors
+      setValue('coordinator', liveClasses.coordinator || []); // Set coordinators
+    }
+  }, [liveClasses, setValue]);
+
+  console.log('selected ', liveClasses);
+
+  useEffect(() => {
+    if (liveClasses && liveClasses.instructor) {
+      setSelectedInstructors(liveClasses.instructor);
+      setValue('instructor', liveClasses.instructor); // Set default value for instructor field
+    }
+  }, [liveClasses, setValue]);
+
+  useEffect(() => {
+    if (liveClasses && liveClasses.coordinator) {
+      setSelectedCoordinates(liveClasses.coordinator);
+      setValue('coordinator', liveClasses.coordinator); // Set default value for coordinator field
+    }
+  }, [liveClasses, setValue]);
 
   const handleClose = () => {
-    setValue('course', '');
-    setValue('videoUrl', '');
-    setValue('classDate', null);
-    setValue('startTime', null);
-    setValue('endTime', null);
-    setValue('instructor', '');
-    setValue('coordinates', '');
     handleEditClose();
-    reset();
+    // setValue('class_name', null);
+    // setValue('classDate', null);
+    // setValue('startTime', null);
+    // setValue('endTime', null);
+    // setValue('instructor', '');
+    // setValue('coordinator', '');
+    reset(defaultValues);
   };
-
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        width: 250,
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-      }
-    }
-  };
-
-  const onSubmit = async (data) => {
-    console.log(data);
-    const dummyData = {
-      selectcourse: data.selectcourse,
-      class_name: data.class_name,
-      branch_id: data.branch,
-      course_id: data.course,
-      batch_id: data.batch,
-      class_date: convertDateFormat(data.classDate),
-      start_time: data.startTime,
-      end_time: data.endTime,
-      instructor_staff_ids: filteredInstructorId,
-      coordinator_staff_ids: filteredCoordinatorId,
-      class_link: data.videoUrl,
-      type: 'live',
-      status: 'pending'
-    };
-
-    try {
-      const result = await updateLiveClass(dummyData);
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+  const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
 
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
@@ -216,7 +174,58 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
     getActiveNonTeachingStaffs(selectedBranchId);
   }, [selectedBranchId]);
 
-  console.log(handleSubmit(onSubmit), 'submitted');
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
+  const onSubmit = async (data) => {
+    const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
+    const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
+    var bodyFormData = new FormData();
+    filteredInstructorId?.forEach((id) => {
+      bodyFormData.append('instructor_staff_ids[]', id);
+    });
+    filteredCoordinatorId?.forEach((id) => {
+      bodyFormData.append('coordinator_staff_ids[]', id);
+    });
+    bodyFormData.append('class_name', data.class_name);
+    bodyFormData.append('class_id', liveClasses.class_id);
+    bodyFormData.append('branch_id', selectedBranchId);
+    bodyFormData.append('course_id', data.course_id);
+    bodyFormData.append('batch_id', data.batch_id);
+    bodyFormData.append('class_date', convertDateFormat(data.classDate));
+    bodyFormData.append('start_time', data.start_time);
+    bodyFormData.append('end_time', data.end_time); // Fixed field name
+    bodyFormData.append('videoUrl', data.class_link);
+
+    console.log(data);
+
+    const result = await updateLiveClass(bodyFormData);
+
+    if (result.success) {
+      toast.success(result.message);
+      handleClose();
+    } else {
+      let errorMessage = '';
+      // Object.values(result.message).forEach((errors) => {
+      //   errors.forEach((error) => {
+      //     errorMessage += `${error}\n`; // Concatenate errors with newline
+      //   });
+      // });
+      toast.error(errorMessage.trim());
+      // toast.error(result.message);
+    }
+  };
   return (
     <Dialog
       open={open}
@@ -249,19 +258,18 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
             <Grid container spacing={4}>
               <Grid item xs={12}>
                 <Controller
-                  name="course"
+                  name="class_name"
                   control={control}
-                  rules={{ required: 'Course field is required' }}
+                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
-                      defaultValue={value}
-                      // value={value}
+                      value={value}
                       label="Class Name"
                       onChange={onChange}
-                      placeholder="React FullStack"
-                      error={Boolean(errors.course)}
-                      {...(errors.course && { helperText: errors.course.message })}
+                      placeholder="John Doe"
+                      error={Boolean(errors.class_name)}
+                      {...(errors.class_name && { helperText: errors.class_name.message })}
                     />
                   )}
                 />
@@ -415,14 +423,14 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
                   multiple
                   id="select-multiple-coordinates"
                   options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
-                  getOptionLabel={(option) => option?.coordinate_name}
+                  getOptionLabel={(option) => option.coordinate_name}
                   value={selectedCoordinates}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option?.staff_id === 'selectAll')) {
-                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option?.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
                         'coordinator',
-                        activeTeachingStaff.filter((option) => option?.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
@@ -448,15 +456,15 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option?.staff_name}
+                      {option.staff_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option?.staff_id}
-                          label={option?.staff_name}
+                          key={option.staff_id}
+                          label={option.staff_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -469,7 +477,7 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option?.staff_id === value?.staff_id}
+                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
@@ -478,12 +486,12 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  defaultValue={selectedClass?.class_link}
+                  defaultValue={liveClasses?.class_link}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
                         <IconButton aria-label="copy-link" onClick={handleCopyLink} edge="start" sx={{ color: 'primary.main' }}>
-                          <FileCopyIcon />
+                          <FileCopy />
                         </IconButton>
                       </InputAdornment>
                     )
@@ -492,12 +500,14 @@ const LiveClassEditModal = ({ open, handleEditClose, selectedClass }) => {
                 />
               </Grid>
 
+
+
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                     Submit
                   </Button>
-                  <Button variant="tonal" color="error" onClick={handleClose}>
+                  <Button onClick={handleClose} variant="tonal" color="error">
                     Cancel
                   </Button>
                 </Box>

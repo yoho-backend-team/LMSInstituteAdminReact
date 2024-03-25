@@ -86,7 +86,7 @@ const LiveClassCard = () => {
     // Return the formatted time string
     return hours + ':' + minutes + ' ' + meridiem;
   }
-  console.log(selectedClass, 'selectedClassxx');
+  console.log(selectedClass);
 
   // function calculateDuration(startTimestamp, endTimestamp) {
   //   // Convert the timestamps to Date objects
@@ -215,7 +215,13 @@ const LiveClassCard = () => {
             </Card>
           </Grid>
         ))}
-        <LiveClassEditModal open={isEditModalOpen} handleEditClose={handleEditClose} selectedClass={selectedClass} />
+          <LiveClassEditModal
+        // liveClasses={liveClasses}
+          selectedBranchId={selectedBranchId}
+          liveClasses={selectedClass}
+          open={isEditModalOpen}
+          handleEditClose={handleEditClose}
+        />
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}

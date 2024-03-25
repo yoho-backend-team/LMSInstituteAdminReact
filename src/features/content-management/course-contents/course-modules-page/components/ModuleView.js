@@ -4,9 +4,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { PDFViewer } from 'react-view-pdf';
-const ModuleView = ({ open, handleViewClose }) => {
+const ModuleView = ({ open, handleViewClose
+  // ,Module
+ }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-
+// const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${Module.document} `);
   return (
     <div>
       <Dialog
