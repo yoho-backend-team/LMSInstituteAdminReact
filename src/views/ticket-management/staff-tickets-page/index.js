@@ -21,8 +21,20 @@ import OpenTicketCard from 'features/ticket-management/staff/components/OpenTick
 import ClosedTicketCard from 'features/ticket-management/staff/components/ClosedTicketCard';
 import TicketResolveDrawer from 'features/ticket-management/staff/components/ResolveTicketDrawer';
 
+import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
+
 const StaffTicketsPage = () => {
   // States
+
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const [value, setValue] = useState('open');
   const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -53,31 +65,35 @@ const StaffTicketsPage = () => {
 
   return (
     <MainCard title="Staff Tickets" sx={{ minHeight: '100vh' }}>
-      <TabContext value={value}>
-        <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
-          <Tab value="open" label="Opened Tickets" />
-          <Tab value="close" label="Closed Tickets" />
-        </CustomTabList>
-        <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
-          <Grid container spacing={2}>
-            {studentOpenTickets?.map((ticket, index) => (
-              <OpenTicketCard
-                key={index}
-                ticket={ticket}
-                handleSelectedTicket={handleSelectedTicket}
-                onClick={() => setOpenResolveDrawer(true)}
-              />
-            ))}
-          </Grid>
-        </TabPanel>
-        <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
-          <Grid container spacing={2}>
-            {studentClosedTickets?.map((ticket, index) => (
-              <ClosedTicketCard key={index} ticket={ticket} />
-            ))}
-          </Grid>
-        </TabPanel>
-      </TabContext>
+      {loading ? (
+        <TicketsCardsSkeleton />
+      ) : (
+        <TabContext value={value}>
+          <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
+            <Tab value="open" label="Opened Tickets" />
+            <Tab value="close" label="Closed Tickets" />
+          </CustomTabList>
+          <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
+            <Grid container spacing={2}>
+              {studentOpenTickets?.map((ticket, index) => (
+                <OpenTicketCard
+                  key={index}
+                  ticket={ticket}
+                  handleSelectedTicket={handleSelectedTicket}
+                  onClick={() => setOpenResolveDrawer(true)}
+                />
+              ))}
+            </Grid>
+          </TabPanel>
+          <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
+            <Grid container spacing={2}>
+              {studentClosedTickets?.map((ticket, index) => (
+                <ClosedTicketCard key={index} ticket={ticket} />
+              ))}
+            </Grid>
+          </TabPanel>
+        </TabContext>
+      )}
       <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} ticket={selectedTicket} />
     </MainCard>
   );
