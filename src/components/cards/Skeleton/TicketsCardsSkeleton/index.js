@@ -10,19 +10,19 @@ const TicketsCardsSkeleton = () => {
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Skeleton variant="circular" sx={{ mr: 2.5, height: 42, width: 42 }} />
+                    <Skeleton variant="circular" sx={{ mr: 2.2, height: 42, width: 42 }} />
                     <Box>
                       <Typography variant="h5">
                         <Skeleton variant="text" width={100} />
                       </Typography>
                       <Typography variant="body4">
-                        <Skeleton variant="text" width={150} />
+                        <Skeleton variant="text" width={120} />
                       </Typography>
                     </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{  }}>
                     <Typography>
-                      <Skeleton variant="text" width={80} />
+                      <Skeleton variant="text" width={70} />
                     </Typography>
                   </Box>
                 </Box>
