@@ -40,21 +40,25 @@ const Teaching = () => {
 
   return (
     <>
-      <TeacherFilter selectedBranchId={selectedBranchId} />
+    <Grid sx={{p:1}}>
+    <TeacherFilter selectedBranchId={selectedBranchId} />
+    </Grid>
+      
       {loading ? (
         <StaffManagement />
-
       ) : (
         <Grid>
-
-          <Grid container xs={12} spacing={2} mt={2}>
+          <Grid container xs={12} mt={1}>
             {teachingStaffs &&
               teachingStaffs?.map((item, i) => (
-                <Grid key={i} item xs={12} sm={6} md={4}>
-                  <Card sx={{ position: 'relative' }}>
+                <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
+                  <Card sx={{ position: 'relative',mb:2 ,}}>
                     <CardContent sx={{ pt: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.staff?.image}`} sx={{ mb: 2, width: 100, height: 100 }} />
+                        <Avatar
+                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.staff?.image}`}
+                          sx={{ mb: 2, width: 70, height: 70 }}
+                        />
                         <Typography variant="h4" sx={{ mb: 1 }}>
                           {item.staff?.staff_name}
                         </Typography>
@@ -68,24 +72,25 @@ const Teaching = () => {
                             width: '100%',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            textDecoration: 'none'
+                            textDecoration: 'none',
+                            gap:2
                           }}
                         >
                           <Grid>
                             <TextField
                               size="small"
                               select
-                              fullWidth
                               label="Status"
                               SelectProps={{ onChange: (e) => handleStatusChange(e) }}
+                              sx={{width:100}}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>
                             </TextField>
                           </Grid>
-                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id:item?.staff?.id }}>
+                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id: item?.staff?.id }}>
                             {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
-                            <Button variant="tonal" sx={{ p: 1.05 }}>
+                            <Button variant="tonal" size='medium' sx={{ m: 0, px: 2 }}>
                               View Profile
                             </Button>
                             {/* </Link> */}

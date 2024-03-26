@@ -44,7 +44,7 @@ const TeacherFilter = (props) => {
     [dispatch]
   );
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
       <Grid item xs={12}>
         <Card>
           <CardHeader title="Teaching Staff" />
@@ -85,9 +85,9 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
-                <Box component={Link} to={'teaching-staffs/add'}>
-                  <Button variant="contained" size="medium" fullWidth>
+              <Grid item xs={12} sm={3} sx={{alignItems:'center'}}>
+                <Box component={Link} to={'teaching-staffs/add'} sx={{p:0,m:0}}>
+                  <Button variant="contained" size="medium" fullWidth sx={{px:2,py:1.5}} runded>
                     Add New Staff
                   </Button>
                 </Box>
