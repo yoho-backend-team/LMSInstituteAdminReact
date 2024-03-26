@@ -70,30 +70,6 @@ const OfflineClassCard = () => {
     return hours + ':' + minutes + ' ' + meridiem;
   }
 
-  // function calculateDuration(startTimestamp, endTimestamp) {
-  //   // Convert the timestamps to Date objects
-  //   const startDate = new Date(startTimestamp);
-  //   const endDate = new Date(endTimestamp);
-
-  //   // Calculate the difference in milliseconds
-  //   const durationInMilliseconds = endDate - startDate;
-
-  //   // Convert milliseconds to days, hours, minutes, and seconds
-  //   const millisecondsPerSecond = 1000;
-  //   const millisecondsPerMinute = millisecondsPerSecond * 60;
-  //   const millisecondsPerHour = millisecondsPerMinute * 60;
-  //   const millisecondsPerDay = millisecondsPerHour * 24;
-
-  //   // const days = Math.floor(durationInMilliseconds / millisecondsPerDay);
-  //   const hours = Math.floor((durationInMilliseconds % millisecondsPerDay) / millisecondsPerHour);
-  //   const minutes = Math.floor((durationInMilliseconds % millisecondsPerHour) / millisecondsPerMinute);
-  //   // const seconds = Math.floor((durationInMilliseconds % millisecondsPerMinute) / millisecondsPerSecond);
-
-  //   // Return the duration as an object
-  //   return hours + ' HR ' + minutes + ' MIN';
-
-  // }
-
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedOfflineClassDeleteId(itemId);
@@ -200,7 +176,13 @@ const OfflineClassCard = () => {
                   </Typography>
                 </Grid>
                 <Grid container p={2} justifyContent="center">
-                  <Button variant="tonal" size="small" component={Link} to={`/view/${card?.class_id}`}>
+                  <Button
+                    variant="tonal"
+                    size="small"
+                    component={Link}
+                    state={{ id: card?.class_id }}
+                    to={`offline-classes/${card?.class_id}`}
+                  >
                     View More
                   </Button>
                 </Grid>
