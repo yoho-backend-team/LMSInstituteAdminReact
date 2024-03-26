@@ -97,6 +97,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('contact', userData?.institution_users?.mobile || '');
       setValue('designation', userData?.institution_users?.designation || '');
       setValue('branch', userData?.institution_users?.branch || []);
+      // setValue('branch', userData?.institution_users?.branch?.map(branch => branch.branch_name) || []); 
       setValue('role', userData?.role_groups?.role?.id || '');
     }
   }, [userData, setValue]);
@@ -353,8 +354,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     helperText={errors.branch?.message}
                   >
                     {branches?.map((item, index) => (
-                      <MenuItem key={index} value={item?.branch_name}>
-                        <Checkbox checked={value.includes(item.branch_name)} />
+                      <MenuItem key={index} value={item?.branch_id}>
+                        <Checkbox checked={value.includes(item.branch_id)} />
                         <ListItemText primary={item.branch_name} />
                       </MenuItem>
                     ))}
