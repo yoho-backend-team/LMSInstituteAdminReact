@@ -13,10 +13,7 @@ const ContentSkeleton = () => {
               <Grid item xs={12}>
                 <Grid container alignItems="center" justifyContent="space-between" spacing={gridSpacing}>
                   <Grid item xs zeroMinWidth>
-                    <Skeleton variant="rectangular" height={20} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" height={20} width={20} />
+                    <Skeleton variant="rectangular" height={50}/>
                   </Grid>
                 </Grid>
               </Grid>
