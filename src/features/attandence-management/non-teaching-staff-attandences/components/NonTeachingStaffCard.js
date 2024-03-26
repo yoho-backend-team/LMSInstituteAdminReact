@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 // import { selectnONTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceSelectors';
 
 const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
-  console.log(nonTeachingStaffs)
+  console.log(nonTeachingStaffs);
   return (
     <>
       <Grid>
@@ -54,7 +54,12 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
                       sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
                     >
                       <Grid>
-                        <Button component={Link} to={'1'} variant="tonal" sx={{ px: 4 }}>
+                        <Button
+                          component={Link}
+                          to={`non-teaching-staff-attendances/${item.staff?.staff_id}`}
+                          variant="tonal"
+                          sx={{ px: 4 }}
+                        >
                           View Attendance
                         </Button>
                       </Grid>
