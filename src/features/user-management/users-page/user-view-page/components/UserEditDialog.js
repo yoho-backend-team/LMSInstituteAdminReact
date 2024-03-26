@@ -16,6 +16,7 @@ import { updateUser } from '../../services/userServices';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -42,9 +43,9 @@ const MenuProps = {
 const schema = yup.object().shape({
   full_name: yup
     .string()
+    .required()
     .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
-    .required(),
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
   user_name: yup
     .string()
     .required()
@@ -53,9 +54,9 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   contact: yup
     .string()
+    .required('Contact Number field is required')
     .matches(/^[0-9]+$/, 'Contact number must contain only digits')
-    .max(10, 'Contact number cannot exceed 10 digits')
-    .required('Contact Number field is required'),
+    .max(10, 'Contact number cannot exceed 10 digits'),
   designation: yup
     .string()
     .required()
@@ -97,7 +98,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('contact', userData?.institution_users?.mobile || '');
       setValue('designation', userData?.institution_users?.designation || '');
       setValue('branch', userData?.institution_users?.branch || []);
-      // setValue('branch', userData?.institution_users?.branch?.map(branch => branch.branch_name) || []); 
+      // setValue('branch', userData?.institution_users?.branch?.map(branch => branch.branch_name) || []);
       setValue('role', userData?.role_groups?.role?.id || '');
     }
   }, [userData, setValue]);
@@ -325,6 +326,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     placeholder="(397) 294-5153"
                     error={Boolean(errors.contact)}
                     {...(errors.contact && { helperText: errors.contact.message })}
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                    }}
                   />
                 )}
               />
