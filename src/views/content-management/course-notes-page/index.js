@@ -20,7 +20,10 @@ import NotesHeader from 'features/content-management/course-contents/course-note
 import NotesView from 'features/content-management/course-contents/course-notes-page/components/NotesView';
 import { selectCourseNotes, selectLoading } from 'features/content-management/course-contents/course-notes-page/redux/noteSelectors';
 import { getAllCourseNotes } from 'features/content-management/course-contents/course-notes-page/redux/noteThunks';
-import { deleteCourseNote, updateCourseNotesStatus } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
+import {
+  deleteCourseNote,
+  updateCourseNotesStatus
+} from 'features/content-management/course-contents/course-notes-page/services/noteServices';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
 import { useEffect } from 'react';
@@ -115,13 +118,18 @@ const Notes = () => {
     setActiveBranches(result.data.data);
   };
 
+  const handleRowClick = (params) => {
+    setSelectedRow(params);
+  };
+
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     console.log('toogle pressed');
   };
 
-  const RowOptions = () => {
+
+  const RowOptions = ({row}) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -138,14 +146,20 @@ const Notes = () => {
             text: 'Edit',
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
-              onClick: () => toggleEditUserDrawer()
+              onClick: () => {
+                toggleEditUserDrawer()
+                handleRowClick(row)
+              }
             }
           },
           {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleDelete()
+              onClick: () => {
+                handleDelete()
+                handleRowClick(row)
+              }
             }
           }
         ]}
@@ -171,13 +185,11 @@ const Notes = () => {
     [dispatch]
   );
 
-  const handleRowClick = (params) => {
-    setSelectedRow(params.row);
-  };
 
   const columns = [
     {
       flex: 0.6,
+      minWidth: 100,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -190,6 +202,7 @@ const Notes = () => {
     },
     {
       flex: 1.8,
+      minWidth: 220,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -235,6 +248,7 @@ const Notes = () => {
 
     {
       flex: 1.5,
+      minWidth:220,
       field: 'course',
       headerName: 'course',
       renderCell: ({ row }) => {
@@ -261,6 +275,7 @@ const Notes = () => {
 
     {
       flex: 1,
+      minWidth: 180,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -292,10 +307,11 @@ const Notes = () => {
     },
     {
       flex: 1,
+      minWidth: 120,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
 
@@ -312,6 +328,7 @@ const Notes = () => {
           <Grid item xs={12}>
             <Card>
               <DataGrid
+                sx={{ p: 2 }}
                 autoHeight
                 rowHeight={80}
                 rows={Notes}
@@ -320,7 +337,7 @@ const Notes = () => {
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                onRowClick={handleRowClick}
+                // onRowClick={handleRowClick}
               />
             </Card>
           </Grid>
@@ -342,7 +359,7 @@ const Notes = () => {
           title="Change Status"
           handleSubmit={handleStatusChangeApi}
         />
-        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} Notes={Notes}/>
+        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} Notes={Notes} />
       </Grid>
     </>
   );

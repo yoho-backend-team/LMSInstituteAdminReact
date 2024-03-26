@@ -47,7 +47,7 @@ const StudyMaterials = () => {
   const [StudyMaterialDeletemodalOpen, setStudyMaterialDeletemodalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
-  const [statusValue,setStatusValue]=useState({})
+  const [statusValue, setStatusValue] = useState({});
   // const [viewMaterial,setViewMaterial]=useState({})
 
   console.log(selectedDeleteId);
@@ -60,17 +60,12 @@ const StudyMaterials = () => {
   useEffect(() => {
     dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
-console.log('getAllCourseStudyMaterialsss',StudyMaterials)
-
-
+  console.log('getAllCourseStudyMaterialsss', StudyMaterials);
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
-
-
-
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
@@ -79,18 +74,14 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
     setActiveBranches(result.data.data);
   };
 
-  const handleRowClick = (params) => {
-    setSelectedRow(params.row);
-  };
+
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-// viewById
+  // viewById
 
-// useEffect(() => {
-//   dispatch(getStudy({ branch_id: selectedBranchId }));
-// }, [dispatch, selectedBranchId, refetch]);
-
-
+  // useEffect(() => {
+  //   dispatch(getStudy({ branch_id: selectedBranchId }));
+  // }, [dispatch, selectedBranchId, refetch]);
 
   //delete
   const handleDelete = useCallback((itemId) => {
@@ -120,7 +111,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered',statusValue);
+    console.log('entered', statusValue);
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
@@ -134,12 +125,10 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
     }
   };
 
-
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
   const handleView = () => {
-
     setViewModalOpen(true);
   };
 
@@ -148,7 +137,11 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
     console.log('Toggle drawer');
   };
 
-  const RowOptions = (id) => {
+  const handleRowClick = (params) => {
+    setSelectedRow(params);
+  };
+
+  const RowOptions = ({row}) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -158,21 +151,27 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
             text: 'View',
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleView(id)
+              onClick: () => handleView()
             }
           },
           {
             text: 'Edit',
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
-              onClick: () => toggleEditUserDrawer(id)
+              onClick: () => {
+                toggleEditUserDrawer()
+                handleRowClick(row)
+              }
             }
           },
           {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleDelete(id)
+              onClick: () =>{
+                 handleDelete()
+                 handleRowClick(row)
+              }
             }
           }
         ]}
@@ -201,6 +200,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
   const columns = [
     {
       flex: 0.6,
+      minWidth: 100,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -213,6 +213,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
     },
     {
       flex: 1.8,
+      minWidth: 220,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -257,6 +258,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
     },
     {
       flex: 1.5,
+      minWidth:220,
       field: 'course',
       headerName: 'course',
       renderCell: ({ row }) => {
@@ -283,6 +285,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
 
     {
       flex: 1,
+      minWidth: 180,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -314,10 +317,11 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
     },
     {
       flex: 1,
+      minWidth: 120,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
 
@@ -333,6 +337,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
           <Grid item xs={12}>
             <Card>
               <DataGrid
+                sx={{ p: 2 }}
                 autoHeight
                 rowHeight={80}
                 rows={StudyMaterials}
@@ -341,7 +346,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                onRowClick={handleRowClick}
+                // onRowClick={handleRowClick}
               />
             </Card>
           </Grid>
@@ -363,7 +368,7 @@ console.log('getAllCourseStudyMaterialsss',StudyMaterials)
           handleSubmit={handleStatusChangeApi}
         />
 
-        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={StudyMaterials}/>
+        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={StudyMaterials} />
       </Grid>
     </>
   );

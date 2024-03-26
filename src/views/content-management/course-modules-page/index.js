@@ -25,7 +25,10 @@ import { searchUsers } from 'features/user-management/users-page/services/userSe
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusDialog from 'components/modal/DeleteModel';
-import { deleteCourseModule, updateCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+import {
+  deleteCourseModule,
+  updateCourseModule
+} from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
 import toast from 'react-hot-toast';
 const Modules = () => {
   const [value, setValue] = useState('');
@@ -40,11 +43,10 @@ const Modules = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
-  const [refetch,setrefetch] =useState(null)
+  const [refetch, setrefetch] = useState(null);
   const [statusValue, setStatusValue] = useState({});
-  
-console.log(selectedDeleteId)
 
+  console.log(selectedDeleteId);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -73,7 +75,7 @@ console.log(selectedDeleteId)
   };
 
   const handleRowClick = (params) => {
-    setSelectedRow(params.row);
+    setSelectedRow(params);
   };
 
   const handleStatusValue = (event, users) => {
@@ -92,24 +94,23 @@ console.log(selectedDeleteId)
     setEditUserOpen(!editUserOpen);
     console.log('toogle pressed');
   };
-//delete
-const handleDelete = useCallback((itemId) => {
-  SetSelectedDeleteId(itemId);
-  setModulesDeleteModalOpen(true);
-}, []);
+  //delete
+  const handleDelete = useCallback((itemId) => {
+    SetSelectedDeleteId(itemId);
+    setModulesDeleteModalOpen(true);
+  }, []);
 
-const handleContentDelete = async () => {
-  const data = { id: selectedRow.id };
-  const result = await deleteCourseModule(data);
-  if (result.success) {
-    toast.success(result.message);
-    setrefetch((state) => !state);
-  } else {
-    toast.error(result.message);
-  }
-};
-////
-
+  const handleContentDelete = async () => {
+    const data = { id: selectedRow.id };
+    const result = await deleteCourseModule(data);
+    if (result.success) {
+      toast.success(result.message);
+      setrefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
+  ////
 
   const dispatch = useDispatch();
   const Module = useSelector(selectCourseModules);
@@ -119,11 +120,9 @@ const handleContentDelete = async () => {
   console.log(Module);
   useEffect(() => {
     dispatch(getAllCourseModules(selectedBranchId));
-  }, [dispatch, selectedBranchId,refetch]);
+  }, [dispatch, selectedBranchId, refetch]);
 
-  
-
-  const RowOptions = () => {
+  const RowOptions = ({row}) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -140,14 +139,20 @@ const handleContentDelete = async () => {
             text: 'Edit',
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
-              onClick: () => toggleEditUserDrawer()
+              onClick: () => {
+                toggleEditUserDrawer()
+                handleRowClick(row)
+              }
             }
           },
           {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleDelete()
+              onClick: () => {
+                handleDelete()
+                handleRowClick(row)
+              }
             }
           }
         ]}
@@ -178,6 +183,7 @@ const handleContentDelete = async () => {
   const columns = [
     {
       flex: 0.6,
+      minWidth: 100,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -190,6 +196,7 @@ const handleContentDelete = async () => {
     },
     {
       flex: 1.8,
+      minWidth: 220,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
@@ -234,6 +241,7 @@ const handleContentDelete = async () => {
     },
     {
       flex: 1.5,
+      minWidth:220,
       field: 'course',
       headerName: 'course',
       renderCell: ({ row }) => {
@@ -259,6 +267,7 @@ const handleContentDelete = async () => {
     },
     {
       flex: 1,
+      minWidth: 180,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -274,10 +283,11 @@ const handleContentDelete = async () => {
     },
     {
       flex: 1,
+      minWidth: 120,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
 
@@ -286,7 +296,7 @@ const handleContentDelete = async () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId}/>
+          <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         {ModuleLoading ? (
           <ContentSkeleton />
@@ -294,6 +304,7 @@ const handleContentDelete = async () => {
           <Grid item xs={12}>
             <Card>
               <DataGrid
+                sx={{ p: 2 }}
                 autoHeight
                 rowHeight={80}
                 rows={Module}
@@ -302,7 +313,8 @@ const handleContentDelete = async () => {
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                onRowClick={handleRowClick}
+                // onRowClick={handleRowClick}
+
               />
             </Card>
           </Grid>
@@ -316,8 +328,14 @@ const handleContentDelete = async () => {
           title="Delete"
           handleSubmit={handleContentDelete}
         />
-        <StatusDialog open={statusOpen} setOpen={setStatusDialogOpen} description="Are you sure you want to Change Status" title="Status" handleSubmit={handleStatusChangeApi}/>
-        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} Module={Module}/>
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
+        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} Module={Module} />
       </Grid>
     </>
   );
