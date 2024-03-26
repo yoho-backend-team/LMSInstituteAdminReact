@@ -1,5 +1,6 @@
 // assets
 import { IconDashboard } from '@tabler/icons';
+import { hasPermission } from 'hooks/hasPermissions';
 
 // constant
 const icons = { IconDashboard };
@@ -12,12 +13,21 @@ const dashboard = {
   type: 'group',
   children: [
     {
-      id: 'dashboard',
+      id: 'authentication',
       title: 'Dashboard',
-      type: 'item',
-      url: '/dashboard',
+      type: 'collapse',
       icon: icons.IconDashboard,
-      breadcrumbs: false
+      children: [
+        {
+          id: 'dashboard',
+          title: 'Branch Dashboard',
+          type: 'item',
+          url: '/dashboard',
+          icon: icons.IconDashboard,
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_dashboard_view')
+        }
+      ]
     }
   ]
 };

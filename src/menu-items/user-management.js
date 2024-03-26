@@ -39,7 +39,7 @@ const pages = {
           title: 'Users',
           icon: IconUser,
           type: 'item',
-          url: '/user-management/users',
+          url: '/user-management/admin-users',
           target: false,
           breadcrumbs: false,
           visible: hasPermission('inst_perm_admin_users_view')

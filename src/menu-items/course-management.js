@@ -11,8 +11,6 @@ const icons = {
   IconCategory
 };
 
-
-
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {

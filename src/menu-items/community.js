@@ -1,5 +1,6 @@
 // assets
 import { IconBuildingCommunity } from '@tabler/icons';
+import { hasPermission } from 'hooks/hasPermissions';
 
 // constant
 const icons = { IconBuildingCommunity };
@@ -12,12 +13,21 @@ const community = {
   type: 'group',
   children: [
     {
-      id: 'communities',
-      title: 'Community',
-      type: 'item',
-      url: '/community-management/community',
+      id: 'authentication',
+      title: 'Community Management',
+      type: 'collapse',
       icon: icons.IconBuildingCommunity,
-      breadcrumbs: false
+      children: [
+        {
+          id: 'communities',
+          title: 'Communities',
+          type: 'item',
+          url: '/community-management/community',
+          icon: icons.IconBuildingCommunity,
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_community_view')
+        }
+      ]
     }
   ]
 };

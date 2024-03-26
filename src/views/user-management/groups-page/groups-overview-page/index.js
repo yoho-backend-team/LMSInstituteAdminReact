@@ -148,7 +148,7 @@ const GroupManagement = () => {
                     text: 'Edit',
                     menuItemProps: {
                       component: Link,
-                      to: `groups/edit/${item.role.id}`,
+                      to: `groups/${item.role.id}/edit`,
                       state: { id: item.role.id, name: item.role.name }
                     }
                   }
