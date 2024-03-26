@@ -88,29 +88,6 @@ const LiveClassCard = () => {
   }
   console.log(selectedClass);
 
-  // function calculateDuration(startTimestamp, endTimestamp) {
-  //   // Convert the timestamps to Date objects
-  //   const startDate = new Date(startTimestamp);
-  //   const endDate = new Date(endTimestamp);
-
-  //   // Calculate the difference in milliseconds
-  //   const durationInMilliseconds = endDate - startDate;
-
-  //   // Convert milliseconds to days, hours, minutes, and seconds
-  //   const millisecondsPerSecond = 1000;
-  //   const millisecondsPerMinute = millisecondsPerSecond * 60;
-  //   const millisecondsPerHour = millisecondsPerMinute * 60;
-  //   const millisecondsPerDay = millisecondsPerHour * 24;
-
-  //   // const days = Math.floor(durationInMilliseconds / millisecondsPerDay);
-  //   const hours = Math.floor((durationInMilliseconds % millisecondsPerDay) / millisecondsPerHour);
-  //   const minutes = Math.floor((durationInMilliseconds % millisecondsPerHour) / millisecondsPerMinute);
-  //   // const seconds = Math.floor((durationInMilliseconds % millisecondsPerMinute) / millisecondsPerSecond);
-
-  //   // Return the duration as an object
-  //   return hours + ' HR ' + minutes + ' MIN';
-
-  // }
   return (
     <>
       <Grid container spacing={2}>
@@ -206,17 +183,19 @@ const LiveClassCard = () => {
                 </Grid>
                 <Grid container justifyContent="space-between" display="flex" alignItems="center">
                   <Grid item xs={12} display="flex" justifyContent="center">
-                    <Button variant="tonal" size="small" href="view">
-                      View More
-                    </Button>
+                    <Box component={Link} state={{ id: card?.class_id }} to={`live-classes/${card?.class_id}`}>
+                      <Button variant="tonal" size="small">
+                        View More
+                      </Button>
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>
             </Card>
           </Grid>
         ))}
-          <LiveClassEditModal
-        // liveClasses={liveClasses}
+        <LiveClassEditModal
+          // liveClasses={liveClasses}
           selectedBranchId={selectedBranchId}
           liveClasses={selectedClass}
           open={isEditModalOpen}
