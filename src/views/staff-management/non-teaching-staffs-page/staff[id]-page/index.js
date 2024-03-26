@@ -13,8 +13,9 @@ import Icon from 'components/icon';
 import TeacherAttendance from '../../../../features/staff-management/non-teaching-staffs/components/StaffAttendance';
 import UserViewAccount from '../../../../features/staff-management/non-teaching-staffs/components/StaffViewAccount';
 import { useLocation } from 'react-router';
-import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+// import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
+import { nonTeachingStaffById } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
@@ -65,7 +66,7 @@ const UserViewRight = ({ tab }) => {
   const [staff, setStaff] = useState('');
   const location = useLocation();
   const staffID = location.state.id;
-
+console.log('staffId:',staffID)
   useEffect(() => {
     getStaffData(staffID);
   }, [staffID]);
@@ -73,7 +74,7 @@ const UserViewRight = ({ tab }) => {
   const getStaffData = async (staffID) => {
     setLoading(true);
     const data = { id: staffID };
-    const result = await TeachingStaffById(data);
+    const result = await nonTeachingStaffById(data);
     if (result.success) {
       setStaff(result.data);
       setLoading(false);
