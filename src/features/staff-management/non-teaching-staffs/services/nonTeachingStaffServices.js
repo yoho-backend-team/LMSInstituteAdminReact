@@ -141,3 +141,30 @@ export const updateNonTeachingStaff = async (data) => {
     throw error;
   }
 };
+
+
+export const nonTeachingStaffById = async (data) => {
+  try {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-id`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log('non-teachingStaff:',response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in teaching staffs:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
