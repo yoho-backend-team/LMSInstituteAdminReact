@@ -30,6 +30,7 @@ import {
   updateCourseModule
 } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
 import toast from 'react-hot-toast';
+
 const Modules = () => {
   const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -119,7 +120,7 @@ const Modules = () => {
 
   console.log(Module);
   useEffect(() => {
-    dispatch(getAllCourseModules(selectedBranchId));
+    dispatch(getAllCourseModules({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const RowOptions = ({row}) => {
