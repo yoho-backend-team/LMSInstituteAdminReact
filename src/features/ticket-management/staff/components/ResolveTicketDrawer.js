@@ -77,6 +77,7 @@ const TicketResolveDrawer = (props) => {
       toggle();
       setRefetch();
     } else {
+      toast.error(result.message);
     }
   };
 

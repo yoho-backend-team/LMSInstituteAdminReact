@@ -103,7 +103,7 @@ const UserBodySection = ({ users, setUserRefetch }) => {
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
               component: Link,
-              to: `users/${id}`,
+              to: `admin-users/${id}`,
               state: { id: id }
             }
           },

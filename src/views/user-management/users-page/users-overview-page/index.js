@@ -61,17 +61,12 @@ const UserList = () => {
           <UserSkeleton />
         ) : (
           <Grid item xs={12}>
-            <UserBodySection
-              groups={groups}
-              users={users?.users}
-              setUserRefetch={setUserRefetch}
-              selectedBranchId={selectedBranchId}
-            />
+            <UserBodySection groups={groups} users={users?.users} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
           </Grid>
         )}
 
         {/* Add User Drawer */}
-        <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups}  />
+        <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} />
       </Grid>
     </>
   );

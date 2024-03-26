@@ -1,5 +1,5 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash,IconHelp } from '@tabler/icons';
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconHelp } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -10,7 +10,7 @@ const icons = {
   IconCash,
   IconHelp
 };
-
+import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
 const pages = {
@@ -27,21 +27,13 @@ const pages = {
       children: [
         {
           id: 'customer-support',
-          title: 'Customer Support',
+          title: 'Help Faqs',
           type: 'item',
-          url: '/help-center/customer-support',
+          url: '/help-center/help-faqs',
           icon: icons.IconHelp,
           target: false,
-          breadcrumbs: false
-        },
-        {
-          id: 'technical-support',
-          title: 'Technical Support',
-          type: 'item',
-          url: '/help-center/technical-support',
-          icon: icons.IconHelp,
-          target: false,
-          breadcrumbs: false
+          breadcrumbs: false,
+          visible: hasPermission('inst_help_faqs_support_view')
         }
       ]
     }
