@@ -58,14 +58,7 @@ const CourseModuleAddDrawer = (props) => {
       .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     branch: yup.object().required(),
     course: yup.object().required(),
-    video_url: yup
-      .string()
-      .required('Video URL is required')
-      .matches(
-        // Regular expression for validating URLs (supports common video hosting platforms)
-        /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|playlist\?list=)|youtu\.be\/|vimeo\.com\/|dai\.ly\/|dailymotion\.com\/video\/|twitch\.tv\/|bitchute\.com\/)/,
-        'Invalid video URL'
-      )
+    video_url: yup.string().required('Video URL is required')
   });
 
   const defaultValues = {
