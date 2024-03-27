@@ -25,6 +25,8 @@ const OfflineClassCard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const offlineClasses = useSelector(selectOfflineClasses);
+  console.log(offlineClasses);
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
 
@@ -33,7 +35,6 @@ const OfflineClassCard = () => {
   const [selectedOfflineClassDeleteId, setSelectedOfflineClassDeleteId] = useState(null);
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
 
-  console.log(offlineClasses);
 
   useEffect(() => {
     const data = {
