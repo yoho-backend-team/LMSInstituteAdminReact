@@ -126,7 +126,7 @@ const StudentIdCard = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: 450,
+                      height: 420,
                       display: 'block'
                     }}
                   >
@@ -157,7 +157,7 @@ const StudentIdCard = () => {
                         }
                       }}
                     >
-                      <Card className="front" sx={{ width: '100%' }}>
+                      <Card className="front" sx={{ width: '100%', minHeight: 400 }}>
                         <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                           {item.student.image ? (
                             <CustomAvatar
@@ -189,7 +189,7 @@ const StudentIdCard = () => {
                           </Box>
                         </CardContent>
                       </Card>
-                      <Card className="back" sx={{ width: '100%' }}>
+                      <Card className="back" sx={{ width: '100%', minHeight: 400 }}>
                         <CardContent sx={{ pb: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                             Details
@@ -220,14 +220,24 @@ const StudentIdCard = () => {
 
                             <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>
+                              <Typography
+                                sx={{
+                                  // my: 4,
+                                  color: 'text.secondary',
+                                  overflow: 'hidden',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  textOverflow: 'ellipsis'
+                                }}
+                              >
                                 {item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state},{' '}
                                 {item.student.pincode},
                               </Typography>
                             </Box>
                           </Box>
 
-                          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
                             <TextField
                               size="small"
                               select

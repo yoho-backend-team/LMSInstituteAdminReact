@@ -55,7 +55,6 @@ const TeachingIdCard = () => {
   const [searchValue, setSearchValue] = useState('');
   const [filterstatusValue, setFilterStatusValue] = useState('');
 
-
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
@@ -90,7 +89,6 @@ const TeachingIdCard = () => {
     },
     [dispatch]
   );
-
 
   const handleFilterByStatus = (e) => {
     setFilterStatusValue(e.target.value);
@@ -211,7 +209,7 @@ const TeachingIdCard = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: 450,
+                      height: 420,
                       display: 'block'
                     }}
                   >
@@ -242,7 +240,7 @@ const TeachingIdCard = () => {
                         }
                       }}
                     >
-                      <Card className="front" sx={{ width: '100%' }}>
+                      <Card className="front" sx={{ width: '100%', minHeight: 400 }}>
                         <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                           {item.staff.image ? (
                             <CustomAvatar
@@ -274,7 +272,7 @@ const TeachingIdCard = () => {
                           </Box>
                         </CardContent>
                       </Card>
-                      <Card className="back" sx={{ width: '100%' }}>
+                      <Card className="back" sx={{ width: '100%', minHeight: 400 }}>
                         <CardContent sx={{ pb: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                             Details
@@ -305,14 +303,24 @@ const TeachingIdCard = () => {
 
                             <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>
+                              <Typography
+                                sx={{
+                                  // my: 4,
+                                  color: 'text.secondary',
+                                  overflow: 'hidden',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  textOverflow: 'ellipsis'
+                                }}
+                              >
                                 {item.staff.address_line_1}, {item.staff.address_line_2}, {item.staff.city}, {item.staff.state},{' '}
                                 {item.staff.pincode},
                               </Typography>
                             </Box>
                           </Box>
 
-                          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
                             <TextField
                               size="small"
                               select

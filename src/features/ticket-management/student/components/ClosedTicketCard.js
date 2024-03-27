@@ -9,7 +9,7 @@ const ClosedTicketCard = ({ ticket }) => {
     <Grid item xs={12} md={6} lg={4}>
       <Card>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
@@ -21,11 +21,23 @@ const ClosedTicketCard = ({ ticket }) => {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0.75 }}>
               <Typography sx={{ fontSize: 12, color: 'primary.main' }}>Just now</Typography>
             </Box>
           </Box>
-          <Typography sx={{ my: 4, color: 'text.main' }}>{ticket?.query}</Typography>
+          <Typography
+            sx={{
+              my: 2,
+              color: 'text.secondary',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {ticket?.query}
+          </Typography>
           <Typography sx={{ my: 2, color: 'text.secondary' }}>{ticket?.solution}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>

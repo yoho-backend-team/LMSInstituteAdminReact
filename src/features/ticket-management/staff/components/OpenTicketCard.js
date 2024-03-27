@@ -7,11 +7,11 @@ import OptionsMenu from 'components/option-menu';
 const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
-      <Card sx={{ minHeight: 220 }}>
+      <Card sx={{ minHeight: 240 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+              <Avatar src={''} sx={{ mr: 1.75, height: 38, width: 38 }} />
               <Box>
                 <Typography variant="h5">{ticket?.staff?.staff_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
@@ -19,7 +19,7 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
               <Typography sx={{ fontSize: 12, color: 'primary.main' }}>{ticket?.ago}</Typography>
             </Box>
           </Box>

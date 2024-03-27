@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import Icon from 'components/icon';
 // ** Custom Components Imports
 import MenuItem from '@mui/material/MenuItem';

@@ -11,7 +11,8 @@ import { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
+
 // import DeleteDialog from 'components/modal/DeleteModel';
 // import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';

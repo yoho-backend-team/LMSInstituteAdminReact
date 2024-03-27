@@ -10,7 +10,7 @@ import { TextField } from '@mui/material';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import { default as NotesDeleteModal, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
