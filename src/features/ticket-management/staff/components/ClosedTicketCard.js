@@ -7,25 +7,35 @@ import OptionsMenu from 'components/option-menu';
 const ClosedTicketCard = ({ ticket }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
-      <Card>
+      <Card sx={{ minHeight: 260 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box sx={{}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5">
-                  {ticket?.student?.first_name} {ticket?.student?.last_name}
-                </Typography>
+                <Typography variant="h5">{ticket?.staff?.staff_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                  {ticket?.student?.email}
+                  {ticket?.staff?.email}
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 0.75 }}>
               <Typography sx={{ fontSize: 12, color: 'primary.main' }}>Just now</Typography>
             </Box>
           </Box>
-          <Typography sx={{ my: 4, color: 'text.main' }}>{ticket?.query}</Typography>
+          <Typography
+            sx={{
+              my: 2,
+              color: 'text.secondary',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {ticket?.query}
+          </Typography>
           <Typography sx={{ my: 2, color: 'text.secondary' }}>{ticket?.solution}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>

@@ -96,7 +96,7 @@ const StaffTicketsPage = () => {
           setRefetch={setRefetch}
           ticket={selectedTicket} />
       </MainCard>
-    </>
+    </> 
   );
 };
 
