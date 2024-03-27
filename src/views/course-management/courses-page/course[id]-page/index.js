@@ -11,7 +11,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardMedia,
+  // CardMedia,
   Grid,
   IconButton,
   List,
@@ -35,6 +35,7 @@ import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 
 import CourseDeleteModel from 'components/modal/DeleteModel';
+import ReactPlayer from 'react-player';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
@@ -53,7 +54,7 @@ const CourseViewPage = () => {
   const [expanded, setExpanded] = useState(null);
   const [course, setCourse] = useState(null);
 
-  const [videoUrl, setVideoUrl] = useState(null);
+  const [videoUrl, setVideoUrl] = useState('');
 
   // useEffect(() => {
   //   console.log('hello');
@@ -74,6 +75,7 @@ const CourseViewPage = () => {
     };
     const result = await getCourseDetails(data);
     setCourse(result?.data?.data);
+    setVideoUrl(result?.data?.data?.course_module[0].video_url);
   };
 
   const handleSwitch = (event, newValue) => {
@@ -172,38 +174,21 @@ const CourseViewPage = () => {
     return null; // Or any other fallback UI
   }
 
-  console.log(videoUrl);
-
   return (
     <Grid container xs={12} spacing={2}>
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} sm={12} md={12} lg={7.5}>
         <Card>
           <CardHeader title={course?.institute_course_branch?.course_name} />{' '}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            {/* <video
-              // controls
-              autoPlay 
+          <Box>
+            <ReactPlayer
+              style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
+              url={videoUrl}
+              controls
+              autoPlay
               loop
-              muted 
-              // style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%' }}
-            >
-              <source src={videoUrl} type="video/mp4" />
-            </video> */}
-            {videoUrl && (
-              <CardMedia component="video" controls autoPlay loop muted width="100%" height="auto">
-                <source src={videoUrl} type="video/mp4" />
-              </CardMedia>
-            )}
-
-            {/* <iframe
-                    title="Your iFrame Title"
-                    width="100%"
-                    height="300"
-                    src= {videoUrl}
-                    frameBorder="0"
-                    allowFullScreen
-                    style={{ borderRadius: '10px' }}
-                  ></iframe> */}
+              width="100%"
+              height={400}
+            />
           </Box>
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box>
@@ -223,7 +208,7 @@ const CourseViewPage = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={12} lg={4.4}>
         <Card sx={{ pb: 1 }}>
           <Button
             fullWidth
