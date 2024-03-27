@@ -20,7 +20,7 @@ export const getAllUsers = async (data) => {
       },
       params: data
     });
-    console.log('users',response);
+    console.log('users', response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -330,6 +330,26 @@ export const getUserProfileById = async (data) => {
     console.error('Error in getAllUsers:', error);
 
     // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+export const updateFcmToken = async (data) => {
+  try {
+    const response = await axios.post(`${USER_API_ENDPOINT}/update-token`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      data: data
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'User Token updated successfully' };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in addUser:', error);
     throw error;
   }
 };

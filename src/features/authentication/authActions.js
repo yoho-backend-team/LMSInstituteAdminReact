@@ -4,7 +4,8 @@ import toast from 'react-hot-toast';
 
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/login`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
-
+import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
+import { requestForToken } from '../../firebase';
 export const login = (username, password) => async (dispatch) => {
   let data = {
     username: username,
@@ -38,6 +39,9 @@ export const login = (username, password) => async (dispatch) => {
           selectedBranchId: response.data.branches[0]?.branch_id
         }
       });
+      const fcmToken = await requestForToken();
+      const updateToken = await updateFcmToken({ fcm_token: fcmToken });
+      console.log(updateToken);
       window.location.replace('/');
       toast.success('Login Successful');
       return { success: true, message: 'Login successfully' };
