@@ -209,7 +209,7 @@ const TeachingIdCard = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: 450,
+                      height: 420,
                       display: 'block'
                     }}
                   >
