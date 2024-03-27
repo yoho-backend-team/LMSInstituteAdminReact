@@ -3,21 +3,23 @@ import { Grid, IconButton } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { PDFViewer } from 'react-view-pdf';
 
 const NotesView = ({ open, handleViewClose
-// ,Notes
- }) => {
+  // ,StudyMaterials 
+}) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${Notes.document} `);
+  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${StudyMaterials.document} `);
 
   return (
     <div>
       <Dialog
+        fullScreen
         open={open}
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -31,7 +33,7 @@ const NotesView = ({ open, handleViewClose
             alignItems: 'center'
           }}
         >
-          View Notes Information
+          View Notes Informations
           <IconButton onClick={handleViewClose}>
             <CloseIcon />
           </IconButton>
@@ -44,7 +46,7 @@ const NotesView = ({ open, handleViewClose
           }}
         >
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <iframe title="PDF Viewer" src={savedPdfUrl} width="100%" height="500px" />
+            <PDFViewer url={savedPdfUrl} />
           </Grid>
         </DialogContent>
       </Dialog>
