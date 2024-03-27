@@ -36,6 +36,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -652,6 +653,9 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['phone'])}
                       aria-describedby="stepper-linear-personal-phone"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                      }}
                       {...(personalErrors['phone'] && { helperText: 'This field is required' })}
                     />
                   )}
@@ -672,6 +676,9 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['alt_phone'])}
                       aria-describedby="stepper-linear-personal-alt_phone"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                      }}
                       {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
                     />
                   )}

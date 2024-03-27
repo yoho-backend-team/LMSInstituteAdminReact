@@ -49,7 +49,7 @@ const NonTeaching = () => {
   const handleStatusChange = () => {
     setDeleteDialogOpen(true);
   };
-
+console.log("Non-Teaching-Staff :",nonTeachingStaffs);
   return (
     <>
       {loading ? (
@@ -90,7 +90,7 @@ const NonTeaching = () => {
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
-                        <Box component={Link} to={`non-teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
+                        <Box component={Link}  to={`non-teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
                           <Button size='medium' sx={{m:0,p:1,px:2}}
                           >View Profile</Button>
                         </Box>

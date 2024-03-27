@@ -1,16 +1,12 @@
 // ** React Imports
 import MenuItem from '@mui/material/MenuItem';
-import { Fragment, forwardRef, useState, useEffect } from 'react';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,14 +17,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
+import InputAdornment from '@mui/material/InputAdornment';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { addNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import DatePicker from 'react-datepicker';
-import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -537,6 +532,9 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['phone'])}
                       aria-describedby="stepper-linear-personal-phone"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                      }}
                       {...(personalErrors['phone'] && { helperText: 'This field is required' })}
                     />
                   )}
@@ -557,6 +555,9 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['alt_phone'])}
                       aria-describedby="stepper-linear-personal-alt_phone"
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                      }}
                       {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
                     />
                   )}
@@ -594,9 +595,6 @@ const StepperLinearWithValidation = () => {
             </Grid>
           </form>
         );
-
-      default:
-        return null;
     }
   };
 
@@ -619,40 +617,6 @@ const StepperLinearWithValidation = () => {
 
   return (
     <Card>
-      <CardContent>
-        <StepperWrapper>
-          <Stepper activeStep={activeStep}>
-            {steps.map((step, index) => {
-              const labelProps = {};
-              if (index === activeStep) {
-                labelProps.error = false;
-                if ((personalErrors['date_of_birth'] || personalErrors['first-name']) && activeStep === 0) {
-                  labelProps.error = true;
-                } else {
-                  labelProps.error = false;
-                }
-              }
-
-              return (
-                <Step key={index}>
-                  <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}>
-                    <div className="step-label">
-                      <Typography className="step-number">{`0${index + 1}`}</Typography>
-                      <div>
-                        <Typography className="step-title">{step.title}</Typography>
-                        <Typography className="step-subtitle">{step.subtitle}</Typography>
-                      </div>
-                    </div>
-                  </StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
-        </StepperWrapper>
-      </CardContent>
-
-      <Divider sx={{ m: '0 !important' }} />
-
       <CardContent>{renderContent()}</CardContent>
     </Card>
   );

@@ -1,6 +1,6 @@
 // ** React Imports
 import MenuItem from '@mui/material/MenuItem';
-import { Fragment, forwardRef, useState, useEffect } from 'react';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 // ** MUI Imports
 // import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -9,11 +9,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 // import CustomChip from 'components/mui/chip';
 // ** Third Party Imports
@@ -26,19 +22,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 // import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
-import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
 // import { updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
-import StepperWrapper from 'styles/mui/stepper';
 import toast from 'react-hot-toast';
 // import { useSelector } from 'react-redux';
 // import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 // import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { useLocation } from 'react-router';
 import { updateNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { useLocation } from 'react-router';
+import InputAdornment from '@mui/material/InputAdornment';
+import { useNavigate } from 'react-router';
 
 const StepperLinearWithValidation = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const staffData = location.state.staff;
   const staffId = location.state.id;
@@ -46,7 +43,7 @@ const StepperLinearWithValidation = () => {
 
   const steps = [
     {
-      title: 'Personal Info',
+      title: 'Edit Non Teaching Staff',
       subtitle: 'Setup Informion'
     }
   ];
@@ -76,21 +73,53 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    phone: yup.number().required(),
-    alt_phone: yup.number().required(),
-    designation: yup.string().required(),
-    state: yup.string().required(),
-    city: yup.string().required(),
-    pin_code: yup.number().required(),
-    address_line_one: yup.string().required(),
-    address_line_two: yup.string().required(),
-    date_of_birth: yup.string().required(),
-    gender: yup.string().required(),
-    // branch: yup.object().required(),
-    username: yup.string().required()
+    name: yup
+      .string()
+      .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets')
+      .required('Name is required'),
+    email: yup
+      .string()
+      .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format')
+      .required('Email is required'),
+    phone: yup
+      .string()
+      .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits')
+      .required('Phone number is required'),
+    alt_phone: yup
+      .string()
+      .matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits')
+      .required('Alternate phone number is required'),
+    designation: yup
+      .string()
+      .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets')
+      .required('Designation is required'),
+      education_qualification: yup
+      .string()
+      .matches(/^[a-zA-Z\s]+$/, 'Qualification should only contain alphabets')
+      .required('Qualification is required'),
+    state: yup
+      .string()
+      .matches(/^[a-zA-Z\s]+$/, 'State should only contain alphabets')
+      .required('State is required'),
+    city: yup
+      .string()
+      .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets')
+      .required('City is required'),
+    pin_code: yup
+      .string()
+      .matches(/^\d{6}$/, 'Pin code must be 6 digits')
+      .required('Pin code is required'),
+    address_line_one: yup.string().required('Address line one is required'),
+    address_line_two: yup.string().required('Address line two is required'),
+    date_of_birth: yup.string().required('Date of birth is required'),
+    gender: yup.string().required('Gender is required'),
+    branch: yup.object().required('Branch is required'),
+    username: yup
+      .string()
+      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
+      .required('Username is required')
   });
+
 
   // ** States
   const [activeStep, setActiveStep] = useState(0);
@@ -138,11 +167,6 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(personalSchema)
   });
 
-  // Handle Stepper
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
   const handleReset = () => {
     setActiveStep(0);
     personalReset({
@@ -161,7 +185,7 @@ const StepperLinearWithValidation = () => {
       alt_phone: Number(''),
       description: '',
       joining_date: '',
-      designation: '',
+      designation: ''
       // branch: ''
     });
   };
@@ -241,14 +265,14 @@ const StepperLinearWithValidation = () => {
       setValue('id', staffId);
       setValue('name', staffData.name);
       setValue('email', staffData?.dob);
-      setValue('phone_number',staffData?.phone_number);
-      setValue('alternate_number',staffData?.alternate_number);
+      setValue('phone_number', staffData?.phone_number);
+      setValue('alternate_number', staffData?.alternate_number);
       setValue('designation', staffData?.designation);
       setValue('branch_id', staffData?.staff_course?.courses?.branch_id);
       setValue('image', logo);
       setValue('gender', staffData?.gender);
-      setValue('address_line_1',staffData?.address_line_1);
-      setValue('address_line_2',staffData?.address_line_2);
+      setValue('address_line_1', staffData?.address_line_1);
+      setValue('address_line_2', staffData?.address_line_2);
       setValue('city', staffData?.city);
       setValue('state', staffData?.state);
       setValue('pin_code', staffData?.pin_code);
@@ -311,11 +335,8 @@ const StepperLinearWithValidation = () => {
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                <Typography variant="h2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   {steps[0].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -360,7 +381,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Leonard"
                       error={Boolean(personalErrors['name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
-                      {...(personalErrors['name'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.name?.message}
                     />
                   )}
                 />
@@ -381,7 +402,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['email'])}
                       aria-describedby="stepper-linear-personal-official_email"
-                      {...(personalErrors['email'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.email?.message}
                     />
                   )}
                 />
@@ -404,7 +425,7 @@ const StepperLinearWithValidation = () => {
                           label="Date Of Birth"
                           error={Boolean(personalErrors['date_of_birth'])}
                           aria-describedby="stepper-linear-personal-date_of_birth"
-                          {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
+                          helperText={personalErrors?.date_of_birth?.message}
                         />
                       }
                       onChange={onChange}
@@ -428,7 +449,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
                       aria-describedby="stepper-linear-personal-gender"
-                      {...(personalErrors['gender'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.gender?.message}
                     >
                       <MenuItem value="male">Male</MenuItem>
                       <MenuItem value="female">Female</MenuItem>
@@ -543,8 +564,7 @@ const StepperLinearWithValidation = () => {
                       label="designation"
                       onChange={onChange}
                       error={Boolean(personalErrors.designation)}
-                      aria-describedby="stepper-linear-personal-designation-helper"
-                      {...(personalErrors.designation && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.designation?.message}
                     />
                   )}
                 />
@@ -563,7 +583,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
                       aria-describedby="stepper-linear-personal-qualification-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.education_qualification?.message}
                     />
                   )}
                 />
@@ -582,7 +602,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
                       aria-describedby="stepper-linear-personal-state-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.state?.message}
                     />
                   )}
                 />
@@ -601,7 +621,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.city)}
                       aria-describedby="stepper-linear-personal-city-helper"
-                      {...(personalErrors.city && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.city?.message}
                     />
                   )}
                 />
@@ -622,7 +642,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['pin_code'])}
                       aria-describedby="stepper-linear-personal-pin_code"
-                      {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.pin_code?.message}
                     />
                   )}
                 />
@@ -642,7 +662,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_one'])}
                       aria-describedby="stepper-linear-personal-address_line_one"
-                      {...(personalErrors['address_line_one'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.address_line_one?.message}
                     />
                   )}
                 />
@@ -662,7 +682,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_two'])}
                       aria-describedby="stepper-linear-personal-address_line_two"
-                      {...(personalErrors['address_line_two'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.address_line_two?.message}
                     />
                   )}
                 />
@@ -683,7 +703,10 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['phone'])}
                       aria-describedby="stepper-linear-personal-phone"
-                      {...(personalErrors['phone'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.phone?.message}
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                      }}
                     />
                   )}
                 />
@@ -704,7 +727,10 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['alt_phone'])}
                       aria-describedby="stepper-linear-personal-alt_phone"
-                      {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.alt_phone?.message}
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                      }}
                     />
                   )}
                 />
@@ -725,18 +751,18 @@ const StepperLinearWithValidation = () => {
                       placeholder="carterLeonard"
                       error={Boolean(personalErrors['username'])}
                       aria-describedby="stepper-linear-account-username"
-                      {...(personalErrors['username'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.username?.message}
                     />
                   )}
                 />
               </Grid>
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="tonal" color="secondary" onClick={handleBack}>
+                <Button variant="tonal" color="secondary" onClick={() => navigate(-1)}>
                   Back
                 </Button>
                 <Button type="submit" variant="contained">
-                  Next
+                  Submit
                 </Button>
               </Grid>
             </Grid>
@@ -767,40 +793,6 @@ const StepperLinearWithValidation = () => {
 
   return (
     <Card>
-      <CardContent>
-        <StepperWrapper>
-          <Stepper activeStep={activeStep}>
-            {steps.map((step, index) => {
-              const labelProps = {};
-              if (index === activeStep) {
-                labelProps.error = false;
-                if ((personalErrors['date_of_birth'] || personalErrors['first-name']) && activeStep === 0) {
-                  labelProps.error = true;
-                } else {
-                  labelProps.error = false;
-                }
-              }
-
-              return (
-                <Step key={index}>
-                  <StepLabel {...labelProps} StepIconComponent={StepperCustomDot}>
-                    <div className="step-label">
-                      <Typography className="step-number">{`0${index + 1}`}</Typography>
-                      <div>
-                        <Typography className="step-title">{step.title}</Typography>
-                        <Typography className="step-subtitle">{step.subtitle}</Typography>
-                      </div>
-                    </div>
-                  </StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
-        </StepperWrapper>
-      </CardContent>
-
-      <Divider sx={{ m: '0 !important' }} />
-
       <CardContent>{renderContent()}</CardContent>
     </Card>
   );
