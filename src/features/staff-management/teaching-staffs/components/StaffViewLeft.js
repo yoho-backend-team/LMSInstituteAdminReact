@@ -20,7 +20,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }));
 
 const UserViewLeft = ({ staff }) => {
- 
+  const imageUrl = staff?.teachingStaff?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staff.teachingStaff.image}` : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   return (
     <Card>
       <CardMedia
@@ -41,7 +41,7 @@ const UserViewLeft = ({ staff }) => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src="https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg" alt="profile-picture" />
+        <ProfilePicture src={imageUrl} alt="profile-picture" />
         <Box
           sx={{
             width: '100%',
@@ -62,13 +62,17 @@ const UserViewLeft = ({ staff }) => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                {staff?.staff_name}
+                {staff?.teachingStaff?.staff_name}
               </Typography>
+              {/* <Typography variant="h5" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
+                {formattedDate(staff?.teachingStaff?.created_at)}
+              </Typography> */}
             </Box>
+            
           </Box>
           <Button color={staff?.is_active ==='1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            {staff?.is_active === '1' ? 'Active' : 'Inactive'}
+            {staff?.teachingStaff?.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>

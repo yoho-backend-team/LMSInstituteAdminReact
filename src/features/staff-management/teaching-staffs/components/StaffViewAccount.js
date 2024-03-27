@@ -14,20 +14,12 @@ import CardMedia from '@mui/material/CardMedia';
 
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
-const UserViewAccount = ({ staff }) => {
+const UserViewAccount = ({ staff, formattedDate }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  console.log('staffID:',staff?.teachingStaff?.id);
-  console.log('teachingStaff:',staff?.teachingStaff)
-  // dateFormat
-  function formattedDate(inputDate) {
-    const dateObject = new Date(inputDate);
-    const day = String(dateObject.getDate()).padStart(2, '0');
-    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
-    const year = dateObject.getFullYear();
-    return `${day}/${month}/${year}`;
-  }
+  console.log('staffID:', staff?.teachingStaff?.id);
+  console.log('teachingStaff:', staff?.teachingStaff);
 
   if (staff) {
     return (
@@ -41,7 +33,7 @@ const UserViewAccount = ({ staff }) => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.username}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.users?.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -81,14 +73,18 @@ const UserViewAccount = ({ staff }) => {
               </Box>
             </CardContent>
 
-            <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Box component={Link} to={`teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`} state={{ staff: staff?.teachingStaff, id: staff.teachingStaff?.id }}>
-                <Button variant="contained" sx={{ mr: 2 }}>
+            <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box
+                component={Link}
+                to={`teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`}
+                state={{ staff: staff?.teachingStaff, id: staff?.teachingStaff?.id }}
+              >
+                <Button variant="contained" sx={{ mr: 2, width: 100 }}>
                   Edit
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
+                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => setSuspendDialogOpen(true)}>
                   Suspend
                 </Button>
               </Box>
@@ -107,17 +103,28 @@ const UserViewAccount = ({ staff }) => {
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
                       sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                      image={course?.courses?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.courses?.logo}` : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'}
+                      image={
+                        course?.courses?.logo
+                          ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.courses?.logo}`
+                          : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'
+                      }
                     >
                       <CustomChip
-                        sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
-                        skin="light"
-                        label={course?.courses
-                          ?.learning_format}
+                        sx={{
+                          position: 'absolute',
+                          top: 0,
+                          right: 0,
+                          zIndex: 1,
+                          '&.MuiChip-root.MuiChip-rounded': {
+                            borderRadius: '0px 4px 0px 10px',
+                            height: '2rem'
+                          }
+                        }}
+                        label={course?.courses?.learning_format}
                         rounded
                         color="primary"
                         size="small"
-                        variant="outlined"
+                        variant="contained"
                       />
                     </CardMedia>
                   </CardContent>
@@ -130,6 +137,7 @@ const UserViewAccount = ({ staff }) => {
                         color="secondary"
                         size="small"
                         variant="outlined"
+                        sx={{ px: 0.5, py: 2 }}
                       />
                     </Box>
                     <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
@@ -154,8 +162,10 @@ const UserViewAccount = ({ staff }) => {
                           '& svg': { color: 'primary.main', mr: 0.5 }
                         }}
                       >
-                        <Icon icon="ic:twotone-person" fontSize={20} />
-                        <Typography sx={{ color: 'text.secondary' }}>{course?.studentCount} Modules</Typography>
+                        <Icon icon="tabler:augmented-reality" fontSize={20} />
+                        <Typography sx={{ color: 'text.secondary' }}>
+                          <span style={{fontWeight:'bold',fontSize:18,marginRight:2}}> {course?.courses?.course_module_count}</span>
+                           Modules</Typography>
                       </Grid>
                       <Grid>
                         <Typography sx={{ color: 'text.secondary' }}>₹ {course?.courses?.course_price}</Typography>
@@ -169,11 +179,11 @@ const UserViewAccount = ({ staff }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.courses?.course?.is_active===1?'Active':'Inactive'}
+                        sx={{ px: 2, py: 2.3 }}
+                        label={course?.courses?.course?.is_active === 1 ? 'Active' : 'Inactive'}
                         rounded
-                        color={course?.courses?.course?.is_active===1?'success':'error'}
-                        size="large"
-                       
+                        color={course?.courses?.course?.is_active === 1 ? 'success' : 'error'}
+                        size="medium"
                       />
                     </Box>
                     <Button component={Link} to="view " size="medium" variant="contained" color="primary">

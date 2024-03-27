@@ -8,39 +8,41 @@ import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
+import InputAdornment from '@mui/material/InputAdornment';
+
 
 const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch, setRefetchBranch }) => {
   // Form validation schema
   const branchSchema = yup.object().shape({
     branchName: yup
       .string()
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Branch Name should not contain special characters')
-      .required('Branch Name is required'),
+      .required('Branch Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Branch Name should not contain special characters'),
     phone: yup
       .string()
-      .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits')
-      .required('Phone No. is required'),
+      .required('Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
     alternatePhone: yup
       .string()
-      .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits')
-      .required('Alternate Phone No. is required'),
+      .required('Alternate Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
     address: yup.string().required('Address is required'),
     pinCode: yup
       .string()
-      .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits')
-      .required('PIN Code is required'),
+      .required('PIN Code is required')
+      .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
     landmark: yup
       .string()
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Landmark should not contain special characters')
-      .required('Landmark is required'),
+      .required('Landmark is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Landmark should not contain special characters'),
     city: yup
       .string()
-      .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters')
-      .required('city is required'),
+      .required('city is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'City should not contain special characters'),
     state: yup
       .string()
-      .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters')
       .required('state is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'State should not contain special characters')
   });
 
   // React Hook Form initialization
@@ -164,11 +166,15 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                       <CustomTextField
                         {...field}
                         fullWidth
+                        // type="tel"
                         type="number"
                         label="Phone No."
-                        placeholder="123-456-7890"
+                        // placeholder="1234567890"
                         error={Boolean(errors.phone)}
                         helperText={errors.phone?.message}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                        }}
                       />
                     )}
                   />
@@ -182,11 +188,15 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
                       <CustomTextField
                         {...field}
                         fullWidth
+                        // type="tel"
                         type="number"
                         label="Alternate Phone No."
-                        placeholder="123-456-7890"
+                        // placeholder="1234567890"
                         error={Boolean(errors.alternatePhone)}
                         helperText={errors.alternatePhone?.message}
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                        }}
                       />
                     )}
                   />

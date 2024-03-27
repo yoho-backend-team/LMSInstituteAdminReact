@@ -8,120 +8,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 
-const LiveClassCard = ({staff}) => {
-  // const cardData = [
-  //   // Add your card data here
-  //   // For example:
-  //   {
-  //     class_name: 'Introduction to App',
-  //     location: 'Kumbakonam',
-  //     duration: '5hr',
-  //     class_date: '2024-03-04',
-
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Change the avatar URL here
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Introduction to web',
-  //     location: 'Kumbakonam',
-  //     duration: '2hr',
-  //     class_date: '2024-03-04',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Block chain',
-  //     location: 'Kumbakonam',
-  //     duration: '3.5hr',
-  //     class_date: '2024-03-04',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Figma',
-  //     location: 'Kumbakonam',
-  //     duration: '5hr',
-  //     class_date: '2024-03-04',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Analysis',
-  //     location: 'Kumbakonam',
-  //     duration: '1hr',
-  //     class_date: '2024-03-04',
-  //     start_time:' 5:NaN AM',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   }
-  //   // Add more card data as needed
-  // ];
-
+const LiveClassCard = ({ staff }) => {
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
     const date = new Date(timestamp);
@@ -143,55 +30,64 @@ const LiveClassCard = ({staff}) => {
 
   return (
     <Grid container spacing={2}>
-      {staff?.map((item, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
-          <Card sx={{ p: 3 }}>
-            <Grid container direction="column" spacing={1}>
-              <Grid item sx={{ mt: 1 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography
-                    sx={{
-                      mb: 0,
-                      flexShrink: 1,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      maxWidth: '230px'
-                    }}
-                    variant="h3"
-                    gutterBottom
-                    textAlign="center"
-                  >
-                    {item?.class?.class_name}
+      {staff && staff.length > 0 ? (
+        staff.map((item, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card sx={{ p: 3, }}>
+              <Grid container direction="column" spacing={1}>
+                <Grid item sx={{ mt: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography
+                      sx={{
+                        mb: 0,
+                        flexShrink: 1,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '230px'
+                      }}
+                      variant="h3"
+                      gutterBottom
+                      textAlign="center"
+                    >
+                      {item?.class?.class_name}
+                    </Typography>
+                  </Box>
+                </Grid>
+                {/* <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
+              <AvatarGroup className="pull-up" max={4}>
+                {card?.batch_class?.batch_student?.map((student, studentIndex) => (
+                  <Avatar key={studentIndex} src={student} alt={student?.first_name} />
+                ))}
+              </AvatarGroup>
+            </Grid> */}
+                <Grid item justifyContent="center" display="flex">
+                  <Typography>8+ Students on this class</Typography>
+                </Grid>
+                <Grid item justifyContent="center" display="flex" mb={2}>
+                  <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
+                    {' '}
+                    <IconCalendar />
+                    {item?.class.class_date} / {convertTo12HourFormat(item?.class?.start_time)} to{' '}
+                    {convertTo12HourFormat(item?.class?.end_time)}{' '}
                   </Typography>
-                </Box>
+                </Grid>
+                <Grid container p={2} justifyContent="center">
+                  <Button variant="tonal" size="small" href="view">
+                    View More
+                  </Button>
+                </Grid>
               </Grid>
-              {/* <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
-                <AvatarGroup className="pull-up" max={4}>
-                  {card?.batch_class?.batch_student?.map((student, studentIndex) => (
-                    <Avatar key={studentIndex} src={student} alt={student?.first_name} />
-                  ))}
-                </AvatarGroup>
-              </Grid> */}
-              <Grid item justifyContent="center" display="flex">
-                <Typography>8+ Students on this class</Typography>
-              </Grid>
-              <Grid item justifyContent="center" display="flex" mb={2}>
-                <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
-                  {' '}
-                  <IconCalendar />
-                  {item?.class.class_date} / {convertTo12HourFormat(item?.class?.start_time)} to {convertTo12HourFormat(item?.class?.end_time)}{' '}
-                </Typography>
-              </Grid>
-              <Grid container p={2} justifyContent="center">
-                <Button variant="tonal" size="small" href="view">
-                  View More
-                </Button>
-              </Grid>
-            </Grid>
+            </Card>
+          </Grid>
+        ))
+      ) : (
+        <Grid item xs={12}>
+          <Card sx={{ p: 3, justifyContent: 'center', display: 'flex' }}>
+            <img src="https://t4.ftcdn.net/jpg/04/75/01/23/360_F_475012363_aNqXx8CrsoTfJP5KCf1rERd6G50K0hXw.jpg" alt="noData" />
           </Card>
         </Grid>
-      ))}
+      )}
     </Grid>
   );
 };

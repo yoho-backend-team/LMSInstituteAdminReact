@@ -49,7 +49,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab, staff,staffID }) => {
+const UserViewRight = ({ tab, staff,staffID,formattedDate }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
   const handleChange = (event, value) => {
@@ -79,7 +79,7 @@ const UserViewRight = ({ tab, staff,staffID }) => {
       <Box sx={{ mt: 4 }}>
         <>
           <TabPanel sx={{ p: 0 }} value="account">
-            <UserViewAccount staff={staff} staffID={staffID}/>
+            <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate}/>
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="security">
             <UserViewSecurity id={staff?.teachingStaff?.id}/>

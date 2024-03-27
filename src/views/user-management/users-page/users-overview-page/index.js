@@ -5,6 +5,7 @@ import { getAllGroups } from 'features/user-management/groups-page/redux/groupTh
 import UserBodySection from 'features/user-management/users-page/users-overview-page/components/UserBodySection';
 import UserHeaderSection from 'features/user-management/users-page/users-overview-page/components/UserHeaderSection';
 import { selectLoading as selectUserLoading, selectUsers } from 'features/user-management/users-page/redux/userSelectors';
+// import { selectUsers } from 'features/user-management/users-page/redux/userSelectors';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,6 +16,7 @@ const UserList = () => {
   const dispatch = useDispatch();
   const users = useSelector(selectUsers);
   const userLoading = useSelector(selectUserLoading);
+  // const userLoading = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const groups = useSelector(selectGroups);
 

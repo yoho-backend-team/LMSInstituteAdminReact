@@ -53,13 +53,7 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                       sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
                     >
                       <Grid>
-                        <Button
-                          component={Link}
-                          state={{ id: item.staff.staff_id }}
-                          to={`teaching-staff-attendances/${item.staff.staff_id}`}
-                          variant="tonal"
-                          sx={{ px: 4 }}
-                        >
+                        <Button component={Link} to={`teaching-staff-attendances/${item.staff?.staff_id}`} variant="tonal" sx={{ px: 4 }}>
                           View Attendance
                         </Button>
                       </Grid>

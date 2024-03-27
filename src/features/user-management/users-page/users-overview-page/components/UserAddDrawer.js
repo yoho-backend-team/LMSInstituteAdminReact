@@ -15,6 +15,8 @@ import toast from 'react-hot-toast';
 import Checkbox from '@mui/material/Checkbox';
 import ListItemText from '@mui/material/ListItemText';
 import { addUser, checkUserName } from '../../services/userServices';
+import InputAdornment from '@mui/material/InputAdornment';
+
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -79,14 +81,14 @@ const SidebarAddUser = (props) => {
     role: yup.number().required(),
     contact: yup
       .string()
+      .required('Contact Number field is required')
       .matches(/^[0-9]+$/, 'Contact number must contain only digits')
-      .max(10, 'Contact number cannot exceed 10 digits')
-      .required('Contact Number field is required'),
+      .max(10, 'Contact number cannot exceed 10 digits'),
     fullName: yup
       .string()
+      .required()
       .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
-      .required(),
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
     userName: yup
       .string()
       .required()
@@ -94,8 +96,8 @@ const SidebarAddUser = (props) => {
       .matches(/^[a-zA-Z0-9\s]+$/, ' User Name should not contain special characters'),
     confirm_password: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required('Password confirmation is required'),
+      .required('Password confirmation is required')
+      .oneOf([yup.ref('password'), null], 'Passwords must match'),
     branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
   });
 
@@ -319,9 +321,12 @@ const SidebarAddUser = (props) => {
                 sx={{ mb: 4 }}
                 label="Contact"
                 onChange={onChange}
-                placeholder="(397) 294-5153"
+                // placeholder="(397) 294-5153"
                 error={Boolean(errors.contact)}
                 {...(errors.contact && { helperText: errors.contact.message })}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                }}
               />
             )}
           />

@@ -37,17 +37,21 @@ const NonTeachingStaffs = () => {
   
   return (
     <>
-      {loading ? (
-        <TeachingStaffSkeleton />
-      ) : (
+   
         <Grid>
           <NonTeachingStaffFilterCard selectedBranchId={selectedBranchId}/>
+          {loading ? (
+        <TeachingStaffSkeleton />
+      ) : (
+        <div>
           <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs} />
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination count={10} color="primary" />
           </Grid>
+          </div>
+)}
         </Grid>
-      )}
+      
     </>
   );
 };
