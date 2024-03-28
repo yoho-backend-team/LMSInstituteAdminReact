@@ -127,16 +127,16 @@ const StudyMaterialEdit = (props) => {
 
   console.log(setSelectedFile);
   // Styled components
-  const ImgStyled = useMemo(
-    () =>
-      styled('img')(({ theme }) => ({
-        width: 100,
-        height: 100,
-        marginRight: theme.spacing(2),
-        borderRadius: theme.shape.borderRadius
-      })),
-    []
-  );
+  // const ImgStyled = useMemo(
+  //   () =>
+  //     styled('img')(({ theme }) => ({
+  //       width: 100,
+  //       height: 100,
+  //       marginRight: theme.spacing(2),
+  //       borderRadius: theme.shape.borderRadius
+  //     })),
+  //   []
+  // );
 
   const ButtonStyled = useMemo(
     () =>
@@ -181,7 +181,8 @@ const StudyMaterialEdit = (props) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 {!selectedFile && <PDFViewer url={savedPdfUrl} />}
-                {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />}
+                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
 
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
                   Upload New File
