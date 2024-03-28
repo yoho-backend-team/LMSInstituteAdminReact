@@ -1,5 +1,5 @@
 // material-ui
-import { Box, CardContent, CardHeader, Typography } from '@mui/material';
+import { Box, CardContent, CardHeader, Typography, TextField } from '@mui/material';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -27,6 +27,17 @@ const ViewLiveClass = () => {
   const location = useLocation();
   const liveClassId = location.state.id;
   const [liveClassData, setLiveClassData] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredStudents = liveClassData?.data?.batch_class?.batch?.institute_batch_student?.filter((student) =>
+    student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  console.log(filteredStudents);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   useEffect(() => {
     const data = {
@@ -233,7 +244,7 @@ const ViewLiveClass = () => {
 
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {liveClassData?.instructor?.class_staff.map((staff) => (
+                      {liveClassData?.instructorStaff?.class_staff.map((staff) => (
                         <Tooltip key={staff.id} title={staff.staff.staff_name}>
                           <Avatar
                             src={staff.staff.image_url} // Assuming the image URL is available in the staff object
@@ -278,19 +289,25 @@ const ViewLiveClass = () => {
             </CardContent>
           </Card>
         </Grid>
-        {/* ))} */}
+
+        <Grid item xs={12} display={'flex'} justifyContent={'flex-end'} marginTop={2}>
+          <TextField placeholder="Search Student" value={searchQuery} onChange={handleSearchChange} />
+        </Grid>
+
         {/* body */}
         {liveClassData && (
           <Grid item xs={12} mt={3}>
             <DataGrid
               autoHeight
               rowHeight={80}
-              disableRowSelectionOnClick
-              rows={liveClassData?.data?.batch_class?.batch?.institute_batch_student}
+              rows={filteredStudents}
               columns={columns}
-              pageSizeOptions={[7, 10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
+              disableRowSelectionOnClick
+              pagination
+              pageSize={paginationModel.pageSize}
+              rowCount={filteredStudents.length}
+              paginationMode="server"
+              onPageChange={(page) => setPaginationModel((prevModel) => ({ ...prevModel, page }))}
             />
           </Grid>
         )}
