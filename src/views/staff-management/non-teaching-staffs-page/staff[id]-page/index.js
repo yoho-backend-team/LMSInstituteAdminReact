@@ -66,7 +66,7 @@ const UserViewRight = ({ tab }) => {
   const [staff, setStaff] = useState('');
   const location = useLocation();
   const staffID = location.state.id;
-console.log('staffId:',staffID)
+  console.log('staffId:', staffID);
   useEffect(() => {
     getStaffData(staffID);
   }, [staffID]);
@@ -81,7 +81,28 @@ console.log('staffId:',staffID)
     }
     setLoading(false);
   };
-  console.log('staff:', staff);
+  console.log('NON-Teaching-staff:', staff);
+  // dateFormat
+function formattedDate(inputDate) {
+  // Split the input date string into day, month, and year
+  const [day, month, year] = inputDate.split('/');
+  
+  // Construct a new Date object using the parsed components
+  const dateObject = new Date(`${month}/${day}/${year}`);
+  
+  // Check if the dateObject is a valid date
+  if (isNaN(dateObject)) {
+    return "Invalid Date";
+  }
+
+  // Format the date components into 'DD/MM/YYYY' format
+  const formattedDay = String(dateObject.getDate()).padStart(2, '0');
+  const formattedMonth = String(dateObject.getMonth() + 1).padStart(2, '0');
+  const formattedYear = dateObject.getFullYear();
+  
+  return `${formattedDay}/${formattedMonth}/${formattedYear}`;
+}
+  
 
   return (
     <TabContext value={activeTab}>
@@ -101,7 +122,7 @@ console.log('staffId:',staffID)
         ) : (
           <>
             <TabPanel sx={{ p: 0 }} value="account">
-              <UserViewAccount staff={staff} />
+              <UserViewAccount staff={staff} formattedDate={formattedDate} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="attendance">
               <TeacherAttendance />

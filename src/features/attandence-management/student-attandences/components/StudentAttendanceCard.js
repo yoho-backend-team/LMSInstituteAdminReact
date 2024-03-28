@@ -101,7 +101,7 @@ const StudentAttendanceCard = () => {
               </Grid>
               <Grid container p={1} justifyContent="space-between">
                 <Box>
-                  <Button component={Link} size="medium" to={'1'} variant="tonal" sx={{ px: 2 }}>
+                  <Button component={Link} size="medium" to={'student-attendances/:id'} variant="tonal" sx={{ px: 2 }}>
                     View Attendance
                   </Button>
                 </Box>
