@@ -32,7 +32,7 @@ const LiveClass = () => {
     <>
       <Grid>
         <LiveClassFilterCard selectedBranchId={selectedBranchId}/>
-        <LiveClassCardHeader />
+        <LiveClassCardHeader selectedBranchId={selectedBranchId} />
         {loading ? (
           <ClassSkeleton />
         ) : (
