@@ -11,8 +11,8 @@ import Typography from '@mui/material/Typography';
 // ** Custom Components Imports
 // import * as source from 'src/views/components/avatars/AvatarsSourceCode'
 
-const EcommerceStatistics = ({ batchData }) => {
-  console.log('batchData2:',batchData);
+const EcommerceStatistics = ({ batchData, theme }) => {
+  console.log('batchData2:', batchData);
 
   const renderStats = () => {
     return (
@@ -20,8 +20,12 @@ const EcommerceStatistics = ({ batchData }) => {
         <Grid container>
           <Grid item xs={12}>
             <Card>
-              <CardHeader 
-              title={batchData.batch_name} 
+              <CardHeader
+                title={
+                  <Typography variant="h4" sx={{ color: theme.palette.primary.main }}>
+                    {batchData.batch_name}
+                  </Typography>
+                }
               />
               <CardContent sx={{ mt: 0, pt: 0 }}>
                 <Grid container spacing={4}>

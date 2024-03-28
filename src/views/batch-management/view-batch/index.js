@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { getBatchDetails } from 'features/batch-management/batches/services/batchServices';
+import { useTheme } from '@mui/material/styles';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -17,8 +18,10 @@ const useTimeout = (callback, delay) => {
 };
 
 const ViewBatch = () => {
-  const [loading, setLoading] = useState(true);
+  // States
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
   const batchId = location.state.id;
@@ -29,17 +32,15 @@ const ViewBatch = () => {
 
   const [batchData, setBatchData] = useState([]);
 
-
   useEffect(() => {
-    const data ={
-      batch_id:batchId
-    }
+    const data = {
+      batch_id: batchId
+    };
     getBatchData(data);
-  }, [dispatch,batchId]);
+  }, [dispatch, batchId]);
 
   const getBatchData = async (data) => {
     try {
-
       setLoading(false);
       const result = await getBatchDetails(data);
       if (result.success) {
@@ -54,7 +55,6 @@ const ViewBatch = () => {
       console.log(error);
     }
   };
- 
 
   return (
     <>
@@ -63,7 +63,7 @@ const ViewBatch = () => {
       ) : (
         <Grid container spacing={3} sx={{ p: 1 }}>
           <Grid item xs={12} sm={12}>
-            <HeaderCard batchData={batchData} />
+            <HeaderCard batchData={batchData} theme={theme} />
           </Grid>
 
           <Grid item xs={12}>
