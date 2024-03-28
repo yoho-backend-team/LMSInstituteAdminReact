@@ -117,47 +117,47 @@ const CourseViewPage = () => {
   };
 
   const createAccordion = (accordion) => (
-    <Grid container xs={12} sx={{ p: 0, m: 0 }}>
+    <Grid container xs={12}>
       <Accordion
         key={accordion.id}
         expanded={expanded === accordion?.id}
         onChange={handleChange(accordion?.id)}
         sx={{ '&.MuiPaper-root': { borderRadius: '0.5rem', m: 0.5, background: 'none', boxShadow: 'none' } }}
       >
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ alignItems: 'center', display: 'flex' }}>
           <AccordionSummary
             className="course-id-page"
             id={`customized-panel-header-${accordion?.id}`}
             expandIcon={<ExpandMoreIcon />}
             aria-controls={`customized-panel-content-${accordion?.id}`}
+            sx={{ px: 2 }}
           >
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, p: 0 }}>
-              <Typography variant="h5" sx={{ fontWeight: 100, textAlign: 'justify' }}>
-                {accordion?.title}
-              </Typography>
-            </Box>
+             <Divider />
           </AccordionSummary>
-          <Divider />
-        </Grid>
 
+          <Box sx={{ px: 2 }}>
+            <Typography variant="h5">{accordion?.title}</Typography>
+          </Box>
+        </Grid>
+       
         <AccordionDetails sx={{ p: 0 }}>
           <Grid container xs={12}>
             <Grid item xs={12}>
               <List>
                 <ListItem>
-                  <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'justify' }}>
+                  <Typography> 
                     {accordion?.description}
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 50, textAlign: 'justify' }}>
+                  {/* <Typography variant="subtitle1" sx={{ fontWeight: 50, textAlign: 'justify' }}>
                     {accordion?.video_url}
-                  </Typography>
+                  </Typography> */}
                 </ListItem>
               </List>
             </Grid>
             <Grid item xs={12}>
-              <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
+              <Box>
                 <Button onClick={() => setVideoUrl(accordion?.video_url)} variant="tonal" color="primary" fullWidth>
                   <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
                   Preview
@@ -178,7 +178,7 @@ const CourseViewPage = () => {
     <Grid container xs={12} spacing={2}>
       <Grid item xs={12} sm={12} md={12} lg={7.5}>
         <Card>
-          <CardHeader title={course?.institute_course_branch?.course_name} />{' '}
+          <CardHeader  title={course?.institute_course_branch?.course_name} />{' '}
           <Box>
             <ReactPlayer
               style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
@@ -209,14 +209,14 @@ const CourseViewPage = () => {
         </Card>
       </Grid>
       <Grid item xs={12} sm={12} lg={4.4}>
-        <Card sx={{ pb: 1 }}>
+        <Card sx={{ pb: 1, overflow: 'auto', height: '88vh' }} className="CourseModules-Card">
           <Button
             fullWidth
             onClick={() => handleEdit()}
             variant="contained"
             color="primary"
             startIcon={<Icon icon="mdi:pencil" />}
-            sx={{ '&.MuiButtonBase-root': { borderRadius: 0, boxShadow: 'none', pb: 3, pt: 3 } }}
+            sx={{ '&.MuiButtonBase-root': { borderRadius: 0, boxShadow: 'none', pb: 3, pt: 3, position: 'static' } }}
           >
             Edit Course
           </Button>
