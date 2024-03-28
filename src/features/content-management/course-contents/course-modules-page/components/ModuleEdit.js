@@ -16,6 +16,7 @@ import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import { updateCourseModule } from '../services/moduleServices';
+import ReactPlayer from 'react-player';
 
 
 const Header = styled(Box)(({ theme }) => ({
@@ -58,7 +59,15 @@ const ModuleEdit = (props) => {
 
   const [groups, setGroups] = useState([]);
 
+  const [videoUrl, setVideoUrl] = useState('');
 
+  useEffect(() => {
+    if(modules){
+      setVideoUrl(modules.video_url)
+
+    }
+  }, [modules])
+  
   useEffect(() => {
     getAllGroups();
   }, []);
@@ -148,9 +157,9 @@ const ModuleEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 380 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 480 } } }}
     >
-      <Header>
+      <Header sx={{pb:2}}>
         <Typography variant="h5">Edit Module</Typography>
         <IconButton
           size="small"
@@ -170,6 +179,19 @@ const ModuleEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(3, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
+
+          <Box sx={{mb:4}}>
+          <ReactPlayer
+              style={{  objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
+              url={videoUrl}
+              controls
+              autoPlay
+              loop
+              width="100%"
+              height={200}
+            />
+          </Box>
+
           <Controller
             name="title"
             control={control}

@@ -137,7 +137,7 @@ const NotesEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { md: 1100, xs: 300, sm: 500 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: '80%', sm: 500 } } }}
     >
       <Grid container spacing={1}>
         <Grid item md={12} sm={12}>
