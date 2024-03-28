@@ -1,16 +1,28 @@
-import React from 'react';
+import { Grid, TextField, Typography } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { DataGrid } from '@mui/x-data-grid';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
+import { useState } from 'react';
+
 
 const ViewBatchTable = ({ students }) => {
+
   console.log('Students', students);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
 
   if (!students) {
     return null; // Or any other fallback UI
   }
+
+  const filteredStudents = students.filter(student =>
+    student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+
+  console.log(filteredStudents)
 
   const columns = [
     {
@@ -83,15 +95,28 @@ const ViewBatchTable = ({ students }) => {
     }
   ];
 
+  
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+
   return (
     <>
       {/* <DataGrid autoHeight rowHeight={80} rows={students} columns={columns} disableRowSelectionOnClick
        pagination={false} /> */}
-      <Card>
-        <Box sx={{ overflowX: 'auto' }}>
-          <DataGrid autoHeight rowHeight={80} rows={students} columns={columns} disableRowSelectionOnClick hideFooterPagination />
-        </Box>
-      </Card>
+      <Grid container spacing={2}>
+        <Grid item xs={12} display={'flex'} justifyContent={'flex-end'}>
+          <TextField  placeholder="Search Student"  value={searchQuery} onChange={handleSearchChange} />
+        </Grid>
+        <Grid item xs={12}>
+          <Card sx={{ mt: 2 }}>
+            <Box sx={{ overflowX: 'auto' }}>
+              <DataGrid autoHeight rowHeight={80} rows={filteredStudents} columns={columns} disableRowSelectionOnClick hideFooterPagination />
+            </Box>
+          </Card>
+        </Grid>
+      </Grid>
     </>
   );
 };
