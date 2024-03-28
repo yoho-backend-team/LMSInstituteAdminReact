@@ -241,3 +241,27 @@
 //   }
 // }
 
+// .CourseModules-Card{
+//  ::-webkit-scrollbar{
+//   background-color: #7367f0 !important;
+//  }
+// }
+*{
+  ::-webkit-scrollbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 10px !important;
+    height: 100vh !important;
+    background-color: #ffffff !important;
+    border-radius: 10px;
+    display: none !important;
+  }
+  
+  .scrollbar-thumb {
+    width: 100%;
+    height: 50px; /* Adjust height as needed */
+    background-color: #888 !important;
+    cursor: pointer;
+  }
+}

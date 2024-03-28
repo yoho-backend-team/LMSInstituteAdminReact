@@ -5,6 +5,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import {
   Accordion,
+  AccordionActions,
   AccordionDetails,
   AccordionSummary,
   Box,
@@ -13,13 +14,13 @@ import {
   CardHeader,
   // CardMedia,
   Grid,
-  IconButton,
-  List,
-  ListItem,
-  Typography
+  IconButton
+  // List,
+  // ListItem,
+  // Typography
 } from '@mui/material';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import Tab from '@mui/material/Tab';
 import Icon from 'components/icon';
 import CourseEditModal from 'features/course-management/courses-page/course-overview-page/components/CourseEditModal';
@@ -85,6 +86,8 @@ const CourseViewPage = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
+  console.log(handleChange);
+  console.log(expanded);
 
   // const handlePreview = (url) => {
   //   setVideoUrl(url);
@@ -116,58 +119,59 @@ const CourseViewPage = () => {
     }
   };
 
-  const createAccordion = (accordion) => (
-    <Grid container xs={12} sx={{ p: 0, m: 0 }}>
-      <Accordion
-        key={accordion.id}
-        expanded={expanded === accordion?.id}
-        onChange={handleChange(accordion?.id)}
-        sx={{ '&.MuiPaper-root': { borderRadius: '0.5rem', m: 0.5, background: 'none', boxShadow: 'none' } }}
-      >
-        <Grid item xs={12}>
-          <AccordionSummary
-            className="course-id-page"
-            id={`customized-panel-header-${accordion?.id}`}
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`customized-panel-content-${accordion?.id}`}
-          >
-            <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, p: 0 }}>
-              <Typography variant="h5" sx={{ fontWeight: 100, textAlign: 'justify' }}>
-                {accordion?.title}
-              </Typography>
-            </Box>
-          </AccordionSummary>
-          <Divider />
-        </Grid>
+  const createAccordion = (item) => (
+    // <Grid container xs={12}>
+    //   <Accordion
+    //     key={accordion.id}
+    //     expanded={expanded === accordion?.id}
+    //     onChange={handleChange(accordion?.id)}
+    //     sx={{ '&.MuiPaper-root': { borderRadius: '0.5rem', m: 0.5, background: 'none', boxShadow: 'none' } }}
+    //   >
+    //     <Grid item xs={12} sx={{ alignItems: 'center', display: 'flex' }}>
+    //       <AccordionSummary
+    //         className="course-id-page"
+    //         id={`customized-panel-header-${accordion?.id}`}
+    //         expandIcon={<ExpandMoreIcon />}
+    //         aria-controls={`customized-panel-content-${accordion?.id}`}
+    //         sx={{ px: 2 }}
+    //       >
+    //         <Divider />
+    //       </AccordionSummary>
 
-        <AccordionDetails sx={{ p: 0 }}>
-          <Grid container xs={12}>
-            <Grid item xs={12}>
-              <List>
-                <ListItem>
-                  <Typography variant="h5" sx={{ fontWeight: 'bold', textAlign: 'justify' }}>
-                    {accordion?.description}
-                  </Typography>
-                </ListItem>
-                <ListItem>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 50, textAlign: 'justify' }}>
-                    {accordion?.video_url}
-                  </Typography>
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={12}>
-              <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                <Button onClick={() => setVideoUrl(accordion?.video_url)} variant="tonal" color="primary" fullWidth>
-                  <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
-                  Preview
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </AccordionDetails>
+    //       <Box sx={{ px: 2 }}>
+    //         <Typography variant="h5">{accordion?.title}</Typography>
+    //       </Box>
+    //     </Grid>
+
+    //     <AccordionDetails sx={{ width: '100%' }}>
+    //       <Grid container xs={12}>
+    //         <Grid item xs={12}>
+    //           <Typography>{accordion?.description}</Typography>
+    //         </Grid>
+    //         <Grid item xs={12} sx={{ backgroundColor: 'red', width: '100%' }}>
+    //           <Button onClick={() => setVideoUrl(accordion?.video_url)} variant="tonal" color="primary" fullWidth sx={{ width: '100%' }}>
+    //             <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main' }} />
+    //             Preview
+    //           </Button>
+    //         </Grid>
+    //       </Grid>
+    //     </AccordionDetails>
+    //   </Accordion>
+    // </Grid>
+    <div>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+          {item.title}
+        </AccordionSummary>
+        <AccordionDetails sx={{ textAlign: 'justify' }}>{item.description}</AccordionDetails>
+        <AccordionActions>
+          <Button onClick={() => setVideoUrl(item?.video_url)} variant="tonal" color="primary" fullWidth sx={{ width: '100%' }}>
+            <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main', mr: 1 }} />
+            Preview
+          </Button>
+        </AccordionActions>
       </Accordion>
-    </Grid>
+    </div>
   );
 
   if (!course || !course.course_module) {
@@ -209,19 +213,18 @@ const CourseViewPage = () => {
         </Card>
       </Grid>
       <Grid item xs={12} sm={12} lg={4.4}>
-        <Card sx={{ pb: 1 }}>
+        <Card sx={{ pb: 1, }} className="CourseModules-Card">
           <Button
             fullWidth
             onClick={() => handleEdit()}
             variant="contained"
             color="primary"
             startIcon={<Icon icon="mdi:pencil" />}
-            sx={{ '&.MuiButtonBase-root': { borderRadius: 0, boxShadow: 'none', pb: 3, pt: 3 } }}
+            sx={{ '&.MuiButtonBase-root': { borderRadius: 0, boxShadow: 'none', pb: 3, pt: 3, position: 'static' } }}
           >
             Edit Course
           </Button>
-          {course?.course_module?.map(createAccordion)}
-
+          <div style={{ overflow: 'auto', height: '69vh' }}>{course?.course_module?.map(createAccordion)}</div>
           {/* Edit Modal */}
           <CourseEditModal
             selectedBranchId={selectedBranchId}

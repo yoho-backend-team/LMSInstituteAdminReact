@@ -65,7 +65,6 @@ const Teaching = () => {
                         <Typography variant="h5" sx={{ mb: 4 }}>
                           {item?.staff?.email}
                         </Typography>
-
                         <Box
                           sx={{
                             display: 'flex',

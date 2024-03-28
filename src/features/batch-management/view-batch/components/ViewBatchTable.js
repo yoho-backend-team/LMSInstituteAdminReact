@@ -1,25 +1,20 @@
-// ** Next Imports
-// import { Link } from 'react-router-dom';
-// ** MUI Imports
-import Box from '@mui/material/Box';
+import React from 'react';
 import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Custom Components Imports
-// import CustomAvatar from 'components/mui/avatar';
-// ** Utils Import
-// import { getInitials } from 'utils/get-initials';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 
 const ViewBatchTable = ({ students }) => {
+  console.log('Students', students);
 
   if (!students) {
     return null; // Or any other fallback UI
   }
-  
+
   const columns = [
     {
-      // flex: 1.5,
-      minWidth: 300,
+      minWidth: 250,
       field: 'id',
       headerName: 'Student ID',
       renderCell: ({ row }) => {
@@ -31,17 +26,15 @@ const ViewBatchTable = ({ students }) => {
       }
     },
     {
-      // flex: 2,
       minWidth: 300,
       field: 'student',
       headerName: 'Student',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* {renderClient(row)} */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            <Avatar src={row?.student?.image} alt={row?.student?.first_name} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 1.65 }}>
               <Typography
-                // href="/apps/user/view/account"
                 sx={{
                   fontWeight: 500,
                   textDecoration: 'none',
@@ -60,7 +53,6 @@ const ViewBatchTable = ({ students }) => {
       }
     },
     {
-      // flex: 2,
       minWidth: 300,
       headerName: 'Contact & Address',
       field: 'Contact',
@@ -69,7 +61,6 @@ const ViewBatchTable = ({ students }) => {
           <Box
             sx={{
               display: 'flex',
-
               alignItems: 'flex-start',
               flexDirection: 'column',
               flexWrap: 1,
@@ -90,32 +81,18 @@ const ViewBatchTable = ({ students }) => {
         );
       }
     }
-
-    // {
-    //   // flex: 1.3,
-    //   minWidth: 200,
-    //   field: 'status',
-    //   headerName: 'Status',
-    //   renderCell: ({ row }) => {
-    //     const userStatus = `${row.is_active}` === 1 ? 'Active' : 'Inactive';
-    //     return (
-    //       <CustomChip
-    //         rounded
-    //         skin="light"
-    //         size="small"
-    //         label={userStatus}
-    //         color={userStatusObj[row.student?.is_active]}
-    //         sx={{ textTransform: 'capitalize' }}
-    //       />
-    //     );
-    //   }
-    // }
   ];
 
   return (
-    <Card>
-      <DataGrid autoHeight rowHeight={80} rows={students} columns={columns} disableRowSelectionOnClick />
-    </Card>
+    <>
+      {/* <DataGrid autoHeight rowHeight={80} rows={students} columns={columns} disableRowSelectionOnClick
+       pagination={false} /> */}
+      <Card>
+        <Box sx={{ overflowX: 'auto' }}>
+          <DataGrid autoHeight rowHeight={80} rows={students} columns={columns} disableRowSelectionOnClick hideFooterPagination />
+        </Box>
+      </Card>
+    </>
   );
 };
 
