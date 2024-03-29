@@ -42,6 +42,7 @@ const CourseCard = (props) => {
     setStatusValue(course);
   };
 
+  const maxCharacters = 30;
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ ...sx }}>
@@ -51,8 +52,16 @@ const CourseCard = (props) => {
             image={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.logo}`}
           >
             <CustomChip
-              sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
-              skin="light"
+              sx={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                zIndex: 1,
+                '&.MuiChip-root.MuiChip-rounded': {
+                  borderRadius: '0px 4px 0px 10px',
+                  height: '2rem'
+                }
+              }}
               label={course?.learning_format}
               rounded
               color="primary"
@@ -64,6 +73,7 @@ const CourseCard = (props) => {
         <CardContent>
           <Box>
             <CustomChip
+              sx={{ px: 0, py: 2 }}
               skin="light"
               label={course?.course?.course_categories?.category_name}
               rounded
@@ -84,7 +94,8 @@ const CourseCard = (props) => {
                 textOverflow: 'ellipsis'
               }}
             >
-              {course?.course_name}
+              {course?.course_name &&
+                (course.course_name.length > maxCharacters ? course.course_name.slice(0, maxCharacters) + '...' : course.course_name)}
             </Typography>
           </Box>
           <Box
@@ -103,11 +114,13 @@ const CourseCard = (props) => {
                 '& svg': { color: 'primary.main', mr: 0.5 }
               }}
             >
-              <Icon icon="ic:twotone-person" fontSize={20} />
+              <Icon icon="tabler:augmented-reality" fontSize={20} />
               <Typography sx={{ color: 'text.secondary' }}>{course?.course?.course_module?.length} Modules</Typography>
             </Grid>
             <Grid>
-              <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
+              <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>
+                ₹ {course?.course_price}
+              </Typography>
             </Grid>
           </Box>
         </CardContent>
