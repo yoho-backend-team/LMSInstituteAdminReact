@@ -87,9 +87,6 @@ const Modules = () => {
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
-  const handleView = () => {
-    setViewModalOpen(true);
-  };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -133,7 +130,10 @@ const Modules = () => {
             text: 'View',
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleView()
+              onClick: () => {
+                setViewModalOpen(true);     
+                handleRowClick(row)
+              }
             }
           },
           {
@@ -336,7 +336,7 @@ const Modules = () => {
           title="Status"
           handleSubmit={handleStatusChangeApi}
         />
-        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} Module={Module} />
+        <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} modules={selectedRow} />
       </Grid>
     </>
   );

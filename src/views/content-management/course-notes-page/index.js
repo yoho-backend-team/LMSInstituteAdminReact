@@ -73,9 +73,7 @@ const Notes = () => {
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
-  const handleView = () => {
-    setViewModalOpen(true);
-  };
+
 
   //delete
   const handleDelete = useCallback((itemId) => {
@@ -139,7 +137,10 @@ const Notes = () => {
             text: 'View',
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleView()
+              onClick: () => {
+                setViewModalOpen(true);     
+                handleRowClick(row)
+              }
             }
           },
           {
@@ -359,7 +360,7 @@ const Notes = () => {
           title="Change Status"
           handleSubmit={handleStatusChangeApi}
         />
-        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} Notes={Notes} />
+        <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} notes={selectedRow} />
       </Grid>
     </>
   );
