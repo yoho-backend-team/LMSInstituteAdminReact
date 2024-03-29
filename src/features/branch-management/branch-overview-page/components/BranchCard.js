@@ -18,7 +18,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
   const [branchEditModelOpen, setBranchEditModelOpen] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
-  const [statusValue, setStatusValue] = useState('');
+  const [statusValue, setStatusValue] = useState(''); 
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -146,7 +146,6 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
           >
             {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
           </Typography>
-
           <Box sx={{ mt: 1.75 }}>
             <TextField
               size="small"

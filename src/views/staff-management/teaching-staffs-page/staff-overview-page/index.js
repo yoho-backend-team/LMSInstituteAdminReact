@@ -36,7 +36,7 @@ const Teaching = () => {
     setDeleteDialogOpen(true);
   };
 
-  console.log('overview-teachingstaffs:', teachingStaffs);
+  console.log('overview-teachingstaffs:',teachingStaffs);
 
   return (
     <>
@@ -111,7 +111,6 @@ const Teaching = () => {
         setOpen={setDeleteDialogOpen}
         description="Are you sure you want to delete this item?"
         title="Delete"
-        // submit={handleSubmit}
       />
     </>
   );

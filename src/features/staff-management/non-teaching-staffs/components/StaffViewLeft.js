@@ -19,9 +19,22 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-const UserViewLeft = () => {
+function formattedDateTime(dateString) {
+  const dynamicDate = new Date(dateString);
+  const year = dynamicDate.getFullYear();
+  const month = (dynamicDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = dynamicDate.getDate().toString().padStart(2, '0');
+  const hours = dynamicDate.getHours().toString().padStart(2, '0');
+  const minutes = dynamicDate.getMinutes().toString().padStart(2, '0');
+  const seconds = dynamicDate.getSeconds().toString().padStart(2, '0');
+  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+}
+
+const NonTeachingViewBanner = ({ staff }) => {
+  console.log('nonTeachingViewww:', staff);
+  const imageUrl = staff?.teachingStaff?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staff.teachingStaff.image}` : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   return (
-    <Card>
+    <Card sx={{ mb: 2 }}>
       <CardMedia
         component="img"
         alt="profile-header"
@@ -40,7 +53,8 @@ const UserViewLeft = () => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src="https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg" alt="profile-picture" />
+        <ProfilePicture 
+        src={imageUrl} alt="profile-picture" />
         <Box
           sx={{
             width: '100%',
@@ -61,25 +75,26 @@ const UserViewLeft = () => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                Lara Carlson
+                {staff?.teachingStaff?.staff_name}
               </Typography>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
+              {/* <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize="1.25rem" icon="tabler:briefcase" />
                 <Typography sx={{ color: 'text.secondary' }}>ReactJs</Typography>
               </Box>
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize="1.25rem" icon="tabler:map-pin" />
                 <Typography sx={{ color: 'text.secondary' }}>london</Typography>
-              </Box>
+              </Box> */}
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize="1.25rem" icon="tabler:calendar" />
-                <Typography sx={{ color: 'text.secondary' }}>Joined 11/09/2023</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>Created at <span style={{fontWeight:500}}>{formattedDateTime(staff?.teachingStaff?.created_at)}</span></Typography>
               </Box>
             </Box>
           </Box>
-          <Button variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={staff?.teachingStaff?.is_active ==='1' ? 'success' : 'error'}
+           variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            Active
+            {staff?.teachingStaff?.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>
@@ -87,4 +102,4 @@ const UserViewLeft = () => {
   );
 };
 
-export default UserViewLeft;
+export default NonTeachingViewBanner;

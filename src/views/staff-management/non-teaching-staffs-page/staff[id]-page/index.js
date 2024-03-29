@@ -16,6 +16,7 @@ import { useLocation } from 'react-router';
 // import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import { nonTeachingStaffById } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import NonTeachingViewBanner from 'features/staff-management/non-teaching-staffs/components/StaffViewLeft';
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
@@ -83,26 +84,25 @@ const UserViewRight = ({ tab }) => {
   };
   console.log('NON-Teaching-staff:', staff);
   // dateFormat
-function formattedDate(inputDate) {
-  // Split the input date string into day, month, and year
-  const [day, month, year] = inputDate.split('/');
-  
-  // Construct a new Date object using the parsed components
-  const dateObject = new Date(`${month}/${day}/${year}`);
-  
-  // Check if the dateObject is a valid date
-  if (isNaN(dateObject)) {
-    return "Invalid Date";
-  }
+  function formattedDate(inputDate) {
+    // Split the input date string into day, month, and year
+    const [day, month, year] = inputDate.split('/');
 
-  // Format the date components into 'DD/MM/YYYY' format
-  const formattedDay = String(dateObject.getDate()).padStart(2, '0');
-  const formattedMonth = String(dateObject.getMonth() + 1).padStart(2, '0');
-  const formattedYear = dateObject.getFullYear();
-  
-  return `${formattedDay}/${formattedMonth}/${formattedYear}`;
-}
-  
+    // Construct a new Date object using the parsed components
+    const dateObject = new Date(`${month}/${day}/${year}`);
+
+    // Check if the dateObject is a valid date
+    if (isNaN(dateObject)) {
+      return 'Invalid Date';
+    }
+
+    // Format the date components into 'DD/MM/YYYY' format
+    const formattedDay = String(dateObject.getDate()).padStart(2, '0');
+    const formattedMonth = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const formattedYear = dateObject.getFullYear();
+
+    return `${formattedDay}/${formattedMonth}/${formattedYear}`;
+  }
 
   return (
     <TabContext value={activeTab}>
@@ -118,9 +118,10 @@ function formattedDate(inputDate) {
       </TabList>
       <Box sx={{ mt: 4 }}>
         {loading ? (
-          <StaffManagementView />
+          <StaffManagementView/>
         ) : (
           <>
+            <NonTeachingViewBanner staff={staff} formattedDate={formattedDate} />
             <TabPanel sx={{ p: 0 }} value="account">
               <UserViewAccount staff={staff} formattedDate={formattedDate} />
             </TabPanel>

@@ -65,11 +65,11 @@ const TeacherFilter = (props) => {
                   }}
                   options={courses}
                   getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
+                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField select fullWidth label="Search By Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
@@ -87,7 +87,7 @@ const TeacherFilter = (props) => {
 
               <Grid item xs={12} sm={3} sx={{alignItems:'center'}}>
                 <Box component={Link} to={'teaching-staffs/add'} sx={{p:0,m:0}}>
-                  <Button variant="contained" size="medium" fullWidth sx={{px:2,py:1.5}} runded>
+                  <Button variant="contained" size="medium" fullWidth sx={{py:1.5,borderRadius:'0.5rem'}}>
                     Add New Staff
                   </Button>
                 </Box>

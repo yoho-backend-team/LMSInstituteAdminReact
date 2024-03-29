@@ -43,7 +43,7 @@ const TeacherFilter = (props) => {
           <CardContent>
             <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField select fullWidth label="Search By Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
@@ -59,9 +59,9 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
-                <Box component={Link} to={'non-teaching-staffs/add'}>
-                  <Button variant="contained" size="medium" fullWidth>
+              <Grid item xs={12} sm={3}>
+                <Box component={Link} to={'non-teaching-staffs/add'} alignItems='center'>
+                  <Button variant="contained" size="medium" fullWidth sx={{py:1.5,borderRadius:'0.5rem'}}> 
                     Add New Staff
                   </Button>
                 </Box>

@@ -34,18 +34,18 @@ const data = {
 //   inactive: 'secondary'
 // };
 
-const UserViewAccount = ({ staff,formattedDate }) => {
+const UserViewAccount = ({ staff, formattedDate }) => {
   // ** States
   // const [openPlans, setOpenPlans] = useState(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  console.log("non teacghing details",staff);
+  console.log('non teaching details', staff);
   if (data) {
     return (
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Card>
-          <CardContent sx={{ pb: 4 }}>
+            <CardContent sx={{ pb: 4 }}>
               <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                 Details
               </Typography>
@@ -93,15 +93,18 @@ const UserViewAccount = ({ staff,formattedDate }) => {
             </CardContent>
 
             <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-              <Box       component={Link}
+              <Box
+                component={Link}
                 to={`non-teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`}
-                state={{ staff: staff?.teachingStaff, id: staff?.teachingStaff?.id }}>
-                <Button variant="contained" sx={{ mr: 2 }}>
+                state={{ staff: staff?.teachingStaff, id: staff?.teachingStaff?.id }}
+                
+              >
+                <Button variant="contained" size='medium' sx={{px:4}}>
                   Edit
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
+                <Button color="error" variant="tonal" sx={{px:3}} onClick={() => setSuspendDialogOpen(true)}>
                   Suspend
                 </Button>
               </Box>

@@ -36,27 +36,32 @@ const NonTeaching = () => {
 
   useEffect(() => {
     const data = {
-      type: 'non_teaching',
+      type: 'teaching',
       branch_id: selectedBranchId
     };
+   
     dispatch(getAllNonTeachingStaffs(data));
   }, [dispatch, selectedBranchId]);
-
   useTimeout(() => {
     setLoading(false);
   }, 1000);
 
   const handleStatusChange = () => {
     setDeleteDialogOpen(true);
-  };
+  }; 
+
+
+  
+  
 console.log("Non-Teaching-Staff :",nonTeachingStaffs);
   return (
     <>
+    <TeacherFilter selectedBranchId={selectedBranchId} />
       {loading ? (
         <StaffManagement />
       ) : (
         <Grid>
-          <TeacherFilter selectedBranchId={selectedBranchId} />
+          
           <Grid container xs={12} spacing={2} mt={2}>
             {nonTeachingStaffs?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4}>
@@ -65,7 +70,7 @@ console.log("Non-Teaching-Staff :",nonTeachingStaffs);
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Avatar
                         src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item.image}`}
-                        sx={{ mb: 2, width: 100, height: 100 }}
+                        sx={{ mb: 2, width: 70, height: 70 }}
                       />
                       <Typography variant="h4" sx={{ mb: 1 }}>
                         {item.staff?.staff_name}
@@ -85,13 +90,16 @@ console.log("Non-Teaching-Staff :",nonTeachingStaffs);
                       >
 
                         <Grid>
-                          <TextField size="small" select label="Status" SelectProps={{ onChange: (e) => handleStatusChange(e) }}>
+                          <TextField size="small"
+                           select label="Status"
+                           SelectProps={{ onChange: (e) => handleStatusChange(e) }}
+                            sx={{width:100}}>
                             <MenuItem value="1">Active</MenuItem>
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
                         <Box component={Link}  to={`non-teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
-                          <Button size='medium' sx={{m:0,p:1,px:2}}
+                          <Button size='medium' variant='tonal' sx={{m:0,px:2}}
                           >View Profile</Button>
                         </Box>
                       </Box>
@@ -106,7 +114,7 @@ console.log("Non-Teaching-Staff :",nonTeachingStaffs);
           </Grid>
         </Grid>
       )}
-      <DeleteDialog
+       <DeleteDialog
         open={isDeleteDialogOpen}
         setOpen={setDeleteDialogOpen}
         description="Are you sure you want to delete this item?"

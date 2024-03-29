@@ -32,7 +32,7 @@ const BranchesOverviewPage = () => {
         </Grid>
         {branchLoading ? (
           <BranchMainSkeleton />
-        ) : (
+        ) : ( 
           branches?.map((branch, index) => (
             // Using useMemo to memoize the BranchCard component to prevent unnecessary re-renders
             <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />

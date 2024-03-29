@@ -159,7 +159,7 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                         sx={{
                           display: 'flex',
                           alignItems: 'center',
-                          '& svg': { color: 'primary.main', mr: 0.5 }
+                          '& svg': { color: 'primary.main', mr: 0.5,ml:0.5 }
                         }}
                       >
                         <Icon icon="tabler:augmented-reality" fontSize={20} />
@@ -168,7 +168,7 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                            Modules</Typography>
                       </Grid>
                       <Grid>
-                        <Typography sx={{ color: 'text.secondary' }}>₹ {course?.courses?.course_price}</Typography>
+                        <Typography variant='h4' sx={{ color: 'text.secondary',mr:1 }}>₹ {course?.courses?.course_price}</Typography>
                       </Grid>
                     </Box>
                   </CardContent>
