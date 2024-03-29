@@ -4,10 +4,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { PDFViewer } from 'react-view-pdf';
+import Typography from '@mui/material/Typography';
 
-const StudyMaterialView = ({ open, handleViewClose
-  // ,StudyMaterials 
-}) => {
+const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
   // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${StudyMaterials.document} `);
 
@@ -45,8 +44,17 @@ const StudyMaterialView = ({ open, handleViewClose
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}
         >
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <PDFViewer url={savedPdfUrl} />
+          <Grid container spacing={2}>
+            <Grid item md={12} sm={12}>
+              <Typography variant="h3">{StudyMaterials?.title}</Typography>
+
+              <Typography variant="h6" sx={{ mt: 1.5 }}>
+                {StudyMaterials?.description}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={12} sx={{ mb: 4, mt: 1.5 }}>
+              <PDFViewer url={savedPdfUrl} />
+            </Grid>
           </Grid>
         </DialogContent>
       </Dialog>

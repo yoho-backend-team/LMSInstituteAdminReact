@@ -129,9 +129,6 @@ const StudyMaterials = () => {
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
-  const handleView = () => {
-    setViewModalOpen(true);
-  };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -152,7 +149,10 @@ const StudyMaterials = () => {
             text: 'View',
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleView()
+              onClick: () => {
+                setViewModalOpen(true);     
+                handleRowClick(row)
+              }
             }
           },
           {
@@ -369,7 +369,7 @@ const StudyMaterials = () => {
           handleSubmit={handleStatusChangeApi}
         />
 
-        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={StudyMaterials} />
+        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
       </Grid>
     </>
   );
