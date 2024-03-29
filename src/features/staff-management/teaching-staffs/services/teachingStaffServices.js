@@ -194,7 +194,7 @@ export const staffChangePassword = async (data) => {
 
 export const staffStatusChange = async (data) => {
   try {
-    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/status`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -203,12 +203,12 @@ export const staffStatusChange = async (data) => {
     });
     console.log(response);
     if (response.data.status) {
-      return { success: true, message: 'User status updated successfully' };
+      return { success: true, message: 'Staff status updated successfully' };
     } else {
       return { success: false, message: response.data.message };
     }
   } catch (error) {
-    console.error('Error in addUser:', error);
+    console.error('Error in staff:', error);
     throw error;
   }
 };

@@ -22,6 +22,7 @@ const CourseCard = (props) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
+  const imageUrl = course?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.logo}` : 'https://assets.newredo.com/large_image_default_4f2d3c136b.png';
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -49,7 +50,7 @@ const CourseCard = (props) => {
         <CardContent sx={{ pb: 0 }}>
           <CardMedia
             sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }}
-            image={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.logo}`}
+            image={imageUrl}
           >
             <CustomChip
               sx={{
@@ -129,7 +130,7 @@ const CourseCard = (props) => {
             <TextField
               size="small"
               select
-              width={100}
+              sx={{width:100}}
               label="Status"
               SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
             >
@@ -137,8 +138,10 @@ const CourseCard = (props) => {
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Grid>
-          <Button component={Link} to="courses/view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary">
-            View Details
+          <Button fullwidth component={Link} to="courses/view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary"
+          sx={{mt:0.4,py:0.8,width:100}}
+          >
+            View
           </Button>
         </CardActions>
       </Card>

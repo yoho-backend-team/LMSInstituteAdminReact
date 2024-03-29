@@ -49,7 +49,7 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
-          <Button variant="contained" component={Link} to="courses/add" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button sx={{py:1.5,borderRadius:'0.5rem'}}variant="contained" component={Link} to="courses/add" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add New Course
           </Button>
         </Box>

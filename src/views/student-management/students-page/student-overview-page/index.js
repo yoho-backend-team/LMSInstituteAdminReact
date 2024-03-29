@@ -28,7 +28,7 @@ const Students = () => {
   const StudentsLoading = useSelector(selectLoading);
   // const StudentsLoading = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  
+
   console.log(Students);
 
   useEffect(() => {
@@ -52,9 +52,13 @@ const Students = () => {
                   <Grid container spacing={2}>
                     {Students.map((item, index) => (
                       <Grid key={index} item xs={12} sm={6} md={3}>
-                        <Card sx={{ textAlign: 'center', height: '100%', px: 0.55 }}>
-                          <Box>
-                            {/* <SvgIconStyle
+                        <Card className="mainContainer" px={2}>
+                          <Card
+                            className="Common item-1"
+                            sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}
+                          >
+                            <Box>
+                              {/* <SvgIconStyle
                               src="https://minimal-assets-api.vercel.app/assets/icons/shape-avatar.svg"
                               sx={{
                                 width: 144,
@@ -68,55 +72,60 @@ const Students = () => {
                                 color: 'background.paper'
                               }}
                             /> */}
-                            <Avatar
-                              alt="image"
-                              src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.student?.image}`}
-                              sx={{
-                                width: 68,
-                                height: 68,
-                                zIndex: 11,
-                                left: 0,
-                                right: 0,
-                                bottom: -32,
-                                mx: 'auto'
-                                // position: 'absolute'
-                              }}
-                            />
-                            {/* <OverlayStyle /> */}
-                            {/* <Image
+                              <Avatar
+                                alt="image"
+                                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.student?.image}`}
+                                sx={{
+                                  width: 68,
+                                  height: 68,
+                                  zIndex: 11,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: -32,
+                                  mx: 'auto'
+                                  // position: 'absolute'
+                                }}
+                              />
+                              {/* <OverlayStyle /> */}
+                              {/* <Image
                               src="https://i.pinimg.com/originals/52/2c/1a/522c1a4289f2e2d0e29ed59071de9dce.jpg"
                               alt="overlaystyle"
                               ratio="16/9"
                             /> */}
-                          </Box>
+                            </Box>
 
-                          <Typography variant="h4" sx={{ mt: 6 }}>
-                            {item.student.first_name}
-                          </Typography>
-                          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                            {item.student.email}
-                          </Typography>
-
-                          <Box>
-                            <Typography
-                              variant="h6"
-                              sx={{
-                                color: 'text.secondary',
-                                overflow: 'hidden',
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical',
-                                textOverflow: 'ellipsis',
-                                mt: 1.75
-                              }}
-                            >
-                              {item.student.address_line_1}, {item.student.city}, {item.student.state}, {item.student.pincode}
+                            <Typography variant="h4" sx={{ mt: 6 }}>
+                              {item.student.first_name}
                             </Typography>
-                          </Box>
+                            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                              {item.student.email}
+                            </Typography>
 
-                          <Stack alignItems="center">
-                            <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
-                          </Stack>
+                            <Box>
+                              <Typography
+                                variant="h6"
+                                sx={{
+                                  color: 'text.secondary',
+                                  overflow: 'hidden',
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  textOverflow: 'ellipsis',
+                                  mt: 1.75
+                                }}
+                              >
+                                {item.student.address_line_1}, {item.student.city}, {item.student.state}, {item.student.pincode}
+                              </Typography>
+                            </Box>
+
+                            <Stack alignItems="center">
+                              <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
+                            </Stack>
+                          </Card>
+                          <Box
+                            className="Common item-2"
+                            sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}
+                          ></Box>
                         </Card>
                       </Grid>
                     ))}
