@@ -93,18 +93,23 @@ const LiveClassCard = () => {
       <Grid container spacing={2}>
         {liveClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
               <Grid container direction="column" spacing={1}>
-                <Grid item sx={{ alignItems: 'center', justifyContent: 'space-between', display: 'flex', mt: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Grid item sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex', mt: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Typography
                       sx={{
                         mb: 0,
-                        flexShrink: 1,
-                        whiteSpace: 'nowrap',
+                        flexShrink: 2,
+                        // whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        maxWidth: '230px'
+                        // textOverflow: 'ellipsis',
+                        // maxWidth: '230px'
+                        // display: 'flex',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        textAlign: 'center'
                       }}
                       variant="h3"
                       gutterBottom
@@ -112,6 +117,56 @@ const LiveClassCard = () => {
                     >
                       {card?.class_name}
                     </Typography>
+                  </Box>
+                </Grid>
+                <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
+                  <AvatarGroup className="pull-up" max={4}>
+                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                      return (
+                        <Avatar
+                          key={studentIndex}
+                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
+                          alt={student?.student?.first_name}
+                        />
+                      );
+                    })}
+                  </AvatarGroup>
+                </Grid>
+                <Grid item justifyContent="center" display="flex">
+                  <Typography sx={{ fontWeight: '500' }}>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
+                </Grid>
+
+                <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
+                  <Box>
+                    <IconCalendar />
+                  </Box>
+                  <Box sx={{ ml: 1 }}>
+                    <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
+                      {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                    </Typography>
+                  </Box>
+                </Grid>
+
+                <Grid sx={{ mb: 1 }}>
+                  <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                    <IconButton onClick={() => handleCopyLink(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
+                      <FileCopyIcon />
+                    </IconButton>
+                    <Typography>{card?.class_link}</Typography>
+                  </Box>
+                </Grid>
+
+                <Grid container p={1} justifyContent="space-between" alignItems={'center'}>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      component={Link}
+                      state={{ id: card?.class_id }}
+                      to={`live-classes/${card?.class_id}`}
+                    >
+                      View More
+                    </Button>
                   </Box>
                   <Box>
                     <OptionsMenu
@@ -149,46 +204,6 @@ const LiveClassCard = () => {
                       ]}
                     />
                   </Box>
-                </Grid>
-                <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
-                  <AvatarGroup className="pull-up" max={4}>
-                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
-                      return (
-                        <Avatar
-                          key={studentIndex}
-                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
-                          alt={student?.student?.first_name}
-                        />
-                      );
-                    })}
-                  </AvatarGroup>
-                </Grid>
-                <Grid item justifyContent="center" display="flex">
-                  <Typography>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
-                </Grid>
-                <Grid item justifyContent="center" display="flex" mb={3}>
-                  <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
-                    {' '}
-                    <IconCalendar />
-                    {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
-                  </Typography>
-                </Grid>
-                <Grid sx={{ mb: 1 }}>
-                  <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                    <IconButton onClick={() => handleCopyLink(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
-                      <FileCopyIcon />
-                    </IconButton>
-                    <Typography>{card?.class_link}</Typography>
-                  </Box>
-                </Grid>
-                <Grid container justifyContent="space-between" display="flex" alignItems="center">
-                  <Grid item xs={12} display="flex" justifyContent="center">
-                    <Box component={Link} state={{ id: card?.class_id }} to={`live-classes/${card?.class_id}`}>
-                      <Button variant="tonal" size="small">
-                        View More
-                      </Button>
-                    </Box>
-                  </Grid>
                 </Grid>
               </Grid>
             </Card>

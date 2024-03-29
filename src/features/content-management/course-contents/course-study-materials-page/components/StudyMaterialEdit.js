@@ -13,11 +13,10 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
+import { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
-import { useState } from 'react';
 import { PDFViewer } from 'react-view-pdf';
+import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -49,8 +48,7 @@ const StudyMaterialEdit = (props) => {
   console.log('StudyMaterialEdit - open:', props.open);
   console.log('StudyMaterialEdit - toggle:', props.toggle);
   // ** State
-  const [studymaterialPdf, setstudymaterialPdf] = useState('');
-  const savedPdfUrl = require('assets/pdf.pdf');
+  // const [studymaterialPdf, setstudymaterialPdf] = useState('');
 
   const {
     handleSubmit,
@@ -103,10 +101,53 @@ const StudyMaterialEdit = (props) => {
     toggle();
     reset();
   };
-  const handleSetPdf = (data) => {
-    setstudymaterialPdf(data);
-    setValue('pdf_file', data);
-  };
+
+  // const handleSetPdf = (data) => {
+  //   setstudymaterialPdf(data);
+  //   setValue('pdf_file', data);
+  // };
+
+  const savedPdfUrls = require('assets/pdf.pdf');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleFileUpload = useCallback((file) => {
+    const reader = new FileReader();
+    const { files } = file.target;
+    if (files && files.length !== 0) {
+      reader.onload = () => setSavedPdfUrl(reader.result);
+      setSelectedFile(files[0]);
+      reader.readAsDataURL(files[0]);
+      if (reader.result !== null) {
+        setInputValue(reader.result);
+      }
+    }
+  }, []);
+
+  console.log(setSelectedFile);
+  // Styled components
+  // const ImgStyled = useMemo(
+  //   () =>
+  //     styled('img')(({ theme }) => ({
+  //       width: 100,
+  //       height: 100,
+  //       marginRight: theme.spacing(2),
+  //       borderRadius: theme.shape.borderRadius
+  //     })),
+  //   []
+  // );
+
+  const ButtonStyled = useMemo(
+    () =>
+      styled(Button)(({ theme }) => ({
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+          textAlign: 'center'
+        }
+      })),
+    []
+  );
   return (
     <Drawer
       open={open}
@@ -114,13 +155,10 @@ const StudyMaterialEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { md:1100,xs: 300, sm: 500 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: '80%', sm: 500 } } }}
     >
       <Grid container spacing={1}>
-        <Grid item md={6} sm={12} sx={{mt:5,pl:2,height:"100%"}}>
-        <PDFViewer url={savedPdfUrl} />
-        </Grid>
-        <Grid item  md={6} sm={12}>
+        <Grid item md={12} sm={12}>
           <Header>
             <Typography variant="h5">Edit Study Material</Typography>
             <IconButton
@@ -141,9 +179,23 @@ const StudyMaterialEdit = (props) => {
           </Header>
           <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-                <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
-                {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
+              <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
+                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
+
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
+                  Upload New File
+                  <input
+                    accept="application/pdf"
+                    style={{ display: 'none' }}
+                    id="account-settings-upload-file"
+                    multiple={false}
+                    type="file"
+                    value={inputValue}
+                    onChange={handleFileUpload}
+                  />
+                </ButtonStyled>
               </Grid>
 
               <Controller
