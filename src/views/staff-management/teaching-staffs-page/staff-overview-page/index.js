@@ -104,7 +104,7 @@ const Teaching = () => {
                             <TextField
                               size="small"
                               select
-                              label="Status"
+                              label={item?.staff?.is_active==1?'Active':'Inactive'}
                               SelectProps={{ onChange: (e) => handleStatusValue(e,item?.staff) }}
                               sx={{width:100}}
                             >
