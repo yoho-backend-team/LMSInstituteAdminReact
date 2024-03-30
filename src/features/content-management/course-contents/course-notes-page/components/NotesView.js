@@ -5,10 +5,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { PDFViewer } from 'react-view-pdf';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import CustomChip from 'components/mui/chip';
 
 const NotesView = ({ open, handleViewClose, notes }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${StudyMaterials.document} `);
+  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${notes.document} `);
 
   return (
     <div>
@@ -28,11 +30,10 @@ const NotesView = ({ open, handleViewClose, notes }) => {
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`],
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             alignItems: 'center'
           }}
         >
-          View Notes Informations
           <IconButton onClick={handleViewClose}>
             <CloseIcon />
           </IconButton>
@@ -46,11 +47,38 @@ const NotesView = ({ open, handleViewClose, notes }) => {
         >
           <Grid container spacing={2}>
             <Grid item md={12} sm={12}>
-              <Typography variant="h3">{notes?.title}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                <Typography variant="h3">Title :</Typography>
+                <Typography variant="body1" sx={{ ml: 1 }}>
+                  {notes?.title}
+                </Typography>
+              </Box>
 
-              <Typography variant="h6" sx={{ mt: 1.5 }}>
-                {notes?.description}
-              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'row', mt: 1 }}>
+                <Typography variant="h3">Description </Typography>
+                <Typography variant="body1" sx={{ ml: 1 }}>
+                  : {notes?.description}
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 1 }}>
+                <Typography variant="h3">Course Name :</Typography>
+                <Typography variant="body1" sx={{ ml: 1 }}>
+                  {notes?.institute_branch_courses?.course_name}
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 1 }}>
+                <Typography variant="h3">Status :</Typography>
+                <CustomChip
+                  sx={{ ml: 1 }}
+                  rounded
+                  size="small"
+                  skin="light"
+                  color="primary"
+                  label={notes?.is_active === "1" ? 'Active' : 'Inactive'}
+                />
+              </Box>
             </Grid>
             <Grid item xs={12} sm={12} sx={{ mb: 4, mt: 1.5 }}>
               <PDFViewer url={savedPdfUrl} />

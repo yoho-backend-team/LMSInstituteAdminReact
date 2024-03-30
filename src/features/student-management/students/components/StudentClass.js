@@ -1,128 +1,40 @@
-// ** React Imports
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { Button } from '@mui/material';
-// import Avatar from '@mui/material/Avatar';
-// import AvatarGroup from '@mui/material/AvatarGroup';
+import Avatar from '@mui/material/Avatar';
+import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
+import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
+import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-const LiveClassCard = ({student}) => {
-  // const cardData = [
-  //   // Add your card data here
-  //   // For example:
-  //   {
-  //     class_name: 'Introduction to App',
-  //     location: 'Kumbakonam',
-  //     duration: '5hr',
-  //     class_date: '2024-03-04',
+const LiveClassCard = () => {
+  const liveClasses = useSelector(selectLiveClasses);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: 'https://randomuser.me/api/portraits/men/1.jpg', // Change the avatar URL here
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Introduction to web',
-  //     location: 'Kumbakonam',
-  //     duration: '2hr',
-  //     class_date: '2024-03-04',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Block chain',
-  //     location: 'Kumbakonam',
-  //     duration: '3.5hr',
-  //     class_date: '2024-03-04',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Figma',
-  //     location: 'Kumbakonam',
-  //     duration: '5hr',
-  //     class_date: '2024-03-04',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   },
-  //   {
-  //     class_name: 'Analysis',
-  //     location: 'Kumbakonam',
-  //     duration: '1hr',
-  //     class_date: '2024-03-04',
-  //     start_time:' 5:NaN AM',
-  //     image: 'https://www.shutterstock.com/image-photo/portrait-cheerful-male-international-indian-260nw-2071252046.jpg',
-  //     avatar: '/images/avatars/1.png',
-  //     batch_class: {
-  //       batch_student: [
-  //         {
-  //           first_name: 'John',
-  //           avatar: 'https://randomuser.me/api/portraits/men/2.jpg' // Change the avatar URL for the student
-  //         },
-  //         {
-  //           first_name: 'Jane',
-  //           avatar: 'https://randomuser.me/api/portraits/women/3.jpg' // Change the avatar URL for the student
-  //         }
-  //         // Add more students as needed
-  //       ]
-  //     }
-  //   }
-  //   // Add more card data as needed
-  // ];
+  const dispatch = useDispatch();
+  console.log(liveClasses);
 
-  // const data:{student?.student_batch?.batch_class?.class}
+  useEffect(() => {
+    const data = {
+      type: 'live',
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllLiveClasses(data));
+  }, [dispatch, selectedBranchId]);
+
+  const handleCopyLink = (index) => {
+    console.log(`Link copied for card at index ${index}`);
+    toast.success('Link copied to clipboard');
+  };
 
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
@@ -144,56 +56,98 @@ const LiveClassCard = ({student}) => {
   }
 
   return (
-    <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ p: 3 }}>
-            <Grid container direction="column" spacing={1}>
-              <Grid item sx={{ mt: 1 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography
-                    sx={{
-                      mb: 0,
-                      flexShrink: 1,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      maxWidth: '230px'
-                    }}
-                    variant="h3"
-                    gutterBottom
-                    textAlign="center"
-                  >
-                    {student?.student_batch?.batch_class?.class.class_name}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
-                {/* <AvatarGroup className="pull-up" max={4}>
-                  {item?.student?.student_batch?.map((student, studentIndex) => (
-                    <Avatar key={studentIndex} src={student} alt={student?.first_name} />
-                  ))}
-                </AvatarGroup> */}
-              </Grid>
-              <Grid item justifyContent="center" display="flex">
-                <Typography>8+ Students on this class</Typography>
-              </Grid>
-              <Grid item justifyContent="center" display="flex" mb={2}>
-                <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex' }}>
-                  {' '}
-                  <IconCalendar />
-                  {student?.student_batch?.batch_class?.class.class_date} / {convertTo12HourFormat(student?.student_batch?.batch_class?.start_time)} to {convertTo12HourFormat(student?.student_batch?.batch_class?.end_time)}{' '}
-                </Typography>
-              </Grid>
-              <Grid container p={2} justifyContent="center">
-                <Button variant="tonal" size="small" href="view">
-                  View More
-                </Button>
-              </Grid>
-            </Grid>
-          </Card>
-        </Grid>
+    <>
+      <Grid container spacing={2}>
+        {liveClasses?.map((card, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
+              <Grid container direction="column" spacing={1}>
+                <Grid item sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex', mt: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Typography
+                      sx={{
+                        mb: 0,
+                        flexShrink: 2,
+                        // whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        // textOverflow: 'ellipsis',
+                        // maxWidth: '230px'
+                        // display: 'flex',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        textAlign: 'center'
+                      }}
+                      variant="h3"
+                      gutterBottom
+                      textAlign="center"
+                    >
+                      {card?.class_name}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
+                  <AvatarGroup className="pull-up" max={4}>
+                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                      return (
+                        <Avatar
+                          key={studentIndex}
+                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
+                          alt={student?.student?.first_name}
+                        />
+                      );
+                    })}
+                  </AvatarGroup>
+                </Grid>
+                <Grid item justifyContent="center" display="flex">
+                  <Typography sx={{ fontWeight: '500' }}>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
+                </Grid>
 
-    </Grid>
+                <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
+                  <Box>
+                    <IconCalendar />
+                  </Box>
+                  <Box sx={{ ml: 1 }}>
+                    <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
+                      {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                    </Typography>
+                  </Box>
+                </Grid>
+                {card.class_link && (
+                  <Grid sx={{ mb: 1 }}>
+                    <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                      <IconButton onClick={() => handleCopyLink(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
+                        <FileCopyIcon />
+                      </IconButton>
+                      <Typography>{card?.class_link}</Typography>
+                    </Box>
+                  </Grid>
+                )}
+
+                <Grid container p={1} justifyContent="center" alignItems={'center'}>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      size="medium"
+                      component={Link}
+                      state={{ id: card?.class_id }}
+                      to={`/class-management/live-classes/${card?.class_id}`}
+                    >
+                      View More
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Grid container justifyContent="flex-end" mt={2}>
+        <div className="demo-space-y">
+          <Pagination count={10} color="primary" />
+        </div>
+      </Grid>
+    </>
   );
 };
 
