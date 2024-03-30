@@ -60,6 +60,7 @@ const NotesHeader = (props) => {
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
+                      <MenuItem value="">Select Status</MenuItem>
                       <MenuItem value="1">Active</MenuItem>
                       <MenuItem value="0">Inactive</MenuItem>
                     </TextField>

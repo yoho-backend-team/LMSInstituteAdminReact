@@ -46,7 +46,7 @@ const NotesEdit = (props) => {
   const { open, toggle, notes } = props;
   console.log('NotesEdit - open:', props.open);
   console.log('NotesEdit - toggle:', props.toggle);
-
+ 
   const {
     handleSubmit,
     control,
@@ -74,7 +74,7 @@ const NotesEdit = (props) => {
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', notes.id);
-    bodyFormData.append('document', notesPdf);
+    bodyFormData.append('document', selectedFile);
     console.log(bodyFormData);
 
     const result = await updateCourseNote(bodyFormData);

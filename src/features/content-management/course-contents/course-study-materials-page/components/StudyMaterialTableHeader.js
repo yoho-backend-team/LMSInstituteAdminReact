@@ -1,10 +1,9 @@
 // ** MUI Imports
-import { useCallback ,useState} from 'react';
+import { useCallback, useState } from 'react';
 import { Grid, TextField } from '@mui/material';
 import { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-
 
 // ** Icon Imports
 import Autocomplete from '@mui/material/Autocomplete';
@@ -17,7 +16,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
-
 
 const StudyMaterialHeader = (props) => {
   // ** Props
@@ -66,11 +64,12 @@ const StudyMaterialHeader = (props) => {
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
+                      <MenuItem value="">Select Status</MenuItem>
                       <MenuItem value="1">Active</MenuItem>
                       <MenuItem value="0">Inactive</MenuItem>
                     </TextField>
                   </Grid>
- 
+
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       fullWidth

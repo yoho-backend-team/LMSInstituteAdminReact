@@ -58,7 +58,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
   const {
     handleSubmit,
     control,
-    reset,
+    // reset,
     setValue,
     formState: { errors }
   } = useForm({
@@ -167,7 +167,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
   // Close the modal
   const handleClose = useCallback(() => {
     handleEditClose();
-    reset();
+    // reset();
   }, [handleEditClose, course]);
 
   useEffect(() => {

@@ -189,8 +189,8 @@ const Notes = () => {
 
   const columns = [
     {
-      flex: 0.4,
-      minWidth: 90,
+      // flex: 0.4,
+      minWidth: 150,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -258,8 +258,8 @@ const Notes = () => {
     },
 
     {
-      flex: 0.4,
-      minWidth: 80,
+      // flex: 0.4,
+      minWidth: 180,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -290,8 +290,8 @@ const Notes = () => {
       }
     },
     {
-      flex: 0.4,
-      minWidth: 80,
+      // flex: 0.4,
+      minWidth: 180,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -328,7 +328,7 @@ const Notes = () => {
           </Grid>
         )}
 
-        <NotesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <NotesAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} notes={selectedRow} />
         <NotesDeleteModal
           open={NotesDeleteModalOpen}

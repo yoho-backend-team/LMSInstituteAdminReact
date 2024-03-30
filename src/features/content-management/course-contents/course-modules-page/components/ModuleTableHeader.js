@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { useCallback ,useState,useEffect} from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Grid, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
@@ -51,13 +51,14 @@ const ModuleHeader = (props) => {
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12}>
                 <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       select
                       fullWidth
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
+                      <MenuItem value="">Select Status</MenuItem>
                       <MenuItem value="1">Active</MenuItem>
                       <MenuItem value="0">Inactive</MenuItem>
                     </TextField>
@@ -73,7 +74,7 @@ const ModuleHeader = (props) => {
                           course_id: newValue.course_id,
                           branch_id: selectedBranchId
                         };
-                     
+
                         dispatch(getAllCourseModules(data));
                       }}
                       options={courses}
