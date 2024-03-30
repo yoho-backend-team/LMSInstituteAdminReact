@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
-import DeleteDialog from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -16,11 +16,14 @@ import TeacherFilter from 'features/staff-management/teaching-staffs/components/
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTeachingStaffs, selectLoading } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-
+import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import toast from 'react-hot-toast';
 const Teaching = () => {
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
   const teachingStaffs = useSelector(selectTeachingStaffs);
   const loading = useSelector(selectLoading);
+  const [refetch,setRefetch]=useState({})
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
 
@@ -30,12 +33,34 @@ const Teaching = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllTeachingStaffs(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
 
-  const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
+  // const handleStatusChange = () => {
+  //   setDeleteDialogOpen(true);
+  // };
+
+
+  const handleStatusChangeApi = async () => {
+    console.log('entered', statusValue);
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue.id
+    };
+    const response = await staffStatusChange(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
   };
 
+  const handleStatusValue = (event, staff) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(staff);
+  };
+
+  
   console.log('overview-teachingstaffs:',teachingStaffs);
 
   return (
@@ -80,7 +105,7 @@ const Teaching = () => {
                               size="small"
                               select
                               label="Status"
-                              SelectProps={{ onChange: (e) => handleStatusChange(e) }}
+                              SelectProps={{ onChange: (e) => handleStatusValue(e,item?.staff) }}
                               sx={{width:100}}
                             >
                               <MenuItem value="1">Active</MenuItem>
@@ -106,11 +131,12 @@ const Teaching = () => {
           </Grid>
         </Grid>
       )}
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
+     <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change the Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
       />
     </>
   );

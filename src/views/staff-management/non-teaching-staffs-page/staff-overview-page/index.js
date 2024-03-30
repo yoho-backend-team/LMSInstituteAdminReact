@@ -34,8 +34,9 @@ const NonTeaching = () => {
   // const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-
+const [refetch,setRefetch]=useState('')
   const nonTeachingStaffs = useSelector(selectNonTeachingStaffs);
+
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -43,12 +44,12 @@ const NonTeaching = () => {
   // console.log('testIDStaff:', StaffId);
   useEffect(() => {
     const data = {
-      type: 'teaching',
+      type: 'non_teaching',
       branch_id: selectedBranchId
     };
 
     dispatch(getAllNonTeachingStaffs(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
   useTimeout(() => {
     setLoading(false);
   }, 1000);
@@ -65,7 +66,7 @@ const NonTeaching = () => {
     const response = await staffStatusChange(data);
     if (response.success) {
       toast.success(response.message);
-      setRefetchBranch((state) => !state);
+      setRefetch((state) => !state);
     } else {
       toast.error(response.message);
     }
@@ -90,7 +91,7 @@ const NonTeaching = () => {
                 <Card sx={{ position: 'relative' }}>
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item.image}`} sx={{ mb: 2, width: 70, height: 70 }} />
+                      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.staff?.image}`} sx={{ mb: 2, width: 70, height: 70 }} />
                       <Typography variant="h4" sx={{ mb: 1 }}>
                         {item.staff?.staff_name}
                       </Typography>
@@ -112,7 +113,7 @@ const NonTeaching = () => {
                             size="small"
                             select
                             label="Status"
-                            SelectProps={{ value: item?.staff?.is_active, onChange: (e) => handleStatusValue(e,item) }}
+                            SelectProps={{ value: item?.staff?.is_active, onChange: (e) => handleStatusValue(e,item.staff) }}
                             sx={{ width: 100 }}
                           >
                             <MenuItem value="1">Active</MenuItem>
