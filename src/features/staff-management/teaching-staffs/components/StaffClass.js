@@ -131,7 +131,7 @@ const LiveClassCard = () => {
                       size="medium"
                       component={Link}
                       state={{ id: card?.class_id }}
-                      to={`live-classes/${card?.class_id}`}
+                      to={`/class-management/live-classes/${card?.class_id}`}
                     >
                       View More
                     </Button>
