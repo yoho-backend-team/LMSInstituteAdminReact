@@ -2,8 +2,8 @@
 import MenuItem from '@mui/material/MenuItem';
 import { forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+// import CheckBoxIcon from '@mui/icons-material/CheckBox';
+// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,7 +15,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import CustomChip from 'components/mui/chip';
+// import CustomChip from 'components/mui/chip';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -25,7 +25,7 @@ import * as yup from 'yup';
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
+// import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
@@ -118,21 +118,23 @@ const StepperLinearWithValidation = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   const [activeCourse, setActiveCourse] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
+  // const [selectedCourses, setSelectedCourses] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedCourses);
+  // console.log(selectedCourses);
 
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({branch_id: selectedBranchId});
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
+
+
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
@@ -151,7 +153,7 @@ const StepperLinearWithValidation = () => {
   const {
     reset: personalReset,
     control: personalControl,
-    // setValue,
+    setValue,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
@@ -275,7 +277,6 @@ const StepperLinearWithValidation = () => {
 
       try {
         const result = await addTeachingStaff(data);
-
         if (result.success) {
           toast.success(result.message);
           navigate(-1);
@@ -419,94 +420,63 @@ const StepperLinearWithValidation = () => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Controller
-                  name="branch"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      value={value || null}
-                      onChange={(event, newValue) => {
-                        onChange(newValue); // Update the value of the branch field
-                      }}
-                      options={activeBranches ?? []}
-                      getOptionLabel={(option) => option.branch_name}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Branch"
-                          value={value}
-                          onChange={onChange}
-                          error={Boolean(personalErrors['branch'])}
-                          aria-describedby="stepper-linear-personal-branch"
-                          {...(personalErrors['branch'] && { helperText: 'This field is required' })}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
+              <Controller
+                name="branch"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value } }) => (
+                  <Autocomplete
+                    fullWidth
+                    options={activeBranches}
+                    getOptionLabel={(option) => option.branch_name}
+                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                    onChange={(event, newValue) => {
+                      setValue('branch', newValue ? newValue.branch_id : '');
+                      getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Branch"
+                        error={Boolean(personalErrors['branch'])}
+                        helperText={personalErrors.branch?.message}
+                        id="custom-select"
+                        aria-describedby="stepper-linear-personal-branch"
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  multiple
-                  disableCloseOnSelect
-                  id="select-multiple-chip"
-                  options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
-                  getOptionLabel={(option) => option.course_name}
-                  value={selectedCourses}
-                  onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                      setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
-                    } else {
-                      setSelectedCourses(newValue);
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      fullWidth
-                      label="Courses"
-                      InputProps={{
-                        ...params.InputProps,
-                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                      }}
-                    />
-                  )}
-                  renderOption={(props, option, { selected }) => (
-                    <li {...props}>
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
+              <Controller
+                name="course"
+                control={personalControl}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <Autocomplete
+                    fullWidth
+                    options={activeCourse}
+                    getOptionLabel={(option) => option.course_name}
+                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    onChange={(event, newValue) => {
+                      onChange(newValue ? newValue.course_id : '');
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Course"
+                        error={Boolean(personalErrors['course'])}
+                        helperText={personalErrors.course?.message}
+                        id="custom-select"
+                        aria-describedby="stepper-linear-personal-course"
                       />
-                      {option.course_name}
-                    </li>
-                  )}
-                  renderTags={(value) => (
-                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                      {value.map((option, index) => (
-                        <CustomChip
-                          key={option.course_id}
-                          label={option.course_name}
-                          onDelete={() => {
-                            const updatedValue = [...value];
-                            updatedValue.splice(index, 1);
-                            setSelectedCourses(updatedValue);
-                          }}
-                          color="primary"
-                          sx={{ m: 0.75 }}
-                        />
-                      ))}
-                    </div>
-                  )}
-                  isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                />
-              </Grid>
+                    )}
+                  />
+                )}
+              />
+            </Grid>
 
               <Grid item xs={12} sm={6}>
                 <Controller

@@ -38,14 +38,14 @@ const CourseFilter = ({ selectedBranchId }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Course" />
+            <CardHeader title="Institute Courses" />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
                     fullWidth
-                    label="Status"
+                    label="Search By Status"
                     defaultValue={''}
                     SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
@@ -70,7 +70,7 @@ const CourseFilter = ({ selectedBranchId }) => {
                     }}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.category_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Categories" placeholder="Favorites" />}
+                    renderInput={(params) => <TextField {...params} label="Search By Categories" placeholder="Favorites" />}
                   />
                 </Grid>
               </Grid>

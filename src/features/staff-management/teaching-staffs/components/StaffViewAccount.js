@@ -122,7 +122,12 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                         }}
                         label={course?.courses?.learning_format}
                         rounded
-                        color="primary"
+                        color={
+                          course?.courses?.learning_format === 'online' ? 'success' :
+                         course?.courses?.learning_format === 'offline' ? 'primary' :
+                         course?.courses?.learning_format === 'hybrid' ? 'secondary' :
+                          'warning'
+                      }
                         size="small"
                         variant="contained"
                       />

@@ -43,7 +43,7 @@ const CourseCard = (props) => {
     setStatusValue(course);
   };
 
-  const maxCharacters = 30;
+  const maxCharacters = 27;
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ ...sx }}>
@@ -65,7 +65,12 @@ const CourseCard = (props) => {
               }}
               label={course?.learning_format}
               rounded
-              color="primary"
+              color={
+                course?.learning_format === 'online' ? 'success' :
+                course?.learning_format === 'offline' ? 'primary' :
+                course?.learning_format === 'hybrid' ? 'secondary' :
+                'warning'
+            }
               size="small"
               variant="outlined"
             />

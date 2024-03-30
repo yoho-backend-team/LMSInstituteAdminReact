@@ -35,7 +35,7 @@ const TeacherFilter = (props) => {
 
   console.log(statusValue)
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} px={1} >
       <Grid item xs={12}>
         <Card>
           <CardHeader title=" Non Teaching Staff" />

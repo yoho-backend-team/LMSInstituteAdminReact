@@ -24,7 +24,7 @@ import { getActiveBranches } from 'features/branch-management/services/branchSer
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addStudent } from 'features/student-management/students/services/studentService';
 import DatePicker from 'react-datepicker';
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast'; 
 import { useSelector } from 'react-redux';
 
 const StepperLinearWithValidation = () => {

@@ -37,7 +37,7 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         }}
       >
         <TextField
@@ -45,7 +45,7 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           sx={{
             width: 400
           }}
-          placeholder="Search Course"
+          placeholder="Search Courses"
           onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
