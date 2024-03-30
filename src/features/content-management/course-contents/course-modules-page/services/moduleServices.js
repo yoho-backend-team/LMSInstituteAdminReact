@@ -116,3 +116,24 @@ console.log('coursemodules-edit',response)
     throw error;
   }
 };
+
+export const updateCourseModulesStatus = async (data) => {
+  try {
+    const response = await axios.post(`${COURSE_MODULE_API_END_POINT}/status`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log('Modulesresponse:', response);
+    if (response.data.status) {
+      console.log(response);
+      return { success: true, message: 'CourseModules status updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update CourseModules status' };
+    }
+  } catch (error) {
+    console.error('Error in updateCourseModules:', error);
+    throw error;
+  }
+};

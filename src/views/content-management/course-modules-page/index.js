@@ -11,7 +11,7 @@ import Icon from 'components/icon';
 // ** Custom Components Imports
 import MenuItem from '@mui/material/MenuItem';
 import { default as ModulesDeleteModal } from 'components/modal/DeleteModel';
-import CustomTextField from 'components/mui/text-field';
+import { TextField } from '@mui/material';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import ModuleAddDrawer from 'features/content-management/course-contents/course-modules-page/components/ModuleAddDrawer';
@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import StatusDialog from 'components/modal/DeleteModel';
 import {
   deleteCourseModule,
-  updateCourseModule
+  updateCourseModulesStatus
 } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
 import toast from 'react-hot-toast';
 
@@ -44,7 +44,7 @@ const Modules = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
-  const [refetch, setrefetch] = useState(null);
+  const [refetch, setrefetch] = useState(false);
   const [statusValue, setStatusValue] = useState({});
 
   console.log(selectedDeleteId);
@@ -59,21 +59,11 @@ const Modules = () => {
     console.log(result.data);
     setActiveBranches(result.data.data);
   };
-
-  const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
-    const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
-    };
-    const response = await updateCourseModule(data);
-    if (response.success) {
-      toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
-    }
+  const userStatusObj = {
+    1: 'success',
+    0: 'error'
   };
+
 
   const handleRowClick = (params) => {
     setSelectedRow(params);
@@ -82,6 +72,21 @@ const Modules = () => {
   const handleStatusValue = (event, users) => {
     setStatusDialogOpen(true);
     setStatusValue(users);
+  };
+
+  const handleStatusChangeApi = async () => {
+    console.log('entered', statusValue);
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue?.id
+    };
+    const response = await updateCourseModulesStatus(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   const handleViewClose = () => {
@@ -183,8 +188,8 @@ const Modules = () => {
 
   const columns = [
     {
-      flex: 0.6,
-      minWidth: 100,
+      flex: 0.4,
+      minWidth: 90,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -196,22 +201,16 @@ const Modules = () => {
       }
     },
     {
-      flex: 1.8,
-      minWidth: 220,
+      // flex: 1.8,
+      minWidth: 320,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' ,my:1.5}}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
-                noWrap
                 sx={{
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  textOverflow: 'ellipsis',
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
@@ -221,13 +220,8 @@ const Modules = () => {
                 {row?.title}
               </Typography>
               <Typography
-                noWrap
                 sx={{
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  textOverflow: 'ellipsis',
+                  textAlign:"justify",
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -241,7 +235,7 @@ const Modules = () => {
       }
     },
     {
-      flex: 1.5,
+      // flex: 1.5,
       minWidth:220,
       field: 'course',
       headerName: 'course',
@@ -249,13 +243,13 @@ const Modules = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
-              noWrap
+              // noWrap
               sx={{
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: 'vertical',
-                textOverflow: 'ellipsis',
+                // overflow: 'hidden',
+                // display: '-webkit-box',
+                // WebkitLineClamp: 1,
+                // WebkitBoxOrient: 'vertical',
+                // textOverflow: 'ellipsis',
                 color: 'text.secondary',
                 textTransform: 'capitalize'
               }}
@@ -267,24 +261,38 @@ const Modules = () => {
       }
     },
     {
-      flex: 1,
-      minWidth: 180,
+      flex: 0.4,
+      minWidth: 80,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
         return (
           <div>
-            <CustomTextField select defaultValue={row.is_active} onChange={(e) => handleStatusValue(e, row)}>
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
-            </CustomTextField>
+            <TextField  size="small"
+              select
+              value={row?.is_active}
+              label="status"
+              id="custom-select"
+              sx={{
+                color: userStatusObj[row?.is_active]
+              }}
+              onChange={(e) => handleStatusValue(e, row)}
+              SelectProps={{
+                sx: {
+                  borderColor: row.is_active === '1' ? 'success' : 'error',
+                  color: userStatusObj[row?.is_active]
+                }
+              }}>
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={0}>Inactive</MenuItem>
+            </TextField>
           </div>
         );
       }
     },
     {
-      flex: 1,
-      minWidth: 120,
+      flex: 0.4,
+      minWidth: 80,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -307,7 +315,7 @@ const Modules = () => {
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
-                rowHeight={80}
+                getRowHeight={()=>'auto'}
                 rows={Module}
                 columns={columns}
                 disableRowSelectionOnClick

@@ -189,8 +189,8 @@ const Notes = () => {
 
   const columns = [
     {
-      flex: 0.6,
-      minWidth: 100,
+      flex: 0.4,
+      minWidth: 90,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -202,22 +202,16 @@ const Notes = () => {
       }
     },
     {
-      flex: 1.8,
-      minWidth: 220,
+      // flex: 1.8,
+      minWidth: 320,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center',my:1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
-                noWrap
                 sx={{
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  textOverflow: 'ellipsis',
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
@@ -227,16 +221,11 @@ const Notes = () => {
                 {row?.title}
               </Typography>
               <Typography
-                noWrap
                 sx={{
+                  textAlign:"justify",
                   color: 'text.secondary',
                   fontSize: '0.75rem',
-                  mt: 1,
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  textOverflow: 'ellipsis'
+                  mt: 1
                 }}
               >
                 {row?.description}
@@ -248,7 +237,7 @@ const Notes = () => {
     },
 
     {
-      flex: 1.5,
+      // flex: 1.5,
       minWidth:220,
       field: 'course',
       headerName: 'course',
@@ -256,13 +245,7 @@ const Notes = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
-              noWrap
               sx={{
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: 'vertical',
-                textOverflow: 'ellipsis',
                 color: 'text.secondary',
                 textTransform: 'capitalize'
               }}
@@ -275,8 +258,8 @@ const Notes = () => {
     },
 
     {
-      flex: 1,
-      minWidth: 180,
+      flex: 0.4,
+      minWidth: 80,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -307,8 +290,8 @@ const Notes = () => {
       }
     },
     {
-      flex: 1,
-      minWidth: 120,
+      flex: 0.4,
+      minWidth: 80,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -331,7 +314,8 @@ const Notes = () => {
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
-                rowHeight={80}
+                getRowHeight={()=>'auto'}
+                // rowHeight={80}
                 rows={Notes}
                 columns={columns}
                 disableRowSelectionOnClick
