@@ -101,14 +101,14 @@ export const addTeachingStaff = async (data) => {
   }
 };
 
-export const deleteTeachingStaff = async (teachingStaffId) => {
+export const deleteTeachingStaff = async (data) => {
   try {
-    const response = await axios.delete(`${TEACHING_STAFF_API_END_POINT}/delete`, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/delete`,data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: teachingStaffId }
+      params: data
     });
 console.log('updateTeachingStaff:',response)
     if (response.data.status) {

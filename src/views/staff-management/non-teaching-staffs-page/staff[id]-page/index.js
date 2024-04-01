@@ -123,7 +123,7 @@ const UserViewRight = ({ tab }) => {
           <>
             <NonTeachingViewBanner staff={staff} formattedDate={formattedDate} />
             <TabPanel sx={{ p: 0 }} value="account">
-              <UserViewAccount staff={staff} formattedDate={formattedDate} />
+              <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="attendance">
               <TeacherAttendance />
