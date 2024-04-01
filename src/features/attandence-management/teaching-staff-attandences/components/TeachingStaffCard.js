@@ -55,7 +55,7 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                       <Grid>
                         <Button
                           component={Link}
-                          state={{ id: item.staff?.staff_id }}
+                          state={{ staff: item.staff }}
                           to={`teaching-staff-attendances/${item.staff?.staff_id}`}
                           variant="tonal"
                           sx={{ px: 4 }}
