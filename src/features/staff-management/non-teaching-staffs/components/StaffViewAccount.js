@@ -13,19 +13,19 @@ import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 import { default as DeleteModal } from 'components/modal/DeleteModel';
 import { deleteTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import toast from 'react-hot-toast';
-const UserViewAccount = ({ staff, formattedDate,staffID }) => {
+const UserViewAccount = ({ staff, formattedDate,staffID,setRefetch }) => {
   
   // ** States
   // const [openPlans, setOpenPlans] = useState(false)
   // const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  const [refetch,setRefetch ] = useState('')
+ 
   console.log('non teaching details', staff);
 //handleDeletion
-const handleDelete = (() => {
+const handleDelete = () => {
   setStaffDeleteModelOpen(true);
-})[refetch];
+};
 
 const Navigate = useNavigate();
 const handleStaffDelete = async () => {

@@ -4,16 +4,17 @@ import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // ** Redux Imports
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 // ** FullCalendar & App Components Imports
 import TeachingStaffAddEventSidebar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffAddEventSidebar';
 import TeachingStaffCalendar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCalendar';
 import TeachingStaffSidebarLeft from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffSidebarLeft';
 import CalendarWrapper from 'styles/libs/fullcalendar';
 // ** Actions
-import { fetchEvents, handleAllCalendars, handleCalendarsUpdate, handleSelectEvent, updateEvent } from 'features/calender/redux/reducers';
+import { handleSelectEvent, updateEvent } from 'features/calender/redux/reducers';
 import { useLocation } from 'react-router-dom';
 import { getTeachingStaffAttendanceById } from 'features/attandence-management/teaching-staff-attandences/services/teachingStaffAttendanceServices';
+import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 
 // ** CalendarColors
 const calendarsColor = {
@@ -30,10 +31,7 @@ const ViewAttendance = () => {
   const [selected, setSelected] = useState(null);
   const [refetch, setRefetch] = useState(false);
   const location = useLocation();
-  const staffId = location.state.id;
-  // ** Hooks
-  const dispatch = useDispatch();
-  const store = useSelector((state) => state.calendar);
+  const staff = location.state.staff;
 
   // ** Vars
   const leftSidebarWidth = 300;
@@ -45,10 +43,11 @@ const ViewAttendance = () => {
 
   useEffect(() => {
     const data = {
-      staff_id: staffId
+      staff_id: staff?.staff_id,
+      title: ''
     };
     getStaffAttendance(data);
-  }, [staffId, refetch]);
+  }, [staffStatusChange, refetch]);
 
   const getStaffAttendance = async (data) => {
     const result = await getTeachingStaffAttendanceById(data);
@@ -57,9 +56,6 @@ const ViewAttendance = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchEvents(store?.selectedCalendars));
-  }, [dispatch, store?.selectedCalendars]);
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
 
@@ -72,18 +68,16 @@ const ViewAttendance = () => {
       }}
     >
       <TeachingStaffSidebarLeft
-        store={store}
         mdAbove={mdAbove}
-        dispatch={dispatch}
         calendarApi={calendarApi}
         calendarsColor={calendarsColor}
         leftSidebarOpen={leftSidebarOpen}
         leftSidebarWidth={leftSidebarWidth}
-        handleSelectEvent={handleSelectEvent}
-        handleAllCalendars={handleAllCalendars}
-        handleCalendarsUpdate={handleCalendarsUpdate}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+        setAttendances={setAttendances}
+        staffId={staff?.staff_id}
+        staff={staff}
       />
       <Box
         sx={{
@@ -113,9 +107,10 @@ const ViewAttendance = () => {
         handleSelectEvent={handleSelectEvent}
         addEventSidebarOpen={addEventSidebarOpen}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        staffId={staffId}
+        staffId={staff?.staff_id}
         selected={selected}
         setRefetch={setRefetch}
+        staff={staff}
       />
     </CalendarWrapper>
   );

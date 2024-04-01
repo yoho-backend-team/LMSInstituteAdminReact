@@ -436,7 +436,7 @@ useEffect(() => {
                       onChange={(date) => {
                         onChange;
                         setSelectedDate(date);
-                      }}
+                      }} 
                       customInput={
                         <CustomInput
                           label="Date Of Birth"

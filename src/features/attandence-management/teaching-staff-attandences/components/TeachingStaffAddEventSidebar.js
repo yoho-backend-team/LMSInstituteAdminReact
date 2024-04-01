@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 // ** Custom Component Import
-import { TextField } from '@mui/material';
+import { Avatar, TextField } from '@mui/material';
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -23,7 +23,7 @@ import toast from 'react-hot-toast';
 
 const TeachingStaffAddEventSidebar = (props) => {
   // ** Props
-  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch } = props;
+  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
 
   const defaultState = {
     staff_name: '',
@@ -40,14 +40,9 @@ const TeachingStaffAddEventSidebar = (props) => {
       setSelectedDate(selected?.date);
     }
   }, [selected]);
+  console.log(staff);
 
-  const {
-    control,
-    setValue,
-    clearErrors,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues: defaultState });
+  const { control, setValue, clearErrors, handleSubmit } = useForm({ defaultValues: defaultState });
 
   const handleSidebarClose = async () => {
     setValues(defaultState);
@@ -146,23 +141,15 @@ const TeachingStaffAddEventSidebar = (props) => {
       <Box className="sidebar-body" sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <DatePickerWrapper>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <Controller
-              name="staff_name"
-              control={control}
-              // rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  fullWidth
-                  label="Staff Name"
-                  value={value}
-                  sx={{ mb: 4 }}
-                  onChange={onChange}
-                  placeholder="Mohammed Thasthakir"
-                  error={Boolean(errors?.staff_name)}
-                  {...(errors?.staff_name && { helperText: 'This field is required' })}
-                />
-              )}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+              <Box>
+                <Typography variant="h5">{staff?.staff_name}</Typography>
+                <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
+                  {staff?.email}
+                </Typography>
+              </Box>
+            </Box>
             <Controller
               name="title"
               control={control}

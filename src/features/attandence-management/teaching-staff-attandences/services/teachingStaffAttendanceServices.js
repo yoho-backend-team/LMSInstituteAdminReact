@@ -38,6 +38,8 @@ export const getTeachingStaffAttendanceById = async (data) => {
       params: data
     });
 
+    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -83,7 +85,7 @@ export const addTeachingStaffAttendance = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(response)
+    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'TeachingStaffAttendance created successfully' };

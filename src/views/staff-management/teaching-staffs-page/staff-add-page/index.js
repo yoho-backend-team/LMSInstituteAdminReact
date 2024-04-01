@@ -107,7 +107,7 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
-    branch: yup.object().required('Branch is required'),
+    branch: yup.string().required('Branch is required'),
     username: yup
       .string()
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
