@@ -100,14 +100,14 @@ const CourseModuleAddDrawer = (props) => {
       reset();
       toggle();
     } else {
-      // let errorMessage = '';
-      // Object?.values(result.message)?.forEach((errors) => {
-      //   errors?.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
-      // toast.error(errorMessage.trim());
-      // toast.error(result.message);
+      let errorMessage = '';
+      Object?.values(result.message)?.forEach((errors) => {
+        errors?.forEach((error) => {
+          errorMessage += `${error}\n`; // Concatenate errors with newline
+        });
+      });
+      toast.error(errorMessage.trim());
+      toast.error(result.message);
     }
   };
 
