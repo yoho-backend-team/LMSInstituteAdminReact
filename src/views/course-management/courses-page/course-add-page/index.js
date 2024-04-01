@@ -21,7 +21,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-
+import InputAdornment from '@mui/material/InputAdornment';
 import * as yup from 'yup';
 
 const AddCoursePage = () => {
@@ -95,18 +95,6 @@ const AddCoursePage = () => {
       subtitle: 'Setup Information'
     }
   ];
-
-  const defaultCourseValues = {
-    course_duration: '',
-    course_name: '',
-    course_price: '',
-    description: '',
-    course_overview: '',
-    learning_format: '',
-    course_category: '',
-    branches: []
-  };
-
   const courseSchema = yup.object().shape({
     course_duration:yup
     .string().required('Course Duration is required')
@@ -120,8 +108,8 @@ const AddCoursePage = () => {
     .string().required('Course Description is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
     course_overview: yup
     .string().required('Course Overview is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
-    learning_format: yup.string().required(),
-    course_category: yup.object().required('Course Category is required').nullable(true),
+    learning_format: yup.string().required('Learning Format is required'),
+    course_category: yup.string().required('Course Category is required'),
     branches: yup
       .array()
       .required()
@@ -132,6 +120,19 @@ const AddCoursePage = () => {
       })
   });
 
+
+  const defaultCourseValues = {
+    course_duration: '',
+    course_name: '',
+    course_price: '',
+    description: '',
+    course_overview: '',
+    learning_format: '',
+    course_category: '',
+    branches: []
+  };
+
+  
   useEffect(() => {
     getAllBranches();
   }, []);
@@ -279,6 +280,9 @@ const AddCoursePage = () => {
                       error={Boolean(courseErrors['course_duration'])}
                       aria-describedby="stepper-linear-personal-course_duration"
                       helperText={courseErrors?.course_duration?.message}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="start">Days</InputAdornment>
+                      }}
                     />
                   )}
                 />
@@ -397,7 +401,7 @@ const AddCoursePage = () => {
                           onChange={onChange}
                           label="Course Category"
                           error={Boolean(courseErrors['course_category'])}
-                          helperText={courseErrors['course_category'] ? 'This field is required' : ''}
+                          helperText={courseErrors?.course_category?.message}
                         />
                       )}
                     />
@@ -423,7 +427,7 @@ const AddCoursePage = () => {
                           {...params}
                           label="Learning Format"
                           error={Boolean(courseErrors['learning_format'])}
-                          {...(courseErrors['learning_format'] && { helperText: 'This field is required' })}
+                          helperText={courseErrors?.learning_format?.message}
                         />
                       )}
                     />

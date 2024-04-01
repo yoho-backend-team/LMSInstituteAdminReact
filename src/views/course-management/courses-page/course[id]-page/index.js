@@ -14,7 +14,8 @@ import {
   CardHeader,
   // CardMedia,
   Grid,
-  IconButton
+  IconButton,
+  Typography
   // List,
   // ListItem,
   // Typography
@@ -29,7 +30,7 @@ import StudyMaterials from 'features/course-management/courses-page/course-overv
 import { getCourseDetails } from 'features/course-management/courses-page/services/courseServices';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 // import { deleteCourseCategory } from '../../services/courseCategoryServices';
 import { deleteCourse } from 'features/course-management/courses-page/services/courseServices';
 import { useCallback } from 'react';
@@ -194,13 +195,22 @@ const CourseViewPage = () => {
               height={400}
             />
           </Box>
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Box>
-              {course?.institute_course_branch?.description}
-              <Link to="" sx={{ TextDecoder: 'none', color: 'primary' }}>
-                View more
-              </Link>
+              <Box sx={{ display: 'flex', alignItems: 'flex-end',mt:1 }}>
+                <Typography variant="h5">Category:</Typography>
+                <Typography sx={{ ml: 1 }}>{course?.course_categories?.category_name}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'flex-end',mt:1 }}>
+                <Typography variant="h5">Course Price :</Typography>
+                <Typography sx={{ ml: 1 }}>{course?.institute_course_branch?.course_price}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'flex-end',mt:1 }}>
+                <Typography variant="h5">Course Duration :</Typography>
+                <Typography sx={{ ml: 1 }}>{course?.institute_course_branch?.course_duration}</Typography>
+              </Box>
             </Box>
+
             <Box>
               <IconButton
                 onClick={() => handleDelete(course?.id)}
@@ -213,7 +223,7 @@ const CourseViewPage = () => {
         </Card>
       </Grid>
       <Grid item xs={12} sm={12} lg={4.4}>
-        <Card sx={{ pb: 1, }} className="CourseModules-Card">
+        <Card sx={{ pb: 1 }} className="CourseModules-Card">
           <Button
             fullWidth
             onClick={() => handleEdit()}

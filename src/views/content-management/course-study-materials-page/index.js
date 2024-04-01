@@ -62,6 +62,7 @@ const StudyMaterials = () => {
     dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
   console.log('getAllCourseStudyMaterialsss', StudyMaterials);
+ 
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
@@ -200,8 +201,8 @@ const StudyMaterials = () => {
 
   const columns = [
     {
-      flex: 0.4,
-      minWidth: 90,
+      // flex: 0.4,
+      minWidth: 150,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -269,8 +270,8 @@ const StudyMaterials = () => {
     },
 
     {
-      flex: 0.4,
-      minWidth: 80,
+      // flex: 0.4,
+      minWidth: 180,
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
@@ -301,8 +302,8 @@ const StudyMaterials = () => {
       }
     },
     {
-      flex: 0.4,
-      minWidth: 80,
+      // flex: 0.4,
+      minWidth: 180,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -336,7 +337,7 @@ const StudyMaterials = () => {
             </Card>
           </Grid>
         )}
-        <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <StudyMaterialAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <StudyMaterialEdit StudyMaterials={selectedRow} open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
