@@ -47,6 +47,7 @@ const OfflineClassFilterCard = ({selectedBranchId}) => {
               <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
                   </TextField>

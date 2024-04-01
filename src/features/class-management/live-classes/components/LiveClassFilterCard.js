@@ -55,6 +55,12 @@ const LiveClassFilterCard = (props) => {
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId]);
 
+  const handleFilterByStatus = (e) => {
+    setStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllLiveClasses(data));
+  };
+
   // useEffect(() => {
   //   const data = {
   //     branch_id: selectedBranchId
@@ -127,9 +133,10 @@ const LiveClassFilterCard = (props) => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
+                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  <MenuItem value="">Select Options</MenuItem>
+                    <MenuItem value="completed">Completed</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>

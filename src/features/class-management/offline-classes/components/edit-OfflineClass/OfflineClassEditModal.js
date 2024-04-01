@@ -117,7 +117,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     }
   }, [offlineClasses, setValue]);
 
-  console.log('selected ', offlineClasses);
+  console.log('selected ', offlineClasses?.instructor);
 
   useEffect(() => {
     if (offlineClasses && offlineClasses.instructor) {
