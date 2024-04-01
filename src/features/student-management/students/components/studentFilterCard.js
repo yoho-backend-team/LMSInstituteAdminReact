@@ -27,7 +27,7 @@ const StudentFilter = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value };
+    const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStudents(data));
   };
 
@@ -104,6 +104,7 @@ const StudentFilter = (props) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  <MenuItem value="">Select Status</MenuItem>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
