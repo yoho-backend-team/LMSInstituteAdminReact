@@ -31,6 +31,11 @@ const UserView = () => {
   };
   console.log('nonteaching:',staff);
   // console.log('staffid:',staffID);
+  // Handle staff deletion
+ 
+
+
+
 
 // dateFormat
 function formattedDate(inputDate) {

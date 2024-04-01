@@ -329,7 +329,7 @@ const Modules = () => {
           </Grid>
         )}
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow} />
+        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow}  setRefetch={setrefetch} />
         <ModulesDeleteModal
           open={ModulesDeleteModalOpen}
           setOpen={setModulesDeleteModalOpen}

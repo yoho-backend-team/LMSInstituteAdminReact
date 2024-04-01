@@ -43,7 +43,7 @@ const StepperLinearWithValidation = () => {
   const steps = [
     {
       title: 'Edit Teaching Staff',
-      subtitle: 'Setup Informion'
+      subtitle: 'Edit Informion'
     }
   ];
 
@@ -121,7 +121,7 @@ const StepperLinearWithValidation = () => {
 
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-
+const [selectedDate,setSelectedDate] = useState()
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
 
@@ -133,7 +133,7 @@ const StepperLinearWithValidation = () => {
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({branch_id:selectedBranchId});
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
@@ -150,6 +150,13 @@ const StepperLinearWithValidation = () => {
     console.log(result.data);
     setActiveBranches(result.data.data);
   };
+
+//forma
+//   function formatDate(inputDate) {
+//     if (!inputDate) return ''; 
+//     const [year, month, day] = inputDate.split('-');
+//     return `${day}/${month}/${year}`;
+// }
 
   // ** Hooks
 
@@ -188,6 +195,12 @@ const StepperLinearWithValidation = () => {
     });
   };
 
+useEffect(() => {
+  setSelectedDate(staffData?.dob ? new Date(staffData?.dob) : new Date());
+}, [''])
+
+
+  
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -230,7 +243,7 @@ const StepperLinearWithValidation = () => {
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -245,7 +258,7 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('/images/avatars/15.png');
+    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg');
   };
   console.log(logo);
 
@@ -324,6 +337,7 @@ const StepperLinearWithValidation = () => {
     }
     [staffId];
   };
+  
 
   console.log('onsubmit:', onSubmit);
   const getStepContent = (step) => {
@@ -338,29 +352,30 @@ const StepperLinearWithValidation = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Profile Picture
+                <Typography sx={{ color: 'text.disabled',mb:2}}>
+                  Update Profile Picture
                 </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
+                {/* <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
                   Upload here
-                </Typography>
+                </Typography> */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <ImgStyled src={logoSrc} alt="Profile Pic" />
                   <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                      Upload your Logo
+                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" >
+                      Update Profile Picture
                       <input
                         hidden
+                        
                         type="file"
                         accept="image/png, image/jpeg"
                         onChange={handleInputImageChange}
                         id="account-settings-upload-image"
                       />
                     </ButtonStyled>
-                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
+                    <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                       Reset
                     </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                    <Typography sx={{ mt: 4, color: 'text.disabled',justifyContent:'center',display:'flex' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
                   </div>
                 </Box>
               </Grid>
@@ -373,7 +388,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData?.name}
+                      defaultValue={staffData?.staff_name}
                       label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
@@ -411,23 +426,27 @@ const StepperLinearWithValidation = () => {
                   name="date_of_birth"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <DatePicker
                       id="issue-date"
-                      dateFormat={'dd/MM/yyyy'}
+                      // dateFormat={'dd/MM/yyyy'}
                       // value={value}
-                      selected={value}
-                      defaultValue={staffData?.dob}
+                      selected={selectedDate}
+                      // defaultValue={staffData?.dob}
+                      onChange={(date) => {
+                        onChange;
+                        setSelectedDate(date);
+                      }}
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
                           error={Boolean(personalErrors['date_of_birth'])}
                           aria-describedby="stepper-linear-personal-date_of_birth"
-                          helperText={personalErrors?.date_of_birth?.message}
+                          // helperText={personalErrors?.dob}
 
                         />
                       }
-                      onChange={onChange}
+                      // onChange={onChange}
                     />
                   )}
                 />

@@ -7,40 +7,40 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // ** Custom Components
-
-import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
-
-const data = {
-  id: 1,
-  role: 'admin',
-  status: 'active',
-  username: 'gslixby0',
-  avatarColor: 'primary',
-  country: 'El Salvador',
-  company: 'Yotz PVT LTD',
-  billing: 'Manual - Cash',
-  contact: '(479) 232-9151',
-  currentPlan: 'enterprise',
-  fullName: 'Teacher Profile',
-  email: 'gslixby0@abc.net.au',
-  avatar: '/images/avatars/14.png'
-};
-
-// const statusColors = {
-//   active: 'success',
-//   pending: 'warning',
-//   inactive: 'secondary'
-// };
-
-const UserViewAccount = ({ staff, formattedDate }) => {
+import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
+import { default as DeleteModal } from 'components/modal/DeleteModel';
+import { deleteTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import toast from 'react-hot-toast';
+const UserViewAccount = ({ staff, formattedDate,staffID }) => {
+  
   // ** States
   // const [openPlans, setOpenPlans] = useState(false)
-  const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
+  // const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
+  const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
+  const [refetch,setRefetch ] = useState('')
   console.log('non teaching details', staff);
-  if (data) {
+//handleDeletion
+const handleDelete = (() => {
+  setStaffDeleteModelOpen(true);
+})[refetch];
+
+const Navigate = useNavigate();
+const handleStaffDelete = async () => {
+  const data = { id: staffID };
+  const result = await deleteTeachingStaff(data);
+  if (result.success) {
+    toast.success(result.message);
+    Navigate(-1);
+    setRefetch((state) => !state);
+  } else {
+    toast.error(result.message);
+  }
+};
+console.log('gettingId', staffID);
+
     return (
       <Grid container spacing={4}>
         <Grid item xs={12}>
@@ -97,28 +97,31 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                 component={Link}
                 to={`non-teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`}
                 state={{ staff: staff?.teachingStaff, id: staff?.teachingStaff?.id }}
-                
               >
-                <Button variant="contained" size='medium' sx={{px:4}}>
+                <Button variant="contained" size="medium" sx={{ px: 4 }}>
                   Edit
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" sx={{px:3}} onClick={() => setSuspendDialogOpen(true)}>
-                  Suspend
+                <Button color="error" variant="tonal" sx={{ px: 3 }} onClick={() => handleDelete(staff?.teachingStaff?.id)}>
+                  Delete
                 </Button>
               </Box>
             </CardActions>
 
-            <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <DeleteModal
+              open={staffDeleteModelOpen}
+              setOpen={setStaffDeleteModelOpen}
+              description="Are you sure you want to delete this Course? "
+              title="Delete"
+              handleSubmit={handleStaffDelete}
+            />
             <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
           </Card>
         </Grid>
       </Grid>
     );
-  } else {
-    return null;
-  }
+  
 };
 
 export default UserViewAccount;
