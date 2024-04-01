@@ -48,8 +48,8 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 const defaultColumns = [
   {
-    flex: 0.3,
-    minWidth: 190,
+    // flex: 0.1,
+    minWidth: 180,
     field: 'refundId',
     headerName: 'Refund ID',
     renderCell: ({ row }) => (
@@ -59,8 +59,8 @@ const defaultColumns = [
     )
   },
   {
-    flex: 0.3,
-    minWidth: 190,
+    // flex: 0.3,
+    minWidth: 180,
     field: 'studentId',
     headerName: 'Student ID',
     renderCell: ({ row }) => (
@@ -70,8 +70,8 @@ const defaultColumns = [
     )
   },
   {
-    flex: 0.35,
-    minWidth: 245,
+    // flex: 0.35,
+    minWidth: 200,
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
@@ -92,22 +92,22 @@ const defaultColumns = [
     }
   },
   {
-    flex: 0.2,
+    // flex: 0.2,
     minWidth: 120,
     field: 'paidAmount',
     headerName: 'Paid Amount',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.paid_amount}</Typography>
   },
   {
-    flex: 0.15,
+    // flex: 0.15,
     minWidth: 150,
     field: 'paymentDate',
     headerName: 'Payment Date',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.payment_date}</Typography>
   },
   {
-    flex: 0.2,
-    minWidth: 160,
+    // flex: 0.2,
+    minWidth: 150,
     field: 'status',
     headerName: 'Status',
     renderCell: ({ row }) => (
@@ -195,7 +195,7 @@ const RefundTable = () => {
   const columns = [
     ...defaultColumns,
     {
-      flex: 0.1,
+      // flex: 0.1,
       minWidth: 140,
       sortable: false,
       field: 'actions',
@@ -352,7 +352,7 @@ const RefundTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 pagination
-                rowHeight={80}
+                getRowHeight={()=>'auto'}
                 rows={studentFeeRefunds}
                 columns={columns}
                 disableRowSelectionOnClick
