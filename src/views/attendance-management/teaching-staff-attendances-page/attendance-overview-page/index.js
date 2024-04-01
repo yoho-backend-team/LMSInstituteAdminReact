@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { selectCourseCategories, selectLoading } from 'features/course-management/categories-page/redux/courseCategorySelectors';
 
 const TeachingStaff = () => {
-  
   const dispatch = useDispatch();
   const teachingStaffs = useSelector(selectTeachingStaffs);
   const teachingstaffLoading = useSelector(selectLoading);
