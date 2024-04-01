@@ -52,7 +52,7 @@ const Students = () => {
                   <Grid container spacing={2}>
                     {Students.map((item, index) => (
                       <Grid key={index} item xs={12} sm={6} md={3}>
-                        <Card className="mainContainer" px={2}>
+                        <Card className="mainContainer">
                           <Card
                             className="Common item-1"
                             sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}

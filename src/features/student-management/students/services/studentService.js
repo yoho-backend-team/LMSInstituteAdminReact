@@ -99,14 +99,14 @@ export const addStudent = async (data) => {
   }
 };
 
-export const deleteStudent = async (StudentId) => {
+export const deleteStudent = async (data) => {
   try {
     const response = await axios.delete(`${STUDENT_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: StudentId }
+      params: data
     });
 
     if (response.data.status) {

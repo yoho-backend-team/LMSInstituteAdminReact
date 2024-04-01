@@ -25,7 +25,7 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object().shape({
-  batchName: yup
+  batch_name: yup
   .string()
   .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
   .required('Batch Name is required'),
@@ -80,9 +80,9 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (selectedBatch) {
-      setValue('batch_name', selectedBatch.batch.batch_name || '');
-      setValue('start_date', selectedBatch.batch.start_date || '');
-      setValue('end_date', selectedBatch.batch.end_date || '');
+      setValue('batch_name', selectedBatch?.batch?.batch_name || '');
+      setValue('start_date', selectedBatch?.batch?.start_date || '');
+      setValue('end_date', selectedBatch?.batch?.end_date || '');
 
       setStartDate(new Date(selectedBatch.batch.start_date || null));
       setEndDate(new Date(selectedBatch.batch.end_date || null));
@@ -193,7 +193,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                   <Grid container spacing={5}>
                     <Grid item xs={12} sm={12}>
                     <Controller
-                      name="batchName"
+                      name="batch_name"
                       control={control}
                       rules={{ required: true }}
                       render={({ field: { value, onChange } }) => (
@@ -203,9 +203,9 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                           label="Batch Name"
                           onChange={onChange}
                           placeholder="Leonard"
-                          error={Boolean(errors['batchName'])}
-                          aria-describedby="stepper-linear-personal-institute_batchName"
-                          helperText={errors.batchName?.message}
+                          error={Boolean(errors['batch_name'])}
+                          aria-describedby="stepper-linear-personal-institute_batch_name"
+                          helperText={errors.batch_name?.message}
                         />
                       )}
                     />

@@ -20,6 +20,28 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { getLiveClassDetails } from 'features/class-management/live-classes/services/liveClassServices';
+import CustomAvatar from 'components/mui/avatar';
+import { getInitials } from 'utils/get-initials';
+
+const renderClient = (row) => {
+  if (row?.student?.image) {
+    return (
+      <CustomAvatar
+        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.student?.image}`}
+        sx={{ mr: 2.5, width: 38, height: 38 }}
+      />
+    );
+  } else {
+    return (
+      <CustomAvatar
+        skin="light"
+        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+      >
+        {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+      </CustomAvatar>
+    );
+  }
+};
 
 const ViewLiveClass = () => {
   const theme = useTheme();
@@ -94,8 +116,8 @@ const ViewLiveClass = () => {
 
   const columns = [
     {
-      flex: 0.2,
-      minWidth: 120,
+      // flex: 0.4,
+      minWidth: 160,
       headerName: 'Student ID',
       field: 'student_id',
       renderCell: ({ row }) => (
@@ -105,7 +127,7 @@ const ViewLiveClass = () => {
       )
     },
     {
-      flex: 0.275,
+      // flex: 0.275,
       minWidth: 290,
       field: 'full_name',
       headerName: 'Student Name',
@@ -114,20 +136,31 @@ const ViewLiveClass = () => {
         const fullName = `${student.first_name} ${student.last_name}`;
         const email = student.email;
         return (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {fullName}
-            </Typography>
-            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {email}
-            </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(params.row)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography
+                noWrap
+                sx={{
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  color: 'text.secondary',
+                  '&:hover': { color: 'primary.main' }
+                }}
+              >
+                {fullName}
+              </Typography>
+              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
+                {email}
+              </Typography>
+            </Box>
           </Box>
         );
       }
     },
     {
-      flex: 0.275,
-      minWidth: 290,
+      // flex: 0.275,
+      minWidth: 170,
       field: 'City',
       headerName: 'city',
       renderCell: (params) => {
@@ -137,6 +170,23 @@ const ViewLiveClass = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
               {city}
+            </Typography>
+          </Box>
+        );
+      }
+    },
+    {
+      // flex: 1,
+      minWidth: 360,
+      field: 'address',
+      headerName: 'Address',
+      renderCell: (params) => {
+        const student = params?.row?.student;
+        const address = `${student.address_line_1} ${student.address_line_2}`;
+        return (
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
+              {address}
             </Typography>
           </Box>
         );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,12 +11,36 @@ import { Link } from 'react-router-dom';
 // ** Custom Components
 import CustomChip from 'components/mui/chip';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
+import StudentDeleteModel from 'components/modal/DeleteModel';
+import { deleteStudent } from '../services/studentService';
+import toast from 'react-hot-toast';
 
 const UserViewAccount = ({ student }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
   console.log('students Course :', student);
+
+  const [studentDeleteModelOpen, setStudentDeleteModelOpen] = useState(false);
+  const [selectedStudentDeleteId, setSelectedStudentDeleteId] = useState(null);
+
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedStudentDeleteId(itemId);
+    setStudentDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleStudentDelete = async () => {
+    const data = { id: selectedStudentDeleteId };
+    const result = await deleteStudent(data);
+    if (result.success) {
+      toast.success(result.message);
+      // setCategoryRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   if (student) {
     return (
@@ -130,13 +154,20 @@ const UserViewAccount = ({ student }) => {
               >
                 Edit
               </Button>
-              <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
+              <Button color="error" variant="tonal" onClick={() => handleDelete(student?.id)}>
                 Suspend
               </Button>
             </CardActions>
 
             <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
             <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
+            <StudentDeleteModel
+              open={studentDeleteModelOpen}
+              setOpen={setStudentDeleteModelOpen}
+              description="Are you sure you want to delete this Student? "
+              title="Delete"
+              handleSubmit={handleStudentDelete}
+            />
           </Card>
         </Grid>
       </Grid>
