@@ -40,6 +40,7 @@ const StepperLinearWithValidation = () => {
   const staffData = location.state.staff;
   const staffId = location.state.id;
   console.log('staffData:', staffData);
+  
 
   const steps = [
     {
@@ -123,6 +124,7 @@ const StepperLinearWithValidation = () => {
 
   // ** States
   const [activeStep, setActiveStep] = useState(0);
+  const [selectedDate,setSelectedDate] = useState()
 
   // const [activeCourse, setActiveCourse] = useState([]);
   // const [selectedCourses, setSelectedCourses] = useState([]);
@@ -190,6 +192,10 @@ const StepperLinearWithValidation = () => {
     });
   };
 
+  useEffect(() => {
+    setSelectedDate(staffData?.dob ? new Date(staffData?.dob) : new Date());
+  }, [''])
+  
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -413,13 +419,17 @@ const StepperLinearWithValidation = () => {
                   name="date_of_birth"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: {onChange } }) => (
                     <DatePicker
                       id="issue-date"
                       dateFormat={'dd/MM/yyyy'}
                       // value={value}
-                      selected={value}
-                      defaultValue={staffData?.dob}
+                      selected={selectedDate}
+                      // defaultValue={staffData?.dob}
+                      onChange={(date) => {
+                        onChange;
+                        setSelectedDate(date);
+                      }} 
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
@@ -428,7 +438,7 @@ const StepperLinearWithValidation = () => {
                           helperText={personalErrors?.date_of_birth?.message}
                         />
                       }
-                      onChange={onChange}
+                      // onChange={onChange}
                     />
                   )}
                 />
