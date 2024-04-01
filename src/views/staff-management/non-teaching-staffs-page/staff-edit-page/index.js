@@ -238,7 +238,7 @@ const StepperLinearWithValidation = () => {
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -253,7 +253,7 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('/images/avatars/15.png');
+    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
   };
   console.log(logo);
 
@@ -356,7 +356,7 @@ const StepperLinearWithValidation = () => {
                   <ImgStyled src={logoSrc} alt="Profile Pic" />
                   <div>
                     <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                      Upload your Logo
+                      Upload Profile Picture
                       <input
                         hidden
                         type="file"

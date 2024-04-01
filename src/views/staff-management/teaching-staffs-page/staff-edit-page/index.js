@@ -243,7 +243,7 @@ useEffect(() => {
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -258,7 +258,7 @@ useEffect(() => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg');
+    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
   };
   console.log(logo);
 
@@ -365,7 +365,7 @@ useEffect(() => {
                       Update Profile Picture
                       <input
                         hidden
-                        
+
                         type="file"
                         accept="image/png, image/jpeg"
                         onChange={handleInputImageChange}
@@ -764,7 +764,7 @@ useEffect(() => {
                     <CustomTextField
                       fullWidth
                       // value={value}
-                      defaultValue={staffData?.username}
+                      defaultValue={staffData?.users?.username}
                       label="Username"
                       onChange={onChange}
                       placeholder="carterLeonard"
