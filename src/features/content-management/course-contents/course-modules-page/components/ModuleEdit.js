@@ -53,7 +53,7 @@ const defaultValues = {
 
 const ModuleEdit = (props) => {
   // ** Props
-  const { open, toggle,modules } = props;
+  const { open, toggle,modules,setRefetch } = props;
 
   // ** State
 
@@ -133,6 +133,8 @@ const ModuleEdit = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      setRefetch((state) => !state); // Trigger category refetch
+      toggle();
     } else {
       let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {

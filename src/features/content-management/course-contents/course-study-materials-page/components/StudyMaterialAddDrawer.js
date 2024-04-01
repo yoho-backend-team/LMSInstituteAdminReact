@@ -19,16 +19,13 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseStudyMaterial } from '../services/studyMaterialServices';
-import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
-import { useDispatch } from 'react-redux';
 
 const StudyMaterialAddDrawer = (props) => {
   // ** Props
-  const { open, toggle, branches } = props;
+  const { open, toggle, branches, setRefetch } = props;
 
   // ** State
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
-  const dispatch = useDispatch();
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
@@ -54,20 +51,17 @@ const StudyMaterialAddDrawer = (props) => {
 
   const schema = yup.object().shape({
     description: yup
-    .string()
-    .required('Description is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
-    title:yup
-    .string()
-    .required('Title is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+      .string()
+      .required('Description is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
+    title: yup
+      .string()
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     branch: yup.object().required(),
     course: yup.object().required(),
-    pdf_file: yup
-    .mixed()
-    .required('PDF file is required')
+    pdf_file: yup.mixed().required('PDF file is required')
     // .test('fileSize', 'File size is too large', (value) => value && value[0].size <= 5000000),
-
   });
 
   const defaultValues = {
@@ -93,7 +87,6 @@ const StudyMaterialAddDrawer = (props) => {
   console.log(studymaterialPdf);
 
   const onSubmit = async (data) => {
-    
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('branch_id', data.branch?.branch_id);
@@ -106,8 +99,9 @@ const StudyMaterialAddDrawer = (props) => {
     const result = await addCourseStudyMaterial(bodyFormData);
 
     if (result.success) {
+      setRefetch((state) => !state); // Trigger category refetch
+
       toast.success(result.message);
-      dispatch(getAllCourseStudyMaterials());
       reset();
       toggle();
     } else {
@@ -124,7 +118,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   const handleSetPdf = (data) => {
     setstudymaterialPdf(data);
-    setValue("pdf_file",data)
+    setValue('pdf_file', data);
   };
 
   const handleClose = () => {
@@ -163,9 +157,8 @@ const StudyMaterialAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf}  className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
-
           </Grid>
 
           <Grid item xs={12} sm={12}>
