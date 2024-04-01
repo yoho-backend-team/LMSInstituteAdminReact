@@ -347,7 +347,7 @@ const AddCoursePage = () => {
                         <TextField
                           {...params}
                           fullWidth
-                          label="Branches"
+                          label="Select Branches"
                           value={value}
                           onChange={onChange}
                           error={Boolean(courseErrors['branches'])}
@@ -415,7 +415,7 @@ const AddCoursePage = () => {
                           {...params}
                           value={value}
                           onChange={onChange}
-                          label="Course Category"
+                          label="Select Category"
                           error={Boolean(courseErrors['course_category'])}
                           helperText={courseErrors?.course_category?.message}
                         />
