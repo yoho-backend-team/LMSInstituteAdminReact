@@ -2,8 +2,8 @@
 import MenuItem from '@mui/material/MenuItem';
 import { forwardRef, useState, useEffect } from 'react';
 // ** MUI Imports
-// import CheckBoxIcon from '@mui/icons-material/CheckBox';
-// import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,7 +15,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-// import CustomChip from 'components/mui/chip';
+import CustomChip from 'components/mui/chip';
 // ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -25,7 +25,7 @@ import * as yup from 'yup';
 import 'react-datepicker/dist/react-datepicker.css';
 // ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
-// import Checkbox from '@mui/material/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 // ** Styled Components
@@ -41,8 +41,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 const StepperLinearWithValidation = () => {
   const steps = [
     {
-      title: 'Personal Info',
-      subtitle: 'Setup Informion'
+      title: 'Add New Staff',
+      subtitle: 'Add staff Information'
     }
   ];
 
@@ -118,7 +118,7 @@ const StepperLinearWithValidation = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   const [activeCourse, setActiveCourse] = useState([]);
-  // const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // console.log(selectedCourses);
@@ -128,13 +128,11 @@ const StepperLinearWithValidation = () => {
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id: selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
-
-
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
@@ -229,7 +227,7 @@ const StepperLinearWithValidation = () => {
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -244,7 +242,7 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('/images/avatars/15.png');
+    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg');
   };
   console.log(logo);
 
@@ -295,26 +293,12 @@ const StepperLinearWithValidation = () => {
         return (
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[0].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
-                </Typography>
-              </Grid>
               <Grid item xs={12} sm={12}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Profile Picture
-                </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload here
-                </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <ImgStyled src={logoSrc} alt="Profile Pic" />
                   <div>
                     <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                      Upload your Logo
+                      Upload Profile picture
                       <input
                         hidden
                         type="file"
@@ -323,10 +307,10 @@ const StepperLinearWithValidation = () => {
                         id="account-settings-upload-image"
                       />
                     </ButtonStyled>
-                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
+                    <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                       Reset
                     </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                    <Typography sx={{ mt: 4, color: 'text.disabled',justifyContent:'center',display:'flex' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
                   </div>
                 </Box>
               </Grid>
@@ -339,7 +323,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="FullName"
+                      label="Full Name"
                       onChange={onChange}
                       placeholder="Leonard"
                       error={Boolean(personalErrors['name'])}
@@ -420,82 +404,126 @@ const StepperLinearWithValidation = () => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-              <Controller
-                name="branch"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeBranches}
-                    getOptionLabel={(option) => option.branch_name}
-                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
-                    onChange={(event, newValue) => {
-                      setValue('branch', newValue ? newValue.branch_id : '');
-                      getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Branch"
-                        error={Boolean(personalErrors['branch'])}
-                        helperText={personalErrors.branch?.message}
-                        id="custom-select"
-                        aria-describedby="stepper-linear-personal-branch"
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-              <Grid item xs={12} sm={6}>
-              <Controller
-                name="course"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeCourse}
-                    getOptionLabel={(option) => option.course_name}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
-                    onChange={(event, newValue) => {
-                      onChange(newValue ? newValue.course_id : '');
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Select Course"
-                        error={Boolean(personalErrors['course'])}
-                        helperText={personalErrors.course?.message}
-                        id="custom-select"
-                        aria-describedby="stepper-linear-personal-course"
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
-
-              <Grid item xs={12} sm={6}>
                 <Controller
-                  name="designation"
+                  name="branch"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
+                  render={({ field: { value } }) => (
+                    <Autocomplete
+                    selectAll
                       fullWidth
-                      value={value}
-                      label="designation"
-                      onChange={onChange}
-                      error={Boolean(personalErrors.designation)}
-                      aria-describedby="stepper-linear-personal-designation-helper"
-                      {...(personalErrors.designation && { helperText: 'This field is required' })}
+                      options={activeBranches}
+                      getOptionLabel={(option) => option.branch_name}
+                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      onChange={(event, newValue) => {
+                        setValue('branch', newValue ? newValue.branch_id : '');
+                        getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Branch"
+                          error={Boolean(personalErrors['branch'])}
+                          helperText={personalErrors.branch?.message}
+                          id="custom-select"
+                          aria-describedby="stepper-linear-personal-branch"
+                        />
+                      )}
                     />
                   )}
                 />
               </Grid>
+{/* 
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="course"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeCourse}
+                      getOptionLabel={(option) => option.course_name}
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      onChange={(event, newValue) => {
+                        onChange(newValue ? newValue.course_id : '');
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          error={Boolean(personalErrors['course'])}
+                          helperText={personalErrors.course?.message}
+                          id="custom-select"
+                          aria-describedby="stepper-linear-personal-course"
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </Grid> */}
+
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  id="select-multiple-chip"
+                  options={[{ course_id: 'selectAll', course_name: 'Select All' },...activeCourse]}
+                  getOptionLabel={(option) => option.course_name}
+                  value={selectedCourses}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                      setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
+                    } else {
+                      setSelectedCourses(newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="Select Course"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.course_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value.map((option, index) => (
+                        <CustomChip
+                          key={option.course_id}
+                          label={option.course_name}
+                          // defaultValue={}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedCourses(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                />
+              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="education_qualification"
@@ -579,7 +607,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Address Line One"
+                      label="Address Line 1"
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_one'])}
@@ -598,7 +626,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Address Line Two"
+                      label="Address Line 2"
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_two'])}
@@ -620,7 +648,7 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="Phone Number"
                       onChange={onChange}
-                      placeholder="Carter"
+                      placeholder=""
                       error={Boolean(personalErrors['phone'])}
                       aria-describedby="stepper-linear-personal-phone"
                       InputProps={{
@@ -643,7 +671,7 @@ const StepperLinearWithValidation = () => {
                       type="number"
                       label="Alt Phone Number"
                       onChange={onChange}
-                      placeholder="Carter"
+                      placeholder=""
                       error={Boolean(personalErrors['alt_phone'])}
                       aria-describedby="stepper-linear-personal-alt_phone"
                       InputProps={{
@@ -682,7 +710,7 @@ const StepperLinearWithValidation = () => {
                 <Button type="submit" variant="contained">
                   Submit
                 </Button>
-                <Button variant="tonal" color="secondary" onClick={handleReset}>
+                <Button variant="tonal" color="error" onClick={handleReset}>
                   Reset
                 </Button>
               </Grid>
@@ -701,7 +729,7 @@ const StepperLinearWithValidation = () => {
         <Fragment>
           <Typography>All steps are completed!</Typography>
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="contained" onClick={handleReset}>
+            <Button variant="contained"  onClick={handleReset}>
               Reset
             </Button>
           </Box>
