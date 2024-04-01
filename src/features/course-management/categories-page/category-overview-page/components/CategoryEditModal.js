@@ -15,8 +15,8 @@ import { updateCourseCategory } from '../../services/courseCategoryServices';
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
   const image =
-  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-
+  'https://www.svgrepo.com/download/508699/landscape-placeholder.svg';
+  
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
     if (valueLen === 0) {
