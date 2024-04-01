@@ -28,6 +28,31 @@ export const getAllTeachingStaffAttendances = async (data) => {
     throw error;
   }
 };
+export const getTeachingStaffAttendanceById = async (data) => {
+  try {
+    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-staff-attendance`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllTeachingStaffAttendances:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
 
 export const searchTeachingStaffAttendances = async (searchQuery) => {
   try {
@@ -58,6 +83,7 @@ export const addTeachingStaffAttendance = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    console.log(response)
 
     if (response.data.status) {
       return { success: true, message: 'TeachingStaffAttendance created successfully' };
