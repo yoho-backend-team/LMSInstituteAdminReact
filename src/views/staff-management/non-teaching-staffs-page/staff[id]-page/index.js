@@ -50,7 +50,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab }) => {
+const UserViewRight = ({ tab,setRefetch }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
 
@@ -123,7 +123,7 @@ const UserViewRight = ({ tab }) => {
           <>
             <NonTeachingViewBanner staff={staff} formattedDate={formattedDate} />
             <TabPanel sx={{ p: 0 }} value="account">
-              <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} />
+              <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch}/>
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="attendance">
               <TeacherAttendance />

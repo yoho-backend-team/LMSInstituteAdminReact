@@ -16,16 +16,16 @@ import { default as DeleteModal } from 'components/modal/DeleteModel';
 import { deleteTeachingStaff } from '../services/teachingStaffServices';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-const UserViewAccount = ({ staff, formattedDate, staffID }) => {
+const UserViewAccount = ({ staff, formattedDate, staffID,setRefetch }) => {
   // ** States
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-const[refetch,setRefetch]=useState({})
+// const[refetch,setRefetch]=useState({})
 
 //handleDeletion
- const handleDelete = (() => {
+ const handleDelete = () => {
   setStaffDeleteModelOpen(true);
-})[refetch];
+}
   const Navigate = useNavigate();
   const handleStaffDelete = async () => {
     const data = { id: staffID };

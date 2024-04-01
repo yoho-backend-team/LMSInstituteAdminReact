@@ -7,7 +7,7 @@ import { TeachingStaffById } from 'features/staff-management/teaching-staffs/ser
 import { useLocation } from 'react-router';
 
 
-const UserView = () => {
+const UserView = ( {setRefetch}) => {
   const [loading, setLoading] = useState(false);
   const [staff, setStaff] = useState({});
   const location = useLocation();
@@ -69,7 +69,7 @@ function formattedDate(inputDate) {
             <UserViewLeft staff={staff} formattedDate={formattedDate}/>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <UserViewRight staff={staff} staffID={staffID} formattedDate={formattedDate}/>
+            <UserViewRight staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch}/>
           </Grid>
         </Grid>
       )}

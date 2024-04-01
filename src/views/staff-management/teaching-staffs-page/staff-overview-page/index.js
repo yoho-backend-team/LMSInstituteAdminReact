@@ -112,7 +112,7 @@ const Teaching = () => {
                               <MenuItem value="0">Inactive</MenuItem>
                             </TextField>
                           </Grid>
-                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id: item?.staff?.id }}>
+                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id: item?.staff?.id }} setRefetch={setRefetch}>
                             {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
                             <Button variant="tonal" size='medium' sx={{ m: 0, px: 2 }}>
                               View Profile
