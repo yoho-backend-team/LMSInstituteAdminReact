@@ -104,7 +104,7 @@ export const deleteStudentFee = async (data) => {
       },
       params: data
     });
-
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'StudentFee deleted successfully' };
     } else {

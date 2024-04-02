@@ -39,6 +39,7 @@ import CustomChip from 'components/mui/chip';
 import { deleteStudentFee } from '../services/studentFeeServices';
 import { useCallback } from 'react';
 import FeesViewDrawer from './FeesViewDrawer';
+import toast from 'react-hot-toast';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -165,6 +166,7 @@ const FeesTable = () => {
 
   const [selectedFeeDeleteId, setSelectedFeeDeleteId] = useState(null);
   const batch = useSelector(selectBatches);
+  console.log(selectedFeeDeleteId);
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -174,7 +176,7 @@ const FeesTable = () => {
 
   // Handle branch deletion
   const handleFeeDelete = async () => {
-    const result = await deleteStudentFee({ id: selectedFeeDeleteId });
+    const result = await deleteStudentFee({ id: selectedRows.id });
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -309,7 +311,10 @@ const FeesTable = () => {
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
-                  onClick: () => handleDelete(row.id)
+                  onClick: () =>{
+                     handleDelete()
+                     handleRowClick(row)
+                  }
                 }
               },
               {
