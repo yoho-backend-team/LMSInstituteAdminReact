@@ -17,6 +17,7 @@ import { hexToRGBA } from 'utils/hex-to-rgba';
 import CustomAvatar from 'components/mui/avatar';
 import CustomTextField from 'components/mui/text-field';
 import UserProfileLeft from './UserProfileLeft';
+import { getAllBatchChats } from '../services/communityServices';
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -34,7 +35,7 @@ const SidebarLeft = (props) => {
     dispatch,
     statusObj,
     userStatus,
-    selectChat,
+    // selectChat,
     getInitials,
     sidebarWidth,
     setUserStatus,
@@ -42,45 +43,45 @@ const SidebarLeft = (props) => {
     removeSelectedChat,
     userProfileLeftOpen,
     handleLeftSidebarToggle,
-    handleUserProfileLeftSidebarToggle
+    handleUserProfileLeftSidebarToggle,
+    communities,
+    setChats,
+    setSelectedBatch
   } = props;
 
   const [query, setQuery] = useState('');
   const [filteredChat, setFilteredChat] = useState([]);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [active, setActive] = useState(null);
-  console.log(store);
+  console.log(communities);
   console.log(filteredChat);
 
-  const handleChatClick = (type, id) => {
-    dispatch(selectChat(id));
-    setActive({ type, id });
+  const handleChatClick = async (type, community) => {
+    setActive(community);
+    setSelectedBatch(community);
+    const response = await getAllBatchChats({ inst_batch_community_id: community?.id });
+    if (response) {
+      setChats(response?.data?.data);
+    }
+
+    // dispatch(selectChat(id));
     if (!mdAbove) {
       handleLeftSidebarToggle();
     }
   };
-  useEffect(() => {
-    if (store && store.chats) {
-      if (active !== null) {
-        if (active.type === 'contact' && active.id === store.chats[0].id) {
-          setActive({ type: 'chat', id: active.id });
-        }
-      }
-    }
-  }, [store, active]);
 
   useEffect(() => {
-    setActive(null);
+    // setActive(null);
     dispatch(removeSelectedChat());
     return () => {
-      setActive(null);
+      // setActive(null);
       dispatch(removeSelectedChat());
     };
   }, []);
 
   const hasActiveId = (id) => {
-    if (store.chats !== null) {
-      const arr = store.chats.filter((i) => i.id === id);
+    if (communities !== null) {
+      const arr = communities.filter((i) => i.id === id);
 
       return !!arr.length;
     }
@@ -95,17 +96,17 @@ const SidebarLeft = (props) => {
           </ListItem>
         );
       } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+        const arrToMap = communities;
 
         return arrToMap !== null
           ? arrToMap.map((contact, index) => {
-            const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+            const activeCondition = active !== null && active.id === contact.id;
 
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
                 <ListItemButton
                   disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
                   sx={{
                     py: 2,
                     px: 3,
@@ -143,7 +144,7 @@ const SidebarLeft = (props) => {
                           outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                         }}
                       >
-                        {getInitials(contact.fullName)}
+                        {getInitials(contact?.batch?.batch_name)}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -153,10 +154,10 @@ const SidebarLeft = (props) => {
                       ml: 3,
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                    primary={<Typography variant="h6">{contact.fullName}</Typography>}
+                    primary={<Typography variant="h6">{contact?.batch?.batch_id}</Typography>}
                     secondary={
                       <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact.about}
+                        {contact?.batch?.batch_name}
                       </Typography>
                     }
                   />
@@ -271,8 +272,8 @@ const SidebarLeft = (props) => {
 
         <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden' }}>
           <ScrollWrapper hidden={hidden}>
-            <Box sx={{ p: (theme) => theme.spacing(5, 3, 3) }}>
-              <Typography variant="h5" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
+            <Box>
+              <Typography variant="h5" sx={{ ml: 3, mb: 2, mt: 2, color: 'primary.main' }}>
                 Batches
               </Typography>
               <List sx={{ p: 0 }}>{renderContacts()}</List>

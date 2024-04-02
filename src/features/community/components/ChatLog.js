@@ -6,6 +6,7 @@ import Icon from 'components/icon';
 import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 import CustomAvatar from 'components/mui/avatar';
 import { getInitials } from 'utils/get-initials';
+import { useSelector } from 'react-redux';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
   padding: theme.spacing(5)
@@ -13,6 +14,8 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
 
 const ChatLog = (props) => {
   const { data, hidden } = props;
+  const currentAuthId = useSelector((state) => state.auth.userData?.user_id);
+  console.log('data', data);
   const chatArea = useRef(null);
   const scrollToBottom = () => {
     if (chatArea.current) {
@@ -26,33 +29,33 @@ const ChatLog = (props) => {
 
   const formattedChatData = () => {
     let chatLog = [];
-    if (Array.isArray(data.chat)) {
-      chatLog = data.chat;
+    if (Array.isArray(data)) {
+      chatLog = data;
     }
     const formattedChatLog = [];
-    let chatMessageSenderId = chatLog[0] ? chatLog[0].senderId : 11;
+    let chatMessageSenderId = chatLog[0] ? chatLog[0].user_id : null;
 
     let msgGroup = {
       senderId: chatMessageSenderId,
       messages: []
     };
     chatLog.forEach((msg, index) => {
-      if (chatMessageSenderId === msg.senderId) {
+      if (chatMessageSenderId === msg.user_id) {
         msgGroup.messages.push({
-          time: msg.time,
+          time: msg.created_at,
           msg: msg.message,
-          feedback: msg.feedback
+          feedback: msg.is_send
         });
       } else {
-        chatMessageSenderId = msg.senderId;
+        chatMessageSenderId = msg.user_id;
         formattedChatLog.push(msgGroup);
         msgGroup = {
           senderId: msg.senderId,
           messages: [
             {
-              time: msg.time,
+              time: msg.created_at,
               msg: msg.message,
-              feedback: msg.feedback
+              feedback: msg.is_send
             }
           ]
         };
@@ -89,14 +92,16 @@ const ChatLog = (props) => {
     }
   };
   useEffect(() => {
-    if (data && data.chat && data.chat.length) {
+    if (data && data?.length) {
       scrollToBottom();
     }
   }, [data]);
 
+  console.log('formattedChatData', formattedChatData());
+
   const renderChats = () => {
     return formattedChatData().map((item, index) => {
-      const isSender = item.senderId === data.userContact.id;
+      const isSender = item.senderId === currentAuthId;
 
       return (
         <Box
@@ -110,7 +115,7 @@ const ChatLog = (props) => {
           <div>
             <CustomAvatar
               skin="light"
-              color={data.contact.avatarColor ? data.contact.avatarColor : undefined}
+              color={data?.avatarColor ? data?.avatarColor : undefined}
               sx={{
                 width: 32,
                 height: 32,
@@ -118,20 +123,20 @@ const ChatLog = (props) => {
                 mr: !isSender ? 3 : undefined,
                 fontSize: (theme) => theme.typography.body1.fontSize
               }}
-              {...(data.contact.avatar && !isSender
+              {...(data?.avatar && !isSender
                 ? {
-                  src: data.contact.avatar,
-                  alt: data.contact.fullName
+                  src: data?.avatar,
+                  alt: data?.users?.name
                 }
                 : {})}
               {...(isSender
                 ? {
-                  src: data.userContact.avatar,
-                  alt: data.userContact.fullName
+                  src: data?.avatar,
+                  alt: data?.users?.name
                 }
                 : {})}
             >
-              {data.contact.avatarColor ? getInitials(data.contact.fullName) : null}
+              {data?.avatarColor ? getInitials(data?.users?.name) : null}
             </CustomAvatar>
           </div>
 

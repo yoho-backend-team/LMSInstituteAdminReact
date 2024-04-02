@@ -89,7 +89,7 @@ const GroupEditDialog = () => {
         } else {
           // Handle the error response here
 
-          toast.error(result.message.name[0]);
+          toast.error(result.message);
         }
       } catch (error) {
         console.log(error);
