@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 
-const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
+const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
   console.log(selectedRowDetails);
 
   const Header = styled(Box)(({ theme }) => ({
@@ -29,7 +29,7 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Fees Details</Typography>
+          <Typography variant="h5">Salary Details</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -52,11 +52,11 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRowDetails?.students?.image}`} sx={{ mr: 2.5, height: 38, width: 38 }} />
+                  <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRowDetails?.staff?.image}`} sx={{ mr: 2.5, height: 38, width: 38 }} />
                   <Box>
                     <Typography variant="h4"> Refund Id</Typography>
                     <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                      {selectedRowDetails.fee_id}
+                      {selectedRowDetails.transaction_id}
                       {/* {selectedRowDetails.institute_student_fee_id} */}
                     </Typography>
                   </Box>
@@ -67,28 +67,28 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
               </Box>
 
               <Typography variant="h4" sx={{ mt: 6, mb: 3, color: 'text.main' }}>
-                Student Deatails :
+                Staff Deatails :
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Student Id : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.students?.student_id}</Typography>
+                <Typography sx={{ width: 150 }}>Staff Id : </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.staff_id}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Student Name : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.students?.first_name}</Typography>
+                <Typography sx={{ width: 150 }}>Staff Name : </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.staff_name}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Student Email : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.students?.email}</Typography>
+                <Typography sx={{ width: 150 }}>Staff Email : </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Paid Amount : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.paid_amount}</Typography>
+                <Typography sx={{ width: 150 }}>Salary Amount : </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.salary_amount}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Payment Date : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.payment_date}</Typography>
+                <Typography sx={{ width: 150 }}>Paid Date : </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.paid_date}</Typography>
               </Box>
             </Grid>
           )}
@@ -98,4 +98,4 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
   );
 };
 
-export default FeesViewDrawer;
+export default SalaryViewDrawer;
