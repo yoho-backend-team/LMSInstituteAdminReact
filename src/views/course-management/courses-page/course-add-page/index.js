@@ -110,7 +110,7 @@ const AddCoursePage = () => {
     course_duration: yup
       .string()
       .required('Course Duration is required')
-      .matches(/^[0-9]{10}$/, 'Course Duration should be digits'),
+      .matches(/^[0-9]+$/, 'Course Duration should be digits'),
     course_name: yup
       .string()
       .required('Course Name is required')
@@ -118,7 +118,7 @@ const AddCoursePage = () => {
     course_price: yup
       .string()
       .required('Course Price is required')
-      .matches(/^[0-9]{10}$/, 'Course Price should be digits'),
+      .matches(/^[0-9]+$/, 'Course Price should be digits'),
     description: yup
       .string()
       .required('Course Description is required')
@@ -533,7 +533,7 @@ const AddCoursePage = () => {
               </Grid>
 
               {/* <Grid item xs={12} sm={12}>
-               
+
               <PDFViewer url={courseSyllabus} />
               <Button>Upload</Button>
               </Grid> */}
@@ -541,10 +541,10 @@ const AddCoursePage = () => {
                 {courseSyllabus ? (
                   <>
                     <Grid>
-                      <Grid >
+                      <Grid>
                         <PDFViewer url={courseSyllabus} />
                       </Grid>
-                      <Grid justifyContent='center' display='flex' sx={{mt:1}}>
+                      <Grid justifyContent="center" display="flex" sx={{ mt: 1 }}>
                         <ButtonStyled component="label" variant="contained" htmlFor="template-pdf-upload-image">
                           {'Change Course Materials (PDF)'}
                           <input

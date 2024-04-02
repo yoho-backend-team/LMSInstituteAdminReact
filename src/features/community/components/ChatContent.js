@@ -35,7 +35,10 @@ const ChatContent = (props) => {
     sidebarWidth,
     userProfileRightOpen,
     handleLeftSidebarToggle,
-    handleUserProfileRightSidebarToggle
+    handleUserProfileRightSidebarToggle,
+    chats,
+    selectedBatch,
+    setChats
   } = props;
 
   const handleStartConversation = () => {
@@ -44,9 +47,9 @@ const ChatContent = (props) => {
     }
   };
   const renderContent = () => {
-    if (store) {
-      const selectedChat = store.selectedChat;
-      if (!selectedChat) {
+    if (chats) {
+      const selectedChat = chats;
+      if (selectedChat?.length === 0) {
         return (
           <ChatWrapperStartChat
             sx={{
@@ -124,28 +127,28 @@ const ChatContent = (props) => {
                         width: 8,
                         height: 8,
                         borderRadius: '50%',
-                        color: `${statusObj[selectedChat.contact?.status]}.main`,
+                        color: `${statusObj[selectedChat?.status]}.main`,
                         boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
-                        backgroundColor: `${statusObj[selectedChat.contact?.status]}.main`
+                        backgroundColor: `${statusObj[selectedChat?.status]}.main`
                       }}
                     />
                   }
                 >
-                  {selectedChat.contact.avatar ? (
-                    <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat.contact.avatar} alt={selectedChat.contact.fullName} />
+                  {selectedChat?.avatar ? (
+                    <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat?.avatar} alt={selectedChat?.fullName} />
                   ) : (
                     <CustomAvatar
                       skin="light"
-                      color={selectedChat.contact.avatarColor}
+                      color={selectedChat?.avatarColor}
                       sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                     >
-                      {getInitials(selectedChat.contact.fullName)}
+                      {getInitials(selectedBatch?.batch?.batch_name)}
                     </CustomAvatar>
                   )}
                 </Badge>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="h6">{selectedChat.contact.fullName}</Typography>
-                  <Typography sx={{ color: 'text.disabled' }}>{selectedChat.contact.role}</Typography>
+                  <Typography variant="h5">{selectedBatch?.batch?.batch_name}</Typography>
+                  <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>{selectedBatch?.batch?.batch_id}</Typography>
                 </Box>
               </Box>
 
@@ -159,10 +162,8 @@ const ChatContent = (props) => {
               </Box>
             </Box>
 
-            {selectedChat && store.userProfile ? (
-              <ChatLog hidden={hidden} data={{ ...selectedChat, userContact: store.userProfile }} />
-            ) : null}
-            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} />
+            {selectedChat ? <ChatLog hidden={hidden} data={selectedChat} /> : null}
+            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
             <UserProfileRight
               store={store}
               hidden={hidden}

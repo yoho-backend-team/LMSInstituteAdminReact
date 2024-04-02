@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StudentFilter from 'features/student-management/students/components/studentFilterCard';
 import SocialsButton from 'features/student-management/students/components/SocialButton';
+import CustomChip from 'components/mui/chip';
 // import cssStyles from 'features/student-management/students/components/cssStyles';
 // import Image from 'features/student-management/students/components/image';
 // import SvgIconStyle from 'features/student-management/students/components/svgIconStyle';
@@ -29,11 +30,26 @@ const Students = () => {
   // const StudentsLoading = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log(Students);
+  console.log('students:',Students);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
   useEffect(() => {
     dispatch(getAllStudents({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId]);
+
+  const formattedAddress = (address) => {
+    // Remove punctuation and split into words
+    const words = address.replace(/[^\w\s]/g, '').split(/\s+/);
+
+    // If the word count is more than 7, hide extra words
+    if (words.length > 6) {
+      return words.slice(0, 7).join(' ') + '...';
+    } else {
+      return address;
+    }
+  };
 
   return (
     <>
@@ -52,11 +68,8 @@ const Students = () => {
                   <Grid container spacing={2}>
                     {Students.map((item, index) => (
                       <Grid key={index} item xs={12} sm={6} md={3}>
-                        <Card className="mainContainer">
-                          <Card
-                            className="Common item-1"
-                            sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}
-                          >
+                        <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
+                          <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
                             <Box>
                               {/* <SvgIconStyle
                               src="https://minimal-assets-api.vercel.app/assets/icons/shape-avatar.svg"
@@ -83,6 +96,7 @@ const Students = () => {
                                   right: 0,
                                   bottom: -32,
                                   mx: 'auto'
+
                                   // position: 'absolute'
                                 }}
                               />
@@ -94,14 +108,19 @@ const Students = () => {
                             /> */}
                             </Box>
 
-                            <Typography variant="h4" sx={{ mt: 6 }}>
-                              {item.student.first_name}
+                            <Typography variant="h3" sx={{ mt: 6 }}>
+                              {capitalizeFirstLetter(item.student.first_name)}
                             </Typography>
-                            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                              {item.student.email}
-                            </Typography>
-
-                            <Box>
+                            <CustomChip
+                              rounded
+                              variant="tonal"
+                              color={item?.student?.is_active === "1" ? 'success' : 'error'}
+                              skin="light"
+                              label={item.student.email}
+                              sx={{ mb: 1, mt: 1 }}
+                              size='x-small'
+                            />
+                            <Box sx={{ height: 20 }}>
                               <Typography
                                 variant="h6"
                                 sx={{
@@ -114,18 +133,17 @@ const Students = () => {
                                   mt: 1.75
                                 }}
                               >
-                                {item.student.address_line_1}, {item.student.city}, {item.student.state}, {item.student.pincode}
+                                {formattedAddress(
+                                  `${item.student.address_line_1}, ${item.student.city}, ${item.student.state}, ${item.student.pincode}`
+                                )}
                               </Typography>
                             </Box>
 
                             <Stack alignItems="center">
-                              <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
+                              <SocialsButton initialColor sx={{ my:2.5 }} item={item} />
                             </Stack>
                           </Card>
-                          <Box
-                            className="Common item-2"
-                            sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}
-                          ></Box>
+                          <Box sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}></Box>
                         </Card>
                       </Grid>
                     ))}

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import { getAllBatchChats, sendMessage } from './../services/communityServices';
 
 import CustomTextField from 'components/mui/text-field';
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
@@ -19,13 +20,40 @@ const Form = styled('form')(({ theme }) => ({
 }));
 
 const SendMsgForm = (props) => {
-  const { store, dispatch, sendMsg } = props;
+  const { selectedBatch, setChats } = props;
   const [msg, setMsg] = useState('');
-  const handleSendMsg = (e) => {
-    e.preventDefault();
-    if (store && store.selectedChat && msg.trim().length) {
-      dispatch(sendMsg({ ...store.selectedChat, message: msg }));
+  console.log(selectedBatch);
+  const getMessages = async (selectedBatch) => {
+    const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?.institute_branch_comm_id });
+    if (result) {
+      setChats(result?.data?.data);
     }
+  };
+
+  useEffect(() => {
+    // Call getMessages immediately when the component mounts
+    getMessages(selectedBatch);
+
+    // Set up interval to call getMessages every 20 seconds
+    const intervalId = setInterval(getMessages, 20000); // 20 seconds = 20000 milliseconds
+
+    // Clean up the interval when the component unmounts or when selectedBatch changes
+    return () => clearInterval(intervalId);
+  }, [selectedBatch]); // Dependency on selectedBatch to re-run effect when it changes
+
+  const handleSendMsg = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      inst_batch_community_id: selectedBatch?.institute_branch_comm_id,
+      message: msg
+    };
+
+    const response = await sendMessage(data);
+    if (response) {
+      getMessages(selectedBatch);
+    }
+
     setMsg('');
   };
 

@@ -78,7 +78,7 @@ const StudentFilter = (props) => {
                   }}
                   options={courses}
                   getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
+                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Filter By Course" />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -99,23 +99,23 @@ const StudentFilter = (props) => {
                   // defaultValue={[top100Films[13]]}
                   id="autocomplete-multiple-outlined"
                   getOptionLabel={(option) => option.batch.batch_name || ''}
-                  renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                  renderInput={(params) => <TextField {...params} label="Filter By Batches" placeholder="Favorites" />}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField select fullWidth label="Filter By Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                   <MenuItem value="">Select Status</MenuItem>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
               </Grid>
               <Grid item sm={3} xs={12}>
-                <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} />
+                <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} fullWidth />
               </Grid>
 
-              <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
+              <Grid item xs={12} sm={3} >
                 <Box component={Link} to={'students/add'}>
-                  <Button variant="contained" size="medium" fullWidth>
+                  <Button variant="contained" size="medium" fullWidth sx={{py:1.6,borderRadius:2}}>
                     Add New Student
                   </Button>
                 </Box>

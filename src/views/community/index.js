@@ -18,6 +18,8 @@ import { getInitials } from 'utils/get-initials';
 import CommunitySkeleton from 'components/cards/Skeleton/CommunitySkeleton';
 import ChatContent from 'features/community/components/ChatContent';
 import SidebarLeft from 'features/community/components/SidebarLeft';
+import { getAllCommunities } from 'features/community/redux/communityThunks';
+import { selectCommunities } from 'features/community/redux/communitySelectors';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -33,6 +35,11 @@ const Community = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
   const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
+  const [chats, setChats] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const communities = useSelector(selectCommunities);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  console.log(communities);
 
   // ** Hooks
   const theme = useTheme();
@@ -53,6 +60,12 @@ const Community = () => {
     offline: 'secondary'
   };
 
+  useEffect(() => {
+    const data = {
+      institute_branch_id: selectedBranchId
+    };
+    dispatch(getAllCommunities(data));
+  }, [dispatch, selectedBranchId]);
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
@@ -104,6 +117,9 @@ const Community = () => {
             formatDateToMonthShort={formatDateToMonthShort}
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+            communities={communities?.batch_community}
+            setChats={setChats}
+            setSelectedBatch={setSelectedBatch}
           />
           <ChatContent
             store={store}
@@ -117,6 +133,9 @@ const Community = () => {
             userProfileRightOpen={userProfileRightOpen}
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+            chats={chats}
+            selectedBatch={selectedBatch}
+            setChats={setChats}
           />
         </Box>
       )}

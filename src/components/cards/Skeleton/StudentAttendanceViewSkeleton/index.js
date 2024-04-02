@@ -5,7 +5,7 @@ import { Box, Card, CardContent, CardHeader, Grid, Skeleton, Typography } from '
 
 const StudentAttendanceViewSkeleton = () => {
   return (
-    <Grid container spacing={4} sx={{ p: 1 }}>
+    <Grid container spacing={2} sx={{ p: 1 }}>
       {/* First Card */}
       <Grid item xs={12}>
         <Card>
@@ -15,10 +15,10 @@ const StudentAttendanceViewSkeleton = () => {
               {[1, 2, 3, 4, 5, 6].map((item, index) => (
                 <Grid item key={index}>
                   <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    <Skeleton animation="wave" height={20} width={100} />
+                    <Skeleton animation="wave" height={20} width={90} />
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    <Skeleton animation="wave" height={30} width={120} />
+                    <Skeleton animation="wave" height={30} width={110} />
                   </Typography>
                 </Grid>
               ))}
@@ -34,11 +34,11 @@ const StudentAttendanceViewSkeleton = () => {
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <Box sx={{ display: 'flex' }}>
                       {[1, 2, 3].map((index) => (
-                        <Skeleton key={index} variant="circular" width={26} height={26} sx={{ mr: 1 }} />
+                        <Skeleton key={index} variant="circular" width={26} height={26} sx={{ mr: 0 }} />
                       ))}
                     </Box>
                     <Box>
-                      <Typography variant="h4">
+                      <Typography variant="h4" sx={{ml:0.75}}>
                         <Skeleton animation="wave" height={30} width={120} />
                       </Typography>
                     </Box>
@@ -51,9 +51,9 @@ const StudentAttendanceViewSkeleton = () => {
       </Grid>
       {/* Table */}
       <Grid item xs={12}>
-        <Card sx={{ mt: 2.75, px: 1, ml: 3 }}>
+        <Card sx={{ mt: 1, px: 1 }}>
           <CardContent>
-            <Grid container spacing={2} direction="column">
+            <Grid container spacing={3} direction="column">
               <Grid item paddingBottom={2}>
                 <Grid container display={'flex'}>
                   <Grid item xs={12} sm={6}>
