@@ -130,7 +130,7 @@ const SalaryTable = () => {
   
   const handleFilterByStaffType = (e) => {
     setStaffValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const data = { type: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStaffSalaries(data));
   };
 
