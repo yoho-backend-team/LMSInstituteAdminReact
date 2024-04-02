@@ -1,13 +1,15 @@
 import CloseIcon from '@mui/icons-material/Close';
-import { Grid, IconButton } from '@mui/material';
+import { Avatar, Grid, IconButton, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { PDFViewer } from 'react-view-pdf';
+
 const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
   const savedPdfUrl = `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`;
   console.log(savedPdfUrl);
-
+  console.log('certificate :', certificate);
   return (
     <div>
       <Dialog
@@ -16,7 +18,7 @@ const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-      // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -30,14 +32,31 @@ const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
             alignItems: 'center'
           }}
         >
-          View StudentCertificate Informations
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box>
+              <Avatar
+                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.students?.image}`}
+                sx={{ mr: 2.5, height: 48, width: 48 }}
+              />
+            </Box>
+            <Box>
+              <Typography variant="h3">
+                {certificate?.students?.first_name}
+                {certificate?.students?.last_name}
+              </Typography>
+              <Typography variant="h5" sx={{ color: 'text.secondary', fontSize: 12 }}>
+                {certificate?.students?.email}
+              </Typography>
+            </Box>
+          </Box>
+
           <IconButton onClick={handleViewClose}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent
           sx={{
-            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(1)} !important`],
+            pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(4)} !important`],
             pb: (theme) => `${theme.spacing(5)} !important`,
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect } from 'react';
+import { useEffect,useState,useCallback,useMemo } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -13,9 +13,9 @@ import * as yup from 'yup';
 // ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import toast from 'react-hot-toast';
 import { updateStudentCertificate } from '../services/studentCertificateServices';
+import { PDFViewer } from 'react-view-pdf';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -53,6 +53,10 @@ const StudentCertificateEdit = (props) => {
   console.log('StudentCertificateEdit - open:', props.open);
   console.log('StudentCertificateEdit - toggle:', props.toggle);
   // ** State
+  const savedPdfUrls = require('assets/pdf.pdf');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
+  const [inputValue, setInputValue] = useState('');
 
   const {
     reset,
@@ -80,6 +84,8 @@ const StudentCertificateEdit = (props) => {
     bodyFormData.append('name', data.name);
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', props.initialValues.id);
+    bodyFormData.append('certificate_file', setSelectedFile);
+
     console.log(bodyFormData);
 
     const result = await updateStudentCertificate(bodyFormData);
@@ -104,6 +110,30 @@ const StudentCertificateEdit = (props) => {
     reset();
   };
 
+  const handleFileUpload = useCallback((file) => {
+    const reader = new FileReader();
+    const { files } = file.target;
+    if (files && files.length !== 0) {
+      reader.onload = () => setSavedPdfUrl(reader.result);
+      setSelectedFile(files[0]);
+      reader.readAsDataURL(files[0]);
+      if (reader.result !== null) {
+        setInputValue(reader.result);
+      }
+    }
+  }, []);
+
+  const ButtonStyled = useMemo(
+    () =>
+      styled(Button)(({ theme }) => ({
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+          textAlign: 'center'
+        }
+      })),
+    []
+
+  );
   return (
     <Drawer
       open={open}
@@ -133,9 +163,24 @@ const StudentCertificateEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput />
-          </Grid>
+        <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
+                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
+
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
+                  Upload New File
+                  <input
+                    accept="application/pdf"
+                    style={{ display: 'none' }}
+                    id="account-settings-upload-file"
+                    multiple={false}
+                    type="file"
+                    value={inputValue}
+                    onChange={handleFileUpload}
+                  />
+                </ButtonStyled>
+              </Grid>
 
           <Controller
             name="name"

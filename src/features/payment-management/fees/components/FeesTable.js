@@ -38,6 +38,8 @@ import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 import CustomChip from 'components/mui/chip';
 import { deleteStudentFee } from '../services/studentFeeServices';
 import { useCallback } from 'react';
+import FeesViewDrawer from './FeesViewDrawer';
+import toast from 'react-hot-toast';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -164,6 +166,7 @@ const FeesTable = () => {
 
   const [selectedFeeDeleteId, setSelectedFeeDeleteId] = useState(null);
   const batch = useSelector(selectBatches);
+  console.log(selectedFeeDeleteId);
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -173,7 +176,7 @@ const FeesTable = () => {
 
   // Handle branch deletion
   const handleFeeDelete = async () => {
-    const result = await deleteStudentFee({ id: selectedFeeDeleteId });
+    const result = await deleteStudentFee({ id: selectedRows.id });
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -181,6 +184,12 @@ const FeesTable = () => {
       toast.error(result.message);
     }
   };
+  const [feesViewOpen, setFeesViewUserOpen] = useState(false);
+  const toggleFeesViewDrawer = () => {
+    setFeesViewUserOpen(!feesViewOpen); // This line toggles the editUserOpen state
+    console.log('Toggle drawer');
+  };
+
 
   const defaultColumns = [
     {
@@ -277,10 +286,13 @@ const FeesTable = () => {
             options={[
               {
                 text: 'View',
-                icon: <Icon icon="tabler:eye" fontSize={20} />,
+                // to: `/apps/invoice/view/${row.id}`,
+                icon: <Icon icon="tabler:eye" />,
                 menuItemProps: {
-                  component: Link,
-                  to: `/apps/invoice/preview/${row.id}`
+                  onClick: () => {
+                    handleRowClick(row);
+                    toggleFeesViewDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                  }
                 }
               },
               {
@@ -299,7 +311,10 @@ const FeesTable = () => {
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
-                  onClick: () => handleDelete(row.id)
+                  onClick: () =>{
+                     handleDelete()
+                     handleRowClick(row)
+                  }
                 }
               },
               {
@@ -407,6 +422,8 @@ const FeesTable = () => {
       </Grid>
 
       <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <FeesViewDrawer open={feesViewOpen} toggle={toggleFeesViewDrawer} selectedRowDetails={selectedRows} />
+   
       <FeesEditDrawer
         setRefetch={setRefetch}
         open={editUserOpen}

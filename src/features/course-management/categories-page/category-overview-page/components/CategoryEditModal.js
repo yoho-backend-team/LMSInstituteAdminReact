@@ -55,7 +55,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-
+  
   // Function to handle closing the dialog
   const handleClose = useCallback(() => {
     setValue('category_name', ''); // Reset input value
