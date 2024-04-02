@@ -5,7 +5,9 @@ import Pagination from '@mui/material/Pagination';
 import StudentAttendanceSkeleton from 'components/cards/Skeleton/StudentAttendance';
 import StudentAttendanceCard from 'features/attandence-management/student-attandences/components/StudentAttendanceCard';
 import StudentAttendanceFilterCard from 'features/attandence-management/student-attandences/components/StudentAttendanceFilterCard';
+import { getAllStudentAttendances } from 'features/attandence-management/student-attandences/redux/studentAttendanceThunks';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -16,16 +18,29 @@ const useTimeout = (callback, delay) => {
 };
 
 const Students = () => {
+
+  // States
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(true);
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  const [refetch, setRefetch] = useState(false);
+
+  useEffect(() => {
+    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId }));
+  }, [selectedBranchId, dispatch, refetch]);
 
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+
   return (
     <>
       <Grid>
         <Grid>
-          <StudentAttendanceFilterCard />
+          <StudentAttendanceFilterCard selectedBranchId={selectedBranchId} setRefetch={setRefetch} />
         </Grid>
         {loading ? (
           <StudentAttendanceSkeleton />
@@ -38,7 +53,7 @@ const Students = () => {
               <Pagination count={10} color="primary" />
             </Grid>
           </Grid>
-        )} 
+        )}
       </Grid>
     </>
   );
