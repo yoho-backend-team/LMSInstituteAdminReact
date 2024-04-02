@@ -15,7 +15,6 @@ const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
 const ChatLog = (props) => {
   const { data, hidden } = props;
   const currentAuthId = useSelector((state) => state.auth.userData?.user_id);
-  console.log('data', data);
   const chatArea = useRef(null);
   const scrollToBottom = () => {
     if (chatArea.current) {
@@ -96,8 +95,6 @@ const ChatLog = (props) => {
       scrollToBottom();
     }
   }, [data]);
-
-  console.log('formattedChatData', formattedChatData());
 
   const renderChats = () => {
     return formattedChatData().map((item, index) => {
