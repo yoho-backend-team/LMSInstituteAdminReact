@@ -50,6 +50,34 @@ export const searchNonTeachingStaffAttendances = async (searchQuery) => {
   }
 };
 
+export const getNonTeachingStaffAttendanceById = async (data) => {
+  try {
+    const response = await axios.get(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-staff-attendance`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch NonTeachingStaffAttendances. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllNonTeachingStaffAttendances:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
 export const addNonTeachingStaffAttendance = async (data) => {
   try {
     const response = await axios.post(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/create`, data, {

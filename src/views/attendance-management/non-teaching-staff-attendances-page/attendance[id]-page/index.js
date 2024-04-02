@@ -4,31 +4,22 @@ import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // ** Redux Imports
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 // ** FullCalendar & App Components Imports
-import NonTeachingStaffAddEventSidebar from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffAddEventSidebar';
-import NonTeachingStaffCalendar from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCalendar';
-import NonTeachingStaffSidebarLeft from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffSidebarLeft';
+import TeachingStaffAddEventSidebar from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffAddEventSidebar';
+import TeachingStaffCalendar from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCalendar';
+import TeachingStaffSidebarLeft from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffSidebarLeft';
 import CalendarWrapper from 'styles/libs/fullcalendar';
-
 // ** Actions
-import {
-  addEvent,
-  deleteEvent,
-  fetchEvents,
-  handleAllCalendars,
-  handleCalendarsUpdate,
-  handleSelectEvent,
-  updateEvent
-} from 'features/calender/redux/reducers';
+import { handleSelectEvent, updateEvent } from 'features/calender/redux/reducers';
+import { useLocation } from 'react-router-dom';
+import { getNonTeachingStaffAttendanceById } from 'features/attandence-management/non-teaching-staff-attandences/services/nonTeachingStaffAttendanceServices';
+import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 
 // ** CalendarColors
 const calendarsColor = {
-  Personal: 'error',
-  Business: 'primary',
-  Family: 'warning',
-  Holiday: 'success',
-  ETC: 'info'
+  present: 'success',
+  absent: 'error'
 };
 
 const ViewAttendance = () => {
@@ -36,18 +27,35 @@ const ViewAttendance = () => {
   const [calendarApi, setCalendarApi] = useState(null);
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false);
-  // ** Hooks
-  const dispatch = useDispatch();
-  const store = useSelector((state) => state.calendar);
+  const [attendances, setAttendances] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [refetch, setRefetch] = useState(false);
+  const location = useLocation();
+  const staff = location.state.staff;
+
   // ** Vars
   const leftSidebarWidth = 300;
   const addEventSidebarWidth = 400;
+
   const skin = 'default';
   const direction = 'ltr';
   const mdAbove = useMediaQuery((theme) => theme.breakpoints.up('md'));
+
   useEffect(() => {
-    dispatch(fetchEvents(store?.selectedCalendars));
-  }, [dispatch, store?.selectedCalendars]);
+    const data = {
+      staff_id: staff?.staff_id,
+      title: ''
+    };
+    getStaffAttendance(data);
+  }, [staffStatusChange, refetch]);
+
+  const getStaffAttendance = async (data) => {
+    const result = await getNonTeachingStaffAttendanceById(data);
+    if (result) {
+      setAttendances(result.data.data);
+    }
+  };
+
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
 
@@ -59,19 +67,17 @@ const ViewAttendance = () => {
         ...(skin === 'bordered' && { border: (theme) => `1px solid ${theme.palette.divider}` })
       }}
     >
-      <NonTeachingStaffSidebarLeft
-        store={store}
+      <TeachingStaffSidebarLeft
         mdAbove={mdAbove}
-        dispatch={dispatch}
         calendarApi={calendarApi}
         calendarsColor={calendarsColor}
         leftSidebarOpen={leftSidebarOpen}
         leftSidebarWidth={leftSidebarWidth}
-        handleSelectEvent={handleSelectEvent}
-        handleAllCalendars={handleAllCalendars}
-        handleCalendarsUpdate={handleCalendarsUpdate}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+        setAttendances={setAttendances}
+        staffId={staff?.staff_id}
+        staff={staff}
       />
       <Box
         sx={{
@@ -84,30 +90,27 @@ const ViewAttendance = () => {
           ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
         }}
       >
-        <NonTeachingStaffCalendar
-          store={store}
-          dispatch={dispatch}
+        <TeachingStaffCalendar
           direction={direction}
           updateEvent={updateEvent}
           calendarApi={calendarApi}
           calendarsColor={calendarsColor}
           setCalendarApi={setCalendarApi}
-          handleSelectEvent={handleSelectEvent}
           handleLeftSidebarToggle={handleLeftSidebarToggle}
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+          attendances={attendances}
+          setSelected={setSelected}
         />
       </Box>
-      <NonTeachingStaffAddEventSidebar
-        store={store}
-        dispatch={dispatch}
-        addEvent={addEvent}
-        updateEvent={updateEvent}
-        deleteEvent={deleteEvent}
-        calendarApi={calendarApi}
+      <TeachingStaffAddEventSidebar
         drawerWidth={addEventSidebarWidth}
         handleSelectEvent={handleSelectEvent}
         addEventSidebarOpen={addEventSidebarOpen}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+        staffId={staff?.staff_id}
+        selected={selected}
+        setRefetch={setRefetch}
+        staff={staff}
       />
     </CalendarWrapper>
   );

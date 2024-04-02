@@ -10,44 +10,31 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 // ** Third Party Style Import
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const blankEvent = {
-  title: '',
-  start: '',
-  end: '',
-  allDay: false,
-  url: '',
-  extendedProps: {
-    calendar: '',
-    guests: [],
-    location: '',
-    description: ''
-  }
-};
-
-const NonTeachingStaffCalendar = (props) => {
+const TeachingStaffCalendar = (props) => {
   // ** Props
   const {
-    store,
-    dispatch,
     direction,
-    updateEvent,
     calendarApi,
     calendarsColor,
     setCalendarApi,
-    handleSelectEvent,
     handleLeftSidebarToggle,
-    handleAddEventSidebarToggle
+    handleAddEventSidebarToggle,
+    attendances,
+    setSelected
   } = props;
 
+  // ** Refs
   const calendarRef = useRef();
+  console.log('Staff Attendance : ', attendances);
   useEffect(() => {
     if (calendarApi === null) {
+      // @ts-ignore
       setCalendarApi(calendarRef.current?.getApi());
     }
   }, [calendarApi, setCalendarApi]);
-  if (store) {
+  if (attendances) {
     const calendarOptions = {
-      events: store.events.length ? store.events : [],
+      events: attendances ? attendances : [],
       plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin],
       initialView: 'dayGridMonth',
       headerToolbar: {
@@ -59,18 +46,16 @@ const NonTeachingStaffCalendar = (props) => {
           titleFormat: { year: 'numeric', month: 'long', day: 'numeric' }
         }
       },
-
-      editable: true,
+      editable: false,
       eventResizableFromStart: true,
       dragScroll: true,
       dayMaxEvents: 2,
       navLinks: true,
       eventClassNames({ event: calendarEvent }) {
-        const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar];
+        const colorName = calendarsColor[calendarEvent._def.title];
         return [`bg-${colorName}`];
       },
-      eventClick({ event: clickedEvent }) {
-        dispatch(handleSelectEvent(clickedEvent));
+      eventClick() {
         handleAddEventSidebarToggle();
       },
       customButtons: {
@@ -82,27 +67,17 @@ const NonTeachingStaffCalendar = (props) => {
         }
       },
       dateClick(info) {
-        const ev = { ...blankEvent };
-        ev.start = info.date;
-        ev.end = info.date;
-        ev.allDay = true;
-        dispatch(handleSelectEvent(ev));
+        setSelected(info);
         handleAddEventSidebarToggle();
       },
 
-      eventDrop({ event: droppedEvent }) {
-        dispatch(updateEvent(droppedEvent));
-      },
-      eventResize({ event: resizedEvent }) {
-        dispatch(updateEvent(resizedEvent));
-      },
       ref: calendarRef,
       direction
     };
-    return <FullCalendar {...calendarOptions} />;
+    return <FullCalendar events={attendances} {...calendarOptions} />;
   } else {
     return null;
   }
 };
 
-export default NonTeachingStaffCalendar;
+export default TeachingStaffCalendar;
