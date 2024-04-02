@@ -30,8 +30,8 @@ import { useSelector } from 'react-redux';
 const StepperLinearWithValidation = () => {
   const steps = [
     {
-      title: 'Student Information',
-      subtitle: 'Add Student Details'
+      title: 'Add New Student',
+      subtitle: 'Enter Student Details'
     }
   ];
 
@@ -192,7 +192,7 @@ const StepperLinearWithValidation = () => {
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -207,7 +207,7 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('/images/avatars/15.png');
+    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
   };
 
   console.log(logo);
@@ -257,7 +257,7 @@ const StepperLinearWithValidation = () => {
         <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+              <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {steps[0].title}
               </Typography>
               <Typography variant="caption" component="p">
@@ -269,7 +269,7 @@ const StepperLinearWithValidation = () => {
                 <ImgStyled src={logoSrc} alt="Profile Pic" />
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload your Logo
+                    Upload Profile Picture
                     <input
                       hidden
                       type="file"
@@ -278,7 +278,7 @@ const StepperLinearWithValidation = () => {
                       id="account-settings-upload-image"
                     />
                   </ButtonStyled>
-                  <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
+                  <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                     Reset
                   </ResetButtonStyled>
                   <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
@@ -410,7 +410,7 @@ const StepperLinearWithValidation = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Branch"
+                        label="Select Branch"
                         error={Boolean(personalErrors['branch'])}
                         helperText={personalErrors.branch?.message}
                         id="custom-select"

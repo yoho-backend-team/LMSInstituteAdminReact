@@ -14,28 +14,28 @@ SocialsButton.propTypes = {
 export default function SocialsButton({ item, initialColor = false, simple = true, links = {}, sx, ...other }) {
   const SOCIALS = [
     {
-      name: 'Call Now',
+      name: `${item.student.phone_no}`,
       icon: 'eva:phone-fill',
-      socialColor: '#1877F2',
+      socialColor: 'primary.dark',
       path: links.instagram || ''
     },
     {
-      name: 'Send Email',
+      name: `${item.student.email}`,
       icon: 'eva:email-fill',
-      socialColor: '#E02D69',
+      socialColor: 'primary.dark',
       path: links.instagram || ''
     },
 
     {
-      name: 'Active',
+      name: `${item.student.is_active==='1' ? 'Active':'Inactive'}`,
       icon: 'eva:person-done-fill',
-      socialColor: '#65B741',
+      socialColor: 'primary.dark',
       path: links.twitter || ''
     },
     {
-      name: 'View Profile',
+      name: 'See Full Profile',
       icon: 'eva:navigation-2-fill',
-      socialColor: '#007EBB',
+      socialColor: 'primary.dark',
       path: `students/${item.student.user_id.toString()}`
     }
   ];
@@ -53,7 +53,7 @@ export default function SocialsButton({ item, initialColor = false, simple = tru
                   ...(initialColor && {
                     color: socialColor,
                     '&:hover': {
-                      bgcolor: alpha(socialColor, 0.08)
+                      bgcolor: (socialColor, 0.08)
                     }
                   }),
                   ...sx
@@ -73,7 +73,7 @@ export default function SocialsButton({ item, initialColor = false, simple = tru
             size="small"
             startIcon={<Iconify icon={icon} />}
             sx={{
-              m: 0.5,
+              m: 1,
               flexShrink: 0,
               ...(initialColor && {
                 color: socialColor,

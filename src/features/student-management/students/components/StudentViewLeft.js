@@ -19,7 +19,9 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
+
 const UserViewLeft = ({ student }) => {
+  const imageUrl = student?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.image}` : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   return (
     <Card>
       <CardMedia
@@ -40,7 +42,7 @@ const UserViewLeft = ({ student }) => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src="https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg" alt="profile-picture" />
+        <ProfilePicture src={imageUrl} alt="profile-picture" />
         <Box
           sx={{
             width: '100%',

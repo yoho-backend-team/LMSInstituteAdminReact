@@ -19,16 +19,16 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-function formattedDateTime(dateString) {
-  const dynamicDate = new Date(dateString);
-  const year = dynamicDate.getFullYear();
-  const month = (dynamicDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = dynamicDate.getDate().toString().padStart(2, '0');
-  const hours = dynamicDate.getHours().toString().padStart(2, '0');
-  const minutes = dynamicDate.getMinutes().toString().padStart(2, '0');
-  const seconds = dynamicDate.getSeconds().toString().padStart(2, '0');
-  return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-}
+// function formattedDateTime(dateString) {
+//   const dynamicDate = new Date(dateString);
+//   const year = dynamicDate.getFullYear();
+//   const month = (dynamicDate.getMonth() + 1).toString().padStart(2, '0');
+//   const day = dynamicDate.getDate().toString().padStart(2, '0');
+//   const hours = dynamicDate.getHours().toString().padStart(2, '0');
+//   const minutes = dynamicDate.getMinutes().toString().padStart(2, '0');
+//   const seconds = dynamicDate.getSeconds().toString().padStart(2, '0');
+//   return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+// }
 
 const NonTeachingViewBanner = ({ staff }) => {
   console.log('nonTeachingViewww:', staff);
@@ -85,10 +85,10 @@ const NonTeachingViewBanner = ({ staff }) => {
                 <Icon fontSize="1.25rem" icon="tabler:map-pin" />
                 <Typography sx={{ color: 'text.secondary' }}>london</Typography>
               </Box> */}
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
+              {/* <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
                 <Icon fontSize="1.25rem" icon="tabler:calendar" />
                 <Typography sx={{ color: 'text.secondary' }}>Created at <span style={{fontWeight:500}}>{formattedDateTime(staff?.teachingStaff?.created_at)}</span></Typography>
-              </Box>
+              </Box> */}
             </Box>
           </Box>
           <Button color={staff?.teachingStaff?.is_active ==='1' ? 'success' : 'error'}
