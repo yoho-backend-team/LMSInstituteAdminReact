@@ -112,8 +112,9 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
       setValue('classDate', new Date(offlineClasses.class_date) || new Date()); // Set class date
       setValue('startTime', offlineClasses?.startTime || null);
       setValue('endTime', offlineClasses?.endTime || null); // Set end time
-      setValue('instructor', offlineClasses.instructor || []); // Set instructors
-      setValue('coordinator', offlineClasses.coordinator || []); // Set coordinators
+      setValue('instructor', offlineClasses?.instructor || []); // Set instructors
+      setValue('coordinator', offlineClasses?.coordinators || []); 
+      setSelectedCoordinates(offlineClasses?.coordinators) // Set coordinators
     }
   }, [offlineClasses, setValue]);
 
@@ -129,7 +130,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
   useEffect(() => {
     if (offlineClasses && offlineClasses.coordinator) {
       setSelectedCoordinates(offlineClasses.coordinator);
-      setValue('coordinator', offlineClasses.coordinator); // Set default value for coordinator field
+      setValue('coordinator', offlineClasses.coordinators); // Set default value for coordinator field
     }
   }, [offlineClasses, setValue]);
 

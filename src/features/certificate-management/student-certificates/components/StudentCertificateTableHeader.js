@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStudentCertificates } from '../redux/studentCertificateThunks';
 import { useState, useCallback } from 'react';
+import MenuItem from '@mui/material/MenuItem';
 
 const StudentCertificateTableHeader = (props) => {
   // ** Props
@@ -22,6 +23,7 @@ const StudentCertificateTableHeader = (props) => {
 
   // State for search value
   const [searchValue, setSearchValue] = useState('');
+  const [statusValue, setStatusValue] = useState('');
 
   // Dispatch function
   const dispatch = useDispatch();
@@ -55,6 +57,12 @@ const StudentCertificateTableHeader = (props) => {
     [dispatch]
   );
 
+  const handleFilterByStatus = (e) => {
+    setStatusValue(e.target.value);
+    const data = { status: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStudentCertificates(data));
+  };
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -64,6 +72,18 @@ const StudentCertificateTableHeader = (props) => {
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12} sx={{ mb: 3 }}>
                 <Grid container spacing={4}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Status"
+                      SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                    >
+                      <MenuItem value="">Select Status</MenuItem>
+                      <MenuItem value="1">Active</MenuItem>
+                      <MenuItem value="0">Inactive</MenuItem>
+                    </TextField>
+                  </Grid>
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       // multiple
@@ -85,7 +105,7 @@ const StudentCertificateTableHeader = (props) => {
                       renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <Autocomplete
                       multiple
                       fullWidth
@@ -105,7 +125,7 @@ const StudentCertificateTableHeader = (props) => {
                       renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
                     />
                   </Grid>
-                  <Grid item sm={6} xs={12}>
+                  <Grid item sm={4} xs={12}>
                     {/* <TextField
                       fullWidth
                       value={value}
@@ -118,7 +138,7 @@ const StudentCertificateTableHeader = (props) => {
                     <TextField value={searchValue} fullWidth placeholder="Search Certificate" onChange={(e) => handleSearch(e)} />
                   </Grid>
 
-                  <Grid item sm={6} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
+                  <Grid item sm={4} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
                     <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Student Certificate

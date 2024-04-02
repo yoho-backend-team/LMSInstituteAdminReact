@@ -44,7 +44,7 @@ const userStatusObj = {
 
 const StudenrCertificate = () => {
   const [value, setValue] = useState('');
-  console.log(setValue)
+  console.log(setValue);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -60,10 +60,10 @@ const StudenrCertificate = () => {
   const [selectedStudentCertificateDeleteId, setSelectedStudentCertificateDeleteId] = useState(null);
 
   const renderClient = (row) => {
-    if (row?.institution_users?.image) {
+    if (row?.students?.image) {
       return (
         <CustomAvatar
-          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.institution_users?.image}`}
+          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.students?.image}`}
           sx={{ mr: 2.5, width: 38, height: 38 }}
         />
       );
@@ -80,7 +80,7 @@ const StudenrCertificate = () => {
   };
 
   const handleRowClick = (params) => {
-    setSelectedRow(params.row);
+    setSelectedRow(params);
   };
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -128,7 +128,6 @@ const StudenrCertificate = () => {
 
   console.log('certificate', studentCertificates);
 
-
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedStudentCertificateDeleteId(itemId);
@@ -146,7 +145,7 @@ const StudenrCertificate = () => {
     }
   };
 
-  const RowOptions = ({ id }) => {
+  const RowOptions = ({ row }) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -164,6 +163,7 @@ const StudenrCertificate = () => {
             menuItemProps: {
               onClick: () => {
                 toggleEditUserDrawer();
+                handleRowClick(row);
               }
             }
           },
@@ -174,6 +174,7 @@ const StudenrCertificate = () => {
             menuItemProps: {
               onClick: () => {
                 handleView();
+                handleRowClick(row);
               }
             }
           },
@@ -182,7 +183,10 @@ const StudenrCertificate = () => {
             text: 'Delete',
             icon: <Icon icon="mdi:delete-outline" />,
             menuItemProps: {
-              onClick: () => handleDelete(id)
+              onClick: () => {
+                handleDelete(id);
+                handleRowClick(row);
+              }
             }
           }
         ]}
@@ -295,7 +299,7 @@ const StudenrCertificate = () => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
 
@@ -330,7 +334,7 @@ const StudenrCertificate = () => {
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                onRowClick={handleRowClick}
+                // onRowClick={handleRowClick}
               />
             </Card>
           </Grid>

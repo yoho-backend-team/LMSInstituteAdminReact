@@ -1,165 +1,106 @@
 // ** React Imports
-import { Fragment, forwardRef, useCallback, useEffect, useState } from 'react';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
-import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 // ** Custom Component Import
-import CustomTextField from 'components/mui/text-field';
+import { Avatar, TextField } from '@mui/material';
 // ** Third Party Imports
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 // ** Icon Imports
 import Icon from 'components/icon';
+import { addNonTeachingStaffAttendance } from '../services/nonTeachingStaffAttendanceServices';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import toast from 'react-hot-toast';
 
-const capitalize = (string) => string && string[0].toUpperCase() + string.slice(1);
+// const capitalize = (string) => string && string[0].toUpperCase() + string.slice(1);
 
-const defaultState = {
-  url: '',
-  title: '',
-  guests: [],
-  allDay: true,
-  description: '',
-  endDate: new Date(),
-  calendar: 'Business',
-  startDate: new Date()
-};
-
-const NonTeachingStaffAddEventSidebar = (props) => {
+const TeachingStaffAddEventSidebar = (props) => {
   // ** Props
-  const {
-    store,
-    dispatch,
-    addEvent,
-    updateEvent,
-    drawerWidth,
-    calendarApi,
-    deleteEvent,
-    handleSelectEvent,
-    addEventSidebarOpen,
-    handleAddEventSidebarToggle
-  } = props;
+  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
+
+  const defaultState = {
+    staff_name: '',
+    title: '',
+    attendance_date: selected ? selected?.date : ''
+  };
 
   // ** States
   const [values, setValues] = useState(defaultState);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const {
-    control,
-    setValue,
-    clearErrors,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues: { title: '' } });
+  useEffect(() => {
+    if (selected) {
+      setSelectedDate(selected?.date);
+    }
+  }, [selected]);
+  console.log(staff);
+
+  const { control, setValue, clearErrors, handleSubmit } = useForm({ defaultValues: defaultState });
 
   const handleSidebarClose = async () => {
     setValues(defaultState);
     clearErrors();
-    dispatch(handleSelectEvent(null));
     handleAddEventSidebarToggle();
   };
 
-  const onSubmit = (data) => {
-    const modifiedEvent = {
-      url: values?.url,
-      display: 'block',
-      title: data?.title,
-      end: values.endDate,
-      allDay: values.allDay,
-      start: values.startDate,
-      extendedProps: {
-        calendar: capitalize(values.calendar),
-        guests: values.guests && values.guests.length ? values.guests : undefined,
-        description: values.description.length ? values.description : undefined
-      }
-    };
-    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.title?.length)) {
-      dispatch(addEvent(modifiedEvent));
-    } else {
-      dispatch(updateEvent({ id: store?.selectedEvent?.id, ...modifiedEvent }));
-    }
-    calendarApi.refetchEvents();
-    handleSidebarClose();
-  };
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
 
-  const handleDeleteEvent = () => {
-    if (store?.selectedEvent) {
-      dispatch(deleteEvent(store?.selectedEvent?.id));
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+  const onSubmit = async (data) => {
+    const inputData = {
+      staff_id: staffId,
+      title: data.title,
+      date: convertDateFormat(selectedDate)
+    };
+    const result = await addNonTeachingStaffAttendance(inputData);
+    if (result.success) {
+      setRefetch((state) => !state);
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
     }
-    // calendarApi.getEventById(store?.selectedEvent?.id).remove()
+
     handleSidebarClose();
   };
 
   const handleStartDate = (date) => {
-    if (date > values.endDate) {
-      setValues({ ...values, startDate: new Date(date), endDate: new Date(date) });
+    if (date) {
+      setValues({ ...values, attendance_date: new Date(date) });
     }
   };
 
-  const resetToStoredValues = useCallback(() => {
-    if (store?.selectedEvent !== null) {
-      const event = store?.selectedEvent;
-      setValue('title', event?.title || '');
-      setValues({
-        url: event?.url || '',
-        title: event?.title || '',
-        allDay: event?.allDay,
-        guests: event?.extendedProps.guests || [],
-        description: event?.extendedProps.description || '',
-        calendar: event?.extendedProps.calendar || 'Business',
-        endDate: event?.end !== null ? event?.end : event?.start,
-        startDate: event?.start !== null ? event?.start : new Date()
-      });
-    }
-  }, [setValue, store?.selectedEvent]);
-
-  const resetToEmptyValues = useCallback(() => {
-    setValue('title', '');
-    setValues(defaultState);
-  }, [setValue]);
-  useEffect(() => {
-    if (store?.selectedEvent !== null) {
-      resetToStoredValues();
-    } else {
-      resetToEmptyValues();
-    }
-  }, [addEventSidebarOpen, resetToStoredValues, resetToEmptyValues, store?.selectedEvent]);
-
   const PickersComponent = forwardRef(({ ...props }, ref) => {
-    return <CustomTextField inputRef={ref} fullWidth {...props} label={props.label || ''} sx={{ width: '100%' }} error={props.error} />;
+    return <TextField inputRef={ref} fullWidth {...props} label={props.label || ''} sx={{ width: '100%' }} error={props.error} />;
   });
 
   const RenderSidebarFooter = () => {
-    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.title?.length)) {
-      return (
-        <Fragment>
-          <Button type="submit" variant="contained" sx={{ mr: 4 }}>
-            Add
-          </Button>
-          <Button variant="tonal" color="secondary" onClick={resetToEmptyValues}>
-            Reset
-          </Button>
-        </Fragment>
-      );
-    } else {
-      return (
-        <Fragment>
-          <Button type="submit" variant="contained" sx={{ mr: 4 }}>
-            Update
-          </Button>
-          <Button variant="tonal" color="secondary" onClick={resetToStoredValues}>
-            Reset
-          </Button>
-        </Fragment>
-      );
-    }
+    return (
+      <Fragment>
+        <Button type="submit" variant="contained" sx={{ mr: 4 }}>
+          Add
+        </Button>
+        <Button variant="tonal" color="secondary">
+          Reset
+        </Button>
+      </Fragment>
+    );
   };
 
   return (
@@ -178,15 +119,8 @@ const NonTeachingStaffAddEventSidebar = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <Typography variant="h5">
-          {store?.selectedEvent !== null && store?.selectedEvent?.title?.length ? 'Update Event' : 'Add Event'}
-        </Typography>
+        <Typography variant="h5">Add Attendance</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {store?.selectedEvent !== null && store?.selectedEvent?.title?.length ? (
-            <IconButton size="small" onClick={handleDeleteEvent} sx={{ color: 'text.primary', mr: store?.selectedEvent !== null ? 1 : 0 }}>
-              <Icon icon="tabler:trash" fontSize="1.25rem" />
-            </IconButton>
-          ) : null}
           <IconButton
             size="small"
             onClick={handleSidebarClose}
@@ -207,111 +141,51 @@ const NonTeachingStaffAddEventSidebar = (props) => {
       <Box className="sidebar-body" sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <DatePickerWrapper>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+              <Box>
+                <Typography variant="h5">{staff?.staff_name}</Typography>
+                <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
+                  {staff?.email}
+                </Typography>
+              </Box>
+            </Box>
             <Controller
               name="title"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <CustomTextField
+                <TextField
+                  select
                   fullWidth
-                  label="Title"
-                  value={value}
                   sx={{ mb: 4 }}
-                  onChange={onChange}
-                  placeholder="Event Title"
-                  error={Boolean(errors?.title)}
-                  {...(errors?.title && { helperText: 'This field is required' })}
-                />
+                  label="Attendance"
+                  SelectProps={{
+                    value: value,
+                    onChange: onChange
+                  }}
+                >
+                  <MenuItem value="present">Present</MenuItem>
+                  <MenuItem value="absent">Absent</MenuItem>
+                </TextField>
               )}
             />
-            <CustomTextField
-              select
-              fullWidth
-              sx={{ mb: 4 }}
-              label="Calendar"
-              SelectProps={{
-                value: values.calendar,
-                onChange: (e) => setValues({ ...values, calendar: e.target.value })
-              }}
-            >
-              <MenuItem value="Personal">Personal</MenuItem>
-              <MenuItem value="Business">Business</MenuItem>
-              <MenuItem value="Family">Family</MenuItem>
-              <MenuItem value="Holiday">Holiday</MenuItem>
-              <MenuItem value="ETC">ETC</MenuItem>
-            </CustomTextField>
             <Box sx={{ mb: 4 }}>
               <DatePicker
-                selectsStart
+                // selectsStart
                 id="event-start-date"
-                endDate={values.endDate}
-                selected={values.startDate}
-                startDate={values.startDate}
-                showTimeSelect={!values.allDay}
-                dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                customInput={<PickersComponent label="Start Date" registername="startDate" />}
-                onChange={(date) => setValues({ ...values, startDate: new Date(date) })}
+                selected={selectedDate}
+                // startDate={values.attendance_date}
+                dateFormat={'yyyy-MM-dd'}
+                customInput={<PickersComponent label="Attendance Date" registername="attendance_date" />}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  setValue('attendance_date', date);
+                }}
                 onSelect={handleStartDate}
               />
             </Box>
-            <Box sx={{ mb: 4 }}>
-              <DatePicker
-                selectsEnd
-                id="event-end-date"
-                endDate={values.endDate}
-                selected={values.endDate}
-                minDate={values.startDate}
-                startDate={values.startDate}
-                showTimeSelect={!values.allDay}
-                dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
-                customInput={<PickersComponent label="End Date" registername="endDate" />}
-                onChange={(date) => setValues({ ...values, endDate: new Date(date) })}
-              />
-            </Box>
-            <FormControl sx={{ mb: 4 }}>
-              <FormControlLabel
-                label="All Day"
-                control={<Switch checked={values.allDay} onChange={(e) => setValues({ ...values, allDay: e.target.checked })} />}
-              />
-            </FormControl>
-            <CustomTextField
-              fullWidth
-              type="url"
-              id="event-url"
-              sx={{ mb: 4 }}
-              label="Event URL"
-              value={values?.url}
-              placeholder="https://www.google.com"
-              onChange={(e) => setValues({ ...values, url: e.target.value })}
-            />
 
-            <CustomTextField
-              select
-              fullWidth
-              label="Guests"
-              sx={{ mb: 4 }}
-              SelectProps={{
-                multiple: true,
-                value: values.guests,
-                onChange: (e) => setValues({ ...values, guests: e.target.value })
-              }}
-            >
-              <MenuItem value="bruce">Bruce</MenuItem>
-              <MenuItem value="clark">Clark</MenuItem>
-              <MenuItem value="diana">Diana</MenuItem>
-              <MenuItem value="john">John</MenuItem>
-              <MenuItem value="barry">Barry</MenuItem>
-            </CustomTextField>
-            <CustomTextField
-              rows={4}
-              multiline
-              fullWidth
-              sx={{ mb: 6.5 }}
-              label="Description"
-              id="event-description"
-              value={values.description}
-              onChange={(e) => setValues({ ...values, description: e.target.value })}
-            />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RenderSidebarFooter />
             </Box>
@@ -322,4 +196,4 @@ const NonTeachingStaffAddEventSidebar = (props) => {
   );
 };
 
-export default NonTeachingStaffAddEventSidebar;
+export default TeachingStaffAddEventSidebar;
