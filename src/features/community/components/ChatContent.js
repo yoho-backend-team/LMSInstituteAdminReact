@@ -38,7 +38,8 @@ const ChatContent = (props) => {
     handleUserProfileRightSidebarToggle,
     chats,
     selectedBatch,
-    setChats
+    setChats,
+    communityDetails
   } = props;
 
   const handleStartConversation = () => {
@@ -148,7 +149,9 @@ const ChatContent = (props) => {
                 </Badge>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Typography variant="h5">{selectedBatch?.batch?.batch_name}</Typography>
-                  <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>{selectedBatch?.batch?.batch_id}</Typography>
+                  <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
+                    {selectedBatch?.batch?.institute_course_branch?.course_name}
+                  </Typography>
                 </Box>
               </Box>
 
@@ -172,6 +175,7 @@ const ChatContent = (props) => {
               sidebarWidth={sidebarWidth}
               userProfileRightOpen={userProfileRightOpen}
               handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+              communityDetails={communityDetails}
             />
           </Box>
         );

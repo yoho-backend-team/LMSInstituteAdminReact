@@ -16,12 +16,8 @@ import format from 'date-fns/format';
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 // ** Custom Components Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
-import Checkbox from '@mui/material/Checkbox';
 import SalariesDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
@@ -31,16 +27,16 @@ import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
 // ** Styled Components
 // import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-import { useEffect } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
+import { useCallback, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
 import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
-import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
-import MenuItem from '@mui/material/MenuItem';
 import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
-import { useCallback } from 'react';
-import toast from 'react-hot-toast';
+import SalaryViewDrawer from './SalaryViewDrawer';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -115,6 +111,8 @@ const SalaryTable = () => {
 
   const [loading, setLoading] = useState(true);
   const [statusValue, setStatusValue] = useState('');
+  const [staffValue, setStaffValue] = useState('');
+
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -129,19 +127,12 @@ const SalaryTable = () => {
     const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStaffSalaries(data));
   };
-
-  const staff = [
-    { staff_id: '1', staff_name: 'staff 1' },
-    { staff_id: '2', staff_name: 'staff 2' },
-    { staff_id: '3', staff_name: 'staff 3' }
-  ];
-
-  const [selectedstafftype, setSelectedstafftype] = useState([]);
-  const stafftype = [
-    { staff_id: '1', staff_name: 'stafftype 1' },
-    { staff_id: '2', staff_name: 'stafftype 2' },
-    { staff_id: '3', staff_name: 'stafftype 3' }
-  ];
+  
+  const handleFilterByStaffType = (e) => {
+    setStaffValue(e.target.value);
+    const data = { type: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStaffSalaries(data));
+  };
 
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
@@ -162,6 +153,12 @@ const SalaryTable = () => {
     } else {
       toast.error(result.message);
     }
+  };
+
+  const [salaryViewOpen, setSalaryViewUserOpen] = useState(false);
+  const toggleSalaryViewDrawer = () => {
+    setSalaryViewUserOpen(!salaryViewOpen); 
+    console.log('Toggle drawer');
   };
 
   const defaultColumns = [
@@ -259,8 +256,10 @@ const SalaryTable = () => {
                 text: 'View',
                 icon: <Icon icon="tabler:eye" fontSize={20} />,
                 menuItemProps: {
-                  component: Link,
-                  to: `/apps/invoice/preview/${row.id}`
+                  onClick: () => {
+                    handleRowClick(row);
+                    toggleSalaryViewDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                  }
                 }
               },
               {
@@ -382,63 +381,17 @@ const SalaryTable = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    disableCloseOnSelect
-                    multiple
-                    id="select-multiple-chip"
-                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...stafftype]}
-                    getOptionLabel={(option) => option.staff_name}
-                    value={selectedstafftype}
-                    onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                        setSelectedstafftype(staff.filter((option) => option.staff_id !== 'selectAll'));
-                      } else {
-                        setSelectedstafftype(newValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Staff Type"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.staff_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.staff_id}
-                            label={option.staff_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedstafftype(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                  />
+                  <TextField
+                    select
+                    fullWidth
+                    label="Staff Type"
+                    defaultValue={''}
+                    SelectProps={{ value: staffValue, onChange: (e) => handleFilterByStaffType(e) }}
+                  >
+                    <MenuItem value="">Select Option</MenuItem>
+                    <MenuItem value="teaching">Teaching</MenuItem>
+                    <MenuItem value="non-teaching">Non Teaching</MenuItem>
+                  </TextField>
                 </Grid>
               </Grid>
             </CardContent>
@@ -485,6 +438,8 @@ const SalaryTable = () => {
         title="Delete"
         handleSubmit={handleSalariesDelete}
       />
+      <SalaryViewDrawer open={salaryViewOpen} toggle={toggleSalaryViewDrawer} selectedRowDetails={selectedRows} />
+
     </DatePickerWrapper>
   );
 };

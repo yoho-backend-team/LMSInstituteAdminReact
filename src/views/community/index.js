@@ -20,6 +20,7 @@ import ChatContent from 'features/community/components/ChatContent';
 import SidebarLeft from 'features/community/components/SidebarLeft';
 import { getAllCommunities } from 'features/community/redux/communityThunks';
 import { selectCommunities } from 'features/community/redux/communitySelectors';
+import { getCommunityDetails } from 'features/community/services/communityServices';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -37,6 +38,7 @@ const Community = () => {
   const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
   const [chats, setChats] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(communities);
@@ -72,7 +74,14 @@ const Community = () => {
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
-  const handleUserProfileRightSidebarToggle = () => setUserProfileRightOpen(!userProfileRightOpen);
+  const handleUserProfileRightSidebarToggle = async () => {
+    const result = await getCommunityDetails({ batch_id: selectedBatch?.institute_batch_id });
+    if (result) {
+      setCommunityDetails(result?.data?.data);
+    }
+    console.log('result  yuyueyu ', result);
+    setUserProfileRightOpen(!userProfileRightOpen);
+  };
   console.log(selectChat);
   const [loading, setLoading] = useState(true);
 
@@ -120,6 +129,8 @@ const Community = () => {
             communities={communities?.batch_community}
             setChats={setChats}
             setSelectedBatch={setSelectedBatch}
+            setCommunityDetails={setCommunityDetails}
+            communityDetails={communityDetails}
           />
           <ChatContent
             store={store}
@@ -136,6 +147,7 @@ const Community = () => {
             chats={chats}
             selectedBatch={selectedBatch}
             setChats={setChats}
+            communityDetails={communityDetails}
           />
         </Box>
       )}

@@ -16,7 +16,6 @@ import Icon from 'components/icon';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 import CustomAvatar from 'components/mui/avatar';
 import CustomTextField from 'components/mui/text-field';
-import UserProfileLeft from './UserProfileLeft';
 import { getAllBatchChats } from '../services/communityServices';
 
 const ScrollWrapper = ({ children, hidden }) => {
@@ -35,13 +34,10 @@ const SidebarLeft = (props) => {
     dispatch,
     statusObj,
     userStatus,
-    // selectChat,
     getInitials,
     sidebarWidth,
-    setUserStatus,
     leftSidebarOpen,
     removeSelectedChat,
-    userProfileLeftOpen,
     handleLeftSidebarToggle,
     handleUserProfileLeftSidebarToggle,
     communities,
@@ -50,11 +46,8 @@ const SidebarLeft = (props) => {
   } = props;
 
   const [query, setQuery] = useState('');
-  const [filteredChat, setFilteredChat] = useState([]);
-  const [filteredContacts, setFilteredContacts] = useState([]);
   const [active, setActive] = useState(null);
   console.log(communities);
-  console.log(filteredChat);
 
   const handleChatClick = async (type, community) => {
     setActive(community);
@@ -88,97 +81,88 @@ const SidebarLeft = (props) => {
   };
 
   const renderContacts = () => {
-    if (store && store.contacts && store.contacts.length) {
-      if (query.length && !filteredContacts.length) {
-        return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
-          </ListItem>
-        );
-      } else {
-        const arrToMap = communities;
+    if (communities === undefined) {
+      return (
+        <ListItem>
+          <Typography sx={{ color: 'text.secondary' }}>No Batches Found</Typography>
+        </ListItem>
+      );
+    } else {
+      const arrToMap = communities;
 
-        return arrToMap !== null
-          ? arrToMap.map((contact, index) => {
-            const activeCondition = active !== null && active.id === contact.id;
+      return arrToMap !== null
+        ? arrToMap?.map((contact, index) => {
+          const activeCondition = active !== null && active.id === contact.id;
 
-            return (
-              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
-                <ListItemButton
-                  disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
+          return (
+            <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+              <ListItemButton
+                disableRipple
+                onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
+                sx={{
+                  py: 2,
+                  px: 3,
+                  width: '100%',
+                  borderRadius: 1,
+                  '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                  ...(activeCondition && {
+                    background: (theme) =>
+                      `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                        theme.palette.primary.main,
+                        0.7
+                      )} 76.47%) !important`
+                  })
+                }}
+              >
+                <ListItemAvatar sx={{ m: 0 }}>
+                  {contact.avatar ? (
+                    <MuiAvatar
+                      alt={contact.fullName}
+                      src={contact.avatar}
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                      }}
+                    />
+                  ) : (
+                    <CustomAvatar
+                      color={contact.avatarColor}
+                      skin={activeCondition ? 'light-static' : 'light'}
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        fontSize: (theme) => theme.typography.body1.fontSize,
+                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                      }}
+                    >
+                      {getInitials(contact?.batch?.batch_name)}
+                    </CustomAvatar>
+                  )}
+                </ListItemAvatar>
+                <ListItemText
                   sx={{
-                    py: 2,
-                    px: 3,
-                    width: '100%',
-                    borderRadius: 1,
-                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
-                    ...(activeCondition && {
-                      background: (theme) =>
-                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                          theme.palette.primary.main,
-                          0.7
-                        )} 76.47%) !important`
-                    })
+                    my: 0,
+                    ml: 3,
+                    ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                   }}
-                >
-                  <ListItemAvatar sx={{ m: 0 }}>
-                    {contact.avatar ? (
-                      <MuiAvatar
-                        alt={contact.fullName}
-                        src={contact.avatar}
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                        }}
-                      />
-                    ) : (
-                      <CustomAvatar
-                        color={contact.avatarColor}
-                        skin={activeCondition ? 'light-static' : 'light'}
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          fontSize: (theme) => theme.typography.body1.fontSize,
-                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                        }}
-                      >
-                        {getInitials(contact?.batch?.batch_name)}
-                      </CustomAvatar>
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{
-                      my: 0,
-                      ml: 3,
-                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
-                    }}
-                    primary={<Typography variant="h6">{contact?.batch?.batch_id}</Typography>}
-                    secondary={
-                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact?.batch?.batch_name}
-                      </Typography>
-                    }
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })
-          : null;
-      }
+                  primary={<Typography variant="h5">{contact?.batch?.batch_name}</Typography>}
+                  secondary={
+                    <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
+                      {contact?.batch?.institute_course_branch?.course_name}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })
+        : null;
     }
   };
 
   const handleFilter = (e) => {
     setQuery(e.target.value);
-    if (store.chats !== null && store.contacts !== null) {
-      const searchFilterFunction = (contact) => contact.fullName.toLowerCase().includes(e.target.value.toLowerCase());
-      const filteredChatsArr = store.chats.filter(searchFilterFunction);
-      const filteredContactsArr = store.contacts.filter(searchFilterFunction);
-      setFilteredChat(filteredChatsArr);
-      setFilteredContacts(filteredContactsArr);
-    }
   };
 
   return (
@@ -281,17 +265,6 @@ const SidebarLeft = (props) => {
           </ScrollWrapper>
         </Box>
       </Drawer>
-
-      <UserProfileLeft
-        store={store}
-        hidden={hidden}
-        statusObj={statusObj}
-        userStatus={userStatus}
-        sidebarWidth={sidebarWidth}
-        setUserStatus={setUserStatus}
-        userProfileLeftOpen={userProfileLeftOpen}
-        handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-      />
     </div>
   );
 };

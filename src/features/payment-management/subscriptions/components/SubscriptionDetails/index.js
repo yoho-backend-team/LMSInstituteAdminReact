@@ -33,7 +33,13 @@ const SubscriptionDetails = (props) => {
   console.log('Subscriptions Plan', data);
 
   const renderFeatures = () => {
-    return data?.features?.map((item, index) => (
+    // Check if data.features is an array
+    if (!Array.isArray(data?.features)) {
+      return null; // or handle the case where data.features is not an array
+    }
+  
+    // If data.features is an array, proceed with mapping its elements
+    return data.features.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Box component="span" sx={{ display: 'inline-flex', color: 'text.secondary', mr: 2.5 }}>
           <Icon icon="tabler:circle" fontSize="0.875rem" />
@@ -42,6 +48,7 @@ const SubscriptionDetails = (props) => {
       </Box>
     ));
   };
+  
 
   return (
     <BoxWrapper
