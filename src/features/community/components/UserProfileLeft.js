@@ -20,7 +20,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Sidebar from 'components/sidebar';
 
 const UserProfileLeft = (props) => {
-  const { store, hidden, statusObj, userStatus, sidebarWidth, setUserStatus, userProfileLeftOpen, handleUserProfileLeftSidebarToggle } =
+  const { store, hidden, statusObj, userStatus, sidebarWidth, setUserStatus, userProfileLeftOpen, handleUserProfileLeftSidebarToggle,communityDetails } =
     props;
 
   const handleUserStatus = (e) => {
@@ -87,7 +87,7 @@ const UserProfileLeft = (props) => {
               </Badge>
             </Box>
             <Typography variant="h5" sx={{ textAlign: 'center' }}>
-              {store.userProfile.fullName}
+              {communityDetails?.batch?.batch_name}
             </Typography>
             <Typography sx={{ textAlign: 'center', color: 'text.secondary', textTransform: 'capitalize' }}>
               {store.userProfile.role}

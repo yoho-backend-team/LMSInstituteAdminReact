@@ -32,7 +32,7 @@ const SendMsgForm = (props) => {
 
   useEffect(() => {
     console.log('hello', selectedBatch);
-    const intervalId = setInterval(getMessages, 2000); // Set interval for every 2 seconds
+    const intervalId = setInterval(getMessages, 5000); // Set interval for every 2 seconds
 
     // Call getMessages immediately when the component mounts
     getMessages();

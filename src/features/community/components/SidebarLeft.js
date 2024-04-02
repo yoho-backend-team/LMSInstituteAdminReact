@@ -46,7 +46,8 @@ const SidebarLeft = (props) => {
     handleUserProfileLeftSidebarToggle,
     communities,
     setChats,
-    setSelectedBatch
+    setSelectedBatch,
+    communityDetails
   } = props;
 
   const [query, setQuery] = useState('');
@@ -154,10 +155,10 @@ const SidebarLeft = (props) => {
                       ml: 3,
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                    primary={<Typography variant="h6">{contact?.batch?.batch_id}</Typography>}
+                    primary={<Typography variant="h5">{contact?.batch?.batch_name}</Typography>}
                     secondary={
-                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact?.batch?.batch_name}
+                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
+                        {contact?.batch?.institute_course_branch?.course_name}
                       </Typography>
                     }
                   />
@@ -291,6 +292,7 @@ const SidebarLeft = (props) => {
         setUserStatus={setUserStatus}
         userProfileLeftOpen={userProfileLeftOpen}
         handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
+        communityDetails={communityDetails}
       />
     </div>
   );

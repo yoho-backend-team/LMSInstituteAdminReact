@@ -18,7 +18,16 @@ import CustomAvatar from 'components/mui/avatar';
 import Sidebar from 'components/sidebar';
 
 const UserProfileRight = (props) => {
-  const { store, hidden, statusObj, getInitials, sidebarWidth, userProfileRightOpen, handleUserProfileRightSidebarToggle } = props;
+  const {
+    store,
+    hidden,
+    statusObj,
+    getInitials,
+    sidebarWidth,
+    userProfileRightOpen,
+    handleUserProfileRightSidebarToggle,
+    communityDetails
+  } = props;
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(null);
 
@@ -65,9 +74,9 @@ const UserProfileRight = (props) => {
           </ListItem>
         );
       } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+        const arrToMap = communityDetails?.batch_staff;
         return arrToMap !== null
-          ? arrToMap.slice(0, 2).map((contact, index) => {
+          ? arrToMap?.map((contact, index) => {
             const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
@@ -90,9 +99,9 @@ const UserProfileRight = (props) => {
                   }}
                 >
                   <ListItemAvatar sx={{ m: 0 }}>
-                    {contact.avatar ? (
+                    {contact.staff?.image ? (
                       <MuiAvatar
-                        alt={contact.fullName}
+                        alt={contact.staff?.staff_name}
                         src={contact.avatar}
                         sx={{
                           width: 38,
@@ -111,7 +120,7 @@ const UserProfileRight = (props) => {
                           outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                         }}
                       >
-                        {getInitials(contact.fullName)}
+                        {getInitials(contact.staff?.staff_name)}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -121,10 +130,10 @@ const UserProfileRight = (props) => {
                       ml: 3,
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                    primary={<Typography variant="h6">{contact.fullName}</Typography>}
+                    primary={<Typography variant="h6">{contact.staff?.staff_name}</Typography>}
                     secondary={
                       <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact.about}
+                        {contact.staff?.email}
                       </Typography>
                     }
                   />
@@ -138,7 +147,7 @@ const UserProfileRight = (props) => {
   };
 
   const renderContacts = () => {
-    if (store && store.contacts && store.contacts.length) {
+    if (communityDetails?.batch_student) {
       if (query.length && !filteredContacts.length) {
         return (
           <ListItem>
@@ -146,7 +155,7 @@ const UserProfileRight = (props) => {
           </ListItem>
         );
       } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+        const arrToMap = communityDetails?.batch_student;
 
         return arrToMap !== null
           ? arrToMap.map((contact, index) => {
@@ -173,9 +182,9 @@ const UserProfileRight = (props) => {
                   }}
                 >
                   <ListItemAvatar sx={{ m: 0 }}>
-                    {contact.avatar ? (
+                    {contact.student?.image ? (
                       <MuiAvatar
-                        alt={contact.fullName}
+                        alt={contact.student?.first_name}
                         src={contact.avatar}
                         sx={{
                           width: 38,
@@ -194,7 +203,7 @@ const UserProfileRight = (props) => {
                           outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                         }}
                       >
-                        {getInitials(contact.fullName)}
+                        {getInitials(contact?.student?.first_name)}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -204,10 +213,10 @@ const UserProfileRight = (props) => {
                       ml: 3,
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                    primary={<Typography variant="h6">{contact.fullName}</Typography>}
+                    primary={<Typography variant="h6">{contact.student?.first_name}</Typography>}
                     secondary={
                       <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact.about}
+                        {contact.student?.email}
                       </Typography>
                     }
                   />
@@ -286,10 +295,12 @@ const UserProfileRight = (props) => {
                   )}
                 </Badge>
               </Box>
-              <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                {store.selectedChat.contact.fullName}
+              <Typography variant="h4" sx={{ textAlign: 'center' }}>
+                {communityDetails?.batch?.batch_name}
               </Typography>
-              <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>{store.selectedChat.contact.role}</Typography>
+              <Typography sx={{ textAlign: 'center', color: 'text.secondary', mt: 0.5 }}>
+                {communityDetails?.batch?.institute_course_branch?.course_name}
+              </Typography>
             </Box>
           </Box>
 
