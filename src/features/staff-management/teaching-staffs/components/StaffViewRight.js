@@ -49,7 +49,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab, staff,staffID,formattedDate ,setRefetch}) => {
+const UserViewRight = ({ tab, staff, staffID, formattedDate, setRefetch }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
   const handleChange = (event, value) => {
@@ -60,7 +60,7 @@ const UserViewRight = ({ tab, staff,staffID,formattedDate ,setRefetch}) => {
       setActiveTab(tab);
     }
   }, [tab]);
-// console.log(staff);
+  // console.log(staff);
   return (
     <TabContext value={activeTab}>
       <TabList
@@ -79,16 +79,16 @@ const UserViewRight = ({ tab, staff,staffID,formattedDate ,setRefetch}) => {
       <Box sx={{ mt: 4 }}>
         <>
           <TabPanel sx={{ p: 0 }} value="account">
-            <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch}/>
+            <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="security">
-            <UserViewSecurity id={staff?.teachingStaff?.id}/>
+            <UserViewSecurity id={staff?.teachingStaff?.id} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="class">
-            <UserViewBilling staff={staff?.teachingStaff?.staff_class}/>
+            <UserViewBilling staff={staff?.teachingStaff?.staff_class} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="attendance">
-            <TeacherAttendance />
+            <TeacherAttendance attendance={staff?.teachingStaff?.attendance} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="activity">
             <UserViewConnection id={staff?.teachingStaff?.id} />
