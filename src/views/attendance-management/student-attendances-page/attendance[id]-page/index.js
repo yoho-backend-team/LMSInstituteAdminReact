@@ -1,10 +1,9 @@
 // material-ui
 import { Grid } from '@mui/material';
-import BatchViewSkeleton from 'components/cards/Skeleton/BatchViewSkeleton';
 import { useEffect, useState } from 'react';
-
 import StudentAttendanceTable from 'features/attandence-management/student-attandences/components/StudentAttendanceTable';
 import StudentViewHeaderCard from 'features/attandence-management/student-attandences/components/StudentViewHeaderCard';
+import StudentAttendanceViewSkeleton from 'components/cards/Skeleton/StudentAttendanceViewSkeleton';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -24,7 +23,7 @@ const ViewAttendance = () => {
   return (
     <>
       {loading ? (
-        <BatchViewSkeleton />
+        <StudentAttendanceViewSkeleton />
       ) : (
         <Grid container spacing={3} sx={{ p: 1 }}>
           <Grid item xs={12} sm={12}>

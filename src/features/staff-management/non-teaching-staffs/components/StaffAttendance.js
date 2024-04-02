@@ -1,56 +1,32 @@
 // ** React Imports
-import { useEffect, useState } from 'react';
-
+import { useState } from 'react';
 // ** MUI Imports
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
 // ** Redux Imports
-import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
-// ** Hooks
-
 // ** FullCalendar & App Components Imports
 import Calendar from 'features/calender/components/Calendar';
-// import SidebarLeft from 'features/calender/components/SidebarLeft';
 import CalendarWrapper from 'styles/libs/fullcalendar';
-// import AddEventSidebar from 'features/calender/components/AddEventSidebar';
-
 // ** Actions
-import { fetchEvents, updateEvent, handleSelectEvent } from 'features/calender/redux/reducers';
 
-// ** CalendarColors
 const calendarsColor = {
-  Personal: 'error',
-  Business: 'primary',
-  Family: 'warning',
-  Holiday: 'success',
-  ETC: 'info'
+  present: 'success',
+  absent: 'error',
+  holiday: 'warning'
 };
 
-const AppCalendar = () => {
+const AppCalendar = ({ attendance }) => {
   // ** States
   const [calendarApi, setCalendarApi] = useState(null);
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
-  const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false);
-
-  // ** Hooks
-
-  const dispatch = useDispatch();
-  const store = useSelector((state) => state.calendar);
 
   const skin = 'default';
   const direction = 'ltr';
   const mdAbove = useMediaQuery((theme) => theme.breakpoints.up('md'));
-  useEffect(() => {
-    dispatch(fetchEvents(store?.selectedCalendars));
-  }, [dispatch, store?.selectedCalendars]);
-  const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
-  const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
 
   return (
-    <Grid container spacing={1}>
-      <Grid xs={12}>
+    <Grid container>
+      <Grid item xs={12} sm={12} sx={{ overflow: 'auto' }}>
         <CalendarWrapper
           className="app-calendar"
           sx={{
@@ -70,16 +46,11 @@ const AppCalendar = () => {
             }}
           >
             <Calendar
-              store={store}
-              dispatch={dispatch}
               direction={direction}
-              updateEvent={updateEvent}
               calendarApi={calendarApi}
               calendarsColor={calendarsColor}
               setCalendarApi={setCalendarApi}
-              handleSelectEvent={handleSelectEvent}
-              handleLeftSidebarToggle={handleLeftSidebarToggle}
-              handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+              attendance={attendance}
             />
           </Box>
         </CalendarWrapper>
