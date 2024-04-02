@@ -23,7 +23,7 @@ const SendMsgForm = (props) => {
   const { selectedBatch, setChats } = props;
   const [msg, setMsg] = useState('');
   console.log(selectedBatch);
-  const getMessages = async (selectedBatch) => {
+  const getMessages = async () => {
     const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?.institute_branch_comm_id });
     if (result) {
       setChats(result?.data?.data);
@@ -31,11 +31,11 @@ const SendMsgForm = (props) => {
   };
 
   useEffect(() => {
-    // Call getMessages immediately when the component mounts
-    getMessages(selectedBatch);
+    console.log('hello', selectedBatch);
+    const intervalId = setInterval(getMessages, 5000); // Set interval for every 2 seconds
 
-    // Set up interval to call getMessages every 20 seconds
-    const intervalId = setInterval(getMessages, 20000); // 20 seconds = 20000 milliseconds
+    // Call getMessages immediately when the component mounts
+    getMessages();
 
     // Clean up the interval when the component unmounts or when selectedBatch changes
     return () => clearInterval(intervalId);

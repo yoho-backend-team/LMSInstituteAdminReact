@@ -48,6 +48,7 @@ const NonTeachingStaffFilterCard = (props) => {
               <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                    <MenuItem value="">Select Status</MenuItem>
                     <MenuItem value="1">Active</MenuItem>
                     <MenuItem value="0">Inactive</MenuItem>
                   </TextField>

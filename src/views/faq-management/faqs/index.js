@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import FaqSkeleton from 'components/cards/Skeleton/FaqSkeleton';
 import DeleteDialog from 'components/modal/DeleteModel';
 import StatusDialog from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
@@ -239,17 +239,20 @@ const FaqDataGrid = () => {
 
   return (
     <>
-      {faqLoading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
+      <Grid container>
+        {/* Faq filter and header */}
+
+        <Grid item xs={12}>
+          <FaqAccordian faqCategories={faqCategories} />
+        </Grid>
+        <Grid item xs={12}>
+          <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+        </Grid>
+        {faqLoading ? (
+          <FaqSkeleton />
+        ) : (
           <Grid item xs={12}>
-            <FaqAccordian faqCategories={faqCategories} />
-          </Grid>
-          <Grid item xs={12}>
-            <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
-          <Grid item xs={12}>
+            {/* Display Faqs */}
             <Card>
               <DataGrid
                 autoHeight
@@ -264,30 +267,30 @@ const FaqDataGrid = () => {
               />
             </Card>
           </Grid>
-          <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
-          <FaqEdit
-            open={editUserOpen}
-            toggle={toggleEditUserDrawer}
-            initialValues={selectedRow}
-            faqCategories={faqCategories}
-            setRefetch={setRefetch}
-          />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-            handleSubmit={handleDeleteApi}
-          />
-          <StatusDialog
-            open={statusOpen}
-            setOpen={setStatusDialogOpen}
-            description="Are you sure you want to Change Status"
-            title="Status"
-            handleSubmit={handleStatusChangeApi}
-          />
-        </Grid>
-      )}
+        )}
+        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
+        <FaqEdit
+          open={editUserOpen}
+          toggle={toggleEditUserDrawer}
+          initialValues={selectedRow}
+          faqCategories={faqCategories}
+          setRefetch={setRefetch}
+        />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+          handleSubmit={handleDeleteApi}
+        />
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
+      </Grid>
     </>
   );
 };

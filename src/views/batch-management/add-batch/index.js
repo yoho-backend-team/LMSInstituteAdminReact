@@ -82,7 +82,7 @@ const AddBatchPage = () => {
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({branch_id:selectedBranchId});
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);

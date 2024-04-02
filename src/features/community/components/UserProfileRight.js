@@ -18,11 +18,18 @@ import CustomAvatar from 'components/mui/avatar';
 import Sidebar from 'components/sidebar';
 
 const UserProfileRight = (props) => {
-  const { store, hidden, statusObj, getInitials, sidebarWidth, userProfileRightOpen, handleUserProfileRightSidebarToggle } = props;
-  const [query, setQuery] = useState('');
-  const [active, setActive] = useState(null);
+  const {
+    store,
+    hidden,
+    statusObj,
+    getInitials,
+    sidebarWidth,
+    userProfileRightOpen,
+    handleUserProfileRightSidebarToggle,
+    communityDetails
+  } = props;
 
-  console.log(setQuery);
+  const [active, setActive] = useState(null);
 
   useEffect(() => {
     if (store && store.chats) {
@@ -33,13 +40,6 @@ const UserProfileRight = (props) => {
       }
     }
   }, [store, active]);
-
-  useEffect(() => {
-    setActive(null);
-    return () => {
-      setActive(null);
-    };
-  }, []);
 
   const hasActiveId = (id) => {
     if (store.chats !== null) {
@@ -57,166 +57,162 @@ const UserProfileRight = (props) => {
   };
 
   const renderStaff = () => {
-    if (store && store.contacts && store.contacts.length) {
-      if (query.length && !filteredContacts.length) {
-        return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
-          </ListItem>
-        );
-      } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
-        return arrToMap !== null
-          ? arrToMap.slice(0, 2).map((contact, index) => {
-            const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
-            return (
-              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
-                <ListItemButton
-                  disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+    if (!communityDetails?.batch_staff) {
+      return (
+        <ListItem>
+          <Typography sx={{ color: 'text.secondary' }}>No Staffs Found</Typography>
+        </ListItem>
+      );
+    } else {
+      const arrToMap = communityDetails?.batch_staff;
+      return arrToMap !== null
+        ? arrToMap?.map((contact, index) => {
+          const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+          return (
+            <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+              <ListItemButton
+                disableRipple
+                onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                sx={{
+                  py: 2,
+                  px: 3,
+                  width: '100%',
+                  borderRadius: 1,
+                  '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                  ...(activeCondition && {
+                    background: (theme) =>
+                      `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                        theme.palette.primary.main,
+                        0.7
+                      )} 76.47%) !important`
+                  })
+                }}
+              >
+                <ListItemAvatar sx={{ m: 0 }}>
+                  {contact.staff?.image ? (
+                    <MuiAvatar
+                      alt={contact.staff?.staff_name}
+                      src={contact.avatar}
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                      }}
+                    />
+                  ) : (
+                    <CustomAvatar
+                      color={contact.avatarColor}
+                      skin={activeCondition ? 'light-static' : 'light'}
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        fontSize: (theme) => theme.typography.body1.fontSize,
+                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                      }}
+                    >
+                      {getInitials(contact.staff?.staff_name)}
+                    </CustomAvatar>
+                  )}
+                </ListItemAvatar>
+                <ListItemText
                   sx={{
-                    py: 2,
-                    px: 3,
-                    width: '100%',
-                    borderRadius: 1,
-                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
-                    ...(activeCondition && {
-                      background: (theme) =>
-                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                          theme.palette.primary.main,
-                          0.7
-                        )} 76.47%) !important`
-                    })
+                    my: 0,
+                    ml: 3,
+                    ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                   }}
-                >
-                  <ListItemAvatar sx={{ m: 0 }}>
-                    {contact.avatar ? (
-                      <MuiAvatar
-                        alt={contact.fullName}
-                        src={contact.avatar}
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                        }}
-                      />
-                    ) : (
-                      <CustomAvatar
-                        color={contact.avatarColor}
-                        skin={activeCondition ? 'light-static' : 'light'}
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          fontSize: (theme) => theme.typography.body1.fontSize,
-                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                        }}
-                      >
-                        {getInitials(contact.fullName)}
-                      </CustomAvatar>
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{
-                      my: 0,
-                      ml: 3,
-                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
-                    }}
-                    primary={<Typography variant="h6">{contact.fullName}</Typography>}
-                    secondary={
-                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact.about}
-                      </Typography>
-                    }
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })
-          : null;
-      }
+                  primary={<Typography variant="h6">{contact.staff?.staff_name}</Typography>}
+                  secondary={
+                    <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
+                      {contact.staff?.email}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })
+        : null;
     }
   };
 
   const renderContacts = () => {
-    if (store && store.contacts && store.contacts.length) {
-      if (query.length && !filteredContacts.length) {
-        return (
-          <ListItem>
-            <Typography sx={{ color: 'text.secondary' }}>No Contacts Found</Typography>
-          </ListItem>
-        );
-      } else {
-        const arrToMap = query.length && filteredContacts.length ? filteredContacts : store.contacts;
+    if (!communityDetails?.batch_student) {
+      return (
+        <ListItem>
+          <Typography sx={{ color: 'text.secondary' }}>No Students Found</Typography>
+        </ListItem>
+      );
+    } else {
+      const arrToMap = communityDetails?.batch_student;
 
-        return arrToMap !== null
-          ? arrToMap.map((contact, index) => {
-            const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+      return arrToMap !== null
+        ? arrToMap.map((contact, index) => {
+          const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
 
-            return (
-              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
-                <ListItemButton
-                  disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+          return (
+            <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+              <ListItemButton
+                disableRipple
+                onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                sx={{
+                  py: 2,
+                  px: 3,
+                  width: '100%',
+                  borderRadius: 1,
+                  '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                  ...(activeCondition && {
+                    background: (theme) =>
+                      `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                        theme.palette.primary.main,
+                        0.7
+                      )} 76.47%) !important`
+                  })
+                }}
+              >
+                <ListItemAvatar sx={{ m: 0 }}>
+                  {contact.student?.image ? (
+                    <MuiAvatar
+                      alt={contact.student?.first_name}
+                      src={contact.avatar}
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                      }}
+                    />
+                  ) : (
+                    <CustomAvatar
+                      color={contact.avatarColor}
+                      skin={activeCondition ? 'light-static' : 'light'}
+                      sx={{
+                        width: 38,
+                        height: 38,
+                        fontSize: (theme) => theme.typography.body1.fontSize,
+                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                      }}
+                    >
+                      {getInitials(contact?.student?.first_name)}
+                    </CustomAvatar>
+                  )}
+                </ListItemAvatar>
+                <ListItemText
                   sx={{
-                    py: 2,
-                    px: 3,
-                    width: '100%',
-                    borderRadius: 1,
-                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
-                    ...(activeCondition && {
-                      background: (theme) =>
-                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                          theme.palette.primary.main,
-                          0.7
-                        )} 76.47%) !important`
-                    })
+                    my: 0,
+                    ml: 3,
+                    ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                   }}
-                >
-                  <ListItemAvatar sx={{ m: 0 }}>
-                    {contact.avatar ? (
-                      <MuiAvatar
-                        alt={contact.fullName}
-                        src={contact.avatar}
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                        }}
-                      />
-                    ) : (
-                      <CustomAvatar
-                        color={contact.avatarColor}
-                        skin={activeCondition ? 'light-static' : 'light'}
-                        sx={{
-                          width: 38,
-                          height: 38,
-                          fontSize: (theme) => theme.typography.body1.fontSize,
-                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                        }}
-                      >
-                        {getInitials(contact.fullName)}
-                      </CustomAvatar>
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    sx={{
-                      my: 0,
-                      ml: 3,
-                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
-                    }}
-                    primary={<Typography variant="h6">{contact.fullName}</Typography>}
-                    secondary={
-                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                        {contact.about}
-                      </Typography>
-                    }
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })
-          : null;
-      }
+                  primary={<Typography variant="h6">{contact.student?.first_name}</Typography>}
+                  secondary={
+                    <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
+                      {contact.student?.email}
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })
+        : null;
     }
   };
 
@@ -272,24 +268,26 @@ const UserProfileRight = (props) => {
                   {store.selectedChat.contact.avatar ? (
                     <MuiAvatar
                       sx={{ width: '5rem', height: '5rem' }}
-                      src={store.selectedChat.contact.avatar}
-                      alt={store.selectedChat.contact.fullName}
+                      src={communityDetails?.batch?.batch_name}
+                      alt={communityDetails?.batch?.batch_name}
                     />
                   ) : (
                     <CustomAvatar
                       skin="light"
-                      color={store.selectedChat.contact.avatarColor}
+                      color={communityDetails?.batch?.batch_name}
                       sx={{ width: '5rem', height: '5rem', fontWeight: 500, fontSize: '2rem' }}
                     >
-                      {getInitials(store.selectedChat.contact.fullName)}
+                      {getInitials(communityDetails?.batch?.batch_name)}
                     </CustomAvatar>
                   )}
                 </Badge>
               </Box>
-              <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                {store.selectedChat.contact.fullName}
+              <Typography variant="h4" sx={{ textAlign: 'center' }}>
+                {communityDetails?.batch?.batch_name}
               </Typography>
-              <Typography sx={{ textAlign: 'center', color: 'text.secondary' }}>{store.selectedChat.contact.role}</Typography>
+              <Typography sx={{ textAlign: 'center', color: 'text.secondary', mt: 0.5 }}>
+                {communityDetails?.batch?.institute_course_branch?.course_name}
+              </Typography>
             </Box>
           </Box>
 
