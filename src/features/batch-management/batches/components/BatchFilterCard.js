@@ -150,11 +150,10 @@ const InvoiceList = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    // value={value}
+                    // value={courses.find((course) => course.course_id === (newValue?.course_id || '')) || null} // Reset to null when newValue is undefined or course_id is not found
                     onChange={(e, newValue) => {
-                      // const courseId = newValue?.map((item) => item?.course_id);
                       const data = {
-                        course_id: newValue.course_id,
+                        course_id: newValue?.course_id || '', 
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllBatches(data));

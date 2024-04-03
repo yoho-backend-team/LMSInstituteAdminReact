@@ -44,9 +44,14 @@ const Batch = () => {
   const batchLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [batchRefetch, setBatchRefetch] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
+  
+  const [batchDeleteModelOpen, setBatchDeleteModelOpen] = useState(false);
 
-
-  const [selectedBatch, setSelectedBatch] =  useState(null);
+  const [selectedBatchDeleteId, setSelectedBatchDeleteId] = useState(null);
 
   console.log(batches);
 
@@ -54,11 +59,8 @@ const Batch = () => {
     dispatch(getAllBatches({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, batchRefetch]);
 
-// console.log('getAllBatches:',getAllBatches)
+  // console.log('getAllBatches:',getAllBatches)
 
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
-  const [statusValue, setStatusValue] = useState('');
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -72,7 +74,7 @@ const Batch = () => {
     } else {
       toast.error(response.message);
     }
-    console.log('getAllBatches',response);
+    console.log('getAllBatches', response);
   };
 
   const handleStatusValue = (event, batch) => {
@@ -87,9 +89,6 @@ const Batch = () => {
     setEditModalOpen(true);
   };
 
-  const [batchDeleteModelOpen, setBatchDeleteModelOpen] = useState(false);
-
-  const [selectedBatchDeleteId, setSelectedBatchDeleteId] = useState(null);
 
   // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
@@ -104,6 +103,7 @@ const Batch = () => {
     if (result.success) {
       toast.success(result.message);
       setBatchRefetch((state) => !state);
+      setBatchDeleteModelOpen(false);
     } else {
       toast.error(result.message);
     }
@@ -314,7 +314,7 @@ const Batch = () => {
                       icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
                       menuItemProps: {
                         onClick: () => {
-                          setSelectedBatch(item)
+                          setSelectedBatch(item);
                           handleEdit();
                         }
                       }
@@ -349,7 +349,18 @@ const Batch = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
               <Icon fontSize="1.25rem" icon="tabler:book" />
 
-              <Typography sx={{ ml: 1 }} variant="h5">
+              <Typography
+                variant="h5"
+                sx={{
+                  mb: 0,
+                  ml: 1,
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 1,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis'
+                }}
+              >
                 {/* {item?.batch?.course_name} */}
                 {item?.batch?.institute_course?.institute_course_branch?.course_name}
               </Typography>
@@ -433,7 +444,7 @@ const Batch = () => {
                 open={isEditModalOpen}
                 handleEditClose={handleEditClose}
                 setBatchRefetch={setBatchRefetch}
-                selectedBatch ={selectedBatch}
+                selectedBatch={selectedBatch}
               />
 
               {/* Status Change Modal */}

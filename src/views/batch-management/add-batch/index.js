@@ -57,8 +57,8 @@ const AddBatchPage = () => {
   const validationSchema = yup.object().shape({
     batchName: yup
     .string()
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
-    .required('Batch Name is required'),
+    .required('Batch Name is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters'),
     startDate: yup.date().required('Start Date is required'),
     endDate: yup.date().required('End Date is required'),
     branch: yup.string().required('Branch is required'),
