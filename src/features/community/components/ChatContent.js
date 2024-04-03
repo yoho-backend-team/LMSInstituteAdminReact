@@ -3,7 +3,7 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-// import { styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
@@ -11,16 +11,16 @@ import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
 import UserProfileRight from './UserProfileRight';
 
-// const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
-//   flexGrow: 1,
-//   height: '100%',
-//   display: 'flex',
-//   borderRadius: 1,
-//   alignItems: 'center',
-//   flexDirection: 'column',
-//   justifyContent: 'center',
-//   backgroundColor: theme.palette.action.hover
-// }));
+const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  height: '100%',
+  display: 'flex',
+  borderRadius: 1,
+  alignItems: 'center',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  backgroundColor: theme.palette.action.hover
+}));
 
 const ChatContent = (props) => {
   // ** Props
@@ -42,11 +42,11 @@ const ChatContent = (props) => {
     communityDetails
   } = props;
 
-  // const handleStartConversation = () => {
-  //   if (!mdAbove) {
-  //     handleLeftSidebarToggle();
-  //   }
-  // };
+  const handleStartConversation = () => {
+    if (!mdAbove) {
+      handleLeftSidebarToggle();
+    }
+  };
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
@@ -107,7 +107,7 @@ const ChatContent = (props) => {
                     color={selectedChat?.avatarColor}
                     sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                   >
-                    {getInitials(selectedBatch?.batch?.batch_name)}
+                    {getInitials(selectedBatch?.batch_community?.batch?.batch_name)}
                   </CustomAvatar>
                 )}
               </Badge>
@@ -144,7 +144,41 @@ const ChatContent = (props) => {
         </Box>
       );
     } else {
-      return null;
+      return (
+        <ChatWrapperStartChat
+          sx={{
+            ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
+          }}
+        >
+          <MuiAvatar
+            sx={{
+              mb: 6,
+              pt: 8,
+              pb: 7,
+              px: 7.5,
+              width: 110,
+              height: 110,
+              boxShadow: 3,
+              backgroundColor: 'background.paper'
+            }}
+          >
+            <Icon icon="tabler:message" fontSize="3.125rem" />
+          </MuiAvatar>
+          <Box
+            onClick={handleStartConversation}
+            sx={{
+              py: 2,
+              px: 6,
+              boxShadow: 3,
+              borderRadius: 5,
+              backgroundColor: 'background.paper',
+              cursor: mdAbove ? 'default' : 'pointer'
+            }}
+          >
+            <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
+          </Box>
+        </ChatWrapperStartChat>
+      );
     }
   };
   return renderContent();

@@ -36,7 +36,7 @@ const Community = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
   const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);

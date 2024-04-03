@@ -31,7 +31,6 @@ const SendMsgForm = (props) => {
   };
 
   useEffect(() => {
-    console.log('hello', selectedBatch);
     const intervalId = setInterval(getMessages, 5000); // Set interval for every 2 seconds
 
     // Call getMessages immediately when the component mounts
@@ -45,7 +44,7 @@ const SendMsgForm = (props) => {
     e.preventDefault();
 
     const data = {
-      inst_batch_community_id: selectedBatch?.selectedBatch?.institute_branch_comm_id,
+      inst_batch_community_id: selectedBatch?.batch_community?.id,
       message: msg
     };
 

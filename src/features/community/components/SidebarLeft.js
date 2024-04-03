@@ -50,6 +50,7 @@ const SidebarLeft = (props) => {
   console.log(communities);
 
   const handleChatClick = async (type, community) => {
+    setChats(null);
     setActive(community);
     setSelectedBatch(community);
     const response = await getAllBatchChats({ inst_batch_community_id: community?.id });
@@ -136,7 +137,7 @@ const SidebarLeft = (props) => {
                         outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                       }}
                     >
-                      {getInitials(contact?.batch?.batch_name)}
+                      {getInitials(contact?.batch_community?.batch?.batch_name)}
                     </CustomAvatar>
                   )}
                 </ListItemAvatar>
