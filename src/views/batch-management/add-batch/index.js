@@ -57,8 +57,8 @@ const AddBatchPage = () => {
   const validationSchema = yup.object().shape({
     batchName: yup
     .string()
-    .required('Batch Name is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters'),
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
+    .required('Batch Name is required'),
     startDate: yup.date().required('Start Date is required'),
     endDate: yup.date().required('End Date is required'),
     branch: yup.string().required('Branch is required'),
@@ -153,7 +153,7 @@ const AddBatchPage = () => {
   };
 
   const getStudentByCourseId = async (courseId) => {
-    const result = await getStudentByCourse(courseId);
+    const result = await getStudentByCourse({ course_id: courseId });
     console.log(result.data.data);
     setActiveStudents(result.data.data);
   };

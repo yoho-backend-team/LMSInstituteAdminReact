@@ -146,14 +146,14 @@ export const addCourse = async (data) => {
   }
 };
 
-export const getStudentByCourse = async (courseId) => {
+export const getStudentByCourse = async (data) => {
   try {
     const response = await axios.get(`${COURSE_END_POINT}/get-by-course-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { course_id: courseId }
+      params:data
     });
 
     console.log(response);
