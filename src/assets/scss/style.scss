@@ -266,3 +266,15 @@
   }
 }
 
+.courseAccordian{
+  .css-1lzgix5-MuiPaper-root-MuiAccordion-root:last-of-type{
+    border-bottom-left-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+
+  }
+  .css-1lzgix5-MuiPaper-root-MuiAccordion-root:first-of-type{
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+
+  }
+}

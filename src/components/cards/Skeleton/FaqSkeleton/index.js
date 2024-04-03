@@ -3,7 +3,7 @@ import { Card, CardContent, Grid, Skeleton } from '@mui/material';
 // import ReactApexCharts from 'react-apexcharts';
 // import { gridSpacing } from 'store/constant';
 
-const ContentSkeleton = () => {
+const FaqSkeleton = () => {
   return (
     <Grid container spacing={2} sx={{ p: 1 }}>
       {/* Table */}
@@ -25,8 +25,8 @@ const ContentSkeleton = () => {
                 <Grid item xs={12} key={rowIndex}>
                   <Grid container spacing={4}>
                     {[...Array(3)].map((_, colIndex) => (
-                      <Grid item xs={6} sm={4} key={colIndex} paddingY={4}>
-                        <Skeleton variant="text" height={20} width="80%" />
+                      <Grid item xs={6} sm={4} key={colIndex} paddingY={3}>
+                        <Skeleton variant="text" height={20} width="70%" />
                       </Grid>
                     ))}
                   </Grid>
@@ -43,4 +43,4 @@ const ContentSkeleton = () => {
   );
 };
 
-export default ContentSkeleton;
+export default FaqSkeleton;

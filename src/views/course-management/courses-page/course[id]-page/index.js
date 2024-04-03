@@ -11,7 +11,7 @@ import {
   Box,
   Card,
   CardContent,
-  CardHeader,
+  // CardHeader,
   // CardMedia,
   Grid,
   IconButton,
@@ -35,7 +35,7 @@ import { useLocation } from 'react-router-dom';
 import { deleteCourse } from 'features/course-management/courses-page/services/courseServices';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
-
+import CustomChip from 'components/mui/chip';
 import CourseDeleteModel from 'components/modal/DeleteModel';
 import ReactPlayer from 'react-player';
 
@@ -159,20 +159,26 @@ const CourseViewPage = () => {
     //     </AccordionDetails>
     //   </Accordion>
     // </Grid>
-    <div>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
+    <Box sx={{ padding: '0px 5px 0px 5px' }} className="courseAccordian">
+      <Accordion sx={{ boxShadow: 'none', backgroundColor: '#124076', color: 'white' }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />} aria-controls="panel1-content" id="panel1-header">
           {item.title}
         </AccordionSummary>
         <AccordionDetails sx={{ textAlign: 'justify' }}>{item.description}</AccordionDetails>
         <AccordionActions>
-          <Button onClick={() => setVideoUrl(item?.video_url)} variant="tonal" color="primary" fullWidth sx={{ width: '100%' }}>
-            <PlayCircleIcon className="play-icon" sx={{ color: 'primary.main', mr: 1 }} />
+          <Button
+            onClick={() => setVideoUrl(item?.video_url)}
+            color="primary"
+            variant="contained"
+            fullWidth
+            sx={{ width: '100%', py: 1.5, borderRadius: '14px' }}
+          >
+            <PlayCircleIcon className="play-icon" sx={{ mr: 1 }} />
             Preview
           </Button>
         </AccordionActions>
       </Accordion>
-    </div>
+    </Box>
   );
 
   if (!course || !course.course_module) {
@@ -183,35 +189,48 @@ const CourseViewPage = () => {
     <Grid container xs={12} spacing={2}>
       <Grid item xs={12} sm={12} md={12} lg={7.5}>
         <Card>
-          <CardHeader title={course?.institute_course_branch?.course_name} />{' '}
-          <Box>
-            <ReactPlayer
-              style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
-              url={videoUrl}
-              controls
-              autoPlay
-              loop
-              width="100%"
-              height={400}
-            />
-          </Box>
+          <ReactPlayer
+            style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
+            url={videoUrl}
+            controls
+            autoPlay
+            loop
+            width="100%"
+            height={400}
+          />
+
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Box>
-              <Box sx={{ display: 'flex', alignItems: 'flex-end',mt:1 }}>
-                <Typography variant="h5">Category:</Typography>
-                <Typography sx={{ ml: 1 }}>{course?.course_categories?.category_name}</Typography>
+            <Box >
+              <Box sx={{display:'flex',alignItems:'center'}}>
+              <Typography variant="h3">{course?.institute_course_branch?.course_name}</Typography>
+
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'flex-end',mt:1 }}>
-                <Typography variant="h5">Course Price :</Typography>
-                <Typography sx={{ ml: 1 }}>{course?.institute_course_branch?.course_price}</Typography>
+              <Box sx={{ mt: 1 }}>
+                <Typography variant="h5" mb={1}>Description</Typography>
+                <Typography sx={{ ml: 1 }}>{course?.institute_course_branch?.description}</Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'flex-end',mt:1 }}>
-                <Typography variant="h5">Course Duration :</Typography>
-                <Typography sx={{ ml: 1 }}>{course?.institute_course_branch?.course_duration}</Typography>
+              <Box>
+                <CustomChip label={course?.course_categories?.category_name} color="secondary" skin="light" size="small" sx={{ mt: 1 }} />
               </Box>
+              <Box sx={{display:'flex',justifyContent:'space-between'}}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                <Typography color="primary" variant='h5' alignItems='center' justifyContent='center' display='flex' gap={1}>
+                
+              <Icon icon="mdi:clock-outline" />
+              <span style={{marginTop:'4px'}}>Duration</span>
+                </Typography>
+                <Typography variant='h5' sx={{ ml: 1,mt:0.5 }}>{course?.institute_course_branch?.course_duration}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'end', mt: 1 }}>
+                <Typography sx={{ ml: 1 }} variant="h3">
+                  ₹ {course?.institute_course_branch?.course_price}
+                </Typography>
+              </Box>
+              </Box>
+             
             </Box>
 
-            <Box>
+            <Box sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>
               <IconButton
                 onClick={() => handleDelete(course?.id)}
                 color="secondary" // Adjust color as needed
@@ -223,7 +242,7 @@ const CourseViewPage = () => {
         </Card>
       </Grid>
       <Grid item xs={12} sm={12} lg={4.4}>
-        <Card sx={{ pb: 1 }} className="CourseModules-Card">
+        <Card sx={{ pb: 1, backgroundColor: 'secondary.light' }} className="CourseModules-Card">
           <Button
             fullWidth
             onClick={() => handleEdit()}
@@ -234,7 +253,7 @@ const CourseViewPage = () => {
           >
             Edit Course
           </Button>
-          <div style={{ overflow: 'auto', height: '69vh' }}>{course?.course_module?.map(createAccordion)}</div>
+          <div style={{ overflow: 'auto', height: '73vh' }}>{course?.course_module?.map(createAccordion)}</div>
           {/* Edit Modal */}
           <CourseEditModal
             selectedBranchId={selectedBranchId}
