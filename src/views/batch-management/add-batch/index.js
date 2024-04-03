@@ -153,7 +153,7 @@ const AddBatchPage = () => {
   };
 
   const getStudentByCourseId = async (courseId) => {
-    const result = await getStudentByCourse({ course_id: courseId });
+    const result = await getStudentByCourse(courseId);
     console.log(result.data.data);
     setActiveStudents(result.data.data);
   };
