@@ -50,138 +50,135 @@ const ChatContent = (props) => {
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
-      if (selectedChat?.length === 0) {
-        return (
-          <ChatWrapperStartChat
-            sx={{
-              ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
-            }}
-          >
-            <MuiAvatar
-              sx={{
-                mb: 6,
-                pt: 8,
-                pb: 7,
-                px: 7.5,
-                width: 110,
-                height: 110,
-                boxShadow: 3,
-                backgroundColor: 'background.paper'
-              }}
-            >
-              <Icon icon="tabler:message" fontSize="3.125rem" />
-            </MuiAvatar>
-            <Box
-              onClick={handleStartConversation}
-              sx={{
-                py: 2,
-                px: 6,
-                boxShadow: 3,
-                borderRadius: 5,
-                backgroundColor: 'background.paper',
-                cursor: mdAbove ? 'default' : 'pointer'
-              }}
-            >
-              <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
-            </Box>
-          </ChatWrapperStartChat>
-        );
-      } else {
-        return (
+
+      return (
+        <Box
+          sx={{
+            width: 0,
+            flexGrow: 1,
+            height: '100%',
+            backgroundColor: 'action.hover'
+          }}
+        >
           <Box
             sx={{
-              width: 0,
-              flexGrow: 1,
-              height: '100%',
-              backgroundColor: 'action.hover'
+              px: 5,
+              py: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: 'background.paper',
+              borderBottom: (theme) => `1px solid ${theme.palette.divider}`
             }}
           >
-            <Box
-              sx={{
-                px: 5,
-                py: 2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: 'background.paper',
-                borderBottom: (theme) => `1px solid ${theme.palette.divider}`
-              }}
-            >
-              {mdAbove ? null : (
-                <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
-                  <Icon icon="tabler:menu-2" />
-                </IconButton>
-              )}
+            {mdAbove ? null : (
+              <IconButton onClick={handleLeftSidebarToggle} sx={{ mr: 2 }}>
+                <Icon icon="tabler:menu-2" />
+              </IconButton>
+            )}
 
-              <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                <Badge
-                  overlap="circular"
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                  }}
-                  sx={{ mr: 3 }}
-                  badgeContent={
-                    <Box
-                      component="span"
-                      sx={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: '50%',
-                        color: `${statusObj[selectedChat?.status]}.main`,
-                        boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
-                        backgroundColor: `${statusObj[selectedChat?.status]}.main`
-                      }}
-                    />
-                  }
-                >
-                  {selectedChat?.avatar ? (
-                    <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat?.avatar} alt={selectedChat?.fullName} />
-                  ) : (
-                    <CustomAvatar
-                      skin="light"
-                      color={selectedChat?.avatarColor}
-                      sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
-                    >
-                      {getInitials(selectedBatch?.batch?.batch_name)}
-                    </CustomAvatar>
-                  )}
-                </Badge>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Typography variant="h5">{selectedBatch?.batch?.batch_name}</Typography>
-                  <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
-                    {selectedBatch?.batch?.institute_course_branch?.course_name}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <OptionsMenu
-                  menuProps={{ sx: { mt: 2 } }}
-                  icon={<Icon icon="tabler:dots-vertical" />}
-                  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-                  options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
-                />
+            <Box onClick={handleUserProfileRightSidebarToggle} sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+              <Badge
+                overlap="circular"
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+                sx={{ mr: 3 }}
+                badgeContent={
+                  <Box
+                    component="span"
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      color: `${statusObj[selectedChat?.status]}.main`,
+                      boxShadow: (theme) => `0 0 0 2px ${theme.palette.background.paper}`,
+                      backgroundColor: `${statusObj[selectedChat?.status]}.main`
+                    }}
+                  />
+                }
+              >
+                {selectedChat?.avatar ? (
+                  <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat?.avatar} alt={selectedChat?.fullName} />
+                ) : (
+                  <CustomAvatar
+                    skin="light"
+                    color={selectedChat?.avatarColor}
+                    sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
+                  >
+                    {getInitials(selectedBatch?.batch_community?.batch?.batch_name)}
+                  </CustomAvatar>
+                )}
+              </Badge>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant="h5">{selectedBatch?.batch_community?.batch?.batch_name}</Typography>
+                <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
+                  {selectedBatch?.batch_community?.batch?.institute_course_branch?.course_name}
+                </Typography>
               </Box>
             </Box>
 
-            {selectedChat ? <ChatLog hidden={hidden} data={selectedChat} /> : null}
-            <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
-            <UserProfileRight
-              store={store}
-              hidden={hidden}
-              statusObj={statusObj}
-              getInitials={getInitials}
-              sidebarWidth={sidebarWidth}
-              userProfileRightOpen={userProfileRightOpen}
-              handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
-              communityDetails={communityDetails}
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <OptionsMenu
+                menuProps={{ sx: { mt: 2 } }}
+                icon={<Icon icon="tabler:dots-vertical" />}
+                iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+                options={['View Contact', 'Mute Notifications', 'Block Contact', 'Clear Chat', 'Report']}
+              />
+            </Box>
           </Box>
-        );
-      }
+
+          {selectedChat ? <ChatLog hidden={hidden} data={selectedChat} /> : null}
+          <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
+          <UserProfileRight
+            store={store}
+            hidden={hidden}
+            statusObj={statusObj}
+            getInitials={getInitials}
+            sidebarWidth={sidebarWidth}
+            userProfileRightOpen={userProfileRightOpen}
+            handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
+            communityDetails={communityDetails}
+          />
+        </Box>
+      );
     } else {
-      return null;
+      return (
+        <ChatWrapperStartChat
+          sx={{
+            ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
+          }}
+        >
+          <MuiAvatar
+            sx={{
+              mb: 6,
+              pt: 8,
+              pb: 7,
+              px: 7.5,
+              width: 110,
+              height: 110,
+              boxShadow: 3,
+              backgroundColor: 'background.paper'
+            }}
+          >
+            <Icon icon="tabler:message" fontSize="3.125rem" />
+          </MuiAvatar>
+          <Box
+            onClick={handleStartConversation}
+            sx={{
+              py: 2,
+              px: 6,
+              boxShadow: 3,
+              borderRadius: 5,
+              backgroundColor: 'background.paper',
+              cursor: mdAbove ? 'default' : 'pointer'
+            }}
+          >
+            <Typography sx={{ fontWeight: 500, fontSize: '1.125rem', lineHeight: 'normal' }}>Start Conversation</Typography>
+          </Box>
+        </ChatWrapperStartChat>
+      );
     }
   };
   return renderContent();

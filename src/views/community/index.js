@@ -36,7 +36,7 @@ const Community = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
   const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);
@@ -75,7 +75,7 @@ const Community = () => {
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = async () => {
-    const result = await getCommunityDetails({ batch_id: selectedBatch?.institute_batch_id });
+    const result = await getCommunityDetails({ batch_id: selectedBatch?.batch_community?.institute_batch_id });
     if (result) {
       setCommunityDetails(result?.data?.data);
     }
@@ -126,7 +126,7 @@ const Community = () => {
             formatDateToMonthShort={formatDateToMonthShort}
             handleLeftSidebarToggle={handleLeftSidebarToggle}
             handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-            communities={communities?.batch_community}
+            communities={communities}
             setChats={setChats}
             setSelectedBatch={setSelectedBatch}
             setCommunityDetails={setCommunityDetails}

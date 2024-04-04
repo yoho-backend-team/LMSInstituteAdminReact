@@ -50,6 +50,7 @@ const SidebarLeft = (props) => {
   console.log(communities);
 
   const handleChatClick = async (type, community) => {
+    setChats(null);
     setActive(community);
     setSelectedBatch(community);
     const response = await getAllBatchChats({ inst_batch_community_id: community?.id });
@@ -136,7 +137,7 @@ const SidebarLeft = (props) => {
                         outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                       }}
                     >
-                      {getInitials(contact?.batch?.batch_name)}
+                      {getInitials(contact?.batch_community?.batch?.batch_name)}
                     </CustomAvatar>
                   )}
                 </ListItemAvatar>
@@ -146,10 +147,10 @@ const SidebarLeft = (props) => {
                     ml: 3,
                     ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                   }}
-                  primary={<Typography variant="h5">{contact?.batch?.batch_name}</Typography>}
+                  primary={<Typography variant="h5">{contact?.batch_community?.batch?.batch_name}</Typography>}
                   secondary={
                     <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
-                      {contact?.batch?.institute_course_branch?.course_name}
+                      {contact?.batch_community?.batch?.institute_course_branch?.course_name}
                     </Typography>
                   }
                 />
