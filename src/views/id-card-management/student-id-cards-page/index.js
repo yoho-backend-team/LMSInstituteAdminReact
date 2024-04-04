@@ -60,7 +60,7 @@ const StudentIdCard = () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       // id: statusValue?.id,
-      student_id: statusValue?.student_id 
+      student_id: statusValue?.student?.student_id
     };
 
     console.log('data:', data);
@@ -253,7 +253,7 @@ const StudentIdCard = () => {
                               select
                               width={100}
                               label="Status"
-                              SelectProps={{ value: item?.student?.is_active, onChange: (e) => handleStatusValue(e, item?.student) }}
+                              SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>
