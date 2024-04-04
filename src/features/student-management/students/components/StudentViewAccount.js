@@ -155,7 +155,7 @@ const UserViewAccount = ({ student }) => {
                 Edit
               </Button>
               <Button color="error" variant="tonal" onClick={() => handleDelete(student?.id)}>
-                Suspend
+                Delete
               </Button>
             </CardActions>
 
