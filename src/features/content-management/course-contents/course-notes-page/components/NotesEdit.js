@@ -43,7 +43,7 @@ const defaultValues = {
 
 const NotesEdit = (props) => {
   // ** Props
-  const { open, toggle, notes } = props;
+  const { open, toggle, notes,setRefetch } = props;
   console.log('NotesEdit - open:', props.open);
   console.log('NotesEdit - toggle:', props.toggle);
  
@@ -81,6 +81,8 @@ const NotesEdit = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      setRefetch((state) => !state); // Trigger category refetch
+      toggle();
     } else {
       let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {

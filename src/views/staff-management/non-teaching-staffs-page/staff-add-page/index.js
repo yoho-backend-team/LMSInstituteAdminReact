@@ -38,20 +38,47 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup.string().required(),
-    email: yup.string().email().required(),
-    phone: yup.number().required(),
-    alt_phone: yup.number().required(),
-    designation: yup.string().required(),
-    state: yup.string().required(),
-    city: yup.string().required(),
-    pin_code: yup.number().required(),
-    address_line_one: yup.string().required(),
-    address_line_two: yup.string().required(),
-    date_of_birth: yup.string().required(),
-    gender: yup.string().required(),
+    name: yup
+      .string()
+      .required('Name is required')
+      .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets'),
+    email: yup
+      .string()
+      .required('Email is required')
+      .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format'),
+    phone: yup
+      .string()
+      .required('Phone number is required')
+      .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits'),
+    alt_phone: yup
+      .string()
+      .required('Alternate phone number is required')
+      .matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits'),
+    designation: yup
+      .string()
+      .required('Designation is required')
+      .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets'),
+    state: yup
+      .string()
+      .required('State is required')
+      .matches(/^[a-zA-Z\s]+$/, 'State should only contain alphabets'),
+    city: yup
+      .string()
+      .required('City is required')
+      .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets'),
+    pin_code: yup
+      .string()
+      .required('Pin code is required')
+      .matches(/^\d{6}$/, 'Pin code must be 6 digits'),
+    address_line_one: yup.string().required('Address line one is required'),
+    address_line_two: yup.string().required('Address line two is required'),
+    date_of_birth: yup.string().required('Date of birth is required'),
+    gender: yup.string().required('Gender is required'),
     branch: yup.string().required('Branch is required'),
-    username: yup.string().required()
+    username: yup
+      .string()
+      .required('Username is required')
+      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
   // ** States
@@ -282,7 +309,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Leonard"
                       error={Boolean(personalErrors['name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
-                      {...(personalErrors['name'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.name?.message}
                     />
                   )}
                 />
@@ -302,7 +329,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['email'])}
                       aria-describedby="stepper-linear-personal-official_email"
-                      {...(personalErrors['email'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.email?.message}
                     />
                   )}
                 />
@@ -324,7 +351,7 @@ const StepperLinearWithValidation = () => {
                           label="Date Of Birth"
                           error={Boolean(personalErrors['date_of_birth'])}
                           aria-describedby="stepper-linear-personal-date_of_birth"
-                          {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
+                          helperText={personalErrors?.date_of_birth?.message}
                         />
                       }
                       onChange={onChange}
@@ -347,7 +374,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
                       aria-describedby="stepper-linear-personal-gender"
-                      {...(personalErrors['gender'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.gender?.message}
                     >
                       <MenuItem value="male">Male</MenuItem>
                       <MenuItem value="female">Female</MenuItem>
@@ -400,7 +427,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.designation)}
                       aria-describedby="stepper-linear-personal-designation-helper"
-                      {...(personalErrors.designation && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.designation?.message}
                     />
                   )}
                 />
@@ -418,7 +445,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
                       aria-describedby="stepper-linear-personal-qualification-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.education_qualification?.message}
                     />
                   )}
                 />
@@ -436,7 +463,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.state)}
                       aria-describedby="stepper-linear-personal-state-helper"
-                      {...(personalErrors.state && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.state?.message}
                     />
                   )}
                 />
@@ -454,7 +481,7 @@ const StepperLinearWithValidation = () => {
                       onChange={onChange}
                       error={Boolean(personalErrors.city)}
                       aria-describedby="stepper-linear-personal-city-helper"
-                      {...(personalErrors.city && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.city?.message}
                     />
                   )}
                 />
@@ -474,7 +501,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['pin_code'])}
                       aria-describedby="stepper-linear-personal-pin_code"
-                      {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.pin_code?.message}
                     />
                   )}
                 />
@@ -493,7 +520,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_one'])}
                       aria-describedby="stepper-linear-personal-address_line_one"
-                      {...(personalErrors['address_line_one'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.address_line_one?.message}
                     />
                   )}
                 />
@@ -512,7 +539,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_two'])}
                       aria-describedby="stepper-linear-personal-address_line_two"
-                      {...(personalErrors['address_line_two'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.address_line_two?.message}
                     />
                   )}
                 />
@@ -535,7 +562,7 @@ const StepperLinearWithValidation = () => {
                       InputProps={{
                         startAdornment: <InputAdornment position="start">+91</InputAdornment>
                       }}
-                      {...(personalErrors['phone'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.phone?.message}
                     />
                   )}
                 />
@@ -558,7 +585,7 @@ const StepperLinearWithValidation = () => {
                       InputProps={{
                         startAdornment: <InputAdornment position="start">+91</InputAdornment>
                       }}
-                      {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.alt_phone?.message}
                     />
                   )}
                 />
@@ -578,7 +605,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="carterLeonard"
                       error={Boolean(personalErrors['username'])}
                       aria-describedby="stepper-linear-account-username"
-                      {...(personalErrors['username'] && { helperText: 'This field is required' })}
+                      helperText={personalErrors?.username?.message}
                     />
                   )}
                 />

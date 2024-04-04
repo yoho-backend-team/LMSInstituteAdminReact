@@ -44,7 +44,7 @@ const defaultValues = {
 
 const StudyMaterialEdit = (props) => {
   // ** Props
-  const { open, toggle, StudyMaterials } = props;
+  const { open, toggle, StudyMaterials ,setRefetch} = props;
   console.log('StudyMaterialEdit - open:', props.open);
   console.log('StudyMaterialEdit - toggle:', props.toggle);
   // ** State
@@ -114,7 +114,9 @@ const StudyMaterialEdit = (props) => {
     const result = await updateCourseStudyMaterial(bodyFormData);
 
     if (result.success) {
+      setRefetch((state) => !state); // Trigger category refetch
       toast.success(result.message);
+      toggle();
     } else {
       let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {

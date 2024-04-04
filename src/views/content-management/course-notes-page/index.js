@@ -329,7 +329,7 @@ const Notes = () => {
         )}
 
         <NotesAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <NotesEdit open={editUserOpen} toggle={toggleEditUserDrawer} notes={selectedRow} />
+        <NotesEdit setRefetch={setRefetch} open={editUserOpen} toggle={toggleEditUserDrawer} notes={selectedRow} />
         <NotesDeleteModal
           open={NotesDeleteModalOpen}
           setOpen={setNotesDeleteModalOpen}

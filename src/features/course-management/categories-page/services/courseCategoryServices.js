@@ -133,7 +133,7 @@ export const updateCourseCategory = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseCategory updated successfully' };

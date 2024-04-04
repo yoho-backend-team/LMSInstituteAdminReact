@@ -7,7 +7,6 @@ export const getAllTeachingStaffs = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-branch-id`, {
       headers: {
-       
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
@@ -103,14 +102,14 @@ export const addTeachingStaff = async (data) => {
 
 export const deleteTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/delete`,data, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/delete`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       params: data
     });
-console.log('updateTeachingStaff:',response)
+    console.log('updateTeachingStaff:', response);
     if (response.data.status) {
       return { success: true, message: 'TeachingStaff deleted successfully' };
     } else {
@@ -129,11 +128,10 @@ export const updateTeachingStaff = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params:data
+      params: data
     });
-console.log('teachingedit:',response)
+    console.log('teachingedit:', response);
     if (response.data.status) {
-      
       return { success: true, message: 'TeachingStaff updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TeachingStaff' };
@@ -144,7 +142,6 @@ console.log('teachingedit:',response)
   }
 };
 
-
 export const TeachingStaffById = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-id`, {
@@ -154,7 +151,7 @@ export const TeachingStaffById = async (data) => {
       },
       params: data
     });
-    console.log('teachingStaff:',response);
+    console.log('teachingStaff:', response);
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response.data.data };

@@ -128,7 +128,7 @@ const AddCoursePage = () => {
       .required('Course Overview is required')
       .matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
     learning_format: yup.string().required('Learning Format is required'),
-    course_category: yup.string().required('Course Category is required'),
+    course_category: yup.object().required('Course Category is required'),
     branches: yup
       .array()
       .required()

@@ -69,7 +69,13 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Search By Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Search By Status"
+                  SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                >
+                  <MenuItem value="">Select Status</MenuItem>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
@@ -85,9 +91,9 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3} sx={{alignItems:'center'}}>
-                <Box component={Link} to={'teaching-staffs/add'} sx={{p:0,m:0}}>
-                  <Button variant="contained" size="medium" fullWidth sx={{py:1.5,borderRadius:'0.5rem'}}>
+              <Grid item xs={12} sm={3} sx={{ alignItems: 'center' }}>
+                <Box component={Link} to={'teaching-staffs/add'} sx={{ p: 0, m: 0 }}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem' }}>
                     Add New Staff
                   </Button>
                 </Box>

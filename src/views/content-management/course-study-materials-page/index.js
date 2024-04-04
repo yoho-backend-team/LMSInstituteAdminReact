@@ -338,7 +338,7 @@ const StudyMaterials = () => {
           </Grid>
         )}
         <StudyMaterialAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <StudyMaterialEdit StudyMaterials={selectedRow} open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <StudyMaterialEdit setRefetch={setRefetch} StudyMaterials={selectedRow} open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
           setOpen={setStudyMaterialDeletemodalOpen}

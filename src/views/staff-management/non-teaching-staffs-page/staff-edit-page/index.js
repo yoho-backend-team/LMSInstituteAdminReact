@@ -40,7 +40,6 @@ const StepperLinearWithValidation = () => {
   const staffData = location.state.staff;
   const staffId = location.state.id;
   console.log('staffData:', staffData);
-  
 
   const steps = [
     {
@@ -52,14 +51,14 @@ const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
     name: '',
     email: '',
-    phone: '',
-    alt_phone: '',
+    phone_number: '',
+    alternate_number: '',
     state: '',
     city: '',
     pin_code: '',
     address_line_one: '',
     address_line_two: '',
-    date_of_birth: '',
+    dob: '',
     gender: '',
     // course: '',
     // branch: '',
@@ -74,19 +73,16 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup
+    staff_name: yup
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets')
       .required('Name is required'),
-    email: yup
-      .string()
-      .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format')
-      .required('Email is required'),
-    phone: yup
+    email:yup.string().required().email(),
+    phone_number: yup
       .string()
       .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits')
       .required('Phone number is required'),
-    alt_phone: yup
+    alternate_number: yup
       .string()
       .matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits')
       .required('Alternate phone number is required'),
@@ -94,7 +90,7 @@ const StepperLinearWithValidation = () => {
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets')
       .required('Designation is required'),
-      education_qualification: yup
+    education_qualification: yup
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Qualification should only contain alphabets')
       .required('Qualification is required'),
@@ -107,24 +103,21 @@ const StepperLinearWithValidation = () => {
       .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets')
       .required('City is required'),
     pin_code: yup
-      .string()
-      .matches(/^\d{6}$/, 'Pin code must be 6 digits')
-      .required('Pin code is required'),
+      .string().required('Pin code is required')
+      .matches(/^\d{6}$/, 'Pin code must be 6 digits') ,
     address_line_one: yup.string().required('Address line one is required'),
     address_line_two: yup.string().required('Address line two is required'),
-    date_of_birth: yup.string().required('Date of birth is required'),
+    dob: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
-    branch: yup.object().required('Branch is required'),
     username: yup
       .string()
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
       .required('Username is required')
   });
 
-
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedDate,setSelectedDate] = useState()
+  const [selectedDate, setSelectedDate] = useState();
 
   // const [activeCourse, setActiveCourse] = useState([]);
   // const [selectedCourses, setSelectedCourses] = useState([]);
@@ -177,14 +170,14 @@ const StepperLinearWithValidation = () => {
       pin_code: Number(''),
       address_line_one: '',
       address_line_two: '',
-      date_of_birth: '',
-      name: '',
+      dob: '',
+      staff_name: '',
       Last_name: '',
       gender: '',
       // course: '',
-      official_email: '',
-      phone: Number(''),
-      alt_phone: Number(''),
+      email: '',
+      phone_number: Number(''),
+      alternate_number: Number(''),
       description: '',
       joining_date: '',
       designation: ''
@@ -194,8 +187,8 @@ const StepperLinearWithValidation = () => {
 
   useEffect(() => {
     setSelectedDate(staffData?.dob ? new Date(staffData?.dob) : new Date());
-  }, [''])
-  
+  }, ['']);
+
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -253,7 +246,9 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
   console.log(logo);
 
@@ -270,7 +265,7 @@ const StepperLinearWithValidation = () => {
       // setValue('state', selectedBranch.state || '');
       setValue('id', staffId);
       setValue('name', staffData.name);
-      setValue('email', staffData?.dob);
+      setValue('email', staffData?.email);
       setValue('phone_number', staffData?.phone_number);
       setValue('alternate_number', staffData?.alternate_number);
       setValue('designation', staffData?.designation);
@@ -300,10 +295,10 @@ const StepperLinearWithValidation = () => {
       // });
 
       data.append('id', staffId);
-      data.append('name', personalData?.name);
+      data.append('staff_name', personalData?.staff_name);
       data.append('email', personalData?.email);
       data.append('phone_number', personalData?.phone);
-      data.append('alternate_number', personalData?.alt_phone);
+      data.append('alternate_number', personalData?.alternate_number);
       data.append('designation', personalData?.designation);
       data.append('branch_id', personalData?.branch?.branch_id);
       data.append('image', logo);
@@ -313,7 +308,7 @@ const StepperLinearWithValidation = () => {
       data.append('city', personalData?.city);
       data.append('state', personalData?.state);
       data.append('pin_code', personalData?.pin_code);
-      data.append('dob', convertDateFormat(personalData?.date_of_birth));
+      data.append('dob', convertDateFormat(personalData?.dob));
       data.append('username', personalData?.username);
       data.append('education_qualification', personalData?.education_qualification);
 
@@ -374,7 +369,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="name"
+                  name="staff_name"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { onChange } }) => (
@@ -382,12 +377,12 @@ const StepperLinearWithValidation = () => {
                       fullWidth
                       // value={value}
                       defaultValue={staffData?.staff_name}
-                      label="FullName"
+                      label="StaffName"
                       onChange={onChange}
                       placeholder="Leonard"
-                      error={Boolean(personalErrors['name'])}
+                      error={Boolean(personalErrors['staff_name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
-                      helperText={personalErrors?.name?.message}
+                      helperText={personalErrors?.staff_name?.message}
                     />
                   )}
                 />
@@ -416,10 +411,10 @@ const StepperLinearWithValidation = () => {
 
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="date_of_birth"
+                  name="dob"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: {onChange } }) => (
+                  render={({ field: { onChange } }) => (
                     <DatePicker
                       id="issue-date"
                       dateFormat={'dd/MM/yyyy'}
@@ -429,13 +424,13 @@ const StepperLinearWithValidation = () => {
                       onChange={(date) => {
                         onChange;
                         setSelectedDate(date);
-                      }} 
+                      }}
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
-                          error={Boolean(personalErrors['date_of_birth'])}
-                          aria-describedby="stepper-linear-personal-date_of_birth"
-                          helperText={personalErrors?.date_of_birth?.message}
+                          error={Boolean(personalErrors['dob'])}
+                          aria-describedby="stepper-linear-personal-dob"
+                          helperText={personalErrors?.dob?.message}
                         />
                       }
                       // onChange={onChange}
@@ -699,7 +694,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="phone"
+                  name="phone_number"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { onChange } }) => (
@@ -711,9 +706,9 @@ const StepperLinearWithValidation = () => {
                       label="Phone Number"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(personalErrors['phone'])}
+                      error={Boolean(personalErrors['phone_number'])}
                       aria-describedby="stepper-linear-personal-phone"
-                      helperText={personalErrors?.phone?.message}
+                      helperText={personalErrors?.phone_number?.message}
                       InputProps={{
                         startAdornment: <InputAdornment position="start">+91</InputAdornment>
                       }}
@@ -723,7 +718,7 @@ const StepperLinearWithValidation = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="alt_phone"
+                  name="alternate_number"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { onChange } }) => (
@@ -735,9 +730,9 @@ const StepperLinearWithValidation = () => {
                       label="Alt Phone Number"
                       onChange={onChange}
                       placeholder="Carter"
-                      error={Boolean(personalErrors['alt_phone'])}
-                      aria-describedby="stepper-linear-personal-alt_phone"
-                      helperText={personalErrors?.alt_phone?.message}
+                      error={Boolean(personalErrors['alternate_number'])}
+                      aria-describedby="stepper-linear-personal-alternate_number"
+                      helperText={personalErrors?.alternate_number?.message}
                       InputProps={{
                         startAdornment: <InputAdornment position="start">+91</InputAdornment>
                       }}

@@ -107,6 +107,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       inputData.append('category_id', category?.category_id);
       inputData.append('logo', selectedImage);
       inputData.append('category_name', data?.category_name);
+      inputData.append('id', category?.id);
 
       try {
         const result = await updateCourseCategory(inputData);

@@ -32,7 +32,6 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import InputAdornment from '@mui/material/InputAdornment';
 
-
 const StepperLinearWithValidation = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -92,7 +91,7 @@ const StepperLinearWithValidation = () => {
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets')
       .required('Designation is required'),
-      education_qualification: yup
+    education_qualification: yup
       .string()
       .matches(/^[a-zA-Z\s]+$/, 'Qualification should only contain alphabets')
       .required('Qualification is required'),
@@ -121,7 +120,7 @@ const StepperLinearWithValidation = () => {
 
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-const [selectedDate,setSelectedDate] = useState()
+  const [selectedDate, setSelectedDate] = useState();
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
 
@@ -133,7 +132,7 @@ const [selectedDate,setSelectedDate] = useState()
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id:selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
@@ -151,12 +150,12 @@ const [selectedDate,setSelectedDate] = useState()
     setActiveBranches(result.data.data);
   };
 
-//forma
-//   function formatDate(inputDate) {
-//     if (!inputDate) return ''; 
-//     const [year, month, day] = inputDate.split('-');
-//     return `${day}/${month}/${year}`;
-// }
+  //forma
+  //   function formatDate(inputDate) {
+  //     if (!inputDate) return '';
+  //     const [year, month, day] = inputDate.split('-');
+  //     return `${day}/${month}/${year}`;
+  // }
 
   // ** Hooks
 
@@ -195,12 +194,10 @@ const [selectedDate,setSelectedDate] = useState()
     });
   };
 
-useEffect(() => {
-  setSelectedDate(staffData?.dob ? new Date(staffData?.dob) : new Date());
-}, [''])
+  useEffect(() => {
+    setSelectedDate(staffData?.dob ? new Date(staffData?.dob) : new Date());
+  }, ['']);
 
-
-  
   function convertDateFormat(input) {
     // Create a new Date object from the original date string
     var originalDate = new Date(input);
@@ -258,7 +255,9 @@ useEffect(() => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
   console.log(logo);
 
@@ -337,7 +336,6 @@ useEffect(() => {
     }
     [staffId];
   };
-  
 
   console.log('onsubmit:', onSubmit);
   const getStepContent = (step) => {
@@ -352,20 +350,17 @@ useEffect(() => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12}>
-                <Typography sx={{ color: 'text.disabled',mb:2}}>
-                  Update Profile Picture
-                </Typography>
+                <Typography sx={{ color: 'text.disabled', mb: 2 }}>Update Profile Picture</Typography>
                 {/* <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
                   Upload here
                 </Typography> */}
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <ImgStyled src={logoSrc} alt="Profile Pic" />
                   <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" >
+                    <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                       Update Profile Picture
                       <input
                         hidden
-
                         type="file"
                         accept="image/png, image/jpeg"
                         onChange={handleInputImageChange}
@@ -375,7 +370,9 @@ useEffect(() => {
                     <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                       Reset
                     </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled',justifyContent:'center',display:'flex' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                    <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
+                      Allowed PNG or JPEG. Max size of 800K.
+                    </Typography>
                   </div>
                 </Box>
               </Grid>
@@ -414,7 +411,7 @@ useEffect(() => {
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(personalErrors['email'])}
-                      aria-describedby="stepper-linear-personal-official_email"  
+                      aria-describedby="stepper-linear-personal-official_email"
                       helperText={personalErrors?.email?.message}
                     />
                   )}
@@ -436,14 +433,13 @@ useEffect(() => {
                       onChange={(date) => {
                         onChange;
                         setSelectedDate(date);
-                      }} 
+                      }}
                       customInput={
                         <CustomInput
                           label="Date Of Birth"
                           error={Boolean(personalErrors['date_of_birth'])}
                           aria-describedby="stepper-linear-personal-date_of_birth"
                           // helperText={personalErrors?.dob}
-
                         />
                       }
                       // onChange={onChange}
@@ -466,7 +462,7 @@ useEffect(() => {
                       label="Gender"
                       placeholder="Select Gender"
                       error={Boolean(personalErrors['gender'])}
-                      aria-describedby="stepper-linear-personal-gender"  
+                      aria-describedby="stepper-linear-personal-gender"
                       helperText={personalErrors?.gender?.message}
                     >
                       <MenuItem value="male">Male</MenuItem>

@@ -29,8 +29,7 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   description: yup
       .string()
-      .required('Description is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
+      .required('Description is required'),
     title: yup
       .string()
       .required('Title is required')
