@@ -1,7 +1,4 @@
-import { Box, Card, CardContent, CardHeader, Grid, Skeleton, Typography } from '@mui/material';
-// import CustomAvatar from 'components/mui/avatar';
-// import ReactApexCharts from 'react-apexcharts';
-// import { gridSpacing } from 'store/constant';
+import { Card, CardContent, CardHeader, Grid, Skeleton, Typography } from '@mui/material';
 
 const BatchViewSkeleton = () => {
   return (
