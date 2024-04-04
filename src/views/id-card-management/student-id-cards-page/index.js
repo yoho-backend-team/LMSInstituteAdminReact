@@ -46,7 +46,7 @@ const StudentIdCard = () => {
   console.log('id cards', StudentIdCards);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards(selectedBranchId));
+    dispatch(getAllStudentIdCards({branch_id:selectedBranchId}));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -59,8 +59,17 @@ const StudentIdCard = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      // id: statusValue?.id,
+      student_id: statusValue?.student?.student_id
     };
+
+    console.log('data:', data);
+
+    if (!data.student_id) {
+      toast.error('Student ID is missing.');
+      return;
+    }
+
     const response = await updateStudentIdCardStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -71,6 +80,7 @@ const StudentIdCard = () => {
   };
 
   const handleStatusValue = (event, student) => {
+    console.log('statusValue:', student);
     setStatusChangeDialogOpen(true);
     setStatusValue(student);
   };
@@ -243,7 +253,7 @@ const StudentIdCard = () => {
                               select
                               width={100}
                               label="Status"
-                              SelectProps={{ value: item?.student?.is_active, onChange: (e) => handleStatusValue(e, item?.student) }}
+                              SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>

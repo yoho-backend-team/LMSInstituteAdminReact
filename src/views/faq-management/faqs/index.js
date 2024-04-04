@@ -39,6 +39,7 @@ const FaqDataGrid = () => {
   const [refetch, setRefetch] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
 
   const faqs = useSelector(selectFaqs);
@@ -48,8 +49,11 @@ const FaqDataGrid = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllFaqs());
-  }, [dispatch, refetch]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllFaqs(data));
+  }, [dispatch, selectedBranchId, refetch]);
 
   const getFaqCategories = async () => {
     const result = await getActiveFaqCategories();
@@ -246,7 +250,7 @@ const FaqDataGrid = () => {
           <FaqAccordian faqCategories={faqCategories} />
         </Grid>
         <Grid item xs={12}>
-          <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         {faqLoading ? (
           <FaqSkeleton />

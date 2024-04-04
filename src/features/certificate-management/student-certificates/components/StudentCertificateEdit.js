@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect,useState,useCallback,useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 // ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -49,7 +49,7 @@ const defaultValues = {
 
 const StudentCertificateEdit = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, setStudentCertificateRefetch } = props;
   console.log('StudentCertificateEdit - open:', props.open);
   console.log('StudentCertificateEdit - toggle:', props.toggle);
   // ** State
@@ -92,6 +92,8 @@ const StudentCertificateEdit = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      toggle();
+      setStudentCertificateRefetch();
     } else {
       let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {
@@ -132,7 +134,6 @@ const StudentCertificateEdit = (props) => {
         }
       })),
     []
-
   );
   return (
     <Drawer
@@ -163,24 +164,24 @@ const StudentCertificateEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
-                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
-                {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
+          <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            {!selectedFile && <PDFViewer url={savedPdfUrl} />}
+            {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+            {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
 
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
-                  Upload New File
-                  <input
-                    accept="application/pdf"
-                    style={{ display: 'none' }}
-                    id="account-settings-upload-file"
-                    multiple={false}
-                    type="file"
-                    value={inputValue}
-                    onChange={handleFileUpload}
-                  />
-                </ButtonStyled>
-              </Grid>
+            <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
+              Upload New File
+              <input
+                accept="application/pdf"
+                style={{ display: 'none' }}
+                id="account-settings-upload-file"
+                multiple={false}
+                type="file"
+                value={inputValue}
+                onChange={handleFileUpload}
+              />
+            </ButtonStyled>
+          </Grid>
 
           <Controller
             name="name"

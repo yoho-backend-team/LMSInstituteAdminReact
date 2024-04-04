@@ -52,7 +52,7 @@ const defaultValues = {
 
 const StaffNotificationAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, setStaffNotificationRefetch } = props;
   // ** State
 
   const [inputValue, setInputValue] = useState('');
@@ -119,6 +119,7 @@ const StaffNotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
+      setStaffNotificationRefetch();
     } else {
       // let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {

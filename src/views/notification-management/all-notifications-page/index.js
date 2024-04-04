@@ -38,7 +38,7 @@ const AllNotification = () => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <AllNotificationHeaderSection  allNotifications={allNotifications}/>
+          <AllNotificationHeaderSection allNotifications={allNotifications} />
         </Grid>
         <Grid item xs={12}>
           <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
@@ -55,7 +55,7 @@ const AllNotification = () => {
             />
           </Grid>
         )}
-        <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setAllNotificationRefetch={setAllNotificationRefetch} />
       </Grid>
     </>
   );

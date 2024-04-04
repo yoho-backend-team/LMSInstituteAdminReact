@@ -37,20 +37,25 @@ const StudentFilterCard = (props) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
-                    // multiple
                     fullWidth
                     options={batch}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
-                      // const batchId = newValue.map((item) => item.batch.batch_id);
-                      console.log(newValue);
-                      const data = {
-                        batch_id: newValue.batch.batch_id,
-                        branch_id: selectedBranchId
-                      };
-                      dispatch(getAllStudentIdCards(data));
+                      if (!newValue) {
+                        // If newValue is null or undefined
+                        const data = {
+                          batch_id: '', // Pass default value for batch_id
+                          branch_id: selectedBranchId
+                        };
+                        dispatch(getAllStudentIdCards(data));
+                      } else {
+                        const data = {
+                          batch_id: newValue.batch.batch_id,
+                          branch_id: selectedBranchId
+                        };
+                        dispatch(getAllStudentIdCards(data));
+                      }
                     }}
-                    // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
