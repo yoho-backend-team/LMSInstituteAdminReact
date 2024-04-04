@@ -58,7 +58,9 @@ const TeachingIdCard = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      id: statusValue?.id,
+      staff_id: statusValue?.staff_id 
+
     };
     const response = await updateStaffIdCardStatus(data);
     if (response.success) {

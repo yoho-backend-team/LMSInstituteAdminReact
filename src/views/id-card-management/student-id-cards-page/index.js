@@ -59,8 +59,17 @@ const StudentIdCard = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      // id: statusValue?.id,
+      student_id: statusValue?.student_id 
     };
+
+    console.log('data:', data);
+
+    if (!data.student_id) {
+      toast.error('Student ID is missing.');
+      return;
+    }
+
     const response = await updateStudentIdCardStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -71,6 +80,7 @@ const StudentIdCard = () => {
   };
 
   const handleStatusValue = (event, student) => {
+    console.log('statusValue:', student);
     setStatusChangeDialogOpen(true);
     setStatusValue(student);
   };
