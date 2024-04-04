@@ -45,7 +45,7 @@ const TeachingIdCard = () => {
   console.log('id cards', StaffIdCards);
 
   useEffect(() => {
-    dispatch(getAllStaffIdCards(selectedBranchId));
+    dispatch(getAllStaffIdCards({branch_id:selectedBranchId}));
   }, [dispatch, selectedBranchId, staffIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -58,9 +58,8 @@ const TeachingIdCard = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id,
-      staff_id: statusValue?.staff_id 
-
+      // id: statusValue?.id,
+      staff_id: statusValue?.staff?.staff_id
     };
     const response = await updateStaffIdCardStatus(data);
     if (response.success) {
@@ -328,7 +327,7 @@ const TeachingIdCard = () => {
                               select
                               width={100}
                               label="Status"
-                              SelectProps={{ value: item?.staff?.is_active, onChange: (e) => handleStatusValue(e, item?.staff) }}
+                              SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>

@@ -46,7 +46,7 @@ const StudentIdCard = () => {
   console.log('id cards', StudentIdCards);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards(selectedBranchId));
+    dispatch(getAllStudentIdCards({branch_id:selectedBranchId}));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
