@@ -23,7 +23,7 @@ import { addNotification } from '../services/allNotificationServices';
 
 const AllNotificationAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, setAllNotificationRefetch } = props;
 
   // ** State
 
@@ -61,13 +61,13 @@ const AllNotificationAddDrawer = (props) => {
   const schema = yup.object().shape({
     branch: yup.string().required('Branch is required'),
     title: yup
-    .string()
-    .required('Title is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+      .string()
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     body: yup
-    .string()
-    .required('Body is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+      .string()
+      .required('Body is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters')
   });
 
   const defaultValues = {
@@ -81,7 +81,7 @@ const AllNotificationAddDrawer = (props) => {
     control,
     // setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -113,6 +113,7 @@ const AllNotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
+      setAllNotificationRefetch();
     } else {
       toast.error(result.message);
     }

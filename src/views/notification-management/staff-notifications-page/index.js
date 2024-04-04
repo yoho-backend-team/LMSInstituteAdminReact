@@ -63,7 +63,11 @@ const StaffNotification = () => {
             />
           </Grid>
         )}
-        <StaffNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        <StaffNotificationAddDrawer
+          open={addUserOpen}
+          toggle={toggleAddUserDrawer}
+          setStaffNotificationRefetch={setStaffNotificationRefetch}
+        />
       </Grid>
     </>
   );
