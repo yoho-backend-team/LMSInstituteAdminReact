@@ -92,7 +92,8 @@ const StudenrCertificate = () => {
     const response = await updateStudentCertificateStatus(data);
     if (response.success) {
       toast.success(response.message);
-      setStudentCertificateRefetch((state) => !state);
+      // setStudentCertificateRefetch((state) => !state);
+      setStudentCertificateRefetch();
     } else {
       toast.error(response.message);
     }
@@ -112,6 +113,7 @@ const StudenrCertificate = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
+    setStudentCertificateRefetch();
     console.log('Toggle drawer');
   };
 
@@ -339,9 +341,21 @@ const StudenrCertificate = () => {
             </Card>
           </Grid>
         )}
-        <StudentCertificateAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
-        <StudentCertificateEdit open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        {/* Add Drawer */}
+        <StudentCertificateAddDrawer
+          open={addUserOpen}
+          toggle={toggleAddUserDrawer}
+          setStudentCertificateRefetch={setStudentCertificateRefetch}
+        />
 
+        {/* Edit */}
+        <StudentCertificateEdit
+          open={editUserOpen}
+          initialValues={selectedRow}
+          toggle={toggleEditUserDrawer}
+          setStudentCertificateRefetch={setStudentCertificateRefetch}
+        />
+        {/* Delete */}
         <StudentCertificateDeleteModel
           open={studentCertificateDeleteModelOpen}
           setOpen={setStudentCertificateDeleteModelOpen}
@@ -349,7 +363,7 @@ const StudenrCertificate = () => {
           title="Delete"
           handleSubmit={handleStudentCertificateDelete}
         />
-
+        {/* Status Change */}
         <StatusChangeDialog
           open={statusChangeDialogOpen}
           setOpen={setStatusChangeDialogOpen}
