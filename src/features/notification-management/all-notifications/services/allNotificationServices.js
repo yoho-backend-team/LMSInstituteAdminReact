@@ -159,3 +159,29 @@ export const getAllNotificationsByAuth = async (data) => {
     throw error;
   }
 };
+
+export const getLastNotifications = async (data) => {
+  try {
+    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/get-last-notifications`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+    console.log('getLastNotifications:', response);
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { success: true, data: response?.data?.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Notifications. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getNotifications:', error);
+
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
