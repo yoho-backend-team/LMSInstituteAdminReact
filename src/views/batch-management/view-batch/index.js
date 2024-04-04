@@ -41,7 +41,7 @@ const ViewBatch = () => {
 
   const getBatchData = async (data) => {
     try {
-      setLoading(false);
+      setLoading(true);
       const result = await getBatchDetails(data);
       if (result.success) {
         console.log('Batches:', result.data);
