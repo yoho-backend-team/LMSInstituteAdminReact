@@ -158,8 +158,6 @@ export const updateGroup = async (data) => {
 
 export const getAllPermissionsByRoleId = async (roleId) => {
   try {
-    console.log('roll id : ', roleId);
-    // const data = { id: roleId };
     const response = await axios.get(`${PERMISSION_API_ENDPOINT}/get-permissions-by-role-id`, {
       headers: {
         'Content-Type': 'application/json',

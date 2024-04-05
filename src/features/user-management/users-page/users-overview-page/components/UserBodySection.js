@@ -17,7 +17,6 @@ import { updateUserStatus } from 'features/user-management/users-page/services/u
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
-// import { deleteCourseCategory } from '../../services/courseCategoryServices';
 import { deleteUsers } from 'features/user-management/users-page/services/userServices';
 
 const userStatusObj = {
@@ -46,7 +45,6 @@ const renderClient = (row) => {
 };
 
 const UserBodySection = ({ users, setUserRefetch }) => {
-  // const [status, setStatus] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);

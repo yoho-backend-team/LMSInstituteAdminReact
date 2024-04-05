@@ -5,11 +5,9 @@ import CardHeader from '@mui/material/CardHeader';
 import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
 import Card from '@mui/material/Card';
-// import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import { useDispatch } from 'react-redux';
 import { useCallback, useState } from 'react';
-// import { FilterUsersByStatus } from 'features/user-management/users-page/services/userServices';
 import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
 
 const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) => {
