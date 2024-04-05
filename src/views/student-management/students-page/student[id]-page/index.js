@@ -19,29 +19,26 @@ const UserView = () => {
 
   const getStudentData = async (id) => {
     // setLoading(true);
-    const data = { id: id };
+    const data = { student_id: id };
     const result = await studentById(data);
     if (result.success) {
-      setStudent(result.data.student);
+      setStudent(result.data);
       // setLoading(false);
     }
     // setLoading(false);
   };
   console.log(student);
 
-  
   return (
     <>
- 
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12} lg={12}>
-            <UserViewLeft student={student} />
-          </Grid>
-          <Grid item xs={12} md={12} lg={12}>
-            <UserViewRight student={student} />
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12} lg={12}>
+          <UserViewLeft student={student} />
         </Grid>
-   
+        <Grid item xs={12} md={12} lg={12}>
+          <UserViewRight student={student} />
+        </Grid>
+      </Grid>
     </>
   );
 };

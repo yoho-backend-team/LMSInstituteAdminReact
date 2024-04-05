@@ -82,7 +82,7 @@ const UserViewRight = ({ tab, student }) => {
             <UserViewAccount student={student} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="security">
-            <UserViewSecurity id={student.id} />
+            <UserViewSecurity id={student.user_id} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="class">
             <UserViewBilling student={student} />

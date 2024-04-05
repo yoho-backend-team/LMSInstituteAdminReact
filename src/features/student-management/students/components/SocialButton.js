@@ -36,7 +36,7 @@ export default function SocialsButton({ item, initialColor = false, simple = tru
       name: 'See Full Profile',
       icon: 'eva:navigation-2-fill',
       socialColor: 'primary.dark',
-      path: `students/${item.student.user_id.toString()}`
+      path: `students/${item.student.student_id.toString()}`
     }
   ];
 
@@ -45,7 +45,7 @@ export default function SocialsButton({ item, initialColor = false, simple = tru
       {SOCIALS.map((social) => {
         const { name, icon, path, socialColor } = social;
         return simple ? (
-          <Link key={name} to={path} state={{ id: item.student.user_id }}>
+          <Link key={name} to={path} state={{ id: item.student.student_id }}>
             <Tooltip title={name} placement="top">
               <IconButton
                 color="inherit"
