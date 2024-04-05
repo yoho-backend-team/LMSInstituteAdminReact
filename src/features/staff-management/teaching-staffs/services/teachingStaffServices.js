@@ -109,7 +109,7 @@ export const deleteTeachingStaff = async (data) => {
       },
       params: data
     });
-    console.log('updateTeachingStaff:', response);
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'TeachingStaff deleted successfully' };
     } else {
@@ -130,7 +130,7 @@ export const updateTeachingStaff = async (data) => {
       },
       params: data
     });
-    console.log('teachingedit:', response);
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'TeachingStaff updated successfully' };
     } else {

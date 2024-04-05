@@ -16,16 +16,14 @@ import { default as DeleteModal } from 'components/modal/DeleteModel';
 import { deleteTeachingStaff } from '../services/teachingStaffServices';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-const UserViewAccount = ({ staff, formattedDate, staffID,setRefetch }) => {
+const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
   // ** States
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-// const[refetch,setRefetch]=useState({})
 
-//handleDeletion
- const handleDelete = () => {
-  setStaffDeleteModelOpen(true);
-}
+  const handleDelete = () => {
+    setStaffDeleteModelOpen(true);
+  };
   const Navigate = useNavigate();
   const handleStaffDelete = async () => {
     const data = { id: staffID };
@@ -39,7 +37,6 @@ const UserViewAccount = ({ staff, formattedDate, staffID,setRefetch }) => {
       toast.error(result.message);
     }
   };
-  console.log('gettingId', staffID);
 
   if (staff) {
     return (
@@ -124,7 +121,7 @@ const UserViewAccount = ({ staff, formattedDate, staffID,setRefetch }) => {
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
             {staff?.teachingStaff?.staff_course?.map((course, index) => (
-              <Grid item spacing={2} key={index} xs={12} md={6}>
+              <Grid item key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
@@ -152,10 +149,10 @@ const UserViewAccount = ({ staff, formattedDate, staffID,setRefetch }) => {
                           course?.courses?.learning_format === 'online'
                             ? 'success'
                             : course?.courses?.learning_format === 'offline'
-                            ? 'primary'
-                            : course?.courses?.learning_format === 'hybrid'
-                            ? 'secondary'
-                            : 'warning'
+                              ? 'primary'
+                              : course?.courses?.learning_format === 'hybrid'
+                                ? 'secondary'
+                                : 'warning'
                         }
                         size="small"
                         variant="contained"

@@ -99,7 +99,27 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
 
               <Box sx={{ display: 'flex' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{9898765645}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.mobile}</Typography>
+              </Box>
+            </Box>
+            <Typography sx={{ mr: 2, mt: 2, fontWeight: 500, color: 'text.secondary' }}>Branches:</Typography>
+            <Box sx={{ display: 'flex', mb: 3, mt: 2 }}>
+              <Box gap={3}>
+                {userData?.branches?.map((item, index) => (
+                  <CustomChip
+                    key={index}
+                    rounded
+                    skin="light"
+                    size="small"
+                    label={item?.branch_name}
+                    color={'primary'}
+                    sx={{
+                      textTransform: 'capitalize',
+                      mb: 1,
+                      mr: 1
+                    }}
+                  />
+                ))}
               </Box>
             </Box>
           </CardContent>

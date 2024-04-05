@@ -101,8 +101,8 @@ const StaffManagementView = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid sx={{mt:2}}>
-        <TabContext>
+      <Grid sx={{ mt: 2 }}>
+        <TabContext value="1">
           <TabList
             variant="scrollable"
             scrollButtons="auto"
@@ -110,93 +110,93 @@ const StaffManagementView = () => {
             sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
           >
             {/* Placeholder for Account Tab */}
-            <Tab disabled  label={<Skeleton variant="text" width={90} height={50}/>} />
+            <Tab value={'1'} disabled label={<Skeleton variant="text" width={90} height={50} />} />
             {/* Placeholder for Security Tab */}
-            <Tab disabled  label={<Skeleton variant="text" width={90} height={50}/>} />
+            <Tab value={'2'} disabled label={<Skeleton variant="text" width={90} height={50} />} />
             {/* Placeholder for Classes Tab */}
-            <Tab disabled  label={<Skeleton variant="text" width={90} height={50}/>} />
+            <Tab value={'3'} disabled label={<Skeleton variant="text" width={90} height={50} />} />
             {/* Placeholder for Attendance Tab */}
-            <Tab disabled  label={<Skeleton variant="text" width={90} height={50}/>} />
+            <Tab value={'4'} disabled label={<Skeleton variant="text" width={90} height={50} />} />
             {/* Placeholder for Activity Tab */}
-            <Tab disabled  label={<Skeleton variant="text" width={90} height={50}/>} />
+            <Tab value={'5'} disabled label={<Skeleton variant="text" width={90} height={50} />} />
           </TabList>
         </TabContext>
       </Grid>
-      <Grid sx={{mt:1}}>
-      <Card>
-      <CardContent sx={{ pb: 2 }}>
-        <Typography variant='body2' sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
-          <Skeleton width={100} height={50}/>
-        </Typography>
-        <Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
+      <Grid sx={{ mt: 1 }}>
+        <Card>
+          <CardContent sx={{ pb: 2 }}>
+            <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+              <Skeleton width={100} height={50} />
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              <Skeleton width={150} height={40}/>
-            </Typography>
-          </Box>
-        </Box>
-      </CardContent>
+            <Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>
+                  <Skeleton width={150} height={40} />
+                </Typography>
+              </Box>
+            </Box>
+          </CardContent>
 
-      <CardActions sx={{ display: 'flex', justifyContent: '' }}>
-        <Button variant='tonal' sx={{ mr: 2 }}>
-          <Skeleton width={60} />
-        </Button>
-        <Button  variant='tonal'>
-          <Skeleton width={70} />
-        </Button>
-      </CardActions>
-    </Card>
+          <CardActions sx={{ display: 'flex', justifyContent: '' }}>
+            <Button variant="tonal" sx={{ mr: 2 }}>
+              <Skeleton width={60} />
+            </Button>
+            <Button variant="tonal">
+              <Skeleton width={70} />
+            </Button>
+          </CardActions>
+        </Card>
       </Grid>
     </>
   );

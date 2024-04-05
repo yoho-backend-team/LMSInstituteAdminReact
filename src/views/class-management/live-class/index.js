@@ -10,11 +10,7 @@ import LiveClassCardHeader from 'features/class-management/live-classes/componen
 import LiveClassFilterCard from 'features/class-management/live-classes/components/LiveClassFilterCard';
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 
-
-
-
 const useTimeout = (callback, delay) => {
- 
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
 
@@ -31,7 +27,7 @@ const LiveClass = () => {
   return (
     <>
       <Grid>
-        <LiveClassFilterCard selectedBranchId={selectedBranchId}/>
+        <LiveClassFilterCard selectedBranchId={selectedBranchId} />
         <LiveClassCardHeader selectedBranchId={selectedBranchId} />
         {loading ? (
           <ClassSkeleton />
