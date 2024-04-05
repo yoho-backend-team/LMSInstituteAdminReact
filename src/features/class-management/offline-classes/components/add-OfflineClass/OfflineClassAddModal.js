@@ -11,7 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
 // import format from 'date-fns/format';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
@@ -83,8 +83,8 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     setActiveNonTeachingStaff(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId };
-    const result = await getAllActiveBatchesByCourse(data);
+    const data = { course_id: courseId,branch_id: selectedBranchId };
+    const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
@@ -314,7 +314,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                     <Autocomplete
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option.batch_name}
+                      getOptionLabel={(option) => option.batch.batch_name}
                       onChange={(event, newValue) => onChange(newValue?.batch_id)}
                       value={activeBatches.find((batch) => batch.batch_id === value) || null}
                       renderInput={(params) => (
