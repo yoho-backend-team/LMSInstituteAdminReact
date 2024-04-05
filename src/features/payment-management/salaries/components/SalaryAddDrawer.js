@@ -144,7 +144,7 @@ const FeesAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
-      setRefetch();
+      setRefetch((state) => !state);
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {

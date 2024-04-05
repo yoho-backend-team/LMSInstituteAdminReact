@@ -29,7 +29,7 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  paid_amount: yup.number().required('Paid Amount is required').typeError('Paid Amount must be a number')
 });
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -109,6 +109,14 @@ const FeesEditDrawer = (props) => {
     return formattedDateString;
   }
 
+
+  const handleClose = () => {
+    setSelectedImage(null);
+    reset();
+    toggle();
+  };
+
+
   // Form submission handler
   const onSubmit = useCallback(async (data) => {
     const inputData = new FormData();
@@ -123,7 +131,7 @@ const FeesEditDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
-      handleEditClose();
+      handleClose();
     } else {
       toast.error(result.message);
     }
@@ -159,11 +167,7 @@ const FeesEditDrawer = (props) => {
 
   console.log(selectedDate);
 
-  const handleClose = () => {
-    setSelectedImage(null);
-    reset();
-    toggle();
-  };
+
 
   const handleStatusChange = (e) => {
     setSelectedStatus(e.target.value);
@@ -285,8 +289,8 @@ const FeesEditDrawer = (props) => {
                     onChange={onChange}
                     label="Paid Amount"
                     type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
+                    error={Boolean(errors.paid_amount)}
+                    helperText={errors.paid_amount?.message}
                   />
                 )}
               />
