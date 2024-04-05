@@ -62,6 +62,7 @@ const StudentCertificateAddDrawer = (props) => {
   const [students, setStudents] = useState([]);
 
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -76,6 +77,8 @@ const StudentCertificateAddDrawer = (props) => {
     console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
+
+  
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 

@@ -385,7 +385,13 @@ const FeesTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
-          <FeesCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
+          {/* Card Header */}
+          <FeesCardHeader
+            selectedBranchId={selectedBranchId}
+            selectedRows={selectedRows}
+            toggle={toggleAddUserDrawer}
+            setRefetch={setRefetch}
+          />
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -397,7 +403,6 @@ const FeesTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                // rows={StudentFees}
                 rows={StudentFees}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -411,9 +416,13 @@ const FeesTable = () => {
         </Grid>
       </Grid>
 
-      <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* Add Drawer */}
+      <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
+
+      {/* View */}
       <FeesViewDrawer open={feesViewOpen} toggle={toggleFeesViewDrawer} selectedRowDetails={selectedRows} />
 
+      {/* Edit Drawer */}
       <FeesEditDrawer
         setRefetch={setRefetch}
         open={editUserOpen}
@@ -421,6 +430,8 @@ const FeesTable = () => {
         selectedRows={selectedRows}
         handleRowClick={handleRowClick}
       />
+
+      {/* Delte Modal */}
       <FeeDeleteModel
         open={feeDeleteModelOpen}
         setOpen={setFeeDeleteModelOpen}
