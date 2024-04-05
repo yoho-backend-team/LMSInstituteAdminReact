@@ -18,12 +18,9 @@ import CustomAvatar from 'components/mui/avatar';
 // ** Utils Import
 import { getInitials } from 'utils/get-initials';
 
-// import { getUserById } from '../services/viewUserServices';
-
 import UserEditDialog from './UserEditDialog';
-// import { MenuItem, TextField } from '@mui/material';
 
-const   UserViewLeft = ({ userData, id, setRefetch }) => {
+const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
     1: 'success',
     pending: 'warning',

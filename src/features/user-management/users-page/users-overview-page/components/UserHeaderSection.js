@@ -1,9 +1,6 @@
 import Grid from '@mui/material/Grid';
 import UserHeaderCard from 'features/user-management/users-page/users-overview-page/components/UserHeaderCard';
 const UserHeaderSection = ({ users, groups }) => {
-  console.log(users);
-  // console.log(groups);
-
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={3} sm={6}>

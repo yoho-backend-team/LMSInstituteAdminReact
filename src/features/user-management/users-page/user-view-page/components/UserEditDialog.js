@@ -98,7 +98,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('contact', userData?.institution_users?.mobile || '');
       setValue('designation', userData?.institution_users?.designation || '');
       setValue('branch', userData?.institution_users?.branch || []);
-      // setValue('branch', userData?.institution_users?.branch?.map(branch => branch.branch_name) || []);
       setValue('role', userData?.role_groups?.role?.id || '');
     }
   }, [userData, setValue]);
@@ -132,7 +131,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     try {
       const result = await getAllActiveGroups();
       if (result.success) {
-        console.log('User Data:', result.data);
         setGroups(result.data);
       } else {
         console.log(result.message);
@@ -169,8 +167,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   };
 
-  console.log(selectedImage);
-
   const onSubmit = async (data) => {
     console.log(data);
     const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_name));
@@ -184,7 +180,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     InputData.append('email', data.email);
     InputData.append('mobile', data.contact);
     InputData.append('designation', data.designation);
-    // InputData.append('branch_id', data.branch);
     InputData.append('role_id', data.role);
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
