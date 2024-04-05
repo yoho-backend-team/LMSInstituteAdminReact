@@ -1,11 +1,11 @@
 // ** React Imports
 import { useCallback, useState } from 'react';
 // ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
-import { TextField } from '@mui/material';
 import { useEffect } from 'react';
 // ** Custom Components Imports
 import Card from '@mui/material/Card';
@@ -18,24 +18,21 @@ import StudentCertificateAddDrawer from 'features/certificate-management/student
 import StudentCertificateEdit from 'features/certificate-management/student-certificates/components/StudentCertificateEdit';
 import StudentCertificateTableHeader from 'features/certificate-management/student-certificates/components/StudentCertificateTableHeader';
 import StudentCertificateView from 'features/certificate-management/student-certificates/components/StudentCertificateView';
-import { selectStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
+import {
+  selectLoading,
+  selectStudentCertificates
+} from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
 // import { setStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSlice';
 // import { searchStudentCertificates } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateStudentCertificateStatus } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
-import { deleteStudentCertificate } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import CustomAvatar from 'components/mui/avatar';
-import { getInitials } from 'utils/get-initials';
+import {
+  deleteStudentCertificate,
+  updateStudentCertificateStatus
+} from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import toast from 'react-hot-toast';
-
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { getInitials } from 'utils/get-initials';
 
 const userStatusObj = {
   1: 'success',
@@ -119,6 +116,8 @@ const StudenrCertificate = () => {
 
   const dispatch = useDispatch();
   const studentCertificates = useSelector(selectStudentCertificates);
+  const studentCertificatesLoading = useSelector(selectLoading);
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
@@ -305,12 +304,6 @@ const StudenrCertificate = () => {
     }
   ];
 
-  const [loading, setLoading] = useState(true);
-
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
   return (
     <>
       <Grid container spacing={2}>
@@ -322,7 +315,7 @@ const StudenrCertificate = () => {
             toggle={toggleAddUserDrawer}
           />
         </Grid>
-        {loading ? (
+        {studentCertificatesLoading ? (
           <ContentSkeleton />
         ) : (
           <Grid item xs={12}>
