@@ -135,7 +135,7 @@ const NotificationAddDrawer = (props) => {
     console.log(data.students);
 
     const bodyFormData = new FormData();
-    data.students.forEach((student) => {
+    selectedStudents?.forEach((student) => {
       bodyFormData.append('student_ids[]', student.student.student_id);
     });
     bodyFormData.append('image', selectedImage);
@@ -290,7 +290,7 @@ const NotificationAddDrawer = (props) => {
               name="students"
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value } }) => (
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
