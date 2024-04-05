@@ -32,7 +32,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
+import { selectStudentFeeRefunds, selectLoading } from '../redux/studentFeeRefundSelectors';
 import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
 import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
 // import RefundEditDrawer from './RefundEditDrawer';
@@ -126,14 +126,6 @@ const defaultColumns = [
 
 /* eslint-enable */
 const RefundTable = () => {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
   // ** State
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -145,6 +137,8 @@ const RefundTable = () => {
   console.log(setRefetch);
   const dispatch = useDispatch();
   const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
+  const StudentFeeRefundsLoading = useSelector(selectLoading);
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(studentFeeRefunds);
@@ -344,7 +338,7 @@ const RefundTable = () => {
           <RefundCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
         </Grid>
         <Grid item xs={12}>
-          {loading ? (
+          {StudentFeeRefundsLoading ? (
             <FeesTableSkeleton />
           ) : (
             <Card>
@@ -352,7 +346,7 @@ const RefundTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 pagination
-                getRowHeight={()=>'auto'}
+                getRowHeight={() => 'auto'}
                 rows={studentFeeRefunds}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -364,7 +358,7 @@ const RefundTable = () => {
               />
             </Card>
           )}
-          <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+          <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
 
           <RefundViewDrawer open={refundViewOpen} toggle={toggleRefundViewDrawer} selectedRowDetails={selectedRowDetails} />
 
