@@ -6,7 +6,7 @@ import UserViewRight from 'features/staff-management/teaching-staffs/components/
 import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { useLocation } from 'react-router';
 
-const UserView = ({ setRefetch }) => {
+const UserView = () => {
   const [loading, setLoading] = useState(false);
   const [staff, setStaff] = useState({});
   const location = useLocation();
@@ -26,9 +26,6 @@ const UserView = ({ setRefetch }) => {
     }
     setLoading(false);
   };
-  console.log('nonteaching:', staff);
-  // console.log('staffid:',staffID);
-  // Handle staff deletion
 
   // dateFormat
   function formattedDate(inputDate) {
@@ -61,7 +58,7 @@ const UserView = ({ setRefetch }) => {
             <UserViewLeft staff={staff} formattedDate={formattedDate} />
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <UserViewRight staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch} />
+            <UserViewRight staff={staff} staffID={staffID} formattedDate={formattedDate} />
           </Grid>
         </Grid>
       )}
