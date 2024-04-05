@@ -55,7 +55,12 @@ const StudentNotification = () => {
             />
           </Grid>
         )}
-        <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        {/* Add Drawer */}
+        <NotificationAddDrawer
+          open={addUserOpen}
+          toggle={toggleAddUserDrawer}
+          setStudentNotificationRefetch={setStudentNotificationRefetch}
+        />
       </Grid>
     </>
   );

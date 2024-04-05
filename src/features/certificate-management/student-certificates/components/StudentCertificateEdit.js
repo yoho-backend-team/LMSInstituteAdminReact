@@ -93,7 +93,7 @@ const StudentCertificateEdit = (props) => {
     if (result.success) {
       toast.success(result.message);
       toggle();
-      setStudentCertificateRefetch();
+      setStudentCertificateRefetch((state)=>!state);
     } else {
       let errorMessage = '';
       // Object.values(result.message).forEach((errors) => {
