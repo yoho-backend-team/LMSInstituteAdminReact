@@ -1,22 +1,26 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Box, Button, Grid } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import CustomChip from 'components/mui/chip';
+import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { updateUser } from '../../services/userServices';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
-import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
-import InputAdornment from '@mui/material/InputAdornment';
+
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -28,17 +32,6 @@ const showErrors = (field, valueLen, min) => {
   }
 };
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
 
 const schema = yup.object().shape({
   full_name: yup
@@ -122,6 +115,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [groups, setGroups] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState([]);
 
   useEffect(() => {
     getAllGroups();
@@ -330,38 +324,65 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <Controller
-                name="branch"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{ mb: 2 }}
-                    select
-                    fullWidth
-                    label="Branch"
-                    id="select-multiple-checkbox"
-                    // value={value}
-                    defaultValue={value}
-                    onChange={onChange}
-                    SelectProps={{
-                      MenuProps,
-                      multiple: true,
-                      renderValue: (selected) => selected.join(', ')
-                    }}
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
-                  >
-                    {branches?.map((item, index) => (
-                      <MenuItem key={index} value={item?.branch_id}>
-                        <Checkbox checked={value.includes(item.branch_id)} />
-                        <ListItemText primary={item.branch_name} />
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  id="select-multiple-chip"
+                  options={[{ branch_id: 'selectAll', branch_name: 'Select All' },...branches]}
+                  getOptionLabel={(option) => option.branch_name}
+                  value={selectedBranch}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
+                      setSelectedBranch(activeCourse.filter((option) => option.branch_id !== 'selectAll'));
+                    } else {
+                      setSelectedBranch(newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="Select Branch"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.branch_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value.map((option, index) => (
+                        <CustomChip
+                          key={option.branch_id}
+                          label={option.branch_name}
+                          // defaultValue={}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedBranch(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                />
+              </Grid>
 
             <Grid item xs={12} sm={6}>
               <Controller
