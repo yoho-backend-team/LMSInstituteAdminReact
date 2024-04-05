@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { getAllLiveClasses } from '../redux/liveClassThunks';
 
 const LiveClassCardHeader = (props) => {
-  const { selectedBranchId } = props;
+  const { selectedBranchId,setRefetch } = props;
 
   // State for search value
   const [searchValue, setSearchValue] = useState('');
@@ -69,7 +69,7 @@ const LiveClassCardHeader = (props) => {
           </Button>
         </Box>
       </Box>
-      <LiveClassAddModal open={isAddModalOpen} handleAddClose={handleAddClose} />
+      <LiveClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
 };

@@ -40,7 +40,7 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
+const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefetch}) => {
   console.log(offlineClasses);
 
   const [startTime, setStartTime] = useState(null);
@@ -205,6 +205,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses }) => {
     const result = await updateOfflineClass(bodyFormData);
 
     if (result.success) {
+      setRefetch((state) => !state); 
       toast.success(result.message);
       handleClose();
     } else {

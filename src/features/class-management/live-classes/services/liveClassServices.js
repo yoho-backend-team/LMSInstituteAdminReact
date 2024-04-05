@@ -74,7 +74,7 @@ export const addLiveClass = async (data) => {
 
 export const deleteLiveClass = async (data) => {
   try {
-    const response = await axios.delete(`${LIVE_CLASS_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${LIVE_CLASS_API_END_POINT}/live-class-delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

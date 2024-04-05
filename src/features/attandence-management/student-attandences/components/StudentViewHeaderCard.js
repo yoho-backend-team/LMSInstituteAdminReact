@@ -7,45 +7,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import Avatar from 'components/mui/avatar';
 import { useTheme } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router';
+import Avatar from 'components/mui/avatar';
 // import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
 
-import { getClassDetails } from '../services/studentAttendanceServices';
 
-const StudentViewHeaderCard = () => {
+const StudentViewHeaderCard = ({ClassData}) => {
   // States
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const ClassId = location.state.id;
-  const [ClassData, setClassData] = useState(null);
 
-  useEffect(() => {
-    const data = {
-      class_id: ClassId
-    };
-    getClassData(data);
-  }, [dispatch, ClassId]);
-
-  const getClassData = async (data) => {
-    try {
-      const result = await getClassDetails(data);
-      if (result.success) {
-        console.log('Class:', result.data);
-        setClassData(result.data); // Assuming result.data is an array
-      } else {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log(ClassData);
 
   return (
     <Grid container spacing={6}>

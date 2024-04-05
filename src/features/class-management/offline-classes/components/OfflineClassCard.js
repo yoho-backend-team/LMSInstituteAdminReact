@@ -202,6 +202,7 @@ const OfflineClassCard = () => {
           </Grid>
         ))}
         <OfflineClassEditModal
+        setRefetch={setofflineClassRefetch}
           selectedBranchId={selectedBranchId}
           offlineClasses={selectedClass}
           open={isEditModalOpen}

@@ -44,7 +44,7 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
+const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) => {
   console.log(liveClasses);
 
   const [startTime, setStartTime] = useState(null);
@@ -213,6 +213,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
     const result = await updateLiveClass(bodyFormData);
 
     if (result.success) {
+      setRefetch((state) => !state); 
       toast.success(result.message);
       handleClose();
     } else {

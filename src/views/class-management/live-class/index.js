@@ -11,6 +11,7 @@ import LiveClassFilterCard from 'features/class-management/live-classes/componen
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 
 const useTimeout = (callback, delay) => {
+
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
 
@@ -19,6 +20,7 @@ const useTimeout = (callback, delay) => {
 };
 
 const LiveClass = () => {
+  const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [loading, setLoading] = useState(true);
   useTimeout(() => {
@@ -27,13 +29,13 @@ const LiveClass = () => {
   return (
     <>
       <Grid>
-        <LiveClassFilterCard selectedBranchId={selectedBranchId} />
-        <LiveClassCardHeader selectedBranchId={selectedBranchId} />
+        <LiveClassFilterCard  selectedBranchId={selectedBranchId} />
+        <LiveClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setRefetch}/>
         {loading ? (
           <ClassSkeleton />
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
-            <LiveClassCard />
+            <LiveClassCard refetch={refetch} setRefetch={setRefetch}/>
           </Grid>
         )}
       </Grid>

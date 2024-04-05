@@ -171,3 +171,24 @@ export const getClassDetails = async (data) => {
     throw error;
   }
 };
+
+export const updateStudentAttendanceStatus = async (data) => {
+  try {
+    const response = await axios.put(`${STUDENT_ATTENDANCES_API_END_POINT}/status-update`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log('Notesresponse:', response);
+    if (response.data.status) {
+      console.log(response);
+      return { success: true, message: 'StudentAttendance status updated successfully' };
+    } else {
+      return { success: false, message: 'Failed to update StudentAttendance status' };
+    }
+  } catch (error) {
+    console.error('Error in updateStudentAttendance:', error);
+    throw error;
+  }
+};

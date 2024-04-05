@@ -24,6 +24,8 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addOfflineClass } from '../../services/offlineClassServices';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
+
 /* eslint-disable */
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -42,6 +44,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -89,6 +92,13 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
+
+  const getStudentsByBatch = async (batchId) => {
+    const data = { batch_id: batchId, branch_id: selectedBranchId };
+    const result = await getAllStudents(data);
+    setStudents(result.data.data); // Assuming result.data contains the list of students
+  };
+
 
   const handleStartTimeChange = (time) => {
     setStartTime(time);

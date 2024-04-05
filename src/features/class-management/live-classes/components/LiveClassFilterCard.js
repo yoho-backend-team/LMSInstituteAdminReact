@@ -38,14 +38,47 @@ const LiveClassFilterCard = (props) => {
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
   const batch = useSelector(selectBatches);
-  const [dates, setDates] = useState([]);
   const [statusValue, setStatusValue] = useState('');
-  const [endDateRange, setEndDateRange] = useState(null);
-  // const [activecourses,setActiveCourses]=useState('')
   const [startDateRange, setStartDateRange] = useState(null);
+  const [dates, setDates] = useState([]);
+  const [endDateRange, setEndDateRange] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
 
+
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
+  console.log(convertDateFormat(startDateRange));
+  console.log(endDateRange);
+
   console.log('dummy', setStatusValue);
+  
+  const handleOnChangeRange = (dates) => {
+    const [start, end] = dates;
+    if (start !== null && end !== null) {
+      setDates(dates);
+      const data = {
+        start_date: convertDateFormat(start),
+        end_date: convertDateFormat(end),
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllLiveClasses(data));
+    }
+    setStartDateRange(start);
+    setEndDateRange(end);
+  };
+
 
   useEffect(() => {
     const data = {
@@ -99,18 +132,6 @@ const LiveClassFilterCard = (props) => {
     }
   };
 
-
-  const handleOnChangeRange = (dates) => {
-    const [start, end] = dates;
-    if (start !== null && end !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-    setEndDateRange(end);
-  };
-
-
-
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -155,7 +176,7 @@ const LiveClassFilterCard = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <DatePicker
+                <DatePicker
                     isClearable
                     selectsRange
                     monthsShown={2}
@@ -166,7 +187,13 @@ const LiveClassFilterCard = (props) => {
                     id="date-range-picker-months"
                     onChange={handleOnChangeRange}
                     customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Class Date" end={endDateRange} start={startDateRange} />
+                      <CustomInput
+                        dates={dates}
+                        setDates={setDates}
+                        label="Start date End date"
+                        end={endDateRange}
+                        start={startDateRange}
+                      />
                     }
                   />
                 </Grid>

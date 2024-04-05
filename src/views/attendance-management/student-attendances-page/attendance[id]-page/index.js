@@ -1,9 +1,13 @@
 // material-ui
 import { Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import StudentAttendanceViewSkeleton from 'components/cards/Skeleton/StudentAttendanceViewSkeleton';
 import StudentAttendanceTable from 'features/attandence-management/student-attandences/components/StudentAttendanceTable';
 import StudentViewHeaderCard from 'features/attandence-management/student-attandences/components/StudentViewHeaderCard';
-import StudentAttendanceViewSkeleton from 'components/cards/Skeleton/StudentAttendanceViewSkeleton';
+import { useEffect, useState } from 'react';
+// ** MUI Imports
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
+import { getClassDetails } from 'features/attandence-management/student-attandences/services/studentAttendanceServices';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -19,7 +23,33 @@ const ViewAttendance = () => {
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const ClassId = location.state.id;
+  const [ClassData, setClassData] = useState(null);
 
+  useEffect(() => {
+    const data = {
+      class_id: ClassId
+    };
+    getClassData(data);
+  }, [dispatch, ClassId]);
+
+  const getClassData = async (data) => {
+    try {
+      const result = await getClassDetails(data);
+      if (result.success) {
+        console.log('Class:', result.data);
+        setClassData(result.data); // Assuming result.data is an array
+      } else {
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(ClassData);
   return (
     <>
       {loading ? (
@@ -27,11 +57,11 @@ const ViewAttendance = () => {
       ) : (
         <Grid container spacing={3} sx={{ p: 1 }}>
           <Grid item xs={12} sm={12}>
-            <StudentViewHeaderCard />
+            <StudentViewHeaderCard ClassData={ClassData}/>
           </Grid>
 
           <Grid item xs={12}>
-            <StudentAttendanceTable />
+            <StudentAttendanceTable ClassData={ClassData}/>
           </Grid>
         </Grid>
       )}

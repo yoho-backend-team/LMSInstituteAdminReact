@@ -23,7 +23,7 @@ const NonTeachingStaffFilterCard = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId, type: 'non-teaching' };
+    const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllNonTeachingStaffs(data));
   };
 
@@ -31,7 +31,7 @@ const NonTeachingStaffFilterCard = (props) => {
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllNonTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'non-teaching' }));
+      dispatch(getAllNonTeachingStaffs({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
       // Dispatch action to fetch branches with search input
     },

@@ -11,7 +11,6 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
-import DeleteDialog from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import toast from 'react-hot-toast';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
@@ -21,22 +20,37 @@ import { useDispatch, useSelector } from 'react-redux';
 import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
 import { deleteLiveClass } from '../services/liveClassServices';
 import { Link } from 'react-router-dom';
+import LiveClassDeleteModel from 'components/modal/DeleteModel';
 
-const LiveClassCard = () => {
+const LiveClassCard = ({refetch,setRefetch}) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const [selectedBranchDeleteId, setSelectedBranchDeleteId] = useState(null);
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState('');
+
+  const [liveclassDeleteModelOpen, setLiveclassDeleteModelOpen] = useState(false);
+  const [selectedLiveclassDeleteId, setSelectedLiveclassDeleteId] = useState(null);
 
   const dispatch = useDispatch();
   console.log(liveClasses);
 
-  const handleDelete = useCallback((itemId) => {
-    setSelectedBranchDeleteId(itemId);
-    setDeleteDialogOpen(true);
-  }, []);
+ // Memoize the handleDelete function to prevent unnecessary re-renders
+ const handleDelete = useCallback((itemId) => {
+  setSelectedLiveclassDeleteId(itemId);
+  setLiveclassDeleteModelOpen(true);
+}, []);
+
+// Handle branch deletion
+const handleLiveclassDelete = async () => {
+  const data = { class_id: selectedLiveclassDeleteId };
+  const result = await deleteLiveClass(data);
+  if (result.success) {
+    toast.success(result.message);
+    setRefetch((state) => !state);
+  } else {
+    toast.error(result.message);
+  }
+};
 
   useEffect(() => {
     const data = {
@@ -44,24 +58,13 @@ const LiveClassCard = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllLiveClasses(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId,refetch]);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
   const handleEdit = () => {
     setEditModalOpen(true);
-  };
-
-  const handleDeleteClass = async () => {
-    const data = { class_id: selectedBranchDeleteId };
-    const result = await deleteLiveClass(data);
-    if (result.success) {
-      toast.success(result.message);
-      setRefetchBranch((state) => !state);
-    } else {
-      toast.error(result.message);
-    }
   };
 
   const handleCopyLink = (index) => {
@@ -215,14 +218,15 @@ const LiveClassCard = () => {
           liveClasses={selectedClass}
           open={isEditModalOpen}
           handleEditClose={handleEditClose}
+          setRefetch={setRefetch}
         />
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          setOpen={setDeleteDialogOpen}
-          description="Are you sure you want to delete this item?"
-          title="Delete"
-          handleSubmit={handleDeleteClass}
-        />
+        <LiveClassDeleteModel
+        open={liveclassDeleteModelOpen}
+        setOpen={setLiveclassDeleteModelOpen}
+        description="Are you sure you want to delete this Live Class? "
+        title="Delete"
+        handleSubmit={handleLiveclassDelete}
+      />
       </Grid>
       <Grid container justifyContent="flex-end" mt={2}>
         <div className="demo-space-y">
