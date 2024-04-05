@@ -185,7 +185,7 @@ const StudenrCertificate = () => {
             icon: <Icon icon="mdi:delete-outline" />,
             menuItemProps: {
               onClick: () => {
-                handleDelete(id);
+                handleDelete(row.id); // Passing the id of the row to the handleDelete function
                 handleRowClick(row);
               }
             }

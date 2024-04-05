@@ -148,7 +148,7 @@ const NotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
-      setStudentNotificationRefetch();
+      setStudentNotificationRefetch((state) => !state);
     } else {
       toast.error(result.message);
     }
