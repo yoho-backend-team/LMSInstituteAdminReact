@@ -132,8 +132,6 @@ const NotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data.students);
-
     const bodyFormData = new FormData();
     selectedStudents?.forEach((student) => {
       bodyFormData.append('student_ids[]', student.student.student_id);
