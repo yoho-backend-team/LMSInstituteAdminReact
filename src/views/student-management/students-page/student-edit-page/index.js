@@ -46,54 +46,54 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    // first_name: yup
-    //   .string()
-    //   .required('First Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'First Name should not contain special characters'),
-    // last_name: yup
-    //   .string()
-    //   .required('Last Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'Last Name should not contain special characters'),
-    // email: yup.string().email().required('Email is required'),
-    // phone: yup
-    //   .string()
-    //   .required('Phone No. is required')
-    //   .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
-    // alt_phone: yup
-    //   .string()
-    //   .required('Alternate Phone No. is required')
-    //   .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
-    // state: yup
-    //   .string()
-    //   .required('state is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters'),
-    // city: yup
-    //   .string()
-    //   .required('city is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters'),
-    // pincode: yup
-    //   .string()
-    //   .required('Pin Code is required')
-    //   .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
+    first_name: yup
+      .string()
+      .required('First Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'First Name should not contain special characters'),
+    last_name: yup
+      .string()
+      .required('Last Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Last Name should not contain special characters'),
+    email: yup.string().email().required('Email is required'),
+    phone_no: yup
+      .string()
+      .required('Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
+    alternate_number: yup
+      .string()
+      .required('Alternate Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
+    state: yup
+      .string()
+      .required('state is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters'),
+    city: yup
+      .string()
+      .required('city is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters'),
+    pincode: yup
+      .string()
+      .required('Pin Code is required')
+      .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
     // qualification: yup
     //   .string()
     //   .required('Qualification is required')
     //   .matches(/^[a-zA-Z0-9\s]+$/, 'Qualification should not contain special characters'),
-    // address_line_one: yup.string().required('Address Line One is required'),
-    // address_line_two: yup.string().required('Address Line Two is required'),
-    // date_of_birth: yup.string().required(),
-    // gender: yup.string().required(),
-    // branch: yup.string().required('Branch is required'),
-    // username: yup
-    //   .string()
-    //   .required('User Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
-    // course: yup.string().required()
+    address_line_1: yup.string().required('Address Line One is required'),
+    address_line_2: yup.string().required('Address Line Two is required'),
+    date_of_birth: yup.string().required(),
+    gender: yup.string().required(),
+    branch: yup.string().required('Branch is required'),
+    username: yup
+      .string()
+      .required('User Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
+    course: yup.string().required()
   });
 
   // ** States
   const [activeStep, setActiveStep] = useState(0);
-console.log(activeStep);
+  console.log(activeStep);
   const [activeCourse, setActiveCourse] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -103,11 +103,11 @@ console.log(activeStep);
   }, [selectedBranchId]);
 
   const defaultPersonalValues = {
-    last_name:'',
+    last_name: '',
     name: '',
     email: '',
     phone_no: '',
-    alt_phone: '',
+    alternate_number: '',
     state: '',
     city: '',
     pincode: '',
@@ -174,7 +174,7 @@ console.log(activeStep);
         education_qualification,
         username
       } = studentData;
-  
+
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
@@ -193,7 +193,6 @@ console.log(activeStep);
       setValue('username', username || '');
     }
   }, [studentData, setValue]);
-  
 
   // Handle Stepper
   const handleBack = () => {
@@ -255,7 +254,9 @@ console.log(activeStep);
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
 
   console.log(logo);
@@ -273,7 +274,7 @@ console.log(activeStep);
     data.append('course_id', personalData?.course);
     data.append('image', logo);
     data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_1 );
+    data.append('address_line_1', personalData?.address_line_1);
     data.append('address_line_2', personalData?.address_line_2);
     data.append('city', personalData?.city);
     data.append('state', personalData?.state);
@@ -281,7 +282,7 @@ console.log(activeStep);
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
-    data.append('id',studentData.id);
+    data.append('id', studentData.id);
 
     const result = await updateStudent(data);
 
@@ -309,8 +310,8 @@ console.log(activeStep);
   //     data.append('course_id', personalData?.course);
   //     data.append('image', logo);
   //     data.append('gender', personalData?.gender);
-  //     data.append('address_line_1', personalData?.address_line_one);
-  //     data.append('address_line_2', personalData?.address_line_two);
+  //     data.append('address_line_1', personalData?.address_line_1);
+  //     data.append('address_line_2', personalData?.address_line_2);
   //     data.append('city', personalData?.city);
   //     data.append('state', personalData?.state);
   //     data.append('pincode', personalData?.pin_code);
@@ -352,8 +353,8 @@ console.log(activeStep);
   //     data.append('branch_id', personalData?.branch.branch_id);
   //     data.append('image', logo);
   //     data.append('gender', personalData?.gender);
-  //     data.append('address_line_1', personalData?.address_line_one);
-  //     data.append('address_line_2', personalData?.address_line_two);
+  //     data.append('address_line_1', personalData?.address_line_1);
+  //     data.append('address_line_2', personalData?.address_line_2);
   //     data.append('city', personalData?.city);
   //     data.append('state', personalData?.state);
   //     data.append('pin_code', personalData?.pin_code);
@@ -651,7 +652,7 @@ console.log(activeStep);
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="address_line_1 "
+                name="address_line_1"
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -661,9 +662,9 @@ console.log(activeStep);
                     label="Address Line One"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['address_line_one'])}
-                    aria-describedby="stepper-linear-personal-address_line_one"
-                    helperText={personalErrors.address_line_one?.message}
+                    error={Boolean(personalErrors['address_line_1'])}
+                    aria-describedby="stepper-linear-personal-address_line_1"
+                    helperText={personalErrors.address_line_1?.message}
                   />
                 )}
               />
@@ -680,9 +681,9 @@ console.log(activeStep);
                     label="Address Line Two"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['address_line_two'])}
-                    aria-describedby="stepper-linear-personal-address_line_two"
-                    helperText={personalErrors.address_line_two?.message}
+                    error={Boolean(personalErrors['address_line_2'])}
+                    aria-describedby="stepper-linear-personal-address_line_2"
+                    helperText={personalErrors.address_line_2?.message}
                   />
                 )}
               />
@@ -700,9 +701,9 @@ console.log(activeStep);
                     label="Phone Number"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['phone'])}
+                    error={Boolean(personalErrors['phone_no'])}
                     aria-describedby="stepper-linear-personal-phone"
-                    helperText={personalErrors.phone?.message}
+                    helperText={personalErrors.phone_no?.message}
                   />
                 )}
               />
@@ -720,9 +721,9 @@ console.log(activeStep);
                     label="Alt Phone Number"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['alt_phone'])}
-                    aria-describedby="stepper-linear-personal-alt_phone"
-                    helperText={personalErrors.alt_phone?.message}
+                    error={Boolean(personalErrors['alternate_number'])}
+                    aria-describedby="stepper-linear-personal-alternate_number"
+                    helperText={personalErrors.alternate_number?.message}
                   />
                 )}
               />
