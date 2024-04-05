@@ -66,6 +66,13 @@ const SalaryEditDrawer = (props) => {
     }
   }, [selectedRows, setValue]);
 
+
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    toggle();
+    reset();
+  };
+
   const onSubmit = useCallback(async (data) => {
     const inputData = new FormData();
     inputData.append('image', selectedImage);
@@ -77,8 +84,8 @@ const SalaryEditDrawer = (props) => {
     console.log(data);
     if (result.success) {
       toast.success(result.message);
+      handleClose();
       setRefetch((state) => !state);
-      handleEditClose();
     } else {
       toast.error(result.message);
     }
@@ -112,11 +119,7 @@ const SalaryEditDrawer = (props) => {
     }
   };
 
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
-  };
+
 
   return (
     <DatePickerWrapper>

@@ -27,19 +27,18 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 // ** Styled Components
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { selectStudentFees } from '../redux/studentFeeSelectors';
-import { getAllStudentFees } from '../redux/studentFeeThunks';
 import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 import CustomChip from 'components/mui/chip';
-import { deleteStudentFee } from '../services/studentFeeServices';
-import { useCallback } from 'react';
-import FeesViewDrawer from './FeesViewDrawer';
+import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
+import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { selectLoading, selectStudentFees } from '../redux/studentFeeSelectors';
+import { getAllStudentFees } from '../redux/studentFeeThunks';
+import { deleteStudentFee } from '../services/studentFeeServices';
+import FeesViewDrawer from './FeesViewDrawer';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -118,6 +117,8 @@ const FeesTable = () => {
 
   const dispatch = useDispatch();
   const StudentFees = useSelector(selectStudentFees);
+  const StudentFeesLoading = useSelector(selectLoading);
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(StudentFees);
@@ -189,7 +190,6 @@ const FeesTable = () => {
     setFeesViewUserOpen(!feesViewOpen); // This line toggles the editUserOpen state
     console.log('Toggle drawer');
   };
-
 
   const defaultColumns = [
     {
@@ -311,9 +311,9 @@ const FeesTable = () => {
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
-                  onClick: () =>{
-                     handleDelete()
-                     handleRowClick(row)
+                  onClick: () => {
+                    handleDelete();
+                    handleRowClick(row);
                   }
                 }
               },
@@ -327,16 +327,6 @@ const FeesTable = () => {
       )
     }
   ];
-
-  const [loading, setLoading] = useState(true);
-  // Simulate loading delay with useEffect
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <DatePickerWrapper>
@@ -395,11 +385,17 @@ const FeesTable = () => {
           </Card>
         </Grid>
         <Grid item xs={12}>
-          <FeesCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
+          {/* Card Header */}
+          <FeesCardHeader
+            selectedBranchId={selectedBranchId}
+            selectedRows={selectedRows}
+            toggle={toggleAddUserDrawer}
+            setRefetch={setRefetch}
+          />
         </Grid>
         <Grid item xs={12}>
           <Card>
-            {loading ? (
+            {StudentFeesLoading ? (
               <FeesTableSkeleton />
             ) : (
               <DataGrid
@@ -407,7 +403,6 @@ const FeesTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                // rows={StudentFees}
                 rows={StudentFees}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -421,9 +416,13 @@ const FeesTable = () => {
         </Grid>
       </Grid>
 
-      <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* Add Drawer */}
+      <FeesAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
+
+      {/* View */}
       <FeesViewDrawer open={feesViewOpen} toggle={toggleFeesViewDrawer} selectedRowDetails={selectedRows} />
-   
+
+      {/* Edit Drawer */}
       <FeesEditDrawer
         setRefetch={setRefetch}
         open={editUserOpen}
@@ -431,6 +430,8 @@ const FeesTable = () => {
         selectedRows={selectedRows}
         handleRowClick={handleRowClick}
       />
+
+      {/* Delte Modal */}
       <FeeDeleteModel
         open={feeDeleteModelOpen}
         setOpen={setFeeDeleteModelOpen}

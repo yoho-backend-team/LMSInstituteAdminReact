@@ -1,7 +1,7 @@
 // ** React Imports
 import { useEffect, useState } from 'react';
 // ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -17,11 +17,11 @@ import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 // import { addStudentFee } from '../services/studentFeeServices';
 import Autocomplete from '@mui/material/Autocomplete';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import CoursePdfInput from 'features/content-management/course-contents/components/PdfInput';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
 import { useSelector } from 'react-redux';
 import { addStudentCertificate } from '../services/studentCertificateServices';
 
@@ -35,7 +35,7 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
   branch: yup.string().required('Branch is required'),
-  batch: yup.string().required('Batch is required'),
+  batch: yup.object().required('Batch is required'),
   student: yup.string().required('Students is required'),
   name: yup.string().required('Certificate Name is required')
 });
@@ -43,24 +43,26 @@ const schema = yup.object().shape({
 const defaultValues = {
   branch: '',
   course: '',
-  batch: '',
+  batch: null,
   student: '',
   name: '',
   description: ''
 };
 
-
 const StudentCertificateAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, setStudentCertificateRefetch } = props;
   // ** State
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  const [activeStudents, setActiveStudents] = useState([]);
+  // const [activeStudents, setActiveStudents] = useState([]);
+  const [students, setStudents] = useState([]);
+
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -75,25 +77,32 @@ const StudentCertificateAddDrawer = (props) => {
     console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
+
+  
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id:selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
+
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId };
-    const result = await getAllActiveBatchesByCourse(data);
+    const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
+    const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
-  };
-  const getActiveStudentByBatch = async (courseId) => {
-    const data = { batch_id: courseId };
-    const result = await getAllStudentsByBatch(data);
 
-    console.log('active students : ', result.data);
-    setActiveStudents(result.data.data);
+    // Fetch students whenever active batches change
+    result.data.data.forEach((batch) => {
+      getStudentsByBatch(batch.batch_id);
+    });
+  };
+
+  const getStudentsByBatch = async (batchId) => {
+    const data = { batch_id: batchId, branch_id: selectedBranchId };
+    const result = await getAllStudents(data);
+    setStudents(result.data.data); // Assuming result.data contains the list of students
   };
 
   const {
@@ -112,6 +121,13 @@ const StudentCertificateAddDrawer = (props) => {
     setstudymaterialPdf(data);
   };
 
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    setstudymaterialPdf('');
+    reset();
+    toggle();
+  };
+
   const onSubmit = async (data) => {
     console.log(data);
     var bodyFormData = new FormData();
@@ -126,6 +142,8 @@ const StudentCertificateAddDrawer = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
+      setStudentCertificateRefetch((state) => !state);
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
@@ -136,13 +154,6 @@ const StudentCertificateAddDrawer = (props) => {
       toast.error(errorMessage.trim());
       // toast.error(result.message);
     }
-  };
-  
-
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
   };
 
   return (
@@ -225,23 +236,31 @@ const StudentCertificateAddDrawer = (props) => {
               />
             </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
+            <Grid item xs={12} sm={12}>
               <Controller
                 name="batch"
                 control={control}
                 rules={{ required: 'Batch field is required' }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field }) => (
                   <Autocomplete
+                    {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(batch) => batch.batch_name}
+                    getOptionLabel={(option) => option?.batch?.batch_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.batch_id);
-                      getActiveStudentByBatch(newValue?.batch_id);
+                      field.onChange(newValue);
+                      setValue('batch', newValue);
+                      getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                    value={field.value} // Set the selected value directly from the field value
                     renderInput={(params) => (
-                      <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      <TextField
+                        {...params}
+                        sx={{ mb: 2 }}
+                        label="Batch"
+                        error={Boolean(errors.batch)}
+                        helperText={errors.batch?.message}
+                      />
                     )}
                   />
                 )}
@@ -254,16 +273,21 @@ const StudentCertificateAddDrawer = (props) => {
                 control={control}
                 rules={{ required: 'Student field is required' }}
                 render={({ field: { value, onChange } }) => (
-                  <Autocomplete
+                  <TextField
+                    select
                     fullWidth
-                    options={activeStudents}
-                    getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
-                    onChange={(event, newValue) => onChange(newValue?.student_id)}
-                    value={activeStudents.find((student) => student.student_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
-                    )}
-                  />
+                    label="Student"
+                    value={value}
+                    onChange={onChange}
+                    error={Boolean(errors.student)}
+                    helperText={errors.student?.message}
+                  >
+                    {students.map((student) => (
+                      <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
+                        {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 )}
               />
             </Grid>

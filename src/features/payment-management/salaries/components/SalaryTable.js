@@ -33,7 +33,7 @@ import { useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
+import { selectTeachingStaffSalaries,selectLoading } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
 import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
 import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import SalaryViewDrawer from './SalaryViewDrawer';
@@ -48,9 +48,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row) => {
   if (row?.staff?.image) {
-    return (
-      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.staff?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
-    );
+    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.staff?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -93,6 +91,8 @@ const SalaryTable = () => {
 
   const dispatch = useDispatch();
   const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
+  const TeachingStaffSalariesLoading = useSelector(selectLoading);
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(TeachingStaffSalaries);
@@ -109,25 +109,17 @@ const SalaryTable = () => {
 
   const [selectedSalariesDeleteId, setSelectedSalariesDeleteId] = useState(null);
 
-  const [loading, setLoading] = useState(true);
+
   const [statusValue, setStatusValue] = useState('');
   const [staffValue, setStaffValue] = useState('');
 
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStaffSalaries(data));
   };
-  
+
   const handleFilterByStaffType = (e) => {
     setStaffValue(e.target.value);
     const data = { type: e.target.value, branch_id: selectedBranchId };
@@ -157,7 +149,7 @@ const SalaryTable = () => {
 
   const [salaryViewOpen, setSalaryViewUserOpen] = useState(false);
   const toggleSalaryViewDrawer = () => {
-    setSalaryViewUserOpen(!salaryViewOpen); 
+    setSalaryViewUserOpen(!salaryViewOpen);
     console.log('Toggle drawer');
   };
 
@@ -221,14 +213,16 @@ const SalaryTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return  <CustomChip
-        rounded
-        skin="light"
-        size="small"
-        label={row.status}
-        color={userStatusObj[row.status]}
-        sx={{ textTransform: 'capitalize' }}
-      />;
+        return (
+          <CustomChip
+            rounded
+            skin="light"
+            size="small"
+            label={row.status}
+            color={userStatusObj[row.status]}
+            sx={{ textTransform: 'capitalize' }}
+          />
+        );
       }
     }
   ];
@@ -402,7 +396,7 @@ const SalaryTable = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            {loading ? (
+            {TeachingStaffSalariesLoading ? (
               <PaymentSalarySkeleton />
             ) : (
               <DataGrid
@@ -423,7 +417,10 @@ const SalaryTable = () => {
           </Card>
         </Grid>
       </Grid>
-      <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* Add Drawer */}
+      <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
+
+      {/* Edit Drawer */}
       <SalaryEditDrawer
         setRefetch={setRefetch}
         open={editUserOpen}
@@ -431,6 +428,8 @@ const SalaryTable = () => {
         selectedRows={selectedRows}
         handleRowClick={handleRowClick}
       />
+
+      {/* Delte Modal */}
       <SalariesDeleteModel
         open={salariesDeleteModelOpen}
         setOpen={setSalariesDeleteModelOpen}
@@ -438,8 +437,9 @@ const SalaryTable = () => {
         title="Delete"
         handleSubmit={handleSalariesDelete}
       />
-      <SalaryViewDrawer open={salaryViewOpen} toggle={toggleSalaryViewDrawer} selectedRowDetails={selectedRows} />
 
+      {/* View Drawer */}
+      <SalaryViewDrawer open={salaryViewOpen} toggle={toggleSalaryViewDrawer} selectedRowDetails={selectedRows} />
     </DatePickerWrapper>
   );
 };
