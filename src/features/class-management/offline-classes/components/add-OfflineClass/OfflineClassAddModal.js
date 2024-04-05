@@ -120,7 +120,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       .required('Class Name field is required'),
     branch: yup.string().required('Branch field is required'),
     course: yup.string().required('Course field is required'),
-    batch: yup.string().required('Batch field is required'),
+    batch: yup.object().required('Batch is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     startTime: yup.date().nullable().required('Start Time field is required'),
     endTime: yup.date().nullable().required('End Time field is required')
@@ -188,7 +188,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       class_name: data.class_name,
       branch_id: data.branch,
       course_id: data.course,
-      batch_id: data.batch,
+      batch_id: data.batch.batch.batch_id,
       class_date: convertDateFormat(data.classDate),
       start_time: data.startTime,
       end_time: data.endTime,
@@ -305,25 +305,30 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  name="batch"
-                  control={control}
-                  rules={{ required: 'Batch field is required' }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={activeBatches}
-                      getOptionLabel={(option) => option.batch.batch_name}
-                      onChange={(event, newValue) => onChange(newValue?.batch_id)}
-                      value={activeBatches.find((batch) => batch.batch_id === value) || null}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
-                      )}
-                    />
+              <Grid item xs={12} sm={12}>
+            <Controller
+              name="batch"
+              control={control}
+              rules={{ required: 'Batch field is required' }}
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
+                  fullWidth
+                  options={activeBatches}
+                  getOptionLabel={(option) => option?.batch?.batch_name}
+                  onChange={(event, newValue) => {
+                    field.onChange(newValue);
+                    setValue('batch', newValue);
+                    getStudentsByBatch(newValue?.batch_id);
+                  }}
+                  value={field.value} // Set the selected value directly from the field value
+                  renderInput={(params) => (
+                    <TextField {...params} sx={{ mb: 2 }} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
                   )}
                 />
-              </Grid>
+              )}
+            />
+          </Grid>
 
               <Grid item xs={6}>
                 <Controller

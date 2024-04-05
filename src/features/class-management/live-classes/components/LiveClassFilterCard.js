@@ -16,7 +16,7 @@ import { getAllLiveClasses } from '../redux/liveClassThunks';
 // ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 /* eslint-disable */
@@ -43,8 +43,8 @@ const LiveClassFilterCard = (props) => {
   const [endDateRange, setEndDateRange] = useState(null);
   // const [activecourses,setActiveCourses]=useState('')
   const [startDateRange, setStartDateRange] = useState(null);
-  const [filterBatches, setFilterBatches] = useState({});
-  const [filterCourses, setfilterCourses] = useState({});
+  const [selectedBatch, setSelectedBatch] = useState(null);
+
   console.log('dummy', setStatusValue);
 
   useEffect(() => {
@@ -55,48 +55,50 @@ const LiveClassFilterCard = (props) => {
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId]);
 
+
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllLiveClasses(data));
   };
 
-  // useEffect(() => {
-  //   const data = {
-  //     branch_id: selectedBranchId
-  //   };
-  //   dispatch(getAllCourses(data));
-  // }, [dispatch, selectedBranchId]);
+  useEffect(() => {
+    dispatch(
+      getAllBatches({
+        branch_id: selectedBranchId
+      })
+    );
+  }, [dispatch, selectedBranchId]);
 
-  // useEffect(() => {
-  //   const data = {
-  //     branch_id: selectedBranchId
-  //   };
-  //   dispatch(getAllBatches(data));
-  // }, [dispatch, selectedBranchId]);
-  const getFilteredCourses = async () => {
+
+
+  useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    const courses = await getAllCourses(data);
-    setfilterCourses(courses);
-  };
-
-  useEffect(() => {
-    getFilteredCourses();
+    dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId]);
 
-  const getAllbatches = async () => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    const activeBatches = await getAllActiveBatchesByCourse(data);
-    setFilterBatches(activeBatches);
+  const handleBatchChange = (e, newValue) => {
+    if (!newValue) {
+      // If newValue is null, clear the batch selection
+      setSelectedBatch(null);
+      const data = {
+        branch_id: selectedBranchId,
+        // Pass empty batch_id to reset the batch filter
+        batch_id: ''
+      };
+      dispatch(getAllLiveClasses(data));
+    } else {
+      setSelectedBatch(newValue);
+      const data = {
+        batch_id: newValue.batch.batch_id,
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllLiveClasses(data));
+    }
   };
 
-  useEffect(() => {
-    getAllbatches();
-  }, [dispatch, selectedBranchId]);
 
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
@@ -107,22 +109,7 @@ const LiveClassFilterCard = (props) => {
     setEndDateRange(end);
   };
 
-  // const [selectedCourses, setSelectedCourses] = useState([]);
-  // const batch = [
-  //   { batch_id: '1', batch_name: 'batch 1' },
-  //   { batch_id: '2', batch_name: 'batch 2' },
-  //   { batch_id: '3', batch_name: 'batch 3' }
-  // ];
 
-  // const [selectedbatch, setSelectedbatch] = useState([]);
-
-  // const handlebatchChange = (newValue) => {
-  //   if (newValue && newValue.some((option) => option.batch_id === 'selectAll')) {
-  //     setSelectedbatch(batch.filter((option) => option.batch_id !== 'selectAll'));
-  //   } else {
-  //     setSelectedbatch(newValue);
-  //   }
-  // };
 
   return (
     <DatePickerWrapper>
@@ -134,7 +121,7 @@ const LiveClassFilterCard = (props) => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                 <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                  <MenuItem value="">Select Options</MenuItem>
+                    <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
                   </TextField>
@@ -142,14 +129,13 @@ const LiveClassFilterCard = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    // value={value}
+                    // value={courses.find((course) => course.course_id === (newValue?.course_id || '')) || null} // Reset to null when newValue is undefined or course_id is not found
                     onChange={(e, newValue) => {
-                      // const courseId = newValue?.map((item) => item?.course_id);
                       const data = {
-                        course_id: newValue.course_id,
+                        course_id: newValue?.course_id || '', 
                         branch_id: selectedBranchId
                       };
-                      filterCourses(getAllLiveClasses(data));
+                      dispatch(getAllLiveClasses(data));
                     }}
                     options={courses}
                     getOptionLabel={(option) => option.course_name || ''}
@@ -157,21 +143,12 @@ const LiveClassFilterCard = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    // multiple
+                <Autocomplete
                     fullWidth
                     options={batch}
                     filterSelectedOptions
-                    onChange={(e, newValue) => {
-                      // const batchId = newValue.map((item) => item.batch.batch_id);
-                      console.log(newValue);
-                      const data = {
-                        batch_id: newValue.batch.batch_id,
-                        branch_id: selectedBranchId
-                      };
-                      filterBatches(getAllLiveClasses(data));
-                    }}
-                    // defaultValue={[top100Films[13]]}
+                    onChange={handleBatchChange} // Handle batch selection change
+                    value={selectedBatch} // Controlled value for the Autocomplete component
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
