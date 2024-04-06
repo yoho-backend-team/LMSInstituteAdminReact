@@ -29,6 +29,7 @@ import { getAllBatches } from 'features/batch-management/batches/services/batchS
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -420,7 +421,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message}</p>}
               </Grid>
 
-              <Grid container item xs={6} spacing={2}>
+              {/* <Grid container item xs={6} spacing={2}>
                 <Grid item xs={6}>
                   <Controller
                     name="startTime"
@@ -449,8 +450,8 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     )}
                   />
                   {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
-                </Grid>
-                <Grid item xs={6}>
+                </Grid> */}
+                {/* <Grid item xs={6}>
                   <Controller
                     name="endTime"
                     control={control}
@@ -475,6 +476,22 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     )}
                   />
                   {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
+                </Grid> */}
+                <Grid item md={6} sm={12}>
+                  <Controller
+                    name="startTime"
+                    control={control}
+                    rules={{ required: 'End time is required' }}
+                    render={({ field: { value, onChange } }) => (
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                         value={value}
+                          onChange={onChange}
+                          label="Start Time"
+                        />
+                      </LocalizationProvider>
+                    )}
+                  />
                 </Grid>
                 <Grid item md={6} sm={12}>
                   <Controller
@@ -484,18 +501,15 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
-                          selected={value}
-                          onChange={(time) => {
-                            handleEndTimeChange(time);
-                            onChange(time);
-                          }}
-                          label="Basic time picker"
+                         value={value}
+                          onChange={onChange}
+                          label="End Time"
                         />
                       </LocalizationProvider>
                     )}
                   />
                 </Grid>
-              </Grid>
+              {/* </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
