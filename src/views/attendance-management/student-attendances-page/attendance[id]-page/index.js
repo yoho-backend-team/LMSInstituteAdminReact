@@ -27,13 +27,14 @@ const ViewAttendance = () => {
   const location = useLocation();
   const ClassId = location.state.id;
   const [ClassData, setClassData] = useState(null);
+  const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
     const data = {
       class_id: ClassId
     };
     getClassData(data);
-  }, [dispatch, ClassId]);
+  }, [dispatch, ClassId,refetch]);
 
   const getClassData = async (data) => {
     try {
@@ -61,7 +62,7 @@ const ViewAttendance = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <StudentAttendanceTable ClassData={ClassData}/>
+            <StudentAttendanceTable ClassData={ClassData} setRefetch={setRefetch}/>
           </Grid>
         </Grid>
       )}

@@ -13,16 +13,15 @@ import { updateStudentAttendanceStatus } from '../services/studentAttendanceServ
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import toast from 'react-hot-toast';
 
-const StudentAttendanceTable = ({ClassData}) => {
-
+const StudentAttendanceTable = ({ ClassData,setRefetch }) => {
   const userStatusObj = {
-    1: 'success',
-    0: 'error'
+    present: 'success',
+    absent: 'error'
   };
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
 
-  const handleStatusValue = (e,row) => {
+  const handleStatusValue = (e, row) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(row);
   };
@@ -30,7 +29,7 @@ const StudentAttendanceTable = ({ClassData}) => {
   const handleStatusChangeApi = async () => {
     console.log('entered', statusValue);
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
+      status: statusValue?.attendance?.title === 'present' ? 'absent' : 'present',
       attendance_id: statusValue?.attendance?.attendance_id
     };
     const response = await updateStudentAttendanceStatus(data);
@@ -41,7 +40,7 @@ const StudentAttendanceTable = ({ClassData}) => {
       toast.error(response.message);
     }
   };
-  
+
   const columns = [
     {
       flex: 0.75,
@@ -51,12 +50,12 @@ const StudentAttendanceTable = ({ClassData}) => {
       renderCell: (params) => {
         const { row } = params;
         return (
-        <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {row?.attendance?.student?.student_id}
-        </Typography>
-      );
-    }
-  },
+          <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            {row?.attendance?.student?.student_id}
+          </Typography>
+        );
+      }
+    },
     {
       flex: 0.75,
       minWidth: 290,
@@ -70,7 +69,7 @@ const StudentAttendanceTable = ({ClassData}) => {
               {row?.attendance?.student?.first_name}
               {row?.attendance?.student?.last_name}
             </Typography>
-            <Typography sx={{mt:1}}>{row?.attendance?.student?.phone_no}</Typography>
+            <Typography sx={{ mt: 1 }}>{row?.attendance?.student?.phone_no}</Typography>
           </Box>
         );
       }
@@ -95,30 +94,18 @@ const StudentAttendanceTable = ({ClassData}) => {
             onChange={(e) => handleStatusValue(e, row)}
             SelectProps={{
               sx: {
-                borderColor: row?.attendance.title === '1' ? 'success' : 'error',
+                borderColor: row?.attendance.title === 'present' ? 'success' : 'error',
                 color: userStatusObj[row?.attendance?.title]
               }
             }}
           >
-            <MenuItem value='present'>Present</MenuItem>
-            <MenuItem value='absent'>Absent</MenuItem>
+            <MenuItem value="present">Present</MenuItem>
+            <MenuItem value="absent">Absent</MenuItem>
           </TextField>
         );
       }
     }
   ];
-
-  // const present = {
-  //   1: { title: 'Present', color: 'success' },
-  //   2: { title: 'Absent', color: 'error' }
-  // };
-
-  // const absent = {
-  //   1: { title: 'Present', color: 'success' },
-  //   2: { title: 'Absent', color: 'error' }
-  // };
-
-
 
   return (
     <>
