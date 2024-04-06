@@ -39,6 +39,15 @@ const StepperLinearWithValidation = () => {
   const staffId = location.state.id;
   console.log('staffData:', staffData);
 
+  const [activeCourse, setActiveCourse] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [logo, setLogo] = useState('');
+  const [logoSrc, setLogoSrc] = useState(
+    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+  );
+
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
   const steps = [
     {
       title: 'Edit Teaching Staff',
@@ -114,17 +123,9 @@ const StepperLinearWithValidation = () => {
     username: yup
       .string()
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
-      .required('Username is required')
+      .required('Username is required'),
+    course: yup.array().required('course field is required').min(1, 'At least one course must be selected')
   });
-
-  const [activeCourse, setActiveCourse] = useState([]);
-  const [selectedCourses, setSelectedCourses] = useState([]);
-  const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState(
-    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
-  );
-
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
@@ -228,6 +229,7 @@ const StepperLinearWithValidation = () => {
   };
 
   const onSubmit = async () => {
+    
     const personalData = personalControl?._formValues;
 
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
@@ -370,10 +372,10 @@ const StepperLinearWithValidation = () => {
                       label="Date Of Birth"
                       error={Boolean(personalErrors['date_of_birth'])}
                       aria-describedby="stepper-linear-personal-date_of_birth"
-                    // helperText={personalErrors?.dob}
+                      // helperText={personalErrors?.dob}
                     />
                   }
-                // onChange={onChange}
+                  // onChange={onChange}
                 />
               )}
             />
@@ -404,7 +406,7 @@ const StepperLinearWithValidation = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Autocomplete
               multiple
               disableCloseOnSelect
@@ -417,6 +419,7 @@ const StepperLinearWithValidation = () => {
                   setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
                 } else {
                   setSelectedCourses(newValue);
+                  setValue('course', newValue);
                 }
               }}
               renderInput={(params) => (
@@ -428,6 +431,9 @@ const StepperLinearWithValidation = () => {
                     ...params.InputProps,
                     style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                   }}
+                  error={personalErrors.course && selectedCourses.length === 0} // Updated error condition
+                  aria-describedby="stepper-linear-personal-official_email"
+                  helperText={personalErrors.course && selectedCourses.length === 0 ? personalErrors.course.message : ''}
                 />
               )}
               renderOption={(props, option, { selected }) => (
@@ -447,11 +453,11 @@ const StepperLinearWithValidation = () => {
                     <CustomChip
                       key={option.course_id}
                       label={option.course_name}
-                      // defaultValue={}
                       onDelete={() => {
                         const updatedValue = [...value];
                         updatedValue.splice(index, 1);
                         setSelectedCourses(updatedValue);
+                        setValue('course', updatedValue);
                       }}
                       color="primary"
                       sx={{ m: 0.75 }}
@@ -462,6 +468,78 @@ const StepperLinearWithValidation = () => {
               isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
               selectAllText="Select All"
               SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+            />
+          </Grid> */}
+
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="course"
+              control={personalControl}
+              rules={{ required: true }}
+              render={({ field: { onChange } }) => (
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  id="select-multiple-chip"
+                  options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
+                  getOptionLabel={(option) => option.course_name}
+                  value={selectedCourses}
+                  onChange={(e, newValue) => {
+                    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
+                      setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
+                    } else {
+                      setSelectedCourses(newValue);
+                      setValue('course', newValue);
+                    }
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      label="Courses"
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                      error={personalErrors.course && selectedCourses.length === 0} // Updated error condition
+                      aria-describedby="stepper-linear-personal-official_email"
+                      helperText={personalErrors.course && selectedCourses.length === 0 ? personalErrors.course.message : ''}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option.course_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value.map((option, index) => (
+                        <CustomChip
+                          key={option.course_id}
+                          label={option.course_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue.splice(index, 1);
+                            setSelectedCourses(updatedValue);
+                            setValue('course', updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                  selectAllText="Select All"
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                />
+              )}
             />
           </Grid>
 
