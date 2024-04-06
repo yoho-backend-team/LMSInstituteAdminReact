@@ -1,13 +1,13 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // ** MUI Imports
 import { Avatar as CustomAvatar } from '@mui/material';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
 import CustomChip from 'components/mui/chip';
@@ -15,10 +15,10 @@ import StudentFilterCard from 'features/id-card-management/student-id-cards/comp
 import { selectLoading, selectStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardSelectors';
 import toast from 'react-hot-toast';
 
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-import StatusChangeDialog from 'components/modal/DeleteModel';
 
 import { updateStudentIdCardStatus } from 'features/id-card-management/student-id-cards/services/studentIdcardServices';
 
@@ -136,7 +136,7 @@ const StudentIdCard = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: 420,
+                      height: 440,
                       display: 'block'
                     }}
                   >
@@ -167,7 +167,7 @@ const StudentIdCard = () => {
                         }
                       }}
                     >
-                      <Card className="front" sx={{ width: '100%', minHeight: 400 }}>
+                      <Card className="front" sx={{ width: '100%', minHeight: 420 }}>
                         <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                           {item.student.image ? (
                             <CustomAvatar
@@ -199,7 +199,7 @@ const StudentIdCard = () => {
                           </Box>
                         </CardContent>
                       </Card>
-                      <Card className="back" sx={{ width: '100%', minHeight: 400 }}>
+                      <Card className="back" sx={{ width: '100%', minHeight: 420 }}>
                         <CardContent sx={{ pb: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                             Details
