@@ -4,18 +4,22 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { getAllStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardThunks';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const StaffFilterCard = (props) => {
-  // const dispatch = useDispatch();
-  const { handleSearch, searchValue, filterstatusValue, handleFilterByStatus } = props;
- 
-  const [filterType, setFilterType] = useState('');
+  //
+  const dispatch = useDispatch();
+  const { handleSearch, selectedBranchId, searchValue, filterstatusValue, handleFilterByStatus } = props;
 
-  const handleTypeChange = (e) => {
-    setFilterType(e.target.value);
+  const [staffValue, setStaffValue] = useState('');
 
+  const handleFilterByStaffType = (e) => {
+    setStaffValue(e.target.value);
+    const data = { type: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStaffIdCards(data));
   };
 
   return (
@@ -32,11 +36,11 @@ const StaffFilterCard = (props) => {
                     fullWidth
                     label="Staff Type"
                     defaultValue={''}
-                    SelectProps={{ value: filterType, onChange: (e) => handleTypeChange(e) }}
+                    SelectProps={{ value: staffValue, onChange: (e) => handleFilterByStaffType(e) }}
                   >
-                    <MenuItem value="">Select Type</MenuItem>
-                    <MenuItem value="1">Teaching</MenuItem>
-                    <MenuItem value="0">Non Teaching</MenuItem>
+                    <MenuItem value="">Select Option</MenuItem>
+                    <MenuItem value="teaching">Teaching</MenuItem>
+                    <MenuItem value="non_teaching">Non Teaching</MenuItem>
                   </TextField>
                 </Grid>
 

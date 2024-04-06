@@ -45,7 +45,7 @@ const TeachingIdCard = () => {
   console.log('id cards', StaffIdCards);
 
   useEffect(() => {
-    dispatch(getAllStaffIdCards({branch_id:selectedBranchId}));
+    dispatch(getAllStaffIdCards({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, staffIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -194,6 +194,7 @@ const TeachingIdCard = () => {
               handleSearch={handleSearch}
               filterstatusValue={filterstatusValue}
               handleFilterByStatus={handleFilterByStatus}
+              setStaffIdRefetch={setStaffIdRefetch}
             />
           </Grid>
           {StaffIdCardsLoading ? (
