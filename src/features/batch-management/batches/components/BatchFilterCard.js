@@ -66,9 +66,9 @@ const InvoiceList = (props) => {
   const { selectedBranchId } = props;
 
   // ** State
+  const [startDateRange, setStartDateRange] = useState(null);
   const [dates, setDates] = useState([]);
   const [endDateRange, setEndDateRange] = useState(null);
-  const [startDateRange, setStartDateRange] = useState(null);
   const [searchValue, setSearchValue] = useState('');
 
   const [filterstatusValue, setFilterStatusValue] = useState('');
@@ -79,10 +79,33 @@ const InvoiceList = (props) => {
     dispatch(getAllBatches(data));
   };
 
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
+
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+
+  console.log(convertDateFormat(startDateRange));
+  console.log(endDateRange);
+
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
       setDates(dates);
+      const data = {
+        start_date: convertDateFormat(start),
+        end_date: convertDateFormat(end),
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllBatches(data));
     }
     setStartDateRange(start);
     setEndDateRange(end);
@@ -131,7 +154,7 @@ const InvoiceList = (props) => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <DatePicker
+                <DatePicker
                     isClearable
                     selectsRange
                     monthsShown={2}
@@ -142,7 +165,13 @@ const InvoiceList = (props) => {
                     id="date-range-picker-months"
                     onChange={handleOnChangeRange}
                     customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Batch Date" end={endDateRange} start={startDateRange} />
+                      <CustomInput
+                        dates={dates}
+                        setDates={setDates}
+                        label="Start date End date"
+                        end={endDateRange}
+                        start={startDateRange}
+                      />
                     }
                   />
                 </Grid>

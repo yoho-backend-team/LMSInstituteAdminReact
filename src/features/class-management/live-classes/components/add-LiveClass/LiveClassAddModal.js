@@ -26,6 +26,9 @@ import { addLiveClass } from '../../services/liveClassServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 /* eslint-disable */
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -34,7 +37,7 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const LiveClassAddModal = ({ open, handleAddClose,setRefetch }) => {
+const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [personName, setPersonName] = useState([]);
   const [dates, setDates] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
@@ -65,13 +68,13 @@ const LiveClassAddModal = ({ open, handleAddClose,setRefetch }) => {
     setActiveBranches(result.data.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id:selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId,branch_id: selectedBranchId };
+    const data = { course_id: courseId, branch_id: selectedBranchId };
     const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
@@ -94,7 +97,7 @@ const LiveClassAddModal = ({ open, handleAddClose,setRefetch }) => {
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudents(data);
-    setStudents(result.data.data); 
+    setStudents(result.data.data);
   };
 
   const handleStartTimeChange = (time) => {
@@ -263,7 +266,7 @@ const LiveClassAddModal = ({ open, handleAddClose,setRefetch }) => {
       const result = await addLiveClass(dummyData);
 
       if (result.success) {
-        setRefetch((state) => !state); 
+        setRefetch((state) => !state);
         toast.success(result.message);
         handleClose();
       } else {
@@ -345,51 +348,57 @@ const LiveClassAddModal = ({ open, handleAddClose,setRefetch }) => {
                 />
               </Grid>
               <Grid item xs={12}>
-              <Controller
-                name="course"
-                control={control}
-                rules={{ required: 'Course field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeCourse}
-                    getOptionLabel={(course) => course.course_name}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?.course_id);
-                      getActiveBatchesByCourse(newValue?.course_id);
-                    }}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
-                    )}
-                  />
-                )}
-              />
+                <Controller
+                  name="course"
+                  control={control}
+                  rules={{ required: 'Course field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeCourse}
+                      getOptionLabel={(course) => course.course_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.course_id);
+                        getActiveBatchesByCourse(newValue?.course_id);
+                      }}
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                      )}
+                    />
+                  )}
+                />
               </Grid>
 
               <Grid item xs={12}>
-              <Controller
-              name="batch"
-              control={control}
-              rules={{ required: 'Batch field is required' }}
-              render={({ field }) => (
-                <Autocomplete
-                  {...field}
-                  fullWidth
-                  options={activeBatches}
-                  getOptionLabel={(option) => option?.batch?.batch_name}
-                  onChange={(event, newValue) => {
-                    field.onChange(newValue);
-                    setValue('batch', newValue);
-                    getStudentsByBatch(newValue?.batch_id);
-                  }}
-                  value={field.value} // Set the selected value directly from the field value
-                  renderInput={(params) => (
-                    <TextField {...params} sx={{ mb: 2 }} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                <Controller
+                  name="batch"
+                  control={control}
+                  rules={{ required: 'Batch field is required' }}
+                  render={({ field }) => (
+                    <Autocomplete
+                      {...field}
+                      fullWidth
+                      options={activeBatches}
+                      getOptionLabel={(option) => option?.batch?.batch_name}
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue);
+                        setValue('batch', newValue);
+                        getStudentsByBatch(newValue?.batch_id);
+                      }}
+                      value={field.value} // Set the selected value directly from the field value
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          sx={{ mb: 2 }}
+                          label="Batch"
+                          error={Boolean(errors.batch)}
+                          helperText={errors.batch?.message}
+                        />
+                      )}
+                    />
                   )}
                 />
-              )}
-            />
               </Grid>
 
               <Grid item xs={6}>
@@ -466,6 +475,25 @@ const LiveClassAddModal = ({ open, handleAddClose,setRefetch }) => {
                     )}
                   />
                   {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
+                </Grid>
+                <Grid item md={6} sm={12}>
+                  <Controller
+                    name="endTime"
+                    control={control}
+                    rules={{ required: 'End time is required' }}
+                    render={({ field: { value, onChange } }) => (
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          selected={value}
+                          onChange={(time) => {
+                            handleEndTimeChange(time);
+                            onChange(time);
+                          }}
+                          label="Basic time picker"
+                        />
+                      </LocalizationProvider>
+                    )}
+                  />
                 </Grid>
               </Grid>
               <Grid item xs={12} sm={12}>

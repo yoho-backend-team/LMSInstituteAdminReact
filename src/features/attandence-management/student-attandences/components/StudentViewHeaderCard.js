@@ -7,15 +7,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import Avatar from 'components/mui/avatar';
 // import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
+import CustomChip from 'components/mui/chip';
 
-
+const userRoleObj = {
+  live: 'success',
+  offline: 'secondary'
+};
 const StudentViewHeaderCard = ({ClassData}) => {
-  // States
-  const theme = useTheme();
-
 
   return (
     <Grid container spacing={6}>
@@ -117,11 +117,9 @@ const StudentViewHeaderCard = ({ClassData}) => {
                 <Typography variant="h5" sx={{ color: 'grey.500' }}>
                   Class Type
                 </Typography>
-                <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center' }}>
-                  <Typography variant="h4">{ClassData?.data?.type}</Typography>
-                  <Typography variant="h5" sx={{ color: theme.palette.primary.main, ml: 1 }}>
-                    Visit Previous Class
-                  </Typography>
+                <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center',justifyContent:"center" }}>
+        <CustomChip rounded skin="light" size="small" label={ClassData?.data?.type} color={userRoleObj[ClassData?.data?.type]} sx={{ textTransform: 'capitalize' }} />
+                
                 </Box>
               </Grid>
             </Grid>

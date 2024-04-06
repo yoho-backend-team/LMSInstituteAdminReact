@@ -56,9 +56,8 @@ const AddBatchPage = () => {
 
   const validationSchema = yup.object().shape({
     batchName: yup
-    .string()
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
-    .required('Batch Name is required'),
+    .string().required('Batch Name is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters'),
     startDate: yup.date().required('Start Date is required'),
     endDate: yup.date().required('End Date is required'),
     branch: yup.string().required('Branch is required'),
@@ -153,7 +152,7 @@ const AddBatchPage = () => {
   };
 
   const getStudentByCourseId = async (courseId) => {
-    const result = await getStudentByCourse(courseId);
+    const result = await getStudentByCourse({course_id:courseId});
     console.log(result.data.data);
     setActiveStudents(result.data.data);
   };
@@ -174,6 +173,7 @@ const AddBatchPage = () => {
     const result = await addBatch(inputData);
 
     if (result.success) {
+      navigate(-1);
       toast.success(result.message);
     } else {
       let errorMessage = '';
@@ -307,7 +307,7 @@ const AddBatchPage = () => {
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('course', newValue ? newValue.course_id : ''); // Update the value of the 'course' field
-                            getStudentByCourseId(newValue ? newValue.course_id : ''); // Call function to get students by course ID
+                            getStudentByCourseId(newValue.course_id); // Call function to get students by course ID
                           }}
                           options={activeCourse}
                           getOptionLabel={(option) => option.course_name || ''}

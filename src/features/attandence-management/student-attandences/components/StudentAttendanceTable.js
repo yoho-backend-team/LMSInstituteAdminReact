@@ -12,8 +12,30 @@ import { useState } from 'react';
 import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import toast from 'react-hot-toast';
+import Avatar from '@mui/material/Avatar';
 
-const StudentAttendanceTable = ({ ClassData,setRefetch }) => {
+const renderClient = (row) => {
+  if (row?.attendance?.student?.image) {
+    return (
+      <Avatar
+        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.attendance?.student?.image}`}
+        sx={{ mr: 2.5, width: 38, height: 38 }}
+      />
+    );
+  } else {
+    return (
+      <Avatar
+        skin="light"
+        color={row?.avatarColor || 'primary'}
+        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+      >
+        {getInitials(row?.name || 'John Doe')}
+      </Avatar>
+    );
+  }
+};
+
+const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
   const userStatusObj = {
     present: 'success',
     absent: 'error'
@@ -64,12 +86,17 @@ const StudentAttendanceTable = ({ ClassData,setRefetch }) => {
       renderCell: (params) => {
         const { row } = params;
         return (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row?.attendance?.student?.first_name}
-              {row?.attendance?.student?.last_name}
-            </Typography>
-            <Typography sx={{ mt: 1 }}>{row?.attendance?.student?.phone_no}</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {row?.attendance?.student?.first_name}
+                {row?.attendance?.student?.last_name}
+              </Typography>
+              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
+                {row?.attendance?.student?.email}
+              </Typography>
+            </Box>
           </Box>
         );
       }

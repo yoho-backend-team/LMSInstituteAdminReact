@@ -29,8 +29,8 @@ const validationSchema = yup.object().shape({
   .string()
   .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
   .required('Batch Name is required'),
-  startDate: yup.date().required('Start Date is required'),
-  endDate: yup.date().required('End Date is required'),
+  start_date: yup.date().required('Start Date is required'),
+  end_date: yup.date().required('End Date is required'),
 
   students: yup
     .array()
@@ -152,10 +152,12 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   //   );
 
   const handleStartDateChange = (date) => {
+    setValue('startDate', date);
     setStartDate(date);
   };
 
   const handleEndDateChange = (date) => {
+    setValue('endDate', date);
     setEndDate(date);
   };
 
@@ -212,41 +214,44 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                      <DatePicker
-                        selected={startDate}
-                        showYearDropdown
-                        showMonthDropdown
-                        placeholderText="MM-DD-YYYY"
-                        customInput={
-                          <CustomInput
-                            label="Start Date"
-                            defaultValue={selectedBatch?.batch?.start_date}
-                            error={Boolean(errors.startDate)}
-                            helperText={errors.startDate?.message}
-                          />
-                        }
-                        id="form-layouts-separator-date"
-                        onChange={handleStartDateChange}
-                      />
+                    <Controller
+                      name="start_date"
+                      control={control}
+                      render={({ value }) => (
+                        <DatePicker
+                          selected={startDate}
+                          value={value}
+                          showYearDropdown
+                          showMonthDropdown
+                          placeholderText="MM-DD-YYYY"
+                          customInput={
+                            <CustomInput label="Start Date" error={Boolean(errors.start_date)} helperText={errors.start_date?.message} />
+                          }
+                          id="form-layouts-separator-date"
+                          onChange={handleStartDateChange}
+                        />
+                      )}
+                    />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <DatePicker
-                        selected={endDate}
-                        defaultValue={''}
-                        showYearDropdown
-                        showMonthDropdown
-                        placeholderText="MM-DD-YYYY"
-                        customInput={
-                          <CustomInput
-                            label="End Date"
-                            defaultValue={''}
-                            error={Boolean(errors.endDate)}
-                            helperText={errors.endDate?.message}
-                          />
-                        }
-                        id="form-layouts-separator-date"
-                        onChange={handleEndDateChange}
-                      />
+                    <Controller
+                      name="end_date"
+                      control={control}
+                      render={({ value }) => (
+                        <DatePicker
+                          selected={endDate}
+                          value={value}
+                          showYearDropdown
+                          showMonthDropdown
+                          placeholderText="MM-DD-YYYY"
+                          customInput={
+                            <CustomInput label="End Date" error={Boolean(errors.end_date)} helperText={errors.end_date?.message} />
+                          }
+                          id="form-layouts-separator-date"
+                          onChange={handleEndDateChange}
+                        />
+                      )}
+                    />
                     </Grid>
 
                     <Grid item xs={12} sm={12}>
