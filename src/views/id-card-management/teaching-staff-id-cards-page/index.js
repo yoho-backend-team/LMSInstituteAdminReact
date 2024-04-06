@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // ** MUI Imports
-import { Box, TextField, Grid } from '@mui/material';
+import { Box, Grid, TextField } from '@mui/material';
 // import Card from '@mui/material/Card';
 import { Avatar as CustomAvatar } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -15,11 +15,11 @@ import StaffFilterCard from 'features/id-card-management/staff-id-cards/componen
 import { getAllStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardThunks';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectLoading, selectStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardSelectors';
 import StatusChangeDialog from 'components/modal/DeleteModel';
-import { getInitials } from 'utils/get-initials';
+import { selectLoading, selectStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardSelectors';
 import { updateStaffIdCardStatus } from 'features/id-card-management/staff-id-cards/services/staffIdcardServices';
 import toast from 'react-hot-toast';
+import { getInitials } from 'utils/get-initials';
 
 const roleColors = {
   admin: 'error',
@@ -211,7 +211,7 @@ const TeachingIdCard = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: 420,
+                      height: 440,
                       display: 'block'
                     }}
                   >
@@ -242,7 +242,7 @@ const TeachingIdCard = () => {
                         }
                       }}
                     >
-                      <Card className="front" sx={{ width: '100%', minHeight: 400 }}>
+                      <Card className="front" sx={{ width: '100%', minHeight: 420 }}>
                         <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                           {item.staff.image ? (
                             <CustomAvatar
@@ -274,7 +274,7 @@ const TeachingIdCard = () => {
                           </Box>
                         </CardContent>
                       </Card>
-                      <Card className="back" sx={{ width: '100%', minHeight: 400 }}>
+                      <Card className="back" sx={{ width: '100%', minHeight: 420 }}>
                         <CardContent sx={{ pb: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                             Details
