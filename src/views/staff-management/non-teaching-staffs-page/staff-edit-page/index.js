@@ -157,7 +157,7 @@ const StepperLinearWithValidation = () => {
     }
   }));
 
-  const [logo, setLogo] = useState('');
+  const [logo, setLogo] = useState();
   const [logoSrc, setLogoSrc] = useState(
     'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
