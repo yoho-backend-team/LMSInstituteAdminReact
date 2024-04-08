@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 
 const OfflineClassCardHeader = (props) => {
-  const {selectedBranchId } = props;
+  const {selectedBranchId,setRefetch } = props;
 
   // State for search value
   const [searchValue, setSearchValue] = useState('');
@@ -66,7 +66,7 @@ const OfflineClassCardHeader = (props) => {
           </Button>
         </Box>
       </Box>
-      <OfflineClassAddModal open={isAddModalOpen} handleAddClose={handleAddClose} />
+      <OfflineClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
 };

@@ -52,8 +52,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
     classDate: yup.date().nullable().required('Class Date field is required'),
     // start_time: yup.date().nullable().required('Start Time field is required'),
     // end_time: yup.date().nullable().required('End Time field is required'),
-    instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
+    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
 
   const defaultValues = {
@@ -61,8 +61,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
     classDate: new Date(),
     start_time: null,
     end_time: null,
-    instructor: [],
-    coordinator: []
+    instructors: [],
+    coordinators: []
   };
   const handleCopyLink = () => {
     const link = 'your Generated Link';
@@ -101,24 +101,26 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
       setValue('classDate', new Date(liveClasses.class_date) || new Date()); // Set class date
       setValue('start_time', dayjs(liveClasses?.start_time) || null);
       setValue('end_time', dayjs(liveClasses?.end_time) || null); // Set end time
-      setValue('instructor', liveClasses.instructor || []); // Set instructors
-      setValue('coordinator', liveClasses.coordinator || []); // Set coordinators
+      setValue('instructors', liveClasses.instructors || []); // Set instructors
+      setValue('coordinators', liveClasses.coordinators || []); // Set coordinators
+      setSelectedCoordinates(liveClasses?.coordinators) // Set coordinators
+      setSelectedInstructors(liveClasses?.instructors) 
     }
   }, [liveClasses, setValue]);
 
   console.log('selected ', liveClasses);
 
   useEffect(() => {
-    if (liveClasses && liveClasses.instructor) {
-      setSelectedInstructors(liveClasses.instructor);
-      setValue('instructor', liveClasses.instructor); // Set default value for instructor field
+    if (liveClasses && liveClasses.instructors) {
+      setSelectedInstructors(liveClasses.instructors);
+      setValue('instructors', liveClasses.instructors); // Set default value for instructor field
     }
   }, [liveClasses, setValue]);
 
   useEffect(() => {
-    if (liveClasses && liveClasses.coordinator) {
-      setSelectedCoordinates(liveClasses.coordinator);
-      setValue('coordinator', liveClasses.coordinator); // Set default value for coordinator field
+    if (liveClasses && liveClasses.coordinators) {
+      setSelectedCoordinates(liveClasses.coordinators);
+      setValue('coordinators', liveClasses.coordinators); // Set default value for coordinator field
     }
   }, [liveClasses, setValue]);
 
@@ -170,8 +172,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
   }
 
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
+    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
     var bodyFormData = new FormData();
     filteredInstructorId?.forEach((id) => {
       bodyFormData.append('instructor_staff_ids[]', id);
@@ -342,12 +344,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
-                        'instructor',
+                        'instructors',
                         activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
-                      setValue('instructor', newValue);
+                      setValue('instructors', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -382,7 +384,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
-                            setValue('instructor', updatedValue);
+                            setValue('instructors', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -408,19 +410,19 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
-                        'coordinator',
+                        'coordinators',
                         activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
-                      setValue('coordinator', newValue);
+                      setValue('coordinators', newValue);
                     }
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       fullWidth
-                      label="Coordinates"
+                      label="cordinators"
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -448,7 +450,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
-                            setValue('coordinator', updatedValue);
+                            setValue('coordinators', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}

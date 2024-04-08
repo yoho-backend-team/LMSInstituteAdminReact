@@ -1,4 +1,3 @@
-import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -10,28 +9,22 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
-import format from 'date-fns/format';
+import dayjs from 'dayjs';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
 import { updateOfflineClass } from '../../services/offlineClassServices';
-import toast from 'react-hot-toast';
-/* eslint-disable */
 
-const DateCustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const value = `${startDate}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -43,17 +36,6 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefetch}) => {
   console.log(offlineClasses);
 
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-
-  const handleStartTimeChange = (time) => {
-    setStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    setEndTime(time);
-  };
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
@@ -63,21 +45,20 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
       .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
-    class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
     classDate: yup.date().nullable().required('Class Date field is required'),
-    startTime: yup.date().nullable().required('Start Time field is required'),
-    endTime: yup.date().nullable().required('End Time field is required'),
-    instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    // startTime: yup.date().nullable().required('Start Time field is required'),
+    // endTime: yup.date().nullable().required('End Time field is required'),
+    instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
+    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
 
   const defaultValues = {
     class_name: '',
     classDate: new Date(),
-    startTime: null,
-    endTime: null,
-    instructor: [],
-    coordinator: []
+    start_time: null,
+    end_time: null,
+    instructors: [],
+    coordinators: []
   };
 
   const {
@@ -110,27 +91,28 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
       setValue('class_name', offlineClasses.class_name || ''); // Set class name
       setValue('class_id', offlineClasses.class_id || ''); // Set class ID
       setValue('classDate', new Date(offlineClasses.class_date) || new Date()); // Set class date
-      setValue('startTime', offlineClasses?.startTime || null);
-      setValue('endTime', offlineClasses?.endTime || null); // Set end time
-      setValue('instructor', offlineClasses?.instructor || []); // Set instructors
-      setValue('coordinator', offlineClasses?.coordinators || []); 
+      setValue('start_time', dayjs(offlineClasses.start_time) || null);
+      setValue('end_time', dayjs(offlineClasses.end_time) || null); // Set end time
+      setValue('instructors', offlineClasses.instructors || []); // Set instructors
+      setValue('coordinators', offlineClasses?.coordinators || []); 
       setSelectedCoordinates(offlineClasses?.coordinators) // Set coordinators
+      setSelectedInstructors(offlineClasses?.instructors) 
     }
   }, [offlineClasses, setValue]);
 
-  console.log('selected ', offlineClasses?.instructor);
+  console.log('selected ', offlineClasses?.instructors);
 
   useEffect(() => {
-    if (offlineClasses && offlineClasses.instructor) {
-      setSelectedInstructors(offlineClasses.instructor);
-      setValue('instructor', offlineClasses.instructor); // Set default value for instructor field
+    if (offlineClasses && offlineClasses.instructors) {
+      setSelectedInstructors(offlineClasses.instructors);
+      setValue('instructors', offlineClasses.instructors); // Set default value for instructor field
     }
   }, [offlineClasses, setValue]);
 
   useEffect(() => {
-    if (offlineClasses && offlineClasses.coordinator) {
-      setSelectedCoordinates(offlineClasses.coordinator);
-      setValue('coordinator', offlineClasses.coordinators); // Set default value for coordinator field
+    if (offlineClasses && offlineClasses.coordinators) {
+      setSelectedCoordinates(offlineClasses.coordinators);
+      setValue('coordinators', offlineClasses.coordinators); // Set default value for coordinator field
     }
   }, [offlineClasses, setValue]);
 
@@ -182,8 +164,8 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
   }
 
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
+    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
     var bodyFormData = new FormData();
     filteredInstructorId?.forEach((id) => {
       bodyFormData.append('instructor_staff_ids[]', id);
@@ -198,7 +180,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
     bodyFormData.append('batch_id', data.batch_id);
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time); // Fixed field name
+    bodyFormData.append('end_time', data.end_time); // Fixed field namee
 
     console.log(data);
 
@@ -288,64 +270,61 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
               </Grid>
 
               <Grid container item xs={6} spacing={2}>
-                <Grid item xs={6}>
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="startTime"
+                    name="start_time"
                     control={control}
                     rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleStartTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput
-                            label="Start Time"
-                            sx={{ border: errors.startTime ? '1px solid red' : 'none', borderRadius: '7px' }}
-                          />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select Start Time"
-                        className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="Start Time"
+                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="Start Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
+                  {errors.start_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.start_time.message}</p>
+                  )}
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="endTime"
+                    name="end_time"
                     control={control}
                     rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleEndTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput label="End Time" sx={{ border: errors.endTime ? '1px solid red' : 'none', borderRadius: '7px' }} />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select End Time"
-                        className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="End Time"
+                              sx={{ border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="End Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
+                  {errors.end_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.end_time.message}</p>
+                  )}
                 </Grid>
               </Grid>
+
               <Grid item xs={12} sm={12}>
-                <Autocomplete
+              <Autocomplete
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
@@ -356,12 +335,12 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
-                        'instructor',
+                        'instructors',
                         activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
-                      setValue('instructor', newValue);
+                      setValue('instructors', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -396,7 +375,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
-                            setValue('instructor', updatedValue);
+                            setValue('instructors', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -422,19 +401,19 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
-                        'coordinator',
+                        'coordinators',
                         activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
-                      setValue('coordinator', newValue);
+                      setValue('coordinators', newValue);
                     }
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       fullWidth
-                      label="Coordinates"
+                      label="coordinators"
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -462,7 +441,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
-                            setValue('coordinator', updatedValue);
+                            setValue('coordinators', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}

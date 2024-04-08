@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 
 import toast from 'react-hot-toast';
 
-const OfflineClassCard = () => {
+const OfflineClassCard = ({offlineClassRefetch,setofflineClassRefetch}) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const offlineClasses = useSelector(selectOfflineClasses);
@@ -33,7 +33,7 @@ const OfflineClassCard = () => {
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
 
   const [selectedOfflineClassDeleteId, setSelectedOfflineClassDeleteId] = useState(null);
-  const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
+ 
 
   useEffect(() => {
     const data = {
