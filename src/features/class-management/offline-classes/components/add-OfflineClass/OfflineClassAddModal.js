@@ -25,8 +25,9 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addOfflineClass } from '../../services/offlineClassServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
-
-/* eslint-disable */
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -35,17 +36,13 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const LiveClassAddModal = ({ open, handleAddClose }) => {
-  // States
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  
+const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [students, setStudents] = useState([]);
-
+  console.log(students);
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -86,7 +83,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     setActiveNonTeachingStaff(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId,branch_id: selectedBranchId };
+    const data = { course_id: courseId, branch_id: selectedBranchId };
     const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
@@ -97,15 +94,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudents(data);
     setStudents(result.data.data); // Assuming result.data contains the list of students
-  };
-
-
-  const handleStartTimeChange = (time) => {
-    setStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    setEndTime(time);
   };
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
@@ -122,7 +110,6 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   };
 
   const schema = yup.object().shape({
-  
     class_name: yup
       .string()
       .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
@@ -132,8 +119,8 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     course: yup.string().required('Course field is required'),
     batch: yup.object().required('Batch is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
-    startTime: yup.date().nullable().required('Start Time field is required'),
-    endTime: yup.date().nullable().required('End Time field is required')
+    start_time: yup.string().required('Start Time field is required'),
+    end_time: yup.date().nullable().required('End Time field is required')
     // instructor: yup.array().required('Instructor field is required'),
     // coordinator: yup.array().required('Instructor field is required'),
   });
@@ -144,8 +131,8 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     course: '',
     batch: '',
     classDate: new Date(),
-    startTime: null,
-    endTime: null,
+    start_time: null,
+    end_time: null,
     instructor: [],
     coordinator: []
   };
@@ -168,8 +155,8 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
     setValue('course', '');
     setValue('batch', '');
     setValue('classDate', null);
-    setValue('startTime', null);
-    setValue('endTime', null);
+    setValue('start_time', null);
+    setValue('end_time', null);
     setValue('instructor', []);
     setValue('coordinator', []);
     reset();
@@ -200,8 +187,8 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       course_id: data.course,
       batch_id: data.batch.batch.batch_id,
       class_date: convertDateFormat(data.classDate),
-      start_time: data.startTime,
-      end_time: data.endTime,
+      start_time: data.start_time,
+      end_time: data.end_time,
       instructor_staff_ids: filteredInstructorId,
       coordinator_staff_ids: filteredCoordinatorId,
       type: 'offline',
@@ -212,6 +199,7 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
       const result = await addOfflineClass(dummyData);
 
       if (result.success) {
+        setRefetch((state) => !state);
         handleClose();
         reset();
         toast.success(result.message);
@@ -316,29 +304,35 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
-            <Controller
-              name="batch"
-              control={control}
-              rules={{ required: 'Batch field is required' }}
-              render={({ field }) => (
-                <Autocomplete
-                  {...field}
-                  fullWidth
-                  options={activeBatches}
-                  getOptionLabel={(option) => option?.batch?.batch_name}
-                  onChange={(event, newValue) => {
-                    field.onChange(newValue);
-                    setValue('batch', newValue);
-                    getStudentsByBatch(newValue?.batch_id);
-                  }}
-                  value={field.value} // Set the selected value directly from the field value
-                  renderInput={(params) => (
-                    <TextField {...params} sx={{ mb: 2 }} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                <Controller
+                  name="batch"
+                  control={control}
+                  rules={{ required: 'Batch field is required' }}
+                  render={({ field }) => (
+                    <Autocomplete
+                      {...field}
+                      fullWidth
+                      options={activeBatches}
+                      getOptionLabel={(option) => option?.batch?.batch_name}
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue);
+                        setValue('batch', newValue);
+                        getStudentsByBatch(newValue?.batch_id);
+                      }}
+                      value={field.value} // Set the selected value directly from the field value
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          sx={{ mb: 2 }}
+                          label="Batch"
+                          error={Boolean(errors.batch)}
+                          helperText={errors.batch?.message}
+                        />
+                      )}
+                    />
                   )}
                 />
-              )}
-            />
-          </Grid>
+              </Grid>
 
               <Grid item xs={6}>
                 <Controller
@@ -360,62 +354,59 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
               </Grid>
 
               <Grid container item xs={6} spacing={2}>
-                <Grid item xs={6}>
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="startTime"
+                    name="start_time"
                     control={control}
                     rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleStartTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput
-                            label="Start Time"
-                            sx={{ border: errors.startTime ? '1px solid red' : 'none', borderRadius: '7px' }}
-                          />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select Start Time"
-                        className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="Start Time"
+                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="Start Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
+                  {errors.start_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.start_time.message}</p>
+                  )}
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="endTime"
+                    name="end_time"
                     control={control}
                     rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleEndTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput label="End Time" sx={{ border: errors.endTime ? '1px solid red' : 'none', borderRadius: '7px' }} />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select End Time"
-                        className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="End Time"
+                              sx={{ border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="End Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
+                  {errors.end_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.end_time.message}</p>
+                  )}
                 </Grid>
               </Grid>
+
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
@@ -565,4 +556,4 @@ const LiveClassAddModal = ({ open, handleAddClose }) => {
   );
 };
 
-export default LiveClassAddModal;
+export default OfflineClassAddModal;

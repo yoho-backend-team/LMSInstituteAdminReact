@@ -18,6 +18,7 @@ const useTimeout = (callback, delay) => {
 
 const OfflineClass = () => {
   const [loading, setLoading] = useState(true);
+  const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
 
   useTimeout(() => {
     setLoading(false);
@@ -28,12 +29,12 @@ const OfflineClass = () => {
     <>
       <Grid>
         <OfflineClassFilterCard selectedBranchId={selectedBranchId}/>
-        <OfflineClassCardHeader selectedBranchId={selectedBranchId}/>
+        <OfflineClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch}/>
         {loading ? (
           <ClassSkeleton />
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
-            <OfflineClassCard />
+            <OfflineClassCard offlineClassRefetch={offlineClassRefetch} setofflineClassRefetch={setofflineClassRefetch}/>
           </Grid>
         )}
       </Grid>
