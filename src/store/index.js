@@ -44,6 +44,9 @@ import studentClosedTickets from 'features/ticket-management/student/redux/close
 import staffOpenTicketSlice from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketSlice';
 import staffClosedTicketSlice from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketSlice';
 
+import openTicketSlice from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSlice';
+import closedTicketSlice from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSlice';
+
 import faqCategoryReducer from 'features/faq-management/faq-categories/redux/faqCategorySlice';
 import faqReducer from 'features/faq-management/faqs/redux/faqSlice';
 
@@ -95,7 +98,9 @@ const store = configureStore({
     faqCategories: faqCategoryReducer,
     faqs: faqReducer,
     subscriptions: SubscriptionReducer,
-    communities: communityReducer
+    communities: communityReducer,
+    openTickets: openTicketSlice,
+    closedTickets: closedTicketSlice
   }
 });
 // configureStore(reducer);

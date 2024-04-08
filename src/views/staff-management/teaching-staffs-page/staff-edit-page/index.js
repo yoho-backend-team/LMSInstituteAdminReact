@@ -229,7 +229,6 @@ const StepperLinearWithValidation = () => {
   };
 
   const onSubmit = async () => {
-    
     const personalData = personalControl?._formValues;
 
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
@@ -372,10 +371,10 @@ const StepperLinearWithValidation = () => {
                       label="Date Of Birth"
                       error={Boolean(personalErrors['date_of_birth'])}
                       aria-describedby="stepper-linear-personal-date_of_birth"
-                      // helperText={personalErrors?.dob}
+                    // helperText={personalErrors?.dob}
                     />
                   }
-                  // onChange={onChange}
+                // onChange={onChange}
                 />
               )}
             />
@@ -476,7 +475,7 @@ const StepperLinearWithValidation = () => {
               name="course"
               control={personalControl}
               rules={{ required: true }}
-              render={({ field: { onChange } }) => (
+              render={() => (
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
