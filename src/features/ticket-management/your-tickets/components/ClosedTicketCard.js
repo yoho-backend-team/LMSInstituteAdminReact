@@ -1,8 +1,7 @@
 import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
-import { Avatar, Box, Card, CardContent, Grid, Icon, IconButton } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-import OptionsMenu from 'components/option-menu';
 
 const ClosedTicketCard = ({ ticket }) => {
   return (
@@ -11,13 +10,11 @@ const ClosedTicketCard = ({ ticket }) => {
         <CardContent>
           <Box sx={{}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+              <Avatar src={ticket?.institute?.logo} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5">
-                  {ticket?.student?.first_name} {ticket?.student?.last_name}
-                </Typography>
+                <Typography variant="h5">{ticket?.institute?.name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                  {ticket?.student?.email}
+                  {ticket?.institute?.email}
                 </Typography>
               </Box>
             </Box>
@@ -36,7 +33,7 @@ const ClosedTicketCard = ({ ticket }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {ticket?.query}
+            {ticket?.tickets?.solution}
           </Typography>
           <Typography sx={{ my: 2, color: 'text.secondary' }}>{ticket?.solution}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -49,12 +46,6 @@ const ClosedTicketCard = ({ ticket }) => {
                 color={'error'}
                 label={`Priority:${ticket?.priority}`}
               />
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton size="small" sx={{ color: 'text.disabled' }}>
-                <Icon fontSize="1.25rem" icon="tabler:star" />
-              </IconButton>
-              <OptionsMenu iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }} options={['Resolve']} />
             </Box>
           </Box>
         </CardContent>
