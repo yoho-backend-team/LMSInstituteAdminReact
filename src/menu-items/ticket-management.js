@@ -45,7 +45,17 @@ const pages = {
           target: false,
           breadcrumbs: false,
           visible: hasPermission('inst_perm_student_ticket_view')
-        }
+        },
+         {
+          id: 'your-ticket',
+          title: 'Your-Ticket',
+          type: 'item',
+          url: '/ticket-management/your-ticket',
+          icon: icons.IconTicket,
+          target: false,
+          breadcrumbs: false,
+          visible: hasPermission('inst_perm_student_ticket_view')
+        },
       ]
     }
   ]

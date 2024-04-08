@@ -75,6 +75,7 @@ const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/custom
 // Ticket Management
 const StaffTicketPage = Loadable(lazy(() => import('views/ticket-management/staff-tickets-page')));
 const StudentTicketPage = Loadable(lazy(() => import('views/ticket-management/student-tickets-page')));
+const YourTicketPage = Loadable(lazy(() => import('views/ticket-management/your-tickets-page')));
 
 // Id Card Management
 const StaffIdCardsPage = Loadable(lazy(() => import('views/id-card-management/teaching-staff-id-cards-page')));
@@ -422,6 +423,9 @@ const ApplicationRoutes = () => {
           </Route>
           <Route element={<ProtectedRoute element={<StudentTicketPage />} permissionCode={'inst_perm_student_ticket_view'} />}>
             <Route path="student-ticket" element={<StudentTicketPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<YourTicketPage />} permissionCode={'inst_perm_student_ticket_view'} />}>
+            <Route path="your-ticket" element={<YourTicketPage />} />
           </Route>
         </Route>
         {/* Help Center Routes */}
