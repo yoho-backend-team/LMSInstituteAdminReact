@@ -1,4 +1,3 @@
-import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -11,31 +10,25 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import CustomChip from 'components/mui/chip';
-import format from 'date-fns/format';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
 // import { update } from '../../services/offlineClassServices';
-import { updateLiveClass } from '../../services/liveClassServices';
-import toast from 'react-hot-toast';
-import {InputAdornment,IconButton} from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
+import { IconButton, InputAdornment } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
+import toast from 'react-hot-toast';
+import { updateLiveClass } from '../../services/liveClassServices';
 
-/* eslint-disable */
 
-const DateCustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const value = `${startDate}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -47,17 +40,6 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) => {
   console.log(liveClasses);
 
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-
-  const handleStartTimeChange = (time) => {
-    setStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    setEndTime(time);
-  };
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
@@ -67,10 +49,9 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
       .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
-    class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
     classDate: yup.date().nullable().required('Class Date field is required'),
-    startTime: yup.date().nullable().required('Start Time field is required'),
-    endTime: yup.date().nullable().required('End Time field is required'),
+    // start_time: yup.date().nullable().required('Start Time field is required'),
+    // end_time: yup.date().nullable().required('End Time field is required'),
     instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
     coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
@@ -78,8 +59,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
   const defaultValues = {
     class_name: '',
     classDate: new Date(),
-    startTime: null,
-    endTime: null,
+    start_time: null,
+    end_time: null,
     instructor: [],
     coordinator: []
   };
@@ -118,8 +99,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
       setValue('class_name', liveClasses.class_name || ''); // Set class name
       setValue('class_id', liveClasses.class_id || ''); // Set class ID
       setValue('classDate', new Date(liveClasses.class_date) || new Date()); // Set class date
-      setValue('startTime', liveClasses?.startTime || null);
-      setValue('endTime', liveClasses?.endTime || null); // Set end time
+      setValue('start_time', dayjs(liveClasses?.start_time) || null);
+      setValue('end_time', dayjs(liveClasses?.end_time) || null); // Set end time
       setValue('instructor', liveClasses.instructor || []); // Set instructors
       setValue('coordinator', liveClasses.coordinator || []); // Set coordinators
     }
@@ -145,8 +126,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
     handleEditClose();
     // setValue('class_name', null);
     // setValue('classDate', null);
-    // setValue('startTime', null);
-    // setValue('endTime', null);
+    // setValue('start_time', null);
+    // setValue('end_time', null);
     // setValue('instructor', '');
     // setValue('coordinator', '');
     reset(defaultValues);
@@ -296,62 +277,59 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
               </Grid>
 
               <Grid container item xs={6} spacing={2}>
-                <Grid item xs={6}>
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="startTime"
+                    name="start_time"
                     control={control}
                     rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleStartTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput
-                            label="Start Time"
-                            sx={{ border: errors.startTime ? '1px solid red' : 'none', borderRadius: '7px' }}
-                          />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select Start Time"
-                        className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="Start Time"
+                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="Start Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
+                  {errors.start_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.start_time.message}</p>
+                  )}
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="endTime"
+                    name="end_time"
                     control={control}
                     rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleEndTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput label="End Time" sx={{ border: errors.endTime ? '1px solid red' : 'none', borderRadius: '7px' }} />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select End Time"
-                        className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="End Time"
+                              sx={{ border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="End Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
+                  {errors.end_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.end_time.message}</p>
+                  )}
                 </Grid>
               </Grid>
+
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple

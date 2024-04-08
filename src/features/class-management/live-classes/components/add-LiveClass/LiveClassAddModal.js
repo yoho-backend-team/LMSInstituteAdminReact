@@ -156,9 +156,9 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     branch: yup.string().required('Branch field is required'),
     course: yup.string().required('Course is required'),
     batch: yup.object().required('Batch is required'),
-    classDate: yup.date().nullable().required('Class Date field is required'),
-    startTime: yup.date().nullable().required('Start Time field is required'),
-    endTime: yup.date().nullable().required('End Time field is required'),
+    class_date: yup.date().nullable().required('Class Date field is required'),
+    start_time: yup.string().required('Start Time field is required'),
+    end_time: yup.date().nullable().required('End Time field is required'),
     // instructor: yup.array().required('Instructor field is required'),
     // coordinator: yup.array().required('Instructor field is required'),
     videoUrl: yup.string().required('VideoUrl field is required')
@@ -169,9 +169,9 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     branch: selectedBranchId,
     course: '',
     batch: '',
-    classDate: new Date(),
-    startTime: null,
-    endTime: null,
+    class_date: new Date(),
+    start_time: null,
+    end_time: null,
     instructor: [],
     coordinator: [],
     videoUrl: ''
@@ -194,9 +194,9 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     setValue('course', '');
     setValue('batch', '');
     setValue('videoUrl', '');
-    setValue('classDate', null);
-    setValue('startTime', null);
-    setValue('endTime', null);
+    setValue('class_date', null);
+    setValue('start_time', null);
+    setValue('end_time', null);
     setValue('instructor', []);
     setValue('coordinator', []);
     handleAddClose();
@@ -253,9 +253,9 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       branch_id: data.branch,
       course_id: data.course,
       batch_id: data.batch.batch.batch_id,
-      class_date: convertDateFormat(data.classDate),
-      start_time: data.startTime,
-      end_time: data.endTime,
+      class_date: convertDateFormat(data.class_date),
+      start_time: data.start_time,
+      end_time: data.end_time,
       instructor_staff_ids: filteredInstructorId,
       coordinator_staff_ids: filteredCoordinatorId,
       class_link: data.videoUrl,
@@ -404,7 +404,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
 
               <Grid item xs={6}>
                 <Controller
-                  name="classDate"
+                  name="class_date"
                   control={control}
                   rules={{ required: 'Class Date field is required' }}
                   render={({ field: { value, onChange } }) => (
@@ -418,7 +418,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     />
                   )}
                 />
-                {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message}</p>}
+                {errors.class_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.class_date.message}</p>}
               </Grid>
 
               {/* <Grid container item xs={6} spacing={2}>
@@ -451,7 +451,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   />
                   {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
                 </Grid> */}
-                {/* <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                   <Controller
                     name="endTime"
                     control={control}
@@ -477,38 +477,60 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   />
                   {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
                 </Grid> */}
+              <Grid container item xs={6} spacing={2}>
                 <Grid item md={6} sm={12}>
                   <Controller
-                    name="startTime"
+                    name="start_time"
                     control={control}
-                    rules={{ required: 'End time is required' }}
+                    rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
-                         value={value}
+                          customInput={
+                            <CustomInput
+                              label="Start Time"
+                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
                           onChange={onChange}
                           label="Start Time"
                         />
                       </LocalizationProvider>
                     )}
                   />
+                  {errors.start_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.start_time.message}</p>
+                  )}
                 </Grid>
+
                 <Grid item md={6} sm={12}>
                   <Controller
-                    name="endTime"
+                    name="end_time"
                     control={control}
                     rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
-                         value={value}
+                          customInput={
+                            <CustomInput
+                              label="End Time"
+                              sx={{ border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
                           onChange={onChange}
                           label="End Time"
                         />
                       </LocalizationProvider>
                     )}
                   />
+                  {errors.end_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.end_time.message}</p>
+                  )}
                 </Grid>
+              </Grid>
+
               {/* </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Autocomplete
