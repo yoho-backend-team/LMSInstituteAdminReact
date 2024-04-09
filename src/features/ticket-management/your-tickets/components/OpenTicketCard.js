@@ -3,7 +3,7 @@ import { Avatar, Box, Card, CardContent, Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 
-const OpenTicketCard = ({ ticket,}) => {
+const OpenTicketCard = ({ ticket }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card sx={{ minHeight: 240 }}>
