@@ -12,7 +12,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 const ClassSkeleton = ({ liveClasses }) => {
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{mt:2}}>
         {liveClasses?.map((_, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3, position: 'relative', borderTop: '4px solid #7cf2e1' }}>
@@ -84,7 +84,6 @@ const ClassSkeleton = ({ liveClasses }) => {
           </Grid>
         ))}
       </Grid>
-      ; ; ;
     </>
   );
 };
