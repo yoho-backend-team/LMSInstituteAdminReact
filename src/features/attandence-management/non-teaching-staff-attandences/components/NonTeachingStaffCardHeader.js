@@ -1,9 +1,8 @@
-// ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
-import { TextField } from '@mui/material';
+import PropTypes from 'prop-types';
 
 const NonTeachingStaffCardHeader = (props) => {
   const { value, handleFilter } = props;
@@ -42,6 +41,11 @@ const NonTeachingStaffCardHeader = (props) => {
       </Box>
     </>
   );
+};
+
+NonTeachingStaffCardHeader.propTypes = {
+  value: PropTypes.any,
+  handleFilter: PropTypes.any
 };
 
 export default NonTeachingStaffCardHeader;

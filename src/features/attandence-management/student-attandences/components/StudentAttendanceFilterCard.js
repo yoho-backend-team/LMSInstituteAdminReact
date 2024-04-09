@@ -1,23 +1,18 @@
-// ** React Imports
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
-// ** Third Party Imports
-import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-// ** Styled Components
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { useEffect } from 'react';
-import { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllStudentAttendances } from '../redux/studentAttendanceThunks';
 
-/* eslint-enable */
 const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
   // ** State
   const dispatch = useDispatch();
@@ -41,18 +36,15 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
     );
   }, [dispatch, selectedBranchId]);
 
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllStudentAttendances({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
 
-  // Function to handle batch selection change
   const handleBatchChange = (e, newValue) => {
     if (!newValue) {
       // If newValue is null, clear the batch selection
@@ -94,8 +86,8 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
                     fullWidth
                     options={batch}
                     filterSelectedOptions
-                    onChange={handleBatchChange} // Handle batch selection change
-                    value={selectedBatch} // Controlled value for the Autocomplete component
+                    onChange={handleBatchChange}
+                    value={selectedBatch}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
@@ -103,12 +95,7 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
-                  <TextField
-                    value={searchValue}
-                    fullWidth
-                    placeholder="Search"
-                    onChange={(e) => handleSearch(e)}
-                  />
+                  <TextField value={searchValue} fullWidth placeholder="Search" onChange={(e) => handleSearch(e)} />
                 </Grid>
               </Grid>
             </CardContent>
@@ -117,6 +104,10 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+StudentAttendanceFilterCard.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default StudentAttendanceFilterCard;

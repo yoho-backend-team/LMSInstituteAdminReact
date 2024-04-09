@@ -1,6 +1,4 @@
-// material-ui
 import { Grid } from '@mui/material';
-// project imports
 import Pagination from '@mui/material/Pagination';
 import StudentAttendanceSkeleton from 'components/cards/Skeleton/StudentAttendance';
 import StudentAttendanceCard from 'features/attandence-management/student-attandences/components/StudentAttendanceCard';
@@ -18,7 +16,6 @@ const useTimeout = (callback, delay) => {
 };
 
 const Students = () => {
-
   // States
   const dispatch = useDispatch();
 

@@ -1,6 +1,4 @@
-// material-ui
 import { Grid } from '@mui/material';
-// project imports
 import Pagination from '@mui/material/Pagination';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
 import TeachingStaffCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCard';
@@ -9,7 +7,6 @@ import { selectLoading, selectTeachingStaffs } from 'features/staff-management/t
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { selectCourseCategories, selectLoading } from 'features/course-management/categories-page/redux/courseCategorySelectors';
 
 const TeachingStaff = () => {
   const dispatch = useDispatch();

@@ -1,25 +1,18 @@
-// ** React Imports
-import { Fragment, forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
+import { Avatar, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-// ** Custom Component Import
-import { Avatar, TextField } from '@mui/material';
-// ** Third Party Imports
+import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
-// ** Icon Imports
-import Icon from 'components/icon';
-import { addNonTeachingStaffAttendance } from '../services/nonTeachingStaffAttendanceServices';
-// ** Styled Components
-import DatePickerWrapper from 'styles/libs/react-datepicker';
 import toast from 'react-hot-toast';
-
-// const capitalize = (string) => string && string[0].toUpperCase() + string.slice(1);
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { addNonTeachingStaffAttendance } from '../services/nonTeachingStaffAttendanceServices';
 
 const TeachingStaffAddEventSidebar = (props) => {
   // ** Props
@@ -194,6 +187,16 @@ const TeachingStaffAddEventSidebar = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+TeachingStaffAddEventSidebar.propTypes = {
+  drawerWidth: PropTypes.any,
+  addEventSidebarOpen: PropTypes.any,
+  handleAddEventSidebarToggle: PropTypes.any,
+  staffId: PropTypes.any,
+  selected: PropTypes.any,
+  setRefetch: PropTypes.any,
+  staff: PropTypes.any
 };
 
 export default TeachingStaffAddEventSidebar;

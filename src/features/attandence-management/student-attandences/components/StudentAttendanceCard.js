@@ -55,9 +55,6 @@ const StudentAttendanceCard = () => {
                       flexShrink: 2,
                       // whiteSpace: 'nowrap',
                       overflow: 'hidden',
-                      // textOverflow: 'ellipsis',
-                      // maxWidth: '230px'
-                      // display: 'flex',
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',

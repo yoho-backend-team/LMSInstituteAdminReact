@@ -1,20 +1,17 @@
-// ** MUI Imports
+import { Avatar, FormControl, Radio, RadioGroup } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-// import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
-// ** Third Party Imports
-import DatePicker from 'react-datepicker';
-// ** Icons Imports
 import Icon from 'components/icon';
-// ** Styled Component
+import PropTypes from 'prop-types';
+import React from 'react';
+import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getNonTeachingStaffAttendanceById } from '../services/nonTeachingStaffAttendanceServices';
-import { Avatar, FormControl, Radio, RadioGroup } from '@mui/material';
-import React from 'react';
+
 const TeachingStaffSidebarLeft = (props) => {
   const {
     mdAbove,
@@ -130,6 +127,18 @@ const TeachingStaffSidebarLeft = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+TeachingStaffSidebarLeft.propTypes = {
+  mdAbove: PropTypes.any,
+  calendarApi: PropTypes.any,
+  leftSidebarOpen: PropTypes.any,
+  leftSidebarWidth: PropTypes.any,
+  handleLeftSidebarToggle: PropTypes.any,
+  handleAddEventSidebarToggle: PropTypes.any,
+  setAttendances: PropTypes.any,
+  staffId: PropTypes.any,
+  staff: PropTypes.any
 };
 
 export default TeachingStaffSidebarLeft;

@@ -1,18 +1,15 @@
-// ** Next Imports
-// ** MUI Imports
+import { Grid, TextField } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Custom Components Imports
-// import CustomChip from 'components/mui/chip';
-import { Grid, TextField } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
-import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
 import StatusChangeDialog from 'components/modal/DeleteModel';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import Avatar from '@mui/material/Avatar';
+import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
 
 const renderClient = (row) => {
   if (row?.attendance?.student?.image) {
@@ -150,6 +147,11 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
       </Grid>
     </>
   );
+};
+
+StudentAttendanceTable.propTypes = {
+  ClassData: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default StudentAttendanceTable;

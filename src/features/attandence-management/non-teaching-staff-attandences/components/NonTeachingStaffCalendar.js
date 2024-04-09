@@ -1,15 +1,12 @@
-// ** React Import
-import { useEffect, useRef } from 'react';
-// ** Full Calendar & it's Plugins
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
-// ** Third Party Style Import
 import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import PropTypes from 'prop-types';
+import { useEffect, useRef } from 'react';
 const TeachingStaffCalendar = (props) => {
   // ** Props
   const {
@@ -78,6 +75,17 @@ const TeachingStaffCalendar = (props) => {
   } else {
     return null;
   }
+};
+
+TeachingStaffCalendar.propTypes = {
+  direction: PropTypes.any,
+  calendarApi: PropTypes.any,
+  calendarsColor: PropTypes.any,
+  setCalendarApi: PropTypes.any,
+  handleLeftSidebarToggle: PropTypes.any,
+  handleAddEventSidebarToggle: PropTypes.any,
+  attendances: PropTypes.any,
+  setSelected: PropTypes.any
 };
 
 export default TeachingStaffCalendar;

@@ -1,22 +1,15 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-// ** Redux Imports
-// import { useDispatch, useSelector } from 'react-redux';
-// ** FullCalendar & App Components Imports
 import TeachingStaffAddEventSidebar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffAddEventSidebar';
 import TeachingStaffCalendar from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCalendar';
 import TeachingStaffSidebarLeft from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffSidebarLeft';
-import CalendarWrapper from 'styles/libs/fullcalendar';
-// ** Actions
-import { handleSelectEvent, updateEvent } from 'features/calender/redux/reducers';
-import { useLocation } from 'react-router-dom';
 import { getTeachingStaffAttendanceById } from 'features/attandence-management/teaching-staff-attandences/services/teachingStaffAttendanceServices';
+import { handleSelectEvent, updateEvent } from 'features/calender/redux/reducers';
 import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import CalendarWrapper from 'styles/libs/fullcalendar';
 
-// ** CalendarColors
 const calendarsColor = {
   present: 'success',
   absent: 'error'

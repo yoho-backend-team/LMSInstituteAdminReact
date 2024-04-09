@@ -1,14 +1,12 @@
-// material-ui
 import { Grid } from '@mui/material';
-// project imports
 import Pagination from '@mui/material/Pagination';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
 import NonTeachingStaffCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCard';
 import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nonTeachingStaffSelectors';
 import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nontTeachingStaffThunks';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 const useTimeout = (callback, delay) => {
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
@@ -34,24 +32,22 @@ const NonTeachingStaffs = () => {
     };
     dispatch(getAllNonTeachingStaffs(data));
   }, [dispatch, selectedBranchId]);
-  
+
   return (
     <>
-   
-        <Grid>
-          <NonTeachingStaffFilterCard selectedBranchId={selectedBranchId}/>
-          {loading ? (
-        <TeachingStaffSkeleton />
-      ) : (
-        <div>
-          <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs} />
-          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination count={10} color="primary" />
-          </Grid>
+      <Grid>
+        <NonTeachingStaffFilterCard selectedBranchId={selectedBranchId} />
+        {loading ? (
+          <TeachingStaffSkeleton />
+        ) : (
+          <div>
+            <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs} />
+            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination count={10} color="primary" />
+            </Grid>
           </div>
-)}
-        </Grid>
-      
+        )}
+      </Grid>
     </>
   );
 };

@@ -1,13 +1,11 @@
-// material-ui
 import { Grid } from '@mui/material';
 import StudentAttendanceViewSkeleton from 'components/cards/Skeleton/StudentAttendanceViewSkeleton';
 import StudentAttendanceTable from 'features/attandence-management/student-attandences/components/StudentAttendanceTable';
 import StudentViewHeaderCard from 'features/attandence-management/student-attandences/components/StudentViewHeaderCard';
+import { getClassDetails } from 'features/attandence-management/student-attandences/services/studentAttendanceServices';
 import { useEffect, useState } from 'react';
-// ** MUI Imports
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
-import { getClassDetails } from 'features/attandence-management/student-attandences/services/studentAttendanceServices';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -34,14 +32,14 @@ const ViewAttendance = () => {
       class_id: ClassId
     };
     getClassData(data);
-  }, [dispatch, ClassId,refetch]);
+  }, [dispatch, ClassId, refetch]);
 
   const getClassData = async (data) => {
     try {
       const result = await getClassDetails(data);
       if (result.success) {
         console.log('Class:', result.data);
-        setClassData(result.data); // Assuming result.data is an array
+        setClassData(result.data);
       } else {
         console.log(result.message);
       }
@@ -58,11 +56,11 @@ const ViewAttendance = () => {
       ) : (
         <Grid container spacing={3} sx={{ p: 1 }}>
           <Grid item xs={12} sm={12}>
-            <StudentViewHeaderCard ClassData={ClassData}/>
+            <StudentViewHeaderCard ClassData={ClassData} />
           </Grid>
 
           <Grid item xs={12}>
-            <StudentAttendanceTable ClassData={ClassData} setRefetch={setRefetch}/>
+            <StudentAttendanceTable ClassData={ClassData} setRefetch={setRefetch} />
           </Grid>
         </Grid>
       )}

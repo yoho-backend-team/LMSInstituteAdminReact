@@ -1,14 +1,12 @@
-// ** React Imports
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
-// ** Third Party Imports
 import TextField from '@mui/material/TextField';
 import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nontTeachingStaffThunks';
-import { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -64,6 +62,10 @@ const NonTeachingStaffFilterCard = (props) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+NonTeachingStaffFilterCard.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default NonTeachingStaffFilterCard;
