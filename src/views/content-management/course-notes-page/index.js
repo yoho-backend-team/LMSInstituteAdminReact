@@ -1,16 +1,12 @@
-// ** React Imports
-import { useCallback, useState } from 'react';
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
-// ** Custom Components Imports
 import { TextField } from '@mui/material';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
+import Icon from 'components/icon';
 import { default as NotesDeleteModal, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
@@ -26,7 +22,7 @@ import {
 } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -73,7 +69,6 @@ const Notes = () => {
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
-
 
   //delete
   const handleDelete = useCallback((itemId) => {
@@ -126,8 +121,7 @@ const Notes = () => {
     console.log('toogle pressed');
   };
 
-
-  const RowOptions = ({row}) => {
+  const RowOptions = ({ row }) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -138,8 +132,8 @@ const Notes = () => {
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                setViewModalOpen(true);     
-                handleRowClick(row)
+                setViewModalOpen(true);
+                handleRowClick(row);
               }
             }
           },
@@ -148,8 +142,8 @@ const Notes = () => {
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                toggleEditUserDrawer()
-                handleRowClick(row)
+                toggleEditUserDrawer();
+                handleRowClick(row);
               }
             }
           },
@@ -158,8 +152,8 @@ const Notes = () => {
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                handleDelete()
-                handleRowClick(row)
+                handleDelete();
+                handleRowClick(row);
               }
             }
           }
@@ -186,7 +180,6 @@ const Notes = () => {
     [dispatch]
   );
 
-
   const columns = [
     {
       // flex: 0.4,
@@ -208,7 +201,7 @@ const Notes = () => {
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center',my:1.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 sx={{
@@ -222,7 +215,7 @@ const Notes = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign:"justify",
+                  textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -238,7 +231,7 @@ const Notes = () => {
 
     {
       // flex: 1.5,
-      minWidth:220,
+      minWidth: 220,
       field: 'course',
       headerName: 'course',
       renderCell: ({ row }) => {
@@ -314,7 +307,7 @@ const Notes = () => {
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
-                getRowHeight={()=>'auto'}
+                getRowHeight={() => 'auto'}
                 // rowHeight={80}
                 rows={Notes}
                 columns={columns}
@@ -322,7 +315,6 @@ const Notes = () => {
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                // onRowClick={handleRowClick}
               />
             </Card>
           </Grid>

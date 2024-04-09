@@ -1,17 +1,13 @@
-// ** React Imports
-import { useCallback, useState } from 'react';
-// ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import Icon from 'components/icon';
-// ** Custom Components Imports
-import MenuItem from '@mui/material/MenuItem';
-import { default as ModulesDeleteModal } from 'components/modal/DeleteModel';
-import { TextField } from '@mui/material';
+import StatusDialog, { default as ModulesDeleteModal } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import ModuleAddDrawer from 'features/content-management/course-contents/course-modules-page/components/ModuleAddDrawer';
@@ -20,16 +16,15 @@ import ModuleHeader from 'features/content-management/course-contents/course-mod
 import ModuleView from 'features/content-management/course-contents/course-modules-page/components/ModuleView';
 import { selectCourseModules, selectLoading } from 'features/content-management/course-contents/course-modules-page/redux/moduleSelectors';
 import { getAllCourseModules } from 'features/content-management/course-contents/course-modules-page/redux/moduleThunks';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
-import { searchUsers } from 'features/user-management/users-page/services/userServices';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import StatusDialog from 'components/modal/DeleteModel';
 import {
   deleteCourseModule,
   updateCourseModulesStatus
 } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
+import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import { searchUsers } from 'features/user-management/users-page/services/userServices';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Modules = () => {
   const [value, setValue] = useState('');
@@ -38,8 +33,6 @@ const Modules = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  // const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  // const [deletingItemId, setDeletingItemId] = useState(null);
   const [activeBranches, setActiveBranches] = useState([]);
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
@@ -63,7 +56,6 @@ const Modules = () => {
     1: 'success',
     0: 'error'
   };
-
 
   const handleRowClick = (params) => {
     setSelectedRow(params);
@@ -97,7 +89,7 @@ const Modules = () => {
     setEditUserOpen(!editUserOpen);
     console.log('toogle pressed');
   };
-  //delete
+
   const handleDelete = useCallback((itemId) => {
     SetSelectedDeleteId(itemId);
     setModulesDeleteModalOpen(true);
@@ -113,7 +105,6 @@ const Modules = () => {
       toast.error(result.message);
     }
   };
-  ////
 
   const dispatch = useDispatch();
   const Module = useSelector(selectCourseModules);
@@ -125,7 +116,7 @@ const Modules = () => {
     dispatch(getAllCourseModules({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
 
-  const RowOptions = ({row}) => {
+  const RowOptions = ({ row }) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -136,8 +127,8 @@ const Modules = () => {
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                setViewModalOpen(true);     
-                handleRowClick(row)
+                setViewModalOpen(true);
+                handleRowClick(row);
               }
             }
           },
@@ -146,8 +137,8 @@ const Modules = () => {
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                toggleEditUserDrawer()
-                handleRowClick(row)
+                toggleEditUserDrawer();
+                handleRowClick(row);
               }
             }
           },
@@ -156,8 +147,8 @@ const Modules = () => {
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                handleDelete()
-                handleRowClick(row)
+                handleDelete();
+                handleRowClick(row);
               }
             }
           }
@@ -207,7 +198,7 @@ const Modules = () => {
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' ,my:1.5}}>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 sx={{
@@ -221,7 +212,7 @@ const Modules = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign:"justify",
+                  textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -236,7 +227,7 @@ const Modules = () => {
     },
     {
       // flex: 1.5,
-      minWidth:220,
+      minWidth: 220,
       field: 'course',
       headerName: 'course',
       renderCell: ({ row }) => {
@@ -268,7 +259,8 @@ const Modules = () => {
       renderCell: ({ row }) => {
         return (
           <div>
-            <TextField  size="small"
+            <TextField
+              size="small"
               select
               value={row?.is_active}
               label="status"
@@ -282,7 +274,8 @@ const Modules = () => {
                   borderColor: row.is_active === '1' ? 'success' : 'error',
                   color: userStatusObj[row?.is_active]
                 }
-              }}>
+              }}
+            >
               <MenuItem value={1}>Active</MenuItem>
               <MenuItem value={0}>Inactive</MenuItem>
             </TextField>
@@ -315,21 +308,20 @@ const Modules = () => {
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
-                getRowHeight={()=>'auto'}
+                getRowHeight={() => 'auto'}
                 rows={Module}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                // onRowClick={handleRowClick}
-
+              
               />
             </Card>
           </Grid>
         )}
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow}  setRefetch={setrefetch} />
+        <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow} setRefetch={setrefetch} />
         <ModulesDeleteModal
           open={ModulesDeleteModalOpen}
           setOpen={setModulesDeleteModalOpen}

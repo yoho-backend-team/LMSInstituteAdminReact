@@ -6,11 +6,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
 import { PDFViewer } from 'react-view-pdf';
 
 const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${StudyMaterials.document} `);
 
   return (
     <div>
@@ -20,7 +20,6 @@ const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -76,7 +75,7 @@ const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={StudyMaterials?.is_active === "1" ? 'Active' : 'Inactive'}
+                  label={StudyMaterials?.is_active === '1' ? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>
@@ -88,6 +87,12 @@ const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
       </Dialog>
     </div>
   );
+};
+
+StudyMaterialView.propTypes = {
+  open: PropTypes.any,
+  handleViewClose: PropTypes.any,
+  StudyMaterials: PropTypes.any
 };
 
 export default StudyMaterialView;

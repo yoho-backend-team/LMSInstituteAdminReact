@@ -1,17 +1,17 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Grid, IconButton, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { PDFViewer } from 'react-view-pdf';
-import Box from '@mui/material/Box';
 import CustomChip from 'components/mui/chip';
-
+import PropTypes from 'prop-types';
+import { PDFViewer } from 'react-view-pdf';
 
 const ModuleView = ({ open, handleViewClose, modules }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${Module.document} `);
   console.log(modules);
+
   return (
     <div>
       <Dialog
@@ -20,7 +20,6 @@ const ModuleView = ({ open, handleViewClose, modules }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -70,7 +69,14 @@ const ModuleView = ({ open, handleViewClose, modules }) => {
 
               <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 1 }}>
                 <Typography variant="h3">Status :</Typography>
-                  <CustomChip sx={{ml:1}} rounded size="small" skin="light" color="primary" label= {modules?.is_active === "1" ? 'Active' : 'Inactive'} />
+                <CustomChip
+                  sx={{ ml: 1 }}
+                  rounded
+                  size="small"
+                  skin="light"
+                  color="primary"
+                  label={modules?.is_active === '1' ? 'Active' : 'Inactive'}
+                />
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} sx={{ mb: 4, mt: 1.5 }}>
@@ -81,6 +87,12 @@ const ModuleView = ({ open, handleViewClose, modules }) => {
       </Dialog>
     </div>
   );
+};
+
+ModuleView.propTypes = {
+  open: PropTypes.any,
+  handleViewClose: PropTypes.any,
+  modules: PropTypes.any
 };
 
 export default ModuleView;

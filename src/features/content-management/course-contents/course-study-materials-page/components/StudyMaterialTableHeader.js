@@ -1,20 +1,16 @@
-// ** MUI Imports
-import { useCallback, useState } from 'react';
 import { Grid, TextField } from '@mui/material';
-import { useEffect } from 'react';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-
-// ** Icon Imports
 import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
-// import { getAllCourseCategories } from 'features/course-management/categories-page/redux/courseCategoryThunks';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
 
 const StudyMaterialHeader = (props) => {
@@ -43,7 +39,6 @@ const StudyMaterialHeader = (props) => {
       const searchInput = e.target.value;
       dispatch(getAllCourseStudyMaterials({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -75,7 +70,6 @@ const StudyMaterialHeader = (props) => {
                       fullWidth
                       // value={value}
                       onChange={(e, newValue) => {
-                        // const courseId = newValue?.map((item) => item?.course_id);
                         const data = {
                           course_id: newValue.course_id,
                           branch_id: selectedBranchId
@@ -105,6 +99,11 @@ const StudyMaterialHeader = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+StudyMaterialHeader.propTypes = {
+  toggle: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 
 export default StudyMaterialHeader;

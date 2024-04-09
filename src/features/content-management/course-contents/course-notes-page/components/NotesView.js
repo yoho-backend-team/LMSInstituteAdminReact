@@ -1,16 +1,16 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Grid, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { PDFViewer } from 'react-view-pdf';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { PDFViewer } from 'react-view-pdf';
 
 const NotesView = ({ open, handleViewClose, notes }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${notes.document} `);
 
   return (
     <div>
@@ -20,7 +20,6 @@ const NotesView = ({ open, handleViewClose, notes }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -76,7 +75,7 @@ const NotesView = ({ open, handleViewClose, notes }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={notes?.is_active === "1" ? 'Active' : 'Inactive'}
+                  label={notes?.is_active === '1' ? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>
@@ -90,4 +89,9 @@ const NotesView = ({ open, handleViewClose, notes }) => {
   );
 };
 
+NotesView.propTypes = {
+  open: PropTypes.any,
+  handleViewClose: PropTypes.any,
+  notes: PropTypes.any
+};
 export default NotesView;

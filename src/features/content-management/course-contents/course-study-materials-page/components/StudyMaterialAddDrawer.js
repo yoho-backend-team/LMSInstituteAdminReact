@@ -1,27 +1,22 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseStudyMaterial } from '../services/studyMaterialServices';
 
 const StudyMaterialAddDrawer = (props) => {
-  // ** Props
   const { open, toggle, branches, setRefetch } = props;
 
   // ** State
@@ -61,7 +56,6 @@ const StudyMaterialAddDrawer = (props) => {
     branch: yup.object().required(),
     course: yup.object().required(),
     pdf_file: yup.mixed().required('PDF file is required')
-    // .test('fileSize', 'File size is too large', (value) => value && value[0].size <= 5000000),
   });
 
   const defaultValues = {
@@ -99,7 +93,7 @@ const StudyMaterialAddDrawer = (props) => {
     const result = await addCourseStudyMaterial(bodyFormData);
 
     if (result.success) {
-      setRefetch((state) => !state); // Trigger category refetch
+      setRefetch((state) => !state);
 
       toast.success(result.message);
       reset();
@@ -108,11 +102,10 @@ const StudyMaterialAddDrawer = (props) => {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -199,9 +192,9 @@ const StudyMaterialAddDrawer = (props) => {
                 <Autocomplete
                   value={value}
                   onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'course' field
+                    onChange(newValue);
                   }}
-                  options={activeCourse || []} // Ensure options are available
+                  options={activeCourse || []}
                   getOptionLabel={(option) => option.course_name || ''}
                   fullWidth
                   renderInput={(params) => (
@@ -268,6 +261,13 @@ const StudyMaterialAddDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+StudyMaterialAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  branches: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default StudyMaterialAddDrawer;
