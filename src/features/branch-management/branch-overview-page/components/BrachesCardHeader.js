@@ -1,24 +1,19 @@
-import { Link } from 'react-router-dom';
 import { Box, Button, TextField } from '@mui/material';
 import Icon from 'components/icon';
-import { useState, useCallback } from 'react';
 import { getAllBranches } from 'features/branch-management/redux/branchThunks';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const TableHeader = () => {
-  // State for search value
   const [searchValue, setSearchValue] = useState('');
-
-  // Dispatch function
   const dispatch = useDispatch();
 
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllBranches({ search: searchInput }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -35,7 +30,6 @@ const TableHeader = () => {
         justifyContent: 'space-between'
       }}
     >
-      {/* Search input */}
       <TextField
         value={searchValue}
         sx={{
@@ -44,7 +38,6 @@ const TableHeader = () => {
         placeholder="Search Branch"
         onChange={handleSearch}
       />
-      {/* Add new branch button */}
       <Box
         component={Link}
         to="branches/add"

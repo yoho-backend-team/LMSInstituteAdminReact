@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import PropTypes from 'prop-types';
 import { PDFViewer } from 'react-view-pdf';
 
 const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
@@ -18,7 +19,6 @@ const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -68,6 +68,12 @@ const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
       </Dialog>
     </div>
   );
+};
+
+StudentCertificateView.propTypes = {
+  open: PropTypes.any,
+  handleViewClose: PropTypes.any,
+  certificate: PropTypes.any
 };
 
 export default StudentCertificateView;

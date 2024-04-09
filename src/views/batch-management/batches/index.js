@@ -1,9 +1,4 @@
-// ** Mui Components
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-// ** React  Import
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-// ** Custom Components
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
@@ -12,20 +7,18 @@ import { styled } from '@mui/material/styles';
 import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 import Icon from 'components/icon';
 import StatusChangeDialog from 'components/modal/DeleteModel';
-
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import BatchDeleteModel from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
 import { selectBatches, selectLoading } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { useDispatch, useSelector } from 'react-redux';
-// import { updateBatch } from 'features/batch-management/batches/services/batchServices';
-import { updateBatchStatus } from 'features/batch-management/batches/services/batchServices';
-// ** Toast Import
-import BatchDeleteModel from 'components/modal/DeleteModel';
-import { deleteBatch } from 'features/batch-management/batches/services/batchServices';
+import { deleteBatch, updateBatchStatus } from 'features/batch-management/batches/services/batchServices';
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
@@ -38,6 +31,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main
   }
 }));
+
 const Batch = () => {
   const dispatch = useDispatch();
   const batches = useSelector(selectBatches);
@@ -48,9 +42,7 @@ const Batch = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  
   const [batchDeleteModelOpen, setBatchDeleteModelOpen] = useState(false);
-
   const [selectedBatchDeleteId, setSelectedBatchDeleteId] = useState(null);
 
   console.log(batches);
@@ -58,9 +50,6 @@ const Batch = () => {
   useEffect(() => {
     dispatch(getAllBatches({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, batchRefetch]);
-
-  // console.log('getAllBatches:',getAllBatches)
-
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -89,14 +78,11 @@ const Batch = () => {
     setEditModalOpen(true);
   };
 
-
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedBatchDeleteId(itemId);
     setBatchDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleBatchDelete = async () => {
     const data = { id: selectedBatchDeleteId };
     const result = await deleteBatch(data);
@@ -108,179 +94,6 @@ const Batch = () => {
       toast.error(result.message);
     }
   };
-
-  // const groups = [
-  //   {
-  //     extraMembers: 25,
-  //     title: 'React Developers',
-  //     avatar: '/images/icons/project-icons/react-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/1.png', name: 'Vinnie Mostowy' },
-  //       { avatar: '/images/avatars/2.png', name: 'Allen Rieske' },
-  //       { avatar: '/images/avatars/3.png', name: 'Julee Rossignol' },
-  //       { avatar: '/images/avatars/4.png', name: 'George Burrill' }
-  //     ],
-  //     description: 'We don’t make assumptions about the rest of your technology stack, so you can develop new features in React.',
-  //     chips: [
-  //       {
-  //         title: 'React',
-  //         color: 'primary'
-  //       },
-  //       {
-  //         title: 'MUI',
-  //         color: 'info'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     extraMembers: 15,
-  //     title: 'Vue.js Dev Team',
-  //     avatar: '/images/icons/project-icons/vue-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/5.png', name: "Kaith D'souza" },
-  //       { avatar: '/images/avatars/6.png', name: 'John Doe' },
-  //       { avatar: '/images/avatars/7.png', name: 'Alan Walker' },
-  //       { avatar: '/images/avatars/8.png', name: 'Calvin Middleton' }
-  //     ],
-  //     description:
-  //       'The development of Vue and its ecosystem is guided by an international team, some of whom have chosen to be featured below.',
-  //     chips: [
-  //       {
-  //         title: 'Vuejs',
-  //         color: 'success'
-  //       },
-  //       {
-  //         color: 'error',
-  //         title: 'Developer'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     extraMembers: 55,
-  //     title: 'Creative Designers',
-  //     avatar: '/images/icons/project-icons/xd-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/9.png', name: 'Jimmy Ressula' },
-  //       { avatar: '/images/avatars/10.png', name: 'Kristi Lawker' },
-  //       { avatar: '/images/avatars/11.png', name: 'Danny Paul' },
-  //       { avatar: '/images/avatars/12.png', name: 'Alicia Littleton' }
-  //     ],
-  //     description: 'A design or product team is more than just the people on it. A team includes the people, the roles they play.',
-  //     chips: [
-  //       {
-  //         title: 'Sketch',
-  //         color: 'warning'
-  //       },
-  //       {
-  //         title: 'XD',
-  //         color: 'error'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     extraMembers: 35,
-  //     title: 'Support Team',
-  //     avatar: '/images/icons/project-icons/support-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/5.png', name: 'Andrew Tye' },
-  //       { avatar: '/images/avatars/12.png', name: 'Rishi Swaat' },
-  //       { avatar: '/images/avatars/7.png', name: 'Rossie Kim' },
-  //       { avatar: '/images/avatars/8.png', name: 'Mary Hunter' }
-  //     ],
-  //     description: 'Support your team. Your customer support team is fielding the good, the bad, and the ugly day in and day out.',
-  //     chips: [
-  //       {
-  //         color: 'info',
-  //         title: 'Zendesk'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     extraMembers: 19,
-  //     title: 'Digital Marketing',
-  //     avatar: '/images/icons/project-icons/social-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/13.png', name: 'Kim Merchent' },
-  //       { avatar: '/images/avatars/12.png', name: "Sam D'souza" },
-  //       { avatar: '/images/avatars/11.png', name: 'Nurvi Karlos' },
-  //       { avatar: '/images/avatars/10.png', name: 'Margorie Whitmire' }
-  //     ],
-  //     description: 'Digital marketing refers to advertising delivered through digital channels such as search engines, websites…',
-  //     chips: [
-  //       {
-  //         color: 'primary',
-  //         title: 'Twitter'
-  //       },
-  //       {
-  //         title: 'Email',
-  //         color: 'success'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     title: 'Event',
-  //     extraMembers: 55,
-  //     avatar: '/images/icons/project-icons/event-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/6.png', name: 'Vinnie Mostowy' },
-  //       { avatar: '/images/avatars/5.png', name: 'Allen Rieske' },
-  //       { avatar: '/images/avatars/4.png', name: 'Julee Rossignol' },
-  //       { avatar: '/images/avatars/7.png', name: 'Daniel Long' }
-  //     ],
-  //     description: 'Event is defined as a particular contest which is part of a program of contests. An example of an event is the long…',
-  //     chips: [
-  //       {
-  //         title: 'Hubilo',
-  //         color: 'success'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     extraMembers: 45,
-  //     title: 'Figma Resources',
-  //     avatar: '/images/icons/project-icons/figma-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/8.png', name: 'Andrew Mostowy' },
-  //       { avatar: '/images/avatars/1.png', name: 'Micky Ressula' },
-  //       { avatar: '/images/avatars/3.png', name: 'Michel Pal' },
-  //       { avatar: '/images/avatars/12.png', name: 'Herman Lockard' }
-  //     ],
-  //     description:
-  //       'Explore, install, use, and remix thousands of plugins and files published to the Figma Community by designers and developers.',
-  //     chips: [
-  //       {
-  //         title: 'UI/UX',
-  //         color: 'success'
-  //       },
-  //       {
-  //         title: 'Figma',
-  //         color: 'secondary'
-  //       }
-  //     ]
-  //   },
-  //   {
-  //     extraMembers: 50,
-  //     title: 'Only Beginners',
-  //     avatar: '/images/icons/project-icons/html-label.png',
-  //     avatarGroup: [
-  //       { avatar: '/images/avatars/11.png', name: 'Kim Karlos' },
-  //       { avatar: '/images/avatars/10.png', name: 'Katy Turner' },
-  //       { avatar: '/images/avatars/9.png', name: 'Peter Adward' },
-  //       { avatar: '/images/avatars/6.png', name: 'Leona Miller' }
-  //     ],
-  //     description: 'Learn the basics of how websites work, front-end vs back-end, and using a code editor. Learn basic HTML, CSS, and…',
-  //     chips: [
-  //       {
-  //         title: 'CSS',
-  //         color: 'info'
-  //       },
-  //       {
-  //         title: 'HTML',
-  //         color: 'warning'
-  //       }
-  //     ]
-  //   }
-  // ];
 
   const renderCards = () => {
     return batches?.map((item, index) => (
@@ -361,7 +174,6 @@ const Batch = () => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {/* {item?.batch?.course_name} */}
                 {item?.batch?.institute_course?.institute_course_branch?.course_name}
               </Typography>
             </Box>
@@ -438,8 +250,6 @@ const Batch = () => {
                   <Pagination count={10} color="primary" />
                 </div>
               </Grid>
-
-              {/* BatchEditModal  Modal */}
               <BatchEditModal
                 open={isEditModalOpen}
                 handleEditClose={handleEditClose}
@@ -447,7 +257,6 @@ const Batch = () => {
                 selectedBatch={selectedBatch}
               />
 
-              {/* Status Change Modal */}
               <StatusChangeDialog
                 open={statusChangeDialogOpen}
                 setOpen={setStatusChangeDialogOpen}
@@ -455,8 +264,6 @@ const Batch = () => {
                 title="Change Status"
                 handleSubmit={handleStatusChangeApi}
               />
-
-              {/* DeleteDialog  Modal */}
               <BatchDeleteModel
                 open={batchDeleteModelOpen}
                 setOpen={setBatchDeleteModelOpen}

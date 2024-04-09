@@ -1,18 +1,18 @@
-// ** React Imports
 import { useCallback, useState } from 'react';
-// ** MUI Imports
+
 import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 import { useEffect } from 'react';
-// ** Custom Components Imports
+
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
 import { default as StatusChangeDialog, default as StudentCertificateDeleteModel } from 'components/modal/DeleteModel';
+import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
 import StudentCertificateAddDrawer from 'features/certificate-management/student-certificates/components/StudentCertificateAddDrawer';
 import StudentCertificateEdit from 'features/certificate-management/student-certificates/components/StudentCertificateEdit';
@@ -23,9 +23,6 @@ import {
   selectStudentCertificates
 } from 'features/certificate-management/student-certificates/redux/studentCertificateSelectors';
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
-// import { setStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateSlice';
-// import { searchStudentCertificates } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
-import CustomAvatar from 'components/mui/avatar';
 import {
   deleteStudentCertificate,
   updateStudentCertificateStatus
@@ -47,13 +44,10 @@ const StudenrCertificate = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
   const [studentCertificateRefetch, setStudentCertificateRefetch] = useState(false);
-
   const [studentCertificateDeleteModelOpen, setStudentCertificateDeleteModelOpen] = useState(false);
-
   const [selectedStudentCertificateDeleteId, setSelectedStudentCertificateDeleteId] = useState(null);
 
   const renderClient = (row) => {
@@ -89,7 +83,6 @@ const StudenrCertificate = () => {
     const response = await updateStudentCertificateStatus(data);
     if (response.success) {
       toast.success(response.message);
-      // setStudentCertificateRefetch((state) => !state);
       setStudentCertificateRefetch();
     } else {
       toast.error(response.message);
@@ -129,13 +122,11 @@ const StudenrCertificate = () => {
 
   console.log('certificate', studentCertificates);
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedStudentCertificateDeleteId(itemId);
     setStudentCertificateDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleStudentCertificateDelete = async () => {
     const result = await deleteStudentCertificate(selectedStudentCertificateDeleteId);
     if (result.success) {
@@ -153,12 +144,10 @@ const StudenrCertificate = () => {
         iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
         options={[
           {
-            // to: `/apps/invoice/download/${row.id}`,
             text: 'Download',
             icon: <Icon icon="tabler:download" fontSize={20} />
           },
           {
-            // to: `/apps/invoice/edit/${row.id}`,
             text: 'Edit',
             icon: <Icon icon="tabler:edit" />,
             menuItemProps: {
@@ -169,7 +158,6 @@ const StudenrCertificate = () => {
             }
           },
           {
-            // to: `/apps/invoice/view/${row.id}`,
             text: 'View',
             icon: <Icon icon="tabler:eye" />,
             menuItemProps: {
@@ -180,12 +168,11 @@ const StudenrCertificate = () => {
             }
           },
           {
-            // to: `/apps/invoice/delete/${row.id}`,
             text: 'Delete',
             icon: <Icon icon="mdi:delete-outline" />,
             menuItemProps: {
               onClick: () => {
-                handleDelete(row.id); // Passing the id of the row to the handleDelete function
+                handleDelete(row.id);
                 handleRowClick(row);
               }
             }
@@ -308,12 +295,7 @@ const StudenrCertificate = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudentCertificateTableHeader
-            selectedBranchId={selectedBranchId}
-            value={value}
-            // handleFilter={handleFilter}
-            toggle={toggleAddUserDrawer}
-          />
+          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} value={value} toggle={toggleAddUserDrawer} />
         </Grid>
         {studentCertificatesLoading ? (
           <ContentSkeleton />
@@ -329,11 +311,11 @@ const StudenrCertificate = () => {
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                // onRowClick={handleRowClick}
               />
             </Card>
           </Grid>
         )}
+
         {/* Add Drawer */}
         <StudentCertificateAddDrawer
           open={addUserOpen}

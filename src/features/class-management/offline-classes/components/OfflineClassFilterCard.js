@@ -1,24 +1,18 @@
-// ** React Imports
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
-// ** Third Party Imports
-import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-// ** Styled Components
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 
-/* eslint-enable */
 const OfflineClassFilterCard = ({ selectedBranchId }) => {
-  // ** State
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const batch = useSelector(selectBatches);
@@ -38,14 +32,11 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
     );
   }, [dispatch, selectedBranchId]);
 
-  // Function to handle batch selection change
   const handleBatchChange = (e, newValue) => {
     if (!newValue) {
-      // If newValue is null, clear the batch selection
       setSelectedBatch(null);
       const data = {
         branch_id: selectedBranchId,
-        // Pass empty batch_id to reset the batch filter
         batch_id: ''
       };
       dispatch(getAllOfflineClasses(data));
@@ -74,36 +65,13 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
                     <MenuItem value="pending">Pending</MenuItem>
                   </TextField>
                 </Grid>
-
-                {/* <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    // multiple
-                    fullWidth
-                    options={batch}
-                    filterSelectedOptions
-                    onChange={(e, newValue) => {
-                      // const batchId = newValue.map((item) => item.batch.batch_id);
-                      console.log(newValue);
-                      const data = {
-                        batch_id: newValue.batch.batch_id,
-                        branch_id: selectedBranchId
-                      };
-                      dispatch(getAllOfflineClasses(data));
-                    }}
-                    // defaultValue={[top100Films[13]]}
-                    id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
-                  />
-                </Grid> */}
-                
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
                     options={batch}
                     filterSelectedOptions
-                    onChange={handleBatchChange} // Handle batch selection change
-                    value={selectedBatch} // Controlled value for the Autocomplete component
+                    onChange={handleBatchChange}
+                    value={selectedBatch}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
@@ -116,6 +84,10 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+OfflineClassFilterCard.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default OfflineClassFilterCard;

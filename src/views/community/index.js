@@ -1,20 +1,11 @@
-// ** React Imports
 import { useEffect, useState } from 'react';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-// ** Store & Actions Imports
 import { fetchUserProfile, removeSelectedChat, selectChat, sendMsg } from 'features/community/components/AppChat';
 import { useDispatch, useSelector } from 'react-redux';
-
-// ** Utils Imports
 import { formatDateToMonthShort } from 'utils/format';
 import { getInitials } from 'utils/get-initials';
-
-// ** Chat App Components Imports
 import CommunitySkeleton from 'components/cards/Skeleton/CommunitySkeleton';
 import ChatContent from 'features/community/components/ChatContent';
 import SidebarLeft from 'features/community/components/SidebarLeft';
@@ -31,7 +22,6 @@ const useTimeout = (callback, delay) => {
 };
 
 const Community = () => {
-  // ** States
   const [userStatus, setUserStatus] = useState('online');
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
@@ -42,14 +32,10 @@ const Community = () => {
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(communities);
-
-  // ** Hooks
   const theme = useTheme();
   const dispatch = useDispatch();
   const hidden = useMediaQuery(theme.breakpoints.down('lg'));
   const store = useSelector((state) => state.chat);
-
-  // ** Vars
   const skin = 'default';
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
   const sidebarWidth = smAbove ? 360 : 300;

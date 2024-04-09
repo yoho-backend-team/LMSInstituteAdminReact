@@ -1,31 +1,22 @@
-// ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
-import { TextField } from '@mui/material';
-import { useState } from 'react';
-import OfflineClassAddModal from './add-OfflineClass/OfflineClassAddModal';
-// ** Custom Component Import
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
+import OfflineClassAddModal from './add-OfflineClass/OfflineClassAddModal';
 
 const OfflineClassCardHeader = (props) => {
-  const {selectedBranchId,setRefetch } = props;
-
-  // State for search value
+  const { selectedBranchId, setRefetch } = props;
   const [searchValue, setSearchValue] = useState('');
 
-  // Dispatch function
   const dispatch = useDispatch();
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllOfflineClasses({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -69,6 +60,11 @@ const OfflineClassCardHeader = (props) => {
       <OfflineClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
+};
+
+OfflineClassCardHeader.propTypes = {
+  selectedBranchId: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default OfflineClassCardHeader;

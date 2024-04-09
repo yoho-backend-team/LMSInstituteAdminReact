@@ -1,21 +1,16 @@
-// ** React Imports
-import { useEffect, useState, useCallback, useMemo } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { updateStudentCertificate } from '../services/studentCertificateServices';
 import { PDFViewer } from 'react-view-pdf';
+import * as yup from 'yup';
+import { updateStudentCertificate } from '../services/studentCertificateServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -52,7 +47,6 @@ const StudentCertificateEdit = (props) => {
   const { open, toggle, setStudentCertificateRefetch } = props;
   console.log('StudentCertificateEdit - open:', props.open);
   console.log('StudentCertificateEdit - toggle:', props.toggle);
-  // ** State
   const savedPdfUrls = require('assets/pdf.pdf');
   const [selectedFile, setSelectedFile] = useState(null);
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
@@ -62,7 +56,6 @@ const StudentCertificateEdit = (props) => {
     reset,
     control,
     setValue,
-    // setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -93,16 +86,10 @@ const StudentCertificateEdit = (props) => {
     if (result.success) {
       toast.success(result.message);
       toggle();
-      setStudentCertificateRefetch((state)=>!state);
+      setStudentCertificateRefetch((state) => !state);
     } else {
       let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -167,8 +154,6 @@ const StudentCertificateEdit = (props) => {
           <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
             {!selectedFile && <PDFViewer url={savedPdfUrl} />}
             {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
-            {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
-
             <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
               Upload New File
               <input
@@ -231,6 +216,12 @@ const StudentCertificateEdit = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+StudentCertificateEdit.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setStudentCertificateRefetch: PropTypes.any
 };
 
 export default StudentCertificateEdit;

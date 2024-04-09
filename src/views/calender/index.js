@@ -1,31 +1,20 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
-// ** Redux Imports
-import { useDispatch, useSelector } from 'react-redux';
-
-// ** Hooks
-
-// ** FullCalendar & App Components Imports
+import AddEventSidebar from 'features/calender/components/AddEventSidebar';
 import Calendar from 'features/calender/components/Calendar';
 import SidebarLeft from 'features/calender/components/SidebarLeft';
-import CalendarWrapper from 'styles/libs/fullcalendar';
-import AddEventSidebar from 'features/calender/components/AddEventSidebar';
-
-// ** Actions
 import {
   addEvent,
-  fetchEvents,
   deleteEvent,
-  updateEvent,
-  handleSelectEvent,
+  fetchEvents,
   handleAllCalendars,
-  handleCalendarsUpdate
+  handleCalendarsUpdate,
+  handleSelectEvent,
+  updateEvent
 } from 'features/calender/redux/reducers';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import CalendarWrapper from 'styles/libs/fullcalendar';
 
 // ** CalendarColors
 const calendarsColor = {
@@ -37,17 +26,11 @@ const calendarsColor = {
 };
 
 const AppCalendar = () => {
-  // ** States
   const [calendarApi, setCalendarApi] = useState(null);
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false);
-
-  // ** Hooks
-
   const dispatch = useDispatch();
   const store = useSelector((state) => state.calendar);
-
-  // ** Vars
   const leftSidebarWidth = 300;
   const addEventSidebarWidth = 400;
 

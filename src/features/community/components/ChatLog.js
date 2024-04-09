@@ -1,12 +1,13 @@
-import { useRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 import CustomAvatar from 'components/mui/avatar';
-import { getInitials } from 'utils/get-initials';
+import PropTypes from 'prop-types';
+import { useEffect, useRef } from 'react';
+import PerfectScrollbarComponent from 'react-perfect-scrollbar';
 import { useSelector } from 'react-redux';
+import { getInitials } from 'utils/get-initials';
 
 const PerfectScrollbar = styled(PerfectScrollbarComponent)(({ theme }) => ({
   padding: theme.spacing(5)
@@ -122,15 +123,15 @@ const ChatLog = (props) => {
               }}
               {...(data?.avatar && !isSender
                 ? {
-                  src: data?.avatar,
-                  alt: data?.users?.name
-                }
+                    src: data?.avatar,
+                    alt: data?.users?.name
+                  }
                 : {})}
               {...(isSender
                 ? {
-                  src: data?.avatar,
-                  alt: data?.users?.name
-                }
+                    src: data?.avatar,
+                    alt: data?.users?.name
+                  }
                 : {})}
             >
               {data?.avatarColor ? getInitials(data?.users?.name) : null}
@@ -207,6 +208,11 @@ const ChatLog = (props) => {
       <ScrollWrapper>{renderChats()}</ScrollWrapper>
     </Box>
   );
+};
+
+ChatLog.propTypes = {
+  data: PropTypes.any,
+  hidden: PropTypes.any
 };
 
 export default ChatLog;

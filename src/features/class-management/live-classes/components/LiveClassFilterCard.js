@@ -1,25 +1,22 @@
-// ** React Imports
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { forwardRef, useState } from 'react';
-// ** Third Party Imports
-import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import format from 'date-fns/format';
-import DatePicker from 'react-datepicker';
-import { getAllLiveClasses } from '../redux/liveClassThunks';
-// ** Styled Components
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-/* eslint-disable */
+import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import PropTypes from 'prop-types';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { useDispatch, useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { getAllLiveClasses } from '../redux/liveClassThunks';
+
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
   const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
@@ -30,10 +27,7 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
-/* eslint-enable */
-
 const LiveClassFilterCard = (props) => {
-  // ** State
   const { selectedBranchId } = props;
   const dispatch = useDispatch();
   const courses = useSelector(selectCourses);
@@ -44,18 +38,12 @@ const LiveClassFilterCard = (props) => {
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
 
-
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -63,7 +51,7 @@ const LiveClassFilterCard = (props) => {
   console.log(endDateRange);
 
   console.log('dummy', setStatusValue);
-  
+
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
@@ -79,7 +67,6 @@ const LiveClassFilterCard = (props) => {
     setEndDateRange(end);
   };
 
-
   useEffect(() => {
     const data = {
       type: 'live-classes',
@@ -87,7 +74,6 @@ const LiveClassFilterCard = (props) => {
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId]);
-
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -103,8 +89,6 @@ const LiveClassFilterCard = (props) => {
     );
   }, [dispatch, selectedBranchId]);
 
-
-
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
@@ -114,11 +98,9 @@ const LiveClassFilterCard = (props) => {
 
   const handleBatchChange = (e, newValue) => {
     if (!newValue) {
-      // If newValue is null, clear the batch selection
       setSelectedBatch(null);
       const data = {
         branch_id: selectedBranchId,
-        // Pass empty batch_id to reset the batch filter
         batch_id: ''
       };
       dispatch(getAllLiveClasses(data));
@@ -141,7 +123,7 @@ const LiveClassFilterCard = (props) => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
@@ -150,10 +132,9 @@ const LiveClassFilterCard = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    // value={courses.find((course) => course.course_id === (newValue?.course_id || '')) || null} // Reset to null when newValue is undefined or course_id is not found
                     onChange={(e, newValue) => {
                       const data = {
-                        course_id: newValue?.course_id || '', 
+                        course_id: newValue?.course_id || '',
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllLiveClasses(data));
@@ -164,19 +145,19 @@ const LiveClassFilterCard = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <Autocomplete
+                  <Autocomplete
                     fullWidth
                     options={batch}
                     filterSelectedOptions
-                    onChange={handleBatchChange} // Handle batch selection change
-                    value={selectedBatch} // Controlled value for the Autocomplete component
+                    onChange={handleBatchChange}
+                    value={selectedBatch}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <DatePicker
+                  <DatePicker
                     isClearable
                     selectsRange
                     monthsShown={2}
@@ -204,6 +185,10 @@ const LiveClassFilterCard = (props) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+LiveClassFilterCard.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default LiveClassFilterCard;

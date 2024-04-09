@@ -1,33 +1,25 @@
-// ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
-import { TextField } from '@mui/material';
-import { useState } from 'react';
-import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
-
-// ** Custom Component Import
-import { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
 
 import { getAllLiveClasses } from '../redux/liveClassThunks';
 
 const LiveClassCardHeader = (props) => {
-  const { selectedBranchId,setRefetch } = props;
+  const { selectedBranchId, setRefetch } = props;
 
-  // State for search value
   const [searchValue, setSearchValue] = useState('');
 
-  // Dispatch function
   const dispatch = useDispatch();
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllLiveClasses({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -72,6 +64,11 @@ const LiveClassCardHeader = (props) => {
       <LiveClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
+};
+
+LiveClassCardHeader.propTypes = {
+  selectedBranchId: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default LiveClassCardHeader;

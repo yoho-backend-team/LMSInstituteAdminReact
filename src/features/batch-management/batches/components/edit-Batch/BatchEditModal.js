@@ -1,23 +1,18 @@
-// material-ui
-import { Button, Grid } from '@mui/material';
+import PropTypes from 'prop-types';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, TextField as CustomTextField, Grid } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
+import CardContent from '@mui/material/CardContent';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
-// ** React Imports
-import { forwardRef, useState, useEffect } from 'react';
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import CardContent from '@mui/material/CardContent';
-// ** Custom Component Import
-import { TextField as CustomTextField } from '@mui/material';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import Autocomplete from '@mui/material/Autocomplete';
-import DatePicker from 'react-datepicker';
-import toast from 'react-hot-toast';
 import { updateBatch } from '../../services/batchServices';
 
 const CustomInput = forwardRef((props, ref) => {
@@ -26,9 +21,9 @@ const CustomInput = forwardRef((props, ref) => {
 
 const validationSchema = yup.object().shape({
   batch_name: yup
-  .string()
-  .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
-  .required('Batch Name is required'),
+    .string()
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
+    .required('Batch Name is required'),
   start_date: yup.date().required('Start Date is required'),
   end_date: yup.date().required('End Date is required'),
 
@@ -57,10 +52,8 @@ const names = [
 ];
 
 const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch }) => {
-  // ** States
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
   const [selectedStudents, setSelectedStudents] = useState([]);
 
   console.log(setSelectedStudents);
@@ -77,7 +70,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
     resolver: yupResolver(validationSchema)
   });
 
-  // Set form values when selectedBranch changes
   useEffect(() => {
     if (selectedBatch) {
       setValue('batch_name', selectedBatch?.batch?.batch_name || '');
@@ -86,10 +78,8 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
 
       setStartDate(new Date(selectedBatch.batch.start_date || null));
       setEndDate(new Date(selectedBatch.batch.end_date || null));
-
     }
   }, [selectedBatch, setValue]);
-
 
   const handleClose = () => {
     setValue('batch_name', '');
@@ -99,8 +89,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
     handleEditClose();
     reset();
   };
-
- 
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -119,37 +107,13 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
     [batches, setBatchRefetch];
   };
-
-  // Form submission handler
-  // const onSubmit = useCallback(
-  //   async (data) => {
-  //     // const inputData = new FormData();
-  //     inputData.append('batch_name', batches?.batch?.batch_name);
-  //     // inputData.append('logo', selectedImage);
-  //     inputData.append('category_name', data?.batch_name);
-
-  //     try {
-  //       const result = await updateBatch(inputData);
-  //       if (result.success) {
-  //         setBatchRefetch((state) => !state);
-  //         toast.success(result.message);
-  //       } else {
-  //         toast.error(result.message);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   },
-  //   [batches, setBatchRefetch]
-  //   );
 
   const handleStartDateChange = (date) => {
     setValue('startDate', date);
@@ -194,64 +158,64 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                 <CardContent>
                   <Grid container spacing={5}>
                     <Grid item xs={12} sm={12}>
-                    <Controller
-                      name="batch_name"
-                      control={control}
-                      rules={{ required: true }}
-                      render={({ field: { value, onChange } }) => (
-                        <CustomTextField
-                          fullWidth
-                          value={value}
-                          label="Batch Name"
-                          onChange={onChange}
-                          placeholder="Leonard"
-                          error={Boolean(errors['batch_name'])}
-                          aria-describedby="stepper-linear-personal-institute_batch_name"
-                          helperText={errors.batch_name?.message}
-                        />
-                      )}
-                    />
+                      <Controller
+                        name="batch_name"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            value={value}
+                            label="Batch Name"
+                            onChange={onChange}
+                            placeholder="Leonard"
+                            error={Boolean(errors['batch_name'])}
+                            aria-describedby="stepper-linear-personal-institute_batch_name"
+                            helperText={errors.batch_name?.message}
+                          />
+                        )}
+                      />
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="start_date"
-                      control={control}
-                      render={({ value }) => (
-                        <DatePicker
-                          selected={startDate}
-                          value={value}
-                          showYearDropdown
-                          showMonthDropdown
-                          placeholderText="MM-DD-YYYY"
-                          customInput={
-                            <CustomInput label="Start Date" error={Boolean(errors.start_date)} helperText={errors.start_date?.message} />
-                          }
-                          id="form-layouts-separator-date"
-                          onChange={handleStartDateChange}
-                        />
-                      )}
-                    />
+                      <Controller
+                        name="start_date"
+                        control={control}
+                        render={({ value }) => (
+                          <DatePicker
+                            selected={startDate}
+                            value={value}
+                            showYearDropdown
+                            showMonthDropdown
+                            placeholderText="MM-DD-YYYY"
+                            customInput={
+                              <CustomInput label="Start Date" error={Boolean(errors.start_date)} helperText={errors.start_date?.message} />
+                            }
+                            id="form-layouts-separator-date"
+                            onChange={handleStartDateChange}
+                          />
+                        )}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                    <Controller
-                      name="end_date"
-                      control={control}
-                      render={({ value }) => (
-                        <DatePicker
-                          selected={endDate}
-                          value={value}
-                          showYearDropdown
-                          showMonthDropdown
-                          placeholderText="MM-DD-YYYY"
-                          customInput={
-                            <CustomInput label="End Date" error={Boolean(errors.end_date)} helperText={errors.end_date?.message} />
-                          }
-                          id="form-layouts-separator-date"
-                          onChange={handleEndDateChange}
-                        />
-                      )}
-                    />
+                      <Controller
+                        name="end_date"
+                        control={control}
+                        render={({ value }) => (
+                          <DatePicker
+                            selected={endDate}
+                            value={value}
+                            showYearDropdown
+                            showMonthDropdown
+                            placeholderText="MM-DD-YYYY"
+                            customInput={
+                              <CustomInput label="End Date" error={Boolean(errors.end_date)} helperText={errors.end_date?.message} />
+                            }
+                            id="form-layouts-separator-date"
+                            onChange={handleEndDateChange}
+                          />
+                        )}
+                      />
                     </Grid>
 
                     <Grid item xs={12} sm={12}>
@@ -303,6 +267,13 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       </Dialog>
     </div>
   );
+};
+
+BatchEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  selectedBatch: PropTypes.any,
+  setBatchRefetch: PropTypes.any
 };
 
 export default BatchEditModal;

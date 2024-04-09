@@ -9,13 +9,17 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
-// import format from 'date-fns/format';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -24,19 +28,14 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addOfflineClass } from '../../services/offlineClassServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
-  // ** Props
   const { label, readOnly } = props;
 
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
+const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
@@ -93,7 +92,7 @@ const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudents(data);
-    setStudents(result.data.data); // Assuming result.data contains the list of students
+    setStudents(result.data.data);
   };
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
@@ -121,8 +120,6 @@ const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
     classDate: yup.date().nullable().required('Class Date field is required'),
     start_time: yup.string().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required')
-    // instructor: yup.array().required('Instructor field is required'),
-    // coordinator: yup.array().required('Instructor field is required'),
   });
 
   const defaultValues = {
@@ -163,16 +160,12 @@ const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
+
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -319,7 +312,7 @@ const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
                         setValue('batch', newValue);
                         getStudentsByBatch(newValue?.batch_id);
                       }}
-                      value={field.value} // Set the selected value directly from the field value
+                      value={field.value}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -554,6 +547,12 @@ const OfflineClassAddModal = ({ open, handleAddClose,setRefetch }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+OfflineClassAddModal.propTypes = {
+  open: PropTypes.any,
+  handleAddClose: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default OfflineClassAddModal;

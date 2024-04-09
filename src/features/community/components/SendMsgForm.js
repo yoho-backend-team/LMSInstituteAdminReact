@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import CustomTextField from 'components/mui/text-field';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { getAllBatchChats, sendMessage } from './../services/communityServices';
 
-import CustomTextField from 'components/mui/text-field';
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -31,14 +32,10 @@ const SendMsgForm = (props) => {
   };
 
   useEffect(() => {
-    const intervalId = setInterval(getMessages, 5000); // Set interval for every 2 seconds
-
-    // Call getMessages immediately when the component mounts
+    const intervalId = setInterval(getMessages, 5000);
     getMessages();
-
-    // Clean up the interval when the component unmounts or when selectedBatch changes
     return () => clearInterval(intervalId);
-  }, [selectedBatch]); // Dependency on selectedBatch to re-run effect when it changes
+  }, [selectedBatch]);
 
   const handleSendMsg = async (e) => {
     e.preventDefault();
@@ -82,6 +79,11 @@ const SendMsgForm = (props) => {
       </ChatFormWrapper>
     </Form>
   );
+};
+
+SendMsgForm.propTypes = {
+  selectedBatch: PropTypes.any,
+  setChats: PropTypes.any
 };
 
 export default SendMsgForm;

@@ -1,31 +1,24 @@
-// ** React Import
-import { useEffect, useRef } from 'react';
-
-// ** Full Calendar & it's Plugins
-import FullCalendar from '@fullcalendar/react';
-import listPlugin from '@fullcalendar/list';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
+import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
-// ** Third Party Style Import
+import listPlugin from '@fullcalendar/list';
+import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import PropTypes from 'prop-types';
+import { useEffect, useRef } from 'react';
 
 const Calendar = (props) => {
   // ** Props
-  const { calendarApi, calendarsColor, setCalendarApi, attendance,direction } = props;
+  const { calendarApi, calendarsColor, setCalendarApi, attendance, direction } = props;
 
-  // ** Refs
   const calendarRef = useRef();
   useEffect(() => {
     if (calendarApi === null) {
-      // @ts-ignore
       setCalendarApi(calendarRef.current?.getApi());
     }
   }, [calendarApi, setCalendarApi]);
   if (attendance) {
-    // ** calendarOptions(Props)
     const calendarOptions = {
       events: attendance ? attendance : [],
       plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin],
@@ -50,13 +43,8 @@ const Calendar = (props) => {
 
       navLinks: true,
       eventClassNames({ event: calendarEvent }) {
-        // @ts-ignore
         const colorName = calendarsColor[calendarEvent._def.title];
-
-        return [
-          // Background Color
-          `bg-${colorName}`
-        ];
+        return [`bg-${colorName}`];
       },
 
       customButtons: {
@@ -66,16 +54,21 @@ const Calendar = (props) => {
       },
 
       ref: calendarRef,
-
-      // Get direction from app state (store)
       direction
     };
 
-    // @ts-ignore
     return <FullCalendar {...calendarOptions} />;
   } else {
     return null;
   }
+};
+
+Calendar.propTypes = {
+  calendarApi: PropTypes.any,
+  calendarsColor: PropTypes.any,
+  setCalendarApi: PropTypes.any,
+  attendance: PropTypes.any,
+  direction: PropTypes.any
 };
 
 export default Calendar;

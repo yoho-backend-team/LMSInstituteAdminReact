@@ -3,16 +3,15 @@ import { Button, TextField as CustomTextField } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
 import { addBranch } from 'features/branch-management/services/branchServices';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import InputAdornment from '@mui/material/InputAdornment';
 
 const AddBranchForms = () => {
   const navigate = useNavigate();
-
   const initialValues = {
     branchName: '',
     phone: Number(''),
@@ -121,10 +120,8 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
-                    // type="tel"
                     type="number"
                     label="Phone No."
-                    // placeholder="1234567890"
                     error={Boolean(errors.phone)}
                     helperText={errors.phone?.message}
                     InputProps={{
@@ -142,10 +139,8 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
-                    // type="tel"
                     type="number"
                     label="Alternate Phone No."
-                    // placeholder="1234567890"
                     error={Boolean(errors.alternatePhone)}
                     helperText={errors.alternatePhone?.message}
                     InputProps={{

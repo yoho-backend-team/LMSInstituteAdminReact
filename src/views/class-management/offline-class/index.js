@@ -1,13 +1,11 @@
-// material-ui
 import { Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
-// project imports
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
+import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import OfflineClassCard from 'features/class-management/offline-classes/components/OfflineClassCard';
 import OfflineClassCardHeader from 'features/class-management/offline-classes/components/OfflineClassCardHeader';
 import OfflineClassFilterCard from 'features/class-management/offline-classes/components/OfflineClassFilterCard';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -29,13 +27,13 @@ const OfflineClass = () => {
   return (
     <>
       <Grid>
-        <OfflineClassFilterCard selectedBranchId={selectedBranchId}/>
-        <OfflineClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch}/>
+        <OfflineClassFilterCard selectedBranchId={selectedBranchId} />
+        <OfflineClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} />
         {loading ? (
-          <ClassSkeleton liveClasses={liveClasses}/>
+          <ClassSkeleton liveClasses={liveClasses} />
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
-            <OfflineClassCard offlineClassRefetch={offlineClassRefetch} setofflineClassRefetch={setofflineClassRefetch}/>
+            <OfflineClassCard offlineClassRefetch={offlineClassRefetch} setofflineClassRefetch={setofflineClassRefetch} />
           </Grid>
         )}
       </Grid>

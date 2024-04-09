@@ -9,6 +9,7 @@ import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
+import PropTypes from 'prop-types';
 import UserProfileRight from './UserProfileRight';
 
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
@@ -182,6 +183,24 @@ const ChatContent = (props) => {
     }
   };
   return renderContent();
+};
+
+ChatContent.propTypes = {
+  store: PropTypes.any,
+  hidden: PropTypes.any,
+  sendMsg: PropTypes.any,
+  dispatch: PropTypes.any,
+  mdAbove: PropTypes.any,
+  statusObj: PropTypes.any,
+  getInitials: PropTypes.any,
+  sidebarWidth: PropTypes.any,
+  userProfileRightOpen: PropTypes.any,
+  handleLeftSidebarToggle: PropTypes.any,
+  handleUserProfileRightSidebarToggle: PropTypes.any,
+  chats: PropTypes.any,
+  selectedBatch: PropTypes.any,
+  setChats: PropTypes.any,
+  communityDetails: PropTypes.any
 };
 
 export default ChatContent;

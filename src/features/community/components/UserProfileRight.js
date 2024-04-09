@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import MuiAvatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -6,16 +5,17 @@ import FormGroup from '@mui/material/FormGroup';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import { useState, useEffect } from 'react';
 import Icon from 'components/icon';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import CustomAvatar from 'components/mui/avatar';
 import Sidebar from 'components/sidebar';
+import PropTypes from 'prop-types';
+import { Fragment, useEffect, useState } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const UserProfileRight = (props) => {
   const {
@@ -67,70 +67,70 @@ const UserProfileRight = (props) => {
       const arrToMap = communityDetails?.batch_staff;
       return arrToMap !== null
         ? arrToMap?.map((contact, index) => {
-          const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
-          return (
-            <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
-              <ListItemButton
-                disableRipple
-                onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
-                sx={{
-                  py: 2,
-                  px: 3,
-                  width: '100%',
-                  borderRadius: 1,
-                  '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
-                  ...(activeCondition && {
-                    background: (theme) =>
-                      `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                        theme.palette.primary.main,
-                        0.7
-                      )} 76.47%) !important`
-                  })
-                }}
-              >
-                <ListItemAvatar sx={{ m: 0 }}>
-                  {contact.staff?.image ? (
-                    <MuiAvatar
-                      alt={contact.staff?.staff_name}
-                      src={contact.avatar}
-                      sx={{
-                        width: 38,
-                        height: 38,
-                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                      }}
-                    />
-                  ) : (
-                    <CustomAvatar
-                      color={contact.avatarColor}
-                      skin={activeCondition ? 'light-static' : 'light'}
-                      sx={{
-                        width: 38,
-                        height: 38,
-                        fontSize: (theme) => theme.typography.body1.fontSize,
-                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                      }}
-                    >
-                      {getInitials(contact.staff?.staff_name)}
-                    </CustomAvatar>
-                  )}
-                </ListItemAvatar>
-                <ListItemText
+            const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+            return (
+              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+                <ListItemButton
+                  disableRipple
+                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
                   sx={{
-                    my: 0,
-                    ml: 3,
-                    ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                    py: 2,
+                    px: 3,
+                    width: '100%',
+                    borderRadius: 1,
+                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                    ...(activeCondition && {
+                      background: (theme) =>
+                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                          theme.palette.primary.main,
+                          0.7
+                        )} 76.47%) !important`
+                    })
                   }}
-                  primary={<Typography variant="h6">{contact.staff?.staff_name}</Typography>}
-                  secondary={
-                    <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                      {contact.staff?.email}
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })
+                >
+                  <ListItemAvatar sx={{ m: 0 }}>
+                    {contact.staff?.image ? (
+                      <MuiAvatar
+                        alt={contact.staff?.staff_name}
+                        src={contact.avatar}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                        }}
+                      />
+                    ) : (
+                      <CustomAvatar
+                        color={contact.avatarColor}
+                        skin={activeCondition ? 'light-static' : 'light'}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          fontSize: (theme) => theme.typography.body1.fontSize,
+                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                        }}
+                      >
+                        {getInitials(contact.staff?.staff_name)}
+                      </CustomAvatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{
+                      my: 0,
+                      ml: 3,
+                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                    }}
+                    primary={<Typography variant="h6">{contact.staff?.staff_name}</Typography>}
+                    secondary={
+                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
+                        {contact.staff?.email}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })
         : null;
     }
   };
@@ -147,71 +147,71 @@ const UserProfileRight = (props) => {
 
       return arrToMap !== null
         ? arrToMap.map((contact, index) => {
-          const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
+            const activeCondition = active !== null && active.id === contact.id && active.type === 'contact' && !hasActiveId(contact.id);
 
-          return (
-            <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
-              <ListItemButton
-                disableRipple
-                onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
-                sx={{
-                  py: 2,
-                  px: 3,
-                  width: '100%',
-                  borderRadius: 1,
-                  '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
-                  ...(activeCondition && {
-                    background: (theme) =>
-                      `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                        theme.palette.primary.main,
-                        0.7
-                      )} 76.47%) !important`
-                  })
-                }}
-              >
-                <ListItemAvatar sx={{ m: 0 }}>
-                  {contact.student?.image ? (
-                    <MuiAvatar
-                      alt={contact.student?.first_name}
-                      src={contact.avatar}
-                      sx={{
-                        width: 38,
-                        height: 38,
-                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                      }}
-                    />
-                  ) : (
-                    <CustomAvatar
-                      color={contact.avatarColor}
-                      skin={activeCondition ? 'light-static' : 'light'}
-                      sx={{
-                        width: 38,
-                        height: 38,
-                        fontSize: (theme) => theme.typography.body1.fontSize,
-                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                      }}
-                    >
-                      {getInitials(contact?.student?.first_name)}
-                    </CustomAvatar>
-                  )}
-                </ListItemAvatar>
-                <ListItemText
+            return (
+              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+                <ListItemButton
+                  disableRipple
+                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
                   sx={{
-                    my: 0,
-                    ml: 3,
-                    ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                    py: 2,
+                    px: 3,
+                    width: '100%',
+                    borderRadius: 1,
+                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                    ...(activeCondition && {
+                      background: (theme) =>
+                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                          theme.palette.primary.main,
+                          0.7
+                        )} 76.47%) !important`
+                    })
                   }}
-                  primary={<Typography variant="h6">{contact.student?.first_name}</Typography>}
-                  secondary={
-                    <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
-                      {contact.student?.email}
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })
+                >
+                  <ListItemAvatar sx={{ m: 0 }}>
+                    {contact.student?.image ? (
+                      <MuiAvatar
+                        alt={contact.student?.first_name}
+                        src={contact.avatar}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                        }}
+                      />
+                    ) : (
+                      <CustomAvatar
+                        color={contact.avatarColor}
+                        skin={activeCondition ? 'light-static' : 'light'}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          fontSize: (theme) => theme.typography.body1.fontSize,
+                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                        }}
+                      >
+                        {getInitials(contact?.student?.first_name)}
+                      </CustomAvatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{
+                      my: 0,
+                      ml: 3,
+                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                    }}
+                    primary={<Typography variant="h6">{contact.student?.first_name}</Typography>}
+                    secondary={
+                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }) }}>
+                        {contact.student?.email}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })
         : null;
     }
   };
@@ -350,6 +350,17 @@ const UserProfileRight = (props) => {
       ) : null}
     </Sidebar>
   );
+};
+
+UserProfileRight.propTypes = {
+  store: PropTypes.any,
+  hidden: PropTypes.any,
+  statusObj: PropTypes.any,
+  getInitials: PropTypes.any,
+  sidebarWidth: PropTypes.any,
+  userProfileRightOpen: PropTypes.any,
+  handleUserProfileRightSidebarToggle: PropTypes.any,
+  communityDetails: PropTypes.any
 };
 
 export default UserProfileRight;

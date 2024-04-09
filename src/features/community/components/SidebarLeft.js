@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import MuiAvatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -11,11 +10,13 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import Icon from 'components/icon';
-import { hexToRGBA } from 'utils/hex-to-rgba';
 import CustomAvatar from 'components/mui/avatar';
 import CustomTextField from 'components/mui/text-field';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import { hexToRGBA } from 'utils/hex-to-rgba';
 import { getAllBatchChats } from '../services/communityServices';
 
 const ScrollWrapper = ({ children, hidden }) => {
@@ -58,17 +59,14 @@ const SidebarLeft = (props) => {
       setChats(response?.data?.data);
     }
 
-    // dispatch(selectChat(id));
     if (!mdAbove) {
       handleLeftSidebarToggle();
     }
   };
 
   useEffect(() => {
-    // setActive(null);
     dispatch(removeSelectedChat());
     return () => {
-      // setActive(null);
       dispatch(removeSelectedChat());
     };
   }, []);
@@ -93,71 +91,71 @@ const SidebarLeft = (props) => {
 
       return arrToMap !== null
         ? arrToMap?.map((contact, index) => {
-          const activeCondition = active !== null && active.id === contact.id;
+            const activeCondition = active !== null && active.id === contact.id;
 
-          return (
-            <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
-              <ListItemButton
-                disableRipple
-                onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
-                sx={{
-                  py: 2,
-                  px: 3,
-                  width: '100%',
-                  borderRadius: 1,
-                  '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
-                  ...(activeCondition && {
-                    background: (theme) =>
-                      `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                        theme.palette.primary.main,
-                        0.7
-                      )} 76.47%) !important`
-                  })
-                }}
-              >
-                <ListItemAvatar sx={{ m: 0 }}>
-                  {contact.avatar ? (
-                    <MuiAvatar
-                      alt={contact.fullName}
-                      src={contact.avatar}
-                      sx={{
-                        width: 38,
-                        height: 38,
-                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                      }}
-                    />
-                  ) : (
-                    <CustomAvatar
-                      color={contact.avatarColor}
-                      skin={activeCondition ? 'light-static' : 'light'}
-                      sx={{
-                        width: 38,
-                        height: 38,
-                        fontSize: (theme) => theme.typography.body1.fontSize,
-                        outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
-                      }}
-                    >
-                      {getInitials(contact?.batch_community?.batch?.batch_name)}
-                    </CustomAvatar>
-                  )}
-                </ListItemAvatar>
-                <ListItemText
+            return (
+              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+                <ListItemButton
+                  disableRipple
+                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
                   sx={{
-                    my: 0,
-                    ml: 3,
-                    ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                    py: 2,
+                    px: 3,
+                    width: '100%',
+                    borderRadius: 1,
+                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                    ...(activeCondition && {
+                      background: (theme) =>
+                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
+                          theme.palette.primary.main,
+                          0.7
+                        )} 76.47%) !important`
+                    })
                   }}
-                  primary={<Typography variant="h5">{contact?.batch_community?.batch?.batch_name}</Typography>}
-                  secondary={
-                    <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
-                      {contact?.batch_community?.batch?.institute_course_branch?.course_name}
-                    </Typography>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })
+                >
+                  <ListItemAvatar sx={{ m: 0 }}>
+                    {contact.avatar ? (
+                      <MuiAvatar
+                        alt={contact.fullName}
+                        src={contact.avatar}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                        }}
+                      />
+                    ) : (
+                      <CustomAvatar
+                        color={contact.avatarColor}
+                        skin={activeCondition ? 'light-static' : 'light'}
+                        sx={{
+                          width: 38,
+                          height: 38,
+                          fontSize: (theme) => theme.typography.body1.fontSize,
+                          outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
+                        }}
+                      >
+                        {getInitials(contact?.batch_community?.batch?.batch_name)}
+                      </CustomAvatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{
+                      my: 0,
+                      ml: 3,
+                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                    }}
+                    primary={<Typography variant="h5">{contact?.batch_community?.batch?.batch_name}</Typography>}
+                    secondary={
+                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
+                        {contact?.batch_community?.batch?.institute_course_branch?.course_name}
+                      </Typography>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })
         : null;
     }
   };
@@ -268,6 +266,24 @@ const SidebarLeft = (props) => {
       </Drawer>
     </div>
   );
+};
+
+SidebarLeft.propTypes = {
+  store: PropTypes.any,
+  hidden: PropTypes.any,
+  mdAbove: PropTypes.any,
+  dispatch: PropTypes.any,
+  statusObj: PropTypes.any,
+  userStatus: PropTypes.any,
+  getInitials: PropTypes.any,
+  sidebarWidth: PropTypes.any,
+  leftSidebarOpen: PropTypes.any,
+  removeSelectedChat: PropTypes.any,
+  handleLeftSidebarToggle: PropTypes.any,
+  handleUserProfileLeftSidebarToggle: PropTypes.any,
+  communities: PropTypes.any,
+  setChats: PropTypes.any,
+  setSelectedBatch: PropTypes.any
 };
 
 export default SidebarLeft;

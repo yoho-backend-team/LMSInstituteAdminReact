@@ -1,5 +1,4 @@
 import FileCopyIcon from '@mui/icons-material/FileCopy';
-import { useCallback } from 'react';
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -11,36 +10,32 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
+import LiveClassDeleteModel from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import toast from 'react-hot-toast';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
-import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
-import { deleteLiveClass } from '../services/liveClassServices';
 import { Link } from 'react-router-dom';
-import LiveClassDeleteModel from 'components/modal/DeleteModel';
+import { deleteLiveClass } from '../services/liveClassServices';
+import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
 
 const LiveClassCard = ({ refetch, setRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedClass, setSelectedClass] = useState('');
-
   const [liveclassDeleteModelOpen, setLiveclassDeleteModelOpen] = useState(false);
   const [selectedLiveclassDeleteId, setSelectedLiveclassDeleteId] = useState(null);
-
   const dispatch = useDispatch();
   console.log(liveClasses);
-
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedLiveclassDeleteId(itemId);
     setLiveclassDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleLiveclassDelete = async () => {
     const data = { class_id: selectedLiveclassDeleteId };
     const result = await deleteLiveClass(data);
@@ -67,23 +62,13 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
     setEditModalOpen(true);
   };
 
-
   function convertTo12HourFormat(timestamp) {
-    // Create a new Date object from the timestamp string
     const date = new Date(timestamp);
-
-    // Extract hours and minutes from the Date object
     let hours = date.getUTCHours();
     let minutes = date.getUTCMinutes();
-
-    // Convert hours to 12-hour format and determine AM/PM
     const meridiem = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Convert midnight (0) to 12
-
-    // Pad minutes with leading zero if needed
+    hours = hours % 12 || 12;
     minutes = minutes < 10 ? '0' + minutes : minutes;
-
-    // Return the formatted time string
     return hours + ':' + minutes + ' ' + meridiem;
   }
   console.log(selectedClass);
@@ -107,11 +92,7 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
                       sx={{
                         mb: 0,
                         flexShrink: 2,
-                        // whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        // textOverflow: 'ellipsis',
-                        // maxWidth: '230px'
-                        // display: 'flex',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
@@ -190,7 +171,6 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
                           }
                         },
                         {
-                          // to: `/apps/invoice/edit/${row.id}`,
                           text: 'Edit',
                           icon: <Icon icon="tabler:edit" />,
                           menuItemProps: {
@@ -201,7 +181,6 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
                           }
                         },
                         {
-                          // to: `/apps/invoice/delete/${row.id}`,
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
@@ -217,7 +196,6 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
           </Grid>
         ))}
         <LiveClassEditModal
-          // liveClasses={liveClasses}
           selectedBranchId={selectedBranchId}
           liveClasses={selectedClass}
           open={isEditModalOpen}
@@ -239,6 +217,11 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
       </Grid>
     </>
   );
+};
+
+LiveClassCard.propTypes = {
+  refetch: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default LiveClassCard;

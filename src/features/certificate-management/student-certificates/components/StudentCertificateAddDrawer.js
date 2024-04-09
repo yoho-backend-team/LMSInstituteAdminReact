@@ -1,28 +1,23 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Button, Grid, MenuItem, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import toast from 'react-hot-toast';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-// import { addStudentFee } from '../services/studentFeeServices';
-import Autocomplete from '@mui/material/Autocomplete';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import CoursePdfInput from 'features/content-management/course-contents/components/PdfInput';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 import { addStudentCertificate } from '../services/studentCertificateServices';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -50,17 +45,12 @@ const defaultValues = {
 };
 
 const StudentCertificateAddDrawer = (props) => {
-  // ** Props
   const { open, toggle, setStudentCertificateRefetch } = props;
-  // ** State
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  // const [activeStudents, setActiveStudents] = useState([]);
   const [students, setStudents] = useState([]);
-
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
 
   useEffect(() => {
@@ -78,7 +68,6 @@ const StudentCertificateAddDrawer = (props) => {
     setActiveBranches(result.data.data);
   };
 
-  
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
@@ -87,13 +76,11 @@ const StudentCertificateAddDrawer = (props) => {
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
+    const data = { course_id: courseId, branch_id: selectedBranchId };
     const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
-
-    // Fetch students whenever active batches change
     result.data.data.forEach((batch) => {
       getStudentsByBatch(batch.batch_id);
     });
@@ -102,7 +89,7 @@ const StudentCertificateAddDrawer = (props) => {
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudents(data);
-    setStudents(result.data.data); // Assuming result.data contains the list of students
+    setStudents(result.data.data);
   };
 
   const {
@@ -132,7 +119,6 @@ const StudentCertificateAddDrawer = (props) => {
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('certificate_file', studymaterialPdf);
-    // bodyFormData.append('branch_id', data.branch);
     bodyFormData.append('institute_student_id', data.student);
     bodyFormData.append('name', data.name);
     bodyFormData.append('description', data.description);
@@ -148,11 +134,10 @@ const StudentCertificateAddDrawer = (props) => {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -252,7 +237,7 @@ const StudentCertificateAddDrawer = (props) => {
                       setValue('batch', newValue);
                       getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={field.value} // Set the selected value directly from the field value
+                    value={field.value}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -344,6 +329,12 @@ const StudentCertificateAddDrawer = (props) => {
       </Drawer>
     </DatePickerWrapper>
   );
+};
+
+StudentCertificateAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setStudentCertificateRefetch: PropTypes.any
 };
 
 export default StudentCertificateAddDrawer;

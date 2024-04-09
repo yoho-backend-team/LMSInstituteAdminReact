@@ -1,27 +1,37 @@
-import { Fragment } from 'react';
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import Badge from '@mui/material/Badge';
-import Radio from '@mui/material/Radio';
 import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
-import ListItem from '@mui/material/ListItem';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import RadioGroup from '@mui/material/RadioGroup';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import CustomTextField from 'components/mui/text-field';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import CustomTextField from 'components/mui/text-field';
 import Sidebar from 'components/sidebar';
+import PropTypes from 'prop-types';
+import { Fragment } from 'react';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const UserProfileLeft = (props) => {
-  const { store, hidden, statusObj, userStatus, sidebarWidth, setUserStatus, userProfileLeftOpen, handleUserProfileLeftSidebarToggle,communityDetails } =
-    props;
+  const {
+    store,
+    hidden,
+    statusObj,
+    userStatus,
+    sidebarWidth,
+    setUserStatus,
+    userProfileLeftOpen,
+    handleUserProfileLeftSidebarToggle,
+    communityDetails
+  } = props;
 
   const handleUserStatus = (e) => {
     setUserStatus(e.target.value);
@@ -175,6 +185,18 @@ const UserProfileLeft = (props) => {
       ) : null}
     </Sidebar>
   );
+};
+
+UserProfileLeft.propTypes = {
+  store: PropTypes.any,
+  hidden: PropTypes.any,
+  statusObj: PropTypes.any,
+  userStatus: PropTypes.any,
+  sidebarWidth: PropTypes.any,
+  setUserStatus: PropTypes.any,
+  handleUserProfileLeftSidebarToggle: PropTypes.any,
+  communityDetails: PropTypes.any,
+  userProfileLeftOpen: PropTypes.any
 };
 
 export default UserProfileLeft;

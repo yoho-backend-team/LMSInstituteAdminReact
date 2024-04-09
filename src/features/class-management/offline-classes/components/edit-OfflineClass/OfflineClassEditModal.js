@@ -16,6 +16,7 @@ import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -25,19 +26,16 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateOfflineClass } from '../../services/offlineClassServices';
 
-
 const CustomInput = forwardRef(({ ...props }, ref) => {
-  // ** Props
   const { label, readOnly } = props;
 
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefetch}) => {
+const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefetch }) => {
   console.log(offlineClasses);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
   const schema = yup.object().shape({
     class_name: yup
@@ -46,8 +44,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
-    // startTime: yup.date().nullable().required('Start Time field is required'),
-    // endTime: yup.date().nullable().required('End Time field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
     coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
@@ -88,15 +84,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
 
   useEffect(() => {
     if (offlineClasses) {
-      setValue('class_name', offlineClasses.class_name || ''); // Set class name
-      setValue('class_id', offlineClasses.class_id || ''); // Set class ID
-      setValue('classDate', new Date(offlineClasses.class_date) || new Date()); // Set class date
+      setValue('class_name', offlineClasses.class_name || '');
+      setValue('class_id', offlineClasses.class_id || '');
+      setValue('classDate', new Date(offlineClasses.class_date) || new Date());
       setValue('start_time', dayjs(offlineClasses.start_time) || null);
-      setValue('end_time', dayjs(offlineClasses.end_time) || null); // Set end time
-      setValue('instructors', offlineClasses.instructors || []); // Set instructors
-      setValue('coordinators', offlineClasses?.coordinators || []); 
-      setSelectedCoordinates(offlineClasses?.coordinators) // Set coordinators
-      setSelectedInstructors(offlineClasses?.instructors) 
+      setValue('end_time', dayjs(offlineClasses.end_time) || null);
+      setValue('instructors', offlineClasses.instructors || []);
+      setValue('coordinators', offlineClasses?.coordinators || []);
+      setSelectedCoordinates(offlineClasses?.coordinators);
+      setSelectedInstructors(offlineClasses?.instructors);
     }
   }, [offlineClasses, setValue]);
 
@@ -105,25 +101,19 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
   useEffect(() => {
     if (offlineClasses && offlineClasses.instructors) {
       setSelectedInstructors(offlineClasses.instructors);
-      setValue('instructors', offlineClasses.instructors); // Set default value for instructor field
+      setValue('instructors', offlineClasses.instructors);
     }
   }, [offlineClasses, setValue]);
 
   useEffect(() => {
     if (offlineClasses && offlineClasses.coordinators) {
       setSelectedCoordinates(offlineClasses.coordinators);
-      setValue('coordinators', offlineClasses.coordinators); // Set default value for coordinator field
+      setValue('coordinators', offlineClasses.coordinators);
     }
   }, [offlineClasses, setValue]);
 
   const handleClose = () => {
     handleEditClose();
-    // setValue('class_name', null);
-    // setValue('classDate', null);
-    // setValue('startTime', null);
-    // setValue('endTime', null);
-    // setValue('instructor', '');
-    // setValue('coordinator', '');
     reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
@@ -150,16 +140,11 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
   }, [selectedBranchId]);
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -180,25 +165,19 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
     bodyFormData.append('batch_id', data.batch_id);
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time); // Fixed field namee
+    bodyFormData.append('end_time', data.end_time);
 
     console.log(data);
 
     const result = await updateOfflineClass(bodyFormData);
 
     if (result.success) {
-      setRefetch((state) => !state); 
+      setRefetch((state) => !state);
       toast.success(result.message);
       handleClose();
     } else {
       let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
   return (
@@ -324,7 +303,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
               </Grid>
 
               <Grid item xs={12} sm={12}>
-              <Autocomplete
+                <Autocomplete
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
@@ -470,6 +449,13 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses ,setRefet
       </DialogContent>
     </Dialog>
   );
+};
+
+OfflineClassEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  offlineClasses: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default OfflineClassEditModal;

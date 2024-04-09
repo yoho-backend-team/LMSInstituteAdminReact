@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, Grid } from '@mui/material';
+import FileCopy from '@mui/icons-material/FileCopy';
+import { Checkbox, Grid, IconButton, InputAdornment } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,26 +10,22 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import CustomChip from 'components/mui/chip';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
-import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { forwardRef, useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
-import { Controller, useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import * as yup from 'yup';
-// import { update } from '../../services/offlineClassServices';
-import FileCopy from '@mui/icons-material/FileCopy';
-import { IconButton, InputAdornment } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import PropTypes from 'prop-types';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 import { updateLiveClass } from '../../services/liveClassServices';
-
-
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -37,11 +34,9 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) => {
+const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) => {
   console.log(liveClasses);
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
   const schema = yup.object().shape({
     class_name: yup
@@ -50,8 +45,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
-    // start_time: yup.date().nullable().required('Start Time field is required'),
-    // end_time: yup.date().nullable().required('End Time field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
     coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
@@ -67,7 +60,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
   const handleCopyLink = () => {
     const link = 'your Generated Link';
     navigator.clipboard.writeText(link).then(() => {});
-  }; 
+  };
 
   const {
     reset,
@@ -96,15 +89,15 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
 
   useEffect(() => {
     if (liveClasses) {
-      setValue('class_name', liveClasses.class_name || ''); // Set class name
-      setValue('class_id', liveClasses.class_id || ''); // Set class ID
-      setValue('classDate', new Date(liveClasses.class_date) || new Date()); // Set class date
+      setValue('class_name', liveClasses.class_name || '');
+      setValue('class_id', liveClasses.class_id || '');
+      setValue('classDate', new Date(liveClasses.class_date) || new Date());
       setValue('start_time', dayjs(liveClasses?.start_time) || null);
-      setValue('end_time', dayjs(liveClasses?.end_time) || null); // Set end time
-      setValue('instructors', liveClasses.instructors || []); // Set instructors
-      setValue('coordinators', liveClasses.coordinators || []); // Set coordinators
-      setSelectedCoordinates(liveClasses?.coordinators) // Set coordinators
-      setSelectedInstructors(liveClasses?.instructors) 
+      setValue('end_time', dayjs(liveClasses?.end_time) || null);
+      setValue('instructors', liveClasses.instructors || []);
+      setValue('coordinators', liveClasses.coordinators || []);
+      setSelectedCoordinates(liveClasses?.coordinators);
+      setSelectedInstructors(liveClasses?.instructors);
     }
   }, [liveClasses, setValue]);
 
@@ -113,25 +106,19 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
   useEffect(() => {
     if (liveClasses && liveClasses.instructors) {
       setSelectedInstructors(liveClasses.instructors);
-      setValue('instructors', liveClasses.instructors); // Set default value for instructor field
+      setValue('instructors', liveClasses.instructors);
     }
   }, [liveClasses, setValue]);
 
   useEffect(() => {
     if (liveClasses && liveClasses.coordinators) {
       setSelectedCoordinates(liveClasses.coordinators);
-      setValue('coordinators', liveClasses.coordinators); // Set default value for coordinator field
+      setValue('coordinators', liveClasses.coordinators);
     }
   }, [liveClasses, setValue]);
 
   const handleClose = () => {
     handleEditClose();
-    // setValue('class_name', null);
-    // setValue('classDate', null);
-    // setValue('start_time', null);
-    // setValue('end_time', null);
-    // setValue('instructor', '');
-    // setValue('coordinator', '');
     reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
@@ -158,16 +145,11 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
   }, [selectedBranchId]);
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -188,7 +170,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
     bodyFormData.append('batch_id', data.batch_id);
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time); // Fixed field name
+    bodyFormData.append('end_time', data.end_time);
     bodyFormData.append('videoUrl', data.class_link);
 
     console.log(data);
@@ -196,18 +178,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
     const result = await updateLiveClass(bodyFormData);
 
     if (result.success) {
-      setRefetch((state) => !state); 
+      setRefetch((state) => !state);
       toast.success(result.message);
       handleClose();
     } else {
       let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
   return (
@@ -481,8 +457,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
                 />
               </Grid>
 
-
-
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
@@ -499,6 +473,13 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses ,setRefetch}) =
       </DialogContent>
     </Dialog>
   );
+};
+
+LiveClassEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  liveClasses: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default LiveClassEditModal;

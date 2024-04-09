@@ -126,6 +126,7 @@ const columns = [
     }
   }
 ];
+
 const BranchTableList = () => {
   const store = [
     {

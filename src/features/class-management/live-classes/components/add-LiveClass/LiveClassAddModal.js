@@ -9,12 +9,17 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
-// import format from 'date-fns/format';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -23,31 +28,16 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addLiveClass } from '../../services/liveClassServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
-/* eslint-disable */
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import dayjs from 'dayjs';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
-  // ** Props
   const { label, readOnly } = props;
 
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
 const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
-  const [personName, setPersonName] = useState([]);
-  const [dates, setDates] = useState([]);
-  const [startDateRange, setStartDateRange] = useState(null);
-
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
@@ -101,42 +91,8 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     setStudents(result.data.data);
   };
 
-  const handleStartTimeChange = (time) => {
-    setStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    setEndTime(time);
-  };
-
-  const handleOnChangeRange = (dates) => {
-    const [start] = dates;
-    if (start !== null) {
-      setDates(dates);
-    }
-    setStartDateRange(start);
-  };
-
-  const handleChange = (event) => {
-    setPersonName(event.target.value);
-  };
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-  const instructors = [
-    { instructor_id: '1', instructor_name: 'Instructor 1' },
-    { instructor_id: '2', instructor_name: 'Instructor 2' },
-    { instructor_id: '3', instructor_name: 'Instructor 3' }
-  ];
-  const coordinates = [
-    { coordinate_id: '1', coordinate_name: 'Coordinate 1' },
-    { coordinate_id: '2', coordinate_name: 'Coordinate 2' },
-    { coordinate_id: '3', coordinate_name: 'Coordinate 3' }
-  ];
-  const courses = [
-    { id: '1', name: 'Course 1' },
-    { id: '2', name: 'Course 2' },
-    { id: '3', name: 'Course 3' }
-  ];
 
   const showErrors = (field, valueLen, min) => {
     if (valueLen === 0) {
@@ -159,8 +115,6 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     class_date: yup.date().nullable().required('Class Date field is required'),
     start_time: yup.string().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required'),
-    // instructor: yup.array().required('Instructor field is required'),
-    // coordinator: yup.array().required('Instructor field is required'),
     videoUrl: yup.string().required('VideoUrl field is required')
   });
 
@@ -203,41 +157,12 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     reset();
   };
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        width: 250,
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-      }
-    }
-  };
-
-  const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder'
-  ];
-
-  const teachersList = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
 
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
 
     return formattedDateString;
@@ -387,7 +312,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         setValue('batch', newValue);
                         getStudentsByBatch(newValue?.batch_id);
                       }}
-                      value={field.value} // Set the selected value directly from the field value
+                      value={field.value}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -420,63 +345,6 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 />
                 {errors.class_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.class_date.message}</p>}
               </Grid>
-
-              {/* <Grid container item xs={6} spacing={2}>
-                <Grid item xs={6}>
-                  <Controller
-                    name="startTime"
-                    control={control}
-                    rules={{ required: 'Start time is required' }}
-                    render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleStartTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput
-                            label="Start Time"
-                            sx={{ border: errors.startTime ? '1px solid red' : 'none', borderRadius: '7px' }}
-                          />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select Start Time"
-                        className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
-                      />
-                    )}
-                  />
-                  {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
-                </Grid> */}
-              {/* <Grid item xs={6}>
-                  <Controller
-                    name="endTime"
-                    control={control}
-                    rules={{ required: 'End time is required' }}
-                    render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleEndTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput label="End Time" sx={{ border: errors.endTime ? '1px solid red' : 'none', borderRadius: '7px' }} />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select End Time"
-                        className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
-                      />
-                    )}
-                  />
-                  {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
-                </Grid> */}
               <Grid container item xs={6} spacing={2}>
                 <Grid item md={6} sm={12}>
                   <Controller
@@ -531,7 +399,6 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 </Grid>
               </Grid>
 
-              {/* </Grid> */}
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
@@ -697,6 +564,12 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+LiveClassAddModal.propTypes = {
+  open: PropTypes.any,
+  handleAddClose: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default LiveClassAddModal;
