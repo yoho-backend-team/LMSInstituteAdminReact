@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-
+import PropTypes from 'prop-types';
 
 const ViewBatchTable = ({ students }) => {
 
@@ -14,7 +14,7 @@ const ViewBatchTable = ({ students }) => {
 
 
   if (!students) {
-    return null; // Or any other fallback UI
+    return null; 
   }
 
   const filteredStudents = students.filter(student =>
@@ -95,16 +95,12 @@ const ViewBatchTable = ({ students }) => {
     }
   ];
 
-  
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-
   return (
     <>
-      {/* <DataGrid autoHeight rowHeight={80} rows={students} columns={columns} disableRowSelectionOnClick
-       pagination={false} /> */}
       <Grid container spacing={2}>
         <Grid item xs={12} display={'flex'} justifyContent={'flex-end'}>
           <TextField  placeholder="Search Student"  value={searchQuery} onChange={handleSearchChange} />
@@ -119,6 +115,10 @@ const ViewBatchTable = ({ students }) => {
       </Grid>
     </>
   );
+};
+
+ViewBatchTable.propTypes = {
+  students: PropTypes.any,
 };
 
 export default ViewBatchTable;
