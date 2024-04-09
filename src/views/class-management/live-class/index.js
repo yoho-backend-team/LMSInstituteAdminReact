@@ -9,6 +9,7 @@ import LiveClassCard from 'features/class-management/live-classes/components/Liv
 import LiveClassCardHeader from 'features/class-management/live-classes/components/LiveClassCardHeader';
 import LiveClassFilterCard from 'features/class-management/live-classes/components/LiveClassFilterCard';
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
+import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 
 const useTimeout = (callback, delay) => {
 
@@ -26,13 +27,15 @@ const LiveClass = () => {
   useTimeout(() => {
     setLoading(false);
   }, 1000);
+
+  const liveClasses = useSelector(selectLiveClasses);
   return (
     <>
       <Grid>
         <LiveClassFilterCard  selectedBranchId={selectedBranchId} />
         <LiveClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setRefetch}/>
         {loading ? (
-          <ClassSkeleton />
+          <ClassSkeleton liveClasses={liveClasses}/>
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
             <LiveClassCard refetch={refetch} setRefetch={setRefetch}/>

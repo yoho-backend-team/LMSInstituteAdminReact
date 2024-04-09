@@ -1,10 +1,9 @@
 // material-ui
-import { Box, CardContent, CardHeader, Typography, TextField } from '@mui/material';
+import { Box, CardContent, CardHeader, TextField, Typography } from '@mui/material';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material/styles';
 import Avatar from 'components/mui/avatar';
 // ** React Imports
 import { useState } from 'react';
@@ -16,11 +15,11 @@ import { DataGrid } from '@mui/x-data-grid';
 // import { TextField } from '@mui/material';
 // import MenuItem from '@mui/material/MenuItem';
 // import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
+import CustomAvatar from 'components/mui/avatar';
+import { getLiveClassDetails } from 'features/class-management/live-classes/services/liveClassServices';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
-import { getLiveClassDetails } from 'features/class-management/live-classes/services/liveClassServices';
-import CustomAvatar from 'components/mui/avatar';
 import { getInitials } from 'utils/get-initials';
 
 const renderClient = (row) => {
@@ -44,7 +43,6 @@ const renderClient = (row) => {
 };
 
 const ViewLiveClass = () => {
-  const theme = useTheme();
   const dispatch = useDispatch();
   const location = useLocation();
   const liveClassId = location.state.id;
@@ -328,11 +326,17 @@ const ViewLiveClass = () => {
                   <Typography variant="h5" sx={{ color: 'grey.500' }}>
                     Class Type
                   </Typography>
-                  <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Typography variant="h4">{liveClassData?.data?.type}</Typography>
-                    <Typography variant="h5" sx={{ color: theme.palette.primary.main, ml: 1 }}>
-                      Visit Previous Class
-                    </Typography>
+                  </Box>
+                </Grid>
+
+                <Grid item>
+                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
+                    Class Link
+                  </Typography>
+                  <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Typography variant="h4">{liveClassData?.data?.class_link}</Typography>
                   </Box>
                 </Grid>
               </Grid>

@@ -22,7 +22,7 @@ import { deleteLiveClass } from '../services/liveClassServices';
 import { Link } from 'react-router-dom';
 import LiveClassDeleteModel from 'components/modal/DeleteModel';
 
-const LiveClassCard = ({refetch,setRefetch}) => {
+const LiveClassCard = ({ refetch, setRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -34,23 +34,23 @@ const LiveClassCard = ({refetch,setRefetch}) => {
   const dispatch = useDispatch();
   console.log(liveClasses);
 
- // Memoize the handleDelete function to prevent unnecessary re-renders
- const handleDelete = useCallback((itemId) => {
-  setSelectedLiveclassDeleteId(itemId);
-  setLiveclassDeleteModelOpen(true);
-}, []);
+  // Memoize the handleDelete function to prevent unnecessary re-renders
+  const handleDelete = useCallback((itemId) => {
+    setSelectedLiveclassDeleteId(itemId);
+    setLiveclassDeleteModelOpen(true);
+  }, []);
 
-// Handle branch deletion
-const handleLiveclassDelete = async () => {
-  const data = { class_id: selectedLiveclassDeleteId };
-  const result = await deleteLiveClass(data);
-  if (result.success) {
-    toast.success(result.message);
-    setRefetch((state) => !state);
-  } else {
-    toast.error(result.message);
-  }
-};
+  // Handle branch deletion
+  const handleLiveclassDelete = async () => {
+    const data = { class_id: selectedLiveclassDeleteId };
+    const result = await deleteLiveClass(data);
+    if (result.success) {
+      toast.success(result.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   useEffect(() => {
     const data = {
@@ -58,7 +58,7 @@ const handleLiveclassDelete = async () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllLiveClasses(data));
-  }, [dispatch, selectedBranchId,refetch]);
+  }, [dispatch, selectedBranchId, refetch]);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -67,10 +67,7 @@ const handleLiveclassDelete = async () => {
     setEditModalOpen(true);
   };
 
-  const handleCopyLink = (index) => {
-    console.log(`Link copied for card at index ${index}`);
-    toast.success('Link copied to clipboard');
-  };
+
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
     const date = new Date(timestamp);
@@ -90,6 +87,12 @@ const handleLiveclassDelete = async () => {
     return hours + ':' + minutes + ' ' + meridiem;
   }
   console.log(selectedClass);
+
+  const handleCopyText = (text) => {
+    navigator.clipboard.writeText(text);
+    console.log(`Link copied for card at index ${text}`);
+    toast.success('Link copied to clipboard');
+  };
 
   return (
     <>
@@ -135,6 +138,7 @@ const handleLiveclassDelete = async () => {
                     })}
                   </AvatarGroup>
                 </Grid>
+
                 <Grid item justifyContent="center" display="flex">
                   <Typography sx={{ fontWeight: '500' }}>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
                 </Grid>
@@ -152,7 +156,7 @@ const handleLiveclassDelete = async () => {
 
                 <Grid sx={{ mb: 1 }}>
                   <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                    <IconButton onClick={() => handleCopyLink(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
+                    <IconButton onClick={() => handleCopyText(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
                       <FileCopyIcon />
                     </IconButton>
                     <Typography>{card?.class_link}</Typography>
@@ -221,12 +225,12 @@ const handleLiveclassDelete = async () => {
           setRefetch={setRefetch}
         />
         <LiveClassDeleteModel
-        open={liveclassDeleteModelOpen}
-        setOpen={setLiveclassDeleteModelOpen}
-        description="Are you sure you want to delete this Live Class? "
-        title="Delete"
-        handleSubmit={handleLiveclassDelete}
-      />
+          open={liveclassDeleteModelOpen}
+          setOpen={setLiveclassDeleteModelOpen}
+          description="Are you sure you want to delete this Live Class? "
+          title="Delete"
+          handleSubmit={handleLiveclassDelete}
+        />
       </Grid>
       <Grid container justifyContent="flex-end" mt={2}>
         <div className="demo-space-y">
