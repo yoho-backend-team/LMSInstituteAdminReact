@@ -6,6 +6,7 @@ import { default as DeleteDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { useState } from 'react';
 import CourseNotesView from './CourseNotesView';
+import PropTypes from 'prop-types';
 
 const Notes = ({ notes }) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -56,9 +57,6 @@ const Notes = ({ notes }) => {
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
               {row.title}
             </Typography>
-            {/* <Typography noWrap variant="caption">
-              {row.description}
-            </Typography> */}
           </Box>
         );
       }
@@ -89,7 +87,6 @@ const Notes = ({ notes }) => {
   
   ];
 
-  // ** State
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
 
   return (
@@ -114,4 +111,7 @@ const Notes = ({ notes }) => {
   );
 };
 
+Notes.propTypes = {
+  notes: PropTypes.any
+};
 export default Notes;

@@ -1,18 +1,14 @@
 import { useMemo } from 'react';
 import * as Yup from 'yup';
-// form
+import PropTypes from 'prop-types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-// @mui
-
 import { Card, Grid, Stack } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
-
-// components
 import FormProvider from 'features/course-management/courses-page/course-add-page/components/FormProvider';
 import CoursePdfInput from './CoursePdfInput';
 
-export default function CourseValidate({  setCourseSyllabus }) {
+export default function CourseValidate({ setCourseSyllabus }) {
   const NewProductSchema = Yup.object().shape({
     images: Yup.array().min(1, 'Images is required')
   });
@@ -30,7 +26,7 @@ export default function CourseValidate({  setCourseSyllabus }) {
     defaultValues
   });
 
-  const { reset,  handleSubmit, watch } = methods;
+  const { reset, handleSubmit, watch } = methods;
 
   const values = watch();
 
@@ -44,40 +40,6 @@ export default function CourseValidate({  setCourseSyllabus }) {
       console.error(error);
     }
   };
-
-  // const handleDropCourseLogo = useCallback(
-  //   (acceptedFiles) => {
-  //     const file = acceptedFiles[0];
-
-  //     if (file) {
-  //       setValue(
-  //         'course_logo',
-  //         Object.assign(file, {
-  //           preview: URL.createObjectURL(file)
-  //         })
-  //       );
-  //       setCourseTemplate(file);
-  //     }
-  //   },
-  //   [setValue]
-  // );
-
-  // const handleDropCourseTemplate = useCallback(
-  //   (acceptedFiles) => {
-  //     const file = acceptedFiles[0];
-
-  //     if (file) {
-  //       setValue(
-  //         'course_template',
-  //         Object.assign(file, {
-  //           preview: URL.createObjectURL(file)
-  //         })
-  //       );
-  //       setCourseLogo(file);
-  //     }
-  //   },
-  //   [setValue]
-  // );
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -97,3 +59,6 @@ export default function CourseValidate({  setCourseSyllabus }) {
   );
 }
 
+CourseValidate.propTypes = {
+  setCourseSyllabus: PropTypes.any
+};

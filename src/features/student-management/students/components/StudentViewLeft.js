@@ -1,4 +1,3 @@
-// ** MUI Components
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -6,8 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -19,9 +18,10 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-
 const UserViewLeft = ({ student }) => {
-  const imageUrl = student?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.image}` : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+  const imageUrl = student?.image
+    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.image}`
+    : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   return (
     <Card>
       <CardMedia
@@ -89,4 +89,7 @@ const UserViewLeft = ({ student }) => {
   );
 };
 
+UserViewLeft.propTypes = {
+  student: PropTypes.any
+};
 export default UserViewLeft;

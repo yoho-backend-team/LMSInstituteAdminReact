@@ -1,13 +1,12 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
 import { TextField } from '@mui/material';
 import { useState, useCallback } from 'react';
 import CategoryAddModal from './CategoryAddModal';
 import { useDispatch } from 'react-redux';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
+import PropTypes from 'prop-types';
 
 const CategoryCardHeader = (props) => {
   // ** Props
@@ -26,7 +25,7 @@ const CategoryCardHeader = (props) => {
       const searchInput = e.target.value;
       dispatch(getAllCourseCategories({ search: searchInput }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
+
     },
     [dispatch]
   );
@@ -69,6 +68,10 @@ const CategoryCardHeader = (props) => {
       <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose} setCategoryRefetch={setCategoryRefetch} />
     </>
   );
+};
+
+CategoryCardHeader.propTypes = {
+  setCategoryRefetch: PropTypes.any
 };
 
 export default CategoryCardHeader;

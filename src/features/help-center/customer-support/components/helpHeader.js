@@ -8,6 +8,7 @@ import { styled } from '@mui/material/styles';
 import IconifyIcon from 'components/icon';
 import CustomAutocomplete from 'components/mui/autocomplete';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const Autocomplete = styled(CustomAutocomplete)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
@@ -95,4 +96,7 @@ const HelpHeader = ({ allArticles }) => {
   );
 };
 
+HelpHeader.propTypes = {
+  allArticles: PropTypes.any
+};
 export default HelpHeader;

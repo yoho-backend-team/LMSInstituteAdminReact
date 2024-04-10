@@ -11,6 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../../services/courseCategoryServices';
+import PropTypes from 'prop-types';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
@@ -210,6 +211,13 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       </Dialog>
     </div>
   );
+};
+
+CategoryEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  setCategoryRefetch: PropTypes.any,
+  category: PropTypes.any
 };
 
 export default CategoryEditModal;

@@ -1,8 +1,5 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-// ** Icon Import
-// ** Custom Component Import
 
 const SubscriptionHeader = () => {
   return (

@@ -1,20 +1,17 @@
-// ** React Imports
 import { useEffect, useState } from 'react';
-// ** MUI Imports
 import TabContext from '@mui/lab/TabContext';
 import MuiTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Demo Components Imports
 import TeacherAttendance from './StudentAttendance';
 import UserViewAccount from './StudentViewAccount';
 import UserViewConnection from './StudentViewConnection';
 import UserViewSecurity from './StudentViewSecurity';
 import UserViewBilling from './StudentClass';
+import PropTypes from 'prop-types';
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
@@ -97,6 +94,11 @@ const UserViewRight = ({ tab, student }) => {
       </Box>
     </TabContext>
   );
+};
+
+UserViewRight.propTypes = {
+  tab: PropTypes.any,
+  student: PropTypes.any,
 };
 
 export default UserViewRight;

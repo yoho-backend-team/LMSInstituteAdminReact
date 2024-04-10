@@ -11,6 +11,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
+import PropTypes from 'prop-types';
 
 const CategoryFilter = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
@@ -49,9 +50,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    // value={value}
                     onChange={(e, newValue) => {
-                      // const courseId = newValue?.map((item) => item?.course_id);
                       const data = {
                         course_id: newValue.course_id,
                         branch_id: selectedBranchId
@@ -72,4 +71,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
   );
 };
 
+CategoryFilter.propTypes = {
+  selectedBranchId: PropTypes.any
+};
 export default CategoryFilter;
