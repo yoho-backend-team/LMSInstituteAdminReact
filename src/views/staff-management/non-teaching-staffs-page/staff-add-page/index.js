@@ -1,29 +1,23 @@
-// ** React Imports
-import MenuItem from '@mui/material/MenuItem';
-import { Fragment, forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-// ** Styled Components
 import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { addNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -117,8 +111,6 @@ const StepperLinearWithValidation = () => {
     setActiveBranches(result.data.data);
   };
 
-  // ** Hooks
-
   const {
     reset: personalReset,
     control: personalControl,
@@ -130,7 +122,6 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(personalSchema)
   });
 
-  // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -157,14 +148,11 @@ const StepperLinearWithValidation = () => {
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
     var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
     var day = ('0' + originalDate.getDate()).slice(-2);
 
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
 
     return formattedDateString;

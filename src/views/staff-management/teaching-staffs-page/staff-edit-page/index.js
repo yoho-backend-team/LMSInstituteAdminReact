@@ -1,7 +1,5 @@
-// ** React Imports
 import MenuItem from '@mui/material/MenuItem';
 import { forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -12,18 +10,13 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
-// ** Styled Components
-
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
@@ -138,8 +131,6 @@ const StepperLinearWithValidation = () => {
     setActiveCourse(result.data.data);
   };
 
-  // ** Hooks
-
   const {
     control: personalControl,
     handleSubmit: handlePersonalSubmit,
@@ -151,14 +142,11 @@ const StepperLinearWithValidation = () => {
   });
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
     var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
     var day = ('0' + originalDate.getDate()).slice(-2);
 
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
 
     return formattedDateString;
@@ -276,9 +264,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={12}>
             <Typography sx={{ color: 'text.disabled', mb: 2 }}>Update Profile Picture</Typography>
-            {/* <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload here
-                </Typography> */}
+
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {!logo && (
                 <ImgStyled
@@ -337,7 +323,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.email}
                   label="Email"
                   onChange={onChange}
@@ -358,23 +343,18 @@ const StepperLinearWithValidation = () => {
               render={({ field: { value } }) => (
                 <DatePicker
                   id="issue-date"
-                  // dateFormat={'dd/MM/yyyy'}
                   value={value}
                   selected={value}
-                  // defaultValue={staffData?.dob}
                   onChange={(date) => {
                     setValue('date_of_birth', date);
-                    // setSelectedDate(date);
                   }}
                   customInput={
                     <CustomInput
                       label="Date Of Birth"
                       error={Boolean(personalErrors['date_of_birth'])}
                       aria-describedby="stepper-linear-personal-date_of_birth"
-                    // helperText={personalErrors?.dob}
                     />
                   }
-                // onChange={onChange}
                 />
               )}
             />
@@ -388,7 +368,6 @@ const StepperLinearWithValidation = () => {
                 <CustomTextField
                   select
                   fullWidth
-                  // value={value}
                   onChange={onChange}
                   defaultValue={staffData?.gender}
                   label="Gender"
@@ -404,71 +383,6 @@ const StepperLinearWithValidation = () => {
               )}
             />
           </Grid>
-
-          {/* <Grid item xs={12} sm={6}>
-            <Autocomplete
-              multiple
-              disableCloseOnSelect
-              id="select-multiple-chip"
-              options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
-              getOptionLabel={(option) => option.course_name}
-              value={selectedCourses}
-              onChange={(e, newValue) => {
-                if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                  setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
-                } else {
-                  setSelectedCourses(newValue);
-                  setValue('course', newValue);
-                }
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  fullWidth
-                  label="Courses"
-                  InputProps={{
-                    ...params.InputProps,
-                    style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                  }}
-                  error={personalErrors.course && selectedCourses.length === 0} // Updated error condition
-                  aria-describedby="stepper-linear-personal-official_email"
-                  helperText={personalErrors.course && selectedCourses.length === 0 ? personalErrors.course.message : ''}
-                />
-              )}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option.course_name}
-                </li>
-              )}
-              renderTags={(value) => (
-                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                  {value.map((option, index) => (
-                    <CustomChip
-                      key={option.course_id}
-                      label={option.course_name}
-                      onDelete={() => {
-                        const updatedValue = [...value];
-                        updatedValue.splice(index, 1);
-                        setSelectedCourses(updatedValue);
-                        setValue('course', updatedValue);
-                      }}
-                      color="primary"
-                      sx={{ m: 0.75 }}
-                    />
-                  ))}
-                </div>
-              )}
-              isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-              selectAllText="Select All"
-              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-            />
-          </Grid> */}
 
           <Grid item xs={12} sm={6}>
             <Controller
@@ -550,7 +464,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.designation}
                   label="designation"
                   onChange={onChange}
@@ -569,7 +482,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.education_qualification}
                   label="Qualification"
                   onChange={onChange}
@@ -588,7 +500,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.state}
                   label="State"
                   onChange={onChange}
@@ -607,7 +518,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.city}
                   label="City"
                   onChange={onChange}
@@ -626,7 +536,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.pin_code}
                   label="Pin Code"
                   type="number"
@@ -647,7 +556,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.address_line_1}
                   label="Address Line One"
                   onChange={onChange}
@@ -667,7 +575,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.address_line_2}
                   label="Address Line Two"
                   onChange={onChange}
@@ -688,7 +595,6 @@ const StepperLinearWithValidation = () => {
                 <CustomTextField
                   fullWidth
                   type="number"
-                  // value={value}
                   defaultValue={staffData?.phone_number}
                   label="Phone Number"
                   onChange={onChange}
@@ -711,7 +617,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.alternate_number}
                   type="number"
                   label="Alt Phone Number"
@@ -736,7 +641,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.users?.username}
                   label="Username"
                   onChange={onChange}

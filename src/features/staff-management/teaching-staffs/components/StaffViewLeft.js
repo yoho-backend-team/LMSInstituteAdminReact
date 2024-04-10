@@ -1,4 +1,3 @@
-// ** MUI Components
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -6,8 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -20,7 +19,10 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }));
 
 const UserViewLeft = ({ staff }) => {
-  const imageUrl = staff?.teachingStaff?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staff.teachingStaff.image}` : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+  const imageUrl = staff?.teachingStaff?.image
+    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staff.teachingStaff.image}`
+    : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+
   return (
     <Card>
       <CardMedia
@@ -64,13 +66,9 @@ const UserViewLeft = ({ staff }) => {
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
                 {staff?.teachingStaff?.staff_name}
               </Typography>
-              {/* <Typography variant="h5" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                {formattedDate(staff?.teachingStaff?.created_at)}
-              </Typography> */}
             </Box>
-            
           </Box>
-          <Button color={staff?.is_active ==='1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={staff?.is_active === '1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
             {staff?.teachingStaff?.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
@@ -78,6 +76,10 @@ const UserViewLeft = ({ staff }) => {
       </CardContent>
     </Card>
   );
+};
+
+UserViewLeft.propTypes = {
+  staff: PropTypes.any
 };
 
 export default UserViewLeft;
