@@ -60,34 +60,38 @@ const UserViewAccount = ({ id }) => {
           />
           <CardContent>
             <Timeline>
-              {activityLog?.map((item, index) => (
-                <TimelineItem key={index}>
-                  <TimelineSeparator>
-                    <TimelineDot color="warning" />
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important` }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                      }}
-                    >
-                      <Typography variant="h6" sx={{ mr: 2 }}>
-                        {item.title}
+              {Array.isArray(activityLog) && activityLog.length > 0 ? (
+                activityLog.map((item, index) => (
+                  <TimelineItem key={index}>
+                    <TimelineSeparator>
+                      <TimelineDot color="warning" />
+                      <TimelineConnector />
+                    </TimelineSeparator>
+                    <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important` }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Typography variant="h6" sx={{ mr: 2 }}>
+                          {item.title}
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                          Today
+                        </Typography>
+                      </Box>
+                      <Typography variant="body2" sx={{ mb: 3 }}>
+                        {item.description}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        Today
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" sx={{ mb: 3 }}>
-                      {item.description}
-                    </Typography>
-                  </TimelineContent>
-                </TimelineItem>
-              ))}
+                    </TimelineContent>
+                  </TimelineItem>
+                ))
+              ) : (
+                <Typography>No activity log available.</Typography>
+              )}
             </Timeline>
           </CardContent>
         </Card>
