@@ -7,11 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import { PDFViewer } from 'react-view-pdf';
+import PropTypes from 'prop-types';
 
 const CourseStudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${StudyMaterials.document} `);
-
+ 
   return (
     <div>
       <Dialog
@@ -20,7 +20,6 @@ const CourseStudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -83,4 +82,9 @@ const CourseStudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   );
 };
 
+CourseStudyMaterialView.propTypes = {
+  open: PropTypes.any,
+  handleViewClose: PropTypes.any,
+  StudyMaterials: PropTypes.any
+};
 export default CourseStudyMaterialView;

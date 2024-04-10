@@ -1,6 +1,4 @@
-// material-ui
 import { Grid } from '@mui/material';
-// project imports
 import SalaryTable from 'features/payment-management/salaries/components/SalaryTable';
 
 const Salary = () => {

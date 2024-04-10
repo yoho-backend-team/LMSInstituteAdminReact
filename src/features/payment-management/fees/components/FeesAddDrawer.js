@@ -1,17 +1,12 @@
-// ** React Imports
 import { forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
 import { Button, Grid, Typography, MenuItem } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-// import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
@@ -24,6 +19,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFee } from '../services/studentFeeServices';
+import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -48,14 +44,12 @@ const defaultValues = {
   batch: null,
   student: '',
   payment_date: new Date()
-  // transaction_id: Number(''),
-  // paidAmount: Number('')
 };
 
 const FeesAddDrawer = (props) => {
   // ** Props
   const { open, toggle, setRefetch } = props;
-  // ** State
+
   const [inputValue, setInputValue] = useState('');
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
@@ -66,8 +60,6 @@ const FeesAddDrawer = (props) => {
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  // const [activeStudents, setActiveStudents] = useState([]);
-
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
@@ -98,8 +90,6 @@ const FeesAddDrawer = (props) => {
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
-
-    // Fetch students whenever active batches change
     result.data.data.forEach((batch) => {
       getStudentsByBatch(batch.batch_id);
     });
@@ -108,7 +98,7 @@ const FeesAddDrawer = (props) => {
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudents(data);
-    setStudents(result.data.data); // Assuming result.data contains the list of students
+    setStudents(result.data.data);
   };
 
   const {
@@ -124,16 +114,11 @@ const FeesAddDrawer = (props) => {
   });
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); 
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -163,11 +148,10 @@ const FeesAddDrawer = (props) => {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -314,7 +298,7 @@ const FeesAddDrawer = (props) => {
                       setValue('batch', newValue);
                       getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={field.value} // Set the selected value directly from the field value
+                    value={field.value}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -445,4 +429,9 @@ const FeesAddDrawer = (props) => {
   );
 };
 
+FeesAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any,
+};
 export default FeesAddDrawer;

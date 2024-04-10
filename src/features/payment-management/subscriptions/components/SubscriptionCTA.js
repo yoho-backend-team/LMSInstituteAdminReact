@@ -1,10 +1,8 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-// ** Util Import
 import { hexToRGBA } from 'utils/hex-to-rgba';
 
 // ** Styled Components

@@ -4,11 +4,9 @@ import { useEffect } from 'react';
 import UserViewLeft from '../../../../features/student-management/students/components/StudentViewLeft';
 import UserViewRight from '../../../../features/student-management/students/components/StudentViewRight';
 import { studentById } from 'features/student-management/students/services/studentService';
-// import StudentSkeleton from 'components/cards/Skeleton/StudentSkeleton';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 const UserView = () => {
-  // const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState({});
   const location = useLocation();
   const studentID = location?.state?.id;
@@ -18,14 +16,11 @@ const UserView = () => {
   }, [studentID]);
 
   const getStudentData = async (id) => {
-    // setLoading(true);
     const data = { student_id: id };
     const result = await studentById(data);
     if (result.success) {
       setStudent(result.data);
-      // setLoading(false);
     }
-    // setLoading(false);
   };
   console.log(student);
 

@@ -1,14 +1,10 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
+import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-// ** Redux Imports
-import { Grid } from '@mui/material';
-// ** FullCalendar & App Components Imports
 import Calendar from 'features/calender/components/Calendar';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import CalendarWrapper from 'styles/libs/fullcalendar';
-// ** Actions
 
 const calendarsColor = {
   present: 'success',
@@ -58,5 +54,7 @@ const AppCalendar = ({ attendance }) => {
     </Grid>
   );
 };
-
+AppCalendar.propTypes = {
+  attendance: PropTypes.any
+};
 export default AppCalendar;

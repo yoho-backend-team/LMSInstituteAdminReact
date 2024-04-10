@@ -1,6 +1,3 @@
-// ** React Imports
-import { forwardRef, useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -9,33 +6,28 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Third Party Imports
-import format from 'date-fns/format';
-// ** Utils Import
+import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
-// ** Custom Components Imports
+
 import { TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import MenuItem from '@mui/material/MenuItem';
+import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
 import SalariesDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
-import { Link } from 'react-router-dom';
-import SalaryAddDrawer from './SalaryAddDrawer';
-import SalaryCardHeader from './SalaryCardHeader';
-import SalaryEditDrawer from './SalaryEditDrawer';
-// ** Styled Components
-// import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-import MenuItem from '@mui/material/MenuItem';
-import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
 import { useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { selectTeachingStaffSalaries,selectLoading } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
+import { selectLoading, selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
 import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
 import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import SalaryAddDrawer from './SalaryAddDrawer';
+import SalaryCardHeader from './SalaryCardHeader';
+import SalaryEditDrawer from './SalaryEditDrawer';
 import SalaryViewDrawer from './SalaryViewDrawer';
 
 // ** Styled component for the link in the dataTable
@@ -68,18 +60,6 @@ const userStatusObj = {
   refund: 'secondary'
 };
 
-/* eslint-disable */
-const CustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
-  const value = `${startDate}${endDate !== null ? endDate : ''}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
-
-/* eslint-enable */
 const SalaryTable = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState([]);
@@ -109,10 +89,8 @@ const SalaryTable = () => {
 
   const [selectedSalariesDeleteId, setSelectedSalariesDeleteId] = useState(null);
 
-
   const [statusValue, setStatusValue] = useState('');
   const [staffValue, setStaffValue] = useState('');
-
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -130,7 +108,6 @@ const SalaryTable = () => {
     setSelectedRows(rowData);
   };
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedSalariesDeleteId(itemId);
     setSalariesDeleteModelOpen(true);
@@ -237,11 +214,6 @@ const SalaryTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* <Tooltip title="View">
-            <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon="tabler:eye" />
-            </IconButton>
-          </Tooltip> */}
           <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -252,7 +224,7 @@ const SalaryTable = () => {
                 menuItemProps: {
                   onClick: () => {
                     handleRowClick(row);
-                    toggleSalaryViewDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                    toggleSalaryViewDrawer();
                   }
                 }
               },
@@ -263,7 +235,7 @@ const SalaryTable = () => {
                 menuItemProps: {
                   onClick: () => {
                     handleRowClick(row);
-                    toggleEditUserDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                    toggleEditUserDrawer();
                   }
                 }
               },
@@ -272,7 +244,6 @@ const SalaryTable = () => {
                 icon: <Icon icon="tabler:download" fontSize={20} />
               },
               {
-                // to: `/apps/invoice/delete/${row.id}`,
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
@@ -285,73 +256,6 @@ const SalaryTable = () => {
       )
     }
   ];
-
-  // const TeachingStaffSalariesdummyData = [
-  //   {
-  //     id: 1,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 100,
-  //     PaymentDate: '2025-01-01',
-  //     balance: 55,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 2,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'arunbalaji.com',
-  //     total: 200,
-  //     PaymentDate: '2000-01-01',
-  //     balance: 50,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 3,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 300,
-  //     PaymentDate: '25-01-01',
-  //     balance: 40,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 4,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 40,
-  //     PaymentDate: '202-01-01',
-  //     balance: 30,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 5,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 50,
-  //     PaymentDate: '20-01-01',
-  //     balance: 0,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   }
-  // ];
 
   return (
     <DatePickerWrapper>
@@ -404,7 +308,6 @@ const SalaryTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                // rows={TeachingStaffSalaries}
                 rows={TeachingStaffSalaries}
                 columns={columns}
                 disableRowSelectionOnClick

@@ -1,6 +1,4 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
+import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,33 +8,23 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Icon Imports
+import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 import Icon from 'components/icon';
-// ** Third Party Imports
-// ** Utils Import
-// ** Custom Components Imports
-import { TextField } from '@mui/material';
+import RefundDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
-import { useCallback } from 'react';
-import { Link } from 'react-router-dom';
-
-import RefundAddDrawer from './RefundAddDrawer';
-import RefundCardHeader from './RefundCardHeader';
-// ** Styled Components
-import FeesTableSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
-import RefundDeleteModel from 'components/modal/DeleteModel';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { selectStudentFeeRefunds, selectLoading } from '../redux/studentFeeRefundSelectors';
+import { selectLoading, selectStudentFeeRefunds } from '../redux/studentFeeRefundSelectors';
 import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
 import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
-// import RefundEditDrawer from './RefundEditDrawer';
-
+import RefundAddDrawer from './RefundAddDrawer';
+import RefundCardHeader from './RefundCardHeader';
 import RefundViewDrawer from './RefundViewDrawer';
 
 // ** Styled component for the link in the dataTable
@@ -48,7 +36,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 
 const defaultColumns = [
   {
-    // flex: 0.1,
     minWidth: 180,
     field: 'refundId',
     headerName: 'Refund ID',
@@ -59,7 +46,6 @@ const defaultColumns = [
     )
   },
   {
-    // flex: 0.3,
     minWidth: 180,
     field: 'studentId',
     headerName: 'Student ID',
@@ -70,7 +56,6 @@ const defaultColumns = [
     )
   },
   {
-    // flex: 0.35,
     minWidth: 200,
     field: 'studentInfo',
     headerName: 'Student Info',
@@ -92,21 +77,18 @@ const defaultColumns = [
     }
   },
   {
-    // flex: 0.2,
     minWidth: 120,
     field: 'paidAmount',
     headerName: 'Paid Amount',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.paid_amount}</Typography>
   },
   {
-    // flex: 0.15,
     minWidth: 150,
     field: 'paymentDate',
     headerName: 'Payment Date',
     renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.payment_date}</Typography>
   },
   {
-    // flex: 0.2,
     minWidth: 150,
     field: 'status',
     headerName: 'Status',
@@ -124,10 +106,8 @@ const defaultColumns = [
   }
 ];
 
-/* eslint-enable */
 const RefundTable = () => {
   // ** State
-
   const [selectedRows, setSelectedRows] = useState([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -160,7 +140,7 @@ const RefundTable = () => {
   };
 
   const toggleRefundViewDrawer = () => {
-    setRefundViewUserOpen(!refundViewOpen); // This line toggles the editUserOpen state
+    setRefundViewUserOpen(!refundViewOpen);
     console.log('Toggle drawer');
   };
 
@@ -173,10 +153,8 @@ const RefundTable = () => {
     setRefundDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleRefundDelete = async () => {
     const data = { refund_id: selectedRefundDeleteId };
-    // const data = { id: selectedRefundDeleteId };
     const result = await deleteStudentFeeRefund(data);
     if (result.success) {
       toast.success(result.message);
@@ -189,7 +167,6 @@ const RefundTable = () => {
   const columns = [
     ...defaultColumns,
     {
-      // flex: 0.1,
       minWidth: 140,
       sortable: false,
       field: 'actions',
@@ -200,25 +177,13 @@ const RefundTable = () => {
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
-              // {
-              //   text: 'Download',
-              //   icon: <Icon icon="tabler:download" fontSize={20} />
-              // },
-              // {
-              //   text: 'Edit',
-              //   to: `/apps/invoice/edit/${row.id}`,
-              //   icon: <Icon icon="tabler:edit" fontSize={20} />,
-              //   menuItemProps: { onClick: toggleEditUserDrawer }
-              // },
               {
                 text: 'View',
-                // to: `/apps/invoice/view/${row.id}`,
                 icon: <Icon icon="tabler:eye" />,
                 menuItemProps: { onClick: toggleRefundViewDrawer }
               },
               {
                 text: 'Delete',
-                // to: `/apps/invoice/delete/${row.id}`,
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
@@ -233,63 +198,6 @@ const RefundTable = () => {
     }
   ];
 
-  // const store = [
-  //   {
-  //     id: 1,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 100,
-  //     issuedDate: '2025-01-01',
-  //     balance: 55,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 2,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'arunbalaji.com',
-  //     total: 200,
-  //     issuedDate: '2000-01-01',
-  //     balance: 50,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 3,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 300,
-  //     issuedDate: '25-01-01',
-  //     balance: 40,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 4,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 40,
-  //     issuedDate: '202-01-01',
-  //     balance: 30,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 5,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 50,
-  //     issuedDate: '20-01-01',
-  //     balance: 0,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   }
-  // ];
   useEffect(() => {
     dispatch(
       getAllBatches({
@@ -354,7 +262,7 @@ const RefundTable = () => {
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
-                onRowClick={(params) => handleRowClick(params.row)} // Handle row click
+                onRowClick={(params) => handleRowClick(params.row)}
               />
             </Card>
           )}

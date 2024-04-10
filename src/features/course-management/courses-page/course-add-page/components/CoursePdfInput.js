@@ -1,18 +1,15 @@
-// ** React Imports
 import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Third Party Imports
 import Grid from '@mui/material/Grid';
 import { useDropzone } from 'react-dropzone';
+import PropTypes from 'prop-types';
 
 const CoursePdfInput = ({ setCourseSyllabus }) => {
-  // ** State
+
   const [files, setFiles] = useState([]);
-  // ** Hooks
+
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     accept: {
@@ -75,4 +72,7 @@ const CoursePdfInput = ({ setCourseSyllabus }) => {
   );
 };
 
+CoursePdfInput.propTypes = {
+  selectedBranchId: PropTypes.any
+};
 export default CoursePdfInput;

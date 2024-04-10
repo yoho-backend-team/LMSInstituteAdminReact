@@ -1,6 +1,7 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
 
 const CardData = (props) => {
   const { sx, stats, title } = props;
@@ -17,5 +18,9 @@ const CardData = (props) => {
     </Card>
   );
 };
-
+CardData.propTypes = {
+  sx: PropTypes.any,
+  stats: PropTypes.any,
+  title: PropTypes.any
+};
 export default CardData;

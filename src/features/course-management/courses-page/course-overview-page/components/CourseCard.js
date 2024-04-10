@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { updateCourseStatus } from '../../services/courseServices';
+import PropTypes from 'prop-types';
 
 const CourseCard = (props) => {
   const { sx, course, setCourseRefetch } = props;
@@ -170,5 +171,9 @@ const CourseCard = (props) => {
     </Grid>
   );
 };
-
+CourseCard.propTypes = {
+  course: PropTypes.any,
+  sx: PropTypes.any,
+  setCourseRefetch: PropTypes.any
+};
 export default CourseCard;

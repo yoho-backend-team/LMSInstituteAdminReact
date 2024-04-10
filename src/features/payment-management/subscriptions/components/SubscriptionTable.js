@@ -1,4 +1,3 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
@@ -8,11 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Custom Components Imports
 import CustomAvatar from 'components/mui/avatar';
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
 
 const SubscriptionTable = ({ data }) => {
   console.log(data);
@@ -135,6 +133,10 @@ const SubscriptionTable = ({ data }) => {
       </Box>
     </div>
   ) : null;
+};
+
+SubscriptionTable.propTypes = {
+  data: PropTypes.any
 };
 
 export default SubscriptionTable;

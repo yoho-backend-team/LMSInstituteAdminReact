@@ -1,17 +1,15 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const SubscriptionFooter = (props) => {
-  // ** Props
   const { data } = props;
   console.log('Data received in SubscriptionFooter:', data);
-  // ** Props
+
   const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -60,4 +58,7 @@ const SubscriptionFooter = (props) => {
   );
 };
 
+SubscriptionFooter.propTypes = {
+  data: PropTypes.any
+};
 export default SubscriptionFooter;

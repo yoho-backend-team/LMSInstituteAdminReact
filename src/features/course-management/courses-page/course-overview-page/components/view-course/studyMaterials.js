@@ -6,6 +6,7 @@ import Icon from 'components/icon';
 import { useState } from 'react';
 import OptionsMenu from 'components/option-menu';
 import CourseStudyMaterialView from './CourseStudyMaterialView';
+import PropTypes from 'prop-types';
 
 const StudyMaterials = ({ materials }) => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -56,9 +57,6 @@ const StudyMaterials = ({ materials }) => {
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
               {row.title}
             </Typography>
-            {/* <Typography noWrap variant="caption">
-              {row.description}
-            </Typography> */}
           </Box>
         );
       }
@@ -79,7 +77,6 @@ const StudyMaterials = ({ materials }) => {
       }
     },
     {
-      // flex: 0.4,
       minWidth: 180,
       sortable: false,
       field: 'actions',
@@ -111,6 +108,10 @@ const StudyMaterials = ({ materials }) => {
      <CourseStudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
     </Box>
   );
+};
+
+StudyMaterials.propTypes = {
+  materials: PropTypes.any
 };
 
 export default StudyMaterials;

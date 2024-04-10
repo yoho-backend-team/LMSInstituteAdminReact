@@ -2,35 +2,21 @@
 import { Avatar, Box, Card, Grid, Stack, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import StudentSkeleton from 'components/cards/Skeleton/StudentSkeleton';
+import CustomChip from 'components/mui/chip';
+import SocialsButton from 'features/student-management/students/components/SocialButton';
+import StudentFilter from 'features/student-management/students/components/studentFilterCard';
 import { selectLoading, selectStudents } from 'features/student-management/students/redux/studentSelectors';
 import { getAllStudents } from 'features/student-management/students/redux/studentThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import StudentFilter from 'features/student-management/students/components/studentFilterCard';
-import SocialsButton from 'features/student-management/students/components/SocialButton';
-import CustomChip from 'components/mui/chip';
-// import cssStyles from 'features/student-management/students/components/cssStyles';
-// import Image from 'features/student-management/students/components/image';
-// import SvgIconStyle from 'features/student-management/students/components/svgIconStyle';
-
-// const OverlayStyle = styled('div')(({ theme }) => ({
-//   ...cssStyles().bgBlur({ blur: 2, color: theme.palette.primary.main }),
-//   top: 0,
-//   zIndex: 8,
-//   content: "''",
-//   width: '100%',
-//   height: '100%',
-//   position: 'absolute'
-// }));
 
 const Students = () => {
   const dispatch = useDispatch();
   const Students = useSelector(selectStudents);
   const StudentsLoading = useSelector(selectLoading);
-  // const StudentsLoading = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log('students:',Students);
+  console.log('students:', Students);
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -40,10 +26,7 @@ const Students = () => {
   }, [dispatch, selectedBranchId]);
 
   const formattedAddress = (address) => {
-    // Remove punctuation and split into words
     const words = address.replace(/[^\w\s]/g, '').split(/\s+/);
-
-    // If the word count is more than 7, hide extra words
     if (words.length > 6) {
       return words.slice(0, 7).join(' ') + '...';
     } else {
@@ -71,20 +54,6 @@ const Students = () => {
                         <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
                           <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
                             <Box>
-                              {/* <SvgIconStyle
-                              src="https://minimal-assets-api.vercel.app/assets/icons/shape-avatar.svg"
-                              sx={{
-                                width: 144,
-                                height: 62,
-                                zIndex: 10,
-                                left: 0,
-                                right: 0,
-                                bottom: -26,
-                                mx: 'auto',
-                                position: 'absolute',
-                                color: 'background.paper'
-                              }}
-                            /> */}
                               <Avatar
                                 alt="image"
                                 src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.student?.image}`}
@@ -96,16 +65,8 @@ const Students = () => {
                                   right: 0,
                                   bottom: -32,
                                   mx: 'auto'
-
-                                  // position: 'absolute'
                                 }}
                               />
-                              {/* <OverlayStyle /> */}
-                              {/* <Image
-                              src="https://i.pinimg.com/originals/52/2c/1a/522c1a4289f2e2d0e29ed59071de9dce.jpg"
-                              alt="overlaystyle"
-                              ratio="16/9"
-                            /> */}
                             </Box>
 
                             <Typography variant="h3" sx={{ mt: 6 }}>
@@ -114,11 +75,11 @@ const Students = () => {
                             <CustomChip
                               rounded
                               variant="tonal"
-                              color={item?.student?.is_active === "1" ? 'success' : 'error'}
+                              color={item?.student?.is_active === '1' ? 'success' : 'error'}
                               skin="light"
                               label={item.student.email}
                               sx={{ mb: 1, mt: 1 }}
-                              size='x-small'
+                              size="x-small"
                             />
                             <Box sx={{ height: 20 }}>
                               <Typography
@@ -140,7 +101,7 @@ const Students = () => {
                             </Box>
 
                             <Stack alignItems="center">
-                              <SocialsButton initialColor sx={{ my:2.5 }} item={item} />
+                              <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
                             </Stack>
                           </Card>
                           <Box sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}></Box>

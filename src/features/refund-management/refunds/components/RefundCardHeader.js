@@ -1,32 +1,26 @@
-// ** MUI Imports
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
-import { TextField } from '@mui/material';
-import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
-import { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { getAllStudentFeeRefunds } from '../redux/studentFeeRefundThunks';
 
 const RefundCardHeader = (props) => {
-  const {toggle,selectedBranchId } = props;
+  const { toggle, selectedBranchId } = props;
+  const [searchValue, setSearchValue] = useState('');
 
-    // State for search value
-    const [searchValue, setSearchValue] = useState('');
+  const dispatch = useDispatch();
 
-    // Dispatch function
-    const dispatch = useDispatch();
-  
-    // Callback function to handle search
-    const handleSearch = useCallback(
-      (e) => {
-        const searchInput = e.target.value;
-        dispatch(getAllStudentFeeRefunds({ search: searchInput ,branch_id:selectedBranchId }));
-        setSearchValue(searchInput);
-        // Dispatch action to fetch branches with search input
-      },
-      [dispatch]
-    );
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentFeeRefunds({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+    },
+    [dispatch]
+  );
 
   return (
     <>
@@ -61,4 +55,8 @@ const RefundCardHeader = (props) => {
   );
 };
 
+RefundCardHeader.propTypes = {
+  toggle: PropTypes.any,
+  selectedBranchId: PropTypes.any
+};
 export default RefundCardHeader;

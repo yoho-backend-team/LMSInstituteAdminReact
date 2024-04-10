@@ -1,10 +1,8 @@
-// ** MUI Imports
 import MuiBox from '@mui/material/Box';
 import { styled, useTheme } from '@mui/material/styles';
-// ** Custom Icon Import
 import Icon from 'components/icon';
-// ** Hooks Imports
 import useBgColor from 'hooks/useBgColor';
+import PropTypes from 'prop-types';
 
 // Styled Box component
 const Box = styled(MuiBox)(() => ({
@@ -18,7 +16,6 @@ const Box = styled(MuiBox)(() => ({
 const StepperCustomDot = (props) => {
   // ** Props
   const { active, completed, error } = props;
-
   // ** Hooks
   const theme = useTheme();
   const bgColors = useBgColor();
@@ -42,4 +39,9 @@ const StepperCustomDot = (props) => {
   }
 };
 
+StepperCustomDot.propTypes = {
+  active: PropTypes.any,
+  completed: PropTypes.any,
+  error: PropTypes.any
+};
 export default StepperCustomDot;
