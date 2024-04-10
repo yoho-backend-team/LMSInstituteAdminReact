@@ -1,14 +1,12 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-// ** Custom Component Import
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
+import PropTypes from 'prop-types';
 
 const AllNotificationHeaderCard = (props) => {
-  // ** Props
   const { sx, icon, stats, title, subtitle, iconSize = 24, avatarSize = 38, avatarColor = 'primary' } = props;
 
   return (
@@ -29,6 +27,14 @@ const AllNotificationHeaderCard = (props) => {
       </CardContent>
     </Card>
   );
+};
+
+AllNotificationHeaderCard.propTypes = {
+  sx: PropTypes.object,
+  icon: PropTypes.any,
+  stats: PropTypes.any,
+  title: PropTypes.any,
+  subtitle: PropTypes.any
 };
 
 export default AllNotificationHeaderCard;

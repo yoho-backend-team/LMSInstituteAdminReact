@@ -1,22 +1,16 @@
-// ** React Imports
 import Grid from '@mui/material/Grid';
-import { useEffect, useState } from 'react';
 import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
-
-// ** Components Imports
+import StaffNotificationAddDrawer from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationAddDrawer';
 import StaffNotificationBodySection from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationBodySection';
 import StaffNotificationHeaderSection from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationHeaderSection';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { getAllStaffNotifications } from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationThunks';
-
-import StaffNotificationAddDrawer from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationAddDrawer';
 import StaffNotificationTableHeader from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationTableHeader';
-
 import {
   selectLoading,
   selectStaffNotifications
 } from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationSelectors';
+import { getAllStaffNotifications } from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationThunks';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const StaffNotification = () => {
   const dispatch = useDispatch();
@@ -28,7 +22,6 @@ const StaffNotification = () => {
 
   const [staffNotificationRefetch, setStaffNotificationRefetch] = useState(false);
 
-  // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId

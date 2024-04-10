@@ -1,18 +1,13 @@
-// ** React Imports
 import Grid from '@mui/material/Grid';
-import { useEffect, useState } from 'react';
-// ** Components Imports
 import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 import AllNotificationAddDrawer from 'features/notification-management/all-notifications/components/AllNotificationAddDrawer';
 import AllNotificationBodySection from 'features/notification-management/all-notifications/components/AllNotificationBodySection';
 import AllNotificationHeaderSection from 'features/notification-management/all-notifications/components/AllNotificationHeaderSection';
 import AllNotificationTableHeader from 'features/notification-management/all-notifications/components/AllNotificationTableHeader';
-
-import { useDispatch, useSelector } from 'react-redux';
-
-import { getAllNotifications } from 'features/notification-management/all-notifications/redux/allNotificationThunks';
-
 import { selectAllNotifications, selectLoading } from 'features/notification-management/all-notifications/redux/allNotificationSelectors';
+import { getAllNotifications } from 'features/notification-management/all-notifications/redux/allNotificationThunks';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AllNotification = () => {
   const dispatch = useDispatch();
@@ -22,7 +17,6 @@ const AllNotification = () => {
   console.log(selectedBranchId);
   const [allNotificationRefetch, setAllNotificationRefetch] = useState(false);
 
-  // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
@@ -49,7 +43,6 @@ const AllNotification = () => {
           <Grid item xs={12}>
             <AllNotificationBodySection
               allNotifications={allNotifications?.data}
-              // setLoading={setLoading}
               setAllNotificationRefetch={setAllNotificationRefetch}
               selectedBranchId={selectedBranchId}
             />

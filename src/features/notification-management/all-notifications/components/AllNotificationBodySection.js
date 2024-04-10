@@ -1,24 +1,16 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-// ** React Router Import
-// import { Link } from 'react-router-dom';
-// ** Custom Components Imports
-import toast from 'react-hot-toast';
-// import { resendNotification } from '../services/allNotificationServices';
-
 import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const AllNotificationBodySection = ({ allNotifications }) => {
   console.log(allNotifications);
 
-  // ** State
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const handleSubmit = async (id) => {
@@ -29,28 +21,21 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         throw new Error('Notification not found');
       }
 
-      // const { title, body } = selectedNotification.institute_notifications;
-
       const data = {
         id: id,
         notification_id: selectedNotification.notification_id // Include the notification_id field
-        // body: body,
-        // branch_id: selectedBranchId,
-        // title: title
       };
 
       const response = await resendStudentNotification(data);
 
       if (response.success) {
-        // Handle success
         toast.success(response.message);
       } else {
-        // Handle failure
         toast.error(response.message);
       }
     } catch (error) {
       console.error('Error in handleSubmit:', error);
-      // Handle error
+
       toast.error('Failed to resend notification');
     }
   };
@@ -152,6 +137,10 @@ const AllNotificationBodySection = ({ allNotifications }) => {
       />
     </Card>
   );
+};
+
+AllNotificationBodySection.propTypes = {
+  allNotifications: PropTypes.any
 };
 
 export default AllNotificationBodySection;
