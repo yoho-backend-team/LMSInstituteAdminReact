@@ -1,30 +1,22 @@
-// ** React Imports
-import MenuItem from '@mui/material/MenuItem';
-import { forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
-
+import { yupResolver } from '@hookform/resolvers/yup';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-// ** Styled Components
-import DatePicker from 'react-datepicker';
-import toast from 'react-hot-toast';
-import { updateNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
-import { useLocation } from 'react-router';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useNavigate } from 'react-router';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+import { updateNonTeachingStaff } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useLocation, useNavigate } from 'react-router';
+import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
   const navigate = useNavigate();
@@ -106,11 +98,8 @@ const StepperLinearWithValidation = () => {
       .required('Username is required')
   });
 
-  // ** Hooks
-
   const {
     control: personalControl,
-    // setValue,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors },
     setValue
@@ -120,14 +109,11 @@ const StepperLinearWithValidation = () => {
   });
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
 
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
 
     return formattedDateString;
@@ -180,7 +166,6 @@ const StepperLinearWithValidation = () => {
   };
   console.log(logo);
 
-  // Set form values when selectedBranch changes
   useEffect(() => {
     if (staffData) {
       setValue('id', staffId);
@@ -307,7 +292,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.email}
                   label="Email"
                   onChange={onChange}
@@ -342,7 +326,6 @@ const StepperLinearWithValidation = () => {
                       helperText={personalErrors?.dob?.message}
                     />
                   }
-                // onChange={onChange}
                 />
               )}
             />
@@ -381,7 +364,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.designation}
                   label="designation"
                   onChange={onChange}
@@ -399,7 +381,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.education_qualification}
                   label="Qualification"
                   onChange={onChange}
@@ -418,7 +399,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.state}
                   label="State"
                   onChange={onChange}
@@ -437,7 +417,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.city}
                   label="City"
                   onChange={onChange}
@@ -456,7 +435,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.pin_code}
                   label="Pin Code"
                   type="number"
@@ -477,7 +455,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.address_line_1}
                   label="Address Line One"
                   onChange={onChange}
@@ -497,7 +474,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.address_line_2}
                   label="Address Line Two"
                   onChange={onChange}
@@ -518,7 +494,6 @@ const StepperLinearWithValidation = () => {
                 <CustomTextField
                   fullWidth
                   type="number"
-                  // value={value}
                   defaultValue={staffData?.phone_number}
                   label="Phone Number"
                   onChange={onChange}
@@ -541,7 +516,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.alternate_number}
                   type="number"
                   label="Alt Phone Number"
@@ -566,7 +540,6 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  // value={value}
                   defaultValue={staffData?.users?.username}
                   label="Username"
                   onChange={onChange}
@@ -598,4 +571,5 @@ const StepperLinearWithValidation = () => {
     </Card>
   );
 };
+
 export default StepperLinearWithValidation;

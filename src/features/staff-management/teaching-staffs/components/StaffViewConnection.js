@@ -1,11 +1,9 @@
 import MuiTimeline from '@mui/lab/Timeline';
-import { useState,useEffect } from 'react';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
-// import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -13,28 +11,25 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
-// import Icon from 'components/icon';
-// ** Custom Components Imports
 import OptionsMenu from 'components/option-menu';
 import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
-// Styled Timeline component
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
     display: 'none'
   }
 });
 
-const UserViewConnection = ({id}) => {
-  // console.log('hhh',id);
-// const id=id
+const UserViewConnection = ({ id }) => {
   const [activityLog, setActivityLog] = useState([]);
-  
+
   useEffect(() => {
     getUserLog(id);
   }, [id]);
 
-  const getUserLog = async ( userId) => {
+  const getUserLog = async (userId) => {
     try {
       const data = {
         user_id: userId
@@ -51,8 +46,8 @@ const UserViewConnection = ({id}) => {
     }
   };
 
-  console.log('TeacheractivityLog:',activityLog);
-  
+  console.log('TeacheractivityLog:', activityLog);
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -68,7 +63,7 @@ const UserViewConnection = ({id}) => {
           />
           <CardContent>
             <Timeline>
-            {activityLog?.map((item, index) => (
+              {activityLog?.map((item, index) => (
                 <TimelineItem key={index}>
                   <TimelineSeparator>
                     <TimelineDot color="warning" />
@@ -96,13 +91,16 @@ const UserViewConnection = ({id}) => {
                   </TimelineContent>
                 </TimelineItem>
               ))}
-             
             </Timeline>
           </CardContent>
         </Card>
       </Grid>
     </Grid>
   );
+};
+
+UserViewConnection.propTypes = {
+  id: PropTypes.any
 };
 
 export default UserViewConnection;

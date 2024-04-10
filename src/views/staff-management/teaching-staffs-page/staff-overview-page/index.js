@@ -10,14 +10,15 @@ import Typography from '@mui/material/Typography';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import TeacherFilter from 'features/staff-management/teaching-staffs/components/TeacherFilterCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectTeachingStaffs, selectLoading } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+import { selectLoading, selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 const Teaching = () => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');

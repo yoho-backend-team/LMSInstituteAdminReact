@@ -1,10 +1,9 @@
-// ** MUI Imports
 import Grid from '@mui/material/Grid';
-import UserViewLeft from './StaffViewLeft';
-import UserViewRight from '../../../../views/staff-management/non-teaching-staffs-page/staff[id]-page/StaffViewRight';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import UserViewRight from '../../../../views/staff-management/non-teaching-staffs-page/staff[id]-page/StaffViewRight';
+import UserViewLeft from './StaffViewLeft';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -13,6 +12,7 @@ const useTimeout = (callback, delay) => {
     return () => clearTimeout(timeoutId);
   }, [callback, delay]);
 };
+
 const UserView = ({ tab, invoiceData }) => {
   const [loading, setLoading] = useState(true);
 
@@ -36,6 +36,11 @@ const UserView = ({ tab, invoiceData }) => {
       )}
     </>
   );
+};
+
+UserView.propTypes = {
+  tab: PropTypes.any,
+  invoiceData: PropTypes.any
 };
 
 export default UserView;

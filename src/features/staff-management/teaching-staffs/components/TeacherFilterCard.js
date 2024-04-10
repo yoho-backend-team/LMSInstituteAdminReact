@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-import { useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
@@ -8,12 +6,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 const TeacherFilter = (props) => {
   const { selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
@@ -39,7 +39,6 @@ const TeacherFilter = (props) => {
       const searchInput = e.target.value;
       setSearchValue(searchInput);
       dispatch(getAllTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'teaching' }));
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -103,6 +102,10 @@ const TeacherFilter = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+TeacherFilter.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default TeacherFilter;

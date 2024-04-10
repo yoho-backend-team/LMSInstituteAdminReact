@@ -1,22 +1,18 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
 import TabContext from '@mui/lab/TabContext';
 import MuiTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Demo Components Imports
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import TeacherAttendance from './StaffAttendance';
+import UserViewBilling from './StaffClass';
 import UserViewAccount from './StaffViewAccount';
 import UserViewConnection from './StaffViewConnection';
 import UserViewSecurity from './StaffViewSecurity';
-import UserViewBilling from './StaffClass';
 
-// ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
   '& svg': {
@@ -50,7 +46,6 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 }));
 
 const UserViewRight = ({ tab, staff, staffID, formattedDate, setRefetch }) => {
-  // ** State
   const [activeTab, setActiveTab] = useState('account');
   const handleChange = (event, value) => {
     setActiveTab(value);
@@ -60,7 +55,7 @@ const UserViewRight = ({ tab, staff, staffID, formattedDate, setRefetch }) => {
       setActiveTab(tab);
     }
   }, [tab]);
-  // console.log(staff);
+
   return (
     <TabContext value={activeTab}>
       <TabList
@@ -97,6 +92,14 @@ const UserViewRight = ({ tab, staff, staffID, formattedDate, setRefetch }) => {
       </Box>
     </TabContext>
   );
+};
+
+UserViewRight.propTypes = {
+  tab: PropTypes.any,
+  staff: PropTypes.any,
+  staffID: PropTypes.any,
+  formattedDate: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewRight;
