@@ -1,33 +1,22 @@
-// ** React Imports
-// import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Avatar, Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Avatar, Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
-
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-
+import * as yup from 'yup';
 import { updateStudentTicket } from '../services/studentTicketService';
 
 const TicketResolveDrawer = (props) => {
-  // ** Props
   const { open, toggle, ticket, setRefetch } = props;
-
-  // ** State
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
-  // console.log(selectedTicket);
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -73,14 +62,7 @@ const TicketResolveDrawer = (props) => {
       toggle();
       setRefetch();
     } else {
-      // let errorMessage = '';
-      // Object?.values(result.message)?.forEach((errors) => {
-      //   errors?.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
-      // toast.error(errorMessage.trim());
-      // toast.error(result.message);
+      toast.error(result.message);
     }
   };
 
@@ -178,4 +160,10 @@ const TicketResolveDrawer = (props) => {
   );
 };
 
+TicketResolveDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  ticket: PropTypes.any,
+  setRefetch: PropTypes.any
+};
 export default TicketResolveDrawer;

@@ -1,34 +1,22 @@
-// ** React Imports
-// import { useEffect, useState } from 'react';
-// ** MUI Imports
+import PropTypes from 'prop-types';
 import { Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
-// ** Icon Imports
-
 import Icon from 'components/icon';
 import { useSelector } from 'react-redux';
-
-// import { updateTicket } from '../services/ticketService';
-
 import { CreateTicket } from '../services/ticketService';
 
 const CreateTicketDrawer = (props) => {
-  // ** Props
+
   const { open, toggle, setRefetch } = props;
-
-  // ** State
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
-  // console.log(selectedTicket);
+
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -44,8 +32,6 @@ const CreateTicketDrawer = (props) => {
   const defaultValues = {
     query: ''
   };
-
-  // ** Hooks
 
   const {
     handleSubmit,
@@ -71,11 +57,11 @@ const CreateTicketDrawer = (props) => {
         query: data.query
       };
 
-      const result = await CreateTicket(inputData); // Call CreateTicket function
+      const result = await CreateTicket(inputData);
 
       if (result.success) {
         console.log('Ticket created successfully');
-        handleClose(); // Close the drawer
+        handleClose();
         setRefetch((state) => !state);
       } else {
         console.error('Failed to create ticket:', result.message);
@@ -116,8 +102,8 @@ const CreateTicketDrawer = (props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12}>
             <Controller
-              name="query" // Specify the name of the field
-              control={control} // Pass the control function from useForm
+              name="query" 
+              control={control} 
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -146,6 +132,12 @@ const CreateTicketDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+CreateTicketDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any,
 };
 
 export default CreateTicketDrawer;

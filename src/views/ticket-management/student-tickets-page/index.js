@@ -1,16 +1,9 @@
-// React Imports
-import { useState } from 'react';
-
-// MUI Imports
 import TabContext from '@mui/lab/TabContext';
+import CustomTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { Grid } from '@mui/material';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
-// Component Imports
-import CustomTabList from '@mui/lab/TabList';
-import { getAllStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketThunks';
-
-import { Grid } from '@mui/material';
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 import ClosedTicketCard from 'features/ticket-management/student/components/ClosedTicketCard';
 import OpenTicketCard from 'features/ticket-management/student/components/OpenTicketCard';
@@ -18,22 +11,20 @@ import TicketResolveDrawer from 'features/ticket-management/student/components/R
 import { selectStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketSelectors';
 import { getAllStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketThunks';
 import { selectLoading, selectStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketSelectors';
-import { useEffect } from 'react';
+import { getAllStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketThunks';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const StudentTicketsPage = () => {
   // States
-
   const [value, setValue] = useState('open');
   const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const studentOpenTickets = useSelector(selectStudentOpenTickets);
   const studentClosedTickets = useSelector(selectStudentClosedTickets);
   const studentLoading = useSelector(selectLoading);
-
   const [openResolveDrawer, setOpenResolveDrawer] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
-
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {

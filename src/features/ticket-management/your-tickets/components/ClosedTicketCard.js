@@ -2,6 +2,7 @@ import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
 import { Avatar, Box, Card, CardContent, Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
 
 const ClosedTicketCard = ({ ticket }) => {
   return (
@@ -54,4 +55,7 @@ const ClosedTicketCard = ({ ticket }) => {
   );
 };
 
+ClosedTicketCard.propTypes = {
+  ticket: PropTypes.any
+};
 export default ClosedTicketCard;
