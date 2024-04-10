@@ -221,7 +221,7 @@ const RefundAddDrawer = (props) => {
                       setValue('batch', newValue);
                       getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={field.value} // Set the selected value directly from the field value
+                    value={field.value}
                     renderInput={(params) => (
                       <TextField
                         {...params}
