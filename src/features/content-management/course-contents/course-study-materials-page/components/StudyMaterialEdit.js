@@ -221,8 +221,6 @@ const StudyMaterialEdit = (props) => {
   );
 };
 
-open, toggle, StudyMaterials, setRefetch;
-
 StudyMaterialEdit.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
