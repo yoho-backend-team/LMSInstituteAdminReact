@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useMemo } from 'react';
 import {
-  Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  FormControlLabel,
   Table,
-  TableContainer,
+  TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableBody,
-  FormControlLabel,
-  Checkbox,
-  Card,
-  CardHeader,
-  CardContent
+  Typography
 } from '@mui/material';
-import { getAllPermissionsByRoleId } from 'features/user-management/groups-page/services/groupService';
-import { useLocation } from 'react-router';
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
+import { getAllPermissionsByRoleId } from 'features/user-management/groups-page/services/groupService';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router';
 
 const GroupViewPage = () => {
   const [permissions, setPermissions] = useState([]);

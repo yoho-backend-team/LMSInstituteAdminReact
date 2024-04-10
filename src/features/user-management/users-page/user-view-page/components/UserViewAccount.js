@@ -12,7 +12,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import OptionsMenu from 'components/option-menu';
-import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { getUserActivityLog } from '../../services/userServices';
 
 const Timeline = styled(MuiTimeline)({
@@ -93,6 +94,10 @@ const UserViewAccount = ({ id }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserViewAccount.propTypes = {
+  id: PropTypes.any
 };
 
 export default UserViewAccount;

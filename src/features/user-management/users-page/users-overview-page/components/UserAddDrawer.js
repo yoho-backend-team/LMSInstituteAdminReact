@@ -1,22 +1,21 @@
-import { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
-import { Button, Grid, Typography } from '@mui/material';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import Icon from 'components/icon';
-import { TextField } from '@mui/material';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
+import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { addUser, checkUserName } from '../../services/userServices';
-import InputAdornment from '@mui/material/InputAdornment';
-
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -53,7 +52,7 @@ const SidebarAddUser = (props) => {
   const { open, toggle, groups } = props;
   const branches = useSelector((state) => state.auth.branches);
   const [inputValue, setInputValue] = useState('');
-  // const image = require('assets/images/avatar/1.png');
+
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
 
@@ -143,7 +142,6 @@ const SidebarAddUser = (props) => {
       const result = await addUser(bodyFormData);
 
       if (result.success) {
-        // setLoading((loading) => !loading);
         setError('');
         toggle();
         reset();
@@ -152,11 +150,10 @@ const SidebarAddUser = (props) => {
         let errorMessage = '';
         Object.values(result.message).forEach((errors) => {
           errors.forEach((error) => {
-            errorMessage += `${error}\n`; // Concatenate errors with newline
+            errorMessage += `${error}\n`;
           });
         });
         toast.error(errorMessage.trim());
-        // toast.error(result.message);
       }
     }
   };
@@ -450,6 +447,12 @@ const SidebarAddUser = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+SidebarAddUser.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  groups: PropTypes.any
 };
 
 export default SidebarAddUser;

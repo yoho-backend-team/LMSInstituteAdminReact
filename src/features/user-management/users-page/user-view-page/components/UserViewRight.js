@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import UserViewAccount from './UserViewAccount';
 import UserViewSecurity from './UserViewSecurity';
@@ -76,6 +77,10 @@ const UserViewRight = ({ id }) => {
       </Box>
     </TabContext>
   );
+};
+
+UserViewRight.propTypes = {
+  id: PropTypes.any
 };
 
 export default UserViewRight;

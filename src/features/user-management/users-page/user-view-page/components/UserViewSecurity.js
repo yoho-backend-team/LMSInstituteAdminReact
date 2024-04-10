@@ -10,9 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-// import { userChangePassword } from '../../../user-view/services/viewUserServices';
 import { userChangePassword } from '../../services/userServices';
 
 const UserViewSecurity = ({ id }) => {
@@ -155,6 +155,10 @@ const UserViewSecurity = ({ id }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserViewSecurity.propTypes = {
+  id: PropTypes.any
 };
 
 export default UserViewSecurity;
