@@ -1,21 +1,16 @@
-// ** React Imports
-import { useEffect } from 'react';
-// ** MUI Imports
-import { Button, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-// import Autocomplete from '@mui/material/Autocomplete';
-import { updateFaq } from '../services/faqServices';
+import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import * as yup from 'yup';
+import { updateFaq } from '../services/faqServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -36,7 +31,6 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  // category: yup.object().required('Category is required'),
   title: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
@@ -44,14 +38,13 @@ const schema = yup.object().shape({
 });
 
 const FaqEdit = (props) => {
-  // ** Props
   const { open, toggle, setRefetch } = props;
-  // ** State
+
   const defaultValues = {
     description: '',
     title: ''
-    // category: {}
   };
+
   const {
     reset,
     control,
@@ -156,27 +149,6 @@ const FaqEdit = (props) => {
             )}
           />
 
-          {/* <Controller
-            name="category"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange } }) => (
-              <Autocomplete
-                fullWidth
-                sx={{ mb: 4 }}
-                value={props.initialValues?.institute_faq_module}
-                onChange={(e, newValue) => {
-                  onChange(newValue);
-                }}
-                getOptionLabel={(option) => option.title}
-                options={faqCategories}
-                renderInput={(params) => (
-                  <TextField {...params} label="Select Category" error={Boolean(errors.category)} helperText={errors.category?.message} />
-                )}
-              />
-            )}
-          /> */}
-
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
               Submit
@@ -189,6 +161,12 @@ const FaqEdit = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+FaqEdit.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default FaqEdit;

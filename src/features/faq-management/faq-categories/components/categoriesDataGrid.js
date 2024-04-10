@@ -1,22 +1,18 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
-import { useEffect } from 'react';
-// ** Custom Components Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
-import StatusDialog from 'components/modal/DeleteModel';
+import Icon from 'components/icon';
+import { default as DeleteDialog, default as StatusDialog } from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import FaqCategoriesAddDrawer from './FaqCategoriesAddDrawer';
 import FaqCategoriesEdit from './FaqCategoriesEdit';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import FaqCategoriesTableHeader from './FaqCategoriesTableHeader';
 
 const useTimeout = (callback, delay) => {

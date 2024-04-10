@@ -3,12 +3,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -42,9 +43,8 @@ const StudentFilterCard = (props) => {
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       if (!newValue) {
-                        // If newValue is null or undefined
                         const data = {
-                          batch_id: '', // Pass default value for batch_id
+                          batch_id: '',
                           branch_id: selectedBranchId
                         };
                         dispatch(getAllStudentIdCards(data));
@@ -86,6 +86,14 @@ const StudentFilterCard = (props) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+StudentFilterCard.propTypes = {
+  handleSearch: PropTypes.any,
+  selectedBranchId: PropTypes.any,
+  searchValue: PropTypes.any,
+  filterstatusValue: PropTypes.any,
+  handleFilterByStatus: PropTypes.any
 };
 
 export default StudentFilterCard;
