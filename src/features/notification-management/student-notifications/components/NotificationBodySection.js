@@ -1,6 +1,3 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -8,21 +5,17 @@ import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-// ** React Router Import
-// ** Custom Components Imports
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-
 import { getInitials } from 'utils/get-initials';
-
 import { resendStudentNotification } from '../services/studentNotificationServices';
 
 const NotificationBodySection = ({ studentNotifications }) => {
   console.log(studentNotifications);
-  // ** State
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
-  // ** renders client column
   const renderClient = (row) => {
     if (row?.avatar?.length) {
       return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
@@ -39,39 +32,6 @@ const NotificationBodySection = ({ studentNotifications }) => {
     }
   };
 
-  // const handleSubmit = async (id) => {
-  //   try {
-  //     const selectedNotification = studentNotifications.find((notification) => notification.id === id);
-
-  //     if (!selectedNotification) {
-  //       throw new Error('Notification not found');
-  //     }
-
-  //     const { title, body } = selectedNotification.institute_notifications;
-
-  //     const data = {
-  //       id: id,
-  //       body: body,
-  //       branch_id: selectedBranchId,
-  //       title: title
-  //     };
-
-  //     const response = await resendNotification({ id, title, body, selectedBranchId });
-
-  //     if (response.success) {
-  //       // Handle success
-  //       toast.success(response.message);
-  //     } else {
-  //       // Handle failure
-  //       toast.error(response.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error in handleSubmit:', error);
-  //     // Handle error
-  //     toast.error('Failed to resend notification');
-  //   }
-  // };
-
   const handleSubmit = async (id) => {
     try {
       const selectedNotification = studentNotifications.find((notification) => notification.id === id);
@@ -80,28 +40,20 @@ const NotificationBodySection = ({ studentNotifications }) => {
         throw new Error('Notification not found');
       }
 
-      // const { title, body } = selectedNotification.institute_notifications;
-
       const data = {
         id: id,
-        notification_id: selectedNotification.notification_id, // Include the notification_id field
-        // body: body,
-        // branch_id: selectedBranchId,
-        // title: title
+        notification_id: selectedNotification.notification_id // Include the notification_id field
       };
 
       const response = await resendStudentNotification(data);
 
       if (response.success) {
-        // Handle success
         toast.success(response.message);
       } else {
-        // Handle failure
         toast.error(response.message);
       }
     } catch (error) {
       console.error('Error in handleSubmit:', error);
-      // Handle error
       toast.error('Failed to resend notification');
     }
   };
@@ -115,8 +67,6 @@ const NotificationBodySection = ({ studentNotifications }) => {
       </>
     );
   };
-
-  // ** Hooks
 
   const columns = [
     {
@@ -216,64 +166,6 @@ const NotificationBodySection = ({ studentNotifications }) => {
     }
   ];
 
-  // const notification = [
-  //   {
-  //     id: 1,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 100,
-  //     issuedDate: '2025-01-01',
-  //     balance: 55,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 2,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'arunbalaji.com',
-  //     total: 200,
-  //     issuedDate: '2000-01-01',
-  //     balance: 50,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 3,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 300,
-  //     issuedDate: '25-01-01',
-  //     balance: 40,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 4,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 40,
-  //     issuedDate: '202-01-01',
-  //     balance: 30,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 5,
-  //     invoiceStatus: 'Sent',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 50,
-  //     issuedDate: '20-01-01',
-  //     balance: 0,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   }
-  // ];
-
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
@@ -292,4 +184,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
   );
 };
 
+NotificationBodySection.propTypes = {
+  studentNotifications: PropTypes.any
+};
 export default NotificationBodySection;

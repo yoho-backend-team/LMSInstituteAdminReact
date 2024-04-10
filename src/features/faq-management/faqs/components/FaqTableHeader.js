@@ -1,32 +1,28 @@
-// ** MUI Imports
 import { Grid, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-// ** Icon Imports
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useState, useCallback } from 'react';
 import { getAllFaqs } from '../redux/faqThunks';
 
 const FaqTableHeader = (props) => {
-  // ** Props
   const { toggle, selectedBranchId } = props;
 
-      // State for search value
-      const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState('');
 
-      // Dispatch function
-      const dispatch = useDispatch();
-    
-      // Callback function to handle search
-      const handleSearch = useCallback(
-        (e) => {
-          const searchInput = e.target.value;
-          dispatch(getAllFaqs({ search: searchInput ,branch_id:selectedBranchId }));
-          setSearchValue(searchInput);
-          // Dispatch action to fetch branches with search input
-        },
-        [dispatch]
-      );
+  // Dispatch function
+  const dispatch = useDispatch();
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllFaqs({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+    },
+    [dispatch]
+  );
 
   return (
     <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
@@ -53,6 +49,11 @@ const FaqTableHeader = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+FaqTableHeader.propTypes = {
+  toggle: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 
 export default FaqTableHeader;

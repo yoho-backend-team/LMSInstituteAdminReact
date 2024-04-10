@@ -1,22 +1,17 @@
-// ** React Imports
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-// import { addStudentFee } from '../services/studentFeeServices';
-import Autocomplete from '@mui/material/Autocomplete';
-import { addFaq } from '../services/faqServices';
+import PropTypes from 'prop-types';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
+import { addFaq } from '../services/faqServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -38,9 +33,7 @@ const defaultValues = {
 };
 
 const FaqAddDrawer = (props) => {
-  // ** Props
   const { open, toggle, faqCategories, setRefetch } = props;
-  // ** State
 
   const {
     handleSubmit,
@@ -184,6 +177,13 @@ const FaqAddDrawer = (props) => {
       </Drawer>
     </DatePickerWrapper>
   );
+};
+
+FaqAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  faqCategories: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default FaqAddDrawer;

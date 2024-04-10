@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useState } from 'react';
-// ** MUI Imports
 import { Avatar as CustomAvatar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,17 +8,16 @@ import Pagination from '@mui/material/Pagination';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import StudentFilterCard from 'features/id-card-management/student-id-cards/components/StudentFilterCard';
 import { selectLoading, selectStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardSelectors';
-import toast from 'react-hot-toast';
-
-import StatusChangeDialog from 'components/modal/DeleteModel';
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
+import { updateStudentIdCardStatus } from 'features/id-card-management/student-id-cards/services/studentIdcardServices';
+import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-
-import { updateStudentIdCardStatus } from 'features/id-card-management/student-id-cards/services/studentIdcardServices';
 
 const roleColors = {
   admin: 'error',
@@ -46,7 +43,7 @@ const StudentIdCard = () => {
   console.log('id cards', StudentIdCards);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards({branch_id:selectedBranchId}));
+    dispatch(getAllStudentIdCards({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -59,7 +56,6 @@ const StudentIdCard = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
-      // id: statusValue?.id,
       student_id: statusValue?.student?.student_id
     };
 
@@ -90,13 +86,11 @@ const StudentIdCard = () => {
     setFlipped(!flipped);
   };
 
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllStudentIdCards({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -106,8 +100,6 @@ const StudentIdCard = () => {
     const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStudentIdCards(data));
   };
-
-  // const [statusValue, setStatusValue] = useState('');
 
   return (
     <>
@@ -232,7 +224,6 @@ const StudentIdCard = () => {
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                               <Typography
                                 sx={{
-                                  // my: 4,
                                   color: 'text.secondary',
                                   overflow: 'hidden',
                                   display: '-webkit-box',
@@ -275,7 +266,6 @@ const StudentIdCard = () => {
         </Grid>
       </Grid>
 
-      {/* Status Change Modal */}
       <StatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
@@ -283,13 +273,6 @@ const StudentIdCard = () => {
         title="Status"
         handleSubmit={handleStatusChangeApi}
       />
-
-      {/* <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
-      /> */}
     </>
   );
 };

@@ -1,27 +1,23 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
-import { useEffect } from 'react';
-// ** Custom Components Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
-import StatusDialog from 'components/modal/DeleteModel';
+import Icon from 'components/icon';
+import { default as DeleteDialog, default as StatusDialog } from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
 import FaqCategoriesAddDrawer from 'features/faq-management/faq-categories/components/FaqCategoriesAddDrawer';
 import FaqCategoriesEdit from 'features/faq-management/faq-categories/components/FaqCategoriesEdit';
-import { useCallback, useState } from 'react';
 import FaqCategoriesTableHeader from 'features/faq-management/faq-categories/components/FaqCategoriesTableHeader';
-import { useSelector, useDispatch } from 'react-redux';
-import { getAllFaqCategories } from 'features/faq-management/faq-categories/redux/faqCategoryThunks';
 import { selectFaqCategories, selectLoading } from 'features/faq-management/faq-categories/redux/faqCategorySelectors';
+import { getAllFaqCategories } from 'features/faq-management/faq-categories/redux/faqCategoryThunks';
 import { deleteFaqCategory, updateStatusFaqCategory } from 'features/faq-management/faq-categories/services/faqCategoryServices';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
@@ -47,7 +43,7 @@ const CategoriesDataGrid = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllFaqCategories(data));
-  }, [dispatch,selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch]);
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
@@ -97,8 +93,6 @@ const CategoriesDataGrid = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
   };
-
-  // ** Hooks
 
   const columns = [
     {
@@ -216,15 +210,18 @@ const CategoriesDataGrid = () => {
   return (
     <>
       <Grid container>
-        {/* Category filter and header */}
         <Grid item xs={12}>
-          <FaqCategoriesTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+          <FaqCategoriesTableHeader
+            value={value}
+            handleFilter={handleFilter}
+            toggle={toggleAddUserDrawer}
+            selectedBranchId={selectedBranchId}
+          />
         </Grid>
         {faqCategoryLoading ? (
           <ContentSkeleton />
         ) : (
           <Grid item xs={12}>
-            {/* Display categories */}
             <Card>
               <DataGrid
                 autoHeight

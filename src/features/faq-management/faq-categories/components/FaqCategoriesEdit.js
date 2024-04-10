@@ -1,20 +1,16 @@
-// ** React Imports
-import { useEffect } from 'react';
-// ** MUI Imports
-import { Button, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import { updateFaqCategory } from '../services/faqCategoryServices';
+import PropTypes from 'prop-types';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import * as yup from 'yup';
+import { updateFaqCategory } from '../services/faqCategoryServices';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -47,11 +43,9 @@ const defaultValues = {
 };
 
 const FaqCategoriesEdit = (props) => {
-  // ** Props
   const { open, toggle, setRefetch } = props;
   console.log('StudyMaterialEdit - open:', props.open);
   console.log('StudyMaterialEdit - toggle:', props.toggle);
-  // ** State
 
   const {
     reset,
@@ -171,6 +165,12 @@ const FaqCategoriesEdit = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+FaqCategoriesEdit.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default FaqCategoriesEdit;

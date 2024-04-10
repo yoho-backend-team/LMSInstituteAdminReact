@@ -5,13 +5,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import { getAllStaffIdCards } from 'features/id-card-management/staff-id-cards/redux/staffIdcardThunks';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const StaffFilterCard = (props) => {
-  //
   const dispatch = useDispatch();
+
   const { handleSearch, selectedBranchId, searchValue, filterstatusValue, handleFilterByStatus } = props;
 
   const [staffValue, setStaffValue] = useState('');
@@ -68,6 +69,14 @@ const StaffFilterCard = (props) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+StaffFilterCard.propTypes = {
+  handleSearch: PropTypes.any,
+  selectedBranchId: PropTypes.any,
+  searchValue: PropTypes.any,
+  filterstatusValue: PropTypes.any,
+  handleFilterByStatus: PropTypes.any
 };
 
 export default StaffFilterCard;

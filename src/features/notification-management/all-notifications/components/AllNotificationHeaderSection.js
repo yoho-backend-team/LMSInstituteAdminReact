@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Grid';
+import PropTypes from 'prop-types';
 import AllNotificationHeaderCard from './AllNotificationHeaderCard';
 
 const AllNotificationHeaderSection = ({ allNotifications }) => {
@@ -29,6 +30,10 @@ const AllNotificationHeaderSection = ({ allNotifications }) => {
       </Grid>
     </>
   );
+};
+
+AllNotificationHeaderSection.propTypes = {
+  allNotifications: PropTypes.any
 };
 
 export default AllNotificationHeaderSection;
