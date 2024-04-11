@@ -15,7 +15,7 @@ const SubscriptionPlans = (props) => {
     </Grid>
   );
 };
-SubscriptionFooter.propTypes = {
+SubscriptionPlans.propTypes = {
   plan: PropTypes.any,
   Subscriptions: PropTypes.any
 };
