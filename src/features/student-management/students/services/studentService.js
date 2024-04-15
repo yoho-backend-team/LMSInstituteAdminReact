@@ -31,7 +31,7 @@ export const getAllStudentsByBatch = async (data) => {
 };
 export const getAllStudents = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -131,7 +131,7 @@ export const updateStudent = async (data) => {
     });
 
     console.log('studentupdate', response);
-    
+
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'Student updated successfully' };

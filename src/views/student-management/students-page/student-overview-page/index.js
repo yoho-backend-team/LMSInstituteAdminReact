@@ -16,8 +16,6 @@ const Students = () => {
   const StudentsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log('students:', Students);
-
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -49,7 +47,7 @@ const Students = () => {
               ) : (
                 <Box>
                   <Grid container spacing={2}>
-                    {Students.map((item, index) => (
+                    {Students?.data?.map((item, index) => (
                       <Grid key={index} item xs={12} sm={6} md={3}>
                         <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
                           <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
