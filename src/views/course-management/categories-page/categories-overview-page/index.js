@@ -46,21 +46,21 @@ const Categories = () => {
       )}
 
       {/* Pagination */}
-      {memoizedCategories?.last_page !== 1 &&
-      <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination
-          count={memoizedCategories?.last_page}
-          color="primary"
-          onChange={async (e, page) => {
-            const data = {
-              branch_id: selectedBranchId,
-              page: page
-            };
-            dispatch(getAllCourseCategories(data));
-          }}
-        />
-      </Grid>
-      }
+      {memoizedCategories?.last_page !== 1 && (
+        <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Pagination
+            count={memoizedCategories?.last_page}
+            color="primary"
+            onChange={async (e, page) => {
+              const data = {
+                branch_id: selectedBranchId,
+                page: page
+              };
+              dispatch(getAllCourseCategories(data));
+            }}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };
