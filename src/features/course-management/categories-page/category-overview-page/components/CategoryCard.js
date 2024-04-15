@@ -10,7 +10,7 @@ import CategoryEditModal from './CategoryEditModal';
 
 const CategoryCard = (props) => {
   // Props
-  const { sx, category, setCategoryRefetch } = props;
+  const { category, setCategoryRefetch } = props;
 
   // State
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -163,7 +163,6 @@ const CategoryCard = (props) => {
 };
 
 CategoryCard.propTypes = {
-  sx: PropTypes.any,
   category: PropTypes.any,
   setCategoryRefetch: PropTypes.any
 };
