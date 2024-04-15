@@ -5,7 +5,7 @@ const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/ap
 
 export const getAllTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

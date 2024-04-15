@@ -5,7 +5,7 @@ const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

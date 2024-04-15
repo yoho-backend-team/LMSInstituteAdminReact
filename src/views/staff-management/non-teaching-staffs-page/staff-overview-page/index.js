@@ -68,7 +68,6 @@ const NonTeaching = () => {
     setStatusValue(staff);
   };
 
-  console.log('Non-Teaching-Staff :', nonTeachingStaffs);
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />
@@ -78,7 +77,7 @@ const NonTeaching = () => {
         <Grid>
           <TeacherFilter selectedBranchId={selectedBranchId} />
           <Grid container xs={12} spacing={2} mt={2}>
-            {nonTeachingStaffs?.map((item, i) => (
+            {nonTeachingStaffs?.data?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
                 <Card sx={{ position: 'relative' }}>
                   <CardContent sx={{ pt: 3 }}>

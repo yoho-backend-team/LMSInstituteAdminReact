@@ -66,8 +66,8 @@ const Teaching = () => {
       ) : (
         <Grid>
           <Grid container xs={12} mt={1}>
-            {teachingStaffs &&
-              teachingStaffs?.map((item, i) => (
+            {teachingStaffs?.data &&
+              teachingStaffs?.data?.map((item, i) => (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
                   <Card sx={{ position: 'relative', mb: 2 }}>
                     <CardContent sx={{ pt: 3 }}>
