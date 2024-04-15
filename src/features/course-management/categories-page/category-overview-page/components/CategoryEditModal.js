@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
@@ -34,8 +34,8 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       yup.object().shape({
         category_name: yup
           .string()
-          .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
           .required('Category Name is required')
+          .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
       }),
     [showErrors]
   );
@@ -99,6 +99,11 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       })),
     []
   );
+
+  // Effect to set the default value for category_name field
+  useEffect(() => {
+    setValue('category_name', category?.category_name || ''); // Set the default value for category_name
+  }, [category?.category_name, setValue]);
 
   // Form submission handler
   const onSubmit = useCallback(
@@ -185,7 +190,6 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                     <TextField
                       fullWidth
                       value={value}
-                      defaultValue={category?.category_name}
                       sx={{ mb: 4 }}
                       label="Category Name"
                       onChange={onChange}
@@ -220,3 +224,4 @@ CategoryEditModal.propTypes = {
 };
 
 export default CategoryEditModal;
+ 
