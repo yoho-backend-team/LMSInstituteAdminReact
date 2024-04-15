@@ -14,7 +14,7 @@ import { addCourseCategory } from '../../services/courseCategoryServices';
 
 const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const image =
-  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
 
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
@@ -32,9 +32,9 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
     () =>
       yup.object().shape({
         category: yup
-        .string()
-        .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
-        .required('Category Name is required'),
+          .string()
+          .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
+          .required('Category Name is required')
       }),
     [showErrors]
   );
@@ -116,6 +116,8 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
         handleAddClose(); // Close the dialog
         setCategoryRefetch((state) => !state); // Trigger category refetch
         toast.success(result.message);
+        setSelectedImage('');
+        setImgSrc(image);
       } else {
         toast.error(result.message);
       }

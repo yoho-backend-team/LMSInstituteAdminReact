@@ -14,9 +14,8 @@ import { updateCourseCategory } from '../../services/courseCategoryServices';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
-  const image =
-  'https://www.svgrepo.com/download/508699/landscape-placeholder.svg';
-  
+  const image = 'https://www.svgrepo.com/download/508699/landscape-placeholder.svg';
+
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
     if (valueLen === 0) {
@@ -33,9 +32,9 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
     () =>
       yup.object().shape({
         category_name: yup
-        .string()
-        .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
-        .required('Category Name is required'),
+          .string()
+          .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
+          .required('Category Name is required')
       }),
     [showErrors]
   );
@@ -55,7 +54,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  
+
   // Function to handle closing the dialog
   const handleClose = useCallback(() => {
     setValue('category_name', ''); // Reset input value

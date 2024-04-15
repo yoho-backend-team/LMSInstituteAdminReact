@@ -22,13 +22,14 @@ const Categories = () => {
   // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllCourseCategories(data));
   }, [dispatch, selectedBranchId, categoryRefetch]);
 
   // Memoize categories data to prevent unnecessary re-renders
-  const memoizedCategories = useMemo(() => courseCategories?.data || [], [courseCategories]);
+  const memoizedCategories = useMemo(() => courseCategories || [], [courseCategories]);
 
   return (
     <Grid container>
@@ -45,7 +46,7 @@ const Categories = () => {
         <Grid item xs={12}>
           {/* Display categories */}
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {memoizedCategories.map((category, index) => (
+            {memoizedCategories?.data?.map((category, index) => (
               <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
             ))}
           </Grid>
@@ -54,7 +55,17 @@ const Categories = () => {
 
       {/* Pagination */}
       <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
+        <Pagination
+          count={memoizedCategories?.last_page}
+          color="primary"
+          onChange={async (e, page) => {
+            const data = {
+              branch_id: selectedBranchId,
+              page: page
+            };
+            dispatch(getAllCourseCategories(data));
+          }}
+        />
       </Grid>
     </Grid>
   );
