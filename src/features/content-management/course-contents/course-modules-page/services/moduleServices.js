@@ -5,7 +5,7 @@ const COURSE_MODULE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api
 
 export const getAllCourseModules = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_MODULE_API_END_POINT}/read`, {
+    const response = await axios.get(`${COURSE_MODULE_API_END_POINT}/read?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -104,7 +104,7 @@ export const updateCourseModule = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-console.log('coursemodules-edit',response)
+    console.log('coursemodules-edit', response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseModule updated successfully' };

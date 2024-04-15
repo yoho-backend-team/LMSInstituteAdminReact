@@ -5,7 +5,7 @@ const COURSE_NOTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/i
 
 export const getAllCourseNotes = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_NOTE_API_END_POINT}/read`, {
+    const response = await axios.get(`${COURSE_NOTE_API_END_POINT}/read?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

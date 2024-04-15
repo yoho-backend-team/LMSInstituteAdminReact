@@ -229,6 +229,8 @@ export const getAllActiveGroups = async () => {
       }
     });
 
+    console.log(response);
+
     // Check if the response status is successful
     if (response.data) {
       return { success: true, data: response.data.data };

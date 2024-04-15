@@ -1,4 +1,17 @@
-import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
+  Pagination
+} from '@mui/material';
 import Header from 'components/Header';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
 import StatusChangeDialog from 'components/modal/DeleteModel';
@@ -29,7 +42,7 @@ const GroupManagement = () => {
 
   // Fetch groups when selectedBranchId changes
   useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId }));
+    dispatch(getAllGroups({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId]);
 
   // Memoized callback for deleting a group
@@ -85,7 +98,7 @@ const GroupManagement = () => {
 
   // Memoized render function for group cards
   const renderCards = useMemo(() => {
-    return groups?.map((item, index) => (
+    return groups?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         {/* Card content here */}
         <Card sx={{ minHeight: 175 }}>
@@ -108,7 +121,7 @@ const GroupManagement = () => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography variant="h4" sx={{ mb: 1 }}>
-                {item?.role?.name}
+                {item?.name}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
@@ -117,7 +130,7 @@ const GroupManagement = () => {
                 select
                 width={100}
                 label="Status"
-                SelectProps={{ value: item?.role?.is_active, onChange: (e) => handleStatusValue(e, item.role) }}
+                SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
               >
                 <MenuItem value="1">Active</MenuItem>
                 <MenuItem value="0">Inactive</MenuItem>
@@ -132,14 +145,14 @@ const GroupManagement = () => {
                     menuItemProps: {
                       component: Link,
                       to: 'groups/view',
-                      state: { group: item.role }
+                      state: { group: item }
                     }
                   },
                   {
                     text: 'Delete',
                     menuItemProps: {
                       onClick: () => {
-                        setSelectedDeleteGroupId(item?.role?.id);
+                        setSelectedDeleteGroupId(item?.id);
                         setDeleteDialogOpen(true);
                       }
                     }
@@ -148,8 +161,8 @@ const GroupManagement = () => {
                     text: 'Edit',
                     menuItemProps: {
                       component: Link,
-                      to: `groups/${item.role.id}/edit`,
-                      state: { id: item.role.id, name: item.role.name }
+                      to: `groups/${item?.id}/edit`,
+                      state: { id: item?.id, name: item?.name }
                     }
                   }
                 ]}
@@ -203,6 +216,19 @@ const GroupManagement = () => {
             </Card>
           </Grid>
           {renderCards}
+
+          {/* Pagination */}
+          {groups?.last_page !== 1 && (
+            <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination
+                count={groups?.last_page}
+                color="primary"
+                onChange={async (e, page) => {
+                  dispatch(getAllGroups({ branch_id: selectedBranchId, page: page }));
+                }}
+              />
+            </Grid>
+          )}
         </Grid>
       )}
 

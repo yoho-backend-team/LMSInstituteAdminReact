@@ -5,16 +5,14 @@ const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institu
 
 export const getAllBranches = async (data) => {
   try {
-    // let data = {
-    //   search: ''
-    // };
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}/read`, {
+    const response = await axios.get(`${BRANCH_API_ENDPOINT}/read?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       params: data
     });
+    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -30,8 +28,6 @@ export const getAllBranches = async (data) => {
     throw error;
   }
 };
-
-console.log('getAllBranches:', getAllBranches);
 
 export const getActiveBranches = async () => {
   try {

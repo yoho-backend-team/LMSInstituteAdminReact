@@ -5,7 +5,7 @@ const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL
 
 export const getAllStudyMaterials = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_STUDY_MATERIALS_END_POINT}/read`, {
+    const response = await axios.get(`${COURSE_STUDY_MATERIALS_END_POINT}/read?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

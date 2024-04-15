@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Pagination } from '@mui/material';
 import BranchMainSkeleton from 'components/cards/Skeleton/BranchMainSkeleton';
 import BranchHeader from 'features/branch-management/branch-overview-page/components/BrachesCardHeader';
 import BranchCard from 'features/branch-management/branch-overview-page/components/BranchCard';
@@ -13,7 +13,8 @@ const BranchesOverviewPage = () => {
   const branchLoading = useSelector(selectLoading);
   const [refetchBranch, setRefetchBranch] = useState(false);
   const getAllBranchesCallback = useCallback(() => {
-    dispatch(getAllBranches());
+    const data = { page: '1' };
+    dispatch(getAllBranches(data));
   }, [dispatch]);
 
   useEffect(() => {
@@ -29,7 +30,23 @@ const BranchesOverviewPage = () => {
         {branchLoading ? (
           <BranchMainSkeleton />
         ) : (
-          branches?.map((branch, index) => <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />)
+          branches?.data?.map((branch, index) => <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />)
+        )}
+
+        {/* Pagination */}
+        {branches?.last_page !== 1 && (
+          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={branches?.last_page}
+              color="primary"
+              onChange={async (e, page) => {
+                const data = {
+                  page: page
+                };
+                dispatch(getAllBranches(data));
+              }}
+            />
+          </Grid>
         )}
       </Grid>
     </Grid>

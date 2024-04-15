@@ -308,7 +308,7 @@ const StudyMaterials = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={StudyMaterials}
+                rows={StudyMaterials?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}

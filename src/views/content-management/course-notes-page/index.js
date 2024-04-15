@@ -93,8 +93,6 @@ const Notes = () => {
   const NotesLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log(Notes);
-
   useEffect(() => {
     dispatch(getAllCourseNotes({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
@@ -308,8 +306,7 @@ const Notes = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                // rowHeight={80}
-                rows={Notes}
+                rows={Notes?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
