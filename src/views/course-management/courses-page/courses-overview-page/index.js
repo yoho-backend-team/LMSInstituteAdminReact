@@ -20,7 +20,8 @@ const Courses = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId, courseRefetch]);
@@ -38,7 +39,7 @@ const Courses = () => {
           <Grid item xs={12}>
             {/* Display courses */}
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-              {courses.map((course, index) => (
+              {courses?.data?.map((course, index) => (
                 <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} />
               ))}
             </Grid>
@@ -46,9 +47,21 @@ const Courses = () => {
         )}
 
         {/* Pagination */}
-        <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Pagination count={10} color="primary" />
-        </Grid>
+        {courses?.last_page !== 1 && (
+          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={courses?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                const data = {
+                  branch_id: selectedBranchId,
+                  page: page
+                };
+                dispatch(getAllCourses(data));
+              }}
+            />
+          </Grid>
+        )}
       </Grid>
     </>
   );
