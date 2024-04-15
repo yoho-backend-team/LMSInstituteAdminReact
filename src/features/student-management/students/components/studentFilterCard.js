@@ -46,7 +46,6 @@ const StudentFilter = (props) => {
     );
   }, [dispatch, selectedBranchId]);
 
-
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
@@ -97,7 +96,12 @@ const StudentFilter = (props) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Filter By Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Filter By Status"
+                  SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                >
                   <MenuItem value="">Select Status</MenuItem>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
@@ -107,9 +111,9 @@ const StudentFilter = (props) => {
                 <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} fullWidth />
               </Grid>
 
-              <Grid item xs={12} sm={3} >
+              <Grid item xs={12} sm={3}>
                 <Box component={Link} to={'students/add'}>
-                  <Button variant="contained" size="medium" fullWidth sx={{py:1.6,borderRadius:2}}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2 }}>
                     Add New Student
                   </Button>
                 </Box>
