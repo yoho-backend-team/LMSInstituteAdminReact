@@ -39,8 +39,6 @@ const defaultValues = {
 
 const StudyMaterialEdit = (props) => {
   const { open, toggle, StudyMaterials, setRefetch } = props;
-  console.log('StudyMaterialEdit - open:', props.open);
-  console.log('StudyMaterialEdit - toggle:', props.toggle);
 
   const {
     handleSubmit,
@@ -53,8 +51,6 @@ const StudyMaterialEdit = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-
-  console.log('StudyMaterials :', StudyMaterials);
 
   useEffect(() => {
     if (StudyMaterials) {
@@ -79,11 +75,19 @@ const StudyMaterialEdit = (props) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
-      reader.onload = () => setSavedPdfUrl(reader.result);
-      setSelectedFile(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
+      const uploadedFile = files[0];
+      const mimeType = uploadedFile.type;
+
+      // Check if the file is a PDF
+      if (mimeType === 'application/pdf') {
+        reader.onload = () => {
+          setSavedPdfUrl(reader.result);
+          setSelectedFile(uploadedFile);
+        };
+
+        reader.readAsDataURL(uploadedFile);
+      } else {
+        toast.error('Only PDF files are allowed');
       }
     }
   }, []);
@@ -94,12 +98,12 @@ const StudyMaterialEdit = (props) => {
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', props.initialValues.id);
     bodyFormData.append('document', setSelectedFile);
-    console.log(bodyFormData);
+   
 
     const result = await updateCourseStudyMaterial(bodyFormData);
 
     if (result.success) {
-      setRefetch((state) => !state); // Trigger category refetch
+      setRefetch((state) => !state);
       toast.success(result.message);
       toggle();
     } else {
@@ -108,7 +112,6 @@ const StudyMaterialEdit = (props) => {
       toast.error(errorMessage.trim());
     }
   };
-  console.log(setSelectedFile);
 
   const ButtonStyled = useMemo(
     () =>
