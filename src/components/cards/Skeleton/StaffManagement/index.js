@@ -3,7 +3,6 @@ import { Card, CardContent, Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 
-// import { OptionsMenu } from '../OptionsMenu';
 // ==============================|| SKELETON - EARNING CARD ||============================== //
 
 const StaffManagement = () => {

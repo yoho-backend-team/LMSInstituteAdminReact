@@ -1,20 +1,21 @@
 import { Grid } from '@mui/material';
 // import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router';
-import { React, useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { getBranchById } from 'features/branch-management/services/branchServices';
+import Earningscard from 'features/branch-management/view-branch/components/Earningscard';
 import Coursescard from 'features/branch-management/view-branch/components/headerCards/Coursescard';
-import UsersCard from 'features/branch-management/view-branch/components/headerCards/usersCard';
 import StaffsCard from 'features/branch-management/view-branch/components/headerCards/staffsCard';
 import StudentsCard from 'features/branch-management/view-branch/components/headerCards/studentsCard';
-import Earningscard from 'features/branch-management/view-branch/components/Earningscard';
-import SupportTicket from 'features/branch-management/view-branch/components/supportTickets';
-import CardStudentAndTeachers from 'features/branch-management/view-branch/components/horizondalCards/CardStudentandTeacher';
-import CardHorizondalCourses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalCourses';
-import { gridSpacing } from 'store/constant';
+import UsersCard from 'features/branch-management/view-branch/components/headerCards/usersCard';
 import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
+import CardHorizondalCourses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalCourses';
 import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
-import { getBranchById } from 'features/branch-management/services/branchServices';
+import CardStudentAndTeachers from 'features/branch-management/view-branch/components/horizondalCards/CardStudentandTeacher';
+import SupportTicket from 'features/branch-management/view-branch/components/supportTickets';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
+import { gridSpacing } from 'store/constant';
+
 const BranchViewPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -43,7 +44,7 @@ const BranchViewPage = () => {
       console.log(error);
     }
   };
-  console.log('branchData:',branchData.StaffCount);
+  console.log('branchData:', branchData.StaffCount);
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>
@@ -52,34 +53,34 @@ const BranchViewPage = () => {
             <UsersCard branchData={branchData} />
           </Grid>
           <Grid item xs={6} sm={3}>
-            <Coursescard branchData={branchData}/>
+            <Coursescard branchData={branchData} />
           </Grid>
           <Grid item xs={6} sm={3}>
-            <StaffsCard branchData={branchData}/>
+            <StaffsCard branchData={branchData} />
           </Grid>
           <Grid item xs={6} sm={3}>
-            <StudentsCard branchData={branchData}/>
+            <StudentsCard branchData={branchData} />
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardStudentAndTeachers branchData={branchData}/>
+        <CardStudentAndTeachers branchData={branchData} />
       </Grid>
       <Grid item xs={12} sm={8}>
         <Earningscard />
       </Grid>
 
       <Grid item xs={12} sm={4}>
-        <SupportTicket branchData={branchData}/>
+        <SupportTicket branchData={branchData} />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardHorizondalCourses branchData={branchData}/>
+        <CardHorizondalCourses branchData={branchData} />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardHorizondalClasses branchData={branchData}/>
+        <CardHorizondalClasses branchData={branchData} />
       </Grid>
       <Grid item xs={12} sm={4}>
-        <CardHorizondalUsers branchData={branchData}/>
+        <CardHorizondalUsers branchData={branchData} />
       </Grid>
     </Grid>
   );

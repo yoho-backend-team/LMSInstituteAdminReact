@@ -1,16 +1,12 @@
-// ** React Imports
 import { useEffect, useState, forwardRef } from 'react';
-// ** MUI Imports
 import { Button, Grid, Typography, Avatar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
@@ -19,6 +15,7 @@ import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFee } from '../services/studentFeeServices';
 import DatePicker from 'react-datepicker';
+import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -29,29 +26,15 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  paid_amount: yup.number().required('Paid Amount is required').typeError('Paid Amount must be a number')
 });
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
-  // ** Props
   const { label, readOnly } = props;
-
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-// const defaultValues = {
-//   email: '',
-//   password: '',
-//   confirm_password: '',
-//   designation: '',
-//   fullName: '',
-//   userName: '',
-//   role: '',
-//   contact: Number('')
-// };
-
 const FeesEditDrawer = (props) => {
-  // ** Props
   const { open, toggle, selectedRows, setRefetch } = props;
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
@@ -70,8 +53,6 @@ const FeesEditDrawer = (props) => {
     payment_date: ''
   };
 
-  // console.log(defaultValues);
-
   const {
     reset,
     control,
@@ -84,7 +65,7 @@ const FeesEditDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  // Set form values when selectedBranch changes
+
   useEffect(() => {
     if (selectedRows) {
       setValue('logo', selectedRows.selectedImage || '');
@@ -96,18 +77,21 @@ const FeesEditDrawer = (props) => {
   }, [selectedRows]);
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
+
+
+  const handleClose = () => {
+    setSelectedImage(null);
+    reset();
+    toggle();
+  };
+
 
   // Form submission handler
   const onSubmit = useCallback(async (data) => {
@@ -123,7 +107,7 @@ const FeesEditDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
-      handleEditClose();
+      handleClose();
     } else {
       toast.error(result.message);
     }
@@ -159,11 +143,7 @@ const FeesEditDrawer = (props) => {
 
   console.log(selectedDate);
 
-  const handleClose = () => {
-    setSelectedImage(null);
-    reset();
-    toggle();
-  };
+
 
   const handleStatusChange = (e) => {
     setSelectedStatus(e.target.value);
@@ -285,13 +265,12 @@ const FeesEditDrawer = (props) => {
                     onChange={onChange}
                     label="Paid Amount"
                     type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
+                    error={Boolean(errors.paid_amount)}
+                    helperText={errors.paid_amount?.message}
                   />
                 )}
               />
             </Grid>
-            {/* {selectedDate && ( */}
             <Grid item xs={6} sx={{ mb: 2 }}>
               <Controller
                 name="payment_date"
@@ -315,8 +294,6 @@ const FeesEditDrawer = (props) => {
                 <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
               )}
             </Grid>
-            {/* )} */}
-
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                 Submit
@@ -332,4 +309,10 @@ const FeesEditDrawer = (props) => {
   );
 };
 
+FeesEditDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  selectedRows: PropTypes.any,
+  setRefetch: PropTypes.any,
+}; 
 export default FeesEditDrawer;

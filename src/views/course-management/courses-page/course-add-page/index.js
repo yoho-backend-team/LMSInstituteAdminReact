@@ -9,19 +9,19 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
-import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-
+import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
 
 const AddCoursePage = () => {
@@ -33,19 +33,18 @@ const AddCoursePage = () => {
   const [branches, setBranches] = useState([]);
   const [activeCategories, setActiveCategories] = useState([]);
 
-  const imageLogo =
-    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
-  const imageTemplate =
-    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+  const imageLogo = 'https://cdn.shopify.com/app-store/listing_images/0fdeaa25e24b9166bf9ee4652d5ba368/icon/CMLVyfvl2vsCEAE=.png';
+  const imageTemplate = 'https://cdn.shopify.com/app-store/listing_images/0fdeaa25e24b9166bf9ee4652d5ba368/icon/CMLVyfvl2vsCEAE=.png';
+  const pdfTemplate =
+    'https://www.intego.com/mac-security-blog/wp-content/uploads/2023/05/BlueNoroff-OSX-RustBucket-NukeSped-Internal-PDF-Viewer-Trojan-horse-malware-icon.png';
 
   const [imgSrcLogo, setImgSrcLogo] = useState(imageLogo);
   const [inputLogoValue, setInputLogoValue] = useState('');
   const [selectedLogo, setSelectedLogo] = useState('');
-
   const [imgSrcTemplate, setImgSrcTemplate] = useState(imageTemplate);
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
-
+  console.log(setCourseSyllabus);
   console.log('selectedLogo', selectedLogo);
   console.log('selectedTemplate', selectedTemplate);
 
@@ -75,6 +74,14 @@ const AddCoursePage = () => {
     }
   };
 
+  const handleUpload = () => {
+    if (fileInputRef.current && fileInputRef.current.files && fileInputRef.current.files.length > 0) {
+      const file = fileInputRef.current.files[0];
+      const url = URL.createObjectURL(file);
+      setCourseSyllabus(url);
+    }
+  };
+
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
@@ -95,6 +102,38 @@ const AddCoursePage = () => {
       subtitle: 'Setup Information'
     }
   ];
+  const courseSchema = yup.object().shape({
+    course_duration: yup
+      .string()
+      .required('Course Duration is required')
+      .matches(/^[0-9]+$/, 'Course Duration should be digits'),
+    course_name: yup
+      .string()
+      .required('Course Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Name should not contain special characters'),
+    course_price: yup
+      .string()
+      .required('Course Price is required')
+      .matches(/^[0-9]+$/, 'Course Price should be digits'),
+    description: yup
+      .string()
+      .required('Course Description is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
+    course_overview: yup
+      .string()
+      .required('Course Overview is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
+    learning_format: yup.string().required('Learning Format is required'),
+    course_category: yup.object().required('Course Category is required'),
+    branches: yup
+      .array()
+      .required()
+      .test('no-special-characters', 'Branches must not contain special characters', (value) => {
+        if (!value) return true;
+        const specialCharRegex = /[^\w\s]/;
+        return !value.some((branch) => specialCharRegex.test(branch));
+      })
+  });
 
   const defaultCourseValues = {
     course_duration: '',
@@ -106,31 +145,6 @@ const AddCoursePage = () => {
     course_category: '',
     branches: []
   };
-
-  const courseSchema = yup.object().shape({
-    course_duration:yup
-    .string().required('Course Duration is required')
-    .matches(/^[0-9]{10}$/, 'Course Duration should be digits'),
-    course_name: yup
-    .string().required('Course Name is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Name should not contain special characters'),
-    course_price:yup
-    .string().required('Course Price is required')
-    .matches(/^[0-9]{10}$/, 'Course Price should be digits'),
-    description: yup
-    .string().required('Course Description is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
-    course_overview: yup
-    .string().required('Course Overview is required').matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
-    learning_format: yup.string().required(),
-    course_category: yup.object().required('Course Category is required').nullable(true),
-    branches: yup
-      .array()
-      .required()
-      .test('no-special-characters', 'Branches must not contain special characters', (value) => {
-        if (!value) return true;
-        const specialCharRegex = /[^\w\s]/;
-        return !value.some((branch) => specialCharRegex.test(branch));
-      })
-  });
 
   useEffect(() => {
     getAllBranches();
@@ -182,8 +196,6 @@ const AddCoursePage = () => {
     resolver: yupResolver(courseSchema)
   });
 
-
-
   const handleReset = () => {
     setActiveStep(0);
     courseFileReset({ instagram: '', twitter: '', facebook: '', linkedIn: '', pinterest: '' });
@@ -220,7 +232,6 @@ const AddCoursePage = () => {
       data.append('logo', selectedLogo);
       data.append('image', selectedTemplate);
       data.append('syllabus', courseSyllabus);
-      // data.append('branch_id', filteredBranchId);
       console.log(personalData);
       const result = await addCourse(data);
 
@@ -232,6 +243,8 @@ const AddCoursePage = () => {
     }
   };
 
+  const fileInputRef = useRef(null);
+
   function getStepContent(step) {
     switch (step) {
       case 0:
@@ -239,10 +252,9 @@ const AddCoursePage = () => {
           <form key={1} onSubmit={handleCourseSubmit(onSubmit)}>
             <Grid container spacing={5}>
               <Grid item xs={12}>
-                 <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   Add Course
                 </Typography>
-                
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
@@ -279,6 +291,9 @@ const AddCoursePage = () => {
                       error={Boolean(courseErrors['course_duration'])}
                       aria-describedby="stepper-linear-personal-course_duration"
                       helperText={courseErrors?.course_duration?.message}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="start">Days</InputAdornment>
+                      }}
                     />
                   )}
                 />
@@ -327,7 +342,7 @@ const AddCoursePage = () => {
                         <TextField
                           {...params}
                           fullWidth
-                          label="Branches"
+                          label="Select Branches"
                           value={value}
                           onChange={onChange}
                           error={Boolean(courseErrors['branches'])}
@@ -386,7 +401,6 @@ const AddCoursePage = () => {
                       onChange={(event, newValue) => {
                         console.log(event);
                         onChange(newValue);
-                        // setValue('course_category', newValue.category_id);
                       }}
                       options={activeCategories ?? []}
                       getOptionLabel={(option) => option.category_name}
@@ -395,9 +409,9 @@ const AddCoursePage = () => {
                           {...params}
                           value={value}
                           onChange={onChange}
-                          label="Course Category"
+                          label="Select Category"
                           error={Boolean(courseErrors['course_category'])}
-                          helperText={courseErrors['course_category'] ? 'This field is required' : ''}
+                          helperText={courseErrors?.course_category?.message}
                         />
                       )}
                     />
@@ -423,7 +437,7 @@ const AddCoursePage = () => {
                           {...params}
                           label="Learning Format"
                           error={Boolean(courseErrors['learning_format'])}
-                          {...(courseErrors['learning_format'] && { helperText: 'This field is required' })}
+                          helperText={courseErrors?.learning_format?.message}
                         />
                       )}
                     />
@@ -474,46 +488,76 @@ const AddCoursePage = () => {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+                <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
                   <ImgStyled src={imgSrcLogo} alt="Profile Pic" />
-                  <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="logo-settings-upload-image">
-                      update New logo
-                      <input
-                        hidden
-                        type="file"
-                        value={inputLogoValue}
-                        accept="image/png, image/jpeg"
-                        onChange={handleInputLogoImageChange}
-                        id="logo-settings-upload-image"
-                      />
-                    </ButtonStyled>
-                  </div>
-                </Box>
+                </Grid>
+                <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
+                  <ButtonStyled component="label" variant="contained" htmlFor="logo-settings-upload-image">
+                    Add Course Logo
+                    <input
+                      hidden
+                      type="file"
+                      value={inputLogoValue}
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputLogoImageChange}
+                      id="logo-settings-upload-image"
+                    />
+                  </ButtonStyled>
+                </Grid>
               </Grid>
-
-              {/*  */}
               <Grid item xs={12} sm={6}>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+                <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
                   <ImgStyled src={imgSrcTemplate} alt="Profile Pic" />
-                  <div>
-                    <ButtonStyled component="label" variant="contained" htmlFor="template-settings-upload-image">
-                      Upload New Template
-                      <input
-                        hidden
-                        type="file"
-                        value={inputTemplateValue}
-                        accept="image/png, image/jpeg"
-                        onChange={handleInputTemplateImageChange}
-                        id="template-settings-upload-image"
-                      />
-                    </ButtonStyled>
-                  </div>
-                </Box>
+                </Grid>
+                <Grid sx={{ justifyContent: 'center', display: 'flex' }}>
+                  <ButtonStyled component="label" variant="contained" htmlFor="template-settings-upload-image">
+                    Add Course Template
+                    <input
+                      hidden
+                      type="file"
+                      value={inputTemplateValue}
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputTemplateImageChange}
+                      id="template-settings-upload-image"
+                    />
+                  </ButtonStyled>
+                </Grid>
               </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
+              <Grid item xs={12} sm={12}>
+                {courseSyllabus ? (
+                  <>
+                    <Grid>
+                      <Grid>
+                        <PDFViewer url={courseSyllabus} />
+                      </Grid>
+                      <Grid justifyContent="center" display="flex" sx={{ mt: 1 }}>
+                        <ButtonStyled component="label" variant="contained" htmlFor="template-pdf-upload-image">
+                          {'Change Course Materials (PDF)'}
+                          <input
+                            ref={fileInputRef}
+                            hidden
+                            type="file"
+                            accept=".pdf"
+                            onChange={handleUpload}
+                            id="template-pdf-upload-image"
+                          />
+                        </ButtonStyled>
+                      </Grid>
+                    </Grid>
+                  </>
+                ) : (
+                  <Grid item justifyContent="center" display="flex" alignItems="center">
+                    <Grid>
+                      <ImgStyled src={pdfTemplate} alt="Profile Pic" />
+                    </Grid>
+                    <Grid>
+                      <ButtonStyled component="label" variant="contained" htmlFor="template-pdf-upload-image">
+                        {'Upload Course Materials (PDF)'}
+                        <input ref={fileInputRef} hidden type="file" accept=".pdf" onChange={handleUpload} id="template-pdf-upload-image" />
+                      </ButtonStyled>
+                    </Grid>
+                  </Grid>
+                )}
               </Grid>
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -550,7 +594,6 @@ const AddCoursePage = () => {
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-
       <CardContent>{renderContent()}</CardContent>
     </Card>
   );

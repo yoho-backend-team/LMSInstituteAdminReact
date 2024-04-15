@@ -1,29 +1,23 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { addCourseModule } from '../services/moduleServices';
 
 const CourseModuleAddDrawer = (props) => {
-  // ** Props
   const { open, toggle, branches } = props;
 
-  // ** State
   const [activeCourse, setActiveCourse] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -100,14 +94,14 @@ const CourseModuleAddDrawer = (props) => {
       reset();
       toggle();
     } else {
-      // let errorMessage = '';
-      // Object?.values(result.message)?.forEach((errors) => {
-      //   errors?.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
-      // toast.error(errorMessage.trim());
-      // toast.error(result.message);
+      let errorMessage = '';
+      Object?.values(result.message)?.forEach((errors) => {
+        errors?.forEach((error) => {
+          errorMessage += `${error}\n`;
+        });
+      });
+      toast.error(errorMessage.trim());
+      toast.error(result.message);
     }
   };
 
@@ -182,9 +176,9 @@ const CourseModuleAddDrawer = (props) => {
                 <Autocomplete
                   value={value}
                   onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'course' field
+                    onChange(newValue);
                   }}
-                  options={activeCourse || []} // Ensure options are available
+                  options={activeCourse || []}
                   getOptionLabel={(option) => option.course_name || ''}
                   fullWidth
                   renderInput={(params) => (
@@ -270,6 +264,12 @@ const CourseModuleAddDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+CourseModuleAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  branches: PropTypes.any
 };
 
 export default CourseModuleAddDrawer;

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -7,9 +5,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-// ** Custom Components
+import StudentDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import { deleteStudent } from '../services/studentService';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const UserViewAccount = ({ student }) => {
@@ -17,6 +19,24 @@ const UserViewAccount = ({ student }) => {
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
   console.log('students Course :', student);
+  const [studentDeleteModelOpen, setStudentDeleteModelOpen] = useState(false);
+  const [selectedStudentDeleteId, setSelectedStudentDeleteId] = useState(null);
+
+  const handleDelete = useCallback((itemId) => {
+    setSelectedStudentDeleteId(itemId);
+    setStudentDeleteModelOpen(true);
+  }, []);
+
+  // Handle branch deletion
+  const handleStudentDelete = async () => {
+    const data = { id: selectedStudentDeleteId };
+    const result = await deleteStudent(data);
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   if (student) {
     return (
@@ -84,10 +104,6 @@ const UserViewAccount = ({ student }) => {
                       </Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 1 }}>{student.state}</Typography>
                     </Box>
-                    {/* <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
-                </Box> */}
                   </Box>
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -130,13 +146,20 @@ const UserViewAccount = ({ student }) => {
               >
                 Edit
               </Button>
-              <Button color="error" variant="tonal" onClick={() => setSuspendDialogOpen(true)}>
-                Suspend
+              <Button color="error" variant="tonal" onClick={() => handleDelete(student?.id)}>
+                Delete
               </Button>
             </CardActions>
 
             <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
             <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
+            <StudentDeleteModel
+              open={studentDeleteModelOpen}
+              setOpen={setStudentDeleteModelOpen}
+              description="Are you sure you want to delete this Student? "
+              title="Delete"
+              handleSubmit={handleStudentDelete}
+            />
           </Card>
         </Grid>
       </Grid>
@@ -146,4 +169,7 @@ const UserViewAccount = ({ student }) => {
   }
 };
 
+UserViewAccount.propTypes = {
+  student: PropTypes.any
+};
 export default UserViewAccount;

@@ -1,14 +1,13 @@
-// ** Next Imports
 import { Link } from 'react-router-dom';
-// ** MUI Imports
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Custom Components Imports
+
 import CustomAvatar from 'components/mui/avatar';
 import CustomChip from 'components/mui/chip';
-// ** Utils Import
+
 import { getInitials } from 'utils/get-initials';
 
 const userStatusObj = {
@@ -22,7 +21,6 @@ const userRoleObj = {
   Manager: 'secondary'
 };
 
-// ** renders client column
 const renderClient = (row) => {
   if (row.avatar.length) {
     return <CustomAvatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;

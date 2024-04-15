@@ -1,22 +1,18 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
 import TabContext from '@mui/lab/TabContext';
 import MuiTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Demo Components Imports
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import TeacherAttendance from './StaffAttendance';
+import UserViewBilling from './StaffClass';
 import UserViewAccount from './StaffViewAccount';
 import UserViewConnection from './StaffViewConnection';
 import UserViewSecurity from './StaffViewSecurity';
-import UserViewBilling from './StaffClass';
 
-// ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
   '& svg': {
@@ -49,8 +45,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab, staff,staffID,formattedDate }) => {
-  // ** State
+const UserViewRight = ({ tab, staff, staffID, formattedDate, setRefetch }) => {
   const [activeTab, setActiveTab] = useState('account');
   const handleChange = (event, value) => {
     setActiveTab(value);
@@ -60,7 +55,7 @@ const UserViewRight = ({ tab, staff,staffID,formattedDate }) => {
       setActiveTab(tab);
     }
   }, [tab]);
-// console.log(staff);
+
   return (
     <TabContext value={activeTab}>
       <TabList
@@ -79,16 +74,16 @@ const UserViewRight = ({ tab, staff,staffID,formattedDate }) => {
       <Box sx={{ mt: 4 }}>
         <>
           <TabPanel sx={{ p: 0 }} value="account">
-            <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate}/>
+            <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="security">
-            <UserViewSecurity id={staff?.teachingStaff?.id}/>
+            <UserViewSecurity id={staff?.teachingStaff?.id} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="class">
-            <UserViewBilling staff={staff?.teachingStaff?.staff_class}/>
+            <UserViewBilling staff={staff?.teachingStaff?.staff_class} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="attendance">
-            <TeacherAttendance />
+            <TeacherAttendance attendance={staff?.teachingStaff?.attendance} />
           </TabPanel>
           <TabPanel sx={{ p: 0 }} value="activity">
             <UserViewConnection id={staff?.teachingStaff?.id} />
@@ -97,6 +92,14 @@ const UserViewRight = ({ tab, staff,staffID,formattedDate }) => {
       </Box>
     </TabContext>
   );
+};
+
+UserViewRight.propTypes = {
+  tab: PropTypes.any,
+  staff: PropTypes.any,
+  staffID: PropTypes.any,
+  formattedDate: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewRight;

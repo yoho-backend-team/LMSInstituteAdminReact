@@ -1,22 +1,26 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { Box, Button, Grid } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import CustomChip from 'components/mui/chip';
+import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { updateUser } from '../../services/userServices';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
-import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
-import InputAdornment from '@mui/material/InputAdornment';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -25,18 +29,6 @@ const showErrors = (field, valueLen, min) => {
     return `${field} must be at least ${min} characters`;
   } else {
     return '';
-  }
-};
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
   }
 };
 
@@ -62,13 +54,19 @@ const schema = yup.object().shape({
     .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
     .max(50, `Designation can't exceed 50 characters`),
-  // role: yup.string().required(),
   branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
 });
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => {
   const branches = useSelector((state) => state.auth.branches);
+  const image =
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
 
+  const [inputValue, setInputValue] = useState('');
+  const [selectedImage, setSelectedImage] = useState('');
+  const [imgSrc, setImgSrc] = useState(image);
+  const [groups, setGroups] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState([]);
   const defaultValues = {
     full_name: '',
     user_name: '',
@@ -97,9 +95,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('email', userData?.institution_users?.email || '');
       setValue('contact', userData?.institution_users?.mobile || '');
       setValue('designation', userData?.institution_users?.designation || '');
-      setValue('branch', userData?.institution_users?.branch || []);
-      // setValue('branch', userData?.institution_users?.branch?.map(branch => branch.branch_name) || []);
+      setValue('branch', userData?.branches || []);
       setValue('role', userData?.role_groups?.role?.id || '');
+      setSelectedBranch(userData?.branches);
     }
   }, [userData, setValue]);
   const handleClose = () => {
@@ -115,15 +113,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     setSelectedImage(null);
   };
 
-  // const image = require('assets/images/avatar/1.png');
-  const image =
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-
-  const [inputValue, setInputValue] = useState('');
-  const [selectedImage, setSelectedImage] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
-  const [groups, setGroups] = useState([]);
-
   useEffect(() => {
     getAllGroups();
   }, []);
@@ -132,7 +121,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     try {
       const result = await getAllActiveGroups();
       if (result.success) {
-        console.log('User Data:', result.data);
         setGroups(result.data);
       } else {
         console.log(result.message);
@@ -169,14 +157,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   };
 
-  console.log(selectedImage);
-
   const onSubmit = async (data) => {
-    console.log(data);
-    const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_name));
+    console.log(data?.branch);
 
     const InputData = new FormData();
-    filteredBranches.forEach((branch) => {
+    data?.branch.forEach((branch) => {
       InputData.append('branch_id[]', branch.branch_id);
     });
     InputData.append('name', data.full_name);
@@ -184,7 +169,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     InputData.append('email', data.email);
     InputData.append('mobile', data.contact);
     InputData.append('designation', data.designation);
-    // InputData.append('branch_id', data.branch);
     InputData.append('role_id', data.role);
     InputData.append('image', selectedImage);
     InputData.append('id', userData.id);
@@ -335,36 +319,59 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
 
             <Grid item xs={12} sm={12}>
-              <Controller
-                name="branch"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
+              <Autocomplete
+                multiple
+                disableCloseOnSelect
+                id="select-multiple-chip"
+                options={branches}
+                getOptionLabel={(option) => option.branch_name}
+                value={selectedBranch}
+                onChange={(e, newValue) => {
+                  setSelectedBranch(newValue);
+                  setValue('branch', newValue);
+                }}
+                renderInput={(params) => (
                   <TextField
-                    sx={{ mb: 2 }}
-                    select
+                    {...params}
                     fullWidth
-                    label="Branch"
-                    id="select-multiple-checkbox"
-                    // value={value}
-                    defaultValue={value}
-                    onChange={onChange}
-                    SelectProps={{
-                      MenuProps,
-                      multiple: true,
-                      renderValue: (selected) => selected.join(', ')
+                    label="Select Branch"
+                    InputProps={{
+                      ...params.InputProps,
+                      style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                     }}
-                    error={Boolean(errors.branch)}
-                    helperText={errors.branch?.message}
-                  >
-                    {branches?.map((item, index) => (
-                      <MenuItem key={index} value={item?.branch_id}>
-                        <Checkbox checked={value.includes(item.branch_id)} />
-                        <ListItemText primary={item.branch_name} />
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  />
                 )}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                      checkedIcon={<CheckBoxIcon fontSize="small" />}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.branch_name}
+                  </li>
+                )}
+                renderTags={(value) => (
+                  <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                    {value.map((option, index) => (
+                      <CustomChip
+                        key={option.branch_id}
+                        label={option.branch_name}
+                        // defaultValue={}
+                        onDelete={() => {
+                          const updatedValue = [...value];
+                          updatedValue.splice(index, 1);
+                          setSelectedBranch(updatedValue);
+                          setValue('branch', updatedValue);
+                        }}
+                        color="primary"
+                        sx={{ m: 0.75 }}
+                      />
+                    ))}
+                  </div>
+                )}
+                isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
               />
             </Grid>
 
@@ -430,6 +437,13 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       </form>
     </Dialog>
   );
+};
+
+UserEditDialog.propTypes = {
+  openEdit: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  userData: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserEditDialog;

@@ -31,14 +31,15 @@ export const getActiveFaqCategories = async (data) => {
   }
 };
 
-export const getAllFaqCategories = async (selectedBranchId) => {
+
+export const getAllFaqCategories = async (data) => {
   try {
     const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/read-all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
 
     console.log(response);
@@ -55,7 +56,7 @@ export const getAllFaqCategories = async (selectedBranchId) => {
     console.error('Error in get all Faq categories:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
 

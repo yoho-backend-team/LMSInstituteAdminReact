@@ -1,13 +1,12 @@
-// material-ui
 import { Grid } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import BatchViewSkeleton from 'components/cards/Skeleton/BatchViewSkeleton';
+import { getBatchDetails } from 'features/batch-management/batches/services/batchServices';
 import HeaderCard from 'features/batch-management/view-batch/components/ViewBatchHeaderCard';
 import ViewBatchTable from 'features/batch-management/view-batch/components/ViewBatchTable';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
-import { getBatchDetails } from 'features/batch-management/batches/services/batchServices';
-import { useTheme } from '@mui/material/styles';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -18,19 +17,16 @@ const useTimeout = (callback, delay) => {
 };
 
 const ViewBatch = () => {
-  // States
   const dispatch = useDispatch();
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-
   const batchId = location.state.id;
+  const [batchData, setBatchData] = useState([]);
 
   useTimeout(() => {
     setLoading(false);
   }, 1000);
-
-  const [batchData, setBatchData] = useState([]);
 
   useEffect(() => {
     const data = {
@@ -41,7 +37,7 @@ const ViewBatch = () => {
 
   const getBatchData = async (data) => {
     try {
-      setLoading(false);
+      setLoading(true);
       const result = await getBatchDetails(data);
       if (result.success) {
         console.log('Batches:', result.data);

@@ -12,13 +12,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
-import { TextField } from '@mui/material';
+import { MenuItem, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
-import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -33,15 +34,15 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
-  batch: yup.string().required('Batch is required'),
+  batch: yup.object().required('Batch is required'),
   student: yup.string().required('Students is required'),
   amount: yup.number().typeError('Amount must be a number').required('Paid Amount is required'),
-  studentfee: yup.object().required('Student Fee is required')
+  studentfee: yup.string().required('Student Fee is required')
 });
 
 const defaultValues = {
   course: '',
-  batch: '',
+  batch: null,
   student: '',
   amount: Number('0'),
   studentfee: ''
@@ -49,15 +50,15 @@ const defaultValues = {
 
 const RefundAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
-  // ** State
-
+  const { open, toggle, setRefetch } = props;
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  const [activeStudents, setActiveStudents] = useState([]);
   const [activeStudentsFee, setActiveStudentsFee] = useState([]);
+
+  const [selectedStudentFee, setSelectedStudentFee] = useState(null);
+
+  const [students, setStudents] = useState([]);
 
   console.log(activeStudentsFee);
 
@@ -72,27 +73,33 @@ const RefundAddDrawer = (props) => {
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId };
-    const result = await getAllActiveBatchesByCourse(data);
+    const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
+    const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
+
+    result.data.data.forEach((batch) => {
+      getStudentsByBatch(batch.batch_id);
+    });
   };
 
-  const getActiveStudentByBatch = async (courseId) => {
-    const data = { batch_id: courseId };
-    const result = await getAllStudentsByBatch(data);
-
-    console.log('active students : ', result.data);
-    setActiveStudents(result.data.data);
+  const getStudentsByBatch = async (batchId) => {
+    const data = { batch_id: batchId, branch_id: selectedBranchId };
+    const result = await getAllStudents(data);
+    setStudents(result.data.data);
   };
 
   const getStudentByStudentFee = async (studentId) => {
-    const data = { student_id: studentId };
-    const result = await getFeeByStudentId(data);
+    try {
+      const data = { student_id: studentId };
+      const result = await getFeeByStudentId(data);
 
-    console.log('student fees : ', result.data);
-    setActiveStudentsFee(result.data.data);
+      console.log('student fees : ', result.data.data);
+      setActiveStudentsFee(result.data.data);
+    } catch (error) {
+      console.error('Error fetching student fees:', error);
+    }
   };
 
   const {
@@ -109,35 +116,39 @@ const RefundAddDrawer = (props) => {
 
   const handleClose = () => {
     setValue('amount', '');
-    setValue(''); // Reset input value
-    reset(); // Reset form values
-    toggle(); // Close the drawer
+    setValue('');
+    reset();
+    toggle();
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-    var bodyFormData = new FormData();
-    bodyFormData.append('student_id', data.student);
-    bodyFormData.append('course_id', data.course);
-    bodyFormData.append('batch_id', data.batch);
-    bodyFormData.append('amount', data.amount);
-    bodyFormData.append('institute_student_fee_id', data.studentfee.fee_id);
-    bodyFormData.append('branch_id', selectedBranchId);
+    if (selectedStudentFee) {
+      console.log('Form data:', data);
+      try {
+        const InputData = {
+          student_id: data.student,
+          course_id: data.course,
+          batch_id: data.batch,
+          amount: data.amount,
+          institute_student_fee_id: selectedStudentFee.fee_id,
+          branch_id: selectedBranchId
+        };
 
-    const result = await addStudentFeeRefund(bodyFormData);
+        const result = await addStudentFeeRefund(InputData);
 
-    if (result.success) {
-      toast.success(result.message);
-      handleClose();
+        if (result.success) {
+          toast.success(result.message);
+          setRefetch((state) => !state);
+          handleClose();
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        toast.error('An error occurred while submitting the form. Please try again.');
+      }
     } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      });
-      toast.error(errorMessage.trim());
-      // toast.error(result.message);
+      toast.error('Please select a student fee.');
     }
   };
 
@@ -199,18 +210,26 @@ const RefundAddDrawer = (props) => {
                 name="batch"
                 control={control}
                 rules={{ required: 'Batch field is required' }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field }) => (
                   <Autocomplete
+                    {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(batch) => batch.batch_name}
+                    getOptionLabel={(option) => option?.batch?.batch_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.batch_id);
-                      getActiveStudentByBatch(newValue?.batch_id);
+                      field.onChange(newValue);
+                      setValue('batch', newValue);
+                      getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                    value={field.value}
                     renderInput={(params) => (
-                      <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      <TextField
+                        {...params}
+                        sx={{ mb: 2 }}
+                        label="Batch"
+                        error={Boolean(errors.batch)}
+                        helperText={errors.batch?.message}
+                      />
                     )}
                   />
                 )}
@@ -222,38 +241,45 @@ const RefundAddDrawer = (props) => {
                 name="student"
                 control={control}
                 rules={{ required: 'Student field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
+                render={({ field: { value } }) => (
+                  <TextField
+                    select
                     fullWidth
-                    options={activeStudents}
-                    getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?.student_id);
-                      getStudentByStudentFee(newValue?.student_id);
+                    label="Student"
+                    value={value}
+                    onChange={(e) => {
+                      setValue('student', e.target.value);
+                      getStudentByStudentFee(e.target.value);
                     }}
-                    value={activeStudents.find((student) => student.student_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
-                    )}
-                  />
+                    error={Boolean(errors.student)}
+                    helperText={errors.student?.message}
+                  >
+                    {students.map((student) => (
+                      <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
+                        {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 )}
               />
             </Grid>
 
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
-                name="studentFee"
+                name="studentfee"
                 control={control}
                 rules={{ required: 'Student Fee field is required' }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field }) => (
                   <Autocomplete
+                    {...field}
                     fullWidth
                     options={activeStudentsFee}
-                    getOptionLabel={(student) => `${student.fee_id}`}
+                    getOptionLabel={(studentFee) => `${studentFee.fee_id}`}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.student_id), setValue('studentfee', newValue);
+                      setSelectedStudentFee(newValue);
+                      field.onChange(newValue?.fee_id);
                     }}
-                    value={activeStudentsFee.find((student) => student.student_id === value) || null}
+                    value={selectedStudentFee}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -298,6 +324,11 @@ const RefundAddDrawer = (props) => {
       </Drawer>
     </DatePickerWrapper>
   );
+};
+RefundAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default RefundAddDrawer;

@@ -1,29 +1,19 @@
-// ** React Imports
-import { useState } from 'react';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
+import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-
-// ** Custom Components
-import CustomChip from 'components/mui/chip';
+import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import CustomAvatar from 'components/mui/avatar';
-
-// ** Utils Import
+import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
-
-// import { getUserById } from '../services/viewUserServices';
-
 import UserEditDialog from './UserEditDialog';
-// import { MenuItem, TextField } from '@mui/material';
 
-const   UserViewLeft = ({ userData, id, setRefetch }) => {
+const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
     1: 'success',
     pending: 'warning',
@@ -102,7 +92,27 @@ const   UserViewLeft = ({ userData, id, setRefetch }) => {
 
               <Box sx={{ display: 'flex' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{9898765645}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.mobile}</Typography>
+              </Box>
+            </Box>
+            <Typography sx={{ mr: 2, mt: 2, fontWeight: 500, color: 'text.secondary' }}>Branches:</Typography>
+            <Box sx={{ display: 'flex', mb: 3, mt: 2 }}>
+              <Box gap={3}>
+                {userData?.branches?.map((item, index) => (
+                  <CustomChip
+                    key={index}
+                    rounded
+                    skin="light"
+                    size="small"
+                    label={item?.branch_name}
+                    color={'primary'}
+                    sx={{
+                      textTransform: 'capitalize',
+                      mb: 1,
+                      mr: 1
+                    }}
+                  />
+                ))}
               </Box>
             </Box>
           </CardContent>
@@ -117,6 +127,12 @@ const   UserViewLeft = ({ userData, id, setRefetch }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserViewLeft.propTypes = {
+  userData: PropTypes.any,
+  id: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewLeft;

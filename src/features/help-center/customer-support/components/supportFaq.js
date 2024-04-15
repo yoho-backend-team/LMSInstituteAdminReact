@@ -10,15 +10,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
-
-// ** Icon Imports
+import PropTypes from 'prop-types';
 import Icon from 'components/icon';
 
-// ** Custom Components Imports
-// import CustomAvatar from 'components/mui/avatar';
-// import { getAllFaqCategorywithFaq } from 'features/faq-management/faq-categories/services/faqCategoryServices';
-
-// Styled TabList component
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   marginTop: theme.spacing(6),
@@ -76,9 +70,6 @@ const SupportFaq = ({ faqCategories }) => {
         <TabPanel key={tab?.id} value={tab?.id} sx={{ p: 6.5, pt: 0, width: '100%' }}>
           <Box key={tab?.id}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {/* <CustomAvatar skin="light" variant="rounded" sx={{ height: 48, width: 48 }}>
-                <Icon icon={tab?.icon} fontSize="2.25rem" />
-              </CustomAvatar> */}
               <Box sx={{ ml: 4 }}>
                 <Typography variant="h4">{tab?.title}</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{tab?.subtitle}</Typography>
@@ -125,21 +116,15 @@ const SupportFaq = ({ faqCategories }) => {
           <TabList orientation="vertical" onChange={handleChange}>
             {renderTabs()}
           </TabList>
-          {/* <Box
-            sx={{
-              mt: 5.5,
-              display: 'flex',
-              justifyContent: 'center',
-              '& img': { maxWidth: '100%', display: { xs: 'none', md: 'block' } }
-            }}
-          >
-            <img src="/images/pages/faq-illustration.png" alt="illustration" width="230" />
-          </Box> */}
         </Box>
         {renderTabContent()}
       </TabContext>
     </MuiBox>
   );
+};
+
+SupportFaq.propTypes = {
+  faqCategories: PropTypes.any
 };
 
 export default SupportFaq;

@@ -1,29 +1,25 @@
-// ** React Imports
-import { useEffect, useState, forwardRef } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { forwardRef, useEffect, useState } from 'react';
+import { Button, Grid, Typography, MenuItem } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-// import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
+import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFee } from '../services/studentFeeServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
-import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
-import DatePicker from 'react-datepicker';
-import Autocomplete from '@mui/material/Autocomplete';
+import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -32,31 +28,28 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }));
 
-const defaultValues = {
-  branch: '',
-  course: '',
-  batch: '',
-  student: '',
-  payment_date: new Date(),
-  // transaction_id: Number(''),
-  // paidAmount: Number('')
-};
-
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
   branch: yup.string().required('Branch is required'),
-  batch: yup.string().required('Batch is required'),
+  batch: yup.object().required('Batch is required'),
   student: yup.string().required('Students is required'),
   payment_date: yup.string().required('Payment Date is required'),
   transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
   paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
 
+const defaultValues = {
+  branch: '',
+  course: '',
+  batch: null,
+  student: '',
+  payment_date: new Date()
+};
 
 const FeesAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
-  // ** State
+  const { open, toggle, setRefetch } = props;
+
   const [inputValue, setInputValue] = useState('');
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
@@ -67,7 +60,8 @@ const FeesAddDrawer = (props) => {
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  const [activeStudents, setActiveStudents] = useState([]);
+  const [students, setStudents] = useState([]);
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -82,25 +76,29 @@ const FeesAddDrawer = (props) => {
     console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
+
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id:selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
+
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId };
-    const result = await getAllActiveBatchesByCourse(data);
+    const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
+    const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
+    result.data.data.forEach((batch) => {
+      getStudentsByBatch(batch.batch_id);
+    });
   };
-  const getActiveStudentByBatch = async (courseId) => {
-    const data = { batch_id: courseId };
-    const result = await getAllStudentsByBatch(data);
 
-    console.log('active students : ', result.data);
-    setActiveStudents(result.data.data);
+  const getStudentsByBatch = async (batchId) => {
+    const data = { batch_id: batchId, branch_id: selectedBranchId };
+    const result = await getAllStudents(data);
+    setStudents(result.data.data);
   };
 
   const {
@@ -116,18 +114,19 @@ const FeesAddDrawer = (props) => {
   });
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); 
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
+
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    toggle();
+    reset();
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -143,15 +142,16 @@ const FeesAddDrawer = (props) => {
 
     if (result.success) {
       toast.success(result.message);
+      handleClose();
+      setRefetch((state) => !state);
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -187,12 +187,6 @@ const FeesAddDrawer = (props) => {
         setInputValue(reader.result);
       }
     }
-  };
-
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
   };
 
   return (
@@ -293,18 +287,26 @@ const FeesAddDrawer = (props) => {
                 name="batch"
                 control={control}
                 rules={{ required: 'Batch field is required' }}
-                render={({ field: { value, onChange } }) => (
+                render={({ field }) => (
                   <Autocomplete
+                    {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(batch) => batch.batch_name}
+                    getOptionLabel={(option) => option?.batch?.batch_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.batch_id);
-                      getActiveStudentByBatch(newValue?.batch_id);
+                      field.onChange(newValue);
+                      setValue('batch', newValue);
+                      getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                    value={field.value}
                     renderInput={(params) => (
-                      <TextField {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                      <TextField
+                        {...params}
+                        sx={{ mb: 2 }}
+                        label="Batch"
+                        error={Boolean(errors.batch)}
+                        helperText={errors.batch?.message}
+                      />
                     )}
                   />
                 )}
@@ -317,16 +319,21 @@ const FeesAddDrawer = (props) => {
                 control={control}
                 rules={{ required: 'Student field is required' }}
                 render={({ field: { value, onChange } }) => (
-                  <Autocomplete
+                  <TextField
+                    select
                     fullWidth
-                    options={activeStudents}
-                    getOptionLabel={(student) => `${student.first_name} ${student.last_name}`}
-                    onChange={(event, newValue) => onChange(newValue?.student_id)}
-                    value={activeStudents.find((student) => student.student_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Student" error={Boolean(errors.student)} helperText={errors.student?.message} />
-                    )}
-                  />
+                    label="Student"
+                    value={value}
+                    onChange={onChange}
+                    error={Boolean(errors.student)}
+                    helperText={errors.student?.message}
+                  >
+                    {students.map((student) => (
+                      <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
+                        {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 )}
               />
             </Grid>
@@ -422,4 +429,9 @@ const FeesAddDrawer = (props) => {
   );
 };
 
+FeesAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any,
+};
 export default FeesAddDrawer;

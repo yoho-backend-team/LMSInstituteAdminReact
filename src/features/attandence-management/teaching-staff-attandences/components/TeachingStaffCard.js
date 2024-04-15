@@ -1,4 +1,3 @@
-// ** MUI Imports
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -7,10 +6,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Avatar from 'components/mui/avatar';
 import { Link } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { useEffect } from 'react';
-// import { getAllTeachingStaffAttendances } from '../redux/teachingStaffAttendanceThunks';
-// import { selectTeachingStaffAttendances } from '../redux/teachingStaffAttendanceSelectors';
+import PropTypes from 'prop-types';
 
 const TeachingStaffCard = ({ teachingStaffs }) => {
   return (
@@ -53,7 +49,13 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                       sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', mt: 1 }}
                     >
                       <Grid>
-                        <Button component={Link} to={`teaching-staff-attendances/${item.staff?.staff_id}`} variant="tonal" sx={{ px: 4 }}>
+                        <Button
+                          component={Link}
+                          state={{ staff: item.staff }}
+                          to={`teaching-staff-attendances/${item.staff?.staff_id}`}
+                          variant="tonal"
+                          sx={{ px: 4 }}
+                        >
                           View Attendance
                         </Button>
                       </Grid>
@@ -67,6 +69,10 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
       </Grid>
     </>
   );
+};
+
+TeachingStaffCard.propTypes = {
+  teachingStaffs: PropTypes.any
 };
 
 export default TeachingStaffCard;

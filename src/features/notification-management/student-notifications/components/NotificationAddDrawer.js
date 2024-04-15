@@ -1,37 +1,27 @@
-// ** React Imports
-import { useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CustomChip from 'components/mui/chip';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-
-// ** MUI Imports
-import { Button, Grid, Typography, Checkbox } from '@mui/material';
+import { Button, Checkbox, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import { useEffect } from 'react';
+import CustomChip from 'components/mui/chip';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllStudents } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
+import * as yup from 'yup';
 import { addStudentNotification } from '../services/studentNotificationServices';
 
-import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
-
 const NotificationAddDrawer = (props) => {
-  // ** Props
-  const { open, toggle } = props;
-
-  // ** State
+  const { open, toggle, setStudentNotificationRefetch } = props;
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -53,29 +43,28 @@ const NotificationAddDrawer = (props) => {
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({branch_id:selectedBranchId});
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId };
-    const result = await getAllActiveBatchesByCourse(data);
+    const data = { course_id: courseId, branch_id: selectedBranchId };
+    const result = await getAllBatches(data);
 
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
 
-    // Fetch students whenever active batches change
     result.data.data.forEach((batch) => {
       getStudentsByBatch(batch.batch_id);
     });
   };
 
   const getStudentsByBatch = async (batchId) => {
-    const data = { batch_id: batchId };
-    const result = await getAllStudentsByBatch(data);
-    setStudents(result.data.data); // Assuming result.data contains the list of students
+    const data = { batch_id: batchId, branch_id: selectedBranchId };
+    const result = await getAllStudents(data);
+    setStudents(result.data.data);
   };
 
   const Header = styled(Box)(({ theme }) => ({
@@ -88,20 +77,20 @@ const NotificationAddDrawer = (props) => {
   const schema = yup.object().shape({
     students: yup.array().required('Students is required').min(1, 'Select at least one student'),
     title: yup
-    .string()
-    .required('Title is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+      .string()
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     body: yup
-    .string()
-    .required('Body is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+      .string()
+      .required('Body is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
     course: yup.object().required('Course is required'),
     batch: yup.object().required('Batch is required')
   });
 
   const defaultValues = {
-    course: null, // Changed to null
-    batch: null, // Changed to null
+    course: null,
+    batch: null,
     students: [],
     title: '',
     body: ''
@@ -112,31 +101,30 @@ const NotificationAddDrawer = (props) => {
     control,
     setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
 
-
   const handleClose = () => {
-    setInputValue(''); // Reset input value
-    setImgSrc(image); // Reset image source
-    setSelectedImage(''); // Reset selected image
-    reset(); // Reset form values
-    toggle(); // Close the drawer
+    setInputValue('');
+    setImgSrc(image);
+    setSelectedImage('');
+    reset();
+    toggle();
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-    var bodyFormData = new FormData();
-    data?.students?.forEach((student) => {
-      bodyFormData.append('student_ids[]', student?.student_id);
+    const bodyFormData = new FormData();
+    selectedStudents?.forEach((student) => {
+      bodyFormData.append('student_ids[]', student.student.student_id);
     });
     bodyFormData.append('image', selectedImage);
-    bodyFormData.append('course', data.course.course_id); // Accessing course_id from selected object
-    bodyFormData.append('branch_id', selectedBranchId); // Accessing batch_id from selected object
+    bodyFormData.append('course', data.course.course_id);
+    bodyFormData.append('batch', data.batch.batch_id);
+    bodyFormData.append('branch_id', selectedBranchId);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
 
@@ -145,17 +133,11 @@ const NotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
+      setStudentNotificationRefetch((state) => !state);
     } else {
-      // let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
       toast.error(result.message);
     }
   };
-
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
@@ -241,8 +223,8 @@ const NotificationAddDrawer = (props) => {
                   options={activeCourse}
                   getOptionLabel={(option) => option.course_name}
                   onChange={(event, newValue) => {
-                    field.onChange(newValue); // This will update the form state
-                    setValue('course', newValue); // Set the selected value in the form state
+                    field.onChange(newValue);
+                    setValue('course', newValue);
                     getActiveBatchesByCourse(newValue?.course_id);
                   }}
                   value={activeCourse.find((course) => course.course_id === (field.value ? field.value.course_id : null)) || null}
@@ -271,16 +253,15 @@ const NotificationAddDrawer = (props) => {
                   {...field}
                   fullWidth
                   options={activeBatches}
-                  getOptionLabel={(option) => option.batch_name}
+                  getOptionLabel={(option) => option?.batch?.batch_name}
                   onChange={(event, newValue) => {
-                    field.onChange(newValue); // This will update the form state
-                    setValue('batch', newValue); // Set the selected value in the form state
-                    // Optionally, you can fetch students here based on the selected batch
+                    field.onChange(newValue);
+                    setValue('batch', newValue);
                     getStudentsByBatch(newValue?.batch_id);
                   }}
-                  value={activeBatches.find((batch) => batch.batch_id === (field.value ? field.value.batch_id : null)) || null}
+                  value={field.value}
                   renderInput={(params) => (
-                    <TextField sx={{ mb: 2 }} {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
+                    <TextField {...params} sx={{ mb: 2 }} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message} />
                   )}
                 />
               )}
@@ -288,75 +269,69 @@ const NotificationAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-            <Autocomplete
-              multiple
-              disableCloseOnSelect
-              id="select-multiple-chip"
-              options={students}
-              getOptionLabel={(option) => option?.first_name}
-              value={selectedStudents}
-              onChange={(e, newValue) => {
-                setSelectedStudents(newValue);
-                setValue('students', newValue);
-              }}
-              renderInput={(params) => (
-                <Controller
-                  name="students"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+            <Controller
+              name="students"
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value } }) => (
+                <Autocomplete
+                  multiple
+                  disableCloseOnSelect
+                  id="select-multiple-chip"
+                  options={students}
+                  getOptionLabel={(option) => option?.student?.first_name || ''}
+                  value={value}
+                  onChange={(e, newValue) => {
+                    setValue('students', newValue);
+                    setSelectedStudents(newValue);
+                  }}
+                  renderInput={(params) => (
                     <TextField
                       {...params}
                       sx={{ mb: 2 }}
                       fullWidth
                       label="Students"
-                      value={value}
-                      onChange={onChange}
                       error={Boolean(errors.students)}
                       helperText={errors.students ? errors.students.message : null}
-                      aria-describedby="stepper-linear-personal-branches"
-                      // {...(errors.students['Students'] && { helperText: 'This field is required' })}
-                      // {...(errors.students && { helperText: 'This field is required' })}
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
                     />
                   )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option?.student?.first_name}
+                    </li>
+                  )}
+                  renderTags={(value) => (
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      {value?.map((option, index) => (
+                        <CustomChip
+                          key={option?.student?.student_id}
+                          label={option?.student?.first_name}
+                          onDelete={() => {
+                            const updatedValue = [...value];
+                            updatedValue?.splice(index, 1);
+                            setValue('students', updatedValue);
+                            setSelectedStudents(updatedValue);
+                          }}
+                          color="primary"
+                          sx={{ m: 0.75 }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  isOptionEqualToValue={(option, value) => option?.student?.student_id === value?.student?.student_id}
+                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               )}
-              renderOption={(props, option, { selected }) => (
-                <li {...props}>
-                  <Checkbox
-                    icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                    checkedIcon={<CheckBoxIcon fontSize="small" />}
-                    style={{ marginRight: 8 }}
-                    checked={selected}
-                  />
-                  {option?.first_name}
-                </li>
-              )}
-              renderTags={(value) => (
-                <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                  {value?.map((option, index) => (
-                    <CustomChip
-                      key={option?.student_id}
-                      label={option?.first_name}
-                      onDelete={() => {
-                        const updatedValue = [...value];
-                        updatedValue?.splice(index, 1);
-                        setSelectedStudents(updatedValue);
-                        setValue('students', updatedValue);
-                      }}
-                      color="primary"
-                      sx={{ m: 0.75 }}
-                    />
-                  ))}
-                </div>
-              )}
-              isOptionEqualToValue={(option, value) => option?.student_id === value?.student_id}
-              selectAllText="Select All"
-              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
             />
           </Grid>
 
@@ -395,8 +370,8 @@ const NotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
-                  multiline // Add multiline prop
-                  rows={4} // Set rows to 4
+                  multiline
+                  rows={4}
                 />
               )}
             />
@@ -414,6 +389,12 @@ const NotificationAddDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+NotificationAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setStudentNotificationRefetch: PropTypes.any
 };
 
 export default NotificationAddDrawer;

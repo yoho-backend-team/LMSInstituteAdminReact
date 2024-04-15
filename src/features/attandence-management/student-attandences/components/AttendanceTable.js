@@ -1,6 +1,5 @@
-// ** React Imports
-import { forwardRef, useState } from 'react';
-// ** MUI Imports
+import { TextField } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,28 +9,21 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Third Party Imports
 import format from 'date-fns/format';
+import { forwardRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-// ** Utils Import
-import { getInitials } from 'utils/get-initials';
-// ** Custom Components Imports
-import { TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
+import { getInitials } from 'utils/get-initials';
 import FeesCardHeader from './AttendanceHeader';
 
-// ** Styled Components
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
-// ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
   fontSize: theme.typography.body1.fontSize,
   color: `${theme.palette.primary.main} !important`
 }));
 
-// ** renders client column
 const renderClient = (row) => {
   if (row.avatar.length) {
     return <Avatar src={row.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
@@ -139,7 +131,6 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
-/* eslint-enable */
 const AttendanceTable = () => {
   // ** State
   const [dates, setDates] = useState([]);

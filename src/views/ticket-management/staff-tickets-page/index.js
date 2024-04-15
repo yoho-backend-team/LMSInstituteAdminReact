@@ -1,31 +1,23 @@
-// React Imports
-import { useState } from 'react';
-
-// MUI Imports
 import TabContext from '@mui/lab/TabContext';
+import CustomTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { Grid } from '@mui/material';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
-// Component Imports
-import CustomTabList from '@mui/lab/TabList';
-
-import { getAllStaffClosedTickets } from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketThunks';
-import { getAllStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketThunks';
-
-import { Grid } from '@mui/material';
 import ClosedTicketCard from 'features/ticket-management/staff/components/ClosedTicketCard';
 import OpenTicketCard from 'features/ticket-management/staff/components/OpenTicketCard';
 import TicketResolveDrawer from 'features/ticket-management/staff/components/ResolveTicketDrawer';
 import { selectLoading, selectStaffClosedTickets } from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketSelectors';
+import { getAllStaffClosedTickets } from 'features/ticket-management/staff/redux/closed-tickets/staffClosedTicketThunks';
 import { selectStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketSelectors';
-import { useEffect } from 'react';
+import { getAllStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketThunks';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 
 const StaffTicketsPage = () => {
   // States
-
   const [value, setValue] = useState('open');
   const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -90,13 +82,9 @@ const StaffTicketsPage = () => {
             </TabPanel>
           </TabContext>
         )}
-        <TicketResolveDrawer
-         open={openResolveDrawer}
-          toggle={handleCloseDrawer}
-          setRefetch={setRefetch}
-          ticket={selectedTicket} />
+        <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} setRefetch={setRefetch} ticket={selectedTicket} />
       </MainCard>
-    </> 
+    </>
   );
 };
 

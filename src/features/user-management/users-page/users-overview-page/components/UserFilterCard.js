@@ -1,16 +1,14 @@
-import React from 'react';
-import Grid from '@mui/material/Grid';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import MenuItem from '@mui/material/MenuItem';
 import { TextField } from '@mui/material';
 import Card from '@mui/material/Card';
-// import { setUsers } from 'features/user-management/users-page/redux/userSlices';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
-import { useDispatch } from 'react-redux';
-import { useCallback, useState } from 'react';
-// import { FilterUsersByStatus } from 'features/user-management/users-page/services/userServices';
 import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) => {
   const [role, setRole] = useState('');
@@ -82,6 +80,13 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) =>
       </Card>
     </>
   );
+};
+
+UserFilterCard.propTypes = {
+  selectedBranchId: PropTypes.any,
+  groups: PropTypes.any,
+  toggle: PropTypes.any,
+  setUserRefetch: PropTypes.any
 };
 
 export default UserFilterCard;

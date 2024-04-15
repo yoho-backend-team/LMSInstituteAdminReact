@@ -8,6 +8,7 @@ import CategoryEditModal from './CategoryEditModal';
 import { updateCourseCategoryStatus } from '../../services/courseCategoryServices';
 import { deleteCourseCategory } from '../../services/courseCategoryServices';
 import toast from 'react-hot-toast';
+import PropTypes from 'prop-types';
 
 const CategoryCard = (props) => {
   // Props
@@ -84,7 +85,6 @@ const CategoryCard = (props) => {
                 iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
                 options={[
                   {
-                    // to: `/apps/invoice/edit/${row.id}`,
                     text: 'Edit',
                     icon: <Icon icon="tabler:edit" />,
                     menuItemProps: {
@@ -94,7 +94,6 @@ const CategoryCard = (props) => {
                     }
                   },
                   {
-                    // to: `/apps/invoice/delete/${row.id}`,
                     text: 'Delete',
                     icon: <Icon icon="mdi:delete-outline" />,
                     menuItemProps: {
@@ -105,7 +104,7 @@ const CategoryCard = (props) => {
               />
             </Box>
           </Box>
-          {/* Category Details */}
+
           <Typography
             variant="h3"
             sx={{
@@ -163,6 +162,12 @@ const CategoryCard = (props) => {
       />
     </Grid>
   );
+};
+
+CategoryCard.propTypes = {
+  sx: PropTypes.any,
+  category: PropTypes.any,
+  setCategoryRefetch: PropTypes.any
 };
 
 export default CategoryCard;

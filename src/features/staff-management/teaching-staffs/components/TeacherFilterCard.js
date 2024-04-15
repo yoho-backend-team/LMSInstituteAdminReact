@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-import { useEffect } from 'react';
 import { Box, Button } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
@@ -8,12 +6,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
 const TeacherFilter = (props) => {
   const { selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
@@ -39,7 +39,6 @@ const TeacherFilter = (props) => {
       const searchInput = e.target.value;
       setSearchValue(searchInput);
       dispatch(getAllTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'teaching' }));
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -53,9 +52,7 @@ const TeacherFilter = (props) => {
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   fullWidth
-                  // value={value}
                   onChange={(e, newValue) => {
-                    // const courseId = newValue?.map((item) => item?.course_id);
                     const data = {
                       type: 'teaching',
                       course_id: newValue.course_id,
@@ -65,11 +62,18 @@ const TeacherFilter = (props) => {
                   }}
                   options={courses}
                   getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
+                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
+                  key={(option, index) => index}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Search By Status"
+                  SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                >
+                  <MenuItem value="">Select Status</MenuItem>
                   <MenuItem value="1">Active</MenuItem>
                   <MenuItem value="0">Inactive</MenuItem>
                 </TextField>
@@ -85,9 +89,9 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3} sx={{alignItems:'center'}}>
-                <Box component={Link} to={'teaching-staffs/add'} sx={{p:0,m:0}}>
-                  <Button variant="contained" size="medium" fullWidth sx={{px:2,py:1.5}}>
+              <Grid item xs={12} sm={3} sx={{ alignItems: 'center' }}>
+                <Box component={Link} to={'teaching-staffs/add'} sx={{ p: 0, m: 0 }}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem' }}>
                     Add New Staff
                   </Button>
                 </Box>
@@ -98,6 +102,10 @@ const TeacherFilter = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+TeacherFilter.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default TeacherFilter;

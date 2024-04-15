@@ -34,7 +34,7 @@ export const getActiveCategoriesByBranch = async (data) => {
 };
 export const getAllCourseCategories = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read`, {
+    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -129,11 +129,11 @@ export const updateCourseCategory = async (data) => {
   try {
     const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/update`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseCategory updated successfully' };

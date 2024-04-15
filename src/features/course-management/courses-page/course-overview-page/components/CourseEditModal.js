@@ -7,14 +7,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
-import { useCallback, useEffect, useState } from 'react';
-
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import toast from 'react-hot-toast';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
-
+import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import * as yup from 'yup';
 import { updateCourse } from '../../services/courseServices';
 
 const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) => {
@@ -58,7 +57,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
   const {
     handleSubmit,
     control,
-    reset,
     setValue,
     formState: { errors }
   } = useForm({
@@ -149,17 +147,16 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
 
         if (result.success) {
           toast.success(result.message);
-          // setRefetchBranch((state) => !state);
           handleClose();
         } else {
           toast.error(result.message);
         }
-        console.log(formData); // Just logging the FormData for now
+        console.log(formData);
       } catch (error) {
         console.error(error);
       }
     },
-    [course] // Add dependencies if needed
+    [course]
   );
 
   console.log(onSubmit);
@@ -167,7 +164,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
   // Close the modal
   const handleClose = useCallback(() => {
     handleEditClose();
-    reset();
   }, [handleEditClose, course]);
 
   useEffect(() => {
@@ -220,7 +216,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                   name="course_name"
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { onChange,value } }) => (
+                  render={({ field: { onChange, value } }) => (
                     <CustomTextField
                       fullWidth
                       value={value}
@@ -244,7 +240,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
-                      // defaultValue={course?.institute_course_branch?.duration}
                       value={value}
                       label="Course Duration"
                       type="number"
@@ -392,8 +387,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
                   </Box>
                 </Grid>
 
-                {/*  */}
-
                 <Grid item xs={12} md={6}>
                   <Box sx={{ mb: 2 }}>
                     {!selectedTemplate && (
@@ -447,6 +440,13 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
       </Dialog>
     </div>
   );
+};
+
+CourseEditModal.propTypes = {
+  selectedBranchId: PropTypes.any,
+  course: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  open: PropTypes.any
 };
 
 export default CourseEditModal;

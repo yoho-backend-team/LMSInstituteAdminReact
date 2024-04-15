@@ -6,6 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import { getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -38,14 +39,14 @@ const CourseFilter = ({ selectedBranchId }) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Course" />
+            <CardHeader title="Institute Courses" />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
                     fullWidth
-                    label="Status"
+                    label="Search By Status"
                     defaultValue={''}
                     SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
@@ -70,7 +71,7 @@ const CourseFilter = ({ selectedBranchId }) => {
                     }}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.category_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Categories" placeholder="Favorites" />}
+                    renderInput={(params) => <TextField {...params} label="Search By Categories" placeholder="Favorites" />}
                   />
                 </Grid>
               </Grid>
@@ -82,4 +83,7 @@ const CourseFilter = ({ selectedBranchId }) => {
   );
 };
 
+CourseFilter.propTypes = {
+  selectedBranchId: PropTypes.any
+};
 export default CourseFilter;

@@ -1,10 +1,10 @@
-// ** MUI Imports
+import Box from '@mui/material/Box';
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
-import { TextField } from '@mui/material';
-
+import PropTypes from 'prop-types';
+ 
 const TeachingStaffCardHeader = (props) => {
   const { value, handleFilter } = props;
   const handleAdd = (itemId) => {
@@ -40,6 +40,11 @@ const TeachingStaffCardHeader = (props) => {
       </Box>
     </>
   );
+};
+
+TeachingStaffCardHeader.propTypes = {
+  value: PropTypes.any,
+  handleFilter: PropTypes.any
 };
 
 export default TeachingStaffCardHeader;

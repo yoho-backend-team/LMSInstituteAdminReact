@@ -1,8 +1,8 @@
-import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, Grid } from '@mui/material';
+import FileCopy from '@mui/icons-material/FileCopy';
+import { Checkbox, Grid, IconButton, InputAdornment } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -10,32 +10,22 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
-import format from 'date-fns/format';
+import dayjs from 'dayjs';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
-// import { update } from '../../services/offlineClassServices';
 import { updateLiveClass } from '../../services/liveClassServices';
-import toast from 'react-hot-toast';
-import {InputAdornment,IconButton} from '@mui/material';
-import FileCopy from '@mui/icons-material/FileCopy';
-
-/* eslint-disable */
-
-const DateCustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const value = `${startDate}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   // ** Props
@@ -44,22 +34,9 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
   return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
 });
 
-const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
+const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) => {
   console.log(liveClasses);
-
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-
-  const handleStartTimeChange = (time) => {
-    setStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    setEndTime(time);
-  };
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  // const selectedClassId = useSelector((state) => state.auth.selectedClassId);
 
   const schema = yup.object().shape({
     class_name: yup
@@ -67,26 +44,23 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
       .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
-    class_id: yup.string().required('Class ID field is required'), // Add validation for class_id
     classDate: yup.date().nullable().required('Class Date field is required'),
-    startTime: yup.date().nullable().required('Start Time field is required'),
-    endTime: yup.date().nullable().required('End Time field is required'),
-    instructor: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinator: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
+    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
 
   const defaultValues = {
     class_name: '',
     classDate: new Date(),
-    startTime: null,
-    endTime: null,
-    instructor: [],
-    coordinator: []
+    start_time: null,
+    end_time: null,
+    instructors: [],
+    coordinators: []
   };
   const handleCopyLink = () => {
     const link = 'your Generated Link';
     navigator.clipboard.writeText(link).then(() => {});
-  }; 
+  };
 
   const {
     reset,
@@ -115,40 +89,36 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
 
   useEffect(() => {
     if (liveClasses) {
-      setValue('class_name', liveClasses.class_name || ''); // Set class name
-      setValue('class_id', liveClasses.class_id || ''); // Set class ID
-      setValue('classDate', new Date(liveClasses.class_date) || new Date()); // Set class date
-      setValue('startTime', liveClasses?.startTime || null);
-      setValue('endTime', liveClasses?.endTime || null); // Set end time
-      setValue('instructor', liveClasses.instructor || []); // Set instructors
-      setValue('coordinator', liveClasses.coordinator || []); // Set coordinators
+      setValue('class_name', liveClasses.class_name || '');
+      setValue('class_id', liveClasses.class_id || '');
+      setValue('classDate', new Date(liveClasses.class_date) || new Date());
+      setValue('start_time', dayjs(liveClasses?.start_time) || null);
+      setValue('end_time', dayjs(liveClasses?.end_time) || null);
+      setValue('instructors', liveClasses.instructors || []);
+      setValue('coordinators', liveClasses.coordinators || []);
+      setSelectedCoordinates(liveClasses?.coordinators);
+      setSelectedInstructors(liveClasses?.instructors);
     }
   }, [liveClasses, setValue]);
 
   console.log('selected ', liveClasses);
 
   useEffect(() => {
-    if (liveClasses && liveClasses.instructor) {
-      setSelectedInstructors(liveClasses.instructor);
-      setValue('instructor', liveClasses.instructor); // Set default value for instructor field
+    if (liveClasses && liveClasses.instructors) {
+      setSelectedInstructors(liveClasses.instructors);
+      setValue('instructors', liveClasses.instructors);
     }
   }, [liveClasses, setValue]);
 
   useEffect(() => {
-    if (liveClasses && liveClasses.coordinator) {
-      setSelectedCoordinates(liveClasses.coordinator);
-      setValue('coordinator', liveClasses.coordinator); // Set default value for coordinator field
+    if (liveClasses && liveClasses.coordinators) {
+      setSelectedCoordinates(liveClasses.coordinators);
+      setValue('coordinators', liveClasses.coordinators);
     }
   }, [liveClasses, setValue]);
 
   const handleClose = () => {
     handleEditClose();
-    // setValue('class_name', null);
-    // setValue('classDate', null);
-    // setValue('startTime', null);
-    // setValue('endTime', null);
-    // setValue('instructor', '');
-    // setValue('coordinator', '');
     reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
@@ -175,22 +145,17 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
   }, [selectedBranchId]);
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructor?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinator?.map((staff) => staff.staff_id);
+    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
     var bodyFormData = new FormData();
     filteredInstructorId?.forEach((id) => {
       bodyFormData.append('instructor_staff_ids[]', id);
@@ -205,7 +170,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
     bodyFormData.append('batch_id', data.batch_id);
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time); // Fixed field name
+    bodyFormData.append('end_time', data.end_time);
     bodyFormData.append('videoUrl', data.class_link);
 
     console.log(data);
@@ -213,17 +178,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
     const result = await updateLiveClass(bodyFormData);
 
     if (result.success) {
+      setRefetch((state) => !state);
       toast.success(result.message);
       handleClose();
     } else {
       let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
   return (
@@ -295,62 +255,59 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
               </Grid>
 
               <Grid container item xs={6} spacing={2}>
-                <Grid item xs={6}>
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="startTime"
+                    name="start_time"
                     control={control}
                     rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleStartTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput
-                            label="Start Time"
-                            sx={{ border: errors.startTime ? '1px solid red' : 'none', borderRadius: '7px' }}
-                          />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select Start Time"
-                        className={`form-control ${errors.startTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="Start Time"
+                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="Start Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.startTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.startTime.message}</p>}
+                  {errors.start_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.start_time.message}</p>
+                  )}
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item md={6} sm={12}>
                   <Controller
-                    name="endTime"
+                    name="end_time"
                     control={control}
                     rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
-                      <DatePicker
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        selected={value}
-                        onChange={(time) => {
-                          handleEndTimeChange(time);
-                          onChange(time);
-                        }}
-                        customInput={
-                          <CustomInput label="End Time" sx={{ border: errors.endTime ? '1px solid red' : 'none', borderRadius: '7px' }} />
-                        }
-                        dateFormat="h:mm aa"
-                        placeholderText="Select End Time"
-                        className={`form-control ${errors.endTime ? 'is-invalid' : ''}`}
-                      />
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <TimePicker
+                          customInput={
+                            <CustomInput
+                              label="End Time"
+                              sx={{ border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="End Time"
+                        />
+                      </LocalizationProvider>
                     )}
                   />
-                  {errors.endTime && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.endTime.message}</p>}
+                  {errors.end_time && (
+                    <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.end_time.message}</p>
+                  )}
                 </Grid>
               </Grid>
+
               <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
@@ -363,12 +320,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
-                        'instructor',
+                        'instructors',
                         activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
-                      setValue('instructor', newValue);
+                      setValue('instructors', newValue);
                     }
                   }}
                   renderInput={(params) => (
@@ -403,7 +360,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedInstructors(updatedValue);
-                            setValue('instructor', updatedValue);
+                            setValue('instructors', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -429,19 +386,19 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
                     if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
                       setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
                       setValue(
-                        'coordinator',
+                        'coordinators',
                         activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
-                      setValue('coordinator', newValue);
+                      setValue('coordinators', newValue);
                     }
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       fullWidth
-                      label="Coordinates"
+                      label="cordinators"
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -469,7 +426,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
                             setSelectedCoordinates(updatedValue);
-                            setValue('coordinator', updatedValue);
+                            setValue('coordinators', updatedValue);
                           }}
                           color="primary"
                           sx={{ m: 0.75 }}
@@ -500,8 +457,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
                 />
               </Grid>
 
-
-
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
@@ -518,6 +473,13 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+LiveClassEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  liveClasses: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default LiveClassEditModal;

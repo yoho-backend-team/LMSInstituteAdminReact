@@ -1,22 +1,19 @@
-// ** React Imports
 import { useEffect, useState } from 'react';
-// ** MUI Imports
 import { Button, Grid, Typography , Avatar} from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import { useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -66,6 +63,13 @@ const SalaryEditDrawer = (props) => {
     }
   }, [selectedRows, setValue]);
 
+
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    toggle();
+    reset();
+  };
+
   const onSubmit = useCallback(async (data) => {
     const inputData = new FormData();
     inputData.append('image', selectedImage);
@@ -77,8 +81,8 @@ const SalaryEditDrawer = (props) => {
     console.log(data);
     if (result.success) {
       toast.success(result.message);
+      handleClose();
       setRefetch((state) => !state);
-      handleEditClose();
     } else {
       toast.error(result.message);
     }
@@ -112,11 +116,7 @@ const SalaryEditDrawer = (props) => {
     }
   };
 
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
-  };
+
 
   return (
     <DatePickerWrapper>
@@ -200,13 +200,10 @@ const SalaryEditDrawer = (props) => {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
-                    // defaultValue={selectedRows? selectedRows?.total :5556}
                     value={value}
                     sx={{ mb: 2 }}
                     fullWidth
-                    // value={value}
                     onChange={onChange}
-                    // label={selectedRows?.total}
                     label="transaction Id"
                     type="number"
                     error={Boolean(errors.transaction_id)}
@@ -251,4 +248,10 @@ const SalaryEditDrawer = (props) => {
   );
 };
 
+SalaryEditDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  selectedRows: PropTypes.any,
+  setRefetch: PropTypes.any
+};
 export default SalaryEditDrawer;

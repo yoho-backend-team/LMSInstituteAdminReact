@@ -1,4 +1,3 @@
-// ** MUI Components
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -6,8 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -19,9 +18,15 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }));
 
-const UserViewLeft = () => {
+const NonTeachingViewBanner = ({ staff }) => {
+  console.log('nonTeachingViewww:', staff);
+
+  const imageUrl = staff?.teachingStaff?.image
+    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staff.teachingStaff.image}`
+    : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+
   return (
-    <Card>
+    <Card sx={{ mb: 2 }}>
       <CardMedia
         component="img"
         alt="profile-header"
@@ -40,7 +45,7 @@ const UserViewLeft = () => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src="https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg" alt="profile-picture" />
+        <ProfilePicture src={imageUrl} alt="profile-picture" />
         <Box
           sx={{
             width: '100%',
@@ -61,25 +66,13 @@ const UserViewLeft = () => {
               }}
             >
               <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                Lara Carlson
+                {staff?.teachingStaff?.staff_name}
               </Typography>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:briefcase" />
-                <Typography sx={{ color: 'text.secondary' }}>ReactJs</Typography>
-              </Box>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:map-pin" />
-                <Typography sx={{ color: 'text.secondary' }}>london</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:calendar" />
-                <Typography sx={{ color: 'text.secondary' }}>Joined 11/09/2023</Typography>
-              </Box>
             </Box>
           </Box>
-          <Button variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={staff?.teachingStaff?.is_active === '1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            Active
+            {staff?.teachingStaff?.is_active === '1' ? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>
@@ -87,4 +80,8 @@ const UserViewLeft = () => {
   );
 };
 
-export default UserViewLeft;
+NonTeachingViewBanner.propTypes = {
+  staff: PropTypes.any
+};
+
+export default NonTeachingViewBanner;

@@ -1,20 +1,17 @@
-// ** MUI Imports
 import { Grid, TextField } from '@mui/material';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import { useState } from 'react';
-import { useEffect,useCallback   } from 'react';
-// ** Icon Imports
 import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
-import { useDispatch, useSelector } from 'react-redux';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-// import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
-// import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAllCourseNotes } from '../redux/noteThunks';
+
 const NotesHeader = (props) => {
   const { toggle, selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
@@ -40,7 +37,6 @@ const NotesHeader = (props) => {
       const searchInput = e.target.value;
       dispatch(getAllCourseNotes({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -53,13 +49,14 @@ const NotesHeader = (props) => {
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12}>
                 <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       select
                       fullWidth
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
+                      <MenuItem value="">Select Status</MenuItem>
                       <MenuItem value="1">Active</MenuItem>
                       <MenuItem value="0">Inactive</MenuItem>
                     </TextField>
@@ -68,15 +65,13 @@ const NotesHeader = (props) => {
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       fullWidth
-                      // value={value}
                       onChange={(e, newValue) => {
-                        // const courseId = newValue?.map((item) => item?.course_id);
-                        console.log('selectedBranchid:',selectedBranchId)
+                        console.log('selectedBranchid:', selectedBranchId);
                         const data = {
                           course_id: newValue.course_id,
                           branch_id: selectedBranchId
                         };
-                     
+
                         dispatch(getAllCourseNotes(data));
                       }}
                       options={courses}
@@ -102,6 +97,11 @@ const NotesHeader = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+NotesHeader.propTypes = {
+  toggle: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 
 export default NotesHeader;

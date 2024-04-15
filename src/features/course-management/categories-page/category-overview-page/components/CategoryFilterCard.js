@@ -11,6 +11,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
+import PropTypes from 'prop-types';
 
 const CategoryFilter = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
@@ -40,29 +41,27 @@ const CategoryFilter = ({ selectedBranchId }) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                    <MenuItem value="">Select Status</MenuItem>
                     <MenuItem value="1">Active</MenuItem>
                     <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
 
-  
                 <Grid item xs={12} sm={6}>
-                    <Autocomplete
-                      fullWidth
-                      // value={value}
-                      onChange={(e, newValue) => {
-                        // const courseId = newValue?.map((item) => item?.course_id);
-                        const data = {
-                          course_id: newValue.course_id,
-                          branch_id: selectedBranchId
-                        };
-                        dispatch(getAllCourseCategories(data));
-                      }}
-                      options={courses}
-                      getOptionLabel={(option) => option.course_name || ''}
-                      renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
-                    />
-                  </Grid>
+                  <Autocomplete
+                    fullWidth
+                    onChange={(e, newValue) => {
+                      const data = {
+                        course_id: newValue.course_id,
+                        branch_id: selectedBranchId
+                      };
+                      dispatch(getAllCourseCategories(data));
+                    }}
+                    options={courses}
+                    getOptionLabel={(option) => option.course_name || ''}
+                    renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
+                  />
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
@@ -72,4 +71,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
   );
 };
 
+CategoryFilter.propTypes = {
+  selectedBranchId: PropTypes.any
+};
 export default CategoryFilter;

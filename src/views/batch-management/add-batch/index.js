@@ -1,47 +1,31 @@
 // material-ui
-import { Button, Grid, Typography } from '@mui/material';
-// import StudentTableList from 'features/batch-management/add-batch/components/StudentTableList';
-import { Controller, useForm } from 'react-hook-form';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import * as yup from 'yup';
-// ** React Imports
-import { forwardRef, useState, useEffect } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, TextField as CustomTextField, Grid, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import MenuItem from '@mui/material/MenuItem';
-// ** Custom Component Import
-import { TextField as CustomTextField } from '@mui/material';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
 import CustomChip from 'components/mui/chip';
-import DatePicker from 'react-datepicker';
 import { addBatch } from 'features/batch-management/batches/services/batchServices';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getAllActiveCourses, getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
-import Autocomplete from '@mui/material/Autocomplete';
 import { useNavigate } from 'react-router';
-
-// import { top100Films } from '_mock';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 
 const AddBatchPage = () => {
-  // ** States
   const navigate = useNavigate();
-
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
-
-  const CustomInput = forwardRef((props, ref) => {
-    return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
-  });
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
 
@@ -54,11 +38,15 @@ const AddBatchPage = () => {
     }
   };
 
+  const CustomInput = forwardRef((props, ref) => {
+    return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
+  });
+
   const validationSchema = yup.object().shape({
     batchName: yup
-    .string()
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters')
-    .required('Batch Name is required'),
+      .string()
+      .required('Batch Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Batch Name should not contain special characters'),
     startDate: yup.date().required('Start Date is required'),
     endDate: yup.date().required('End Date is required'),
     branch: yup.string().required('Branch is required'),
@@ -82,23 +70,18 @@ const AddBatchPage = () => {
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -111,7 +94,6 @@ const AddBatchPage = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
     console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
@@ -135,17 +117,9 @@ const AddBatchPage = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  // const handleClose = () => {
-  //   reset();
-  // };
-
   const handleStudentsChange = (event) => {
     setValue('students', event.target.value);
-    // const filteredStudent = activeStudents.filter((student) => student.student_id === event.target.value);
-    // console.log('filtered', filteredStudent);
-    // const filteredStudent = activeStudents.filter(item => event.target.value.includes(item.student_id));
     const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student.student_id));
-
     console.log('event', event.target.value);
     console.log('filter', filteredStudents);
     setSelectedStudentIds(event.target.value);
@@ -153,7 +127,7 @@ const AddBatchPage = () => {
   };
 
   const getStudentByCourseId = async (courseId) => {
-    const result = await getStudentByCourse(courseId);
+    const result = await getStudentByCourse({ course_id: courseId });
     console.log(result.data.data);
     setActiveStudents(result.data.data);
   };
@@ -174,16 +148,16 @@ const AddBatchPage = () => {
     const result = await addBatch(inputData);
 
     if (result.success) {
+      navigate(-1);
       toast.success(result.message);
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -280,8 +254,8 @@ const AddBatchPage = () => {
                         <Autocomplete
                           value={value}
                           onChange={(event, newValue) => {
-                            setValue('branch', newValue ? newValue.branch_id : ''); // Update the value of the 'branch' field
-                            getActiveCoursesByBranch(newValue ? newValue.branch_id : ''); // Call function to fetch active courses based on the selected branch
+                            setValue('branch', newValue ? newValue.branch_id : '');
+                            getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
                           }}
                           options={activeBranches}
                           getOptionLabel={(option) => option.branch_name || ''}
@@ -306,8 +280,8 @@ const AddBatchPage = () => {
                         <Autocomplete
                           value={value}
                           onChange={(event, newValue) => {
-                            setValue('course', newValue ? newValue.course_id : ''); // Update the value of the 'course' field
-                            getStudentByCourseId(newValue ? newValue.course_id : ''); // Call function to get students by course ID
+                            setValue('course', newValue ? newValue.course_id : '');
+                            getStudentByCourseId(newValue.course_id);
                           }}
                           options={activeCourse}
                           getOptionLabel={(option) => option.course_name || ''}
@@ -381,13 +355,6 @@ const AddBatchPage = () => {
           </Card>
         </DatePickerWrapper>
       </Grid>
-      {/* <Grid item xs={12}>
-        <Typography variant="h4">Students List</Typography>
-        <Typography sx={{ color: 'text.secondary' }}>Check, remove student</Typography>
-      </Grid> */}
-      {/* <Grid item xs={12}>
-        <StudentTableList />
-      </Grid> */}
     </Grid>
   );
 };

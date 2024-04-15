@@ -1,22 +1,18 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Button, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import ReactPlayer from 'react-player';
+import * as yup from 'yup';
 import { updateCourseModule } from '../services/moduleServices';
-
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -26,22 +22,18 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup
-      .string()
-      .required('Description is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
-    title: yup
-      .string()
-      .required('Title is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
-    video_url: yup
-      .string()
-      .required('Video URL is required')
-      .matches(
-        // Regular expression for validating URLs (supports common video hosting platforms)
-        /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|playlist\?list=)|youtu\.be\/|vimeo\.com\/|dai\.ly\/|dailymotion\.com\/video\/|twitch\.tv\/|bitchute\.com\/)/,
-        'Invalid video URL'
-      )
+  description: yup.string().required('Description is required'),
+  title: yup
+    .string()
+    .required('Title is required')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+  video_url: yup
+    .string()
+    .required('Video URL is required')
+    .matches(
+      /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|embed\/|v\/|playlist\?list=)|youtu\.be\/|vimeo\.com\/|dai\.ly\/|dailymotion\.com\/video\/|twitch\.tv\/|bitchute\.com\/)/,
+      'Invalid video URL'
+    )
 });
 
 const defaultValues = {
@@ -51,13 +43,17 @@ const defaultValues = {
 };
 
 const ModuleEdit = (props) => {
-  // ** Props
-  const { open, toggle,modules } = props;
-
-  // ** State
+  const { open, toggle, modules, setRefetch } = props;
 
   const [groups, setGroups] = useState([]);
 
+  const [videoUrl, setVideoUrl] = useState('');
+
+  useEffect(() => {
+    if (modules) {
+      setVideoUrl(modules.video_url);
+    }
+  }, [modules]);
 
   useEffect(() => {
     getAllGroups();
@@ -101,7 +97,6 @@ const ModuleEdit = (props) => {
     resolver: yupResolver(schema)
   });
 
-  
   useEffect(() => {
     if (modules) {
       setValue('title', modules?.title || '');
@@ -110,29 +105,26 @@ const ModuleEdit = (props) => {
     }
   }, [modules, setValue]);
 
-  console.log("modules",modules);
+  console.log('modules', modules);
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('video_url', data.videourl);
-    bodyFormData.append('id',modules.id);
+    bodyFormData.append('id', modules.id);
     console.log(bodyFormData);
 
     const result = await updateCourseModule(bodyFormData);
 
     if (result.success) {
       toast.success(result.message);
+      setRefetch((state) => !state); // Trigger category refetch
+      toggle();
     } else {
       let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
+
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
   const handleClose = () => {
@@ -148,9 +140,9 @@ const ModuleEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 380 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 480 } } }}
     >
-      <Header>
+      <Header sx={{ pb: 2 }}>
         <Typography variant="h5">Edit Module</Typography>
         <IconButton
           size="small"
@@ -170,6 +162,18 @@ const ModuleEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(3, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{ mb: 4 }}>
+            <ReactPlayer
+              style={{ objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
+              url={videoUrl}
+              controls
+              autoPlay
+              loop
+              width="100%"
+              height={200}
+            />
+          </Box>
+
           <Controller
             name="title"
             control={control}
@@ -206,25 +210,23 @@ const ModuleEdit = (props) => {
             )}
           />
 
-
-            <Controller
-              name="video_url"
-              control={control}
-              rules={{ required: 'Video URL is required' }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  fullWidth
-                  value={value}
-                  sx={{ mb: 4 }}
-                  label="Video URL"
-                  onChange={onChange}
-                  placeholder="e.g., https://www.youtube.com/watch?v=example"
-                  error={Boolean(errors.video_url)}
-                  helperText={errors.video_url ? errors.video_url.message : ''}
-                />
-              )}
-            />
-
+          <Controller
+            name="video_url"
+            control={control}
+            rules={{ required: 'Video URL is required' }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Video URL"
+                onChange={onChange}
+                placeholder="e.g., https://www.youtube.com/watch?v=example"
+                error={Boolean(errors.video_url)}
+                helperText={errors.video_url ? errors.video_url.message : ''}
+              />
+            )}
+          />
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>
@@ -238,6 +240,13 @@ const ModuleEdit = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+ModuleEdit.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  modules: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default ModuleEdit;

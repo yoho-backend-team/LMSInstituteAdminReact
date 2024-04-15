@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const STUDENT_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/id-card-management/student`;
 
-export const getAllStudentIdCards = async (selectedBranchId) => {
+export const getAllStudentIdCards = async (data) => {
   try {
     const response = await axios.get(`${STUDENT_ID_CARDS_API_ENDPOINT}/get-by-branch-id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
+      params: data
     });
     console.log(response);
     // Check if the response status is successful

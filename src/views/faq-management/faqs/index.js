@@ -1,29 +1,25 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
-import { useEffect } from 'react';
-// ** Custom Components Imports
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
-import DeleteDialog from 'components/modal/DeleteModel';
-import StatusDialog from 'components/modal/DeleteModel';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
+import FaqSkeleton from 'components/cards/Skeleton/FaqSkeleton';
+import Icon from 'components/icon';
+import { default as DeleteDialog, default as StatusDialog } from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
-import FaqAddDrawer from 'features/faq-management/faqs/components/FaqAddDrawer';
-import FaqEdit from 'features/faq-management/faqs/components/FaqEdit';
-import { useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHeader';
-import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
-import { selectFaqs, selectLoading } from 'features/faq-management/faqs/redux/faqSelectors';
 import { getActiveFaqCategories } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
-import { updateStatusFaq, deleteFaq } from 'features/faq-management/faqs/services/faqServices';
+import FaqAddDrawer from 'features/faq-management/faqs/components/FaqAddDrawer';
+import FaqEdit from 'features/faq-management/faqs/components/FaqEdit';
+import FaqTableHeader from 'features/faq-management/faqs/components/FaqTableHeader';
+import { selectFaqs, selectLoading } from 'features/faq-management/faqs/redux/faqSelectors';
+import { getAllFaqs } from 'features/faq-management/faqs/redux/faqThunks';
+import { deleteFaq, updateStatusFaq } from 'features/faq-management/faqs/services/faqServices';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
@@ -39,6 +35,7 @@ const FaqDataGrid = () => {
   const [refetch, setRefetch] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
 
   const faqs = useSelector(selectFaqs);
@@ -48,8 +45,11 @@ const FaqDataGrid = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllFaqs());
-  }, [dispatch, refetch]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllFaqs(data));
+  }, [dispatch, selectedBranchId, refetch]);
 
   const getFaqCategories = async () => {
     const result = await getActiveFaqCategories();
@@ -103,8 +103,6 @@ const FaqDataGrid = () => {
     setEditUserOpen(!editUserOpen);
     console.log('Toggle drawer');
   };
-
-  // ** Hooks
 
   const columns = [
     {
@@ -239,16 +237,16 @@ const FaqDataGrid = () => {
 
   return (
     <>
-      {faqLoading ? (
-        <ContentSkeleton />
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <FaqAccordian faqCategories={faqCategories} />
-          </Grid>
-          <Grid item xs={12}>
-            <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
-          </Grid>
+      <Grid container>
+        <Grid item xs={12}>
+          <FaqAccordian faqCategories={faqCategories} />
+        </Grid>
+        <Grid item xs={12}>
+          <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+        </Grid>
+        {faqLoading ? (
+          <FaqSkeleton />
+        ) : (
           <Grid item xs={12}>
             <Card>
               <DataGrid
@@ -264,30 +262,30 @@ const FaqDataGrid = () => {
               />
             </Card>
           </Grid>
-          <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
-          <FaqEdit
-            open={editUserOpen}
-            toggle={toggleEditUserDrawer}
-            initialValues={selectedRow}
-            faqCategories={faqCategories}
-            setRefetch={setRefetch}
-          />
-          <DeleteDialog
-            open={isDeleteDialogOpen}
-            setOpen={setDeleteDialogOpen}
-            description="Are you sure you want to delete this item?"
-            title="Delete"
-            handleSubmit={handleDeleteApi}
-          />
-          <StatusDialog
-            open={statusOpen}
-            setOpen={setStatusDialogOpen}
-            description="Are you sure you want to Change Status"
-            title="Status"
-            handleSubmit={handleStatusChangeApi}
-          />
-        </Grid>
-      )}
+        )}
+        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
+        <FaqEdit
+          open={editUserOpen}
+          toggle={toggleEditUserDrawer}
+          initialValues={selectedRow}
+          faqCategories={faqCategories}
+          setRefetch={setRefetch}
+        />
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+          handleSubmit={handleDeleteApi}
+        />
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
+      </Grid>
     </>
   );
 };

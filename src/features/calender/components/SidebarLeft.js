@@ -1,19 +1,14 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
 import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
-// ** Third Party Imports
+import Typography from '@mui/material/Typography';
+import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 import DatePicker from 'react-datepicker';
 
-// ** Icons Imports
-import Icon from 'components/icon';
-
-// ** Styled Component
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const SidebarLeft = (props) => {
@@ -35,21 +30,21 @@ const SidebarLeft = (props) => {
 
   const renderFilters = colorsArr.length
     ? colorsArr.map(([key, value]) => {
-      return (
-        <FormControlLabel
-          key={key}
-          label={key}
-          sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
-          control={
-            <Checkbox
-              color={value}
-              checked={store?.selectedCalendars.includes(key)}
-              onChange={() => dispatch(handleCalendarsUpdate(key))}
-            />
-          }
-        />
-      );
-    })
+        return (
+          <FormControlLabel
+            key={key}
+            label={key}
+            sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
+            control={
+              <Checkbox
+                color={value}
+                checked={store?.selectedCalendars.includes(key)}
+                onChange={() => dispatch(handleCalendarsUpdate(key))}
+              />
+            }
+          />
+        );
+      })
     : null;
 
   const handleSidebarToggleSidebar = () => {
@@ -66,7 +61,7 @@ const SidebarLeft = (props) => {
           disablePortal: true,
           disableAutoFocus: true,
           disableScrollLock: true,
-          keepMounted: true // Better open performance on mobile.
+          keepMounted: true
         }}
         sx={{
           zIndex: 3,
@@ -128,6 +123,21 @@ const SidebarLeft = (props) => {
   } else {
     return null;
   }
+};
+
+SidebarLeft.propTypes = {
+  store: PropTypes.any,
+  mdAbove: PropTypes.any,
+  dispatch: PropTypes.any,
+  calendarApi: PropTypes.any,
+  calendarsColor: PropTypes.any,
+  leftSidebarOpen: PropTypes.any,
+  leftSidebarWidth: PropTypes.any,
+  handleSelectEvent: PropTypes.any,
+  handleAllCalendars: PropTypes.any,
+  handleCalendarsUpdate: PropTypes.any,
+  handleLeftSidebarToggle: PropTypes.any,
+  handleAddEventSidebarToggle: PropTypes.any
 };
 
 export default SidebarLeft;

@@ -1,8 +1,7 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
+import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -22,7 +21,6 @@ const CourseCardHeader = ({ selectedBranchId }) => {
       const searchInput = e.target.value;
       dispatch(getAllCourses({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -37,7 +35,7 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         }}
       >
         <TextField
@@ -45,17 +43,21 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           sx={{
             width: 400
           }}
-          placeholder="Search Course"
+          placeholder="Search Courses"
           onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
-          <Button variant="contained" component={Link} to="courses/add" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button sx={{py:1.5,borderRadius:'0.5rem'}}variant="contained" component={Link} to="courses/add" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add New Course
           </Button>
         </Box>
       </Box>
     </>
   );
+};
+
+CourseCardHeader.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default CourseCardHeader;

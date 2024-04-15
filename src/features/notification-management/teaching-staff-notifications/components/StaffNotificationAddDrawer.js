@@ -1,26 +1,21 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Button, Checkbox, Grid, Typography } from '@mui/material';
+import { Button, Checkbox, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import CustomChip from 'components/mui/chip';
-
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
+import CustomChip from 'components/mui/chip';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { addStaffNotification } from '../services/staffNotificationServices';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -51,9 +46,7 @@ const defaultValues = {
 };
 
 const StaffNotificationAddDrawer = (props) => {
-  // ** Props
-  const { open, toggle } = props;
-  // ** State
+  const { open, toggle, setStaffNotificationRefetch } = props;
 
   const [inputValue, setInputValue] = useState('');
 
@@ -94,11 +87,11 @@ const StaffNotificationAddDrawer = (props) => {
   });
 
   const handleClose = () => {
-    setInputValue(''); // Reset input value
-    setImgSrc(image); // Reset image source
-    setSelectedImage(''); // Reset selected image
-    reset(); // Reset form values
-    toggle(); // Close the drawer
+    setInputValue('');
+    setImgSrc(image);
+    setSelectedImage('');
+    reset();
+    toggle();
   };
 
   const onSubmit = async (data) => {
@@ -109,7 +102,6 @@ const StaffNotificationAddDrawer = (props) => {
     });
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('branch_id', selectedBranchId);
-    // bodyFormData.append('institute_staff_id', data.staff.staff_id);
     bodyFormData.append('type', data.type);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
@@ -119,15 +111,9 @@ const StaffNotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
+      setStaffNotificationRefetch();
     } else {
-      // let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
       toast.error(result.message);
-      // toast.error(result.message);
     }
   };
 
@@ -259,8 +245,6 @@ const StaffNotificationAddDrawer = (props) => {
                       error={Boolean(errors.staff)}
                       helperText={errors.staff ? errors.staff.message : null}
                       aria-describedby="stepper-linear-personal-branches"
-                      // {...(errors.staff['staff'] && { helperText: 'This field is required' })}
-                      // {...(errors.staff && { helperText: 'This field is required' })}
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -304,26 +288,6 @@ const StaffNotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          {/* <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="staff"
-                control={control}
-                rules={{ required: 'Staff field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    value={value}
-                    onChange={(event, newValue) => onChange(newValue)}
-                    options={activeStaffs}
-                    getOptionLabel={(staff) => staff.staff_name}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid> */}
-
           <Grid item xs={12} sm={12}>
             <Controller
               name="title"
@@ -359,8 +323,8 @@ const StaffNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
-                  multiline // Add multiline prop
-                  rows={4} // Set rows to 4
+                  multiline
+                  rows={4}
                 />
               )}
             />
@@ -378,6 +342,12 @@ const StaffNotificationAddDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+StaffNotificationAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setStaffNotificationRefetch: PropTypes.any
 };
 
 export default StaffNotificationAddDrawer;

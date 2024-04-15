@@ -33,15 +33,16 @@ export const getActivesByBranch = async (data) => {
   }
 };
 
-export const getAllFaqs = async (selectedBranchId) => {
+
+export const getAllFaqs = async (data) => {
   try {
     const response = await axios.get(`${FAQ_API_END_POINT}/read`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { branch_id: selectedBranchId }
-    }); 
+      params: data
+    });
 
     console.log(response);
 
@@ -50,16 +51,17 @@ export const getAllFaqs = async (selectedBranchId) => {
       return response;
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Faq s. Status: ${response.status}`);
+      throw new Error(`Failed to fetch Faqs. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in get all Faq s:', error);
+    console.error('Error in get all Faqs:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
+
 
 export const searchFaqs = async (searchQuery) => {
   try {

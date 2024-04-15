@@ -58,7 +58,7 @@ export const addOfflineClass = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'OfflineClass created successfully' };
     } else {
@@ -125,9 +125,10 @@ export const getOfflineClassDetails = async (data) => {
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return{
-        success:true ,data:response?.data
-      } 
+      return {
+        success: true,
+        data: response?.data
+      };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch batch. Status: ${response.status}`);

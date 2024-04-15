@@ -1,25 +1,41 @@
-import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-import CustomChip from 'components/mui/chip';
 import Icon from 'components/icon';
-import CardMedia from '@mui/material/CardMedia';
+import { default as DeleteModal } from 'components/modal/DeleteModel';
+import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { deleteTeachingStaff } from '../services/teachingStaffServices';
+import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 
-import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
-
-const UserViewAccount = ({ staff, formattedDate }) => {
-  // ** States
-  const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
+const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
+  const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  console.log('staffID:', staff?.teachingStaff?.id);
-  console.log('teachingStaff:', staff?.teachingStaff);
+
+  const handleDelete = () => {
+    setStaffDeleteModelOpen(true);
+  };
+  const Navigate = useNavigate();
+  const handleStaffDelete = async () => {
+    const data = { id: staffID };
+    const result = await deleteTeachingStaff(data);
+
+    if (result.success) {
+      toast.success(result.message);
+      Navigate(-1);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(result.message);
+    }
+  };
 
   if (staff) {
     return (
@@ -84,13 +100,19 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => setSuspendDialogOpen(true)}>
-                  Suspend
+                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.teachingStaff?.id)}>
+                  Delete
                 </Button>
               </Box>
             </CardActions>
 
-            <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <DeleteModal
+              open={staffDeleteModelOpen}
+              setOpen={setStaffDeleteModelOpen}
+              description="Are you sure you want to delete this Course? "
+              title="Delete"
+              handleSubmit={handleStaffDelete}
+            />
             <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
           </Card>
         </Grid>
@@ -98,7 +120,7 @@ const UserViewAccount = ({ staff, formattedDate }) => {
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
             {staff?.teachingStaff?.staff_course?.map((course, index) => (
-              <Grid item spacing={2} key={index} xs={12} md={6}>
+              <Grid item key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
@@ -122,7 +144,15 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                         }}
                         label={course?.courses?.learning_format}
                         rounded
-                        color="primary"
+                        color={
+                          course?.courses?.learning_format === 'online'
+                            ? 'success'
+                            : course?.courses?.learning_format === 'offline'
+                            ? 'primary'
+                            : course?.courses?.learning_format === 'hybrid'
+                            ? 'secondary'
+                            : 'warning'
+                        }
                         size="small"
                         variant="contained"
                       />
@@ -159,16 +189,19 @@ const UserViewAccount = ({ staff, formattedDate }) => {
                         sx={{
                           display: 'flex',
                           alignItems: 'center',
-                          '& svg': { color: 'primary.main', mr: 0.5 }
+                          '& svg': { color: 'primary.main', mr: 0.5, ml: 0.5 }
                         }}
                       >
                         <Icon icon="tabler:augmented-reality" fontSize={20} />
                         <Typography sx={{ color: 'text.secondary' }}>
-                          <span style={{fontWeight:'bold',fontSize:18,marginRight:2}}> {course?.courses?.course_module_count}</span>
-                           Modules</Typography>
+                          <span style={{ fontWeight: 'bold', fontSize: 18, marginRight: 2 }}> {course?.courses?.course_module_count}</span>
+                          Modules
+                        </Typography>
                       </Grid>
                       <Grid>
-                        <Typography sx={{ color: 'text.secondary' }}>₹ {course?.courses?.course_price}</Typography>
+                        <Typography variant="h4" sx={{ color: 'text.secondary', mr: 1 }}>
+                          ₹ {course?.courses?.course_price}
+                        </Typography>
                       </Grid>
                     </Box>
                   </CardContent>
@@ -200,6 +233,13 @@ const UserViewAccount = ({ staff, formattedDate }) => {
   } else {
     return null;
   }
+};
+
+UserViewAccount.propTypes = {
+  staff: PropTypes.any,
+  formattedDate: PropTypes.any,
+  staffID: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewAccount;

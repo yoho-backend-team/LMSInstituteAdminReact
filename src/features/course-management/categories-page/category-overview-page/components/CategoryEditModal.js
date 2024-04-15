@@ -11,11 +11,11 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../../services/courseCategoryServices';
+import PropTypes from 'prop-types';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
-  const image =
-    'https://media.istockphoto.com/id/1411772543/photo/side-profile-of-african-woman-with-afro-isolated-against-a-white-background-in-a-studio.webp?b=1&s=170667a&w=0&k=20&c=AXoZk6bD-xbU4AQ66k4AKpWBRuDgHufmP4A1_Gn_5zg=';
+  const image = 'https://www.svgrepo.com/download/508699/landscape-placeholder.svg';
 
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
@@ -33,9 +33,9 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
     () =>
       yup.object().shape({
         category_name: yup
-        .string()
-        .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
-        .required('Category Name is required'),
+          .string()
+          .matches(/^[a-zA-Z0-9\s]+$/, 'Category Name should not contain special characters')
+          .required('Category Name is required')
       }),
     [showErrors]
   );
@@ -107,6 +107,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       inputData.append('category_id', category?.category_id);
       inputData.append('logo', selectedImage);
       inputData.append('category_name', data?.category_name);
+      inputData.append('id', category?.id);
 
       try {
         const result = await updateCourseCategory(inputData);
@@ -209,6 +210,13 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       </Dialog>
     </div>
   );
+};
+
+CategoryEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  setCategoryRefetch: PropTypes.any,
+  category: PropTypes.any
 };
 
 export default CategoryEditModal;

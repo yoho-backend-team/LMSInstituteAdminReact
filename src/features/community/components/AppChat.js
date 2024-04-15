@@ -17,7 +17,6 @@ export const selectChat = createAsyncThunk('appChat/selectChat', async (id) => {
 
 export const sendMsg = createAsyncThunk('appChat/sendMsg', async (obj) => {
   const newMessageData = {
-    /* populate with message data */
   };
 
   return { newMessageData, id: obj.contact.id };

@@ -1,31 +1,24 @@
-// ** React Imports
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { forwardRef, useState, useCallback } from 'react';
-// ** Third Party Imports
+import { forwardRef, useCallback, useState } from 'react';
 import { Box } from '@mui/material';
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
-// ** Custom Components Imports
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-// ** Styled Components
-import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
+import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-
+import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllBatches } from '../redux/batchThunks';
-// import { searchBatches } from '../services/batchServices';
-// import { getAllActiveBatchesByCourse } from '../services/batchServices';
+import PropTypes from 'prop-types';
 
-/* eslint-disable */
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
   const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
@@ -36,41 +29,13 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-
-const MenuProps = {
-  PaperProps: {
-    style: {
-      width: 250,
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
-    }
-  }
-};
-
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder'
-];
-
-/* eslint-enable */
-const InvoiceList = (props) => {
+const BatchFilterCard = (props) => {
   const { selectedBranchId } = props;
 
-  // ** State
+  const [startDateRange, setStartDateRange] = useState(null);
   const [dates, setDates] = useState([]);
   const [endDateRange, setEndDateRange] = useState(null);
-  const [startDateRange, setStartDateRange] = useState(null);
   const [searchValue, setSearchValue] = useState('');
-
   const [filterstatusValue, setFilterStatusValue] = useState('');
 
   const handleFilterByStatus = (e) => {
@@ -79,10 +44,28 @@ const InvoiceList = (props) => {
     dispatch(getAllBatches(data));
   };
 
+  function convertDateFormat(input) {
+    var originalDate = new Date(input);
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
+    var day = ('0' + originalDate.getDate()).slice(-2);
+    var formattedDateString = year + '-' + month + '-' + day;
+    return formattedDateString;
+  }
+
+  console.log(convertDateFormat(startDateRange));
+  console.log(endDateRange);
+
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
       setDates(dates);
+      const data = {
+        start_date: convertDateFormat(start),
+        end_date: convertDateFormat(end),
+        branch_id: selectedBranchId
+      };
+      dispatch(getAllBatches(data));
     }
     setStartDateRange(start);
     setEndDateRange(end);
@@ -98,13 +81,11 @@ const InvoiceList = (props) => {
     dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId]);
 
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllBatches({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -142,7 +123,13 @@ const InvoiceList = (props) => {
                     id="date-range-picker-months"
                     onChange={handleOnChangeRange}
                     customInput={
-                      <CustomInput dates={dates} setDates={setDates} label="Batch Date" end={endDateRange} start={startDateRange} />
+                      <CustomInput
+                        dates={dates}
+                        setDates={setDates}
+                        label="Start date End date"
+                        end={endDateRange}
+                        start={startDateRange}
+                      />
                     }
                   />
                 </Grid>
@@ -150,11 +137,9 @@ const InvoiceList = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    // value={value}
                     onChange={(e, newValue) => {
-                      // const courseId = newValue?.map((item) => item?.course_id);
                       const data = {
-                        course_id: newValue.course_id,
+                        course_id: newValue?.course_id || '',
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllBatches(data));
@@ -185,4 +170,8 @@ const InvoiceList = (props) => {
   );
 };
 
-export default InvoiceList;
+BatchFilterCard.propTypes = {
+  selectedBranchId: PropTypes.any,
+};
+
+export default BatchFilterCard;

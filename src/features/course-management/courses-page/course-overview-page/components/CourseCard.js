@@ -16,12 +16,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { updateCourseStatus } from '../../services/courseServices';
+import PropTypes from 'prop-types';
 
 const CourseCard = (props) => {
   const { sx, course, setCourseRefetch } = props;
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
+  const imageUrl = course?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.logo}` : 'https://assets.newredo.com/large_image_default_4f2d3c136b.png';
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -42,20 +44,34 @@ const CourseCard = (props) => {
     setStatusValue(course);
   };
 
+  const maxCharacters = 27;
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
           <CardMedia
             sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }}
-            image={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.logo}`}
+            image={imageUrl}
           >
             <CustomChip
-              sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
-              skin="light"
+              sx={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                zIndex: 1,
+                '&.MuiChip-root.MuiChip-rounded': {
+                  borderRadius: '0px 4px 0px 10px',
+                  height: '2rem'
+                }
+              }}
               label={course?.learning_format}
               rounded
-              color="primary"
+              color={
+                course?.learning_format === 'online' ? 'success' :
+                course?.learning_format === 'offline' ? 'primary' :
+                course?.learning_format === 'hybrid' ? 'secondary' :
+                'warning'
+            }
               size="small"
               variant="outlined"
             />
@@ -64,6 +80,7 @@ const CourseCard = (props) => {
         <CardContent>
           <Box>
             <CustomChip
+              sx={{ px: 0, py: 2 }}
               skin="light"
               label={course?.course?.course_categories?.category_name}
               rounded
@@ -84,7 +101,8 @@ const CourseCard = (props) => {
                 textOverflow: 'ellipsis'
               }}
             >
-              {course?.course_name}
+              {course?.course_name &&
+                (course.course_name.length > maxCharacters ? course.course_name.slice(0, maxCharacters) + '...' : course.course_name)}
             </Typography>
           </Box>
           <Box
@@ -103,11 +121,13 @@ const CourseCard = (props) => {
                 '& svg': { color: 'primary.main', mr: 0.5 }
               }}
             >
-              <Icon icon="ic:twotone-person" fontSize={20} />
+              <Icon icon="tabler:augmented-reality" fontSize={20} />
               <Typography sx={{ color: 'text.secondary' }}>{course?.course?.course_module?.length} Modules</Typography>
             </Grid>
             <Grid>
-              <Typography sx={{ color: 'text.secondary' }}>₹ {course?.course_price}</Typography>
+              <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>
+                ₹ {course?.course_price}
+              </Typography>
             </Grid>
           </Box>
         </CardContent>
@@ -116,7 +136,7 @@ const CourseCard = (props) => {
             <TextField
               size="small"
               select
-              width={100}
+              sx={{width:100}}
               label="Status"
               SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
             >
@@ -124,8 +144,10 @@ const CourseCard = (props) => {
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Grid>
-          <Button component={Link} to="courses/view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary">
-            View Details
+          <Button fullwidth component={Link} to="courses/view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary"
+          sx={{mt:0.4,py:0.8,width:100}}
+          >
+            View
           </Button>
         </CardActions>
       </Card>
@@ -149,5 +171,9 @@ const CourseCard = (props) => {
     </Grid>
   );
 };
-
+CourseCard.propTypes = {
+  course: PropTypes.any,
+  sx: PropTypes.any,
+  setCourseRefetch: PropTypes.any
+};
 export default CourseCard;

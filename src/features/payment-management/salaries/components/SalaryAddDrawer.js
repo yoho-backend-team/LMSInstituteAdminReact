@@ -1,21 +1,16 @@
-// ** React Imports
 import { forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-// import { addStudentFee } from '../services/studentFeeServices';
 import Autocomplete from '@mui/material/Autocomplete';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
@@ -23,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -45,13 +41,11 @@ const defaultValues = {
   staff_type: '',
   staff: '',
   payment_date: ''
-  // paymentId: Number('0'),
-  // salary_amount: Number('0')
 };
 
 const FeesAddDrawer = (props) => {
   // ** Props
-  const { open, toggle } = props;
+  const { open, toggle, setRefetch } = props;
   // ** State
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -109,21 +103,23 @@ const FeesAddDrawer = (props) => {
   });
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    setValue('imgSrc', '');
+    setImgSrc('');
+    reset();
+    toggle();
+  };
+
   const onSubmit = async (data) => {
-    
     var bodyFormData = new FormData();
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);
@@ -133,18 +129,19 @@ const FeesAddDrawer = (props) => {
     bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
 
     const result = await addTeachingStaffSalary(bodyFormData);
-    console.log(data)
+    console.log(data);
     if (result.success) {
       toast.success(result.message);
+      handleClose();
+      setRefetch((state) => !state);
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`; 
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -169,7 +166,7 @@ const FeesAddDrawer = (props) => {
     }
   }));
 
-    const handleInputImageChange = (file) => {
+  const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
@@ -180,12 +177,6 @@ const FeesAddDrawer = (props) => {
         setInputValue(reader.result);
       }
     }
-  };
-
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
   };
 
   return (
@@ -218,7 +209,7 @@ const FeesAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -394,5 +385,9 @@ const FeesAddDrawer = (props) => {
     </DatePickerWrapper>
   );
 };
-
+FeesAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any,
+};
 export default FeesAddDrawer;

@@ -1,34 +1,26 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import toast from 'react-hot-toast';
-// import { addCoursenotes } from '../services/notesServices';
-import Autocomplete from '@mui/material/Autocomplete';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseNote } from '../services/noteServices';
-import { useDispatch } from 'react-redux';
 
 const CourseNotesAddDrawer = (props) => {
-  // ** Props
-  const { open, toggle, branches } = props;
+  const { open, toggle, branches, setRefetch } = props;
 
   // ** State
   const [notesPdf, setnotesPdf] = useState('');
-  const dispatch = useDispatch();
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
@@ -54,20 +46,16 @@ const CourseNotesAddDrawer = (props) => {
 
   const schema = yup.object().shape({
     description: yup
-    .string()
-    .required('Description is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
-    title:yup
-    .string()
-    .required('Title is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+      .string()
+      .required('Description is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Description should not contain special characters'),
+    title: yup
+      .string()
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     branch: yup.object().required(),
     course: yup.object().required(),
-    pdf_file: yup
-    .mixed()
-    .required('PDF file is required')
-    // .test('fileSize', 'File size is too large', (value) => value && value[0].size <= 5000000),
-
+    pdf_file: yup.mixed().required('PDF file is required')
   });
 
   const defaultValues = {
@@ -93,7 +81,6 @@ const CourseNotesAddDrawer = (props) => {
   console.log(notesPdf);
 
   const onSubmit = async (data) => {
-    
     console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('branch_id', data.branch?.branch_id);
@@ -106,25 +93,24 @@ const CourseNotesAddDrawer = (props) => {
     const result = await addCourseNote(bodyFormData);
 
     if (result.success) {
+      setRefetch((state) => !state);
       toast.success(result.message);
-      dispatch(getAllCourseNotes());
       reset();
       toggle();
     } else {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; // Concatenate errors with newline
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
   const handleSetPdf = (data) => {
     setnotesPdf(data);
-    setValue("pdf_file",data)
+    setValue('pdf_file', data);
   };
 
   const handleClose = () => {
@@ -163,9 +149,8 @@ const CourseNotesAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf}  className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
-
           </Grid>
 
           <Grid item xs={12} sm={12}>
@@ -206,9 +191,9 @@ const CourseNotesAddDrawer = (props) => {
                 <Autocomplete
                   value={value}
                   onChange={(event, newValue) => {
-                    onChange(newValue); // Update the value of the 'course' field
+                    onChange(newValue);
                   }}
-                  options={activeCourse || []} // Ensure options are available
+                  options={activeCourse || []}
                   getOptionLabel={(option) => option.course_name || ''}
                   fullWidth
                   renderInput={(params) => (
@@ -275,6 +260,13 @@ const CourseNotesAddDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+CourseNotesAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  branches: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default CourseNotesAddDrawer;

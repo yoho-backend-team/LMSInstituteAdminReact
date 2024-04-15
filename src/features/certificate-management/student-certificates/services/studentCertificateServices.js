@@ -117,7 +117,7 @@ export const updateStudentCertificate = async (data) => {
 
 export const updateStudentCertificateStatus = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_CERTIFICATE_API_ENDPOINT}/status-update`, data, {
+    const response = await axios.post(`${STUDENT_CERTIFICATE_API_ENDPOINT}/status-update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

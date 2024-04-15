@@ -55,9 +55,6 @@ const StudentAttendanceCard = () => {
                       flexShrink: 2,
                       // whiteSpace: 'nowrap',
                       overflow: 'hidden',
-                      // textOverflow: 'ellipsis',
-                      // maxWidth: '230px'
-                      // display: 'flex',
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
@@ -72,7 +69,7 @@ const StudentAttendanceCard = () => {
                 </Box>
               </Grid>
 
-              <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 2}}>
+              <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 2 }}>
                 <AvatarGroup className="pull-up" max={4}>
                   {card?.batch_class?.batch?.institute_batch_student?.map((student) => {
                     return (
@@ -87,21 +84,30 @@ const StudentAttendanceCard = () => {
               </Grid>
 
               <Grid item justifyContent="center" display="flex">
-                <Typography sx={{fontWeight:"500"}}>{card?.batch_class?.batch?.institute_batch_student?.length ?? 0} Students on this class</Typography>
-              </Grid>
-              <Grid item justifyContent="center" alignItems='center' sx={{verticalAlign:"center"}} display="flex" mb={2}>
-              <Box>
-              <IconCalendar/>
-              </Box>
-              <Box sx={{ml:1}}>
-              <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex',fontWeight:"bold" }}>
-                  {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                <Typography sx={{ fontWeight: '500' }}>
+                  {card?.batch_class?.batch?.institute_batch_student?.length ?? 0} Students on this class
                 </Typography>
-              </Box>
+              </Grid>
+              <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
+                <Box>
+                  <IconCalendar />
+                </Box>
+                <Box sx={{ ml: 1 }}>
+                  <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
+                    {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                  </Typography>
+                </Box>
               </Grid>
               <Grid container p={1} justifyContent="space-between">
                 <Box>
-                  <Button component={Link} size="medium" to={'student-attendances/:id'} variant="tonal" sx={{ px: 2 }}>
+                  <Button
+                    sx={{ px: 2 }}
+                    variant="contained"
+                    size="medium"
+                    component={Link}
+                    state={{ id: card?.class_id }}
+                    to={`student-attendances/${card?.class_id}`}
+                  >
                     View Attendance
                   </Button>
                 </Box>

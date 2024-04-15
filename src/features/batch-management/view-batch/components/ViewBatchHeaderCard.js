@@ -1,15 +1,9 @@
-// ** MUI Imports
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-
-// ** Icon Imports
-// import Icon from 'components/icon';
-
-// ** Custom Components Imports
-// import * as source from 'src/views/components/avatars/AvatarsSourceCode'
+import PropTypes from 'prop-types';
 
 const EcommerceStatistics = ({ batchData, theme }) => {
   console.log('batchData2:', batchData);
@@ -35,7 +29,6 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                     </Typography>
                     <Typography variant="h4" sx={{ mt: 1 }}>
                       {batchData?.institute_course?.institute_course_branch?.course_name}
-                      {/* fsdg */}
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -73,70 +66,6 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                   </Grid>
                 </Grid>
               </CardContent>
-              {/* <CardContent sx={{ mt: 0, pt: 0 }}>
-                <Grid container spacing={3}>
-                  <Grid item>
-                    <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                      Instructor
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                      <Box>
-                        <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Tooltip title="Olivia Sparks">
-                            <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                          <Tooltip title="Howard Lloyd">
-                            <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                          <Tooltip title="Hallie Richards">
-                            <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                          <Tooltip title="Alice Cobb">
-                            <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                        </AvatarGroup>
-                      </Box>
-                      <Box>
-                        <Typography variant="h4">Jerome Bell</Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                      Coordinator
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                      <Box>
-                        <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Tooltip title="Olivia Sparks">
-                            <Avatar src="/images/avatars/4.png" alt="Olivia Sparks" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                          <Tooltip title="Howard Lloyd">
-                            <Avatar src="/images/avatars/5.png" alt="Howard Lloyd" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                          <Tooltip title="Hallie Richards">
-                            <Avatar src="/images/avatars/6.png" alt="Hallie Richards" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                          <Tooltip title="Alice Cobb">
-                            <Avatar src="/images/avatars/8.png" alt="Alice Cobb" sx={{ width: 25, height: 25 }} />
-                          </Tooltip>
-                        </AvatarGroup>
-                      </Box>
-                      <Box>
-                        <Typography variant="h4">Robert Fox</Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                      Class Type
-                    </Typography>
-                    <Typography variant="h4" sx={{ mt: 1 }}>
-                      Online
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent> */}
             </Card>
           </Grid>
         </Grid>
@@ -149,6 +78,11 @@ const EcommerceStatistics = ({ batchData, theme }) => {
       {renderStats()}
     </Grid>
   );
+};
+
+EcommerceStatistics.propTypes = {
+  batchData: PropTypes.any,
+  theme: PropTypes.any,
 };
 
 export default EcommerceStatistics;

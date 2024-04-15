@@ -1,14 +1,11 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
-// ** Icon Imports
 import Icon from 'components/icon';
+import { useState } from 'react';
 
 const UserSuspendDialog = (props) => {
   // ** Props
@@ -110,6 +107,11 @@ const UserSuspendDialog = (props) => {
       </Dialog>
     </>
   );
+};
+
+UserSuspendDialog.propTypes = {
+  open: PropTypes.any,
+  setOpen: PropTypes.any
 };
 
 export default UserSuspendDialog;

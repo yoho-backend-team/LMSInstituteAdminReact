@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid';
 import ViewUserSkeleton from 'components/cards/Skeleton/ViewUserSkeleton';
+import { getUserById } from 'features/user-management/users-page/services/userServices';
 import UserViewLeft from 'features/user-management/users-page/user-view-page/components/UserViewLeft';
 import UserViewRight from 'features/user-management/users-page/user-view-page/components/UserViewRight';
-import { getUserById } from 'features/user-management/users-page/services/userServices';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ const UserView = () => {
 
   useEffect(() => {
     getUserData(userId);
-  }, [userId,refetch]);
+  }, [userId, refetch]);
 
   const getUserData = async (id) => {
     try {
@@ -30,7 +30,6 @@ const UserView = () => {
       setLoading(true);
       const result = await getUserById(data);
       if (result.success) {
-        console.log('User:', result.data);
         setUserData(result.data);
         setLoading(false);
       } else {
@@ -41,26 +40,25 @@ const UserView = () => {
       console.log(error);
     }
   };
+  console.log('user Data', userData);
 
   return (
-    <>
-      <Grid>
-        <Grid spacing={1} className="match-height">
-          {loading ? (
-            <ViewUserSkeleton />
-          ) : (
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={5} lg={4}>
-                <UserViewLeft id={userId} userData={userData} setRefetch={setRefetch} />
-              </Grid>
-              <Grid item xs={12} md={7} lg={8}>
-                <UserViewRight id={userId} userData={userData} />
-              </Grid>
+    <Grid>
+      <Grid className="match-height">
+        {loading ? (
+          <ViewUserSkeleton />
+        ) : (
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={5} lg={4}>
+              <UserViewLeft id={userId} userData={userData} setRefetch={setRefetch} />
             </Grid>
-          )}
-        </Grid>
+            <Grid item xs={12} md={7} lg={8}>
+              <UserViewRight id={userId} userData={userData} />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
-    </>
+    </Grid>
   );
 };
 

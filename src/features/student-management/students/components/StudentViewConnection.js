@@ -1,4 +1,3 @@
-
 import MuiTimeline from '@mui/lab/Timeline';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
@@ -13,8 +12,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import OptionsMenu from 'components/option-menu';
-import { useState, useEffect } from 'react';
 import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -96,6 +96,10 @@ const UserViewConnection = ({ id }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserViewConnection.propTypes = {
+  id: PropTypes.any
 };
 
 export default UserViewConnection;

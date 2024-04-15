@@ -1,4 +1,3 @@
-// ** MUI Imports
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -6,11 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Avatar from 'components/mui/avatar';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { useEffect } from 'react';
-// import { getAllNonTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceThunks';
-// import { selectnONTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceSelectors';
 
 const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
   console.log(nonTeachingStaffs);
@@ -56,6 +52,7 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
                       <Grid>
                         <Button
                           component={Link}
+                          state={{ staff: item.staff }}
                           to={`non-teaching-staff-attendances/${item.staff?.staff_id}`}
                           variant="tonal"
                           sx={{ px: 4 }}
@@ -73,6 +70,10 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
       </Grid>
     </>
   );
+};
+
+NonTeachingStaffCard.propTypes = {
+  nonTeachingStaffs: PropTypes.any
 };
 
 export default NonTeachingStaffCard;

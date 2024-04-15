@@ -10,31 +10,25 @@ import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Categories = () => {
-  // Redux hooks
   const dispatch = useDispatch();
   const categoriesLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const courseCategories = useSelector(selectCourseCategories);
-
-  // Local state
   const [categoryRefetch, setCategoryRefetch] = useState(false);
 
-  // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllCourseCategories(data));
   }, [dispatch, selectedBranchId, categoryRefetch]);
 
   // Memoize categories data to prevent unnecessary re-renders
-  const memoizedCategories = useMemo(() => courseCategories?.data || [], [courseCategories]);
+  const memoizedCategories = useMemo(() => courseCategories || [], [courseCategories]);
 
   return (
     <Grid container>
-      {/* Category skeleton or content based on loading state */}
-
-      {/* Category filter and header */}
       <Grid item xs={12}>
         <CategoryFilter selectedBranchId={selectedBranchId} />
         <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
@@ -43,9 +37,8 @@ const Categories = () => {
         <CategorySkeleton />
       ) : (
         <Grid item xs={12}>
-          {/* Display categories */}
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {memoizedCategories.map((category, index) => (
+            {memoizedCategories?.data?.map((category, index) => (
               <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
             ))}
           </Grid>
@@ -54,7 +47,17 @@ const Categories = () => {
 
       {/* Pagination */}
       <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
+        <Pagination
+          count={memoizedCategories?.last_page}
+          color="primary"
+          onChange={async (e, page) => {
+            const data = {
+              branch_id: selectedBranchId,
+              page: page
+            };
+            dispatch(getAllCourseCategories(data));
+          }}
+        />
       </Grid>
     </Grid>
   );

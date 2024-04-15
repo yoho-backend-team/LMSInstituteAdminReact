@@ -1,20 +1,13 @@
-// ** React Imports
-import { useCallback, useState } from 'react';
-// ** MUI Imports
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
 import { TextField } from '@mui/material';
-import { useEffect } from 'react';
-// ** Custom Components Imports
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
-
-// import DeleteDialog from 'components/modal/DeleteModel';
-// import CustomTextField from 'components/mui/text-field';
+import Icon from 'components/icon';
+import { default as StatusChangeDialog, default as StudyMaterialDeletemodal } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import StudyMaterialAddDrawer from 'features/content-management/course-contents/course-study-materials-page/components/StudyMaterialAddDrawer';
@@ -26,13 +19,15 @@ import {
   selectLoading
 } from 'features/content-management/course-contents/course-study-materials-page/redux/studyMaterialSelectors';
 import { getAllCourseStudyMaterials } from 'features/content-management/course-contents/course-study-materials-page/redux/studyMaterialThunks';
-import { updateCourseStudyMaterialStatus } from 'features/content-management/course-contents/course-study-materials-page/services/studyMaterialServices';
+import {
+  deleteCourseStudyMaterial,
+  updateCourseStudyMaterialStatus
+} from 'features/content-management/course-contents/course-study-materials-page/services/studyMaterialServices';
 import { setUsers } from 'features/user-management/users-page/redux/userSlices';
 import { searchUsers } from 'features/user-management/users-page/services/userServices';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { default as StatusChangeDialog, default as StudyMaterialDeletemodal } from 'components/modal/DeleteModel';
-import { deleteCourseStudyMaterial } from 'features/content-management/course-contents/course-study-materials-page/services/studyMaterialServices';
 
 const StudyMaterials = () => {
   const [value, setValue] = useState('');
@@ -41,15 +36,11 @@ const StudyMaterials = () => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
-  // const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  // const [deletingItemId, setDeletingItemId] = useState(null);
   const [refetch, setRefetch] = useState(false);
-  // const [statusOpen, setStatusDialogOpen] = useState(false);
   const [StudyMaterialDeletemodalOpen, setStudyMaterialDeletemodalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-  // const [viewMaterial,setViewMaterial]=useState({})
 
   console.log(selectedDeleteId);
 
@@ -75,16 +66,8 @@ const StudyMaterials = () => {
     setActiveBranches(result.data.data);
   };
 
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  // viewById
-
-  // useEffect(() => {
-  //   dispatch(getStudy({ branch_id: selectedBranchId }));
-  // }, [dispatch, selectedBranchId, refetch]);
-
-  //delete
   const handleDelete = useCallback((itemId) => {
     SetSelectedDeleteId(itemId);
     setStudyMaterialDeletemodalOpen(true);
@@ -100,7 +83,7 @@ const StudyMaterials = () => {
       toast.error(result.message);
     }
   };
-  ////
+
   const userStatusObj = {
     1: 'success',
     0: 'error'
@@ -129,9 +112,6 @@ const StudyMaterials = () => {
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
-  const handleView = () => {
-    setViewModalOpen(true);
-  };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -142,7 +122,7 @@ const StudyMaterials = () => {
     setSelectedRow(params);
   };
 
-  const RowOptions = ({row}) => {
+  const RowOptions = ({ row }) => {
     return (
       <OptionsMenu
         menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
@@ -152,7 +132,10 @@ const StudyMaterials = () => {
             text: 'View',
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
-              onClick: () => handleView()
+              onClick: () => {
+                setViewModalOpen(true);
+                handleRowClick(row);
+              }
             }
           },
           {
@@ -160,8 +143,8 @@ const StudyMaterials = () => {
             icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                toggleEditUserDrawer()
-                handleRowClick(row)
+                toggleEditUserDrawer();
+                handleRowClick(row);
               }
             }
           },
@@ -169,9 +152,9 @@ const StudyMaterials = () => {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
             menuItemProps: {
-              onClick: () =>{
-                 handleDelete()
-                 handleRowClick(row)
+              onClick: () => {
+                handleDelete();
+                handleRowClick(row);
               }
             }
           }
@@ -200,8 +183,8 @@ const StudyMaterials = () => {
 
   const columns = [
     {
-      flex: 0.6,
-      minWidth: 100,
+      // flex: 0.4,
+      minWidth: 150,
       headerName: 'Id',
       field: 'employee_id',
       renderCell: ({ row }) => {
@@ -213,41 +196,30 @@ const StudyMaterials = () => {
       }
     },
     {
-      flex: 1.8,
-      minWidth: 220,
+      // flex: 1.8,
+      minWidth: 320,
       field: 'title',
       headerName: 'Title',
       renderCell: ({ row }) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
-                noWrap
                 sx={{
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' },
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  textOverflow: 'ellipsis'
+                  '&:hover': { color: 'primary.main' }
                 }}
               >
                 {row?.title}
               </Typography>
               <Typography
-                noWrap
                 sx={{
+                  textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
-                  mt: 1,
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 1,
-                  WebkitBoxOrient: 'vertical',
-                  textOverflow: 'ellipsis'
+                  mt: 1
                 }}
               >
                 {row?.description}
@@ -257,24 +229,19 @@ const StudyMaterials = () => {
         );
       }
     },
+
     {
-      flex: 1.5,
-      minWidth:220,
+      // flex: 1.5,
+      minWidth: 220,
       field: 'course',
       headerName: 'course',
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
-              noWrap
               sx={{
                 color: 'text.secondary',
-                textTransform: 'capitalize',
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 1,
-                WebkitBoxOrient: 'vertical',
-                textOverflow: 'ellipsis'
+                textTransform: 'capitalize'
               }}
             >
               {row?.institute_branch_courses?.course_name}
@@ -285,7 +252,7 @@ const StudyMaterials = () => {
     },
 
     {
-      flex: 1,
+      // flex: 0.4,
       minWidth: 180,
       field: 'status',
       headerName: 'Status',
@@ -317,8 +284,8 @@ const StudyMaterials = () => {
       }
     },
     {
-      flex: 1,
-      minWidth: 120,
+      // flex: 0.4,
+      minWidth: 180,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -340,20 +307,25 @@ const StudyMaterials = () => {
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
-                rowHeight={80}
+                getRowHeight={() => 'auto'}
                 rows={StudyMaterials}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
                 paginationModel={paginationModel}
                 onPaginationModelChange={setPaginationModel}
-                // onRowClick={handleRowClick}
               />
             </Card>
           </Grid>
         )}
-        <StudyMaterialAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
-        <StudyMaterialEdit StudyMaterials={selectedRow} open={editUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} />
+        <StudyMaterialAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <StudyMaterialEdit
+          setRefetch={setRefetch}
+          StudyMaterials={selectedRow}
+          open={editUserOpen}
+          toggle={toggleEditUserDrawer}
+          initialValues={selectedRow}
+        />
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
           setOpen={setStudyMaterialDeletemodalOpen}
@@ -369,7 +341,7 @@ const StudyMaterials = () => {
           handleSubmit={handleStatusChangeApi}
         />
 
-        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={StudyMaterials} />
+        <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
       </Grid>
     </>
   );

@@ -13,7 +13,7 @@ export const getAllNonTeachingStaffs = async (data) => {
       params: data
     });
 
-    console.log('Non-teachingStaffs:',response);
+    console.log('Non-teachingStaffs:', response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -125,11 +125,11 @@ export const updateNonTeachingStaff = async (data) => {
   try {
     const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/update`, data, {
       headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
+    console.log(response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'NonTeachingStaff updated successfully' };
@@ -142,7 +142,6 @@ export const updateNonTeachingStaff = async (data) => {
   }
 };
 
-
 export const nonTeachingStaffById = async (data) => {
   try {
     const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-id`, {
@@ -152,7 +151,7 @@ export const nonTeachingStaffById = async (data) => {
       },
       params: data
     });
-    console.log('non-teachingStaff:',response);
+    console.log('non-teachingStaff:', response);
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response.data.data };

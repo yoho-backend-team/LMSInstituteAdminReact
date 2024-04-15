@@ -1,91 +1,74 @@
-// ** React Imports
-import { Fragment, forwardRef, useCallback, useEffect, useState } from 'react';
-// ** MUI Imports
+import { Avatar, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-// ** Custom Component Import
-import { TextField } from '@mui/material';
-// ** Third Party Imports
+import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
-// ** Icon Imports
-import Icon from 'components/icon';
-
-// ** Styled Components
+import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-
-const capitalize = (string) => string && string[0].toUpperCase() + string.slice(1);
-
-const defaultState = {
-  staff_name: '',
-  attendance: 'Present',
-  attendance_date: new Date()
-};
+import { addTeachingStaffAttendance } from '../services/teachingStaffAttendanceServices';
 
 const TeachingStaffAddEventSidebar = (props) => {
-  // ** Props
-  const {
-    store,
-    dispatch,
-    addEvent,
-    updateEvent,
-    drawerWidth,
-    attendanceApi,
-    deleteEvent,
-    handleSelectEvent,
-    addEventSidebarOpen,
-    handleAddEventSidebarToggle
-  } = props;
+  const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
+
+  const defaultState = {
+    staff_name: '',
+    title: '',
+    attendance_date: selected ? selected?.date : ''
+  };
 
   // ** States
   const [values, setValues] = useState(defaultState);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const {
-    control,
-    setValue,
-    clearErrors,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues: { staff_name: '' } });
+  useEffect(() => {
+    if (selected) {
+      setSelectedDate(selected?.date);
+    }
+  }, [selected]);
+  console.log(staff);
+
+  const { control, setValue, clearErrors, handleSubmit } = useForm({ defaultValues: defaultState });
 
   const handleSidebarClose = async () => {
     setValues(defaultState);
     clearErrors();
-    dispatch(handleSelectEvent(null));
     handleAddEventSidebarToggle();
   };
 
-  const onSubmit = (data) => {
-    const modifiedEvent = {
-      url: values?.url,
-      display: 'block',
-      staff_name: data?.staff_name,
-      end: values.endDate,
-      allDay: values.allDay,
-      start: values.startDate,
-      extendedProps: {
-        attendance: capitalize(values.attendance),
-        guests: values.guests && values.guests.length ? values.guests : undefined,
-        description: values.description.length ? values.description : undefined
-      }
-    };
-    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.staff_name?.length)) {
-      dispatch(addEvent(modifiedEvent));
-    } else {
-      dispatch(updateEvent({ id: store?.selectedEvent?.id, ...modifiedEvent }));
-    }
-    attendanceApi.refetchEvents();
-    handleSidebarClose();
-  };
+  function convertDateFormat(input) {
+    // Create a new Date object from the original date string
+    var originalDate = new Date(input);
+    // Extract the year, month, and day components
+    var year = originalDate.getFullYear();
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var day = ('0' + originalDate.getDate()).slice(-2);
 
-  const handleDeleteEvent = () => {
-    if (store?.selectedEvent) {
-      dispatch(deleteEvent(store?.selectedEvent?.id));
+    // Form the yyyy-mm-dd date string
+    var formattedDateString = year + '-' + month + '-' + day;
+
+    return formattedDateString;
+  }
+  const onSubmit = async (data) => {
+    const inputData = {
+      staff_id: staffId,
+      title: data.title,
+      date: convertDateFormat(selectedDate)
+    };
+    const result = await addTeachingStaffAttendance(inputData);
+    if (result.success) {
+      setRefetch((state) => !state);
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
     }
+
     handleSidebarClose();
   };
 
@@ -95,58 +78,21 @@ const TeachingStaffAddEventSidebar = (props) => {
     }
   };
 
-  const resetToStoredValues = useCallback(() => {
-    if (store?.selectedEvent !== null) {
-      const event = store?.selectedEvent;
-      setValue('staff_name', event?.staff_name || '');
-      setValues({
-        staff_name: event?.staff_name || '',
-        attendance: event?.extendedProps.attendance || 'Present',
-        attendance_date: event?.start !== null ? event?.start : new Date()
-      });
-    }
-  }, [setValue, store?.selectedEvent]);
-
-  const resetToEmptyValues = useCallback(() => {
-    setValue('staff_name', '');
-    setValues(defaultState);
-  }, [setValue]);
-  useEffect(() => {
-    if (store?.selectedEvent !== null) {
-      resetToStoredValues();
-    } else {
-      resetToEmptyValues();
-    }
-  }, [addEventSidebarOpen, resetToStoredValues, resetToEmptyValues, store?.selectedEvent]);
-
   const PickersComponent = forwardRef(({ ...props }, ref) => {
     return <TextField inputRef={ref} fullWidth {...props} label={props.label || ''} sx={{ width: '100%' }} error={props.error} />;
   });
 
   const RenderSidebarFooter = () => {
-    if (store?.selectedEvent === null || (store?.selectedEvent !== null && !store?.selectedEvent?.staff_name?.length)) {
-      return (
-        <Fragment>
-          <Button type="submit" variant="contained" sx={{ mr: 4 }}>
-            Add
-          </Button>
-          <Button variant="tonal" color="secondary" onClick={resetToEmptyValues}>
-            Reset
-          </Button>
-        </Fragment>
-      );
-    } else {
-      return (
-        <Fragment>
-          <Button type="submit" variant="contained" sx={{ mr: 4 }}>
-            Update
-          </Button>
-          <Button variant="tonal" color="secondary" onClick={resetToStoredValues}>
-            Reset
-          </Button>
-        </Fragment>
-      );
-    }
+    return (
+      <Fragment>
+        <Button type="submit" variant="contained" sx={{ mr: 4 }}>
+          Add
+        </Button>
+        <Button variant="tonal" color="secondary">
+          Reset
+        </Button>
+      </Fragment>
+    );
   };
 
   return (
@@ -165,15 +111,8 @@ const TeachingStaffAddEventSidebar = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <Typography variant="h5">
-          {store?.selectedEvent !== null && store?.selectedEvent?.staff_name?.length ? 'Update Attendance' : 'Add Attendance'}
-        </Typography>
+        <Typography variant="h5">Add Attendance</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {store?.selectedEvent !== null && store?.selectedEvent?.staff_name?.length ? (
-            <IconButton size="small" onClick={handleDeleteEvent} sx={{ color: 'text.primary', mr: store?.selectedEvent !== null ? 1 : 0 }}>
-              <Icon icon="tabler:trash" fontSize="1.25rem" />
-            </IconButton>
-          ) : null}
           <IconButton
             size="small"
             onClick={handleSidebarClose}
@@ -194,45 +133,47 @@ const TeachingStaffAddEventSidebar = (props) => {
       <Box className="sidebar-body" sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <DatePickerWrapper>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+              <Box>
+                <Typography variant="h5">{staff?.staff_name}</Typography>
+                <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
+                  {staff?.email}
+                </Typography>
+              </Box>
+            </Box>
             <Controller
-              name="staff_name"
+              name="title"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
+                  select
                   fullWidth
-                  label="Staff Name"
-                  value={value}
                   sx={{ mb: 4 }}
-                  onChange={onChange}
-                  placeholder="Mohammed Thasthakir"
-                  error={Boolean(errors?.staff_name)}
-                  {...(errors?.staff_name && { helperText: 'This field is required' })}
-                />
+                  label="Attendance"
+                  SelectProps={{
+                    value: value,
+                    onChange: onChange
+                  }}
+                >
+                  <MenuItem value="present">Present</MenuItem>
+                  <MenuItem value="absent">Absent</MenuItem>
+                </TextField>
               )}
             />
-            <TextField
-              select
-              fullWidth
-              sx={{ mb: 4 }}
-              label="Attendance"
-              SelectProps={{
-                value: values.attendance,
-                onChange: (e) => setValues({ ...values, attendance: e.target.value })
-              }}
-            >
-              <MenuItem value="Present">Present</MenuItem>
-              <MenuItem value="Absent">Absent</MenuItem>
-            </TextField>
             <Box sx={{ mb: 4 }}>
               <DatePicker
-                selectsStart
+                // selectsStart
                 id="event-start-date"
-                selected={values.attendance_date}
-                startDate={values.attendance_date}
+                selected={selectedDate}
+                // startDate={values.attendance_date}
                 dateFormat={'yyyy-MM-dd'}
                 customInput={<PickersComponent label="Attendance Date" registername="attendance_date" />}
-                onChange={(date) => setValues({ ...values, attendance_date: new Date(date) })}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  setValue('attendance_date', date);
+                }}
                 onSelect={handleStartDate}
               />
             </Box>
@@ -247,4 +188,13 @@ const TeachingStaffAddEventSidebar = (props) => {
   );
 };
 
+TeachingStaffAddEventSidebar.propTypes = {
+  drawerWidth: PropTypes.any,
+  addEventSidebarOpen: PropTypes.any,
+  handleAddEventSidebarToggle: PropTypes.any,
+  staffId: PropTypes.any,
+  selected: PropTypes.any,
+  setRefetch: PropTypes.any,
+  staff: PropTypes.any
+};
 export default TeachingStaffAddEventSidebar;

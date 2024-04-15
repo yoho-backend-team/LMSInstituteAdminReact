@@ -1,7 +1,6 @@
-// ** MUI Imports
-import Box from '@mui/material/Box';
-// ** Custom Component Import
 import { TextField } from '@mui/material';
+import Box from '@mui/material/Box';
+import PropTypes from 'prop-types';
 
 const StudentAttendanceCardHeader = (props) => {
   const { value, handleFilter } = props;
@@ -29,6 +28,11 @@ const StudentAttendanceCardHeader = (props) => {
       </Box>
     </>
   );
+};
+
+StudentAttendanceCardHeader.propTypes = {
+  value: PropTypes.any,
+  handleFilter: PropTypes.any
 };
 
 export default StudentAttendanceCardHeader;

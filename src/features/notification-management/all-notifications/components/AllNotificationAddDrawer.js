@@ -1,31 +1,22 @@
-// ** React Imports
-import { useState, useEffect } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// import axios from 'axios';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-
+import * as yup from 'yup';
 import { addNotification } from '../services/allNotificationServices';
 
 const AllNotificationAddDrawer = (props) => {
-  // ** Props
-  const { open, toggle } = props;
-
-  // ** State
+  const { open, toggle, setAllNotificationRefetch } = props;
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -39,10 +30,6 @@ const AllNotificationAddDrawer = (props) => {
   useEffect(() => {
     getActiveBranchesByUser();
   }, [selectedBranchId]);
-
-  // useEffect(() => {
-  //   getActiveStaffsByBranch(selectedBranchId);
-  // }, [selectedBranchId]);
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
@@ -61,13 +48,13 @@ const AllNotificationAddDrawer = (props) => {
   const schema = yup.object().shape({
     branch: yup.string().required('Branch is required'),
     title: yup
-    .string()
-    .required('Title is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
+      .string()
+      .required('Title is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     body: yup
-    .string()
-    .required('Body is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+      .string()
+      .required('Body is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters')
   });
 
   const defaultValues = {
@@ -79,9 +66,8 @@ const AllNotificationAddDrawer = (props) => {
   const {
     reset,
     control,
-    // setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -89,22 +75,19 @@ const AllNotificationAddDrawer = (props) => {
   });
 
   const handleClose = () => {
-    setInputValue(''); // Reset input value
-    setImgSrc(image); // Reset image source
-    setSelectedImage(''); // Reset selected image
-    reset(); // Reset form values
-    toggle(); // Close the drawer
+    setInputValue('');
+    setImgSrc(image);
+    setSelectedImage('');
+    reset();
+    toggle();
   };
 
   const onSubmit = async (data) => {
     console.log(data);
     var bodyFormData = new FormData();
-    // data?.students?.forEach((student) => {
-    //   bodyFormData.append('student_ids[]', student?.student_id);
-    // });
     bodyFormData.append('image', selectedImage);
-    bodyFormData.append('branch', data.branch); // Accessing course_id from selected object
-    bodyFormData.append('branch_id', selectedBranchId); // Accessing batch_id from selected object
+    bodyFormData.append('branch', data.branch);
+    bodyFormData.append('branch_id', selectedBranchId);
     bodyFormData.append('title', data.title);
     bodyFormData.append('body', data.body);
 
@@ -113,6 +96,7 @@ const AllNotificationAddDrawer = (props) => {
     if (result.success) {
       toast.success(result.message);
       handleClose();
+      setAllNotificationRefetch();
     } else {
       toast.error(result.message);
     }
@@ -203,7 +187,6 @@ const AllNotificationAddDrawer = (props) => {
                   getOptionLabel={(branch) => branch.branch_name}
                   onChange={(event, newValue) => {
                     onChange(newValue?.branch_id);
-                    // getActiveCoursesByBranch(newValue?.branch_id);
                   }}
                   value={activeBranches.find((branch) => branch.branch_id === value) || null}
                   renderInput={(params) => (
@@ -255,8 +238,8 @@ const AllNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}
                   helperText={errors.body ? errors.body.message : null}
-                  multiline // Add multiline prop
-                  rows={4} // Set rows to 4
+                  multiline
+                  rows={4}
                 />
               )}
             />
@@ -274,6 +257,12 @@ const AllNotificationAddDrawer = (props) => {
       </Box>
     </Drawer>
   );
+};
+
+AllNotificationAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setAllNotificationRefetch: PropTypes.any
 };
 
 export default AllNotificationAddDrawer;

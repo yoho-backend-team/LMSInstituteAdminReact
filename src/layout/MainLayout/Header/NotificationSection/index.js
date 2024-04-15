@@ -196,13 +196,14 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
+                        {/* Notification List */}
                         <NotificationList />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
                   <Divider />
                   <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
-                    <Button component={Link} to="profile-management/allnotifications" size="small" disableElevation>
+                    <Button component={Link} to="/profile-management/notifications" size="small" disableElevation>
                       View All
                     </Button>
                   </CardActions>

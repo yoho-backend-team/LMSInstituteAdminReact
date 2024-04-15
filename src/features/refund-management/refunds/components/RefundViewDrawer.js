@@ -3,6 +3,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
   console.log(selectedRowDetails);
@@ -57,7 +58,6 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
                     <Typography variant="h4"> Refund Id</Typography>
                     <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
                       {selectedRowDetails.refund_id}
-                      {/* {selectedRowDetails.institute_student_fee_id} */}
                     </Typography>
                   </Box>
                 </Box>
@@ -96,6 +96,12 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
       </Drawer>
     </>
   );
+};
+
+RefundViewDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  selectedRowDetails: PropTypes.any,
 };
 
 export default RefundViewDrawer;

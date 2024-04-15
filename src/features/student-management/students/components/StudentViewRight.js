@@ -1,20 +1,17 @@
-// ** React Imports
 import { useEffect, useState } from 'react';
-// ** MUI Imports
 import TabContext from '@mui/lab/TabContext';
 import MuiTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Demo Components Imports
 import TeacherAttendance from './StudentAttendance';
 import UserViewAccount from './StudentViewAccount';
 import UserViewConnection from './StudentViewConnection';
 import UserViewSecurity from './StudentViewSecurity';
 import UserViewBilling from './StudentClass';
+import PropTypes from 'prop-types';
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)(({ theme }) => ({
@@ -49,7 +46,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab,student }) => {
+const UserViewRight = ({ tab, student }) => {
   // ** State
   const [activeTab, setActiveTab] = useState('account');
   const handleChange = (event, value) => {
@@ -81,22 +78,27 @@ const UserViewRight = ({ tab,student }) => {
           <TabPanel sx={{ p: 0 }} value="account">
             <UserViewAccount student={student} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="security"  >
-            <UserViewSecurity id={student.id}/>
+          <TabPanel sx={{ p: 0 }} value="security">
+            <UserViewSecurity id={student.user_id} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="class"  >
+          <TabPanel sx={{ p: 0 }} value="class">
             <UserViewBilling student={student} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="attendance"  >
-            <TeacherAttendance student={student} />
+          <TabPanel sx={{ p: 0 }} value="attendance">
+            <TeacherAttendance attendance={student?.attendance} />
           </TabPanel>
-          <TabPanel sx={{ p: 0 }} value="activity" >
-            <UserViewConnection  student={student} />
+          <TabPanel sx={{ p: 0 }} value="activity">
+            <UserViewConnection student={student} />
           </TabPanel>
         </>
       </Box>
     </TabContext>
   );
+};
+
+UserViewRight.propTypes = {
+  tab: PropTypes.any,
+  student: PropTypes.any,
 };
 
 export default UserViewRight;

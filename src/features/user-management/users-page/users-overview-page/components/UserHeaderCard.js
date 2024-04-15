@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
+import PropTypes from 'prop-types';
 
 const CardStatsHorizontalWithDetails = (props) => {
   const { sx, icon, stats, title, subtitle, iconSize = 24, avatarSize = 38, avatarColor = 'primary' } = props;
@@ -26,6 +27,14 @@ const CardStatsHorizontalWithDetails = (props) => {
       </CardContent>
     </Card>
   );
+};
+
+CardStatsHorizontalWithDetails.propTypes = {
+  sx: PropTypes.any,
+  icon: PropTypes.any,
+  stats: PropTypes.any,
+  title: PropTypes.any,
+  subtitle: PropTypes.any
 };
 
 export default CardStatsHorizontalWithDetails;

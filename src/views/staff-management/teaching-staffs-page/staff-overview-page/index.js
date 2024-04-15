@@ -8,19 +8,23 @@ import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
-import DeleteDialog from 'components/modal/DeleteModel';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import TeacherFilter from 'features/staff-management/teaching-staffs/components/TeacherFilterCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectTeachingStaffs, selectLoading } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+import { selectLoading, selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
+import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const Teaching = () => {
-  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusValue, setStatusValue] = useState('');
   const teachingStaffs = useSelector(selectTeachingStaffs);
   const loading = useSelector(selectLoading);
+  const [refetch, setRefetch] = useState({});
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
 
@@ -30,29 +34,42 @@ const Teaching = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllTeachingStaffs(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId, refetch]);
 
-  const handleStatusChange = () => {
-    setDeleteDialogOpen(true);
+  const handleStatusChangeApi = async () => {
+    const data = {
+      status: statusValue?.is_active === '1' ? '0' : '1',
+      id: statusValue.id
+    };
+    const response = await staffStatusChange(data);
+    if (response.success) {
+      toast.success(response.message);
+      setRefetch((state) => !state);
+    } else {
+      toast.error(response.message);
+    }
   };
 
-  // console.log('overview-teachingstaffs:', teachingStaffs);
+  const handleStatusValue = (event, staff) => {
+    setStatusChangeDialogOpen(true);
+    setStatusValue(staff);
+  };
 
   return (
     <>
-    <Grid sx={{p:1}}>
-    <TeacherFilter selectedBranchId={selectedBranchId} />
-    </Grid>
-      
+      <Grid sx={{ p: 1 }}>
+        <TeacherFilter selectedBranchId={selectedBranchId} />
+      </Grid>
+
       {loading ? (
         <StaffManagement />
       ) : (
-        <Grid container>
-          <Grid item xs={12} mt={1}>
+        <Grid>
+          <Grid container xs={12} mt={1}>
             {teachingStaffs &&
               teachingStaffs?.map((item, i) => (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
-                  <Card sx={{ position: 'relative',mb:2 ,}}>
+                  <Card sx={{ position: 'relative', mb: 2 }}>
                     <CardContent sx={{ pt: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                         <Avatar
@@ -72,27 +89,26 @@ const Teaching = () => {
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             textDecoration: 'none',
-                            gap:2
+                            gap: 2
                           }}
                         >
                           <Grid>
                             <TextField
                               size="small"
                               select
-                              label="Status"
-                              SelectProps={{ onChange: (e) => handleStatusChange(e) }}
-                              sx={{width:100}}
+                              defaultValue={item.staff?.is_active}
+                              label={item?.staff?.is_active == '1' ? 'Active' : 'Inactive'}
+                              SelectProps={{ onChange: (e) => handleStatusValue(e, item?.staff) }}
+                              sx={{ width: 100 }}
                             >
                               <MenuItem value="0">Active</MenuItem>
                               <MenuItem value="1">Inactive</MenuItem>
                             </TextField>
                           </Grid>
                           <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id: item?.staff?.id }}>
-                            {/* <Link to ={item?.staff?.id} state={{id:item?.staff?.id}}> */}
-                            <Button variant="tonal" size='medium' sx={{ m: 0, px: 2 }}>
+                            <Button variant="tonal" size="medium" sx={{ m: 0, px: 2 }}>
                               View Profile
                             </Button>
-                            {/* </Link> */}
                           </Box>
                         </Box>
                       </Box>
@@ -106,12 +122,12 @@ const Teaching = () => {
           </Grid>
         </Grid>
       )}
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
-        // submit={handleSubmit}
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change the Status"
+        title="Status"
+        handleSubmit={handleStatusChangeApi}
       />
     </>
   );

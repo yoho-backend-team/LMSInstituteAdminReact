@@ -1,6 +1,3 @@
-// ** React Imports
-import { forwardRef, useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -9,38 +6,29 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Third Party Imports
-import format from 'date-fns/format';
-// ** Utils Import
+import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
-// ** Custom Components Imports
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+
 import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
-import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
 import SalariesDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
+import { useCallback, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { selectLoading, selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
+import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
+import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
-// ** Styled Components
-// import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { selectTeachingStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesSelectors';
-import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
-import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
-import MenuItem from '@mui/material/MenuItem';
-import { deleteTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
-import { useCallback } from 'react';
-import toast from 'react-hot-toast';
+import SalaryViewDrawer from './SalaryViewDrawer';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -52,9 +40,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row) => {
   if (row?.staff?.image) {
-    return (
-      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.staff?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
-    );
+    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.staff?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -74,18 +60,6 @@ const userStatusObj = {
   refund: 'secondary'
 };
 
-/* eslint-disable */
-const CustomInput = forwardRef((props, ref) => {
-  const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
-  const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
-  const value = `${startDate}${endDate !== null ? endDate : ''}`;
-  props.start === null && props.dates.length && props.setDates ? props.setDates([]) : null;
-  const updatedProps = { ...props };
-  delete updatedProps.setDates;
-  return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
-});
-
-/* eslint-enable */
 const SalaryTable = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState([]);
@@ -97,6 +71,8 @@ const SalaryTable = () => {
 
   const dispatch = useDispatch();
   const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
+  const TeachingStaffSalariesLoading = useSelector(selectLoading);
+
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   console.log(TeachingStaffSalaries);
@@ -113,16 +89,8 @@ const SalaryTable = () => {
 
   const [selectedSalariesDeleteId, setSelectedSalariesDeleteId] = useState(null);
 
-  const [loading, setLoading] = useState(true);
   const [statusValue, setStatusValue] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const [staffValue, setStaffValue] = useState('');
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -130,24 +98,16 @@ const SalaryTable = () => {
     dispatch(getAllStaffSalaries(data));
   };
 
-  const staff = [
-    { staff_id: '1', staff_name: 'staff 1' },
-    { staff_id: '2', staff_name: 'staff 2' },
-    { staff_id: '3', staff_name: 'staff 3' }
-  ];
-
-  const [selectedstafftype, setSelectedstafftype] = useState([]);
-  const stafftype = [
-    { staff_id: '1', staff_name: 'stafftype 1' },
-    { staff_id: '2', staff_name: 'stafftype 2' },
-    { staff_id: '3', staff_name: 'stafftype 3' }
-  ];
+  const handleFilterByStaffType = (e) => {
+    setStaffValue(e.target.value);
+    const data = { type: e.target.value, branch_id: selectedBranchId };
+    dispatch(getAllStaffSalaries(data));
+  };
 
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
   };
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedSalariesDeleteId(itemId);
     setSalariesDeleteModelOpen(true);
@@ -162,6 +122,12 @@ const SalaryTable = () => {
     } else {
       toast.error(result.message);
     }
+  };
+
+  const [salaryViewOpen, setSalaryViewUserOpen] = useState(false);
+  const toggleSalaryViewDrawer = () => {
+    setSalaryViewUserOpen(!salaryViewOpen);
+    console.log('Toggle drawer');
   };
 
   const defaultColumns = [
@@ -224,14 +190,16 @@ const SalaryTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
-        return  <CustomChip
-        rounded
-        skin="light"
-        size="small"
-        label={row.status}
-        color={userStatusObj[row.status]}
-        sx={{ textTransform: 'capitalize' }}
-      />;
+        return (
+          <CustomChip
+            rounded
+            skin="light"
+            size="small"
+            label={row.status}
+            color={userStatusObj[row.status]}
+            sx={{ textTransform: 'capitalize' }}
+          />
+        );
       }
     }
   ];
@@ -246,11 +214,6 @@ const SalaryTable = () => {
       headerName: 'Actions',
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* <Tooltip title="View">
-            <IconButton size="small" sx={{ color: 'text.secondary' }} to={`/apps/invoice/preview/${row.id}`}>
-              <Icon icon="tabler:eye" />
-            </IconButton>
-          </Tooltip> */}
           <OptionsMenu
             menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -259,8 +222,10 @@ const SalaryTable = () => {
                 text: 'View',
                 icon: <Icon icon="tabler:eye" fontSize={20} />,
                 menuItemProps: {
-                  component: Link,
-                  to: `/apps/invoice/preview/${row.id}`
+                  onClick: () => {
+                    handleRowClick(row);
+                    toggleSalaryViewDrawer();
+                  }
                 }
               },
               {
@@ -270,7 +235,7 @@ const SalaryTable = () => {
                 menuItemProps: {
                   onClick: () => {
                     handleRowClick(row);
-                    toggleEditUserDrawer(); // Toggle the edit drawer when either the text or the icon is clicked
+                    toggleEditUserDrawer();
                   }
                 }
               },
@@ -279,7 +244,6 @@ const SalaryTable = () => {
                 icon: <Icon icon="tabler:download" fontSize={20} />
               },
               {
-                // to: `/apps/invoice/delete/${row.id}`,
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
@@ -292,73 +256,6 @@ const SalaryTable = () => {
       )
     }
   ];
-
-  // const TeachingStaffSalariesdummyData = [
-  //   {
-  //     id: 1,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 100,
-  //     PaymentDate: '2025-01-01',
-  //     balance: 55,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 2,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'arunbalaji.com',
-  //     total: 200,
-  //     PaymentDate: '2000-01-01',
-  //     balance: 50,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 3,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 300,
-  //     PaymentDate: '25-01-01',
-  //     balance: 40,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 4,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 40,
-  //     PaymentDate: '202-01-01',
-  //     balance: 30,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   },
-  //   {
-  //     id: 5,
-  //     invoiceStatus: 'Sent',
-  //     transactionid: '123456',
-
-  //     name: 'John Doe',
-  //     companyEmail: 'john.doe@example.com',
-  //     total: 50,
-  //     PaymentDate: '20-01-01',
-  //     balance: 0,
-  //     avatar: '',
-  //     avatarColor: 'primary'
-  //   }
-  // ];
 
   return (
     <DatePickerWrapper>
@@ -382,63 +279,17 @@ const SalaryTable = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Autocomplete
-                    disableCloseOnSelect
-                    multiple
-                    id="select-multiple-chip"
-                    options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...stafftype]}
-                    getOptionLabel={(option) => option.staff_name}
-                    value={selectedstafftype}
-                    onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                        setSelectedstafftype(staff.filter((option) => option.staff_id !== 'selectAll'));
-                      } else {
-                        setSelectedstafftype(newValue);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        fullWidth
-                        label="Staff Type"
-                        InputProps={{
-                          ...params.InputProps,
-                          style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        }}
-                      />
-                    )}
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
-                        <Checkbox
-                          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                          checkedIcon={<CheckBoxIcon fontSize="small" />}
-                          style={{ marginRight: 8 }}
-                          checked={selected}
-                        />
-                        {option.staff_name}
-                      </li>
-                    )}
-                    renderTags={(value) => (
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
-                        {value.map((option, index) => (
-                          <CustomChip
-                            key={option.staff_id}
-                            label={option.staff_name}
-                            onDelete={() => {
-                              const updatedValue = [...value];
-                              updatedValue.splice(index, 1);
-                              setSelectedstafftype(updatedValue);
-                            }}
-                            color="primary"
-                            sx={{ m: 0.75 }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                    selectAllText="Select All"
-                    SelectAllProps={{ sx: { fontWeight: 'bold' } }}
-                  />
+                  <TextField
+                    select
+                    fullWidth
+                    label="Staff Type"
+                    defaultValue={''}
+                    SelectProps={{ value: staffValue, onChange: (e) => handleFilterByStaffType(e) }}
+                  >
+                    <MenuItem value="">Select Option</MenuItem>
+                    <MenuItem value="teaching">Teaching</MenuItem>
+                    <MenuItem value="non-teaching">Non Teaching</MenuItem>
+                  </TextField>
                 </Grid>
               </Grid>
             </CardContent>
@@ -449,7 +300,7 @@ const SalaryTable = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            {loading ? (
+            {TeachingStaffSalariesLoading ? (
               <PaymentSalarySkeleton />
             ) : (
               <DataGrid
@@ -457,7 +308,6 @@ const SalaryTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                // rows={TeachingStaffSalaries}
                 rows={TeachingStaffSalaries}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -470,7 +320,10 @@ const SalaryTable = () => {
           </Card>
         </Grid>
       </Grid>
-      <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* Add Drawer */}
+      <SalaryAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
+
+      {/* Edit Drawer */}
       <SalaryEditDrawer
         setRefetch={setRefetch}
         open={editUserOpen}
@@ -478,6 +331,8 @@ const SalaryTable = () => {
         selectedRows={selectedRows}
         handleRowClick={handleRowClick}
       />
+
+      {/* Delte Modal */}
       <SalariesDeleteModel
         open={salariesDeleteModelOpen}
         setOpen={setSalariesDeleteModelOpen}
@@ -485,6 +340,9 @@ const SalaryTable = () => {
         title="Delete"
         handleSubmit={handleSalariesDelete}
       />
+
+      {/* View Drawer */}
+      <SalaryViewDrawer open={salaryViewOpen} toggle={toggleSalaryViewDrawer} selectedRowDetails={selectedRows} />
     </DatePickerWrapper>
   );
 };

@@ -1,32 +1,25 @@
-import { forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-// ** Styled Components
-// import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { updateStudent } from 'features/student-management/students/services/studentService';
-import { useCallback } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
+import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
   const location = useLocation();
@@ -46,56 +39,50 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    // first_name: yup
-    //   .string()
-    //   .required('First Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'First Name should not contain special characters'),
-    // last_name: yup
-    //   .string()
-    //   .required('Last Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'Last Name should not contain special characters'),
-    // email: yup.string().email().required('Email is required'),
-    // phone: yup
-    //   .string()
-    //   .required('Phone No. is required')
-    //   .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
-    // alt_phone: yup
-    //   .string()
-    //   .required('Alternate Phone No. is required')
-    //   .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
-    // state: yup
-    //   .string()
-    //   .required('state is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters'),
-    // city: yup
-    //   .string()
-    //   .required('city is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters'),
-    // pincode: yup
-    //   .string()
-    //   .required('Pin Code is required')
-    //   .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
-    // qualification: yup
-    //   .string()
-    //   .required('Qualification is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'Qualification should not contain special characters'),
-    // address_line_one: yup.string().required('Address Line One is required'),
-    // address_line_two: yup.string().required('Address Line Two is required'),
-    // date_of_birth: yup.string().required(),
-    // gender: yup.string().required(),
-    // branch: yup.string().required('Branch is required'),
-    // username: yup
-    //   .string()
-    //   .required('User Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
-    // course: yup.string().required()
+    first_name: yup
+      .string()
+      .required('First Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'First Name should not contain special characters'),
+    last_name: yup
+      .string()
+      .required('Last Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Last Name should not contain special characters'),
+    email: yup.string().email().required('Email is required'),
+    phone_no: yup
+      .string()
+      .required('Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Phone No. should be exactly 10 digits'),
+    alternate_number: yup
+      .string()
+      .required('Alternate Phone No. is required')
+      .matches(/^[0-9]{10}$/, 'Alternate Phone No. should be exactly 10 digits'),
+    state: yup
+      .string()
+      .required('state is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'state should not contain special characters'),
+    city: yup
+      .string()
+      .required('city is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'city should not contain special characters'),
+    pincode: yup
+      .string()
+      .required('Pin Code is required')
+      .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
+    address_line_1: yup.string().required('Address Line One is required'),
+    address_line_2: yup.string().required('Address Line Two is required'),
+    date_of_birth: yup.string().required(),
+    gender: yup.string().required(),
+    branch: yup.string().required('Branch is required'),
+    username: yup
+      .string()
+      .required('User Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
+    course: yup.string().required()
   });
 
-  // ** States
   const [activeStep, setActiveStep] = useState(0);
-console.log(activeStep);
+  console.log(activeStep);
   const [activeCourse, setActiveCourse] = useState([]);
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
@@ -103,11 +90,11 @@ console.log(activeStep);
   }, [selectedBranchId]);
 
   const defaultPersonalValues = {
-    last_name:'',
+    last_name: '',
     name: '',
     email: '',
     phone_no: '',
-    alt_phone: '',
+    alternate_number: '',
     state: '',
     city: '',
     pincode: '',
@@ -142,8 +129,6 @@ console.log(activeStep);
     setActiveBranches(result.data.data);
   };
 
-  // ** Hooks
-
   const {
     control: personalControl,
     setValue,
@@ -174,7 +159,7 @@ console.log(activeStep);
         education_qualification,
         username
       } = studentData;
-  
+
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
@@ -193,24 +178,17 @@ console.log(activeStep);
       setValue('username', username || '');
     }
   }, [studentData, setValue]);
-  
 
-  // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -240,7 +218,7 @@ console.log(activeStep);
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -255,7 +233,9 @@ console.log(activeStep);
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('/images/avatars/15.png');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
 
   console.log(logo);
@@ -273,7 +253,7 @@ console.log(activeStep);
     data.append('course_id', personalData?.course);
     data.append('image', logo);
     data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_1 );
+    data.append('address_line_1', personalData?.address_line_1);
     data.append('address_line_2', personalData?.address_line_2);
     data.append('city', personalData?.city);
     data.append('state', personalData?.state);
@@ -281,100 +261,16 @@ console.log(activeStep);
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
-    data.append('id',studentData.id);
+    data.append('id', studentData.id);
 
     const result = await updateStudent(data);
 
     if (result.success) {
       toast.success(result.message);
-      // setRefetch((state) => !state);
-      // handleEditClose();
     } else {
       toast.error(result.message);
     }
   });
-
-  // const onSubmit = async () => {
-  //   const personalData = personalControl?._formValues;
-  //   console.log(personalData);
-  //   setActiveStep(activeStep + 1);
-  //   if (activeStep === steps.length - 1) {
-  //     const data = new FormData();
-  //     data.append('first_name', personalData?.first_name);
-  //     data.append('student_last_name', personalData?.last_name);
-  //     data.append('student_email', personalData?.email);
-  //     data.append('student_phone_no', personalData?.phone);
-  //     data.append('alternate_number', personalData?.alt_phone);
-  //     data.append('branch_id', personalData?.branch);
-  //     data.append('course_id', personalData?.course);
-  //     data.append('image', logo);
-  //     data.append('gender', personalData?.gender);
-  //     data.append('address_line_1', personalData?.address_line_one);
-  //     data.append('address_line_2', personalData?.address_line_two);
-  //     data.append('city', personalData?.city);
-  //     data.append('state', personalData?.state);
-  //     data.append('pincode', personalData?.pin_code);
-  //     data.append('dob', convertDateFormat(personalData?.date_of_birth));
-  //     data.append('username', personalData?.username);
-  //     data.append('education_qualification', personalData?.education_qualification);
-  //     data.append('id',studentData.id);
-
-  //     try {
-  //       const result = await updateStudent(data);
-
-  //       if (result.success) {
-  //         toast.success(result.message);
-  //         navigate(-1);
-  //       } else {
-  //         toast.error(result.message);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
-
-  // const onSubmit = async () => {
-  //   const personalData = personalControl?._formValues;
-  //   const filteredCourseId = selectedCourses?.map((course) => course.course_id);
-  //   setActiveStep(activeStep + 1);
-  //   if (activeStep === steps.length - 1) {
-  //     let data = new FormData();
-  //     filteredCourseId.forEach((id) => {
-  //       data.append(`course_ids[]`, id);
-  //     });
-  //     data.append('name', personalData?.name);
-  //     data.append('email', personalData?.email);
-  //     data.append('phone_number', personalData?.phone);
-  //     data.append('alternate_number', personalData?.alt_phone);
-  //     data.append('designation', personalData?.designation);
-  //     data.append('type', 'teaching');
-  //     data.append('branch_id', personalData?.branch.branch_id);
-  //     data.append('image', logo);
-  //     data.append('gender', personalData?.gender);
-  //     data.append('address_line_1', personalData?.address_line_one);
-  //     data.append('address_line_2', personalData?.address_line_two);
-  //     data.append('city', personalData?.city);
-  //     data.append('state', personalData?.state);
-  //     data.append('pin_code', personalData?.pin_code);
-  //     data.append('dob', convertDateFormat(personalData?.date_of_birth));
-  //     data.append('username', personalData?.username);
-  //     data.append('education_qualification', personalData?.education_qualification);
-  //     console.log(personalData);
-  //     try {
-  //       const result = await updateStudent(data);
-
-  //       if (result.success) {
-  //         toast.success(result.message);
-  //         navigate(-1);
-  //       } else {
-  //         toast.error(result.message);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
 
   return (
     <Card>
@@ -651,7 +547,7 @@ console.log(activeStep);
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="address_line_1 "
+                name="address_line_1"
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -661,9 +557,9 @@ console.log(activeStep);
                     label="Address Line One"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['address_line_one'])}
-                    aria-describedby="stepper-linear-personal-address_line_one"
-                    helperText={personalErrors.address_line_one?.message}
+                    error={Boolean(personalErrors['address_line_1'])}
+                    aria-describedby="stepper-linear-personal-address_line_1"
+                    helperText={personalErrors.address_line_1?.message}
                   />
                 )}
               />
@@ -680,9 +576,9 @@ console.log(activeStep);
                     label="Address Line Two"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['address_line_two'])}
-                    aria-describedby="stepper-linear-personal-address_line_two"
-                    helperText={personalErrors.address_line_two?.message}
+                    error={Boolean(personalErrors['address_line_2'])}
+                    aria-describedby="stepper-linear-personal-address_line_2"
+                    helperText={personalErrors.address_line_2?.message}
                   />
                 )}
               />
@@ -700,9 +596,9 @@ console.log(activeStep);
                     label="Phone Number"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['phone'])}
+                    error={Boolean(personalErrors['phone_no'])}
                     aria-describedby="stepper-linear-personal-phone"
-                    helperText={personalErrors.phone?.message}
+                    helperText={personalErrors.phone_no?.message}
                   />
                 )}
               />
@@ -720,9 +616,9 @@ console.log(activeStep);
                     label="Alt Phone Number"
                     onChange={onChange}
                     placeholder="Carter"
-                    error={Boolean(personalErrors['alt_phone'])}
-                    aria-describedby="stepper-linear-personal-alt_phone"
-                    helperText={personalErrors.alt_phone?.message}
+                    error={Boolean(personalErrors['alternate_number'])}
+                    aria-describedby="stepper-linear-personal-alternate_number"
+                    helperText={personalErrors.alternate_number?.message}
                   />
                 )}
               />

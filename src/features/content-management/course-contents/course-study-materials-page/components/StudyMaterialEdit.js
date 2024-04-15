@@ -1,21 +1,16 @@
-// ** React Imports
-import { useEffect } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import { useCallback, useMemo, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { PDFViewer } from 'react-view-pdf';
+import * as yup from 'yup';
 import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -43,12 +38,9 @@ const defaultValues = {
 };
 
 const StudyMaterialEdit = (props) => {
-  // ** Props
-  const { open, toggle, StudyMaterials } = props;
+  const { open, toggle, StudyMaterials, setRefetch } = props;
   console.log('StudyMaterialEdit - open:', props.open);
   console.log('StudyMaterialEdit - toggle:', props.toggle);
-  // ** State
-  // const [studymaterialPdf, setstudymaterialPdf] = useState('');
 
   const {
     handleSubmit,
@@ -72,40 +64,11 @@ const StudyMaterialEdit = (props) => {
     }
   }, [StudyMaterials, setValue]);
 
-  const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('id', props.initialValues.id);
-    bodyFormData.append('document', studymaterialPdf);
-    console.log(bodyFormData);
-
-    const result = await updateCourseStudyMaterial(bodyFormData);
-
-    if (result.success) {
-      toast.success(result.message);
-    } else {
-      let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
-      toast.error(errorMessage.trim());
-      // toast.error(result.message);
-    }
-  };
-
   const handleClose = () => {
     setValue('contact', Number(''));
     toggle();
     reset();
   };
-
-  // const handleSetPdf = (data) => {
-  //   setstudymaterialPdf(data);
-  //   setValue('pdf_file', data);
-  // };
 
   const savedPdfUrls = require('assets/pdf.pdf');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -125,18 +88,27 @@ const StudyMaterialEdit = (props) => {
     }
   }, []);
 
+  const onSubmit = async (data) => {
+    var bodyFormData = new FormData();
+    bodyFormData.append('title', data.title);
+    bodyFormData.append('description', data.description);
+    bodyFormData.append('id', props.initialValues.id);
+    bodyFormData.append('document', setSelectedFile);
+    console.log(bodyFormData);
+
+    const result = await updateCourseStudyMaterial(bodyFormData);
+
+    if (result.success) {
+      setRefetch((state) => !state); // Trigger category refetch
+      toast.success(result.message);
+      toggle();
+    } else {
+      let errorMessage = '';
+
+      toast.error(errorMessage.trim());
+    }
+  };
   console.log(setSelectedFile);
-  // Styled components
-  // const ImgStyled = useMemo(
-  //   () =>
-  //     styled('img')(({ theme }) => ({
-  //       width: 100,
-  //       height: 100,
-  //       marginRight: theme.spacing(2),
-  //       borderRadius: theme.shape.borderRadius
-  //     })),
-  //   []
-  // );
 
   const ButtonStyled = useMemo(
     () =>
@@ -182,7 +154,6 @@ const StudyMaterialEdit = (props) => {
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 {!selectedFile && <PDFViewer url={savedPdfUrl} />}
                 {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
-                {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
 
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
                   Upload New File
@@ -248,6 +219,13 @@ const StudyMaterialEdit = (props) => {
       </Grid>
     </Drawer>
   );
+};
+
+StudyMaterialEdit.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  StudyMaterials: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default StudyMaterialEdit;

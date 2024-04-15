@@ -99,7 +99,7 @@ export const updateCourseNote = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-console.log('updatenotes:',response)
+    console.log('updatenotes:', response);
     if (response.data.status) {
       console.log(response);
       return { success: true, message: 'CourseNote updated successfully' };

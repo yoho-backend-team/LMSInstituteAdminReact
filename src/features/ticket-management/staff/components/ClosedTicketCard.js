@@ -3,6 +3,7 @@ import { Avatar, Box, Card, CardContent, Grid, Icon, IconButton } from '@mui/mat
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
+import PropTypes from 'prop-types';
 
 const ClosedTicketCard = ({ ticket }) => {
   return (
@@ -61,4 +62,7 @@ const ClosedTicketCard = ({ ticket }) => {
   );
 };
 
+ClosedTicketCard.propTypes = {
+  ticket: PropTypes.any
+};
 export default ClosedTicketCard;

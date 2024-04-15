@@ -8,49 +8,6 @@ import menuItem from 'menu-items';
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
-  // const filteredSidebarData = menuItem?.items.filter((item) => {
-  //   var children = item?.children[0]?.children;
-  //   if (children) {
-  //     children = children.filter((child) => child.visible !== false);
-  //     return children.length > 0; // Only keep items with non-empty children
-  //   }
-  //   return item.visible !== false; // Keep items with visible set to true
-  // });
-
-  // const filteredData = menuItem?.items.filter((item) => {
-  //   if (item.children && item.children.length > 0) {
-  //     return item.children.some((child) => {
-  //       if (child.children && child.children.length > 0) {
-  //         return child.children.some((grandchild) => grandchild.visible === true);
-  //       }
-  //       return false;
-  //     });
-  //   }
-  //   return false;
-  // });
-
-  // const filteredData = menuItem?.items.filter((item) => {
-  //   if (item.children && item.children.length > 0) {
-  //     return item.children.some((child) => {
-  //       if (child.children && child.children.length > 0) {
-  //         return child.children.some((grandchild) => grandchild.visible === true);
-  //       }
-  //       return false;
-  //     });
-  //   }
-  //   return false;
-  // });
-
-  // // Further filtering to remove non-visible children
-  // filteredData.forEach((item) => {
-  //   item.children = item.children.filter((child) => {
-  //     if (child.children && child.children.length > 0) {
-  //       return child.children.find((grandchild) => grandchild.visible === true);
-  //     }
-  //     return false;
-  //   });
-  // });
-
   const filteredData = [];
 
   menuItem?.items.forEach((item) => {
@@ -71,8 +28,6 @@ const MenuList = () => {
       }
     }
   });
-
-  console.log(filteredData);
 
   const navItems = filteredData.map((item) => {
     switch (item.type) {

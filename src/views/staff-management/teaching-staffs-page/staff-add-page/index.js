@@ -1,48 +1,41 @@
-// ** React Imports
-import MenuItem from '@mui/material/MenuItem';
-import { forwardRef, useState, useEffect } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import CustomChip from 'components/mui/chip';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import { Fragment } from 'react';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
-import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
-// ** Styled Components
+import CustomChip from 'components/mui/chip';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import StepperWrapper from 'styles/mui/stepper';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import InputAdornment from '@mui/material/InputAdornment';
+import StepperWrapper from 'styles/mui/stepper';
+import * as yup from 'yup';
+import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 
 const StepperLinearWithValidation = () => {
   const steps = [
     {
-      title: 'Personal Info',
-      subtitle: 'Setup Informion'
+      title: 'Add New Staff',
+      subtitle: 'Add staff Information'
     }
   ];
 
@@ -107,7 +100,7 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
-    branch: yup.object().required('Branch is required'),
+    branch: yup.string().required('Branch is required'),
     username: yup
       .string()
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
@@ -121,14 +114,13 @@ const StepperLinearWithValidation = () => {
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedCourses);
 
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
   }, [selectedBranchId]);
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
 
     console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
@@ -146,12 +138,10 @@ const StepperLinearWithValidation = () => {
     setActiveBranches(result.data.data);
   };
 
-  // ** Hooks
-
   const {
     reset: personalReset,
     control: personalControl,
-    // setValue,
+    setValue,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
@@ -159,7 +149,6 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(personalSchema)
   });
 
-  // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -188,14 +177,11 @@ const StepperLinearWithValidation = () => {
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
 
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
 
     return formattedDateString;
@@ -227,7 +213,7 @@ const StepperLinearWithValidation = () => {
 
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
-    'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
   const handleInputImageChange = (file) => {
@@ -242,7 +228,9 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('/images/avatars/15.png');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
   console.log(logo);
 
@@ -275,7 +263,6 @@ const StepperLinearWithValidation = () => {
 
       try {
         const result = await addTeachingStaff(data);
-
         if (result.success) {
           toast.success(result.message);
           navigate(-1);
@@ -294,26 +281,12 @@ const StepperLinearWithValidation = () => {
         return (
           <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
             <Grid container spacing={5}>
-              <Grid item xs={12}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {steps[0].title}
-                </Typography>
-                <Typography variant="caption" component="p">
-                  {steps[0].subtitle}
-                </Typography>
-              </Grid>
               <Grid item xs={12} sm={12}>
-                <Typography color="dark" sx={{ fontWeight: 600 }}>
-                  Upload Profile Picture
-                </Typography>
-                <Typography color="dark" sx={{ fontSize: 12, mb: 4 }}>
-                  Upload here
-                </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <ImgStyled src={logoSrc} alt="Profile Pic" />
                   <div>
                     <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                      Upload your Logo
+                      Upload Profile picture
                       <input
                         hidden
                         type="file"
@@ -322,10 +295,12 @@ const StepperLinearWithValidation = () => {
                         id="account-settings-upload-image"
                       />
                     </ButtonStyled>
-                    <ResetButtonStyled color="secondary" variant="tonal" onClick={handleInputImageReset}>
+                    <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                       Reset
                     </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                    <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
+                      Allowed PNG or JPEG. Max size of 800K.
+                    </Typography>
                   </div>
                 </Box>
               </Grid>
@@ -338,7 +313,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="FullName"
+                      label="Full Name"
                       onChange={onChange}
                       placeholder="Leonard"
                       error={Boolean(personalErrors['name'])}
@@ -423,24 +398,25 @@ const StepperLinearWithValidation = () => {
                   name="branch"
                   control={personalControl}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
+                  render={({ field: { value } }) => (
                     <Autocomplete
+                      selectAll
                       fullWidth
-                      value={value || null}
-                      onChange={(event, newValue) => {
-                        onChange(newValue); // Update the value of the branch field
-                      }}
-                      options={activeBranches ?? []}
+                      options={activeBranches}
                       getOptionLabel={(option) => option.branch_name}
+                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      onChange={(event, newValue) => {
+                        setValue('branch', newValue ? newValue.branch_id : '');
+                        getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                      }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Branch"
-                          value={value}
-                          onChange={onChange}
+                          label="Select Branch"
                           error={Boolean(personalErrors['branch'])}
+                          helperText={personalErrors.branch?.message}
+                          id="custom-select"
                           aria-describedby="stepper-linear-personal-branch"
-                          {...(personalErrors['branch'] && { helperText: 'This field is required' })}
                         />
                       )}
                     />
@@ -467,7 +443,7 @@ const StepperLinearWithValidation = () => {
                     <TextField
                       {...params}
                       fullWidth
-                      label="Courses"
+                      label="Select Course"
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
@@ -508,24 +484,6 @@ const StepperLinearWithValidation = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="designation"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="designation"
-                      onChange={onChange}
-                      error={Boolean(personalErrors.designation)}
-                      aria-describedby="stepper-linear-personal-designation-helper"
-                      {...(personalErrors.designation && { helperText: 'This field is required' })}
-                    />
-                  )}
-                />
-              </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="education_qualification"
@@ -609,7 +567,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Address Line One"
+                      label="Address Line 1"
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_one'])}
@@ -628,7 +586,7 @@ const StepperLinearWithValidation = () => {
                     <CustomTextField
                       fullWidth
                       value={value}
-                      label="Address Line Two"
+                      label="Address Line 2"
                       onChange={onChange}
                       placeholder="Carter"
                       error={Boolean(personalErrors['address_line_two'])}
@@ -650,7 +608,7 @@ const StepperLinearWithValidation = () => {
                       value={value}
                       label="Phone Number"
                       onChange={onChange}
-                      placeholder="Carter"
+                      placeholder=""
                       error={Boolean(personalErrors['phone'])}
                       aria-describedby="stepper-linear-personal-phone"
                       InputProps={{
@@ -673,7 +631,7 @@ const StepperLinearWithValidation = () => {
                       type="number"
                       label="Alt Phone Number"
                       onChange={onChange}
-                      placeholder="Carter"
+                      placeholder=""
                       error={Boolean(personalErrors['alt_phone'])}
                       aria-describedby="stepper-linear-personal-alt_phone"
                       InputProps={{
@@ -712,7 +670,7 @@ const StepperLinearWithValidation = () => {
                 <Button type="submit" variant="contained">
                   Submit
                 </Button>
-                <Button variant="tonal" color="secondary" onClick={handleReset}>
+                <Button variant="tonal" color="error" onClick={handleReset}>
                   Reset
                 </Button>
               </Grid>

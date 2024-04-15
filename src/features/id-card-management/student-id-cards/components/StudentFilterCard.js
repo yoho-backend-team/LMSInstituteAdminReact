@@ -3,12 +3,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
+import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import MenuItem from '@mui/material/MenuItem';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
@@ -37,20 +38,24 @@ const StudentFilterCard = (props) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
-                    // multiple
                     fullWidth
                     options={batch}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
-                      // const batchId = newValue.map((item) => item.batch.batch_id);
-                      console.log(newValue);
-                      const data = {
-                        batch_id: newValue.batch.batch_id,
-                        branch_id: selectedBranchId
-                      };
-                      dispatch(getAllStudentIdCards(data));
+                      if (!newValue) {
+                        const data = {
+                          batch_id: '',
+                          branch_id: selectedBranchId
+                        };
+                        dispatch(getAllStudentIdCards(data));
+                      } else {
+                        const data = {
+                          batch_id: newValue.batch.batch_id,
+                          branch_id: selectedBranchId
+                        };
+                        dispatch(getAllStudentIdCards(data));
+                      }
                     }}
-                    // defaultValue={[top100Films[13]]}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.batch.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
@@ -81,6 +86,14 @@ const StudentFilterCard = (props) => {
       </Grid>
     </DatePickerWrapper>
   );
+};
+
+StudentFilterCard.propTypes = {
+  handleSearch: PropTypes.any,
+  selectedBranchId: PropTypes.any,
+  searchValue: PropTypes.any,
+  filterstatusValue: PropTypes.any,
+  handleFilterByStatus: PropTypes.any
 };
 
 export default StudentFilterCard;

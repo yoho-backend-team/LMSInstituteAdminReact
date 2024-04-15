@@ -1,18 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { Card, CardContent, Grid, Typography, Box, TextField, MenuItem } from '@mui/material';
+import { Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
 import Icon from 'components/icon';
-import BranchDeleteModel from 'components/modal/DeleteModel';
-import StatusChangeDialog from 'components/modal/DeleteModel';
-import BranchEditModal from './BranchEditModal';
+import { default as BranchDeleteModel, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import { Link } from 'react-router-dom';
-import { deleteBranch } from 'features/branch-management/services/branchServices';
+import { deleteBranch, updateBranchStatus } from 'features/branch-management/services/branchServices';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import { updateBranchStatus } from 'features/branch-management/services/branchServices';
+import { Link } from 'react-router-dom';
+import BranchEditModal from './BranchEditModal';
 
 const BranchCard = ({ branch, setRefetchBranch }) => {
-  // State variables
   const [branchDeleteModelOpen, setBranchDeleteModelOpen] = useState(false);
   const [selectedBranchDeleteId, setSelectedBranchDeleteId] = useState(null);
   const [branchEditModelOpen, setBranchEditModelOpen] = useState(false);
@@ -20,13 +18,11 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedBranchDeleteId(itemId);
     setBranchDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleBranchDelete = async () => {
     const data = { id: selectedBranchDeleteId };
     const result = await deleteBranch(data);
@@ -60,7 +56,6 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{ position: 'relative', minHeight: 300 }}>
-        {/* Options menu */}
         <Grid
           sx={{
             position: 'absolute',
@@ -104,7 +99,6 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
             ]}
           />
         </Grid>
-        {/* Branch image */}
         <CardMedia
           sx={{
             height: 100,
@@ -118,7 +112,6 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
           image={require('assets/images/avatar/map-pin.png')}
         />
         <CardContent>
-          {/* Branch name */}
           <Typography
             variant="h4"
             sx={{
@@ -132,7 +125,6 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
           >
             {branch?.branch_name}
           </Typography>
-          {/* Branch address */}
           <Typography
             variant="h6"
             sx={{
@@ -146,7 +138,6 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
           >
             {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
           </Typography>
-
           <Box sx={{ mt: 1.75 }}>
             <TextField
               size="small"
@@ -189,6 +180,11 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
       />
     </Grid>
   );
+};
+
+BranchCard.propTypes = {
+  branch: PropTypes.any,
+  setRefetchBranch: PropTypes.any
 };
 
 export default BranchCard;

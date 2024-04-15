@@ -41,9 +41,10 @@ export const getBatchDetails = async (data) => {
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return{
-        success:true ,data:response?.data?.data
-      } 
+      return {
+        success: true,
+        data: response?.data?.data
+      };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch batch. Status: ${response.status}`);
@@ -63,7 +64,7 @@ export const getAllActiveBatchesByCourse = async (data) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: data,
+      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -123,20 +124,41 @@ export const addBatch = async (data) => {
   }
 };
 
-export const deleteBatch = async (batchId) => {
+// export const deleteBatch = async (batchId) => {
+//   try {
+//     const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Bearer ${localStorage.getItem('token')}`
+//       },
+//       params: { id: batchId }
+//     });
+
+//     if (response.data.status) {
+//       return { success: true, message: 'Batch deleted successfully' };
+//     } else {
+//       return { success: false, message: 'Failed to delete batch' };
+//     }
+//   } catch (error) {
+//     console.error('Error in deleteBatch:', error);
+//     throw error;
+//   }
+// };
+
+export const deleteBatch = async (data) => {
   try {
     const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: batchId }
+      params: data
     });
 
     if (response.data.status) {
       return { success: true, message: 'Batch deleted successfully' };
     } else {
-      return { success: false, message: 'Failed to delete batch' };
+      return { success: false, message: 'Failed to delete Batch' };
     }
   } catch (error) {
     console.error('Error in deleteBatch:', error);
@@ -164,7 +186,6 @@ export const updateBatch = async (data) => {
     throw error;
   }
 };
-
 
 export const updateBatchStatus = async (data) => {
   try {

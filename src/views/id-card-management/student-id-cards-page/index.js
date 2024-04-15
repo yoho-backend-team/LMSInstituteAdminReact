@@ -1,26 +1,23 @@
-import { useEffect, useState, useCallback } from 'react';
-// ** MUI Imports
 import { Avatar as CustomAvatar } from '@mui/material';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IdCardSkeleton from 'components/cards/Skeleton/IdCardSkeleton';
+import StatusChangeDialog from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import StudentFilterCard from 'features/id-card-management/student-id-cards/components/StudentFilterCard';
 import { selectLoading, selectStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardSelectors';
-import toast from 'react-hot-toast';
-
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
+import { updateStudentIdCardStatus } from 'features/id-card-management/student-id-cards/services/studentIdcardServices';
+import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
-import StatusChangeDialog from 'components/modal/DeleteModel';
-
-import { updateStudentIdCardStatus } from 'features/id-card-management/student-id-cards/services/studentIdcardServices';
 
 const roleColors = {
   admin: 'error',
@@ -46,7 +43,7 @@ const StudentIdCard = () => {
   console.log('id cards', StudentIdCards);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards(selectedBranchId));
+    dispatch(getAllStudentIdCards({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -59,8 +56,16 @@ const StudentIdCard = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      student_id: statusValue?.student?.student_id
     };
+
+    console.log('data:', data);
+
+    if (!data.student_id) {
+      toast.error('Student ID is missing.');
+      return;
+    }
+
     const response = await updateStudentIdCardStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -71,6 +76,7 @@ const StudentIdCard = () => {
   };
 
   const handleStatusValue = (event, student) => {
+    console.log('statusValue:', student);
     setStatusChangeDialogOpen(true);
     setStatusValue(student);
   };
@@ -80,13 +86,11 @@ const StudentIdCard = () => {
     setFlipped(!flipped);
   };
 
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllStudentIdCards({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -96,8 +100,6 @@ const StudentIdCard = () => {
     const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStudentIdCards(data));
   };
-
-  // const [statusValue, setStatusValue] = useState('');
 
   return (
     <>
@@ -126,7 +128,7 @@ const StudentIdCard = () => {
                     sx={{
                       position: 'relative',
                       width: '100%',
-                      height: 420,
+                      height: 440,
                       display: 'block'
                     }}
                   >
@@ -157,7 +159,7 @@ const StudentIdCard = () => {
                         }
                       }}
                     >
-                      <Card className="front" sx={{ width: '100%', minHeight: 400 }}>
+                      <Card className="front" sx={{ width: '100%', minHeight: 420 }}>
                         <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                           {item.student.image ? (
                             <CustomAvatar
@@ -189,7 +191,7 @@ const StudentIdCard = () => {
                           </Box>
                         </CardContent>
                       </Card>
-                      <Card className="back" sx={{ width: '100%', minHeight: 400 }}>
+                      <Card className="back" sx={{ width: '100%', minHeight: 420 }}>
                         <CardContent sx={{ pb: 2 }}>
                           <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                             Details
@@ -222,7 +224,6 @@ const StudentIdCard = () => {
                               <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                               <Typography
                                 sx={{
-                                  // my: 4,
                                   color: 'text.secondary',
                                   overflow: 'hidden',
                                   display: '-webkit-box',
@@ -243,7 +244,7 @@ const StudentIdCard = () => {
                               select
                               width={100}
                               label="Status"
-                              SelectProps={{ value: item?.student?.is_active, onChange: (e) => handleStatusValue(e, item?.student) }}
+                              SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                             >
                               <MenuItem value="1">Active</MenuItem>
                               <MenuItem value="0">Inactive</MenuItem>
@@ -265,7 +266,6 @@ const StudentIdCard = () => {
         </Grid>
       </Grid>
 
-      {/* Status Change Modal */}
       <StatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
@@ -273,13 +273,6 @@ const StudentIdCard = () => {
         title="Status"
         handleSubmit={handleStatusChangeApi}
       />
-
-      {/* <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setDeleteDialogOpen}
-        description="Are you sure you want to delete this item?"
-        title="Delete"
-      /> */}
     </>
   );
 };

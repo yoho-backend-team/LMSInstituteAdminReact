@@ -14,7 +14,7 @@ import { styled } from '@mui/material/styles';
 import OptionsMenu from 'components/option-menu';
 import { useState, useEffect } from 'react';
 import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
-
+import Pagination from '@mui/material/Pagination';
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
     display: 'none'
@@ -25,13 +25,14 @@ const UserViewAccount = ({ id }) => {
   const [activityLog, setActivityLog] = useState([]);
 
   useEffect(() => {
-    getUserLog(id);
+    getUserLog(id, '1');
   }, [id]);
 
-  const getUserLog = async (userId) => {
+  const getUserLog = async (userId, page) => {
     try {
       const data = {
-        user_id: userId
+        user_id: userId,
+        page: page
       };
       const result = await getUserActivityLog(data);
       if (result.success) {
@@ -61,7 +62,7 @@ const UserViewAccount = ({ id }) => {
           />
           <CardContent>
             <Timeline>
-              {activityLog?.map((item, index) => (
+              {activityLog?.data?.map((item, index) => (
                 <TimelineItem key={index}>
                   <TimelineSeparator>
                     <TimelineDot color="warning" />
@@ -80,16 +81,27 @@ const UserViewAccount = ({ id }) => {
                         {item.title}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        Today
+                        {item?.ago}
                       </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{ mb: 3 }}>
+                    <Typography variant="body2" sx={{ mb: 1 }}>
                       {item.description}
                     </Typography>
                   </TimelineContent>
                 </TimelineItem>
               ))}
             </Timeline>
+            <Grid container justifyContent="flex-end" mt={2}>
+              <div className="demo-space-y">
+                <Pagination
+                  count={activityLog?.last_page}
+                  color="primary"
+                  onChange={async (e, page) => {
+                    getUserLog(id, page);
+                  }}
+                />
+              </div>
+            </Grid>
           </CardContent>
         </Card>
       </Grid>

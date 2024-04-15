@@ -1,9 +1,11 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-
 import CustomTextField from 'components/mui/text-field';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { getAllBatchChats, sendMessage } from './../services/communityServices';
+
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -19,13 +21,35 @@ const Form = styled('form')(({ theme }) => ({
 }));
 
 const SendMsgForm = (props) => {
-  const { store, dispatch, sendMsg } = props;
+  const { selectedBatch, setChats } = props;
   const [msg, setMsg] = useState('');
-  const handleSendMsg = (e) => {
-    e.preventDefault();
-    if (store && store.selectedChat && msg.trim().length) {
-      dispatch(sendMsg({ ...store.selectedChat, message: msg }));
+  console.log(selectedBatch);
+  const getMessages = async () => {
+    const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?.batch_community?.institute_branch_comm_id });
+    if (result) {
+      setChats(result?.data?.data);
     }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(getMessages, 5000);
+    getMessages();
+    return () => clearInterval(intervalId);
+  }, [selectedBatch]);
+
+  const handleSendMsg = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      inst_batch_community_id: selectedBatch?.batch_community?.id,
+      message: msg
+    };
+
+    const response = await sendMessage(data);
+    if (response) {
+      getMessages(selectedBatch);
+    }
+
     setMsg('');
   };
 
@@ -55,6 +79,11 @@ const SendMsgForm = (props) => {
       </ChatFormWrapper>
     </Form>
   );
+};
+
+SendMsgForm.propTypes = {
+  selectedBatch: PropTypes.any,
+  setChats: PropTypes.any
 };
 
 export default SendMsgForm;

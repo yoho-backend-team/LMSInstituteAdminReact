@@ -1,22 +1,18 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import { useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { PDFViewer } from 'react-view-pdf';
+import * as yup from 'yup';
 import { updateCourseNote } from '../services/noteServices';
+
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -43,7 +39,7 @@ const defaultValues = {
 
 const NotesEdit = (props) => {
   // ** Props
-  const { open, toggle, notes } = props;
+  const { open, toggle, notes, setRefetch } = props;
   console.log('NotesEdit - open:', props.open);
   console.log('NotesEdit - toggle:', props.toggle);
 
@@ -74,22 +70,19 @@ const NotesEdit = (props) => {
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', notes.id);
-    bodyFormData.append('document', notesPdf);
+    bodyFormData.append('document', selectedFile);
     console.log(bodyFormData);
 
     const result = await updateCourseNote(bodyFormData);
 
     if (result.success) {
       toast.success(result.message);
+      setRefetch((state) => !state);
+      toggle();
     } else {
       let errorMessage = '';
-      // Object.values(result.message).forEach((errors) => {
-      //   errors.forEach((error) => {
-      //     errorMessage += `${error}\n`; // Concatenate errors with newline
-      //   });
-      // });
+
       toast.error(errorMessage.trim());
-      // toast.error(result.message);
     }
   };
 
@@ -137,7 +130,7 @@ const NotesEdit = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { md: 1100, xs: 300, sm: 500 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: '80%', sm: 500 } } }}
     >
       <Grid container spacing={1}>
         <Grid item md={12} sm={12}>
@@ -164,7 +157,6 @@ const NotesEdit = (props) => {
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 {!selectedFile && <PDFViewer url={savedPdfUrl} />}
                 {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
-                {/* {selectedFile && <ImgStyled src={URL.createObjectURL(selectedFile)} alt="Pdf" />} */}
 
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
                   Upload New File
@@ -230,6 +222,13 @@ const NotesEdit = (props) => {
       </Grid>
     </Drawer>
   );
+};
+
+NotesEdit.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  notes: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default NotesEdit;

@@ -3,16 +3,15 @@ import { Button, CardContent, TextField as CustomTextField, Grid } from '@mui/ma
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import InputAdornment from '@mui/material/InputAdornment';
 import { updateBranch } from 'features/branch-management/services/branchServices';
+import PropTypes from 'prop-types';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import InputAdornment from '@mui/material/InputAdornment';
-
 
 const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch, setRefetchBranch }) => {
-  // Form validation schema
   const branchSchema = yup.object().shape({
     branchName: yup
       .string()
@@ -307,6 +306,14 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
       </Dialog>
     </div>
   );
+};
+
+BranchEditModal.propTypes = {
+  open: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  selectedBranch: PropTypes.any,
+  setSelectedBranch: PropTypes.any,
+  setRefetchBranch: PropTypes.any
 };
 
 export default BranchEditModal;

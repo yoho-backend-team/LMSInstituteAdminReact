@@ -1,22 +1,18 @@
-// ** React Imports
-import { useEffect, useState } from 'react';
-// ** MUI Imports
 import TabContext from '@mui/lab/TabContext';
 import MuiTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
+import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import Icon from 'components/icon';
-// ** Demo Components Imports
+import NonTeachingViewBanner from 'features/staff-management/non-teaching-staffs/components/StaffViewLeft';
+import { nonTeachingStaffById } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import TeacherAttendance from '../../../../features/staff-management/non-teaching-staffs/components/StaffAttendance';
 import UserViewAccount from '../../../../features/staff-management/non-teaching-staffs/components/StaffViewAccount';
-import { useLocation } from 'react-router';
-// import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
-import { nonTeachingStaffById } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
-// ** Styled Tab component
+
 const Tab = styled(MuiTab)(({ theme }) => ({
   flexDirection: 'row',
   '& svg': {
@@ -49,8 +45,7 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
   }
 }));
 
-const UserViewRight = ({ tab }) => {
-  // ** State
+const UserViewRight = ({ tab, setRefetch }) => {
   const [activeTab, setActiveTab] = useState('account');
 
   const handleChange = (event, value) => {
@@ -82,27 +77,22 @@ const UserViewRight = ({ tab }) => {
     setLoading(false);
   };
   console.log('NON-Teaching-staff:', staff);
-  // dateFormat
-function formattedDate(inputDate) {
-  // Split the input date string into day, month, and year
-  const [day, month, year] = inputDate.split('/');
-  
-  // Construct a new Date object using the parsed components
-  const dateObject = new Date(`${month}/${day}/${year}`);
-  
-  // Check if the dateObject is a valid date
-  if (isNaN(dateObject)) {
-    return "Invalid Date";
-  }
 
-  // Format the date components into 'DD/MM/YYYY' format
-  const formattedDay = String(dateObject.getDate()).padStart(2, '0');
-  const formattedMonth = String(dateObject.getMonth() + 1).padStart(2, '0');
-  const formattedYear = dateObject.getFullYear();
-  
-  return `${formattedDay}/${formattedMonth}/${formattedYear}`;
-}
-  
+  function formattedDate(inputDate) {
+    const [day, month, year] = inputDate.split('/');
+
+    const dateObject = new Date(`${month}/${day}/${year}`);
+
+    if (isNaN(dateObject)) {
+      return 'Invalid Date';
+    }
+
+    const formattedDay = String(dateObject.getDate()).padStart(2, '0');
+    const formattedMonth = String(dateObject.getMonth() + 1).padStart(2, '0');
+    const formattedYear = dateObject.getFullYear();
+
+    return `${formattedDay}/${formattedMonth}/${formattedYear}`;
+  }
 
   return (
     <TabContext value={activeTab}>
@@ -121,11 +111,12 @@ function formattedDate(inputDate) {
           <StaffManagementView />
         ) : (
           <>
+            <NonTeachingViewBanner staff={staff} formattedDate={formattedDate} />
             <TabPanel sx={{ p: 0 }} value="account">
-              <UserViewAccount staff={staff} formattedDate={formattedDate} />
+              <UserViewAccount staff={staff} staffID={staffID} formattedDate={formattedDate} setRefetch={setRefetch} />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value="attendance">
-              <TeacherAttendance />
+              <TeacherAttendance attendance={staff?.teachingStaff?.attendance} />
             </TabPanel>
           </>
         )}

@@ -1,18 +1,16 @@
-// ** React Imports
 import Grid from '@mui/material/Grid';
-import { useEffect, useState } from 'react';
-// ** Components Imports
+import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
+import NotificationAddDrawer from 'features/notification-management/student-notifications/components/NotificationAddDrawer';
 import NotificationBodySection from 'features/notification-management/student-notifications/components/NotificationBodySection';
 import NotificationHeaderSection from 'features/notification-management/student-notifications/components/NotificationHeaderSection';
-import { useDispatch, useSelector } from 'react-redux';
-import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
-import { getAllStudentNotifications } from 'features/notification-management/student-notifications/redux/studentNotificationThunks';
+import NotificationTableHeader from 'features/notification-management/student-notifications/components/NotificationTableHeader';
 import {
   selectLoading,
   selectStudentNotifications
 } from 'features/notification-management/student-notifications/redux/studentNotificationSelectors';
-import NotificationTableHeader from 'features/notification-management/student-notifications/components/NotificationTableHeader';
-import NotificationAddDrawer from 'features/notification-management/student-notifications/components/NotificationAddDrawer';
+import { getAllStudentNotifications } from 'features/notification-management/student-notifications/redux/studentNotificationThunks';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const StudentNotification = () => {
   const dispatch = useDispatch();
@@ -22,7 +20,6 @@ const StudentNotification = () => {
 
   const [studentNotificationRefetch, setStudentNotificationRefetch] = useState(false);
 
-  // Fetch course categories on component mount or when dependencies change
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
@@ -49,13 +46,17 @@ const StudentNotification = () => {
           <Grid item xs={12}>
             <NotificationBodySection
               studentNotifications={studentNotifications?.data}
-              // setLoading={setLoading}
               setStudentNotificationRefetch={setStudentNotificationRefetch}
               selectedBranchId={selectedBranchId}
             />
           </Grid>
         )}
-        <NotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+        {/* Add Drawer */}
+        <NotificationAddDrawer
+          open={addUserOpen}
+          toggle={toggleAddUserDrawer}
+          setStudentNotificationRefetch={setStudentNotificationRefetch}
+        />
       </Grid>
     </>
   );

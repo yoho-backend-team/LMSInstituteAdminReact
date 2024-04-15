@@ -4,12 +4,8 @@ import axios from 'axios';
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
-
 const PROFILE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/profile-management`;
 // const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
-
-
-
 
 export const getAllUsers = async (data) => {
   try {
@@ -38,7 +34,7 @@ export const getAllUsers = async (data) => {
 };
 export const getUserActivityLog = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/activity-log-by-user-id`, {
+    const response = await axios.get(`${USER_API_ENDPOINT}/activity-log-by-user-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -211,8 +207,6 @@ export const checkUserName = async (userName) => {
   }
 };
 
-
-
 export const FilterUsersByRole = async (id) => {
   try {
     const response = await axios.get('/data_storage/user-management/users/AllUsers.json', {
@@ -277,8 +271,6 @@ export const deleteUsers = async (userId) => {
   }
 };
 
-
-
 export const getAllActiveGroups = async () => {
   try {
     const response = await axios.get(`${GROUP_API_ENDPOINT}/get-active-roles`, {
@@ -302,11 +294,6 @@ export const getAllActiveGroups = async () => {
     throw error;
   }
 };
-
-
-
-
-
 
 export const getUserProfileById = async (data) => {
   try {

@@ -3,6 +3,7 @@ import { Avatar, Box, Card, CardContent, Grid, Icon, IconButton } from '@mui/mat
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
+import PropTypes from 'prop-types';
 
 const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
   return (
@@ -57,7 +58,6 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
                 iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
                 options={[
                   {
-                    // to: `/apps/invoice/edit/${row.id}`,
                     text: 'Resolve',
                     icon: <Icon icon="tabler:edit" />,
                     menuItemProps: {
@@ -77,4 +77,9 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
   );
 };
 
+OpenTicketCard.propTypes = {
+  ticket: PropTypes.any,
+  onClick: PropTypes.any,
+  handleSelectedTicket: PropTypes.any
+};
 export default OpenTicketCard;
