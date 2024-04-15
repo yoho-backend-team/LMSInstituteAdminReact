@@ -65,7 +65,7 @@ const Teaching = () => {
         <StaffManagement />
       ) : (
         <Grid>
-          <Grid container>
+          <Grid container xs={12} mt={1}>
             {teachingStaffs &&
               teachingStaffs?.map((item, i) => (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
@@ -101,8 +101,8 @@ const Teaching = () => {
                               SelectProps={{ onChange: (e) => handleStatusValue(e, item?.staff) }}
                               sx={{ width: 100 }}
                             >
-                              <MenuItem value="1">Active</MenuItem>
-                              <MenuItem value="0">Inactive</MenuItem>
+                              <MenuItem value="0">Active</MenuItem>
+                              <MenuItem value="1">Inactive</MenuItem>
                             </TextField>
                           </Grid>
                           <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id: item?.staff?.id }}>
