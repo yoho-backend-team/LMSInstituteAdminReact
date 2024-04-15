@@ -1,14 +1,12 @@
 import { Avatar, Box, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Icon from 'components/icon';
-import CategoryDeleteModel from 'components/modal/DeleteModel';
-import StatusChangeDialog from 'components/modal/DeleteModel';
+import { default as CategoryDeleteModel, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import { useCallback, useMemo, useState } from 'react';
-import CategoryEditModal from './CategoryEditModal';
-import { updateCourseCategoryStatus } from '../../services/courseCategoryServices';
-import { deleteCourseCategory } from '../../services/courseCategoryServices';
-import toast from 'react-hot-toast';
 import PropTypes from 'prop-types';
+import { useCallback, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
+import { deleteCourseCategory, updateCourseCategoryStatus } from '../../services/courseCategoryServices';
+import CategoryEditModal from './CategoryEditModal';
 
 const CategoryCard = (props) => {
   // Props
@@ -70,7 +68,7 @@ const CategoryCard = (props) => {
 
   return (
     <Grid item xs={12} sm={6} lg={4}>
-      <Card sx={{ ...sx }}>
+      <Card sx={{ minHeight: 260 }}>
         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           {/* Category Logo and Actions */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
