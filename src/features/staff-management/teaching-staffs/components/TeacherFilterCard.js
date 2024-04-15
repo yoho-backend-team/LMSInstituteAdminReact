@@ -87,7 +87,7 @@ const TeacherFilter = (props) => {
 
               <Grid item xs={12} sm={3} sx={{alignItems:'center'}}>
                 <Box component={Link} to={'teaching-staffs/add'} sx={{p:0,m:0}}>
-                  <Button variant="contained" size="medium" fullWidth sx={{px:2,py:1.5}} runded>
+                  <Button variant="contained" size="medium" fullWidth sx={{px:2,py:1.5}}>
                     Add New Staff
                   </Button>
                 </Box>
