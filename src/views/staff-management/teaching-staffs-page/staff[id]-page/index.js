@@ -1,9 +1,9 @@
 import Grid from '@mui/material/Grid';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
-import { useEffect, useState } from 'react';
 import UserViewLeft from 'features/staff-management/teaching-staffs/components/StaffViewLeft';
 import UserViewRight from 'features/staff-management/teaching-staffs/components/StaffViewRight';
 import { TeachingStaffById } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 const UserView = () => {
@@ -27,20 +27,15 @@ const UserView = () => {
     setLoading(false);
   };
 
-  // dateFormat
   function formattedDate(inputDate) {
-    // Split the input date string into day, month, and year
     const [day, month, year] = inputDate.split('/');
 
-    // Construct a new Date object using the parsed components
     const dateObject = new Date(`${month}/${day}/${year}`);
 
-    // Check if the dateObject is a valid date
     if (isNaN(dateObject)) {
       return 'Invalid Date';
     }
 
-    // Format the date components into 'DD/MM/YYYY' format
     const formattedDay = String(dateObject.getDate()).padStart(2, '0');
     const formattedMonth = String(dateObject.getMonth() + 1).padStart(2, '0');
     const formattedYear = dateObject.getFullYear();

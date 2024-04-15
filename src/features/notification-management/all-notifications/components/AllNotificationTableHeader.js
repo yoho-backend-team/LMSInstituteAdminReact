@@ -1,32 +1,26 @@
-// ** MUI Imports
 import { Grid, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-// ** Icon Imports
 import Icon from 'components/icon';
-import { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { getAllNotifications } from '../redux/allNotificationThunks';
 
 const AllNotificationTableHeader = (props) => {
-  // ** Props
   const { toggle } = props;
 
   const [searchValue, setSearchValue] = useState('');
 
-  // Dispatch function
   const dispatch = useDispatch();
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  // Callback function to handle search
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
       dispatch(getAllNotifications({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -57,6 +51,10 @@ const AllNotificationTableHeader = (props) => {
       </Grid>
     </Box>
   );
+};
+
+AllNotificationTableHeader.propTypes = {
+  toggle: PropTypes.any
 };
 
 export default AllNotificationTableHeader;

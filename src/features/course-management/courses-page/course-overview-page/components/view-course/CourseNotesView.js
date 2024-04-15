@@ -7,11 +7,10 @@ import { PDFViewer } from 'react-view-pdf';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
 
 const CourseNotesView = ({ open, handleViewClose, notes }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  // const savedPdfUrl = require(`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${notes.document} `);
-
   return (
     <div>
       <Dialog
@@ -20,7 +19,6 @@ const CourseNotesView = ({ open, handleViewClose, notes }) => {
         onClose={handleViewClose}
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
-        // sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
           id="user-view-View"
@@ -83,4 +81,9 @@ const CourseNotesView = ({ open, handleViewClose, notes }) => {
   );
 };
 
+CourseNotesView.propTypes = {
+  open: PropTypes.any,
+  handleViewClose: PropTypes.any,
+  notes: PropTypes.any
+};
 export default CourseNotesView;

@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import PropTypes from 'prop-types';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -190,4 +191,10 @@ const HelpAddModal = ({ open, handleAddClose, itemId, SetLoad }) => {
   );
 };
 
+HelpAddModal.propTypes = {
+  open: PropTypes.any,
+  handleAddClose: PropTypes.any,
+  itemId: PropTypes.any,
+  SetLoad: PropTypes.any
+};
 export default HelpAddModal;

@@ -27,12 +27,7 @@ const Courses = () => {
 
   return (
     <>
-      {/*  */}
-
       <Grid container>
-        {/* courses skeleton or content based on loading state */}
-
-        {/* courses filter and header */}
         <Grid item xs={12}>
           <CourseFilter selectedBranchId={selectedBranchId} />
           <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId} />

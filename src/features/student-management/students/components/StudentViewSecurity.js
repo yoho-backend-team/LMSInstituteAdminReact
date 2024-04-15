@@ -1,6 +1,4 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
+import { Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Button from '@mui/material/Button';
@@ -10,16 +8,14 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
-import { Typography } from '@mui/material';
-import toast from 'react-hot-toast';
-// import { staffChangePassword } from '../services/teachingStaffServices';
-import { userChangePassword } from 'features/user-management/users-page/services/userServices';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Custom Component Import
 import CustomTextField from 'components/mui/text-field';
+import { userChangePassword } from 'features/user-management/users-page/services/userServices';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
-const UserViewSecurity = ({id}) => {
+const UserViewSecurity = ({ id }) => {
   // ** States
   const [values, setValues] = useState({
     newPassword: '',
@@ -29,7 +25,7 @@ const UserViewSecurity = ({id}) => {
   });
 
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  // Handle Password
+
   const handleNewPasswordChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -47,38 +43,35 @@ const UserViewSecurity = ({id}) => {
     setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword });
   };
 
-  const handleSubmit =async (event)=>{
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !==''){
+    if (values.newPassword === values.confirmNewPassword && values.newPassword !== '' && values.confirmNewPassword !== '') {
       try {
         let data = {
-          user_id:id,
-          c_password:values.confirmNewPassword,
-          password:values.newPassword
+          user_id: id,
+          c_password: values.confirmNewPassword,
+          password: values.newPassword
         };
         const result = await userChangePassword(data);
-              if (result.success) {
-                toast.success(result.message);
-                setValues({
-                  newPassword: '',
-                  confirmNewPassword: '',
-                  showNewPassword: false,
-                  showConfirmNewPassword: false
-                });
-                setPasswordsMatch(true);
-              } else {
-                toast.error(result.message);
-              }
-            } catch (error) {
-              console.error('Error:', error);
-            }
-          } else {
-            setPasswordsMatch(false);
-          }
-  }
-
-  
-
+        if (result.success) {
+          toast.success(result.message);
+          setValues({
+            newPassword: '',
+            confirmNewPassword: '',
+            showNewPassword: false,
+            showConfirmNewPassword: false
+          });
+          setPasswordsMatch(true);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      setPasswordsMatch(false);
+    }
+  };
 
   return (
     <Grid container spacing={6}>
@@ -164,5 +157,9 @@ const UserViewSecurity = ({id}) => {
       </Grid>
     </Grid>
   );
-                  }
+};
+
+UserViewSecurity.propTypes = {
+  id: PropTypes.any
+};
 export default UserViewSecurity;

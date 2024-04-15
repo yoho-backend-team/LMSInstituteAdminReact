@@ -1,23 +1,22 @@
-import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-import CustomChip from 'components/mui/chip';
 import Icon from 'components/icon';
-import CardMedia from '@mui/material/CardMedia';
-import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 import { default as DeleteModal } from 'components/modal/DeleteModel';
-import { deleteTeachingStaff } from '../services/teachingStaffServices';
+import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { deleteTeachingStaff } from '../services/teachingStaffServices';
+import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
+
 const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
-  // ** States
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
@@ -149,10 +148,10 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
                           course?.courses?.learning_format === 'online'
                             ? 'success'
                             : course?.courses?.learning_format === 'offline'
-                              ? 'primary'
-                              : course?.courses?.learning_format === 'hybrid'
-                                ? 'secondary'
-                                : 'warning'
+                            ? 'primary'
+                            : course?.courses?.learning_format === 'hybrid'
+                            ? 'secondary'
+                            : 'warning'
                         }
                         size="small"
                         variant="contained"
@@ -234,6 +233,13 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
   } else {
     return null;
   }
+};
+
+UserViewAccount.propTypes = {
+  staff: PropTypes.any,
+  formattedDate: PropTypes.any,
+  staffID: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewAccount;

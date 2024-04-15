@@ -1,5 +1,3 @@
-import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -7,21 +5,20 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Link, useNavigate } from 'react-router-dom';
-// ** Custom Components
-import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 import { default as DeleteModal } from 'components/modal/DeleteModel';
 import { deleteTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
+
 const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
-  // ** States
-  // const [openPlans, setOpenPlans] = useState(false)
-  // const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
   console.log('non teaching details', staff);
-  //handleDeletion
+
   const handleDelete = () => {
     setStaffDeleteModelOpen(true);
   };
@@ -120,6 +117,13 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserViewAccount.propTypes = {
+  staff: PropTypes.any,
+  formattedDate: PropTypes.any,
+  staffID: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewAccount;

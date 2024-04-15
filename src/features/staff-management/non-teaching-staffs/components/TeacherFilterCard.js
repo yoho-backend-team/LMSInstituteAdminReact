@@ -5,13 +5,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { getAllNonTeachingStaffs } from '../redux/nontTeachingStaffThunks';
 
 const TeacherFilter = (props) => {
   const { selectedBranchId } = props;
+
   const [statusValue, setStatusValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
 
@@ -28,7 +30,6 @@ const TeacherFilter = (props) => {
       const searchInput = e.target.value;
       setSearchValue(searchInput);
       dispatch(getAllNonTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'non_teaching' }));
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -78,6 +79,10 @@ const TeacherFilter = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+TeacherFilter.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default TeacherFilter;

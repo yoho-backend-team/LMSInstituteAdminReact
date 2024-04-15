@@ -1,23 +1,16 @@
-// ** React Imports
-import { useState } from 'react';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
+import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
-
-// ** Custom Components
-import CustomChip from 'components/mui/chip';
+import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import CustomAvatar from 'components/mui/avatar';
-
-// ** Utils Import
+import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
-
 import UserEditDialog from './UserEditDialog';
 
 const UserViewLeft = ({ userData, id, setRefetch }) => {
@@ -134,6 +127,12 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserViewLeft.propTypes = {
+  userData: PropTypes.any,
+  id: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserViewLeft;

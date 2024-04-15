@@ -1,8 +1,7 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-// ** Custom Component Import
+import PropTypes from 'prop-types';
 import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -22,7 +21,6 @@ const CourseCardHeader = ({ selectedBranchId }) => {
       const searchInput = e.target.value;
       dispatch(getAllCourses({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -56,6 +54,10 @@ const CourseCardHeader = ({ selectedBranchId }) => {
       </Box>
     </>
   );
+};
+
+CourseCardHeader.propTypes = {
+  selectedBranchId: PropTypes.any
 };
 
 export default CourseCardHeader;

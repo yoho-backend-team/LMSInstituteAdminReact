@@ -1,16 +1,16 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, Typography, TextField, MenuItem, Tooltip } from '@mui/material';
+import { Avatar, AvatarGroup, Box, Button, Card, CardContent, Grid, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import Header from 'components/Header';
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
-import OptionsMenu from 'components/option-menu';
 import StatusChangeDialog from 'components/modal/DeleteModel';
+import OptionsMenu from 'components/option-menu';
 import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
 import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
 import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
 import { deleteGroup, updateStatus } from 'features/user-management/groups-page/services/groupService';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const GroupManagement = () => {
   // State variables

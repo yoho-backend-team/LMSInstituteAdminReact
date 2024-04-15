@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 const DeleteGroupDialog = (props) => {
@@ -106,6 +107,12 @@ const DeleteGroupDialog = (props) => {
       </Dialog>
     </>
   );
+};
+
+DeleteGroupDialog.propTypes = {
+  open: PropTypes.any,
+  setOpen: PropTypes.any,
+  handleDeleteGroup: PropTypes.any
 };
 
 export default DeleteGroupDialog;

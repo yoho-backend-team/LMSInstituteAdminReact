@@ -1,19 +1,16 @@
-// ** React Imports
-import { useState } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
-// ** Icon Imports
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const UserSuspendDialog = (props) => {
-  // ** Props
   const { open, setOpen } = props;
-  // ** States
+
   const [userInput, setUserInput] = useState('yes');
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const handleClose = () => setOpen(false);
@@ -25,8 +22,6 @@ const UserSuspendDialog = (props) => {
     setSecondDialogOpen(true);
   };
 
-
-  
   return (
     <>
       <Dialog fullWidth open={open} onClose={handleClose} sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 512 } }}>
@@ -111,6 +106,11 @@ const UserSuspendDialog = (props) => {
       </Dialog>
     </>
   );
+};
+
+UserSuspendDialog.propTypes = {
+  open: PropTypes.any,
+  setOpen: PropTypes.any
 };
 
 export default UserSuspendDialog;

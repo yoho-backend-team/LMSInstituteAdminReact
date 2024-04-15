@@ -87,7 +87,6 @@ const UserViewBilling = () => {
         'https://media.istockphoto.com/id/1369754239/photo/university-student-in-white-background-stock-photo.jpg?s=612x612&w=0&k=20&c=LjFVDfjusWBjYTNliHV9DyXfApPGc8DmgBGEtfVgQ0Q='
       ]
     }
-    // Add more card data as needed
   ];
 
   return (

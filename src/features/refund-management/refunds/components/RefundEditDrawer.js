@@ -1,22 +1,19 @@
-// ** React Imports
 import { useEffect, useState } from 'react';
-// ** MUI Imports
 import { Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { updateStudentFeeRefund } from '../services/studentFeeRefundServices';
 import { useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -30,7 +27,6 @@ const schema = yup.object().shape({
   students: yup.string().required('Student is required'),
   amount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
 });
-
 
 
 const RefundEditDrawer = (props) => {
@@ -251,4 +247,10 @@ const RefundEditDrawer = (props) => {
   );
 };
 
+SubscriptionTable.propTypes = {
+  open: PropTypes.any,
+  selectedRows: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any
+};
 export default RefundEditDrawer;

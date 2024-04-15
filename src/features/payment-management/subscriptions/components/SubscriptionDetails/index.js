@@ -1,14 +1,11 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-// ** Icon Imports
 import Icon from 'components/icon';
-// ** Util Import
-import { hexToRGBA } from 'utils/hex-to-rgba';
-// ** Custom Components Imports
 import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { hexToRGBA } from 'utils/hex-to-rgba';
 
 // ** Styled Component for the wrapper of whole component
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -33,12 +30,10 @@ const SubscriptionDetails = (props) => {
   console.log('Subscriptions Plan', data);
 
   const renderFeatures = () => {
-    // Check if data.features is an array
     if (!Array.isArray(data?.features)) {
-      return null; // or handle the case where data.features is not an array
+      return null;
     }
-  
-    // If data.features is an array, proceed with mapping its elements
+
     return data.features.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Box component="span" sx={{ display: 'inline-flex', color: 'text.secondary', mr: 2.5 }}>
@@ -48,7 +43,6 @@ const SubscriptionDetails = (props) => {
       </Box>
     ));
   };
-  
 
   return (
     <BoxWrapper
@@ -100,4 +94,7 @@ const SubscriptionDetails = (props) => {
   );
 };
 
+SubscriptionDetails.propTypes = {
+  data: PropTypes.any
+};
 export default SubscriptionDetails;

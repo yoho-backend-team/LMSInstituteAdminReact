@@ -1,23 +1,20 @@
 import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-import CustomAvatar from 'components/mui/avatar';
-import { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
-
 import Icon from 'components/icon';
 import { default as StatusChangeDialog, default as UserDeleteModel } from 'components/modal/DeleteModel';
+import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
-import { updateUserStatus } from 'features/user-management/users-page/services/userServices';
+import { deleteUsers, updateUserStatus } from 'features/user-management/users-page/services/userServices';
 import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import { getInitials } from 'utils/get-initials';
-import { deleteUsers } from 'features/user-management/users-page/services/userServices';
 
 const userStatusObj = {
   1: 'success',
@@ -220,7 +217,7 @@ const UserBodySection = ({ users, setUserRefetch }) => {
       }
     },
     {
-      flex: 1.00,
+      flex: 1.0,
       minWidth: 150,
       sortable: false,
       field: 'actions',
@@ -264,7 +261,7 @@ const UserBodySection = ({ users, setUserRefetch }) => {
 };
 
 UserBodySection.propTypes = {
-  groups: PropTypes.array.isRequired,
+  setUserRefetch: PropTypes.func,
   users: PropTypes.array.isRequired
 };
 

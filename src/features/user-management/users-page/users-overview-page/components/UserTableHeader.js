@@ -1,9 +1,9 @@
 import { Grid, TextField } from '@mui/material';
-// import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useState, useCallback } from 'react';
 import { getAllUsers } from '../../redux/userThunks';
 
 const TableHeader = (props) => {
@@ -25,7 +25,6 @@ const TableHeader = (props) => {
         search: searchInput
       };
       dispatch(getAllUsers(data));
-      // Dispatch action to fetch branches with search input
     },
     [dispatch]
   );
@@ -46,4 +45,8 @@ const TableHeader = (props) => {
   );
 };
 
+TableHeader.propTypes = {
+  toggle: PropTypes.any,
+  selectedBranchId: PropTypes.any
+};
 export default TableHeader;

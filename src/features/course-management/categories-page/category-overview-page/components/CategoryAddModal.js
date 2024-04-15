@@ -6,7 +6,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { useState, useCallback, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
@@ -59,10 +60,9 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
 
-  // Function to handle closing the dialog
   const handleClose = useCallback(() => {
-    reset(); // Reset form
-    handleAddClose(); // Close the dialog
+    reset();
+    handleAddClose();
   }, [reset, handleAddClose]);
 
   // Function to handle image input change
@@ -112,9 +112,9 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
       const result = await addCourseCategory(bodyFormData);
 
       if (result.success) {
-        reset(); // Reset form
-        handleAddClose(); // Close the dialog
-        setCategoryRefetch((state) => !state); // Trigger category refetch
+        reset();
+        handleAddClose();
+        setCategoryRefetch((state) => !state);
         toast.success(result.message);
         setSelectedImage('');
         setImgSrc(image);
@@ -202,6 +202,12 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
       </Dialog>
     </div>
   );
+};
+
+CategoryAddModal.propTypes = {
+  open: PropTypes.any,
+  handleAddClose: PropTypes.any,
+  setCategoryRefetch: PropTypes.any
 };
 
 export default CategoryAddModal;

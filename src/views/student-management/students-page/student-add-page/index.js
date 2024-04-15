@@ -1,33 +1,25 @@
-// ** React Imports
-import MenuItem from '@mui/material/MenuItem';
-import { forwardRef, useEffect, useState } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// ** Styled Components
-
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addStudent } from 'features/student-management/students/services/studentService';
+import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import toast from 'react-hot-toast'; 
+import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -79,19 +71,13 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required('Address Line Two is required'),
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
-    // branch: yup.string().required('Branch is required'),
     username: yup
       .string()
       .required('User Name is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
-    // course: yup.string().required()
+      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters')
   });
 
-  // ** States
-  // const [activeStep, setActiveStep] = useState(0);
-
   const [activeCourse, setActiveCourse] = useState([]);
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const Navigate = useNavigate();
 
@@ -138,8 +124,6 @@ const StepperLinearWithValidation = () => {
     setActiveBranches(result.data.data);
   };
 
-  // ** Hooks
-
   const {
     control: personalControl,
     setValue,
@@ -150,22 +134,16 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(personalSchema)
   });
 
-  // Handle Stepper
   const handleBack = () => {
     Navigate(-1);
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
-
     return formattedDateString;
   }
 
@@ -210,48 +188,46 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
-
-  // console.log(logo);
 
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
     console.log(personalData);
-    // setActiveStep(activeStep + 1);
-    // if (activeStep === steps.length - 1) {
-      const data = new FormData();
-      data.append('student_first_name', personalData?.student_first_name);
-      data.append('student_last_name', personalData?.student_last_name);
-      data.append('student_email', personalData?.student_email);
-      data.append('student_phone_no', personalData?.student_phone_no);
-      data.append('alternate_number', personalData?.alt_phone);
-      data.append('branch_id', personalData?.branch);
-      data.append('course_id', personalData?.course);
-      data.append('image', logo);
-      data.append('gender', personalData?.gender);
-      data.append('address_line_1', personalData?.address_line_one);
-      data.append('address_line_2', personalData?.address_line_two);
-      data.append('city', personalData?.city);
-      data.append('state', personalData?.state);
-      data.append('pincode', personalData?.pin_code);
-      data.append('dob', convertDateFormat(personalData?.date_of_birth));
-      data.append('username', personalData?.username);
-      data.append('education_qualification', personalData?.qualification);
-      console.log(personalData);
+    const data = new FormData();
+    data.append('student_first_name', personalData?.student_first_name);
+    data.append('student_last_name', personalData?.student_last_name);
+    data.append('student_email', personalData?.student_email);
+    data.append('student_phone_no', personalData?.student_phone_no);
+    data.append('alternate_number', personalData?.alt_phone);
+    data.append('branch_id', personalData?.branch);
+    data.append('course_id', personalData?.course);
+    data.append('image', logo);
+    data.append('gender', personalData?.gender);
+    data.append('address_line_1', personalData?.address_line_one);
+    data.append('address_line_2', personalData?.address_line_two);
+    data.append('city', personalData?.city);
+    data.append('state', personalData?.state);
+    data.append('pincode', personalData?.pin_code);
+    data.append('dob', convertDateFormat(personalData?.date_of_birth));
+    data.append('username', personalData?.username);
+    data.append('education_qualification', personalData?.qualification);
+    console.log(personalData);
 
-      try {
-        const result = await addStudent(data);
+    try {
+      const result = await addStudent(data);
 
-        if (result.success) {
-          toast.success(result.message);
-          Navigate(-1);
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.log(error);
+      if (result.success) {
+        toast.success(result.message);
+        Navigate(-1);
+      } else {
+        toast.error(result.message);
       }
+    } catch (error) {
+      console.log(error);
+    }
     // }
   };
 

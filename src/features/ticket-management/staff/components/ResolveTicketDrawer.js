@@ -1,23 +1,16 @@
-// ** React Imports
-// import { useEffect, useState } from 'react';
-// ** MUI Imports
 import { Avatar, Button, Grid, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-// ** Third Party Imports
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
-// ** Icon Imports
 import { TextField } from '@mui/material';
-
+import PropTypes from 'prop-types';
 import Icon from 'components/icon';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-// import { addCourseModule } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
-
 import { updateStaffTicket } from '../services/staffTicketService';
 
 const TicketResolveDrawer = (props) => {
@@ -27,7 +20,6 @@ const TicketResolveDrawer = (props) => {
   console.log(ticket);
 
   // ** State
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   console.log(selectedBranchId);
   // console.log(selectedTicket);
@@ -45,7 +37,6 @@ const TicketResolveDrawer = (props) => {
 
   const defaultValues = {
     solution: ''
-    // solution: `Ticket ID: ${ticket?.ticket_id}\n\n`,
   };
 
   // ** Hooks
@@ -173,4 +164,10 @@ const TicketResolveDrawer = (props) => {
   );
 };
 
+TicketResolveDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  ticket: PropTypes.any,
+  setRefetch: PropTypes.any
+};
 export default TicketResolveDrawer;

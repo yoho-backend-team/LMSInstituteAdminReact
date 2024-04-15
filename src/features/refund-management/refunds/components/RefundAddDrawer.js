@@ -12,13 +12,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 // ** Icon Imports
-import { TextField, MenuItem } from '@mui/material';
+import { MenuItem, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -50,13 +51,9 @@ const defaultValues = {
 const RefundAddDrawer = (props) => {
   // ** Props
   const { open, toggle, setRefetch } = props;
-  // ** State
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  // const [activeStudents, setActiveStudents] = useState([]);
   const [activeStudentsFee, setActiveStudentsFee] = useState([]);
 
   const [selectedStudentFee, setSelectedStudentFee] = useState(null);
@@ -82,7 +79,6 @@ const RefundAddDrawer = (props) => {
     console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
 
-    // Fetch students whenever active batches change
     result.data.data.forEach((batch) => {
       getStudentsByBatch(batch.batch_id);
     });
@@ -91,7 +87,7 @@ const RefundAddDrawer = (props) => {
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudents(data);
-    setStudents(result.data.data); // Assuming result.data contains the list of students
+    setStudents(result.data.data);
   };
 
   const getStudentByStudentFee = async (studentId) => {
@@ -100,12 +96,9 @@ const RefundAddDrawer = (props) => {
       const result = await getFeeByStudentId(data);
 
       console.log('student fees : ', result.data.data);
-
-      // Assuming result.data contains the list of student fees
       setActiveStudentsFee(result.data.data);
     } catch (error) {
       console.error('Error fetching student fees:', error);
-      // Handle error if needed
     }
   };
 
@@ -123,13 +116,12 @@ const RefundAddDrawer = (props) => {
 
   const handleClose = () => {
     setValue('amount', '');
-    setValue(''); // Reset input value
-    reset(); // Reset form values
-    toggle(); // Close the drawer
+    setValue('');
+    reset();
+    toggle();
   };
 
   const onSubmit = async (data) => {
-    // Check if selectedStudentFee is not null
     if (selectedStudentFee) {
       console.log('Form data:', data);
       try {
@@ -156,7 +148,6 @@ const RefundAddDrawer = (props) => {
         toast.error('An error occurred while submitting the form. Please try again.');
       }
     } else {
-      // Handle case where no student fee is selected
       toast.error('Please select a student fee.');
     }
   };
@@ -230,7 +221,7 @@ const RefundAddDrawer = (props) => {
                       setValue('batch', newValue);
                       getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={field.value} // Set the selected value directly from the field value
+                    value={field.value}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -285,8 +276,8 @@ const RefundAddDrawer = (props) => {
                     options={activeStudentsFee}
                     getOptionLabel={(studentFee) => `${studentFee.fee_id}`}
                     onChange={(event, newValue) => {
-                      setSelectedStudentFee(newValue); // Set the selected fee object
-                      field.onChange(newValue?.fee_id); // Set the field value
+                      setSelectedStudentFee(newValue);
+                      field.onChange(newValue?.fee_id);
                     }}
                     value={selectedStudentFee}
                     renderInput={(params) => (
@@ -333,6 +324,11 @@ const RefundAddDrawer = (props) => {
       </Drawer>
     </DatePickerWrapper>
   );
+};
+RefundAddDrawer.propTypes = {
+  open: PropTypes.any,
+  toggle: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default RefundAddDrawer;

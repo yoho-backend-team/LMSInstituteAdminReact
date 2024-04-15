@@ -1,5 +1,7 @@
 import Grid from '@mui/material/Grid';
 import UserHeaderCard from 'features/user-management/users-page/users-overview-page/components/UserHeaderCard';
+import PropTypes from 'prop-types';
+
 const UserHeaderSection = ({ users, groups }) => {
   return (
     <Grid container spacing={2}>
@@ -17,6 +19,11 @@ const UserHeaderSection = ({ users, groups }) => {
       </Grid>
     </Grid>
   );
+};
+
+UserHeaderSection.propTypes = {
+  users: PropTypes.any,
+  groups: PropTypes.any
 };
 
 export default UserHeaderSection;

@@ -9,22 +9,20 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
-// import CoursePdfInput from 'features/course-management/courses-page/course-add-page/components/CoursePdfInput';
 import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import InputAdornment from '@mui/material/InputAdornment';
-import * as yup from 'yup';
 import { PDFViewer } from 'react-view-pdf';
-import { useRef } from 'react';
+import * as yup from 'yup';
 
 const AddCoursePage = () => {
   const navigate = useNavigate();
@@ -43,9 +41,7 @@ const AddCoursePage = () => {
   const [imgSrcLogo, setImgSrcLogo] = useState(imageLogo);
   const [inputLogoValue, setInputLogoValue] = useState('');
   const [selectedLogo, setSelectedLogo] = useState('');
-
   const [imgSrcTemplate, setImgSrcTemplate] = useState(imageTemplate);
-  // const [pdfSourceTemplate,setPdfsourceTemplate] = useState(pdfTemplate)
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
   console.log(setCourseSyllabus);
@@ -236,7 +232,6 @@ const AddCoursePage = () => {
       data.append('logo', selectedLogo);
       data.append('image', selectedTemplate);
       data.append('syllabus', courseSyllabus);
-      // data.append('branch_id', filteredBranchId);
       console.log(personalData);
       const result = await addCourse(data);
 
@@ -406,7 +401,6 @@ const AddCoursePage = () => {
                       onChange={(event, newValue) => {
                         console.log(event);
                         onChange(newValue);
-                        // setValue('course_category', newValue.category_id);
                       }}
                       options={activeCategories ?? []}
                       getOptionLabel={(option) => option.category_name}
@@ -511,8 +505,6 @@ const AddCoursePage = () => {
                   </ButtonStyled>
                 </Grid>
               </Grid>
-
-              {/*  */}
               <Grid item xs={12} sm={6}>
                 <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
                   <ImgStyled src={imgSrcTemplate} alt="Profile Pic" />
@@ -531,12 +523,6 @@ const AddCoursePage = () => {
                   </ButtonStyled>
                 </Grid>
               </Grid>
-
-              {/* <Grid item xs={12} sm={12}>
-
-              <PDFViewer url={courseSyllabus} />
-              <Button>Upload</Button>
-              </Grid> */}
               <Grid item xs={12} sm={12}>
                 {courseSyllabus ? (
                   <>
@@ -608,7 +594,6 @@ const AddCoursePage = () => {
   return (
     <Card>
       <Divider sx={{ m: '0 !important' }} />
-
       <CardContent>{renderContent()}</CardContent>
     </Card>
   );

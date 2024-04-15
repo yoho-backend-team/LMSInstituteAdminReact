@@ -2,6 +2,7 @@ import { Box, Button } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
 
 const ImageUploader = ({ galleryImages, setGalleryImages }) => {
   const handleImageChange = (event) => {
@@ -58,6 +59,11 @@ const ImageUploader = ({ galleryImages, setGalleryImages }) => {
       </div>
     </Box>
   );
+};
+
+ImageUploader.propTypes = {
+  galleryImages: PropTypes.any,
+  setGalleryImages: PropTypes.any,
 };
 
 export default ImageUploader;

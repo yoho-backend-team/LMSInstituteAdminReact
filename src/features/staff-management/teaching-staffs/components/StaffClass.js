@@ -37,21 +37,16 @@ const LiveClassCard = () => {
   };
 
   function convertTo12HourFormat(timestamp) {
-    // Create a new Date object from the timestamp string
     const date = new Date(timestamp);
 
-    // Extract hours and minutes from the Date object
     let hours = date.getUTCHours();
     let minutes = date.getUTCMinutes();
 
-    // Convert hours to 12-hour format and determine AM/PM
     const meridiem = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Convert midnight (0) to 12
+    hours = hours % 12 || 12;
 
-    // Pad minutes with leading zero if needed
     minutes = minutes < 10 ? '0' + minutes : minutes;
 
-    // Return the formatted time string
     return hours + ':' + minutes + ' ' + meridiem;
   }
 
@@ -68,11 +63,7 @@ const LiveClassCard = () => {
                       sx={{
                         mb: 0,
                         flexShrink: 2,
-                        // whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        // textOverflow: 'ellipsis',
-                        // maxWidth: '230px'
-                        // display: 'flex',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',

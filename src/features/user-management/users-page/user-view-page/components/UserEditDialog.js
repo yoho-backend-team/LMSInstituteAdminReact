@@ -14,6 +14,7 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import CustomChip from 'components/mui/chip';
 import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -53,7 +54,6 @@ const schema = yup.object().shape({
     .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
     .max(50, `Designation can't exceed 50 characters`),
-  // role: yup.string().required(),
   branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
 });
 
@@ -113,8 +113,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     setSelectedImage(null);
   };
 
-  // const image = require('assets/images/avatar/1.png');
-
   useEffect(() => {
     getAllGroups();
   }, []);
@@ -160,7 +158,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   };
 
   const onSubmit = async (data) => {
-    // const filteredBranches = selectedBranch?.filter((branch) => data?.branch?.includes(branch.branch_name));
     console.log(data?.branch);
 
     const InputData = new FormData();
@@ -330,9 +327,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 getOptionLabel={(option) => option.branch_name}
                 value={selectedBranch}
                 onChange={(e, newValue) => {
-                  // if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
-                  //   setSelectedBranch(activeCourse.filter((option) => option.branch_id !== 'selectAll'));
-                  // } else {
                   setSelectedBranch(newValue);
                   setValue('branch', newValue);
                 }}
@@ -378,8 +372,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   </div>
                 )}
                 isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
-              // selectAllText="Select All"
-              // SelectAllProps={{ sx: { fontWeight: 'bold' } }}
               />
             </Grid>
 
@@ -445,6 +437,13 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       </form>
     </Dialog>
   );
+};
+
+UserEditDialog.propTypes = {
+  openEdit: PropTypes.any,
+  handleEditClose: PropTypes.any,
+  userData: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default UserEditDialog;

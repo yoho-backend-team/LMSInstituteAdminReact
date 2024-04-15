@@ -20,6 +20,7 @@ import DeleteDialog from 'features/user-management/groups-page/components/GroupD
 import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
+import PropTypes from 'prop-types';
 
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -244,6 +245,14 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
       />
     </>
   );
+};
+
+HelpPage.propTypes = {
+  data: PropTypes.any,
+  activeTab: PropTypes.any,
+  handleChange: PropTypes.any,
+  helps: PropTypes.any,
+  SetLoad: PropTypes.any
 };
 
 export default HelpPage;

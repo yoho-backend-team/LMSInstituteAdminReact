@@ -1,5 +1,3 @@
-import { useState, useCallback } from 'react';
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -7,24 +5,23 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-// ** Custom Components
-import CustomChip from 'components/mui/chip';
-import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 import StudentDeleteModel from 'components/modal/DeleteModel';
-import { deleteStudent } from '../services/studentService';
+import CustomChip from 'components/mui/chip';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import { deleteStudent } from '../services/studentService';
+import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const UserViewAccount = ({ student }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
   console.log('students Course :', student);
-
   const [studentDeleteModelOpen, setStudentDeleteModelOpen] = useState(false);
   const [selectedStudentDeleteId, setSelectedStudentDeleteId] = useState(null);
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedStudentDeleteId(itemId);
     setStudentDeleteModelOpen(true);
@@ -36,7 +33,6 @@ const UserViewAccount = ({ student }) => {
     const result = await deleteStudent(data);
     if (result.success) {
       toast.success(result.message);
-      // setCategoryRefetch((state) => !state);
     } else {
       toast.error(result.message);
     }
@@ -108,10 +104,6 @@ const UserViewAccount = ({ student }) => {
                       </Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 1 }}>{student.state}</Typography>
                     </Box>
-                    {/* <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Country:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{data.country}</Typography>
-                </Box> */}
                   </Box>
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -177,4 +169,7 @@ const UserViewAccount = ({ student }) => {
   }
 };
 
+UserViewAccount.propTypes = {
+  student: PropTypes.any
+};
 export default UserViewAccount;

@@ -6,6 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import { getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -82,4 +83,7 @@ const CourseFilter = ({ selectedBranchId }) => {
   );
 };
 
+CourseFilter.propTypes = {
+  selectedBranchId: PropTypes.any
+};
 export default CourseFilter;

@@ -1,42 +1,35 @@
-// ** React Imports
-import MenuItem from '@mui/material/MenuItem';
-import { forwardRef, useState, useEffect } from 'react';
-// ** MUI Imports
+import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { TextField as CustomTextField, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
-import CustomChip from 'components/mui/chip';
-// ** Third Party Imports
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import { Fragment } from 'react';
-import * as yup from 'yup';
-// ** Icon Imports
-import 'react-datepicker/dist/react-datepicker.css';
-// ** Custom Components Imports
-import { TextField as CustomTextField, TextField } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
-import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
-// ** Styled Components
+import CustomChip from 'components/mui/chip';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
+import { Fragment, forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import StepperWrapper from 'styles/mui/stepper';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import InputAdornment from '@mui/material/InputAdornment';
+import StepperWrapper from 'styles/mui/stepper';
+import * as yup from 'yup';
+import StepperCustomDot from '../../../../features/staff-management/teaching-staffs/components/StepperCustomDot';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -121,7 +114,6 @@ const StepperLinearWithValidation = () => {
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  // console.log(selectedCourses);
 
   useEffect(() => {
     getActiveCoursesByBranch(selectedBranchId);
@@ -146,8 +138,6 @@ const StepperLinearWithValidation = () => {
     setActiveBranches(result.data.data);
   };
 
-  // ** Hooks
-
   const {
     reset: personalReset,
     control: personalControl,
@@ -159,7 +149,6 @@ const StepperLinearWithValidation = () => {
     resolver: yupResolver(personalSchema)
   });
 
-  // Handle Stepper
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -188,14 +177,11 @@ const StepperLinearWithValidation = () => {
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
 
-    // Form the yyyy-mm-dd date string
     var formattedDateString = year + '-' + month + '-' + day;
 
     return formattedDateString;
@@ -242,7 +228,9 @@ const StepperLinearWithValidation = () => {
 
   const handleInputImageReset = () => {
     setLogo('');
-    setLogoSrc('https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg');
+    setLogoSrc(
+      'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+    );
   };
   console.log(logo);
 
@@ -310,7 +298,9 @@ const StepperLinearWithValidation = () => {
                     <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                       Reset
                     </ResetButtonStyled>
-                    <Typography sx={{ mt: 4, color: 'text.disabled',justifyContent:'center',display:'flex' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                    <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
+                      Allowed PNG or JPEG. Max size of 800K.
+                    </Typography>
                   </div>
                 </Box>
               </Grid>
@@ -410,7 +400,7 @@ const StepperLinearWithValidation = () => {
                   rules={{ required: true }}
                   render={({ field: { value } }) => (
                     <Autocomplete
-                    selectAll
+                      selectAll
                       fullWidth
                       options={activeBranches}
                       getOptionLabel={(option) => option.branch_name}
@@ -433,42 +423,13 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
-{/* 
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name="course"
-                  control={personalControl}
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <Autocomplete
-                      fullWidth
-                      options={activeCourse}
-                      getOptionLabel={(option) => option.course_name}
-                      value={activeCourse.find((course) => course.course_id === value) || null}
-                      onChange={(event, newValue) => {
-                        onChange(newValue ? newValue.course_id : '');
-                      }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Select Course"
-                          error={Boolean(personalErrors['course'])}
-                          helperText={personalErrors.course?.message}
-                          id="custom-select"
-                          aria-describedby="stepper-linear-personal-course"
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid> */}
 
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ course_id: 'selectAll', course_name: 'Select All' },...activeCourse]}
+                  options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
                   getOptionLabel={(option) => option.course_name}
                   value={selectedCourses}
                   onChange={(e, newValue) => {
@@ -506,7 +467,6 @@ const StepperLinearWithValidation = () => {
                         <CustomChip
                           key={option.course_id}
                           label={option.course_name}
-                          // defaultValue={}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -729,7 +689,7 @@ const StepperLinearWithValidation = () => {
         <Fragment>
           <Typography>All steps are completed!</Typography>
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="contained"  onClick={handleReset}>
+            <Button variant="contained" onClick={handleReset}>
               Reset
             </Button>
           </Box>
