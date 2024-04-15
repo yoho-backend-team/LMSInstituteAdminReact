@@ -44,7 +44,7 @@ const CourseCard = (props) => {
     setStatusValue(course);
   };
 
-  const maxCharacters = 27;
+  const maxCharacters = 100;
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ ...sx }}>
@@ -89,7 +89,7 @@ const CourseCard = (props) => {
               variant="outlined"
             />
           </Box>
-          <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column',height:'50px' }}>
             <Typography
               variant="h4"
               sx={{
