@@ -18,6 +18,26 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+const CardStyle = styled(Card)(({ theme }) => ({
+  background: theme.palette.secondary.light,
+  marginTop: '16px',
+  marginBottom: '16px',
+  overflow: 'hidden',
+  position: 'relative',
+  '&:after': {
+    content: '""',
+    position: 'absolute',
+    width: '200px',
+    height: '200px',
+    border: '19px solid ',
+    borderColor: theme.palette.primary.main,
+    borderRadius: '50%',
+    top: '-86px',
+    right: '-100px'
+  }
+}));
+
+
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
   borderRadius: 5,
@@ -94,7 +114,7 @@ const Batch = () => {
   const renderCards = () => {
     return batches?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
-        <Card sx={{ position: 'relative' }}>
+        <CardStyle sx={{ position: 'relative' }}>
           <CardContent>
             <Grid container>
               <Grid
@@ -222,7 +242,7 @@ const Batch = () => {
               </Box>
             </Box>
           </CardContent>
-        </Card>
+        </CardStyle>
       </Grid>
     ));
   };
