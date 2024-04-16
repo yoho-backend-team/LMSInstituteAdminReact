@@ -97,7 +97,7 @@ const CourseViewPage = () => {
   };
 
   const createAccordion = (item) => (
-    <Box sx={{ padding: '0px 5px 0px 5px' }} className="courseAccordian">
+    <Box key={item.id} sx={{ padding: '0px 5px 0px 5px' }} className="courseAccordian">
       <Accordion sx={{ boxShadow: 'none', backgroundColor: '#124076', color: 'white' }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />} aria-controls="panel1-content" id="panel1-header">
           {item.title}

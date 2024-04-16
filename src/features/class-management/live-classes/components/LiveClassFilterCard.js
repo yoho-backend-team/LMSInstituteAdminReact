@@ -47,11 +47,6 @@ const LiveClassFilterCard = (props) => {
     return formattedDateString;
   }
 
-  console.log(convertDateFormat(startDateRange));
-  console.log(endDateRange);
-
-  console.log('dummy', setStatusValue);
-
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {

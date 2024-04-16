@@ -15,7 +15,6 @@ import { getAllStudentAttendances } from '../redux/studentAttendanceThunks';
 const StudentAttendanceCard = () => {
   const dispatch = useDispatch();
   const studentAttendance = useSelector(selectStudentAttendances);
-  console.log(studentAttendance);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   useEffect(() => {

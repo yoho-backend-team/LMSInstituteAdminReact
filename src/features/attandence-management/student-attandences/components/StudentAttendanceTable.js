@@ -46,7 +46,7 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
+  
     const data = {
       status: statusValue?.attendance?.title === 'present' ? 'absent' : 'present',
       attendance_id: statusValue?.attendance?.attendance_id

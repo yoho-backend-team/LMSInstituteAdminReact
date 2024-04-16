@@ -43,7 +43,7 @@ const Students = () => {
           <StudentAttendanceSkeleton />
         ) : (
           <Grid>
-            <Grid item spacing={2} className="match-height" sx={{ marginTop: 3 }}>
+            <Grid className="match-height" sx={{ marginTop: 3 }}>
               <StudentAttendanceCard />
             </Grid>
             <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>

@@ -56,8 +56,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   const [endDate, setEndDate] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
 
-  console.log(setSelectedStudents);
-
   const {
     reset,
     control,
@@ -91,8 +89,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     const inputData = {
       batch_name: data?.batch_name,
       start_date: data?.start_date,
@@ -243,6 +239,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             value={selectedStudents}
                             onChange={(event, newValue) => {
                               setValue('students', newValue);
+                              setSelectedStudents(newValue);
                             }}
                           />
                         )}

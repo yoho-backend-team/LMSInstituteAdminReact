@@ -27,8 +27,7 @@ const OfflineClassCardHeader = (props) => {
     setAddModalOpen(false);
   };
 
-  const handleAdd = (itemId) => {
-    console.log('Add clicked for item ID:', itemId);
+  const handleAdd = () => {
     setAddModalOpen(true);
   };
   return (

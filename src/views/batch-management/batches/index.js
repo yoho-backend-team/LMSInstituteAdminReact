@@ -6,19 +6,17 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import BatchSkeleton from 'components/cards/Skeleton/BatchSkeleton';
 import Icon from 'components/icon';
-import StatusChangeDialog from 'components/modal/DeleteModel';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import BatchDeleteModel from 'components/modal/DeleteModel';
+import { default as BatchDeleteModel, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import BatchFilterCard from 'features/batch-management/batches/components/BatchFilterCard';
 import BatchEditModal from 'features/batch-management/batches/components/edit-Batch/BatchEditModal';
 import { selectBatches, selectLoading } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { deleteBatch, updateBatchStatus } from 'features/batch-management/batches/services/batchServices';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
@@ -44,8 +42,6 @@ const Batch = () => {
   const [statusValue, setStatusValue] = useState('');
   const [batchDeleteModelOpen, setBatchDeleteModelOpen] = useState(false);
   const [selectedBatchDeleteId, setSelectedBatchDeleteId] = useState(null);
-
-  console.log(batches);
 
   useEffect(() => {
     dispatch(getAllBatches({ branch_id: selectedBranchId }));
@@ -233,19 +229,20 @@ const Batch = () => {
 
   return (
     <>
-      <Grid>
-        <Grid spacing={1} className="match-height">
-          <Grid>
+      <Grid container>
+        <Grid container spacing={1} className="match-height">
+          <Grid item>
             <BatchFilterCard selectedBranchId={selectedBranchId} setBatchRefetch={setBatchRefetch} />
           </Grid>
           {batchLoading ? (
             <BatchSkeleton />
           ) : (
-            <Grid>
+            <Grid item container>
+              {' '}
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {renderCards()}
               </Grid>
-              <Grid sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Grid item sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                 <div className="demo-space-y">
                   <Pagination count={10} color="primary" />
                 </div>
@@ -256,7 +253,6 @@ const Batch = () => {
                 setBatchRefetch={setBatchRefetch}
                 selectedBatch={selectedBatch}
               />
-
               <StatusChangeDialog
                 open={statusChangeDialogOpen}
                 setOpen={setStatusChangeDialogOpen}

@@ -8,7 +8,6 @@ const NonTeachingStaffCardHeader = (props) => {
   const { value, handleFilter } = props;
 
   const handleAdd = (itemId) => {
-    console.log('Add clicked for item ID:', itemId);
     setAddModalOpen(true);
   };
   return (

@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -39,14 +39,17 @@ const NotificationAddDrawer = (props) => {
   const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
-
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const getActiveBatchesByCourse = async (courseId) => {

@@ -19,7 +19,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { Fragment, forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -116,14 +116,17 @@ const StepperLinearWithValidation = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
-
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -400,7 +403,6 @@ const StepperLinearWithValidation = () => {
                   rules={{ required: true }}
                   render={({ field: { value } }) => (
                     <Autocomplete
-                      selectAll
                       fullWidth
                       options={activeBranches}
                       getOptionLabel={(option) => option.branch_name}
@@ -479,8 +481,8 @@ const StepperLinearWithValidation = () => {
                     </div>
                   )}
                   isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  // selectAllText="Select All"
+                  // SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
 

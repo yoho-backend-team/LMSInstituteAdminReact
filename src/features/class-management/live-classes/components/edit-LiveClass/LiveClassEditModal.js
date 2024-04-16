@@ -35,7 +35,6 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 });
 
 const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) => {
-  console.log(liveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const schema = yup.object().shape({
@@ -101,8 +100,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     }
   }, [liveClasses, setValue]);
 
-  console.log('selected ', liveClasses);
-
   useEffect(() => {
     if (liveClasses && liveClasses.instructors) {
       setSelectedInstructors(liveClasses.instructors);
@@ -127,15 +124,11 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-
-    console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveNonTeachingStaffs(data);
-
-    console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
 
@@ -172,8 +165,6 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     bodyFormData.append('start_time', data.start_time);
     bodyFormData.append('end_time', data.end_time);
     bodyFormData.append('videoUrl', data.class_link);
-
-    console.log(data);
 
     const result = await updateLiveClass(bodyFormData);
 

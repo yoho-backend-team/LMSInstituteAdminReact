@@ -6,24 +6,30 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
 import PropTypes from 'prop-types';
 
 const CategoryFilter = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
+  const [courses, setCourses] = useState([]);
   const dispatch = useDispatch();
-  const courses = useSelector(selectCourses);
 
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    dispatch(getAllCourses(data));
+    getCourses(data);
   }, [dispatch, selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -52,13 +58,13 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     fullWidth
                     onChange={(e, newValue) => {
                       const data = {
-                        course_id: newValue.course_id,
+                        course_id: newValue?.course_id, 
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllCourseCategories(data));
                     }}
-                    options={courses}
-                    getOptionLabel={(option) => option.course_name || ''}
+                    options={Array.isArray(courses) ? courses : []}
+                    getOptionLabel={(option) => option?.course_name || ''}
                     renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                   />
                 </Grid>

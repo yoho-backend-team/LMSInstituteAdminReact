@@ -13,8 +13,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
-import { addCourse, getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourseCategories } from 'features/course-management/categories-page/services/courseCategoryServices';
+import { addCourse } from 'features/course-management/courses-page/services/courseServices';
+
 import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
@@ -159,11 +160,10 @@ const AddCoursePage = () => {
     const data = {
       branch_id: branchIds
     };
-    console.log(data);
-    const result = await getActiveCategoriesByBranch(data);
+    const result = await getAllCourseCategories(data);
 
-    if (result.data.data) {
-      setActiveCategories(result.data.data);
+    if (result.data) {
+      setActiveCategories(result.data);
     }
   };
 
@@ -180,7 +180,7 @@ const AddCoursePage = () => {
   }, [selectedBranchId]);
 
   const getAllCategories = async () => {
-    const result = await getAllActiveCourseCategories(selectedBranchId);
+    const result = await getAllCourseCategories(selectedBranchId);
     if (result.success) {
       setActiveCategories(result?.data);
     }
@@ -385,8 +385,6 @@ const AddCoursePage = () => {
                     </div>
                   )}
                   isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

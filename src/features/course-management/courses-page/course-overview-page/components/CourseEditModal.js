@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { getActiveCategoriesByBranch } from 'features/course-management/categories-page/services/courseCategoryServices';
+import { getAllCourseCategories } from 'features/course-management/categories-page/services/courseCategoryServices';
 import CourseValidate from 'features/course-management/courses-page/course-add-page/components/CourseValidate';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
@@ -175,10 +175,10 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
       branch_id: branchIds
     };
     console.log(data);
-    const result = await getActiveCategoriesByBranch(data);
+    const result = await getAllCourseCategories(data);
 
-    if (result.data.data) {
-      setActiveCategories(result.data.data);
+    if (result.data) {
+      setActiveCategories(result.data);
     }
   };
 

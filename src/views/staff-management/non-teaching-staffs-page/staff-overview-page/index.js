@@ -75,8 +75,7 @@ const NonTeaching = () => {
         <StaffManagement />
       ) : (
         <Grid>
-          <TeacherFilter selectedBranchId={selectedBranchId} />
-          <Grid container xs={12} spacing={2} mt={2}>
+          <Grid container spacing={2} mt={2}>
             {nonTeachingStaffs?.data?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
                 <Card sx={{ position: 'relative' }}>
@@ -114,12 +113,7 @@ const NonTeaching = () => {
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
-                        <Box
-                          component={Link}
-                          to={`non-teaching-staffs/${item?.staff?.id.toString()}`}
-                          state={{ id: item?.staff?.id }}
-                          setRefetch={setRefetch}
-                        >
+                        <Box component={Link} to={`non-teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
                           <Button size="medium" variant="tonal" sx={{ m: 0, px: 2 }}>
                             View Profile
                           </Button>

@@ -17,7 +17,7 @@ import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-s
 import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
@@ -83,11 +83,12 @@ const FeesAddDrawer = (props) => {
     setActiveStaffs(result.data.data);
   };
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
 
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const {
@@ -138,7 +139,7 @@ const FeesAddDrawer = (props) => {
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
-          errorMessage += `${error}\n`; 
+          errorMessage += `${error}\n`;
         });
       });
       toast.error(errorMessage.trim());
@@ -238,7 +239,7 @@ const FeesAddDrawer = (props) => {
                     getOptionLabel={(branch) => branch.branch_name}
                     onChange={(event, newValue) => {
                       onChange(newValue?.branch_id);
-                      getActiveCoursesByBranch(newValue?.branch_id);
+                      getActiveCoursesByBranch({ branch_id: newValue?.branch_id });
                     }}
                     value={activeBranches.find((branch) => branch.branch_id === value) || null}
                     renderInput={(params) => (
@@ -388,6 +389,6 @@ const FeesAddDrawer = (props) => {
 FeesAddDrawer.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
-  setRefetch: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 export default FeesAddDrawer;
