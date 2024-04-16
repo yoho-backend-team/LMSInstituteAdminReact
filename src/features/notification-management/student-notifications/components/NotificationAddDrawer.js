@@ -332,7 +332,6 @@ const NotificationAddDrawer = (props) => {
                     </div>
                   )}
                   isOptionEqualToValue={(option, value) => option?.student?.student_id === value?.student?.student_id}
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               )}
             />

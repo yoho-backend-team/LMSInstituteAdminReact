@@ -283,8 +283,6 @@ const StaffNotificationAddDrawer = (props) => {
                 </div>
               )}
               isOptionEqualToValue={(option, value) => option?.staff_id === value?.staff_id}
-              selectAllText="Select All"
-              SelectAllProps={{ sx: { fontWeight: 'bold' } }}
             />
           </Grid>
 
