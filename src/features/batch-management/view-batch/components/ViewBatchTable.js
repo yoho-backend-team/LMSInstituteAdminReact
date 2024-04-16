@@ -102,8 +102,9 @@ const ViewBatchTable = ({ students }) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} display={'flex'} justifyContent={'flex-end'}>
-          <TextField  placeholder="Search Student"  value={searchQuery} onChange={handleSearchChange} />
+        <Grid item xs={12} sm={8}/>
+        <Grid item xs={12} sm={4}>
+          <TextField sx={{display:'flex'}} fullwidth placeholder="Search Student"  value={searchQuery} onChange={handleSearchChange} />
         </Grid>
         <Grid item xs={12}>
           <Card sx={{ mt: 2 }}>

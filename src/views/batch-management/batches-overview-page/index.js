@@ -200,7 +200,7 @@ const Batch = () => {
               <div className="connect" />
               <CustomChip label={item?.batch?.end_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',px:1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
                 <Icon fontSize="1.25rem" icon="tabler:user-square" color="primary" />
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
@@ -212,7 +212,7 @@ const Batch = () => {
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Icon fontSize="1.25rem" icon="tabler:calendar" />
+                <Icon fontSize="1.25rem" icon="tabler:clock-filled" />
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
                   {item.totalDays}
                 </Typography>
