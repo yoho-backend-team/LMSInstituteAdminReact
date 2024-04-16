@@ -266,60 +266,56 @@
   }
 }
 
-.courseAccordian{
-  .css-1lzgix5-MuiPaper-root-MuiAccordion-root:last-of-type{
+.courseAccordian {
+  .css-1lzgix5-MuiPaper-root-MuiAccordion-root:last-of-type {
     border-bottom-left-radius: 15px !important;
     border-bottom-right-radius: 15px !important;
-
   }
-  .css-1lzgix5-MuiPaper-root-MuiAccordion-root:first-of-type{
+  .css-1lzgix5-MuiPaper-root-MuiAccordion-root:first-of-type {
     border-top-left-radius: 15px !important;
     border-top-right-radius: 15px !important;
-
   }
 }
 
-.connect::before
-  {
-    content: '';
-    width: 10px;
-    height: 10px;
-    text-align: center;
-    line-height: 10px;
-    border-radius: 5px;
-    background: $darkPrimary800;
-    margin: 0;
-    display: inline-block;
-    position: absolute;
-    top:-4px;
-  }
-
-.connect::after
-{
+.connect::before {
   content: '';
   width: 10px;
   height: 10px;
   text-align: center;
   line-height: 10px;
   border-radius: 5px;
-  background: $darkPrimary800;
+  background: $warningDark;
   margin: 0;
   display: inline-block;
   position: absolute;
-  top:-4px;
-}
-
-.connect::before {
-  left:-5px;
+  top: -4px;
 }
 
 .connect::after {
-  right:-5px;
+  content: '';
+  width: 10px;
+  height: 10px;
+  text-align: center;
+  line-height: 10px;
+  border-radius: 5px;
+  background: $warningDark;
+  margin: 0;
+  display: inline-block;
+  position: absolute;
+  top: -4px;
 }
 
-.connect{
+.connect::before {
+  left: -5px;
+}
+
+.connect::after {
+  right: -5px;
+}
+
+.connect {
   width: 50px;
   height: 2px;
-  background:$darkPrimary800;
+  background: $warningDark;
   position: relative;
 }

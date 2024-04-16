@@ -48,7 +48,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette.success.main
   }
 }));
 
@@ -195,25 +195,30 @@ const Batch = () => {
                 {item?.batch?.institute_course?.institute_course_branch?.course_name}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2,justifyContent:'space-around' }}>
-              <CustomChip label={item?.batch?.start_date} size="small" color="success" variant="tonal" skin="dark" rounded />
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, justifyContent: 'space-around' }}>
+              <CustomChip label={item?.batch?.start_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
               <div className="connect" />
               <CustomChip label={item?.batch?.end_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Icon fontSize="1.25rem" icon="tabler:users" />
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',px:1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+                <Icon fontSize="1.25rem" icon="tabler:user-square" color="primary" />
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
                   {item?.students?.length}
                 </Typography>
-                <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Students</Typography>
+                <Typography variant="h5" sx={{ ml: 0.5, color: 'text.secondary' }}>
+                  {item?.students?.length > 1 ? 'Students' : 'Student'}
+                </Typography>
               </Box>
-              <Icon fontSize="1.25rem" icon="tabler:clock" />
+
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Icon fontSize="1.25rem" icon="tabler:calendar" />
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
                   {item.totalDays}
                 </Typography>
-                <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Days</Typography>
+                <Typography variant="h5" sx={{ ml: 0.5, color: 'text.secondary' }}>
+                  Days
+                </Typography>
               </Box>
             </Box>
 
