@@ -76,8 +76,8 @@ const StudyMaterialHeader = (props) => {
                         };
                         dispatch(getAllCourseStudyMaterials(data));
                       }}
-                      options={Array.isArray(courses) ? courses : []} // Ensure options is an array
-                      // options={courses}
+                      // options={Array.isArray(courses) ? courses : []} // Ensure options is an array
+                      options={courses}
                       getOptionLabel={(option) => option.course_name || ''}
                       renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                     />

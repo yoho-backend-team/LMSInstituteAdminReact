@@ -53,9 +53,6 @@ const BatchFilterCard = (props) => {
     return formattedDateString;
   }
 
-  console.log(convertDateFormat(startDateRange));
-  console.log(endDateRange);
-
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
     if (start !== null && end !== null) {
@@ -171,7 +168,7 @@ const BatchFilterCard = (props) => {
 };
 
 BatchFilterCard.propTypes = {
-  selectedBranchId: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 
 export default BatchFilterCard;
