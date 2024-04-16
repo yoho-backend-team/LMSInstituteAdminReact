@@ -22,8 +22,8 @@ const CourseFilter = ({ selectedBranchId }) => {
   }, []);
 
   const getAllCategories = async () => {
-    const result = await getAllCourseCategories(selectedBranchId);
-    if (result.success) {
+    const result = await getAllCourseCategories();
+    if (result.data) {
       setActiveCategories(result?.data);
     }
   };
