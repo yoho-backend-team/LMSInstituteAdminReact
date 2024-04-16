@@ -104,7 +104,7 @@ const StudentIdCard = () => {
   return (
     <>
       <Grid>
-        <Grid spacing={1} className="match-height">
+        <Grid container spacing={1} className="match-height">
           <Grid item xs={12} sm={12}>
             <StudentFilterCard
               selectedBranchId={selectedBranchId}
