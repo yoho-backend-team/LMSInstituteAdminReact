@@ -6,18 +6,30 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAllCourseNotes } from '../redux/noteThunks';
-
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 const NotesHeader = (props) => {
   const { toggle, selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
   const [statusValue, setStatusValue] = useState('');
-  const courses = useSelector(selectCourses);
   const dispatch = useDispatch();
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getCourses(data);
+  }, [selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
 
   useEffect(() => {
     const data = {
