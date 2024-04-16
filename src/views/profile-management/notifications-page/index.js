@@ -21,6 +21,7 @@ const AllNotifications = () => {
   // const [readNotifications,setreadnotifications]=useState('')
   const [unreadNotifications, setUnreadNotifications] = useState('');
   const [allNotifcations, setAllNotifcations] = useState('');
+  // const [loading,setLoading] = useState(false)
 
   // Fetch course categories on component mount or when dependencies change
 
@@ -40,12 +41,11 @@ const AllNotifications = () => {
 
     const result = await getAllNotificationsByAuth(data);
     if (result.success) {
-      setAllreadNotifications(result?.data);
       // setLoading(false)
+      setAllreadNotifications(result?.data);
     }
     // setLoading(false)
   };
-  console.log('allreadNotifications', allreadNotifications);
 
   //unreadNotifications
   useEffect(() => {
@@ -66,7 +66,6 @@ const AllNotifications = () => {
     }
     // setLoading(false)
   };
-  console.log('unreadNotifications', unreadNotifications);
 
   //allNotifications
   useEffect(() => {
@@ -87,8 +86,6 @@ const AllNotifications = () => {
     }
     // setLoading(false)
   };
-  console.log('unreadNotifications', unreadNotifications);
-
   return (
     <>
       <Card>
@@ -104,14 +101,14 @@ const AllNotifications = () => {
                 // allNotifications={allNotifications}
                 // setLoading={setLoading}
 
-                selectedBranchId={selectedBranchId}
+                // selectedBranchId={selectedBranchId}
               />
             </TabList>
 
             <TabPanel value="1">
               <Grid container spacing={3}>
-                {[...allreadNotifications]?.map((item) => (
-                  <Grid item xs={12} key={item}>
+                {[...allreadNotifications]?.map((item, index) => (
+                  <Grid item xs={12} key={index}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
@@ -123,7 +120,7 @@ const AllNotifications = () => {
                         </Box>
                       </Box>
                       <Typography fontSize={12} variant="body2">
-                        33 minutes ago
+                        {item?.ago}
                       </Typography>
                     </Box>
                   </Grid>
@@ -133,8 +130,8 @@ const AllNotifications = () => {
 
             <TabPanel value="2">
               <Grid container spacing={3}>
-                {[...unreadNotifications]?.map((item) => (
-                  <Grid item xs={12} key={item}>
+                {[...unreadNotifications]?.map((item, index) => (
+                  <Grid item xs={12} key={index}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
@@ -146,7 +143,7 @@ const AllNotifications = () => {
                         </Box>
                       </Box>
                       <Typography fontSize={12} variant="body2">
-                        33 minutes ago
+                       {item?.ago}
                       </Typography>
                     </Box>
                   </Grid>
@@ -156,8 +153,8 @@ const AllNotifications = () => {
 
             <TabPanel value="3">
               <Grid container spacing={3}>
-                {[...allNotifcations].map((item) => (
-                  <Grid item xs={12} key={item}>
+                {[...allNotifcations].map((item, index) => (
+                  <Grid item xs={12} key={index}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Avatar src="/vuexy-nextjs-admin-template/demo-1/images/avatars/1.png" alt="Victor Anderson" />
@@ -169,7 +166,7 @@ const AllNotifications = () => {
                         </Box>
                       </Box>
                       <Typography fontSize={12} variant="body2">
-                        33 minutes ago
+                        {item?.ago}
                       </Typography>
                     </Box>
                   </Grid>
