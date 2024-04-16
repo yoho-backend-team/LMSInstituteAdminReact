@@ -10,10 +10,10 @@ import * as yup from 'yup';
 import { TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
@@ -89,19 +89,18 @@ const FeesAddDrawer = (props) => {
 
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
-    const result = await getAllBatches(data);
-
-    console.log('active batches : ', result.data);
-    setActiveBatches(result.data.data);
-    result.data.data.forEach((batch) => {
-      getStudentsByBatch(batch.batch_id);
-    });
+    const result = await getBatchesByCourse(data);
+    if (result?.success) {
+      setActiveBatches(result?.data);
+    }
   };
 
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
-    const result = await getAllStudents(data);
-    setStudents(result.data.data);
+    const result = await getAllStudentsByBatch(data);
+    if (result?.success) {
+      setStudents(result?.data);
+    }
   };
 
   const {
@@ -295,7 +294,7 @@ const FeesAddDrawer = (props) => {
                       {...field}
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option?.batch?.batch_name}
+                      getOptionLabel={(option) => option?.batch_name}
                       onChange={(event, newValue) => {
                         field.onChange(newValue);
                         setValue('batch', newValue);
@@ -332,8 +331,8 @@ const FeesAddDrawer = (props) => {
                       helperText={errors.student?.message}
                     >
                       {students.map((student) => (
-                        <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
-                          {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                        <MenuItem key={student?.student_id} value={student?.student_id}>
+                          {`${student?.first_name} ${student?.last_name}`}
                         </MenuItem>
                       ))}
                     </TextField>

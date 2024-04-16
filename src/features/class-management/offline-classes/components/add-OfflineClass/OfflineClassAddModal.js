@@ -13,7 +13,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
@@ -76,8 +76,10 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   };
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
-    const result = await getAllBatches(data);
-    setActiveBatches(result.data.data);
+    const result = await getBatchesByCourse(data);
+    if (result?.success) {
+      setActiveBatches(result.data);
+    }
   };
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
@@ -289,7 +291,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       {...field}
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option?.batch?.batch_name}
+                      getOptionLabel={(option) => option?.batch_name}
                       onChange={(event, newValue) => {
                         field.onChange(newValue);
                         setValue('batch', newValue);
