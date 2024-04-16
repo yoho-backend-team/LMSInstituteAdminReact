@@ -5,12 +5,11 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getAllStudentIdCards } from 'features/id-card-management/student-id-cards/redux/studentIdcardThunks';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const StudentFilterCard = (props) => {
@@ -18,15 +17,20 @@ const StudentFilterCard = (props) => {
 
   const { handleSearch, selectedBranchId, searchValue, filterstatusValue, handleFilterByStatus } = props;
 
-  const batch = useSelector(selectBatches);
-
+  const [batches, setBatches] = useState([]);
   useEffect(() => {
-    dispatch(
-      getAllBatches({
-        branch_id: selectedBranchId
-      })
-    );
-  }, [dispatch, selectedBranchId]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
+
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
+    }
+  };
 
   return (
     <DatePickerWrapper>
@@ -39,7 +43,7 @@ const StudentFilterCard = (props) => {
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
-                    options={batch}
+                    options={batches}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       if (!newValue) {
@@ -50,14 +54,14 @@ const StudentFilterCard = (props) => {
                         dispatch(getAllStudentIdCards(data));
                       } else {
                         const data = {
-                          batch_id: newValue.batch.batch_id,
+                          batch_id: newValue.batch_id,
                           branch_id: selectedBranchId
                         };
                         dispatch(getAllStudentIdCards(data));
                       }
                     }}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
+                    getOptionLabel={(option) => option.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
