@@ -5,7 +5,7 @@ const Fee = () => {
   return (
     <>
       <Grid>
-        <Grid spacing={1} className="match-height">
+        <Grid container spacing={1} className="match-height">
           <FeesTable />
         </Grid>
       </Grid>
