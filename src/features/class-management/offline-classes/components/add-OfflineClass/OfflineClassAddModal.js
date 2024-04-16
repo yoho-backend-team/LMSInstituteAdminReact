@@ -18,7 +18,6 @@ import { getActiveBranches } from 'features/branch-management/services/branchSer
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -40,7 +39,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
-  const [students, setStudents] = useState([]);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -80,12 +78,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
     const result = await getAllBatches(data);
     setActiveBatches(result.data.data);
-  };
-
-  const getStudentsByBatch = async (batchId) => {
-    const data = { batch_id: batchId, branch_id: selectedBranchId };
-    const result = await getAllStudents(data);
-    setStudents(result.data.data);
   };
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);

@@ -94,7 +94,7 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
                         display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
-                        textAlign: 'center' 
+                        textAlign: 'center'
                       }}
                       variant="h3"
                       gutterBottom

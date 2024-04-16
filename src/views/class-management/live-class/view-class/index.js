@@ -70,21 +70,6 @@ const ViewLiveClass = () => {
   };
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
-  const [statusValue] = useState({});
-
-  const handleStatusChangeApi = async () => {
-    const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
-    };
-    const response = await updateCourseStudyMaterialStatus(data);
-    if (response.success) {
-      toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
-    }
-  };
 
   const columns = [
     {
@@ -231,11 +216,7 @@ const ViewLiveClass = () => {
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
                       {liveClassData?.instructorStaff?.class_staff.map((staff) => (
                         <Tooltip key={staff.id} title={staff.staff.staff_name}>
-                          <Avatar
-                            src={staff.staff.image_url} 
-                            alt={staff.staff.staff_name}
-                            sx={{ width: 25, height: 25 }}
-                          />
+                          <Avatar src={staff.staff.image_url} alt={staff.staff.staff_name} sx={{ width: 25, height: 25 }} />
                         </Tooltip>
                       ))}
                     </AvatarGroup>
@@ -249,11 +230,7 @@ const ViewLiveClass = () => {
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
                       {liveClassData?.coordinator?.class_staff.map((staff) => (
                         <Tooltip key={staff.id} title={staff.staff.staff_name}>
-                          <Avatar
-                            src={staff.staff.image_url} 
-                            alt={staff.staff.staff_name}
-                            sx={{ width: 25, height: 25 }}
-                          />
+                          <Avatar src={staff.staff.image_url} alt={staff.staff.staff_name} sx={{ width: 25, height: 25 }} />
                         </Tooltip>
                       ))}
                     </AvatarGroup>

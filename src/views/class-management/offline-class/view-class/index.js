@@ -70,22 +70,6 @@ const ViewOfflineClass = () => {
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
 
-  const [statusValue] = useState({});
-
-  const handleStatusChangeApi = async () => {
-    const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
-    };
-    const response = await updateCourseStudyMaterialStatus(data);
-    if (response.success) {
-      toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
-    }
-  };
-
   const columns = [
     {
       minWidth: 160,
