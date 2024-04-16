@@ -42,8 +42,6 @@ const StudyMaterials = () => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
 
-  console.log(selectedDeleteId);
-
   const dispatch = useDispatch();
   const StudyMaterials = useSelector(selectCourseStudyMaterials);
   const StudyMaterialsLoading = useSelector(selectLoading);
@@ -52,7 +50,6 @@ const StudyMaterials = () => {
   useEffect(() => {
     dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, refetch]);
-  console.log('getAllCourseStudyMaterialsss', StudyMaterials);
 
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
@@ -62,7 +59,6 @@ const StudyMaterials = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -74,7 +70,7 @@ const StudyMaterials = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedRow.id };
+    const data = { id: selectedDeleteId };
     const result = await deleteCourseStudyMaterial(data);
     if (result.success) {
       toast.success(result.message);
@@ -95,7 +91,6 @@ const StudyMaterials = () => {
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
@@ -115,7 +110,7 @@ const StudyMaterials = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
+    y;
   };
 
   const handleRowClick = (params) => {

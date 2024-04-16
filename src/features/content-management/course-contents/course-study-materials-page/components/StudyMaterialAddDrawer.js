@@ -23,7 +23,6 @@ const StudyMaterialAddDrawer = (props) => {
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
 
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
@@ -32,8 +31,6 @@ const StudyMaterialAddDrawer = (props) => {
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllActiveCourses(selectedBranchId);
-
-    console.log('active courses : ', result.data);
     setActiveCourse(result.data.data);
   };
 
@@ -78,23 +75,18 @@ const StudyMaterialAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(studymaterialPdf);
-
   const onSubmit = async (data) => {
-    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('branch_id', data.branch?.branch_id);
     bodyFormData.append('course_id', data.course?.course_id);
     bodyFormData.append('title', data.title);
     bodyFormData.append('description', data.description);
     bodyFormData.append('document', studymaterialPdf);
-    console.log(bodyFormData);
 
     const result = await addCourseStudyMaterial(bodyFormData);
 
     if (result.success) {
       setRefetch((state) => !state);
-
       toast.success(result.message);
       reset();
       toggle();
