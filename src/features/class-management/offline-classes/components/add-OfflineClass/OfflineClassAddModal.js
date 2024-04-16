@@ -163,7 +163,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       class_name: data.class_name,
       branch_id: data.branch,
       course_id: data.course,
-      batch_id: data.batch.batch.batch_id,
+      batch_id: data.batch_id,
       class_date: convertDateFormat(data.classDate),
       start_time: data.start_time,
       end_time: data.end_time,
