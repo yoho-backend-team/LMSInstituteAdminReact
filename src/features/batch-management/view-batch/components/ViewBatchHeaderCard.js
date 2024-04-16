@@ -51,7 +51,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
               />
               <CardContent sx={{ mt: 0, pt: 0 }}>
                 <Grid container>
-                  <Grid item xs={12} sm={5} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Grid item xs={12} sm={5} sx={{ display: 'flex', alignItems: 'center',mt:2 }}>
                     <Typography variant="h5">Course Name :</Typography>
                     <Typography
                       variant="h5"
@@ -60,12 +60,12 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                       {batchData?.institute_course?.institute_course_branch?.course_name}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center',mt:2 }}>
                     <Typography>
                       <CustomChip label={batchData.batch_id} rounded color="primary" variant="contained"></CustomChip>
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center',mt:2 }}>
                     <Typography variant="h5">Duration:</Typography>
                     <Typography
                       variant="h4"
@@ -75,7 +75,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                     </Typography>
                     <Typography sx={{ ml: 0.5 }}>days</Typography>
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={3} sx={{mt:2}}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
                       <CustomChip label={batchData.start_date} size="large" color="secondary" variant="tonal" skin="dark" rounded />
                       <div className="connect" />
