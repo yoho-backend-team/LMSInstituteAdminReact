@@ -1,6 +1,4 @@
-// material-ui
 import { Grid } from '@mui/material';
-// project imports
 import RefundTable from 'features/refund-management/refunds/components/RefundTable';
 
 const Refunds = () => {
