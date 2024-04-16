@@ -26,7 +26,7 @@ const AddBranchPage = Loadable(lazy(() => import('views/branch-management/branch
 const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/branch[id]-page')));
 
 // Batch Management
-const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
+const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches-overview-page')));
 const AddBatchPage = Loadable(lazy(() => import('views/batch-management/add-batch')));
 const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-batch')));
 
