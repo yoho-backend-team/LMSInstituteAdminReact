@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import toast from 'react-hot-toast';
 // import { updateUser } from '../../services/userServices';
 import { updateUser } from 'features/user-management/users-page/services/userServices';
-import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -93,12 +93,12 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    getAllGroups();
+    getGroups();
   }, []);
 
-  const getAllGroups = async () => {
+  const getGroups = async () => {
     try {
-      const result = await getAllActiveGroups();
+      const result = await getAllGroups();
       if (result.success) {
         console.log('User Data:', result.data);
         setGroups(result.data);

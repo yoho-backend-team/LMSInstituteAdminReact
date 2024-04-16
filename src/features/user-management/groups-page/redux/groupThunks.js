@@ -1,5 +1,5 @@
 // groupThunks.js
-import { getAllGroups as fetchAllGroups } from '../services/groupService'; // Replace with your service file
+import { getAllGroupsByInstitute as fetchAllGroups } from '../services/groupService'; // Replace with your service file
 import { setGroups, setLoading } from './groupSlice';
 
 export const getAllGroups = (data) => async (dispatch) => {

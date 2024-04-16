@@ -3,11 +3,30 @@ import axios from 'axios';
 
 const GROUP_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group`;
 const PERMISSION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/permission`;
-const SEARCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/group/search`;
 
-export const getAllGroups = async (data) => {
+export const addGroup = async (data) => {
   try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all?page=${data?.page}`, {
+    const response = await axios.post(`${GROUP_API_ENDPOINT}/create`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    console.log(response);
+    if (response.data.status) {
+      return { success: true, message: 'Group created successfully' };
+    } else {
+      return { success: false, message: response?.data?.message };
+    }
+  } catch (error) {
+    console.error('Error in addGroup:', error);
+    throw error;
+  }
+};
+
+export const getAllGroupsByInstitute = async (data) => {
+  try {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-by-institute?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -27,47 +46,6 @@ export const getAllGroups = async (data) => {
     console.error('Error in getAllGroups:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
-
-export const searchGroups = async (searchQuery) => {
-  try {
-    const response = await axios.get(SEARCH_API_ENDPOINT, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchGroups:', error);
-    throw error;
-  }
-};
-
-export const addGroup = async (data) => {
-  try {
-    const response = await axios.post(`${GROUP_API_ENDPOINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Group created successfully' };
-    } else {
-      return { success: false, message: response?.data?.message };
-    }
-  } catch (error) {
-    console.error('Error in addGroup:', error);
     throw error;
   }
 };
@@ -94,30 +72,10 @@ export const deleteGroup = async (groupId) => {
     throw error;
   }
 };
-export const changeStatusGroup = async (data) => {
-  try {
-    const response = await axios.put(`${GROUP_API_ENDPOINT}/status`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'Group status changed successfully' };
-    } else {
-      return { success: false, message: 'Failed to change group status' };
-    }
-  } catch (error) {
-    console.error('Error in deleteGroup:', error);
-    throw error;
-  }
-};
 
 export const updateStatus = async (data) => {
   try {
-    const response = await axios.put(`${GROUP_API_ENDPOINT}/status`, data, {
+    const response = await axios.put(`${GROUP_API_ENDPOINT}/change-status`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -135,6 +93,7 @@ export const updateStatus = async (data) => {
     throw error;
   }
 };
+
 export const updateGroup = async (data) => {
   try {
     const response = await axios.put(`${GROUP_API_ENDPOINT}/update`, data, {
@@ -152,6 +111,32 @@ export const updateGroup = async (data) => {
     }
   } catch (error) {
     console.error('Error in updateGroup:', error);
+    throw error;
+  }
+};
+
+export const getAllGroups = async () => {
+  try {
+    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-all`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data) {
+      return { success: true, data: response.data.data };
+    } else {
+      return { success: false, message: 'Failed to fetch Groups' };
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllGroups:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
@@ -216,32 +201,6 @@ export const getPermissionsByRole = async (roleId) => {
     }
   } catch (error) {
     console.error('Error in getPermissionsByRoleId:', error);
-    throw error;
-  }
-};
-
-export const getAllActiveGroups = async () => {
-  try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-active-roles`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    console.log(response);
-
-    // Check if the response status is successful
-    if (response.data) {
-      return { success: true, data: response.data.data };
-    } else {
-      return { success: false, message: 'Failed to fetch Groups' };
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllGroups:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

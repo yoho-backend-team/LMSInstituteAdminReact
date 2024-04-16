@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import CustomChip from 'components/mui/chip';
-import { getAllActiveGroups } from 'features/user-management/groups-page/services/groupService';
+import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -114,12 +114,12 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   };
 
   useEffect(() => {
-    getAllGroups();
+    getGroups();
   }, []);
 
-  const getAllGroups = async () => {
+  const getGroups = async () => {
     try {
-      const result = await getAllActiveGroups();
+      const result = await getAllGroups();
       if (result.success) {
         setGroups(result.data);
       } else {
@@ -410,8 +410,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   >
                     {/* <MenuItem value="">Select Role</MenuItem> */}
                     {groups?.map((group, index) => (
-                      <MenuItem key={index} value={group?.role?.id}>
-                        {group?.role?.name}
+                      <MenuItem key={index} value={group?.id}>
+                        {group?.name}
                       </MenuItem>
                     ))}
                   </TextField>
