@@ -96,7 +96,7 @@ const Batch = () => {
   };
 
   const renderCards = () => {
-    return batches?.map((item, index) => (
+    return batches?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <Card sx={{ position: 'relative' }}>
           <CardContent>

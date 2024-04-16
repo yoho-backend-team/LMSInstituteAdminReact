@@ -9,7 +9,7 @@ const PROFILE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/instit
 
 export const getAllUsers = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/get-all`, {
+    const response = await axios.get(`${USER_API_ENDPOINT}/get-all?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
