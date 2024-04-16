@@ -176,7 +176,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={staffNotifications}
+        rows={staffNotifications?.data}
         columns={columns}
         disableRowSelectionOnClick
         pageSizeOptions={[10, 25, 50]}

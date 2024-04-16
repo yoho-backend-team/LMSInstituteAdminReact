@@ -305,7 +305,7 @@ const StudenrCertificate = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificates}
+                rows={studentCertificates?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
