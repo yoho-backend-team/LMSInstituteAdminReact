@@ -54,8 +54,8 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) =>
               >
                 <MenuItem value="">Select Role</MenuItem>
                 {groups?.map((group, index) => (
-                  <MenuItem key={index} value={group?.role?.id}>
-                    {group?.role?.name}
+                  <MenuItem key={index} value={group?.id}>
+                    {group?.name}
                   </MenuItem>
                 ))}
               </TextField>

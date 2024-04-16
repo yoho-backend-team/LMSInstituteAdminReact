@@ -20,14 +20,12 @@ import {
   deleteCourseModule,
   updateCourseModulesStatus
 } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
-import { setUsers } from 'features/user-management/users-page/redux/userSlices';
-import { searchUsers } from 'features/user-management/users-page/services/userServices';
+
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Modules = () => {
-  const [value, setValue] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -159,24 +157,6 @@ const Modules = () => {
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
-  const handleFilter = useCallback(
-    async (val) => {
-      try {
-        setValue(val);
-        const result = await searchUsers(val);
-        if (result.success) {
-          console.log('Search results:', result.data);
-          dispatch(setUsers(result.data));
-        } else {
-          console.log(result.message);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [dispatch]
-  );
-
   const columns = [
     {
       // flex: 0.4,
@@ -298,7 +278,7 @@ const Modules = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <ModuleHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+          <ModuleHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
         {ModuleLoading ? (
           <ContentSkeleton />

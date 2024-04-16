@@ -5,11 +5,10 @@ const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute
 const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
 const PROFILE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/profile-management`;
-// const USER_API_USER_NAME_CHECK_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user/check-username`;
 
 export const getAllUsers = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/get-all?page=${data?.page}`, {
+    const response = await axios.get(`${USER_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -82,7 +81,6 @@ export const getUserById = async (data) => {
     throw error;
   }
 };
-
 export const updateUserStatus = async (data) => {
   try {
     const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
@@ -161,27 +159,6 @@ export const addUser = async (data) => {
     throw error;
   }
 };
-
-export const searchUsers = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/users/AllUsers.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchUsers:', error);
-    throw error;
-  }
-};
 export const checkUserName = async (userName) => {
   try {
     const response = await axios.post(
@@ -206,48 +183,6 @@ export const checkUserName = async (userName) => {
     throw error;
   }
 };
-
-export const FilterUsersByRole = async (id) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/users/AllUsers.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: id }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchUsers:', error);
-    throw error;
-  }
-};
-export const FilterUsersByStatus = async (status) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/users/AllUsers.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { status: status }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchUsers:', error);
-    throw error;
-  }
-};
-
 export const deleteUsers = async (userId) => {
   try {
     const response = await axios.delete(`${USER_API_ENDPOINT}/delete`, {
@@ -270,31 +205,6 @@ export const deleteUsers = async (userId) => {
     throw error;
   }
 };
-
-export const getAllActiveGroups = async () => {
-  try {
-    const response = await axios.get(`${GROUP_API_ENDPOINT}/get-active-roles`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-
-    // Check if the response status is successful
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch Groups' };
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllGroups:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
-
 export const getUserProfileById = async (data) => {
   try {
     const response = await axios.get(`${PROFILE_API_ENDPOINT}/get-by-auth-id`, {

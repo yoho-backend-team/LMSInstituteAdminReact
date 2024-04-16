@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid';
 import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
-import { selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
-import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
+import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
 import { selectLoading as selectUserLoading, selectUsers } from 'features/user-management/users-page/redux/userSelectors';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import UserAddDrawer from 'features/user-management/users-page/users-overview-page/components/UserAddDrawer';
@@ -16,12 +15,19 @@ const UserList = () => {
   const users = useSelector(selectUsers);
   const userLoading = useSelector(selectUserLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const groups = useSelector(selectGroups);
+  const [groups, setGroups] = useState([]);
 
   // Fetch groups when selectedBranchId changes
   useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId }));
+    getGroups();
   }, [dispatch, selectedBranchId]);
+
+  const getGroups = async () => {
+    const result = await getAllGroups();
+    if (result.data) {
+      setGroups(result.data);
+    }
+  };
 
   // State for controlling the visibility of the Add User Drawer
   const [addUserOpen, setAddUserOpen] = useState(false);

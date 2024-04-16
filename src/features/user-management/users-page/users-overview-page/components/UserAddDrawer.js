@@ -361,8 +361,8 @@ const SidebarAddUser = (props) => {
                 {...(errors.role && { helperText: errors.role.message })}
               >
                 {groups?.map((group, index) => (
-                  <MenuItem key={index} value={group?.role?.id}>
-                    {group?.role?.name}
+                  <MenuItem key={index} value={group?.id}>
+                    {group?.name}
                   </MenuItem>
                 ))}
               </TextField>
