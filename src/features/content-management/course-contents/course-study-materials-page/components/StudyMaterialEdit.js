@@ -83,6 +83,7 @@ const StudyMaterialEdit = (props) => {
         reader.onload = () => {
           setSavedPdfUrl(reader.result);
           setSelectedFile(uploadedFile);
+          setInputValue(uploadedFile);
         };
 
         reader.readAsDataURL(uploadedFile);
@@ -98,7 +99,6 @@ const StudyMaterialEdit = (props) => {
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', props.initialValues.id);
     bodyFormData.append('document', setSelectedFile);
-   
 
     const result = await updateCourseStudyMaterial(bodyFormData);
 

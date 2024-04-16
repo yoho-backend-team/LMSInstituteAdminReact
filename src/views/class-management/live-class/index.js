@@ -9,7 +9,6 @@ import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 
 const useTimeout = (callback, delay) => {
-
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
 
@@ -29,13 +28,13 @@ const LiveClass = () => {
   return (
     <>
       <Grid>
-        <LiveClassFilterCard  selectedBranchId={selectedBranchId} />
-        <LiveClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setRefetch}/>
+        <LiveClassFilterCard selectedBranchId={selectedBranchId} />
+        <LiveClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setRefetch} />
         {loading ? (
-          <ClassSkeleton liveClasses={liveClasses}/>
+          <ClassSkeleton liveClasses={liveClasses} />
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
-            <LiveClassCard refetch={refetch} setRefetch={setRefetch}/>
+            <LiveClassCard refetch={refetch} setRefetch={setRefetch} />
           </Grid>
         )}
       </Grid>
