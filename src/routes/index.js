@@ -26,7 +26,7 @@ const AddBranchPage = Loadable(lazy(() => import('views/branch-management/branch
 const ViewBranchPage = Loadable(lazy(() => import('views/branch-management/branch[id]-page')));
 
 // Batch Management
-const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches')));
+const BatchesPage = Loadable(lazy(() => import('views/batch-management/batches-overview-page')));
 const AddBatchPage = Loadable(lazy(() => import('views/batch-management/add-batch')));
 const ViewBatchPage = Loadable(lazy(() => import('views/batch-management/view-batch')));
 
@@ -52,10 +52,10 @@ const NonTeachingStaffViewAttendancesPage = Loadable(
 const StudentCertificatesPage = Loadable(lazy(() => import('views/certificate-management/student-certificates-page')));
 
 // Class Management
-const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class')));
-const ViewLiveClass = Loadable(lazy(() => import('views/class-management/live-class/view-class')));
-const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class')));
-const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offline-class/view-class')));
+const LiveClassesPage = Loadable(lazy(() => import('views/class-management/live-class-page')));
+const ViewLiveClass = Loadable(lazy(() => import('views/class-management/live-class[id]-page')));
+const OfflineClassesPage = Loadable(lazy(() => import('views/class-management/offline-class-page')));
+const ViewOfflineClass = Loadable(lazy(() => import('views/class-management/offline-class[id]-page')));
 
 // Content Management
 

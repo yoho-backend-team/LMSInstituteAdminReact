@@ -11,34 +11,22 @@ import Icon from 'components/icon';
 import OfflineClassDeleteModel from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectOfflineClasses } from '../redux/offlineClassSelectors';
-import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 
-const OfflineClassCard = ({ offlineClassRefetch, setofflineClassRefetch }) => {
+const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
-  const offlineClasses = useSelector(selectOfflineClasses);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const dispatch = useDispatch();
 
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
 
   const [selectedOfflineClassDeleteId, setSelectedOfflineClassDeleteId] = useState(null);
-
-  useEffect(() => {
-    const data = {
-      type: 'offline',
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllOfflineClasses(data));
-  }, [dispatch, selectedBranchId, offlineClassRefetch]);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -47,16 +35,6 @@ const OfflineClassCard = ({ offlineClassRefetch, setofflineClassRefetch }) => {
     setSelectedClass(data);
     setEditModalOpen(true);
   };
-
-  function convertTo12HourFormat(timestamp) {
-    const date = new Date(timestamp);
-    let hours = date.getUTCHours();
-    let minutes = date.getUTCMinutes();
-    const meridiem = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return hours + ':' + minutes + ' ' + meridiem;
-  }
 
   const handleDelete = useCallback((itemId) => {
     setSelectedOfflineClassDeleteId(itemId);
@@ -77,7 +55,7 @@ const OfflineClassCard = ({ offlineClassRefetch, setofflineClassRefetch }) => {
   return (
     <>
       <Grid container spacing={2}>
-        {offlineClasses?.data?.map((card, index) => (
+        {offlineClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
               <Grid container direction="column" spacing={1}>
@@ -125,7 +103,7 @@ const OfflineClassCard = ({ offlineClassRefetch, setofflineClassRefetch }) => {
                   </Box>
                   <Box sx={{ ml: 1 }}>
                     <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                      {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                      {card?.class_date} / {card?.start_time} to {card?.end_time}{' '}
                     </Typography>
                   </Box>
                 </Grid>
