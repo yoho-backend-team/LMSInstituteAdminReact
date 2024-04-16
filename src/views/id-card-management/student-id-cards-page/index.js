@@ -40,8 +40,6 @@ const StudentIdCard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [studentIdRefetch, setStudentIdRefetch] = useState(false);
 
-  console.log('id cards', StudentIdCards);
-
   useEffect(() => {
     dispatch(getAllStudentIdCards({ branch_id: selectedBranchId }));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
@@ -59,8 +57,6 @@ const StudentIdCard = () => {
       student_id: statusValue?.student?.student_id
     };
 
-    console.log('data:', data);
-
     if (!data.student_id) {
       toast.error('Student ID is missing.');
       return;
@@ -76,7 +72,6 @@ const StudentIdCard = () => {
   };
 
   const handleStatusValue = (event, student) => {
-    console.log('statusValue:', student);
     setStatusChangeDialogOpen(true);
     setStatusValue(student);
   };
@@ -103,166 +98,160 @@ const StudentIdCard = () => {
 
   return (
     <>
-      <Grid>
-        <Grid container spacing={1} className="match-height">
-          <Grid item xs={12} sm={12}>
-            <StudentFilterCard
-              selectedBranchId={selectedBranchId}
-              searchValue={searchValue}
-              handleSearch={handleSearch}
-              filterstatusValue={filterstatusValue}
-              handleFilterByStatus={handleFilterByStatus}
-            />
-          </Grid>
+      <Grid container>
+        <Grid item xs={12} sm={12}>
+          <StudentFilterCard
+            selectedBranchId={selectedBranchId}
+            searchValue={searchValue}
+            handleSearch={handleSearch}
+            filterstatusValue={filterstatusValue}
+            handleFilterByStatus={handleFilterByStatus}
+          />
+        </Grid>
+        <Grid item xs={12}>
           {StudentIdCardsLoading ? (
             <IdCardSkeleton />
           ) : (
-            <Grid>
-              <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-                {StudentIdCards?.data?.map((item, index) => (
+            <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+              {StudentIdCards?.data?.map((item, index) => (
+                <Grid
+                  key={index}
+                  item
+                  xs={12}
+                  sm={3}
+                  sx={{
+                    position: 'relative',
+                    width: '100%',
+                    height: 450,
+                    display: 'block'
+                  }}
+                >
                   <Grid
-                    key={index}
-                    item
-                    xs={12}
-                    sm={3}
+                    onMouseEnter={() => flip(index)}
+                    onMouseLeave={() => flip(null)}
+                    className={`${index === flippedIndex ? 'flipped' : ''}`}
                     sx={{
                       position: 'relative',
-                      width: '100%',
-                      height: 440,
-                      display: 'block'
-                    }}
-                  >
-                    <Grid
-                      onMouseEnter={() => flip(index)}
-                      onMouseLeave={() => flip(null)}
-                      className={`${index === flippedIndex ? 'flipped' : ''}`}
-                      sx={{
-                        position: 'relative',
-                        '&.flipped': {
-                          '.front': {
-                            transform: 'rotateY(180deg)'
-                          },
-                          '.back': {
-                            transform: 'rotateY(0deg)'
-                          }
-                        },
-                        '.front, .back': {
-                          position: 'absolute',
-                          backfaceVisibility: 'hidden',
-                          transition: 'transform ease 500ms'
-                        },
+                      '&.flipped': {
                         '.front': {
-                          transform: 'rotateY(0deg)'
+                          transform: 'rotateY(180deg)'
                         },
                         '.back': {
-                          transform: 'rotateY(-180deg)'
+                          transform: 'rotateY(0deg)'
                         }
-                      }}
-                    >
-                      <Card className="front" sx={{ width: '100%', minHeight: 420 }}>
-                        <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                          {item.student.image ? (
-                            <CustomAvatar
-                              src={item.student.image}
-                              alt={item.student.first_name}
-                              variant="light"
-                              sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
-                            />
-                          ) : (
-                            <CustomAvatar
-                              skin="light"
-                              color={statusColors.active}
-                              sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
-                            >
-                              {getInitials(item.student.first_name)}
-                            </CustomAvatar>
-                          )}
-                          <Typography variant="h4" sx={{ mb: 2 }}>
-                            {item.student.first_name} {item.student.last_name}
-                          </Typography>
-                          <CustomChip rounded skin="light" size="small" label={`${item.student.email}`} color={statusColors.active} />
-                          <Box mt={3}>
-                            <img
-                              style={{ borderRadius: '10px' }}
-                              height={100}
-                              src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
-                              alt="qrCode"
-                            />
+                      },
+                      '.front, .back': {
+                        position: 'absolute',
+                        backfaceVisibility: 'hidden',
+                        transition: 'transform ease 500ms'
+                      },
+                      '.front': {
+                        transform: 'rotateY(0deg)'
+                      },
+                      '.back': {
+                        transform: 'rotateY(-180deg)'
+                      }
+                    }}
+                  >
+                    <Card className="front" sx={{ width: '100%', minHeight: 435 }}>
+                      <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                        {item.student.image ? (
+                          <CustomAvatar
+                            src={item.student.image}
+                            alt={item.student.first_name}
+                            variant="light"
+                            sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
+                          />
+                        ) : (
+                          <CustomAvatar skin="light" color={statusColors.active} sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}>
+                            {getInitials(item.student.first_name)}
+                          </CustomAvatar>
+                        )}
+                        <Typography variant="h4" sx={{ mb: 2 }}>
+                          {item.student.first_name} {item.student.last_name}
+                        </Typography>
+                        <CustomChip rounded skin="light" size="small" label={`${item.student.email}`} color={statusColors.active} />
+                        <Box mt={3}>
+                          <img
+                            style={{ borderRadius: '10px' }}
+                            height={100}
+                            src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
+                            alt="qrCode"
+                          />
+                        </Box>
+                      </CardContent>
+                    </Card>
+                    <Card className="back" sx={{ width: '100%', minHeight: 435 }}>
+                      <CardContent sx={{ pb: 2 }}>
+                        <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+                          Details
+                        </Typography>
+                        <Box sx={{ pt: 2 }}>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>
+                              {item.student.first_name} {item.student.last_name}
+                            </Typography>
                           </Box>
-                        </CardContent>
-                      </Card>
-                      <Card className="back" sx={{ width: '100%', minHeight: 420 }}>
-                        <CardContent sx={{ pb: 2 }}>
-                          <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
-                            Details
-                          </Typography>
-                          <Box sx={{ pt: 2 }}>
-                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>
-                                {item.student.first_name} {item.student.last_name}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.student.email}</Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                              <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>student</Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}> ID:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.student.student_id}</Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{item.student.phone_no}</Typography>
-                            </Box>
-
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                              <Typography
-                                sx={{
-                                  color: 'text.secondary',
-                                  overflow: 'hidden',
-                                  display: '-webkit-box',
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: 'vertical',
-                                  textOverflow: 'ellipsis'
-                                }}
-                              >
-                                {item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state},{' '}
-                                {item.student.pincode},
-                              </Typography>
-                            </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.student.email}</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
+                            <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>student</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}> ID:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.student.student_id}</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.student.phone_no}</Typography>
                           </Box>
 
-                          <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-                            <TextField
-                              size="small"
-                              select
-                              width={100}
-                              label="Status"
-                              SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
                             >
-                              <MenuItem value="1">Active</MenuItem>
-                              <MenuItem value="0">Inactive</MenuItem>
-                            </TextField>
+                              {item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state},{' '}
+                              {item.student.pincode},
+                            </Typography>
                           </Box>
-                        </CardContent>
-                      </Card>
-                    </Grid>
+                        </Box>
+
+                        <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+                          <TextField
+                            size="small"
+                            select
+                            width={100}
+                            label="Status"
+                            SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
+                          >
+                            <MenuItem value="1">Active</MenuItem>
+                            <MenuItem value="0">Inactive</MenuItem>
+                          </TextField>
+                        </Box>
+                      </CardContent>
+                    </Card>
                   </Grid>
-                ))}
-              </Grid>
-              <Grid container justifyContent="flex-end" mt={2}>
-                <div className="demo-space-y">
-                  <Pagination count={10} color="primary" />
-                </div>
-              </Grid>
+                </Grid>
+              ))}
             </Grid>
           )}
+        </Grid>
+        <Grid item xs={12} mt={2}>
+          <Grid container justifyContent="flex-end">
+            <Pagination count={10} color="primary" />
+          </Grid>
         </Grid>
       </Grid>
 
