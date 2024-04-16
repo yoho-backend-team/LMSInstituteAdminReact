@@ -48,7 +48,6 @@ const ViewAttendance = () => {
     }
   };
 
-  console.log(ClassData);
   return (
     <>
       {loading ? (
