@@ -60,8 +60,6 @@ const RefundAddDrawer = (props) => {
 
   const [students, setStudents] = useState([]);
 
-  console.log(activeStudentsFee);
-
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
@@ -79,8 +77,6 @@ const RefundAddDrawer = (props) => {
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getAllBatches(data);
-
-    console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
 
     result.data.data.forEach((batch) => {
@@ -98,8 +94,6 @@ const RefundAddDrawer = (props) => {
     try {
       const data = { student_id: studentId };
       const result = await getFeeByStudentId(data);
-
-      console.log('student fees : ', result.data.data);
       setActiveStudentsFee(result.data.data);
     } catch (error) {
       console.error('Error fetching student fees:', error);
@@ -127,7 +121,6 @@ const RefundAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
-      console.log('Form data:', data);
       try {
         const InputData = {
           student_id: data.student,

@@ -6,7 +6,6 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 
 const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
-  console.log(selectedRowDetails);
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
