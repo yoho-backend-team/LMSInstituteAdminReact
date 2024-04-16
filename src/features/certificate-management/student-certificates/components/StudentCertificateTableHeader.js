@@ -8,8 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,7 +20,6 @@ const StudentCertificateTableHeader = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
 
-  const courses = useSelector(selectCourses);
   const batch = useSelector(selectBatches);
 
   useEffect(() => {
@@ -32,12 +30,20 @@ const StudentCertificateTableHeader = (props) => {
     );
   }, [dispatch, selectedBranchId]);
 
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId]);
+    getCourses(data);
+  }, [selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
 
   const handleSearch = useCallback(
     (e) => {
@@ -118,7 +124,7 @@ const StudentCertificateTableHeader = (props) => {
                   </Grid>
 
                   <Grid item sm={4} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
-                    <Button  onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+                    <Button onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Student Certificate
                     </Button>
