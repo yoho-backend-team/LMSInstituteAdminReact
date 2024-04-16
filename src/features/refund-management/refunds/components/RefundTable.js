@@ -13,8 +13,7 @@ import Icon from 'components/icon';
 import RefundDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -114,14 +113,12 @@ const RefundTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const [refetch, setRefetch] = useState(false);
-  console.log(setRefetch);
+
   const dispatch = useDispatch();
   const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
   const StudentFeeRefundsLoading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(studentFeeRefunds);
 
   useEffect(() => {
     dispatch(
@@ -141,7 +138,6 @@ const RefundTable = () => {
 
   const toggleRefundViewDrawer = () => {
     setRefundViewUserOpen(!refundViewOpen);
-    console.log('Toggle drawer');
   };
 
   const [refundDeleteModelOpen, setRefundDeleteModelOpen] = useState(false);
@@ -198,17 +194,20 @@ const RefundTable = () => {
     }
   ];
 
+  const [batches, setBatches] = useState([]);
   useEffect(() => {
-    dispatch(
-      getAllBatches({
-        branch_id: selectedBranchId
-      })
-    );
-  }, [dispatch, selectedBranchId]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
 
-  const batch = useSelector(selectBatches);
-
-  console.log(studentFeeRefunds);
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
+    }
+  };
 
   return (
     <DatePickerWrapper>
@@ -221,20 +220,20 @@ const RefundTable = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batch}
+                    options={batches}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       let data = { branch_id: selectedBranchId };
                       if (newValue) {
                         data = {
-                          batch_id: newValue.batch.batch_id,
+                          batch_id: newValue.batch_id,
                           branch_id: selectedBranchId
                         };
                       }
                       dispatch(getAllStudentFeeRefunds(data));
                     }}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
+                    getOptionLabel={(option) => option.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label="Batches" placeholder="Favorites" />}
                   />
                 </Grid>
@@ -255,7 +254,7 @@ const RefundTable = () => {
                 autoHeight
                 pagination
                 getRowHeight={() => 'auto'}
-                rows={studentFeeRefunds}
+                rows={studentFeeRefunds?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}

@@ -6,16 +6,15 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import format from 'date-fns/format';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+// import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllLiveClasses } from '../redux/liveClassThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -30,13 +29,40 @@ const CustomInput = forwardRef((props, ref) => {
 const LiveClassFilterCard = (props) => {
   const { selectedBranchId } = props;
   const dispatch = useDispatch();
-  const courses = useSelector(selectCourses);
-  const batch = useSelector(selectBatches);
   const [statusValue, setStatusValue] = useState('');
   const [startDateRange, setStartDateRange] = useState(null);
   const [dates, setDates] = useState([]);
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
+
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getCourses(data);
+  }, [selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
+  const [batches, setBatches] = useState([]);
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
+
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
+    }
+  };
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -62,34 +88,11 @@ const LiveClassFilterCard = (props) => {
     setEndDateRange(end);
   };
 
-  useEffect(() => {
-    const data = {
-      type: 'live-classes',
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllLiveClasses(data));
-  }, [dispatch, selectedBranchId]);
-
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllLiveClasses(data));
   };
-
-  useEffect(() => {
-    dispatch(
-      getAllBatches({
-        branch_id: selectedBranchId
-      })
-    );
-  }, [dispatch, selectedBranchId]);
-
-  useEffect(() => {
-    const data = {
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId]);
 
   const handleBatchChange = (e, newValue) => {
     if (!newValue) {
@@ -102,7 +105,7 @@ const LiveClassFilterCard = (props) => {
     } else {
       setSelectedBatch(newValue);
       const data = {
-        batch_id: newValue.batch.batch_id,
+        batch_id: newValue.batch_id,
         branch_id: selectedBranchId
       };
       dispatch(getAllLiveClasses(data));
@@ -142,13 +145,13 @@ const LiveClassFilterCard = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batch}
+                    options={batches}
                     filterSelectedOptions
                     onChange={handleBatchChange}
                     value={selectedBatch}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                    getOptionLabel={(option) => option.batch_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Batches" />}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>

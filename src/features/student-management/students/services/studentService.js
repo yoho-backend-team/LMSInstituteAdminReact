@@ -16,7 +16,7 @@ export const getAllStudentsByBatch = async (data) => {
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return response;
+      return { success: true, data: response?.data?.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch Students. Status: ${response.status}`);
@@ -52,27 +52,6 @@ export const getAllStudents = async (data) => {
     console.error('Error in getAllStudents:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
-
-export const searchStudents = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchStudents:', error);
     throw error;
   }
 };

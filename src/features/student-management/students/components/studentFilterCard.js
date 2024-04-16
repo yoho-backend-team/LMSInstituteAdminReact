@@ -6,14 +6,13 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from '../redux/studentThunks';
 
 const StudentFilter = (props) => {
@@ -21,7 +20,6 @@ const StudentFilter = (props) => {
   const [searchValue, setSearchValue] = useState('');
 
   const [statusValue, setStatusValue] = useState('');
-  const courses = useSelector(selectCourses);
   const dispatch = useDispatch();
   const batch = useSelector(selectBatches);
 
@@ -31,12 +29,20 @@ const StudentFilter = (props) => {
     dispatch(getAllStudents(data));
   };
 
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId]);
+    getCourses(data);
+  }, [selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
 
   useEffect(() => {
     dispatch(

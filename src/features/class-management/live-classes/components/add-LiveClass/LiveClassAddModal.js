@@ -13,12 +13,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
+
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -65,8 +65,10 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   };
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
-    const result = await getAllBatches(data);
-    setActiveBatches(result.data.data);
+    const result = await getBatchesByCourse(data);
+    if (result?.success) {
+      setActiveBatches(result?.data);
+    }
   };
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
@@ -77,11 +79,6 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveNonTeachingStaffs(data);
     setActiveNonTeachingStaff(result.data.data);
-  };
-  const getStudentsByBatch = async (batchId) => {
-    const data = { batch_id: batchId, branch_id: selectedBranchId };
-    const result = await getAllStudents(data);
-    setStudents(result.data.data);
   };
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
@@ -168,7 +165,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       class_name: data.class_name,
       branch_id: data.branch,
       course_id: data.course,
-      batch_id: data.batch.batch.batch_id,
+      batch_id: data.batch.batch_id,
       class_date: convertDateFormat(data.class_date),
       start_time: data.start_time,
       end_time: data.end_time,
@@ -297,11 +294,9 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       {...field}
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option?.batch?.batch_name}
+                      getOptionLabel={(option) => option?.batch_name}
                       onChange={(event, newValue) => {
-                        field.onChange(newValue);
                         setValue('batch', newValue);
-                        getStudentsByBatch(newValue?.batch_id);
                       }}
                       value={field.value}
                       renderInput={(params) => (

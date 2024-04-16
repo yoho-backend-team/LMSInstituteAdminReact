@@ -15,15 +15,15 @@ import * as yup from 'yup';
 import { MenuItem, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -60,8 +60,6 @@ const RefundAddDrawer = (props) => {
 
   const [students, setStudents] = useState([]);
 
-  console.log(activeStudentsFee);
-
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
@@ -78,28 +76,24 @@ const RefundAddDrawer = (props) => {
 
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
-    const result = await getAllBatches(data);
-
-    console.log('active batches : ', result.data);
-    setActiveBatches(result.data.data);
-
-    result.data.data.forEach((batch) => {
-      getStudentsByBatch(batch.batch_id);
-    });
+    const result = await getBatchesByCourse(data);
+    if (result?.success) {
+      setActiveBatches(result?.data);
+    }
   };
 
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
-    const result = await getAllStudents(data);
-    setStudents(result.data.data);
+    const result = await getAllStudentsByBatch(data);
+    if (result?.success) {
+      setStudents(result?.data);
+    }
   };
 
   const getStudentByStudentFee = async (studentId) => {
     try {
       const data = { student_id: studentId };
       const result = await getFeeByStudentId(data);
-
-      console.log('student fees : ', result.data.data);
       setActiveStudentsFee(result.data.data);
     } catch (error) {
       console.error('Error fetching student fees:', error);
@@ -127,7 +121,6 @@ const RefundAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
-      console.log('Form data:', data);
       try {
         const InputData = {
           student_id: data.student,
@@ -219,7 +212,7 @@ const RefundAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(option) => option?.batch?.batch_name}
+                    getOptionLabel={(option) => option?.batch_name}
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
@@ -259,8 +252,8 @@ const RefundAddDrawer = (props) => {
                     helperText={errors.student?.message}
                   >
                     {students.map((student) => (
-                      <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
-                        {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                      <MenuItem key={student?.student_id} value={student?.student_id}>
+                        {`${student?.first_name} ${student?.last_name}`}
                       </MenuItem>
                     ))}
                   </TextField>

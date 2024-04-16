@@ -308,7 +308,7 @@ const SalaryTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                rows={TeachingStaffSalaries}
+                rows={TeachingStaffSalaries?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}

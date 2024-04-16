@@ -9,9 +9,9 @@ import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import CustomChip from 'components/mui/chip';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -54,20 +54,19 @@ const NotificationAddDrawer = (props) => {
 
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
-    const result = await getAllBatches(data);
+    const result = await getBatchesByCourse(data);
 
-    console.log('active batches : ', result.data);
-    setActiveBatches(result.data.data);
-
-    result.data.data.forEach((batch) => {
-      getStudentsByBatch(batch.batch_id);
-    });
+    if (result?.success) {
+      setActiveBatches(result?.data);
+    }
   };
 
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
-    const result = await getAllStudents(data);
-    setStudents(result.data.data);
+    const result = await getAllStudentsByBatch(data);
+    if (result?.success) {
+      setStudents(result?.data);
+    }
   };
 
   const Header = styled(Box)(({ theme }) => ({
@@ -122,7 +121,7 @@ const NotificationAddDrawer = (props) => {
   const onSubmit = async (data) => {
     const bodyFormData = new FormData();
     selectedStudents?.forEach((student) => {
-      bodyFormData.append('student_ids[]', student.student.student_id);
+      bodyFormData.append('student_ids[]', student.student_id);
     });
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('course', data.course.course_id);
@@ -256,7 +255,7 @@ const NotificationAddDrawer = (props) => {
                   {...field}
                   fullWidth
                   options={activeBatches}
-                  getOptionLabel={(option) => option?.batch?.batch_name}
+                  getOptionLabel={(option) => option?.batch_name}
                   onChange={(event, newValue) => {
                     field.onChange(newValue);
                     setValue('batch', newValue);
@@ -282,7 +281,7 @@ const NotificationAddDrawer = (props) => {
                   disableCloseOnSelect
                   id="select-multiple-chip"
                   options={students}
-                  getOptionLabel={(option) => option?.student?.first_name || ''}
+                  getOptionLabel={(option) => option?.first_name || ''}
                   value={value}
                   onChange={(e, newValue) => {
                     setValue('students', newValue);
@@ -310,15 +309,15 @@ const NotificationAddDrawer = (props) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option?.student?.first_name}
+                      {option?.first_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value?.map((option, index) => (
                         <CustomChip
-                          key={option?.student?.student_id}
-                          label={option?.student?.first_name}
+                          key={option?.student_id}
+                          label={option?.first_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue?.splice(index, 1);
@@ -331,7 +330,7 @@ const NotificationAddDrawer = (props) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option?.student?.student_id === value?.student?.student_id}
+                  isOptionEqualToValue={(option, value) => option?.student_id === value?.student_id}
                 />
               )}
             />

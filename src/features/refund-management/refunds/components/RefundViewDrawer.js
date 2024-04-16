@@ -6,8 +6,6 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 
 const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
-  console.log(selectedRowDetails);
-
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -50,46 +48,48 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
 
         <CardContent>
           {selectedRowDetails && (
-            <Grid item xs={12} sm={12}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
-                  <Box>
-                    <Typography variant="h4"> Refund Id</Typography>
-                    <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                      {selectedRowDetails.refund_id}
-                    </Typography>
+            <Grid container>
+              <Grid item xs={12}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+                    <Box>
+                      <Typography variant="h4"> Refund Id</Typography>
+                      <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
+                        {selectedRowDetails.refund_id}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography sx={{ fontSize: 15, color: 'primary.main' }}>{selectedRowDetails.status}</Typography>
                   </Box>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography sx={{ fontSize: 15, color: 'primary.main' }}>{selectedRowDetails.status}</Typography>
+
+                <Typography variant="h4" sx={{ mt: 6, mb: 3, color: 'text.main' }}>
+                  Student Deatails :
+                </Typography>
+
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Typography sx={{ width: 150 }}>Student Id : </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.student_id}</Typography>
                 </Box>
-              </Box>
-
-              <Typography variant="h4" sx={{ mt: 6, mb: 3, color: 'text.main' }}>
-                Student Deatails :
-              </Typography>
-
-              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Student Id : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.student_id}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Student Name : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.first_name}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Student Email : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.email}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Paid Amount : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.paid_amount}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <Typography sx={{ width: 150 }}>Payment Date : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.payment_date}</Typography>
-              </Box>
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Typography sx={{ width: 150 }}>Student Name : </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.first_name}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Typography sx={{ width: 150 }}>Student Email : </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.email}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Typography sx={{ width: 150 }}>Paid Amount : </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.paid_amount}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Typography sx={{ width: 150 }}>Payment Date : </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.payment_date}</Typography>
+                </Box>
+              </Grid>
             </Grid>
           )}
         </CardContent>
@@ -101,7 +101,7 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
 RefundViewDrawer.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
-  selectedRowDetails: PropTypes.any,
+  selectedRowDetails: PropTypes.any
 };
 
 export default RefundViewDrawer;

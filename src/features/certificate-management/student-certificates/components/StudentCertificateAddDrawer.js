@@ -6,11 +6,11 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import CoursePdfInput from 'features/content-management/course-contents/components/PdfInput';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllStudents } from 'features/student-management/students/services/studentService';
+import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -78,19 +78,18 @@ const StudentCertificateAddDrawer = (props) => {
 
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
-    const result = await getAllBatches(data);
-
-    console.log('active batches : ', result.data);
-    setActiveBatches(result.data.data);
-    result.data.data.forEach((batch) => {
-      getStudentsByBatch(batch.batch_id);
-    });
+    const result = await getBatchesByCourse(data);
+    if (result?.success) {
+      setActiveBatches(result?.data);
+    }
   };
 
   const getStudentsByBatch = async (batchId) => {
     const data = { batch_id: batchId, branch_id: selectedBranchId };
-    const result = await getAllStudents(data);
-    setStudents(result.data.data);
+    const result = await getAllStudentsByBatch(data);
+    if (result?.success) {
+      setStudents(result?.data);
+    }
   };
 
   const {
@@ -232,7 +231,7 @@ const StudentCertificateAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(option) => option?.batch?.batch_name}
+                    getOptionLabel={(option) => option?.batch_name}
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
@@ -269,8 +268,8 @@ const StudentCertificateAddDrawer = (props) => {
                     helperText={errors.student?.message}
                   >
                     {students.map((student) => (
-                      <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
-                        {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                      <MenuItem key={student?.student_id} value={student?.student_id}>
+                        {`${student?.first_name} ${student?.last_name}`}
                       </MenuItem>
                     ))}
                   </TextField>
