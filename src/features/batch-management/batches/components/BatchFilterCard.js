@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { useEffect } from 'react';
-import { useDispatch, } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllBatches } from '../redux/batchThunks';
 import PropTypes from 'prop-types';
@@ -94,17 +94,16 @@ const BatchFilterCard = (props) => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
+        <Grid item xs={12} sm={12}>
+          <Card >
             <CardHeader title="Batches" />
             <CardContent>
               <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     select
                     fullWidth
-                    label="Status"
+                    label="Search By Status"
                     defaultValue={''}
                     SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
@@ -113,7 +112,7 @@ const BatchFilterCard = (props) => {
                     <MenuItem value="0">Inactive</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <DatePicker
                     isClearable
                     selectsRange
@@ -128,7 +127,7 @@ const BatchFilterCard = (props) => {
                       <CustomInput
                         dates={dates}
                         setDates={setDates}
-                        label="Start date End date"
+                        label="Search Between Dates"
                         end={endDateRange}
                         start={startDateRange}
                       />
@@ -136,7 +135,7 @@ const BatchFilterCard = (props) => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
                     onChange={(e, newValue) => {
@@ -148,17 +147,17 @@ const BatchFilterCard = (props) => {
                     }}
                     options={courses}
                     getOptionLabel={(option) => option.course_name || ''}
-                    renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
+                    renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
                   />
                 </Grid>
-
-                <Grid item xs={12} sm={3}>
+                <Grid xs={12} sm={4}></Grid>
+                <Grid item xs={12} sm={4}>
                   <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
                 </Grid>
 
-                <Grid item xs={12} sm={3} sx={{ mt: 1 }}>
+                <Grid item xs={12} sm={4} > 
                   <Box component={Link} to={'batches/add'}>
-                    <Button variant="contained" size="medium" fullWidth>
+                    <Button variant="contained" size="medium" fullWidth sx={{py:1.7,borderRadius:2}}>
                       Add New Batch
                     </Button>
                   </Box>
@@ -167,7 +166,7 @@ const BatchFilterCard = (props) => {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+     
     </DatePickerWrapper>
   );
 };

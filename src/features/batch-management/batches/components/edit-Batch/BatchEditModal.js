@@ -101,11 +101,19 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       toast.success(result.message);
     } else {
       let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
+      if (Array.isArray(result.message)) {
+        result.message.forEach((error) => {
           errorMessage += `${error}\n`;
         });
-      });
+      } else if (typeof result.message === 'object' && result.message !== null) {
+        Object.values(result.message).forEach((errors) => {
+          errors.forEach((error) => {
+            errorMessage += `${error}\n`;
+          });
+        });
+      } else {
+        errorMessage = 'Unexpected message format';
+      }
       toast.error(errorMessage.trim());
     }
     [batches, setBatchRefetch];

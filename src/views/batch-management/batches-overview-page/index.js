@@ -17,9 +17,12 @@ import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import CustomChip from 'components/mui/chip';
 
 const CardStyle = styled(Card)(({ theme }) => ({
-  background: theme.palette.secondary.light,
+  border: '2px dotted',
+  borderColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main,
+  background: theme.palette.mode === 'light' ? theme.palette.secondary.light : theme.palette.dark.main,
   marginTop: '16px',
   marginBottom: '16px',
   overflow: 'hidden',
@@ -29,14 +32,13 @@ const CardStyle = styled(Card)(({ theme }) => ({
     position: 'absolute',
     width: '200px',
     height: '200px',
-    border: '19px solid ',
+    border: '100px solid ',
     borderColor: theme.palette.primary.main,
     borderRadius: '50%',
-    top: '-86px',
-    right: '-100px'
+    top: '215px',
+    right: '-120px'
   }
 }));
-
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 6,
@@ -46,7 +48,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
   [`& .${linearProgressClasses.bar}`]: {
     borderRadius: 5,
-    backgroundColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main
+    backgroundColor: theme.palette.primary.main
   }
 }));
 
@@ -131,7 +133,7 @@ const Batch = () => {
                   options={[
                     {
                       text: 'View',
-                      icon: <Icon icon="tabler:eye" fontSize={20} />,
+                      // icon: <Icon icon="tabler:eye" fontSize={20} />,
                       menuItemProps: {
                         component: Link,
                         to: `batches/${item?.batch?.batch_id}`,
@@ -140,7 +142,7 @@ const Batch = () => {
                     },
                     {
                       text: 'Edit',
-                      icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
+                      // icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
                       menuItemProps: {
                         onClick: () => {
                           setSelectedBatch(item);
@@ -150,7 +152,7 @@ const Batch = () => {
                     },
                     {
                       text: 'Delete',
-                      icon: <Icon color="primary" icon="tabler:archive-filled" fontSize={20} />,
+                      // icon: <Icon color="primary" icon="tabler:archive-filled" fontSize={20} />,
                       menuItemProps: {
                         onClick: () => handleDelete(item.batch?.id)
                       }
@@ -176,7 +178,7 @@ const Batch = () => {
             </Grid>
 
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
-              <Icon fontSize="1.25rem" icon="tabler:book" />
+              <Icon fontSize="1.25rem" icon="tabler:books" />
 
               <Typography
                 variant="h5"
@@ -193,21 +195,10 @@ const Batch = () => {
                 {item?.batch?.institute_course?.institute_course_branch?.course_name}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-              <Icon fontSize="1.25rem" icon="tabler:calendar-month" />
-              <Box sx={{ alignItems: 'center', mr: 3 }}>
-                <Typography sx={{ ml: 1 }} variant="h5">
-                  Start Date
-                </Typography>
-                <Typography sx={{ color: 'text.secondary', ml: 1 }}>{item?.batch?.start_date}</Typography>
-              </Box>
-              <Icon fontSize="1.25rem" icon="tabler:calendar-month" />
-              <Box sx={{ alignItems: 'center' }}>
-                <Typography sx={{ ml: 1 }} variant="h5">
-                  End Date
-                </Typography>
-                <Typography sx={{ color: 'text.secondary', ml: 1 }}>{item?.batch?.end_date}</Typography>
-              </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2,justifyContent:'space-around' }}>
+              <CustomChip label={item?.batch?.start_date} size="small" color="success" variant="tonal" skin="dark" rounded />
+              <div className="connect" />
+              <CustomChip label={item?.batch?.end_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Icon fontSize="1.25rem" icon="tabler:users" />
@@ -249,15 +240,15 @@ const Batch = () => {
 
   return (
     <>
-      <Grid container>
-        <Grid container spacing={1} className="match-height">
-          <Grid item>
+      <Grid>
+        <Grid container className="match-height">
+          <Grid item xs={12}>
             <BatchFilterCard selectedBranchId={selectedBranchId} setBatchRefetch={setBatchRefetch} />
           </Grid>
           {batchLoading ? (
             <BatchSkeleton />
           ) : (
-            <Grid item container>
+            <Grid>
               {' '}
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {renderCards()}

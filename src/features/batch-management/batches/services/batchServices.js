@@ -127,7 +127,7 @@ export const deleteBatch = async (data) => {
 
 export const updateBatch = async (data) => {
   try {
-    const response = await axios.put(`${BATCH_API_ENDPOINT}/update`, data, {
+    const response = await axios.post(`${BATCH_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
