@@ -4,8 +4,8 @@ import FeesTable from 'features/payment-management/fees/components/FeesTable';
 const Fee = () => {
   return (
     <>
-      <Grid>
-        <Grid container spacing={1} className="match-height">
+      <Grid container spacing={1} className="match-height">
+        <Grid item xs={12} sm={12}>
           <FeesTable />
         </Grid>
       </Grid>
