@@ -17,8 +17,6 @@ const NonTeachingStaffFilterCard = (props) => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState('');
 
-  console.log(selectedBranchId);
-
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };

@@ -403,7 +403,6 @@ const StepperLinearWithValidation = () => {
                   rules={{ required: true }}
                   render={({ field: { value } }) => (
                     <Autocomplete
-                      selectAll
                       fullWidth
                       options={activeBranches}
                       getOptionLabel={(option) => option.branch_name}
@@ -482,8 +481,8 @@ const StepperLinearWithValidation = () => {
                     </div>
                   )}
                   isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  // selectAllText="Select All"
+                  // SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
 

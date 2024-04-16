@@ -65,7 +65,7 @@ const Teaching = () => {
         <StaffManagement />
       ) : (
         <Grid>
-          <Grid container xs={12} mt={1}>
+          <Grid container mt={1}>
             {teachingStaffs?.data &&
               teachingStaffs?.data?.map((item, i) => (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>

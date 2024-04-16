@@ -58,13 +58,13 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     fullWidth
                     onChange={(e, newValue) => {
                       const data = {
-                        course_id: newValue.course_id,
+                        course_id: newValue?.course_id, 
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllCourseCategories(data));
                     }}
-                    options={courses}
-                    getOptionLabel={(option) => option.course_name || ''}
+                    options={Array.isArray(courses) ? courses : []}
+                    getOptionLabel={(option) => option?.course_name || ''}
                     renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                   />
                 </Grid>

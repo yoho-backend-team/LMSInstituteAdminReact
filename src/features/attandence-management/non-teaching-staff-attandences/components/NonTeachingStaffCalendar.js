@@ -22,7 +22,7 @@ const TeachingStaffCalendar = (props) => {
 
   // ** Refs
   const calendarRef = useRef();
-  console.log('Staff Attendance : ', attendances);
+
   useEffect(() => {
     if (calendarApi === null) {
       // @ts-ignore

@@ -28,7 +28,7 @@ const StepperLinearWithValidation = () => {
   const steps = [
     {
       title: 'Student Information',
-      subtitle: 'Add Student Details'
+      subtitle: 'Edit Student Details'
     }
   ];
 
@@ -36,6 +36,7 @@ const StepperLinearWithValidation = () => {
     return <TextField fullWidth inputRef={ref} {...props} />;
   });
 
+  
   const personalSchema = yup.object().shape({
     first_name: yup
       .string()

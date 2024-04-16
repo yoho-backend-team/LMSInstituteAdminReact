@@ -32,7 +32,7 @@ const TeachingStaffAddEventSidebar = (props) => {
       setSelectedDate(selected?.date);
     }
   }, [selected]);
-  console.log(staff);
+
 
   const { control, setValue, clearErrors, handleSubmit } = useForm({ defaultValues: defaultState });
 
