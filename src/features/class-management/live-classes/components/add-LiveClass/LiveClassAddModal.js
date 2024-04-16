@@ -15,7 +15,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
@@ -59,10 +59,11 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     setActiveBranches(result.data.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
+    const result = await getAllCourses({ branch_id: selectedBranchId });
 
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };

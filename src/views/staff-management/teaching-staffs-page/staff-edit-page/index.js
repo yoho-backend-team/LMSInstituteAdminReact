@@ -17,7 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { updateTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
@@ -121,14 +121,17 @@ const StepperLinearWithValidation = () => {
   });
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
-
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const {

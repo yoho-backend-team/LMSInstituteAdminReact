@@ -12,7 +12,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
@@ -67,7 +67,10 @@ const FeesAddDrawer = (props) => {
   }, []);
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
   const getActiveBranchesByUser = async () => {
@@ -77,11 +80,11 @@ const FeesAddDrawer = (props) => {
     setActiveBranches(result.data.data);
   };
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
-
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
@@ -116,7 +119,7 @@ const FeesAddDrawer = (props) => {
   function convertDateFormat(input) {
     var originalDate = new Date(input);
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); 
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
     var formattedDateString = year + '-' + month + '-' + day;
     return formattedDateString;
@@ -432,6 +435,6 @@ const FeesAddDrawer = (props) => {
 FeesAddDrawer.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
-  setRefetch: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 export default FeesAddDrawer;
