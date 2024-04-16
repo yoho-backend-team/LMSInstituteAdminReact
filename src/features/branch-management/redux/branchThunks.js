@@ -1,5 +1,5 @@
 // groupThunks.js
-import { getAllBranches as fetchAllBranches } from '../services/branchServices'; // Replace with your service file
+import { getAllBranchesByInstitute as fetchAllBranches } from '../services/branchServices'; // Replace with your service file
 import { setBranches, setLoading } from './branchSlice';
 // import { updateAuthBranch } from 'features/authentication/authActions';
 

@@ -3,9 +3,9 @@ import axios from 'axios';
 
 const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-management/institute-branches`;
 
-export const getAllBranches = async (data) => {
+export const getAllBranchesByInstitute = async (data) => {
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}/read?page=${data?.page}`, {
+    const response = await axios.get(`${BRANCH_API_ENDPOINT}/get-by-institute?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -31,9 +31,6 @@ export const getAllBranches = async (data) => {
 
 export const getActiveBranches = async () => {
   try {
-    // let data = {
-    //   search: ''
-    // };
     const response = await axios.get(`${BRANCH_API_ENDPOINT}/list-branch-by-auth-user`, {
       headers: {
         'Content-Type': 'application/json',
@@ -54,27 +51,6 @@ export const getActiveBranches = async () => {
     console.error('Error in getActiveBranches:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
-
-export const searchBranches = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchBranches:', error);
     throw error;
   }
 };
@@ -122,7 +98,6 @@ export const deleteBranch = async (data) => {
 };
 
 export const updateBranch = async (data) => {
-  console.log(data);
   try {
     const response = await axios.post(`${BRANCH_API_ENDPOINT}/update`, data, {
       headers: {
@@ -142,10 +117,11 @@ export const updateBranch = async (data) => {
     throw error;
   }
 };
+
 export const updateBranchStatus = async (data) => {
   console.log(data);
   try {
-    const response = await axios.post(`${BRANCH_API_ENDPOINT}/status`, data, {
+    const response = await axios.post(`${BRANCH_API_ENDPOINT}/status-change`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

@@ -5,7 +5,7 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 
 export const getAllBatches = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/read-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -57,6 +57,7 @@ export const getBatchDetails = async (data) => {
     throw error;
   }
 };
+
 export const getAllActiveBatchesByCourse = async (data) => {
   try {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-course-id`, {
@@ -83,27 +84,6 @@ export const getAllActiveBatchesByCourse = async (data) => {
   }
 };
 
-export const searchBatches = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchBatches:', error);
-    throw error;
-  }
-};
-
 export const addBatch = async (data) => {
   try {
     const response = await axios.post(`${BATCH_API_ENDPOINT}/create`, data, {
@@ -123,27 +103,6 @@ export const addBatch = async (data) => {
     throw error;
   }
 };
-
-// export const deleteBatch = async (batchId) => {
-//   try {
-//     const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${localStorage.getItem('token')}`
-//       },
-//       params: { id: batchId }
-//     });
-
-//     if (response.data.status) {
-//       return { success: true, message: 'Batch deleted successfully' };
-//     } else {
-//       return { success: false, message: 'Failed to delete batch' };
-//     }
-//   } catch (error) {
-//     console.error('Error in deleteBatch:', error);
-//     throw error;
-//   }
-// };
 
 export const deleteBatch = async (data) => {
   try {
@@ -189,7 +148,7 @@ export const updateBatch = async (data) => {
 
 export const updateBatchStatus = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/status`, data, {
+    const response = await axios.post(`${BATCH_API_ENDPOINT}/status-change`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
