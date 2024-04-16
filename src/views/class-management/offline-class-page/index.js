@@ -20,7 +20,7 @@ const OfflineClass = () => {
       branch_id: selectedBranchId
     };
     dispatch(getAllOfflineClasses(data));
-  }, [dispatch, selectedBranchId]);
+  }, [dispatch, selectedBranchId, offlineClassRefetch]);
   return (
     <>
       <Grid>
