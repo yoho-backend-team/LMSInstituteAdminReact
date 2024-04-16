@@ -12,6 +12,7 @@ export const getAllOfflineClasses = async (data) => {
       },
       params: data
     });
+    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {

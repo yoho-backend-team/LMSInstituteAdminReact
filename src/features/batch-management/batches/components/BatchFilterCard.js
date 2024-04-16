@@ -11,10 +11,9 @@ import DatePicker from 'react-datepicker';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllBatches } from '../redux/batchThunks';
 import PropTypes from 'prop-types';
@@ -69,14 +68,20 @@ const BatchFilterCard = (props) => {
   };
 
   const dispatch = useDispatch();
-  const courses = useSelector(selectCourses);
-
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId]);
+    getCourses(data);
+  }, [selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
 
   const handleSearch = useCallback(
     (e) => {
