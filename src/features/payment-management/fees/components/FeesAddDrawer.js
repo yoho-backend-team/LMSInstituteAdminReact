@@ -238,185 +238,185 @@ const FeesAddDrawer = (props) => {
                 </ButtonStyled>
               </div>
             </Box>
+            <Grid container>
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <Controller
+                  name="branch"
+                  control={control}
+                  rules={{ required: 'Branch field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeBranches}
+                      getOptionLabel={(branch) => branch.branch_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.branch_id);
+                        getActiveCoursesByBranch(newValue?.branch_id);
+                      }}
+                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="branch"
-                control={control}
-                rules={{ required: 'Branch field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeBranches}
-                    getOptionLabel={(branch) => branch.branch_name}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?.branch_id);
-                      getActiveCoursesByBranch(newValue?.branch_id);
-                    }}
-                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
-                    )}
-                  />
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <Controller
+                  name="course"
+                  control={control}
+                  rules={{ required: 'Course field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeCourse}
+                      getOptionLabel={(course) => course.course_name}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.course_id);
+                        getActiveBatchesByCourse(newValue?.course_id);
+                      }}
+                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <Controller
+                  name="batch"
+                  control={control}
+                  rules={{ required: 'Batch field is required' }}
+                  render={({ field }) => (
+                    <Autocomplete
+                      {...field}
+                      fullWidth
+                      options={activeBatches}
+                      getOptionLabel={(option) => option?.batch?.batch_name}
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue);
+                        setValue('batch', newValue);
+                        getStudentsByBatch(newValue?.batch_id);
+                      }}
+                      value={field.value}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          sx={{ mb: 2 }}
+                          label="Batch"
+                          error={Boolean(errors.batch)}
+                          helperText={errors.batch?.message}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <Controller
+                  name="student"
+                  control={control}
+                  rules={{ required: 'Student field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <TextField
+                      select
+                      fullWidth
+                      label="Student"
+                      value={value}
+                      onChange={onChange}
+                      error={Boolean(errors.student)}
+                      helperText={errors.student?.message}
+                    >
+                      {students.map((student) => (
+                        <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
+                          {`${student?.student?.first_name} ${student?.student?.last_name}`}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={6} sx={{ mb: 2 }}>
+                <Controller
+                  name="payment_date"
+                  control={control}
+                  rules={{ required: 'Payment Date field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <DatePicker
+                      selected={value}
+                      id="date-time-picker"
+                      timeFormat="HH:mm"
+                      className="full-width-datepicker"
+                      onChange={onChange}
+                      placeholderText="Click to select a date"
+                      customInput={<CustomInput label="Payment Date" />}
+                    />
+                  )}
+                />
+                {errors.payment_date && (
+                  <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date?.message}</p>
                 )}
-              />
-            </Grid>
+              </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="course"
-                control={control}
-                rules={{ required: 'Course field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeCourse}
-                    getOptionLabel={(course) => course.course_name}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?.course_id);
-                      getActiveBatchesByCourse(newValue?.course_id);
-                    }}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="transaction_id"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label="Transaction Id"
+                      type="number"
+                      error={Boolean(errors.transaction_id)}
+                      helperText={errors.transaction_id?.message}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="batch"
-                control={control}
-                rules={{ required: 'Batch field is required' }}
-                render={({ field }) => (
-                  <Autocomplete
-                    {...field}
-                    fullWidth
-                    options={activeBatches}
-                    getOptionLabel={(option) => option?.batch?.batch_name}
-                    onChange={(event, newValue) => {
-                      field.onChange(newValue);
-                      setValue('batch', newValue);
-                      getStudentsByBatch(newValue?.batch_id);
-                    }}
-                    value={field.value}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        sx={{ mb: 2 }}
-                        label="Batch"
-                        error={Boolean(errors.batch)}
-                        helperText={errors.batch?.message}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="paidAmount"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label="Paid Amount"
+                      type="number"
+                      error={Boolean(errors.paidAmount)}
+                      helperText={errors.paidAmount?.message}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="student"
-                control={control}
-                rules={{ required: 'Student field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    select
-                    fullWidth
-                    label="Student"
-                    value={value}
-                    onChange={onChange}
-                    error={Boolean(errors.student)}
-                    helperText={errors.student?.message}
-                  >
-                    {students.map((student) => (
-                      <MenuItem key={student?.student?.student_id} value={student?.student?.student_id}>
-                        {`${student?.student?.first_name} ${student?.student?.last_name}`}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="balance"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label="Balance"
+                      type="number"
+                      error={Boolean(errors.balance)}
+                      helperText={errors.balance?.message}
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
-
-            <Grid item xs={6} sx={{ mb: 2 }}>
-              <Controller
-                name="payment_date"
-                control={control}
-                rules={{ required: 'Payment Date field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <DatePicker
-                    selected={value}
-                    id="date-time-picker"
-                    timeFormat="HH:mm"
-                    className="full-width-datepicker"
-                    onChange={onChange}
-                    placeholderText="Click to select a date"
-                    customInput={<CustomInput label="Payment Date" />}
-                  />
-                )}
-              />
-              {errors.payment_date && (
-                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date?.message}</p>
-              )}
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="transaction_id"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Transaction Id"
-                    type="number"
-                    error={Boolean(errors.transaction_id)}
-                    helperText={errors.transaction_id?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="paidAmount"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Paid Amount"
-                    type="number"
-                    error={Boolean(errors.paidAmount)}
-                    helperText={errors.paidAmount?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="balance"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Balance"
-                    type="number"
-                    error={Boolean(errors.balance)}
-                    helperText={errors.balance?.message}
-                  />
-                )}
-              />
-            </Grid>
-
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
                 Submit

@@ -65,7 +65,6 @@ const FeesEditDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-
   useEffect(() => {
     if (selectedRows) {
       setValue('logo', selectedRows.selectedImage || '');
@@ -85,13 +84,11 @@ const FeesEditDrawer = (props) => {
     return formattedDateString;
   }
 
-
   const handleClose = () => {
     setSelectedImage(null);
     reset();
     toggle();
   };
-
 
   // Form submission handler
   const onSubmit = useCallback(async (data) => {
@@ -142,8 +139,6 @@ const FeesEditDrawer = (props) => {
   };
 
   console.log(selectedDate);
-
-
 
   const handleStatusChange = (e) => {
     setSelectedStatus(e.target.value);
@@ -225,74 +220,76 @@ const FeesEditDrawer = (props) => {
                 </ButtonStyled>
               </div>
             </Box>
+            <Grid container>
+              <Grid item xs={12} sm={12}>
+                <TextField sx={{ mb: 2 }} defaultValue={'0'} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
+                  <MenuItem value="0">Paid</MenuItem>
+                  <MenuItem value="1">Refund</MenuItem>
+                  <MenuItem value="2">Pending</MenuItem>
+                </TextField>
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <TextField sx={{ mb: 2 }} defaultValue={'0'} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
-                <MenuItem value="0">Paid</MenuItem>
-                <MenuItem value="1">Refund</MenuItem>
-                <MenuItem value="2">Pending</MenuItem>
-              </TextField>
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="transaction_id"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label="Transaction Id"
+                      type="number"
+                      error={Boolean(errors.transaction_id)}
+                      helperText={errors.transaction_id?.message}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="transaction_id"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    label="Transaction Id"
-                    type="number"
-                    error={Boolean(errors.transaction_id)}
-                    helperText={errors.transaction_id?.message}
-                  />
-                )}
-              />
-            </Grid>
+              <Grid item xs={12} sm={12}>
+                <Controller
+                  name="paid_amount"
+                  rules={{ required: true }}
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      value={value}
+                      onChange={onChange}
+                      label="Paid Amount"
+                      type="number"
+                      error={Boolean(errors.paid_amount)}
+                      helperText={errors.paid_amount?.message}
+                    />
+                  )}
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="paid_amount"
-                rules={{ required: true }}
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    sx={{ mb: 2 }}
-                    fullWidth
-                    value={value}
-                    onChange={onChange}
-                    label="Paid Amount"
-                    type="number"
-                    error={Boolean(errors.paid_amount)}
-                    helperText={errors.paid_amount?.message}
-                  />
+              <Grid item xs={6} sx={{ mb: 2 }}>
+                <Controller
+                  name="payment_date"
+                  control={control}
+                  rules={{ required: 'Payment Date field is required' }}
+                  render={({ field: { onChange } }) => (
+                    <DatePicker
+                      selected={selectedDate}
+                      id="basic-input"
+                      className="full-width-datepicker"
+                      onChange={(date) => {
+                        onChange;
+                        setSelectedDate(date);
+                      }}
+                      placeholderText="Click to select a date"
+                      customInput={<CustomInput label="Payment Date" />}
+                    />
+                  )}
+                />
+                {errors.payment_date && (
+                  <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
                 )}
-              />
-            </Grid>
-            <Grid item xs={6} sx={{ mb: 2 }}>
-              <Controller
-                name="payment_date"
-                control={control}
-                rules={{ required: 'Payment Date field is required' }}
-                render={({ field: { onChange } }) => (
-                  <DatePicker
-                    selected={selectedDate}
-                    id="basic-input"
-                    className="full-width-datepicker"
-                    onChange={(date) => {
-                      onChange;
-                      setSelectedDate(date);
-                    }}
-                    placeholderText="Click to select a date"
-                    customInput={<CustomInput label="Payment Date" />}
-                  />
-                )}
-              />
-              {errors.payment_date && (
-                <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date.message}</p>
-              )}
+              </Grid>
             </Grid>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
               <Button type="submit" variant="contained" sx={{ mr: 3 }}>
@@ -313,6 +310,6 @@ FeesEditDrawer.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
   selectedRows: PropTypes.any,
-  setRefetch: PropTypes.any,
-}; 
+  setRefetch: PropTypes.any
+};
 export default FeesEditDrawer;
