@@ -9,10 +9,11 @@ import IconButton from '@mui/material/IconButton';
 import AvatarGroup from '@mui/material/AvatarGroup';
 // import OptionsMenu from 'components/option-menu';
 
-const ClassSkeleton = ({ liveClasses }) => {
+const ClassSkeleton = () => {
+  const liveClasses = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   return (
     <>
-      <Grid container spacing={2} sx={{mt:2}}>
+      <Grid container spacing={2} sx={{ mt: 2 }}>
         {liveClasses?.map((_, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3, position: 'relative', borderTop: '4px solid #7cf2e1' }}>
@@ -61,7 +62,7 @@ const ClassSkeleton = ({ liveClasses }) => {
 
                 <Grid sx={{ mb: 1 }}>
                   <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                    <IconButton sx={{ color: 'primary.main' }} aria-label="copy-link">
+                    <IconButton aria-label="copy-link">
                       <Skeleton variant="rectangle" width={20} height={20} animation="wave" />
                     </IconButton>
                     <Typography>
@@ -76,9 +77,7 @@ const ClassSkeleton = ({ liveClasses }) => {
                       <Skeleton variant="text" width={80} height={30} animation="wave" />
                     </Button>
                   </Box>
-
                 </Grid>
-
               </Grid>
             </Card>
           </Grid>

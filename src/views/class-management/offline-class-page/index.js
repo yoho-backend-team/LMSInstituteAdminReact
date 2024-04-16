@@ -1,39 +1,40 @@
 import { Grid } from '@mui/material';
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
-import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import OfflineClassCard from 'features/class-management/offline-classes/components/OfflineClassCard';
 import OfflineClassCardHeader from 'features/class-management/offline-classes/components/OfflineClassCardHeader';
 import OfflineClassFilterCard from 'features/class-management/offline-classes/components/OfflineClassFilterCard';
+import { selectOfflineClasses, selectLoading } from 'features/class-management/offline-classes/redux/offlineClassSelectors';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllOfflineClasses } from 'features/class-management/offline-classes/redux/offlineClassThunks';
 
 const OfflineClass = () => {
-  const [loading, setLoading] = useState(true);
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
-
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const liveClasses = useSelector(selectLiveClasses);
+  const offlineClasses = useSelector(selectOfflineClasses);
+  const loading = useSelector(selectLoading);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const data = {
+      type: 'offline',
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllOfflineClasses(data));
+  }, [dispatch, selectedBranchId]);
   return (
     <>
       <Grid>
         <OfflineClassFilterCard selectedBranchId={selectedBranchId} />
         <OfflineClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} />
         {loading ? (
-          <ClassSkeleton liveClasses={liveClasses} />
+          <ClassSkeleton />
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
-            <OfflineClassCard offlineClassRefetch={offlineClassRefetch} setofflineClassRefetch={setofflineClassRefetch} />
+            <OfflineClassCard
+              offlineClassRefetch={offlineClassRefetch}
+              setofflineClassRefetch={setofflineClassRefetch}
+              offlineClasses={offlineClasses?.data}
+            />
           </Grid>
         )}
       </Grid>

@@ -12,24 +12,20 @@ import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
 import LiveClassDeleteModel from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import { selectLiveClasses } from 'features/class-management/live-classes/redux/liveClassSelectors';
-import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteLiveClass } from '../services/liveClassServices';
 import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
 
-const LiveClassCard = ({ refetch, setRefetch }) => {
+const LiveClassCard = ({ setRefetch, liveClasses }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedClass, setSelectedClass] = useState('');
   const [liveclassDeleteModelOpen, setLiveclassDeleteModelOpen] = useState(false);
   const [selectedLiveclassDeleteId, setSelectedLiveclassDeleteId] = useState(null);
-  const dispatch = useDispatch();
 
   const handleDelete = useCallback((itemId) => {
     setSelectedLiveclassDeleteId(itemId);
@@ -47,30 +43,12 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
     }
   };
 
-  useEffect(() => {
-    const data = {
-      type: 'live',
-      branch_id: selectedBranchId
-    };
-    dispatch(getAllLiveClasses(data));
-  }, [dispatch, selectedBranchId, refetch]);
-
   const handleEditClose = () => {
     setEditModalOpen(false);
   };
   const handleEdit = () => {
     setEditModalOpen(true);
   };
-
-  function convertTo12HourFormat(timestamp) {
-    const date = new Date(timestamp);
-    let hours = date.getUTCHours();
-    let minutes = date.getUTCMinutes();
-    const meridiem = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    return hours + ':' + minutes + ' ' + meridiem;
-  }
 
   const handleCopyText = (text) => {
     navigator.clipboard.writeText(text);
@@ -80,7 +58,7 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
   return (
     <>
       <Grid container spacing={2}>
-        {liveClasses?.data?.map((card, index) => (
+        {liveClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
               <Grid container direction="column" spacing={1}>
@@ -128,7 +106,7 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
                   </Box>
                   <Box sx={{ ml: 1 }}>
                     <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                      {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                      {card?.class_date} / {card?.start_time} to {card?.end_time}{' '}
                     </Typography>
                   </Box>
                 </Grid>
