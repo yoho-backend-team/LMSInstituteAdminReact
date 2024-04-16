@@ -24,7 +24,6 @@ const OfflineClassCard = ({ offlineClassRefetch, setofflineClassRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const offlineClasses = useSelector(selectOfflineClasses);
-  console.log(offlineClasses);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -78,7 +77,7 @@ const OfflineClassCard = ({ offlineClassRefetch, setofflineClassRefetch }) => {
   return (
     <>
       <Grid container spacing={2}>
-        {offlineClasses?.map((card, index) => (
+        {offlineClasses?.data?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
               <Grid container direction="column" spacing={1}>

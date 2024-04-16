@@ -43,7 +43,6 @@ const ViewOfflineClass = () => {
   const filteredStudents = offlineClassData?.data?.batch_class?.batch?.institute_batch_student?.filter((student) =>
     student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  console.log(filteredStudents);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -60,7 +59,6 @@ const ViewOfflineClass = () => {
     try {
       const result = await getOfflineClassDetails(data);
       if (result.success) {
-        console.log('Offline Class:', result.data);
         setOfflineClassData(result.data);
       } else {
         console.log(result.message);
@@ -70,14 +68,11 @@ const ViewOfflineClass = () => {
     }
   };
 
-  console.log(offlineClassData);
-
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
 
   const [statusValue] = useState({});
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue?.id
@@ -90,8 +85,6 @@ const ViewOfflineClass = () => {
       toast.error(response.message);
     }
   };
-
-  console.log(handleStatusChangeApi);
 
   const columns = [
     {

@@ -33,8 +33,6 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 });
 
 const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefetch }) => {
-  console.log(offlineClasses);
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const schema = yup.object().shape({
@@ -96,8 +94,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     }
   }, [offlineClasses, setValue]);
 
-  console.log('selected ', offlineClasses?.instructors);
-
   useEffect(() => {
     if (offlineClasses && offlineClasses.instructors) {
       setSelectedInstructors(offlineClasses.instructors);
@@ -122,15 +118,11 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-
-    console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveNonTeachingStaffs(data);
-
-    console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
 
@@ -166,8 +158,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     bodyFormData.append('class_date', convertDateFormat(data.classDate));
     bodyFormData.append('start_time', data.start_time);
     bodyFormData.append('end_time', data.end_time);
-
-    console.log(data);
 
     const result = await updateOfflineClass(bodyFormData);
 

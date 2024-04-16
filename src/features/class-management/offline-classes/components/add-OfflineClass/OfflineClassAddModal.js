@@ -41,15 +41,13 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [students, setStudents] = useState([]);
-  console.log(students);
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -71,22 +69,16 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-
-    console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveNonTeachingStaffs(data);
-
-    console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
     const result = await getAllBatches(data);
-
-    console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
 
@@ -171,8 +163,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     const filteredInstructorId = data.instructor?.map((staff) => staff.staff_id);
     const filteredCoordinatorId = data.coordinator?.map((staff) => staff.staff_id);
     const dummyData = {
