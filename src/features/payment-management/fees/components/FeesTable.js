@@ -383,7 +383,7 @@ const FeesTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                rows={StudentFees}
+                rows={StudentFees?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
