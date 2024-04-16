@@ -118,7 +118,7 @@ const StudentCertificateTableHeader = (props) => {
                   </Grid>
 
                   <Grid item sm={4} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
-                    <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+                    <Button  onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Student Certificate
                     </Button>
