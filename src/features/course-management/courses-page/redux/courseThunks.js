@@ -1,5 +1,5 @@
 // coursesThunks.js
-import { getAllCourses as fetchAllCourses } from '../services/courseServices'; // Replace with your service file
+import { getAllCoursesByBranch as fetchAllCourses } from '../services/courseServices'; // Replace with your service file
 import { setCourses, setLoading } from './courseSlice';
 
 export const getAllCourses = (data) => async (dispatch) => {

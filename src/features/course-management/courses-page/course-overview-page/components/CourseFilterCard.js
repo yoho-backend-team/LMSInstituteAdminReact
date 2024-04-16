@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
-import { getAllActiveCourseCategories } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourseCategories } from 'features/course-management/categories-page/services/courseCategoryServices';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -22,7 +22,7 @@ const CourseFilter = ({ selectedBranchId }) => {
   }, []);
 
   const getAllCategories = async () => {
-    const result = await getAllActiveCourseCategories(selectedBranchId);
+    const result = await getAllCourseCategories(selectedBranchId);
     if (result.success) {
       setActiveCategories(result?.data);
     }

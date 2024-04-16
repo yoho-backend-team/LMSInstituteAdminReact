@@ -13,7 +13,7 @@ export const getAllLiveClasses = async (data) => {
       params: data
     });
 
-    console.log('getAllLiveClasses:',response);
+    console.log('getAllLiveClasses:', response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -81,7 +81,7 @@ export const deleteLiveClass = async (data) => {
       },
       params: data
     });
-    console.log(response)
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'LiveClass deleted successfully' };
     } else {
@@ -101,7 +101,7 @@ export const updateLiveClass = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-console.log('updateLiveClass:',response)
+    console.log('updateLiveClass:', response);
     if (response.data.status) {
       // console.log(response);
       return { success: true, message: 'LiveClass updated successfully' };
@@ -113,7 +113,6 @@ console.log('updateLiveClass:',response)
     throw error;
   }
 };
-
 
 export const getLiveClassDetails = async (data) => {
   try {
@@ -127,9 +126,10 @@ export const getLiveClassDetails = async (data) => {
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return{
-        success:true ,data:response?.data
-      } 
+      return {
+        success: true,
+        data: response?.data
+      };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch batch. Status: ${response.status}`);

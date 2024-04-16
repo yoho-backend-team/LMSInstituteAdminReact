@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addStudent } from 'features/student-management/students/services/studentService';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -82,7 +82,10 @@ const StepperLinearWithValidation = () => {
   const Navigate = useNavigate();
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
   const defaultPersonalValues = {
@@ -105,11 +108,12 @@ const StepperLinearWithValidation = () => {
     logo: ''
   };
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
 
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const [activeBranches, setActiveBranches] = useState([]);

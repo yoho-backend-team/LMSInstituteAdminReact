@@ -1,40 +1,11 @@
-// groupService.js
+// courseCategories.js
 import axios from 'axios';
 
 const COURSE_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/course-categories`;
 
-const COURSES_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses/active-categories`;
-
-export const getActiveCategoriesByBranch = async (data) => {
+export const getAllCourseCategoriesByInstitute = async (data) => {
   try {
-    const response = await axios.get(`${COURSES_CATEGORY_API_END_POINT}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch CourseCategories. Status: ${response.status}`);
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllCourseCategories:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
-export const getAllCourseCategories = async (data) => {
-  try {
-    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/read?page=${data?.page}`, {
+    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/get-by-institute-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -59,28 +30,6 @@ export const getAllCourseCategories = async (data) => {
     // throw error;
   }
 };
-
-export const searchCourseCategories = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchCourseCategories:', error);
-    throw error;
-  }
-};
-
 export const addCourseCategory = async (data) => {
   try {
     const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/create`, data, {
@@ -102,7 +51,6 @@ export const addCourseCategory = async (data) => {
     throw error;
   }
 };
-
 export const deleteCourseCategory = async (data) => {
   try {
     const response = await axios.delete(`${COURSE_CATEGORY_API_END_POINT}/delete`, {
@@ -124,7 +72,6 @@ export const deleteCourseCategory = async (data) => {
     throw error;
   }
 };
-
 export const updateCourseCategory = async (data) => {
   try {
     const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/update`, data, {
@@ -147,7 +94,7 @@ export const updateCourseCategory = async (data) => {
 };
 export const updateCourseCategoryStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/status`, data, {
+    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/status-change`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -162,6 +109,33 @@ export const updateCourseCategoryStatus = async (data) => {
     }
   } catch (error) {
     console.error('Error in updateCourseCategory:', error);
+    throw error;
+  }
+};
+export const getAllCourseCategories = async (data) => {
+  try {
+    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/get-all`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      },
+      params: data
+    });
+
+    console.log(response);
+
+    // Check if the response status is successful
+    if (response.data.status) {
+      return { data: response.data.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch CourseCategories. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllCourseCategories:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

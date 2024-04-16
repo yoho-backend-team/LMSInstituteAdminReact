@@ -30,7 +30,7 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
   const [liveclassDeleteModelOpen, setLiveclassDeleteModelOpen] = useState(false);
   const [selectedLiveclassDeleteId, setSelectedLiveclassDeleteId] = useState(null);
   const dispatch = useDispatch();
-  console.log(liveClasses);
+
   const handleDelete = useCallback((itemId) => {
     setSelectedLiveclassDeleteId(itemId);
     setLiveclassDeleteModelOpen(true);
@@ -71,11 +71,9 @@ const LiveClassCard = ({ refetch, setRefetch }) => {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     return hours + ':' + minutes + ' ' + meridiem;
   }
-  console.log(selectedClass);
 
   const handleCopyText = (text) => {
     navigator.clipboard.writeText(text);
-    console.log(`Link copied for card at index ${text}`);
     toast.success('Link copied to clipboard');
   };
 

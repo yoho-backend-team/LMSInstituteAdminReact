@@ -6,7 +6,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -26,12 +26,17 @@ const StudyMaterialAddDrawer = (props) => {
 
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses(selectedBranchId);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const Header = styled(Box)(({ theme }) => ({

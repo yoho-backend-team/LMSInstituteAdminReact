@@ -239,6 +239,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             value={selectedStudents}
                             onChange={(event, newValue) => {
                               setValue('students', newValue);
+                              setSelectedStudents(newValue);
                             }}
                           />
                         )}

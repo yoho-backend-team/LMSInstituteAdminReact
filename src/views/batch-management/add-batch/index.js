@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import CustomChip from 'components/mui/chip';
 import { addBatch } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveCourses, getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses, getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -66,14 +66,17 @@ const AddBatchPage = () => {
   console.log(selectedBranchId);
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
-
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   function convertDateFormat(input) {

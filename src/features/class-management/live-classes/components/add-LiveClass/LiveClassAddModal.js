@@ -15,7 +15,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
@@ -54,35 +54,28 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
+    const result = await getAllCourses({ branch_id: selectedBranchId });
 
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
   const getActiveBatchesByCourse = async (courseId) => {
     const data = { course_id: courseId, branch_id: selectedBranchId };
     const result = await getAllBatches(data);
-
-    console.log('active batches : ', result.data);
     setActiveBatches(result.data.data);
   };
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-
-    console.log('active teaching staffs : ', result.data);
     setActiveTeachingStaff(result.data.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllActiveNonTeachingStaffs(data);
-
-    console.log('active non teaching staffs : ', result.data);
     setActiveNonTeachingStaff(result.data.data);
   };
   const getStudentsByBatch = async (batchId) => {
@@ -169,8 +162,6 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
-
     const filteredInstructorId = data.instructor?.map((staff) => staff.staff_id);
     const filteredCoordinatorId = data.coordinator?.map((staff) => staff.staff_id);
     const dummyData = {

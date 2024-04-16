@@ -1,5 +1,5 @@
 // courseCategoryThunks.js
-import { getAllCourseCategories as fetchAllCourseCategories } from '../services/courseCategoryServices'; // Replace with your service file
+import { getAllCourseCategoriesByInstitute as fetchAllCourseCategories } from '../services/courseCategoryServices'; // Replace with your service file
 import { setCourseCategories, setLoading } from './courseCategorySlice';
 
 export const getAllCourseCategories = (data) => async (dispatch) => {

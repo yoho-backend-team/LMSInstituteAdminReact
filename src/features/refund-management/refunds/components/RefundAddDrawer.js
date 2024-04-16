@@ -16,7 +16,7 @@ import { MenuItem, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
-import { getAllActiveCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getFeeByStudentId } from 'features/payment-management/fees/services/studentFeeServices';
 import { getAllStudents } from 'features/student-management/students/services/studentService';
 import PropTypes from 'prop-types';
@@ -63,13 +63,17 @@ const RefundAddDrawer = (props) => {
   console.log(activeStudentsFee);
 
   useEffect(() => {
-    getActiveCoursesByBranch(selectedBranchId);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-  const getActiveCoursesByBranch = async (selectedBranchId) => {
-    const result = await getAllActiveCourses({ branch_id: selectedBranchId });
-    console.log('active courses : ', result.data);
-    setActiveCourse(result.data.data);
+  const getActiveCoursesByBranch = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setActiveCourse(result?.data);
+    }
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
