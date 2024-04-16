@@ -5,12 +5,11 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { selectCourses } from 'features/course-management/courses-page/redux/courseSelectors';
-import { getAllCourses } from 'features/course-management/courses-page/redux/courseThunks';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 
 const TeachingStaffFilterCard = (props) => {
@@ -21,15 +20,20 @@ const TeachingStaffFilterCard = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const [searchValue, setSearchValue] = useState('');
 
-  const courses = useSelector(selectCourses);
-
+  const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
-      // type: "teaching"
     };
-    dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId]);
+    getCourses(data);
+  }, [selectedBranchId]);
+
+  const getCourses = async (data) => {
+    const result = await getAllCourses(data);
+    if (result?.data) {
+      setCourses(result?.data);
+    }
+  };
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
