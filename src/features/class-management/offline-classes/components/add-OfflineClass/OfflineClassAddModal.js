@@ -157,13 +157,14 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   }
 
   const onSubmit = async (data) => {
+    console.log(data);
     const filteredInstructorId = data.instructor?.map((staff) => staff.staff_id);
     const filteredCoordinatorId = data.coordinator?.map((staff) => staff.staff_id);
     const dummyData = {
       class_name: data.class_name,
       branch_id: data.branch,
       course_id: data.course,
-      batch_id: data.batch_id,
+      batch_id: data.batch.batch_id,
       class_date: convertDateFormat(data.classDate),
       start_time: data.start_time,
       end_time: data.end_time,
@@ -293,9 +294,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       options={activeBatches}
                       getOptionLabel={(option) => option?.batch_name}
                       onChange={(event, newValue) => {
-                        field.onChange(newValue);
                         setValue('batch', newValue);
-                        getStudentsByBatch(newValue?.batch_id);
                       }}
                       value={field.value}
                       renderInput={(params) => (
