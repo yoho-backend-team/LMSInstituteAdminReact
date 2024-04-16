@@ -75,7 +75,6 @@ const RefundEditDrawer = (props) => {
    const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    console.log(setImgSrc);
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);

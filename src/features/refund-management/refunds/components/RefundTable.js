@@ -114,14 +114,12 @@ const RefundTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const [refetch, setRefetch] = useState(false);
-  console.log(setRefetch);
+
   const dispatch = useDispatch();
   const studentFeeRefunds = useSelector(selectStudentFeeRefunds);
   const StudentFeeRefundsLoading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(studentFeeRefunds);
 
   useEffect(() => {
     dispatch(
@@ -141,7 +139,6 @@ const RefundTable = () => {
 
   const toggleRefundViewDrawer = () => {
     setRefundViewUserOpen(!refundViewOpen);
-    console.log('Toggle drawer');
   };
 
   const [refundDeleteModelOpen, setRefundDeleteModelOpen] = useState(false);
@@ -208,8 +205,6 @@ const RefundTable = () => {
 
   const batch = useSelector(selectBatches);
 
-  console.log(studentFeeRefunds);
-
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -255,7 +250,7 @@ const RefundTable = () => {
                 autoHeight
                 pagination
                 getRowHeight={() => 'auto'}
-                rows={studentFeeRefunds}
+                rows={studentFeeRefunds?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 pageSizeOptions={[10, 25, 50]}
