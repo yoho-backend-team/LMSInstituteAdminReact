@@ -119,7 +119,7 @@ const StudentIdCard = () => {
           ) : (
             <Grid>
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-                {StudentIdCards.map((item, index) => (
+                {StudentIdCards?.data?.map((item, index) => (
                   <Grid
                     key={index}
                     item
