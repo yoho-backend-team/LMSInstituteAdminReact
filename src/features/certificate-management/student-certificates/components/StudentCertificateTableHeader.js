@@ -6,12 +6,11 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import MenuItem from '@mui/material/MenuItem';
 import Icon from 'components/icon';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAllStudentCertificates } from '../redux/studentCertificateThunks';
 
 const StudentCertificateTableHeader = (props) => {
@@ -20,15 +19,20 @@ const StudentCertificateTableHeader = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
 
-  const batch = useSelector(selectBatches);
-
+  const [batches, setBatches] = useState([]);
   useEffect(() => {
-    dispatch(
-      getAllBatches({
-        branch_id: selectedBranchId
-      })
-    );
-  }, [dispatch, selectedBranchId]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
+
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
+    }
+  };
 
   const [courses, setCourses] = useState([]);
   useEffect(() => {
@@ -85,18 +89,18 @@ const StudentCertificateTableHeader = (props) => {
                     <Autocomplete
                       // multiple
                       fullWidth
-                      options={batch}
+                      options={batches}
                       filterSelectedOptions
                       onChange={(e, newValue) => {
                         console.log(newValue);
                         const data = {
-                          batch_id: newValue.batch.batch_id,
+                          batch_id: newValue.batch_id,
                           branch_id: selectedBranchId
                         };
                         dispatch(getAllStudentCertificates(data));
                       }}
                       id="autocomplete-multiple-outlined"
-                      getOptionLabel={(option) => option.batch.batch_name || ''}
+                      getOptionLabel={(option) => option.batch_name || ''}
                       renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                     />
                   </Grid>

@@ -5,18 +5,16 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 
 const OfflineClassFilterCard = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
-  const batch = useSelector(selectBatches);
   const [selectedBatch, setSelectedBatch] = useState(null);
 
   const handleFilterByStatus = (e) => {
@@ -25,13 +23,20 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
     dispatch(getAllOfflineClasses(data));
   };
 
+  const [batches, setBatches] = useState([]);
   useEffect(() => {
-    dispatch(
-      getAllBatches({
-        branch_id: selectedBranchId
-      })
-    );
-  }, [dispatch, selectedBranchId]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
+
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
+    }
+  };
 
   const handleBatchChange = (e, newValue) => {
     if (!newValue) {
@@ -44,7 +49,7 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
     } else {
       setSelectedBatch(newValue);
       const data = {
-        batch_id: newValue.batch.batch_id,
+        batch_id: newValue.batch_id,
         branch_id: selectedBranchId
       };
       dispatch(getAllOfflineClasses(data));
@@ -69,12 +74,12 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batch}
+                    options={batches}
                     filterSelectedOptions
                     onChange={handleBatchChange}
                     value={selectedBatch}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
+                    getOptionLabel={(option) => option.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>

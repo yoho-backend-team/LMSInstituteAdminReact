@@ -14,6 +14,7 @@ import DatePicker from 'react-datepicker';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllLiveClasses } from '../redux/liveClassThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -28,7 +29,6 @@ const CustomInput = forwardRef((props, ref) => {
 const LiveClassFilterCard = (props) => {
   const { selectedBranchId } = props;
   const dispatch = useDispatch();
-  const batch = [];
   const [statusValue, setStatusValue] = useState('');
   const [startDateRange, setStartDateRange] = useState(null);
   const [dates, setDates] = useState([]);
@@ -47,6 +47,20 @@ const LiveClassFilterCard = (props) => {
     const result = await getAllCourses(data);
     if (result?.data) {
       setCourses(result?.data);
+    }
+  };
+  const [batches, setBatches] = useState([]);
+  useEffect(() => {
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
+
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
     }
   };
 
@@ -91,7 +105,7 @@ const LiveClassFilterCard = (props) => {
     } else {
       setSelectedBatch(newValue);
       const data = {
-        batch_id: newValue.batch.batch_id,
+        batch_id: newValue.batch_id,
         branch_id: selectedBranchId
       };
       dispatch(getAllLiveClasses(data));
@@ -131,13 +145,13 @@ const LiveClassFilterCard = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batch}
+                    options={batches}
                     filterSelectedOptions
                     onChange={handleBatchChange}
                     value={selectedBatch}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                    getOptionLabel={(option) => option.batch_name || ''}
+                    renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Batches" />}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>

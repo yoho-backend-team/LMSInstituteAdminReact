@@ -15,8 +15,7 @@ import FeeDeleteModel from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import format from 'date-fns/format';
-import { selectBatches } from 'features/batch-management/batches/redux/batchSelectors';
-import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
+import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import toast from 'react-hot-toast';
@@ -141,18 +140,24 @@ const FeesTable = () => {
     setEndDateRange(end);
   };
 
+  const [batches, setBatches] = useState([]);
   useEffect(() => {
-    dispatch(
-      getAllBatches({
-        branch_id: selectedBranchId
-      })
-    );
-  }, [dispatch, selectedBranchId]);
+    const data = {
+      branch_id: selectedBranchId
+    };
+    getBatches(data);
+  }, [selectedBranchId]);
+
+  const getBatches = async (data) => {
+    const result = await getAllBatches(data);
+    if (result?.success) {
+      setBatches(result?.data);
+    }
+  };
 
   const [feeDeleteModelOpen, setFeeDeleteModelOpen] = useState(false);
 
   const [selectedFeeDeleteId, setSelectedFeeDeleteId] = useState(null);
-  const batch = useSelector(selectBatches);
   console.log(selectedFeeDeleteId);
 
   const handleDelete = useCallback((itemId) => {
@@ -317,18 +322,18 @@ const FeesTable = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batch}
+                    options={batches}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       console.log(newValue);
                       const data = {
-                        batch_id: newValue.batch.batch_id,
+                        batch_id: newValue.batch_id,
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllStudentFees(data));
                     }}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch.batch_name || ''}
+                    getOptionLabel={(option) => option.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
