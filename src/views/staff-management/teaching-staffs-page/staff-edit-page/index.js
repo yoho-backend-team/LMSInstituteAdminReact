@@ -449,8 +449,8 @@ const StepperLinearWithValidation = () => {
                     </div>
                   )}
                   isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  // selectAllText="Select All"
+                  // SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               )}
             />

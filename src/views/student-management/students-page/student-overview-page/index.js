@@ -35,84 +35,82 @@ const Students = () => {
   return (
     <>
       <Grid>
-        <Grid spacing={1} className="match-height">
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={12} lg={12} mb={2}>
-              <StudentFilter selectedBranchId={selectedBranchId} />
-            </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12} lg={12} mb={2}>
+            <StudentFilter selectedBranchId={selectedBranchId} />
+          </Grid>
 
-            <Grid item xs={12} md={12} lg={12} mb={2}>
-              {StudentsLoading ? (
-                <StudentSkeleton />
-              ) : (
-                <Box>
-                  <Grid container spacing={2}>
-                    {Students?.data?.map((item, index) => (
-                      <Grid key={index} item xs={12} sm={6} md={3}>
-                        <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
-                          <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
-                            <Box>
-                              <Avatar
-                                alt="image"
-                                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.student?.image}`}
-                                sx={{
-                                  width: 68,
-                                  height: 68,
-                                  zIndex: 11,
-                                  left: 0,
-                                  right: 0,
-                                  bottom: -32,
-                                  mx: 'auto'
-                                }}
-                              />
-                            </Box>
-
-                            <Typography variant="h3" sx={{ mt: 6 }}>
-                              {capitalizeFirstLetter(item.student.first_name)}
-                            </Typography>
-                            <CustomChip
-                              rounded
-                              variant="tonal"
-                              color={item?.student?.is_active === '1' ? 'success' : 'error'}
-                              skin="light"
-                              label={item.student.email}
-                              sx={{ mb: 1, mt: 1 }}
-                              size="x-small"
+          <Grid item xs={12} md={12} lg={12} mb={2}>
+            {StudentsLoading ? (
+              <StudentSkeleton />
+            ) : (
+              <Box>
+                <Grid container spacing={2}>
+                  {Students?.data?.map((item, index) => (
+                    <Grid key={index} item xs={12} sm={6} md={3}>
+                      <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
+                        <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
+                          <Box>
+                            <Avatar
+                              alt="image"
+                              src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.student?.image}`}
+                              sx={{
+                                width: 68,
+                                height: 68,
+                                zIndex: 11,
+                                left: 0,
+                                right: 0,
+                                bottom: -32,
+                                mx: 'auto'
+                              }}
                             />
-                            <Box sx={{ height: 20 }}>
-                              <Typography
-                                variant="h6"
-                                sx={{
-                                  color: 'text.secondary',
-                                  overflow: 'hidden',
-                                  display: '-webkit-box',
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: 'vertical',
-                                  textOverflow: 'ellipsis',
-                                  mt: 1.75
-                                }}
-                              >
-                                {formattedAddress(
-                                  `${item.student.address_line_1}, ${item.student.city}, ${item.student.state}, ${item.student.pincode}`
-                                )}
-                              </Typography>
-                            </Box>
+                          </Box>
 
-                            <Stack alignItems="center">
-                              <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
-                            </Stack>
-                          </Card>
-                          <Box sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}></Box>
+                          <Typography variant="h3" sx={{ mt: 6 }}>
+                            {capitalizeFirstLetter(item.student.first_name)}
+                          </Typography>
+                          <CustomChip
+                            rounded
+                            variant="tonal"
+                            color={item?.student?.is_active === '1' ? 'success' : 'error'}
+                            skin="light"
+                            label={item.student.email}
+                            sx={{ mb: 1, mt: 1 }}
+                            size="x-small"
+                          />
+                          <Box sx={{ height: 20 }}>
+                            <Typography
+                              variant="h6"
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis',
+                                mt: 1.75
+                              }}
+                            >
+                              {formattedAddress(
+                                `${item.student.address_line_1}, ${item.student.city}, ${item.student.state}, ${item.student.pincode}`
+                              )}
+                            </Typography>
+                          </Box>
+
+                          <Stack alignItems="center">
+                            <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
+                          </Stack>
                         </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  <Grid container justifyContent="flex-end" mt={2}>
-                    <Pagination count={10} color="primary" />
-                  </Grid>
-                </Box>
-              )}
-            </Grid>
+                        <Box sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}></Box>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+                <Grid container justifyContent="flex-end" mt={2}>
+                  <Pagination count={10} color="primary" />
+                </Grid>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Grid>

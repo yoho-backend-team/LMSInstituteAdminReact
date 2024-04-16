@@ -385,8 +385,6 @@ const AddCoursePage = () => {
                     </div>
                   )}
                   isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
