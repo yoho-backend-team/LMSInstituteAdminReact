@@ -37,7 +37,6 @@ const userStatusObj = {
 };
 
 const StudenrCertificate = () => {
-  const [value, setValue] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -293,7 +292,7 @@ const StudenrCertificate = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} value={value} toggle={toggleAddUserDrawer} />
+          <StudentCertificateTableHeader selectedBranchId={selectedBranchId}  toggle={toggleAddUserDrawer} />
         </Grid>
         {studentCertificatesLoading ? (
           <ContentSkeleton />
