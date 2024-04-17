@@ -2,8 +2,10 @@ import TabContext from '@mui/lab/TabContext';
 import CustomTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Grid } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
+import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 import ClosedTicketCard from 'features/ticket-management/staff/components/ClosedTicketCard';
 import OpenTicketCard from 'features/ticket-management/staff/components/OpenTicketCard';
 import TicketResolveDrawer from 'features/ticket-management/staff/components/ResolveTicketDrawer';
@@ -13,8 +15,6 @@ import { selectStaffOpenTickets } from 'features/ticket-management/staff/redux/o
 import { getAllStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 
 const StaffTicketsPage = () => {
   // States
@@ -83,6 +83,9 @@ const StaffTicketsPage = () => {
           </TabContext>
         )}
         <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} setRefetch={setRefetch} ticket={selectedTicket} />
+        <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Pagination count={10} color="primary" />
+        </Grid>
       </MainCard>
     </>
   );
