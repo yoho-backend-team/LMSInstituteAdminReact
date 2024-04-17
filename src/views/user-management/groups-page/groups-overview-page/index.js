@@ -1,3 +1,4 @@
+//Mui Imports
 import {
   Avatar,
   AvatarGroup,
@@ -12,17 +13,35 @@ import {
   Typography,
   Pagination
 } from '@mui/material';
+
+// Groups Header Import Search Input and Add Button
 import Header from 'components/Header';
+
+//Group Card Skeleton Import
 import GroupSkeleton from 'components/cards/Skeleton/GroupSkeleton';
-import StatusChangeDialog from 'components/modal/DeleteModel';
-import OptionsMenu from 'components/option-menu';
+
+//Dialogs Import
+import GroupStatusChangeDialog from 'components/modal/DeleteModel';
 import GroupDeleteDialog from 'features/user-management/groups-page/components/GroupDeleteDialog';
+
+//Redux Imports
 import { selectLoading as selectGroupLoading, selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
-import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
-import { deleteGroup, updateStatus } from 'features/user-management/groups-page/services/groupService';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { getAllGroups } from 'features/user-management/groups-page/redux/groupThunks';
+
+//Services Import
+import { deleteGroup, updateStatus } from 'features/user-management/groups-page/services/groupService';
+
+//Hooks Import
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+//Component Import
+import OptionsMenu from 'components/option-menu';
+
+//Toast Import
+import toast from 'react-hot-toast';
+
+//React Router Import
 import { Link } from 'react-router-dom';
 
 const GroupManagement = () => {
@@ -172,7 +191,7 @@ const GroupManagement = () => {
         </Card>
       </Grid>
     ));
-  }, [groups]);
+  }, [groups?.data, handleStatusValue]);
 
   return (
     <Grid>
@@ -236,7 +255,7 @@ const GroupManagement = () => {
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
 
       {/* Status change dialog */}
-      <StatusChangeDialog
+      <GroupStatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}
         description="Are you sure you want to Change Status"

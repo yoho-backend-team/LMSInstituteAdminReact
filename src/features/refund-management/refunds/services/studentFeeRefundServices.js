@@ -5,7 +5,7 @@ const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}
 
 export const getAllStudentFeeRefunds = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}/read-by-branch-id`, {
+    const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}/read-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

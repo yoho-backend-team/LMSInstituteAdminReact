@@ -1,3 +1,4 @@
+import { Pagination } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 import StaffNotificationAddDrawer from 'features/notification-management/teaching-staff-notifications/components/StaffNotificationAddDrawer';
@@ -11,6 +12,8 @@ import {
 import { getAllStaffNotifications } from 'features/notification-management/teaching-staff-notifications/redux/staffNotificationThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 const StaffNotification = () => {
   const dispatch = useDispatch();
@@ -24,13 +27,11 @@ const StaffNotification = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllStaffNotifications(data));
   }, [dispatch, selectedBranchId, staffNotificationRefetch]);
-
-  console.log(staffNotifications);
-  console.log(setStaffNotificationRefetch);
 
   const [addUserOpen, setAddUserOpen] = useState(false);
 
@@ -45,17 +46,32 @@ const StaffNotification = () => {
         <Grid item xs={12}>
           <StaffNotificationTableHeader toggle={toggleAddUserDrawer} />
         </Grid>
-        {staffLoading ? (
-          <NotificationSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <StaffNotificationBodySection
-              staffNotifications={staffNotifications?.data}
-              setStaffNotificationRefetch={setStaffNotificationRefetch}
-              selectedBranchId={selectedBranchId}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12}>
+          <Card>
+            {staffLoading ? (
+              <NotificationSkeleton />
+            ) : (
+              <StaffNotificationBodySection
+                staffNotifications={staffNotifications}
+                setStaffNotificationRefetch={setStaffNotificationRefetch}
+                selectedBranchId={selectedBranchId}
+              />
+            )}
+            {staffNotifications?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={staffNotifications?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStaffNotifications({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
         <StaffNotificationAddDrawer
           open={addUserOpen}
           toggle={toggleAddUserDrawer}

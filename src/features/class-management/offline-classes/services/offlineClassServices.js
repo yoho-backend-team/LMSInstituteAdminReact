@@ -5,7 +5,7 @@ const OFFLINE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api
 
 export const getAllOfflineClasses = async (data) => {
   try {
-    const response = await axios.get(`${OFFLINE_CLASS_API_END_POINT}/get-offline-class-by-branch-id`, {
+    const response = await axios.get(`${OFFLINE_CLASS_API_END_POINT}/get-offline-class-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

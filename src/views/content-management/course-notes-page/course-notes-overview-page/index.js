@@ -1,8 +1,9 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
@@ -20,13 +21,11 @@ import {
   deleteCourseNote,
   updateCourseNotesStatus
 } from 'features/content-management/course-contents/course-notes-page/services/noteServices';
-
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Notes = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -92,7 +91,7 @@ const Notes = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseNotes({ branch_id: selectedBranchId }));
+    dispatch(getAllCourseNotes({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -173,7 +172,7 @@ const Notes = () => {
       }
     },
     {
-      // flex: 1.8,
+      flex: 1,
       minWidth: 320,
       field: 'title',
       headerName: 'Title',
@@ -193,7 +192,7 @@ const Notes = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: 'justify',
+                  // textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -277,11 +276,11 @@ const Notes = () => {
           <NotesHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
 
-        {NotesLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {NotesLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -289,13 +288,26 @@ const Notes = () => {
                 rows={Notes?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
-            </Card>
-          </Grid>
-        )}
+            )}
+
+            {Notes?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={Notes?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllCourseNotes({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
 
         <NotesAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <NotesEdit setRefetch={setRefetch} open={editUserOpen} toggle={toggleEditUserDrawer} notes={selectedRow} />

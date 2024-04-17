@@ -1,16 +1,15 @@
 import { useCallback, useState } from 'react';
 
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
-import { useEffect } from 'react';
-
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import Icon from 'components/icon';
 import { default as StatusChangeDialog, default as StudentCertificateDeleteModel } from 'components/modal/DeleteModel';
 import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
@@ -27,6 +26,7 @@ import {
   deleteStudentCertificate,
   updateStudentCertificateStatus
 } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
@@ -37,9 +37,6 @@ const userStatusObj = {
 };
 
 const StudenrCertificate = () => {
-  const [value, setValue] = useState('');
-  console.log(setValue);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -115,12 +112,11 @@ const StudenrCertificate = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllStudentCertificates(data));
   }, [dispatch, selectedBranchId, studentCertificateRefetch]);
-
-  console.log('certificate', studentCertificates);
 
   const handleDelete = useCallback((itemId) => {
     setSelectedStudentCertificateDeleteId(itemId);
@@ -295,26 +291,38 @@ const StudenrCertificate = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} value={value} toggle={toggleAddUserDrawer} />
+          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} toggle={toggleAddUserDrawer} />
         </Grid>
-        {studentCertificatesLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {studentCertificatesLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 autoHeight
                 rowHeight={80}
                 rows={studentCertificates?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
-            </Card>
-          </Grid>
-        )}
+            )}
+            <CardContent>
+              {studentCertificates?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={studentCertificates?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStudentCertificates({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
 
         {/* Add Drawer */}
         <StudentCertificateAddDrawer

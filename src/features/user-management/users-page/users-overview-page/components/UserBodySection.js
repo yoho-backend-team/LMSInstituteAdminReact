@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
@@ -17,6 +17,8 @@ import { Link } from 'react-router-dom';
 import { getInitials } from 'utils/get-initials';
 import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
+import { getAllUsers } from '../../redux/userThunks';
+import { useDispatch } from 'react-redux';
 const userStatusObj = {
   1: 'success',
   0: 'error'
@@ -42,7 +44,7 @@ const renderClient = (row) => {
   }
 };
 
-const UserBodySection = ({ users, setUserRefetch }) => {
+const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
   // const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
@@ -51,6 +53,8 @@ const UserBodySection = ({ users, setUserRefetch }) => {
   const [userDeleteModelOpen, setUserDeleteModelOpen] = useState(false);
 
   const [selectedUserDeleteId, setSelectedUserDeleteId] = useState(null);
+
+  const dispatch = useDispatch();
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -235,11 +239,12 @@ const UserBodySection = ({ users, setUserRefetch }) => {
           <DataGrid
             sx={{ p: 2 }}
             autoHeight
-            rowHeight={62}
-            rows={users}
+            rowHeight={70}
+            rows={users?.data ? users?.data : []}
             columns={columns}
             disableRowSelectionOnClick
             hideFooterPagination
+            hideFooter
           />
 
           <StatusChangeDialog
@@ -257,10 +262,24 @@ const UserBodySection = ({ users, setUserRefetch }) => {
             title="Delete"
             handleSubmit={handleUserDelete}
           />
+          {users?.last_page !== 1 && (
+            <CardContent>
+              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination
+                  count={users?.last_page}
+                  color="primary"
+                  onChange={(e, page) => {
+                    const data = {
+                      branch_id: selectedBranchId,
+                      page: page
+                    };
+                    dispatch(getAllUsers(data));
+                  }}
+                />
+              </Grid>
+            </CardContent>
+          )}
         </Card>
-      </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
       </Grid>
     </Box>
   );
@@ -268,7 +287,8 @@ const UserBodySection = ({ users, setUserRefetch }) => {
 
 UserBodySection.propTypes = {
   setUserRefetch: PropTypes.func,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  selectedBranchId: PropTypes.string
 };
 
 export default UserBodySection;

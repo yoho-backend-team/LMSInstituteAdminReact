@@ -5,7 +5,7 @@ const STAFF_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api
 
 export const getAllStaffIdCards = async (data) => {
   try {
-    const response = await axios.get(`${STAFF_ID_CARDS_API_ENDPOINT}/get-by-branch-id`, {
+    const response = await axios.get(`${STAFF_ID_CARDS_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -111,7 +111,6 @@ export const updateStaffIdCard = async (data) => {
     throw error;
   }
 };
-
 
 export const updateStaffIdCardStatus = async (data) => {
   try {

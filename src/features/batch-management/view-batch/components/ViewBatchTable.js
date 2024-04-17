@@ -2,27 +2,23 @@ import { Grid, TextField, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Pagination from '@mui/material/Pagination';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const ViewBatchTable = ({ students }) => {
-
   console.log('Students', students);
 
   const [searchQuery, setSearchQuery] = useState('');
 
-
   if (!students) {
-    return null; 
+    return null;
   }
 
-  const filteredStudents = students.filter(student =>
-    student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredStudents = students.filter((student) => student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase()));
 
-
-  console.log(filteredStudents)
+  console.log(filteredStudents);
 
   const columns = [
     {
@@ -102,24 +98,35 @@ const ViewBatchTable = ({ students }) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={8}/>
+        <Grid item xs={12} sm={8} />
         <Grid item xs={12} sm={4}>
-          <TextField sx={{display:'flex'}} fullwidth placeholder="Search Student"  value={searchQuery} onChange={handleSearchChange} />
+          <TextField sx={{ display: 'flex' }} fullwidth placeholder="Search Student" value={searchQuery} onChange={handleSearchChange} />
         </Grid>
         <Grid item xs={12}>
           <Card sx={{ mt: 2 }}>
             <Box sx={{ overflowX: 'auto' }}>
-              <DataGrid autoHeight rowHeight={80} rows={filteredStudents} columns={columns} disableRowSelectionOnClick hideFooterPagination />
+              <DataGrid
+                autoHeight
+                rowHeight={80}
+                rows={filteredStudents}
+                columns={columns}
+                disableRowSelectionOnClick
+                hideFooterPagination
+                hideFooter
+              />
             </Box>
           </Card>
         </Grid>
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );
 };
 
 ViewBatchTable.propTypes = {
-  students: PropTypes.any,
+  students: PropTypes.any
 };
 
 export default ViewBatchTable;

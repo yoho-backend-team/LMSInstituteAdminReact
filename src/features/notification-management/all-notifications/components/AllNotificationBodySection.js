@@ -1,18 +1,13 @@
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import Grid from '@mui/material/Grid';
 
 const AllNotificationBodySection = ({ allNotifications }) => {
-  console.log(allNotifications);
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
   const handleSubmit = async (id) => {
     try {
       const selectedNotification = allNotifications.find((notification) => notification.id === id);
@@ -122,7 +117,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
   ];
 
   return (
-    <Card>
+    <Grid>
       <Divider sx={{ m: '0 !important' }} />
       <DataGrid
         sx={{ p: 2 }}
@@ -131,11 +126,10 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         rows={allNotifications?.data}
         columns={columns}
         disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
+        hideFooterPagination
+        hideFooter
       />
-    </Card>
+    </Grid>
   );
 };
 

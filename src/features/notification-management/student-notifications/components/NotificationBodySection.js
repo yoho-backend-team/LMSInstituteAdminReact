@@ -1,20 +1,16 @@
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
 import { resendStudentNotification } from '../services/studentNotificationServices';
-
+import Grid from '@mui/material/Grid';
 const NotificationBodySection = ({ studentNotifications }) => {
   console.log(studentNotifications);
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const renderClient = (row) => {
     if (row?.avatar?.length) {
@@ -167,7 +163,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
   ];
 
   return (
-    <Card>
+    <Grid>
       <Divider sx={{ m: '0 !important' }} />
       <DataGrid
         sx={{ p: 2 }}
@@ -176,11 +172,10 @@ const NotificationBodySection = ({ studentNotifications }) => {
         rows={studentNotifications?.data}
         columns={columns}
         disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
+        hideFooterPagination
+        hideFooter
       />
-    </Card>
+    </Grid>
   );
 };
 

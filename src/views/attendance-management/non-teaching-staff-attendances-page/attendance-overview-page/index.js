@@ -3,24 +3,19 @@ import Pagination from '@mui/material/Pagination';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
 import NonTeachingStaffCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffCard';
 import NonTeachingStaffFilterCard from 'features/attandence-management/non-teaching-staff-attandences/components/NonTeachingStaffFilterCard';
-import { selectNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nonTeachingStaffSelectors';
-import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nontTeachingStaffThunks';
-import { useEffect, useState } from 'react';
+
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
+
+import {
+  selectLoading,
+  selectNonTeachingStaffAttendances
+} from 'features/attandence-management/non-teaching-staff-attandences/redux/nonTeachingStaffAttendanceSelectors';
+import { getAllNonTeachingStaffAttendances } from 'features/attandence-management/non-teaching-staff-attandences/redux/nonTeachingStaffAttendanceThunks';
 
 const NonTeachingStaffs = () => {
-  const [loading, setLoading] = useState(true);
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
-
-  const nonTeachingStaffs = useSelector(selectNonTeachingStaffs);
+  const nonTeachingStaffs = useSelector(selectNonTeachingStaffAttendances);
+  const loading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -28,9 +23,10 @@ const NonTeachingStaffs = () => {
   useEffect(() => {
     const data = {
       type: 'non_teaching',
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
-    dispatch(getAllNonTeachingStaffs(data));
+    dispatch(getAllNonTeachingStaffAttendances(data));
   }, [dispatch, selectedBranchId]);
 
   return (
@@ -41,11 +37,19 @@ const NonTeachingStaffs = () => {
           <TeachingStaffSkeleton />
         ) : (
           <div>
-            <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs} />
-            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-              <Pagination count={10} color="primary" />
-            </Grid>
+            <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs?.data} />
           </div>
+        )}
+        {nonTeachingStaffs?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={nonTeachingStaffs?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllNonTeachingStaffAttendances({ branch_id: selectedBranchId, page: page }));
+              }}
+            />
+          </Grid>
         )}
       </Grid>
     </>

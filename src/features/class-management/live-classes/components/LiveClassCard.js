@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import Pagination from '@mui/material/Pagination';
+
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
@@ -185,11 +185,6 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
           title="Delete"
           handleSubmit={handleLiveclassDelete}
         />
-      </Grid>
-      <Grid container justifyContent="flex-end" mt={2}>
-        <div className="demo-space-y">
-          <Pagination count={10} color="primary" />
-        </div>
       </Grid>
     </>
   );

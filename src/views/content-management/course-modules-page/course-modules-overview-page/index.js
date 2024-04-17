@@ -1,8 +1,9 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
@@ -20,13 +21,11 @@ import {
   deleteCourseModule,
   updateCourseModulesStatus
 } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
-
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Modules = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -111,7 +110,7 @@ const Modules = () => {
 
   console.log(Module);
   useEffect(() => {
-    dispatch(getAllCourseModules({ branch_id: selectedBranchId }));
+    dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const RowOptions = ({ row }) => {
@@ -172,7 +171,7 @@ const Modules = () => {
       }
     },
     {
-      // flex: 1.8,
+      flex: 1,
       minWidth: 320,
       field: 'title',
       headerName: 'Title',
@@ -192,7 +191,7 @@ const Modules = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: 'justify',
+                  // textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -280,11 +279,11 @@ const Modules = () => {
         <Grid item xs={12}>
           <ModuleHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
-        {ModuleLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {ModuleLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -292,13 +291,26 @@ const Modules = () => {
                 rows={Module?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
-            </Card>
-          </Grid>
-        )}
+            )}
+            {Module?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={Module?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
+
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow} setRefetch={setrefetch} />
         <ModulesDeleteModal

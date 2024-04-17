@@ -5,7 +5,7 @@ const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_UR
 
 export const getAllStudentNotifications = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_NOTIFICATION_API_ENDPOINT}/read-all-student-notifications`, {
+    const response = await axios.get(`${STUDENT_NOTIFICATION_API_ENDPOINT}/read-all-student-notifications?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -113,8 +113,6 @@ export const updateStudentNotification = async (data) => {
     throw error;
   }
 };
-
-
 
 export const resendStudentNotification = async (data) => {
   try {

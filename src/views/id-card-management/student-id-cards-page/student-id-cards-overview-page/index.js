@@ -41,7 +41,7 @@ const StudentIdCard = () => {
   const [studentIdRefetch, setStudentIdRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards({ branch_id: selectedBranchId }));
+    dispatch(getAllStudentIdCards({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -248,11 +248,17 @@ const StudentIdCard = () => {
             </Grid>
           )}
         </Grid>
-        <Grid item xs={12} mt={2}>
-          <Grid container justifyContent="flex-end">
-            <Pagination count={10} color="primary" />
+        {StudentIdCards?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={StudentIdCards?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllStudentIdCards({ branch_id: selectedBranchId, page: page }));
+              }}
+            />
           </Grid>
-        </Grid>
+        )}
       </Grid>
 
       <StatusChangeDialog

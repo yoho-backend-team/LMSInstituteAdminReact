@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Pagination } from '@mui/material';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -18,7 +18,8 @@ const LiveClass = () => {
   useEffect(() => {
     const data = {
       type: 'live',
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId, refetch]);
@@ -32,6 +33,17 @@ const LiveClass = () => {
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
             <LiveClassCard refetch={refetch} setRefetch={setRefetch} liveClasses={liveClasses?.data} />
+          </Grid>
+        )}
+        {liveClasses?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={liveClasses?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllLiveClasses({ branch_id: selectedBranchId, page: page }));
+              }}
+            />
           </Grid>
         )}
       </Grid>

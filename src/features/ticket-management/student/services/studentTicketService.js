@@ -4,10 +4,9 @@ import axios from 'axios';
 const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket`;
 const STUDENT_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/ticket-management/student-ticket`;
 
-
 export const getAllStudentTickets = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_TICKET_END_POINT}/get-by-type`, {
+    const response = await axios.get(`${STUDENT_TICKET_END_POINT}/get-by-type?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

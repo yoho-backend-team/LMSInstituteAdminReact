@@ -2,6 +2,7 @@ import TabContext from '@mui/lab/TabContext';
 import CustomTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Grid } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
@@ -45,7 +46,6 @@ const StudentTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
-  console.log(studentClosedTickets);
 
   return (
     <MainCard title="Student Tickets" sx={{ minHeight: '100vh' }}>
@@ -59,7 +59,7 @@ const StudentTicketsPage = () => {
           </CustomTabList>
           <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
             <Grid container spacing={2}>
-              {studentOpenTickets?.map((ticket, index) => (
+              {studentOpenTickets?.data?.map((ticket, index) => (
                 <OpenTicketCard
                   key={index}
                   ticket={ticket}
@@ -67,13 +67,35 @@ const StudentTicketsPage = () => {
                   onClick={() => setOpenResolveDrawer(true)}
                 />
               ))}
+              {studentOpenTickets?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={studentOpenTickets?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
             </Grid>
           </TabPanel>
           <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
             <Grid container spacing={2}>
-              {studentClosedTickets?.map((ticket, index) => (
+              {studentClosedTickets?.data?.map((ticket, index) => (
                 <ClosedTicketCard key={index} ticket={ticket} />
               ))}
+              {studentClosedTickets?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={studentClosedTickets?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
             </Grid>
           </TabPanel>
         </TabContext>

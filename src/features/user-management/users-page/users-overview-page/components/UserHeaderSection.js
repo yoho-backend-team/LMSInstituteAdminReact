@@ -6,7 +6,7 @@ const UserHeaderSection = ({ users, groups }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={3} sm={6}>
-        <UserHeaderCard title={'Total Users'} stats={users?.users?.length} icon={'tabler:user'} />
+        <UserHeaderCard title={'Total Users'} stats={users?.total} icon={'tabler:user'} />
       </Grid>
       <Grid item xs={12} md={3} sm={6}>
         <UserHeaderCard title={'Total Groups'} stats={groups?.length} avatarColor={'error'} icon={'tabler:user-plus'} />

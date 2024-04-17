@@ -5,13 +5,15 @@ const NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PU
 
 export const getAllNonTeachingStaffAttendances = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-all`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       params: data
     });
+
+    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {

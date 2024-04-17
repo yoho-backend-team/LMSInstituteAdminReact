@@ -6,7 +6,7 @@ const _TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/ap
 
 export const getAllTickets = async (data) => {
   try {
-    const response = await axios.get(`${TICKET_END_POINT}/read`, {
+    const response = await axios.get(`${TICKET_END_POINT}/read?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

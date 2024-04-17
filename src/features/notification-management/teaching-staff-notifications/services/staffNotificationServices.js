@@ -5,7 +5,7 @@ const STAFF_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}
 
 export const getAllStaffNotifications = async (data) => {
   try {
-    const response = await axios.get(`${STAFF_NOTIFICATION_API_ENDPOINT}/read-all-staff-notifications`, {
+    const response = await axios.get(`${STAFF_NOTIFICATION_API_ENDPOINT}/read-all-staff-notifications?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -29,27 +29,6 @@ export const getAllStaffNotifications = async (data) => {
   }
 };
 
-export const searchStaffNotifications = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchStaffNotifications:', error);
-    throw error;
-  }
-};
-
 export const addStaffNotification = async (data) => {
   try {
     const response = await axios.post(`${STAFF_NOTIFICATION_API_ENDPOINT}/staff-notification-send`, data, {
@@ -58,7 +37,7 @@ export const addStaffNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-console.log(response)
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'StaffNotification created successfully' };
     } else {
@@ -111,10 +90,6 @@ export const updateStaffNotification = async (data) => {
     throw error;
   }
 };
-
-
-
-
 
 export const resendStaffNotification = async (data) => {
   try {

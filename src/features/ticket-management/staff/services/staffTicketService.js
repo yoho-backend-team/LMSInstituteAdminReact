@@ -6,7 +6,7 @@ const STAFF_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_UR
 
 export const getAllStaffTickets = async (data) => {
   try {
-    const response = await axios.get(`${STAFF_TICKET_API_END_POINT}/get-by-type`, {
+    const response = await axios.get(`${STAFF_TICKET_API_END_POINT}/get-by-type?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

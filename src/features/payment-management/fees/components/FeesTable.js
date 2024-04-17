@@ -30,6 +30,7 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
+import Pagination from '@mui/material/Pagination';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -79,7 +80,6 @@ const FeesTable = () => {
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -111,7 +111,8 @@ const FeesTable = () => {
   useEffect(() => {
     dispatch(
       getAllStudentFees({
-        branch_id: selectedBranchId
+        branch_id: selectedBranchId,
+        page: '1'
       })
     );
   }, [dispatch, selectedBranchId, refetch]);
@@ -385,12 +386,22 @@ const FeesTable = () => {
                 rowHeight={62}
                 rows={StudentFees?.data}
                 columns={columns}
+                hideFooter
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
               />
+            )}
+            {StudentFees?.last_page !== 1 && (
+              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination
+                  count={StudentFees?.last_page}
+                  color="primary"
+                  onChange={(e, page) => {
+                    dispatch(getAllStudentFees({ branch_id: selectedBranchId, page: page }));
+                  }}
+                />
+              </Grid>
             )}
           </Card>
         </Grid>

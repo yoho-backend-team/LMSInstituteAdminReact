@@ -66,7 +66,7 @@ const Batch = () => {
   const [selectedBatchDeleteId, setSelectedBatchDeleteId] = useState(null);
 
   useEffect(() => {
-    dispatch(getAllBatches({ branch_id: selectedBranchId }));
+    dispatch(getAllBatches({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, batchRefetch]);
 
   const handleStatusChangeApi = async () => {
@@ -258,11 +258,17 @@ const Batch = () => {
               <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
                 {renderCards()}
               </Grid>
-              <Grid item sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                <div className="demo-space-y">
-                  <Pagination count={10} color="primary" />
-                </div>
-              </Grid>
+              {batches?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={batches?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllBatches({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
               <BatchEditModal
                 open={isEditModalOpen}
                 handleEditClose={handleEditClose}

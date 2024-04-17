@@ -1,8 +1,9 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
@@ -23,13 +24,11 @@ import {
   deleteCourseStudyMaterial,
   updateCourseStudyMaterialStatus
 } from 'features/content-management/course-contents/course-study-materials-page/services/studyMaterialServices';
-
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const StudyMaterials = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -46,7 +45,7 @@ const StudyMaterials = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
+    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -171,7 +170,7 @@ const StudyMaterials = () => {
       }
     },
     {
-      // flex: 1.8,
+      flex: 1,
       minWidth: 320,
       field: 'title',
       headerName: 'Title',
@@ -191,7 +190,7 @@ const StudyMaterials = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: 'justify',
+                  // textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -274,11 +273,11 @@ const StudyMaterials = () => {
         <Grid item xs={12}>
           <StudyMaterialHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
-        {StudyMaterialsLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {StudyMaterialsLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -286,13 +285,26 @@ const StudyMaterials = () => {
                 rows={StudyMaterials?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
-            </Card>
-          </Grid>
-        )}
+            )}
+
+            {StudyMaterials?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={StudyMaterials?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
         <StudyMaterialAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <StudyMaterialEdit
           setRefetch={setRefetch}

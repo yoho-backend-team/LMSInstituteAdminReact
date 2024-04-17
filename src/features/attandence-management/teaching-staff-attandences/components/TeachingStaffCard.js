@@ -12,16 +12,16 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
   return (
     <>
       <Grid container spacing={2} mt={2}>
-        {teachingStaffs?.data?.map((item, i) => (
+        {teachingStaffs?.map((item, i) => (
           <Grid key={i} item xs={12} sm={6} md={4}>
             <Card sx={{ position: 'relative', p: 1.5 }}>
               <CardContent sx={{ pt: 2.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                   <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
                   <Typography variant="h4" sx={{ mb: 1 }}>
-                    {item.staff.staff_name}
+                    {item.staff_name}
                   </Typography>
-                  <Typography variant="h6">{item.staff.email}</Typography>
+                  <Typography variant="h6">{item.email}</Typography>
 
                   <Box
                     sx={{
@@ -36,11 +36,11 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Typography variant="h4">40</Typography>
+                      <Typography variant="h4">{item?.presentCount}</Typography>
                       <Typography sx={{ color: 'text.secondary' }}>Present</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Typography variant="h4">15</Typography>
+                      <Typography variant="h4">{item?.absentCount}</Typography>
                       <Typography sx={{ color: 'text.secondary' }}>Absent</Typography>
                     </Box>
                   </Box>
@@ -50,8 +50,8 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                     <Grid>
                       <Button
                         component={Link}
-                        state={{ staff: item.staff }}
-                        to={`teaching-staff-attendances/${item.staff?.staff_id}`}
+                        state={{ staff: item }}
+                        to={`teaching-staff-attendances/${item.staff_id}`}
                         variant="tonal"
                         sx={{ px: 4 }}
                       >

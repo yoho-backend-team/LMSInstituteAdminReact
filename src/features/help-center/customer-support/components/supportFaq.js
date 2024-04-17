@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'components/icon';
 
@@ -59,6 +59,9 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 
 const SupportFaq = ({ faqCategories }) => {
   const [activeTab, setActiveTab] = useState(faqCategories[0]?.id);
+  useEffect(() => {
+    setActiveTab(faqCategories[0]?.id);
+  }, [faqCategories]);
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);

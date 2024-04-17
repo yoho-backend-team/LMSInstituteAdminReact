@@ -31,7 +31,8 @@ const Teaching = () => {
   useEffect(() => {
     const data = {
       type: 'teaching',
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllTeachingStaffs(data));
   }, [dispatch, selectedBranchId, refetch]);
@@ -117,9 +118,17 @@ const Teaching = () => {
                 </Grid>
               ))}
           </Grid>
-          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination count={10} color="primary" />
-          </Grid>
+          {teachingStaffs?.last_page !== 1 && (
+            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination
+                count={teachingStaffs?.last_page}
+                color="primary"
+                onChange={(e, page) => {
+                  dispatch(getAllTeachingStaffs({ branch_id: selectedBranchId, page: page }));
+                }}
+              />
+            </Grid>
+          )}
         </Grid>
       )}
       <StatusChangeDialog
