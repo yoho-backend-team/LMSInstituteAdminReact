@@ -9,7 +9,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
-
+import Pagination from '@mui/material/Pagination';
 import { TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
@@ -63,7 +63,6 @@ const userStatusObj = {
 const SalaryTable = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -305,18 +304,19 @@ const SalaryTable = () => {
             ) : (
               <DataGrid
                 sx={{ p: 2 }}
+                hideFooterPagination
                 autoHeight
-                pagination
                 rowHeight={62}
                 rows={TeachingStaffSalaries?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooter
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
               />
             )}
+            <Grid sx={{ m: 3, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination count={10} color="primary" />
+            </Grid>
           </Card>
         </Grid>
       </Grid>

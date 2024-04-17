@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
@@ -108,7 +109,6 @@ const defaultColumns = [
 const RefundTable = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState([]);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -252,16 +252,13 @@ const RefundTable = () => {
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
-                pagination
                 getRowHeight={() => 'auto'}
                 rows={studentFeeRefunds?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
                 onRowClick={(params) => handleRowClick(params.row)}
+                hideFooterPagination
               />
             </Card>
           )}
@@ -277,6 +274,9 @@ const RefundTable = () => {
             handleSubmit={handleRefundDelete}
           />
         </Grid>
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </DatePickerWrapper>
   );

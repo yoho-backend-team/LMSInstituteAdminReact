@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
@@ -20,13 +21,11 @@ import {
   deleteCourseModule,
   updateCourseModulesStatus
 } from 'features/content-management/course-contents/course-modules-page/services/moduleServices';
-
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Modules = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -192,7 +191,7 @@ const Modules = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: 'justify',
+                  // textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -292,9 +291,8 @@ const Modules = () => {
                 rows={Module?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
             </Card>
           </Grid>
@@ -316,6 +314,9 @@ const Modules = () => {
           handleSubmit={handleStatusChangeApi}
         />
         <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} modules={selectedRow} />
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );

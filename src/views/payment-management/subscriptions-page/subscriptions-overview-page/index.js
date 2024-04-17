@@ -10,7 +10,8 @@ import { getSubscriptions } from 'features/payment-management/subscriptions/redu
 import { getAllSubscriptionPlans } from 'features/payment-management/subscriptions/services';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
+import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: `${theme.spacing(2, 2)} !important`,
@@ -192,9 +193,13 @@ const Subscription = () => {
   return (
     <Card>
       <CardContent>
-        <SubscriptionHeader  />
+        <SubscriptionHeader />
         <SubscriptionDataTable Subscription={Subscription} />
         <SubscriptionPlans data={data.pricingTable} Subscriptions={subscriptions} />
+
+        <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Pagination count={10} color="primary" />
+        </Grid>
       </CardContent>
     </Card>
   );

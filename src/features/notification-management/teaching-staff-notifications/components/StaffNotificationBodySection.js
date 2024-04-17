@@ -6,15 +6,13 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
 import { resendStaffNotification } from '../services/staffNotificationServices';
-
+import Pagination from '@mui/material/Pagination';
+import Grid from '@mui/material/Grid';
 const StaffNotificationBodySection = ({ staffNotifications }) => {
   console.log(staffNotifications);
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const renderClient = (row) => {
     if (row?.avatar?.length) {
@@ -179,10 +177,12 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         rows={staffNotifications?.data}
         columns={columns}
         disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
+        hideFooterPagination
+        hideFooter
       />
+      <Grid sx={{ m: 3, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
+      </Grid>
     </Card>
   );
 };

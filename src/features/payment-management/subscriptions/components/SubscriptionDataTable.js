@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // ** Styled component for the link in the dataTable
@@ -16,8 +15,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 const SubscriptionDataTable = ({ Subscription }) => {
   // ** State
   console.log('Subscription :', Subscription);
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const Columns = [
     {
@@ -71,14 +68,11 @@ const SubscriptionDataTable = ({ Subscription }) => {
         <DataGrid
           sx={{ p: 2 }}
           autoHeight
-          pagination
           rowHeight={62}
           rows={Subscription}
           columns={Columns}
           disableRowSelectionOnClick
-          pageSizeOptions={[10, 25, 50]}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
+          hideFooterPagination
           onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
         />
       </Grid>

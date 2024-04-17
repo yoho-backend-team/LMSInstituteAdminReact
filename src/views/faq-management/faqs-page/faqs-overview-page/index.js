@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import FaqSkeleton from 'components/cards/Skeleton/FaqSkeleton';
@@ -23,8 +24,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -255,9 +254,8 @@ const FaqDataGrid = () => {
                 rows={faqs}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
                 onRowClick={handleRowClick}
               />
             </Card>
@@ -285,6 +283,9 @@ const FaqDataGrid = () => {
           title="Status"
           handleSubmit={handleStatusChangeApi}
         />
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );
