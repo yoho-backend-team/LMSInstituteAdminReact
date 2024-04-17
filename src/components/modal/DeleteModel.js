@@ -12,6 +12,8 @@ import DialogActions from '@mui/material/DialogActions';
 // ** Icon Imports
 import Icon from 'components/icon';
 
+import PropTypes from 'prop-types';
+
 const DeleteDialog = (props) => {
   // ** Props
   const { open, setOpen, handleSubmit, description, title, successDescription, failureDescription } = props;
@@ -114,6 +116,16 @@ const DeleteDialog = (props) => {
       </Dialog>
     </>
   );
+};
+
+DeleteDialog.propTypes = {
+  open: PropTypes.any,
+  setOpen: PropTypes.any,
+  title: PropTypes.any,
+  handleSubmit: PropTypes.any,
+  description: PropTypes.any,
+  successDescription: PropTypes.any,
+  failureDescription: PropTypes.any
 };
 
 export default DeleteDialog;
