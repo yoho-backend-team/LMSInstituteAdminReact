@@ -6,12 +6,11 @@ import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import Pagination from '@mui/material/Pagination';
+import Grid from '@mui/material/Grid';
 
 const AllNotificationBodySection = ({ allNotifications }) => {
   console.log(allNotifications);
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const handleSubmit = async (id) => {
     try {
@@ -131,10 +130,12 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         rows={allNotifications?.data}
         columns={columns}
         disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
+        hideFooterPagination
+        hideFooter
       />
+      <Grid sx={{ m:3,display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
+      </Grid>
     </Card>
   );
 };

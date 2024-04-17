@@ -12,6 +12,7 @@ import { getAllStudentNotifications } from 'features/notification-management/stu
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+
 const StudentNotification = () => {
   const dispatch = useDispatch();
   const studentNotifications = useSelector(selectStudentNotifications);

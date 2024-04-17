@@ -30,6 +30,7 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
+import Pagination from '@mui/material/Pagination';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -79,7 +80,6 @@ const FeesTable = () => {
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [startDateRange, setStartDateRange] = useState(null);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -385,13 +385,15 @@ const FeesTable = () => {
                 rowHeight={62}
                 rows={StudentFees?.data}
                 columns={columns}
+                hideFooter
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
               />
             )}
+            <Grid sx={{ m: 3, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination count={10} color="primary" />
+            </Grid>
           </Card>
         </Grid>
       </Grid>
