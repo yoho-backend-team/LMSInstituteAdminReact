@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -110,7 +110,7 @@ const Modules = () => {
 
   console.log(Module);
   useEffect(() => {
-    dispatch(getAllCourseModules({ branch_id: selectedBranchId }));
+    dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const RowOptions = ({ row }) => {
@@ -279,11 +279,11 @@ const Modules = () => {
         <Grid item xs={12}>
           <ModuleHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
-        {ModuleLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {ModuleLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -294,12 +294,23 @@ const Modules = () => {
                 hideFooterPagination
                 hideFooter
               />
-              <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination count={10} color="primary" />
-              </Grid>
-            </Card>
-          </Grid>
-        )}
+            )}
+            {Module?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={Module?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
+
         <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow} setRefetch={setrefetch} />
         <ModulesDeleteModal

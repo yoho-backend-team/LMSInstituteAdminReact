@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -45,7 +45,7 @@ const StudyMaterials = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId }));
+    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -273,11 +273,11 @@ const StudyMaterials = () => {
         <Grid item xs={12}>
           <StudyMaterialHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
-        {StudyMaterialsLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {StudyMaterialsLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -288,12 +288,23 @@ const StudyMaterials = () => {
                 hideFooterPagination
                 hideFooter
               />
-              <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination count={10} color="primary" />
-              </Grid>
-            </Card>
-          </Grid>
-        )}
+            )}
+
+            {StudyMaterials?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={StudyMaterials?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
         <StudyMaterialAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <StudyMaterialEdit
           setRefetch={setRefetch}

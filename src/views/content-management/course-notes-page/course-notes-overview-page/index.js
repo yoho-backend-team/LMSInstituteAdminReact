@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -91,7 +91,7 @@ const Notes = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseNotes({ branch_id: selectedBranchId }));
+    dispatch(getAllCourseNotes({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -276,11 +276,11 @@ const Notes = () => {
           <NotesHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
 
-        {NotesLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {NotesLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 sx={{ p: 2 }}
                 autoHeight
@@ -291,12 +291,23 @@ const Notes = () => {
                 hideFooterPagination
                 hideFooter
               />
-              <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination count={10} color="primary" />
-              </Grid>
-            </Card>
-          </Grid>
-        )}
+            )}
+
+            {Notes?.last_page !== 1 && (
+              <CardContent>
+                <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={Notes?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllCourseNotes({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              </CardContent>
+            )}
+          </Card>
+        </Grid>
 
         <NotesAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
         <NotesEdit setRefetch={setRefetch} open={editUserOpen} toggle={toggleEditUserDrawer} notes={selectedRow} />
