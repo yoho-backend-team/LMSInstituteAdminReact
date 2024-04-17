@@ -111,7 +111,8 @@ const FeesTable = () => {
   useEffect(() => {
     dispatch(
       getAllStudentFees({
-        branch_id: selectedBranchId
+        branch_id: selectedBranchId,
+        page: '1'
       })
     );
   }, [dispatch, selectedBranchId, refetch]);
@@ -391,9 +392,17 @@ const FeesTable = () => {
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
               />
             )}
-            <Grid sx={{ m: 3, display: 'flex', justifyContent: 'flex-end' }}>
-              <Pagination count={10} color="primary" />
-            </Grid>
+            {StudentFees?.last_page !== 1 && (
+              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination
+                  count={StudentFees?.last_page}
+                  color="primary"
+                  onChange={(e, page) => {
+                    dispatch(getAllStudentFees({ branch_id: selectedBranchId, page: page }));
+                  }}
+                />
+              </Grid>
+            )}
           </Card>
         </Grid>
       </Grid>

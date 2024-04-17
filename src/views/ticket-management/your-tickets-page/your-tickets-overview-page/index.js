@@ -27,13 +27,12 @@ const YourTicketsPage = () => {
   const [openCreateTicketDrawer, setOpenCreateTicketDrawer] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
   const [refetch, setRefetch] = useState(false);
-  console.log(studentOpenTickets);
 
   useEffect(() => {
-    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, type: 'opened' }));
+    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, type: 'opened', page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
   useEffect(() => {
-    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, type: 'closed' }));
+    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, type: 'closed', page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
 
   const handleChange = (event, newValue) => {
@@ -43,7 +42,6 @@ const YourTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
-  console.log(studentClosedTickets);
 
   return (
     <MainCard>
@@ -70,16 +68,38 @@ const YourTicketsPage = () => {
               </CustomTabList>
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentOpenTickets?.map((ticket, index) => (
+                  {studentOpenTickets?.data?.map((ticket, index) => (
                     <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
                   ))}
+                  {studentOpenTickets?.last_page !== 1 && (
+                    <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                      <Pagination
+                        count={studentOpenTickets?.last_page}
+                        color="primary"
+                        onChange={(e, page) => {
+                          dispatch(getAllOpenTickets({ branch_id: selectedBranchId, page: page }));
+                        }}
+                      />
+                    </Grid>
+                  )}
                 </Grid>
               </TabPanel>
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentClosedTickets?.map((ticket, index) => (
+                  {studentClosedTickets?.data?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
+                  {studentClosedTickets?.last_page !== 1 && (
+                    <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                      <Pagination
+                        count={studentClosedTickets?.last_page}
+                        color="primary"
+                        onChange={(e, page) => {
+                          dispatch(getAllClosedTickets({ branch_id: selectedBranchId, page: page }));
+                        }}
+                      />
+                    </Grid>
+                  )}
                 </Grid>
               </TabPanel>
             </TabContext>
@@ -93,9 +113,6 @@ const YourTicketsPage = () => {
         setRefetch={setRefetch}
         ticket={selectedTicket}
       />
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
-      </Grid>
     </MainCard>
   );
 };

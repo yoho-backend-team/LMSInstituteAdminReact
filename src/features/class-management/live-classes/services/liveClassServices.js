@@ -5,7 +5,7 @@ const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/in
 
 export const getAllLiveClasses = async (data) => {
   try {
-    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/get-live-class-by-branch-id`, {
+    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/get-live-class-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

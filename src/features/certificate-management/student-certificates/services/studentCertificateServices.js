@@ -5,7 +5,7 @@ const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL
 
 export const getAllStudentCertificates = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/read-by-branch-id`, {
+    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/read-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -80,7 +80,6 @@ export const deleteStudentCertificate = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
       params: { id: data }
-
     });
 
     if (response.data.status) {

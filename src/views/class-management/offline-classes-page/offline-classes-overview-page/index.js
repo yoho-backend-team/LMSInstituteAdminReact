@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Pagination } from '@mui/material';
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import OfflineClassCard from 'features/class-management/offline-classes/components/OfflineClassCard';
 import OfflineClassCardHeader from 'features/class-management/offline-classes/components/OfflineClassCardHeader';
@@ -17,7 +17,8 @@ const OfflineClass = () => {
   useEffect(() => {
     const data = {
       type: 'offline',
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllOfflineClasses(data));
   }, [dispatch, selectedBranchId, offlineClassRefetch]);
@@ -34,6 +35,17 @@ const OfflineClass = () => {
               offlineClassRefetch={offlineClassRefetch}
               setofflineClassRefetch={setofflineClassRefetch}
               offlineClasses={offlineClasses?.data}
+            />
+          </Grid>
+        )}
+        {offlineClasses?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={offlineClasses?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllOfflineClasses({ branch_id: selectedBranchId, page: page }));
+              }}
             />
           </Grid>
         )}

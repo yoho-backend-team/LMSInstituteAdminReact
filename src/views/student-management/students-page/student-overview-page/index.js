@@ -20,7 +20,7 @@ const Students = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   useEffect(() => {
-    dispatch(getAllStudents({ branch_id: selectedBranchId }));
+    dispatch(getAllStudents({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId]);
 
   const formattedAddress = (address) => {
@@ -106,9 +106,17 @@ const Students = () => {
                     </Grid>
                   ))}
                 </Grid>
-                <Grid container justifyContent="flex-end" mt={2}>
-                  <Pagination count={10} color="primary" />
-                </Grid>
+                {Students?.last_page !== 1 && (
+                  <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                    <Pagination
+                      count={Students?.last_page}
+                      color="primary"
+                      onChange={(e, page) => {
+                        dispatch(getAllStudents({ branch_id: selectedBranchId, page: page }));
+                      }}
+                    />
+                  </Grid>
+                )}
               </Box>
             )}
           </Grid>

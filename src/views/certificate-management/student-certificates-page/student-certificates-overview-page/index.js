@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import { TextField } from '@mui/material';
+import { CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -112,12 +112,11 @@ const StudenrCertificate = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllStudentCertificates(data));
   }, [dispatch, selectedBranchId, studentCertificateRefetch]);
-
-  console.log('certificate', studentCertificates);
 
   const handleDelete = useCallback((itemId) => {
     setSelectedStudentCertificateDeleteId(itemId);
@@ -292,13 +291,13 @@ const StudenrCertificate = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudentCertificateTableHeader selectedBranchId={selectedBranchId}  toggle={toggleAddUserDrawer} />
+          <StudentCertificateTableHeader selectedBranchId={selectedBranchId} toggle={toggleAddUserDrawer} />
         </Grid>
-        {studentCertificatesLoading ? (
-          <ContentSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <Card>
+        <Grid item xs={12}>
+          <Card>
+            {studentCertificatesLoading ? (
+              <ContentSkeleton />
+            ) : (
               <DataGrid
                 autoHeight
                 rowHeight={80}
@@ -308,9 +307,22 @@ const StudenrCertificate = () => {
                 hideFooterPagination
                 hideFooter
               />
-            </Card>
-          </Grid>
-        )}
+            )}
+            <CardContent>
+              {studentCertificates?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={studentCertificates?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStudentCertificates({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
 
         {/* Add Drawer */}
         <StudentCertificateAddDrawer
@@ -344,9 +356,6 @@ const StudenrCertificate = () => {
         />
 
         <StudentCertificateView certificate={selectedRow} open={isViewModalOpen} handleViewClose={handleViewClose} />
-      </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );

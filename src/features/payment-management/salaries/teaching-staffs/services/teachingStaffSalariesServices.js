@@ -5,7 +5,7 @@ const TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_AP
 
 export const getAllStaffSalaries = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_SALARIES_API_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${TEACHING_STAFF_SALARIES_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -25,27 +25,6 @@ export const getAllStaffSalaries = async (data) => {
     console.error('Error in getAllTeachingStaffSalaries:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
-};
-
-export const searchTeachingStaffSalaries = async (searchQuery) => {
-  try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { search: searchQuery }
-    });
-
-    if (response.data.status) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchTeachingStaffSalaries:', error);
     throw error;
   }
 };

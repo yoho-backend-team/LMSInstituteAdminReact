@@ -4,7 +4,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import Pagination from '@mui/material/Pagination';
+
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import Icon from 'components/icon';
@@ -172,11 +172,6 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
           title="Delete"
           handleSubmit={handleOfflineClassDelete}
         />
-      </Grid>
-      <Grid container justifyContent="flex-end" mt={2}>
-        <div className="demo-space-y">
-          <Pagination count={10} color="primary" />
-        </div>
       </Grid>
     </>
   );

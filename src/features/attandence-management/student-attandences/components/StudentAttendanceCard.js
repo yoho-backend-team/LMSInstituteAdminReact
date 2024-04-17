@@ -6,21 +6,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import CustomChip from 'components/mui/chip';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectStudentAttendances } from '../redux/studentAttendanceSelectors';
-import { getAllStudentAttendances } from '../redux/studentAttendanceThunks';
 
-const StudentAttendanceCard = () => {
-  const dispatch = useDispatch();
-  const studentAttendance = useSelector(selectStudentAttendances);
-
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  useEffect(() => {
-    dispatch(getAllStudentAttendances(selectedBranchId));
-  }, [dispatch, selectedBranchId]);
-
+const StudentAttendanceCard = ({ studentAttendance }) => {
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
     const date = new Date(timestamp);

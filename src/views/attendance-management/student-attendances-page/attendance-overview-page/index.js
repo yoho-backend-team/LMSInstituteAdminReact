@@ -6,32 +6,23 @@ import StudentAttendanceFilterCard from 'features/attandence-management/student-
 import { getAllStudentAttendances } from 'features/attandence-management/student-attandences/redux/studentAttendanceThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
-
+import {
+  selectStudentAttendances,
+  selectLoading
+} from 'features/attandence-management/student-attandences/redux/studentAttendanceSelectors';
 const Students = () => {
   // States
-  const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(true);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const dispatch = useDispatch();
+  const studentAttendance = useSelector(selectStudentAttendances);
 
+  const loading = useSelector(selectLoading);
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId }));
+    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId, page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
-
-  useTimeout(() => {
-    setLoading(false);
-  }, 1000);
 
   return (
     <>
@@ -44,11 +35,19 @@ const Students = () => {
         ) : (
           <Grid>
             <Grid className="match-height" sx={{ marginTop: 3 }}>
-              <StudentAttendanceCard />
+              <StudentAttendanceCard studentAttendance={studentAttendance?.data} />
             </Grid>
-            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-              <Pagination count={10} color="primary" />
-            </Grid>
+          </Grid>
+        )}
+        {studentAttendance?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={studentAttendance?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllStudentAttendances({ branch_id: selectedBranchId, page: page }));
+              }}
+            />
           </Grid>
         )}
       </Grid>

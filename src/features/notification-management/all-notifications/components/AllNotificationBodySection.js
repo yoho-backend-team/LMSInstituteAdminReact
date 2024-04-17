@@ -1,17 +1,13 @@
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
 import PropTypes from 'prop-types';
-import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
 
 const AllNotificationBodySection = ({ allNotifications }) => {
-  console.log(allNotifications);
-
   const handleSubmit = async (id) => {
     try {
       const selectedNotification = allNotifications.find((notification) => notification.id === id);
@@ -121,7 +117,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
   ];
 
   return (
-    <Card>
+    <Grid>
       <Divider sx={{ m: '0 !important' }} />
       <DataGrid
         sx={{ p: 2 }}
@@ -133,10 +129,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         hideFooterPagination
         hideFooter
       />
-      <Grid sx={{ m:3,display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
-      </Grid>
-    </Card>
+    </Grid>
   );
 };
 

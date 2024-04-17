@@ -23,7 +23,7 @@ const CustomerSupport = () => {
     <MainCard title="Customer Suppport">
       <Fragment>
         <HelpHeader />
-          <SupportFaq faqCategories={faqCategories}/>
+        <SupportFaq faqCategories={faqCategories} />
         <HelpFooter />
       </Fragment>
     </MainCard>

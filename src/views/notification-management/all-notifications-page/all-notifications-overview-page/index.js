@@ -1,3 +1,4 @@
+import { CardContent, Pagination, Card } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 import AllNotificationAddDrawer from 'features/notification-management/all-notifications/components/AllNotificationAddDrawer';
@@ -14,12 +15,13 @@ const AllNotification = () => {
   const allNotifications = useSelector(selectAllNotifications);
   const allNotificationsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
+
   const [allNotificationRefetch, setAllNotificationRefetch] = useState(false);
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllNotifications(data));
   }, [dispatch, selectedBranchId, allNotificationRefetch]);
@@ -37,17 +39,32 @@ const AllNotification = () => {
         <Grid item xs={12}>
           <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
         </Grid>
-        {allNotificationsLoading ? (
-          <NotificationSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <AllNotificationBodySection
-              allNotifications={allNotifications?.data}
-              setAllNotificationRefetch={setAllNotificationRefetch}
-              selectedBranchId={selectedBranchId}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12}>
+          <Card>
+            {allNotificationsLoading ? (
+              <NotificationSkeleton />
+            ) : (
+              <AllNotificationBodySection
+                allNotifications={allNotifications}
+                setAllNotificationRefetch={setAllNotificationRefetch}
+                selectedBranchId={selectedBranchId}
+              />
+            )}
+            <CardContent>
+              {allNotifications?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={allNotifications?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllNotifications({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
         <AllNotificationAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setAllNotificationRefetch={setAllNotificationRefetch} />
       </Grid>
     </>

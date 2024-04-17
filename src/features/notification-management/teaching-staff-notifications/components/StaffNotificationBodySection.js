@@ -1,7 +1,6 @@
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
@@ -9,7 +8,6 @@ import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
 import { resendStaffNotification } from '../services/staffNotificationServices';
-import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
 const StaffNotificationBodySection = ({ staffNotifications }) => {
   console.log(staffNotifications);
@@ -168,7 +166,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
   ];
 
   return (
-    <Card>
+    <Grid>
       <Divider sx={{ m: '0 !important' }} />
       <DataGrid
         sx={{ p: 2 }}
@@ -180,10 +178,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         hideFooterPagination
         hideFooter
       />
-      <Grid sx={{ m: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
-      </Grid>
-    </Card>
+    </Grid>
   );
 };
 

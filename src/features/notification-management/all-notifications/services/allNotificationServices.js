@@ -5,7 +5,7 @@ const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/i
 // const NOTIFICATION_AUTHBYUSER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/get-notification-by-auth`;
 export const getAllNotifications = async (data) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read-all-notifications`, {
+    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read-all-notifications?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

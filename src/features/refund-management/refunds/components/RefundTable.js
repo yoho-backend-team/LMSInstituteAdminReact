@@ -123,7 +123,8 @@ const RefundTable = () => {
   useEffect(() => {
     dispatch(
       getAllStudentFeeRefunds({
-        branch_id: selectedBranchId
+        branch_id: selectedBranchId,
+        page: '1'
       })
     );
   }, [dispatch, selectedBranchId, refetch]);
@@ -262,6 +263,17 @@ const RefundTable = () => {
               />
             </Card>
           )}
+          {studentFeeRefunds?.last_page !== 1 && (
+            <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Pagination
+                count={studentFeeRefunds?.last_page}
+                color="primary"
+                onChange={(e, page) => {
+                  dispatch(getAllStudentFeeRefunds({ branch_id: selectedBranchId, page: page }));
+                }}
+              />
+            </Grid>
+          )}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
 
           <RefundViewDrawer open={refundViewOpen} toggle={toggleRefundViewDrawer} selectedRowDetails={selectedRowDetails} />
@@ -274,9 +286,6 @@ const RefundTable = () => {
             handleSubmit={handleRefundDelete}
           />
         </Grid>
-      </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
       </Grid>
     </DatePickerWrapper>
   );

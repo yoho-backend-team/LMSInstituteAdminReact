@@ -74,9 +74,8 @@ const SalaryTable = () => {
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log(TeachingStaffSalaries);
   useEffect(() => {
-    dispatch(getAllStaffSalaries({ branch_id: selectedBranchId }));
+    dispatch(getAllStaffSalaries({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const toggleEditUserDrawer = () => {
@@ -314,9 +313,17 @@ const SalaryTable = () => {
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
               />
             )}
-            <Grid sx={{ m: 3, display: 'flex', justifyContent: 'flex-end' }}>
-              <Pagination count={10} color="primary" />
-            </Grid>
+            {TeachingStaffSalaries?.last_page !== 1 && (
+              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination
+                  count={TeachingStaffSalaries?.last_page}
+                  color="primary"
+                  onChange={(e, page) => {
+                    dispatch(getAllStaffSalaries({ branch_id: selectedBranchId, page: page }));
+                  }}
+                />
+              </Grid>
+            )}
           </Card>
         </Grid>
       </Grid>

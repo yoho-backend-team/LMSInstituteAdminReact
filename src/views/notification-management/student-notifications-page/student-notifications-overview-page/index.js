@@ -1,3 +1,4 @@
+import { Card, CardContent, Pagination } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import NotificationSkeleton from 'components/cards/Skeleton/NotificationSkeleton';
 import NotificationAddDrawer from 'features/notification-management/student-notifications/components/NotificationAddDrawer';
@@ -12,7 +13,6 @@ import { getAllStudentNotifications } from 'features/notification-management/stu
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-
 const StudentNotification = () => {
   const dispatch = useDispatch();
   const studentNotifications = useSelector(selectStudentNotifications);
@@ -23,7 +23,8 @@ const StudentNotification = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      page: '1'
     };
     dispatch(getAllStudentNotifications(data));
   }, [dispatch, selectedBranchId, studentNotificationRefetch]);
@@ -41,17 +42,32 @@ const StudentNotification = () => {
         <Grid item xs={12}>
           <NotificationTableHeader studentNotifications={studentNotifications} toggle={toggleAddUserDrawer} />
         </Grid>
-        {studentLoading ? (
-          <NotificationSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <NotificationBodySection
-              studentNotifications={studentNotifications?.data}
-              setStudentNotificationRefetch={setStudentNotificationRefetch}
-              selectedBranchId={selectedBranchId}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12}>
+          <Card>
+            {studentLoading ? (
+              <NotificationSkeleton />
+            ) : (
+              <NotificationBodySection
+                studentNotifications={studentNotifications}
+                setStudentNotificationRefetch={setStudentNotificationRefetch}
+                selectedBranchId={selectedBranchId}
+              />
+            )}
+            <CardContent>
+              {studentNotifications?.last_page !== 1 && (
+                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={studentNotifications?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStudentNotifications({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
         {/* Add Drawer */}
         <NotificationAddDrawer
           open={addUserOpen}
