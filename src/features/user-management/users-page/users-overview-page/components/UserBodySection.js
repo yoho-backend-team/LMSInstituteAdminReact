@@ -15,7 +15,8 @@ import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { getInitials } from 'utils/get-initials';
-
+import Pagination from '@mui/material/Pagination';
+import Grid from '@mui/material/Grid';
 const userStatusObj = {
   1: 'success',
   0: 'error'
@@ -42,7 +43,7 @@ const renderClient = (row) => {
 };
 
 const UserBodySection = ({ users, setUserRefetch }) => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
+  // const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
@@ -226,37 +227,42 @@ const UserBodySection = ({ users, setUserRefetch }) => {
     }
   ];
   return (
-    <Card>
-      <Divider sx={{ m: '0 !important' }} />
+    <Box>
+      <Grid>
+        <Card>
+          <Divider sx={{ m: '0 !important' }} />
 
-      <DataGrid
-        sx={{ p: 2 }}
-        autoHeight
-        rowHeight={62}
-        rows={users}
-        columns={columns}
-        disableRowSelectionOnClick
-        pageSizeOptions={[10, 25, 50]}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-      />
+          <DataGrid
+            sx={{ p: 2 }}
+            autoHeight
+            rowHeight={62}
+            rows={users}
+            columns={columns}
+            disableRowSelectionOnClick
+            hideFooterPagination
+          />
 
-      <StatusChangeDialog
-        open={statusChangeDialogOpen}
-        setOpen={setStatusChangeDialogOpen}
-        description="Are you sure you want to Change Status"
-        title="Change Status"
-        handleSubmit={handleStatusChangeApi}
-      />
+          <StatusChangeDialog
+            open={statusChangeDialogOpen}
+            setOpen={setStatusChangeDialogOpen}
+            description="Are you sure you want to Change Status"
+            title="Change Status"
+            handleSubmit={handleStatusChangeApi}
+          />
 
-      <UserDeleteModel
-        open={userDeleteModelOpen}
-        setOpen={setUserDeleteModelOpen}
-        description="Are you sure you want to delete this user?"
-        title="Delete"
-        handleSubmit={handleUserDelete}
-      />
-    </Card>
+          <UserDeleteModel
+            open={userDeleteModelOpen}
+            setOpen={setUserDeleteModelOpen}
+            description="Are you sure you want to delete this user?"
+            title="Delete"
+            handleSubmit={handleUserDelete}
+          />
+        </Card>
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
+      </Grid>
+    </Box>
   );
 };
 
