@@ -2,6 +2,7 @@ import { Grid, TextField, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Pagination from '@mui/material/Pagination';
 import { DataGrid } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
@@ -116,6 +117,9 @@ const ViewBatchTable = ({ students }) => {
             </Box>
           </Card>
         </Grid>
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );

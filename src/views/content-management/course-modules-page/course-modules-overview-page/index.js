@@ -171,7 +171,7 @@ const Modules = () => {
       }
     },
     {
-      // flex: 1.8,
+      flex: 1,
       minWidth: 320,
       field: 'title',
       headerName: 'Title',
@@ -294,6 +294,9 @@ const Modules = () => {
                 hideFooterPagination
                 hideFooter
               />
+              <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination count={10} color="primary" />
+              </Grid>
             </Card>
           </Grid>
         )}
@@ -314,9 +317,6 @@ const Modules = () => {
           handleSubmit={handleStatusChangeApi}
         />
         <ModuleView open={isViewModalOpen} handleViewClose={handleViewClose} data={selectedRow} modules={selectedRow} />
-      </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );

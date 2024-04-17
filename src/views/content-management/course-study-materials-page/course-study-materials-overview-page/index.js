@@ -170,7 +170,7 @@ const StudyMaterials = () => {
       }
     },
     {
-      // flex: 1.8,
+      flex: 1,
       minWidth: 320,
       field: 'title',
       headerName: 'Title',
@@ -288,6 +288,9 @@ const StudyMaterials = () => {
                 hideFooterPagination
                 hideFooter
               />
+              <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination count={10} color="primary" />
+              </Grid>
             </Card>
           </Grid>
         )}
@@ -315,9 +318,6 @@ const StudyMaterials = () => {
         />
 
         <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
-      </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );

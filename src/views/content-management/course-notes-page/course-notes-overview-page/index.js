@@ -172,7 +172,7 @@ const Notes = () => {
       }
     },
     {
-      // flex: 1.8,
+      flex: 1,
       minWidth: 320,
       field: 'title',
       headerName: 'Title',
@@ -291,6 +291,9 @@ const Notes = () => {
                 hideFooterPagination
                 hideFooter
               />
+              <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <Pagination count={10} color="primary" />
+              </Grid>
             </Card>
           </Grid>
         )}
@@ -312,9 +315,6 @@ const Notes = () => {
           handleSubmit={handleStatusChangeApi}
         />
         <NotesView open={isViewModalOpen} handleViewClose={handleViewClose} notes={selectedRow} />
-      </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );
