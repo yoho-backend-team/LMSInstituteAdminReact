@@ -49,9 +49,9 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const UsersCard = ({ isLoading,branchData }) => {
+const UsersCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
-console.log('dataCheck',branchData.InstituteUserCount)
+  console.log('dataCheck', branchData.InstituteUserCount);
   return (
     <>
       {isLoading ? (
@@ -61,9 +61,9 @@ console.log('dataCheck',branchData.InstituteUserCount)
           <Box sx={{ p: 2 }}>
             <Grid container direction="column">
               <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Avatar
+                <Grid container sx={{justifyContent:'center',display:'flex'}}>
+                  <Grid item >
+                    <Avatar  
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
@@ -77,25 +77,45 @@ console.log('dataCheck',branchData.InstituteUserCount)
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
-                <Grid container alignItems="center">
-                  <Grid item>
+              <Grid container xs={12}>
+                <Grid item xs={6}>
+                  <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                    {branchData.StaffCount}
+                      {branchData.StaffCount}
                     </Typography>
-                  </Grid>
+                  </Box>
+
+                  <Box item sx={{ mb: 1,justifyContent:'center',display:'flex' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      Users
+                    </Typography>
+                  </Box>
                 </Grid>
-              </Grid>
-              <Grid item sx={{ mb: 1 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.common.white
-                  }}
-                >
-                  Users
-                </Typography>
+                <Grid item xs={6}>
+                  <Box sx={{justifyContent:'center',display:'flex'}}>
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
+                      {branchData.StaffCount}
+                    </Typography>
+                  </Box>
+
+                  <Box item sx={{ mb: 1,justifyContent:'center',display:'flex' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      Groups
+                    </Typography>
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
           </Box>

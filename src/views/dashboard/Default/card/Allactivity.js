@@ -43,75 +43,77 @@ const data = [
 const AllActivity = () => {
   const theme = useTheme();
   return (
-    <Card width="100%" height="100%" sx={{ backgroundColor: theme.palette.primary.dark, p: 3 }}>
-      <Box>
-        <Typography variant="h4" sx={{ color: 'white' }}>
-          All activity
-        </Typography>
-        <Card sx={{ mt: 2, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
-          {data.map((item, index) => {
-            return (
-              <Box key={index}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mb: index !== data.length - 1 ? 1 : undefined,
-                    pb: index === data.length - 1 ? 2 : undefined,
-                    pr: 2,
-                    pl: 2,
-                    pt: 2
-                  }}
-                >
-                  <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
-                  <Box sx={{ marginLeft: 2 }}>
-                    <Typography variant="h5" sx={{ color: 'white' }}>
-                      {item.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
-                      {item.subtitle}
-                    </Typography>
+    <>
+      <Typography variant="h4"sx={{ml:1,mb:2}}>
+        Recent Activities
+      </Typography>
+      <Card sx={{ backgroundColor: theme.palette.dark.light, p: 3, height: 450, overflow: 'auto' }}>
+        <Box>
+          <Card sx={{ mt: 2, backgroundColor: theme.palette.primary.main, opacity: 0.8, boxShadow: 'none' }}>
+            {data.map((item, index) => {
+              return (
+                <Box key={index}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mb: index !== data.length - 1 ? 1 : undefined,
+                      pb: index === data.length - 1 ? 2 : undefined,
+                      pr: 2,
+                      pl: 2,
+                      pt: 2
+                    }}
+                  >
+                    <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
+                    <Box sx={{ marginLeft: 2 }}>
+                      <Typography variant="h5" sx={{ color: 'white' }}>
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
+                        {item.subtitle}
+                      </Typography>
+                    </Box>
                   </Box>
+                  <Divider sx={{ mr: 2, ml: 2 }} />
                 </Box>
-                <Divider sx={{ mr: 2, ml: 2 }} />
-              </Box>
-            );
-          })}
-        </Card>
-      </Box>
-      <Box>
-        <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
-          {data.map((item, index) => {
-            return (
-              <Box key={index}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    mb: index !== data.length - 1 ? 1 : undefined,
-                    pb: index === data.length - 1 ? 2 : undefined,
-                    pr: 2,
-                    pl: 2,
-                    pt: 2
-                  }}
-                >
-                  <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
-                  <Box sx={{ marginLeft: 2 }}>
-                    <Typography variant="h5" sx={{ color: 'white' }}>
-                      {item.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
-                      {item.subtitle}
-                    </Typography>
+              );
+            })}
+          </Card>
+        </Box>
+        <Box>
+          <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
+            {data.map((item, index) => {
+              return (
+                <Box key={index}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mb: index !== data.length - 1 ? 1 : undefined,
+                      pb: index === data.length - 1 ? 2 : undefined,
+                      pr: 2,
+                      pl: 2,
+                      pt: 2
+                    }}
+                  >
+                    <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
+                    <Box sx={{ marginLeft: 2 }}>
+                      <Typography variant="h5" sx={{ color: 'white' }}>
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
+                        {item.subtitle}
+                      </Typography>
+                    </Box>
                   </Box>
+                  <Divider sx={{ mr: 2, ml: 2 }} />
                 </Box>
-                <Divider sx={{ mr: 2, ml: 2 }} />
-              </Box>
-            );
-          })}
-        </Card>
-      </Box>
-    </Card>
+              );
+            })}
+          </Card>
+        </Box>
+      </Card>
+    </>
   );
 };
 

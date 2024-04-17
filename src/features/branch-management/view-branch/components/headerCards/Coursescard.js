@@ -7,11 +7,12 @@ import { Avatar, Box, Grid, Typography } from '@mui/material';
 // project imports
 import MainCard from 'components/cards/MainCard';
 import SkeletonEarningCard from 'components/cards/Skeleton/EarningCard';
-import Icon from 'components/icon';
+
 // assets
+import Icon from 'components/icon';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.dark,
+  backgroundColor: theme.palette.success.dark,
   color: '#fff',
   overflow: 'hidden',
   position: 'relative',
@@ -34,7 +35,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 195,
     height: 223,
-    background: theme.palette.secondary.light,
+    background: theme.palette.info.light,
     borderRadius: '50%',
     top: -154,
     right: -72,
@@ -48,10 +49,9 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const Coursescard = ({ isLoading ,branchData}) => {
+const CoursesCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
-  console.log('demo',branchData
-  )
+  console.log('dataCheck', branchData.InstituteUserCount);
   return (
     <>
       {isLoading ? (
@@ -61,9 +61,9 @@ const Coursescard = ({ isLoading ,branchData}) => {
           <Box sx={{ p: 2 }}>
             <Grid container direction="column">
               <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Avatar
+                <Grid container sx={{justifyContent:'center',display:'flex'}}>
+                  <Grid item >
+                    <Avatar  
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
@@ -72,30 +72,50 @@ const Coursescard = ({ isLoading ,branchData}) => {
                         mt: 1
                       }}
                     >
-                      <Icon icon="tabler:books" color="white" />
+                      <Icon icon="tabler:users-group" color="white" />
                     </Avatar>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
-                <Grid container alignItems="center">
-                  <Grid item>
+              <Grid container xs={12}>
+                <Grid item xs={6}>
+                  <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.courseCount}
+                      {branchData.StaffCount}
                     </Typography>
-                  </Grid>
+                  </Box>
+
+                  <Box item sx={{ mb: 1,justifyContent:'center',display:'flex' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      Courses
+                    </Typography>
+                  </Box>
                 </Grid>
-              </Grid>
-              <Grid item sx={{ mb: 1 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.common.white
-                  }}
-                >
-                  Courses
-                </Typography>
+                <Grid item xs={6}>
+                  <Box sx={{justifyContent:'center',display:'flex'}}>
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
+                      {branchData.StaffCount}
+                    </Typography>
+                  </Box>
+
+                  <Box item sx={{ mb: 1,justifyContent:'center',display:'flex' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      Batches
+                    </Typography>
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
           </Box>
@@ -105,8 +125,8 @@ const Coursescard = ({ isLoading ,branchData}) => {
   );
 };
 
-Coursescard.propTypes = {
+CoursesCard.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default Coursescard;
+export default CoursesCard;

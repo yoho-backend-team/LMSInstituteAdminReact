@@ -12,7 +12,7 @@ import SkeletonEarningCard from 'components/cards/Skeleton/EarningCard';
 import Icon from 'components/icon';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.success.dark,
+  backgroundColor: theme.palette.secondary.dark,
   color: '#fff',
   overflow: 'hidden',
   position: 'relative',
@@ -51,7 +51,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const StaffsCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
-
+  console.log('dataCheck', branchData.InstituteUserCount);
   return (
     <>
       {isLoading ? (
@@ -61,9 +61,9 @@ const StaffsCard = ({ isLoading, branchData }) => {
           <Box sx={{ p: 2 }}>
             <Grid container direction="column">
               <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Avatar
+                <Grid container sx={{justifyContent:'center',display:'flex'}}>
+                  <Grid item >
+                    <Avatar  
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
@@ -72,30 +72,50 @@ const StaffsCard = ({ isLoading, branchData }) => {
                         mt: 1
                       }}
                     >
-                      <Icon icon="tabler:chalkboard" color="white" />
+                      <Icon icon="tabler:users-group" color="white" />
                     </Avatar>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
-                <Grid container alignItems="center">
-                  <Grid item>
+              <Grid container xs={12}>
+                <Grid item xs={6}>
+                  <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
                       {branchData.StaffCount}
                     </Typography>
-                  </Grid>
+                  </Box>
+
+                  <Box item sx={{ mb: 1,justifyContent:'center',display:'flex' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      Users
+                    </Typography>
+                  </Box>
                 </Grid>
-              </Grid>
-              <Grid item sx={{ mb: 1 }}>
-                <Typography
-                  sx={{
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    color: theme.palette.common.white
-                  }}
-                >
-                  Staffs
-                </Typography>
+                <Grid item xs={6}>
+                  <Box sx={{justifyContent:'center',display:'flex'}}>
+                    <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
+                      {branchData.StaffCount}
+                    </Typography>
+                  </Box>
+
+                  <Box item sx={{ mb: 1,justifyContent:'center',display:'flex' }}>
+                    <Typography
+                      sx={{
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      Groups
+                    </Typography>
+                  </Box>
+                </Grid>
               </Grid>
             </Grid>
           </Box>
@@ -106,8 +126,7 @@ const StaffsCard = ({ isLoading, branchData }) => {
 };
 
 StaffsCard.propTypes = {
-  isLoading: PropTypes.bool,
-  branchData: PropTypes.object
+  isLoading: PropTypes.bool
 };
 
 export default StaffsCard;

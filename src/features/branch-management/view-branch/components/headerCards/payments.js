@@ -12,7 +12,7 @@ import SkeletonEarningCard from 'components/cards/Skeleton/EarningCard';
 import Icon from 'components/icon';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.secondary.dark,
+  backgroundColor: theme.palette.primary.dark,
   color: '#fff',
   overflow: 'hidden',
   position: 'relative',
@@ -49,7 +49,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const StudentsCard = ({ isLoading, branchData }) => {
+const PaymentsCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
   console.log('dataCheck', branchData.InstituteUserCount);
   return (
@@ -93,7 +93,7 @@ const StudentsCard = ({ isLoading, branchData }) => {
                         color: theme.palette.common.white
                       }}
                     >
-                      Students
+                      Profits
                     </Typography>
                   </Box>
                 </Grid>
@@ -112,7 +112,7 @@ const StudentsCard = ({ isLoading, branchData }) => {
                         color: theme.palette.common.white
                       }}
                     >
-                      Instructors
+                      Payouts
                     </Typography>
                   </Box>
                 </Grid>
@@ -125,8 +125,8 @@ const StudentsCard = ({ isLoading, branchData }) => {
   );
 };
 
-StudentsCard.propTypes = {
+PaymentsCard.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default StudentsCard;
+export default PaymentsCard;
