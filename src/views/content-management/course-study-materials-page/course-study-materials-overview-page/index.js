@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
@@ -23,13 +24,11 @@ import {
   deleteCourseStudyMaterial,
   updateCourseStudyMaterialStatus
 } from 'features/content-management/course-contents/course-study-materials-page/services/studyMaterialServices';
-
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const StudyMaterials = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -191,7 +190,7 @@ const StudyMaterials = () => {
               </Typography>
               <Typography
                 sx={{
-                  textAlign: 'justify',
+                  // textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -286,9 +285,8 @@ const StudyMaterials = () => {
                 rows={StudyMaterials?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
             </Card>
           </Grid>
@@ -317,6 +315,9 @@ const StudyMaterials = () => {
         />
 
         <StudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );

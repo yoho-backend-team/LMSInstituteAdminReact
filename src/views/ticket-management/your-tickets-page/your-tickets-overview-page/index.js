@@ -2,6 +2,7 @@ import TabContext from '@mui/lab/TabContext';
 import CustomTabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { Box, Button, Grid, Typography } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
@@ -92,6 +93,9 @@ const YourTicketsPage = () => {
         setRefetch={setRefetch}
         ticket={selectedTicket}
       />
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
+      </Grid>
     </MainCard>
   );
 };

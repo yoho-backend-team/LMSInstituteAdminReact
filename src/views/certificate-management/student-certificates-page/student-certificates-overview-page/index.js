@@ -2,15 +2,14 @@ import { useCallback, useState } from 'react';
 
 import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import Icon from 'components/icon';
-import { useEffect } from 'react';
-
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
+import Typography from '@mui/material/Typography';
+import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton/ContentSkeleton';
+import Icon from 'components/icon';
 import { default as StatusChangeDialog, default as StudentCertificateDeleteModel } from 'components/modal/DeleteModel';
 import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
@@ -27,6 +26,7 @@ import {
   deleteStudentCertificate,
   updateStudentCertificateStatus
 } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
@@ -38,8 +38,6 @@ const userStatusObj = {
 
 const StudenrCertificate = () => {
   const [value, setValue] = useState('');
-  console.log(setValue);
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -308,9 +306,8 @@ const StudenrCertificate = () => {
                 rows={studentCertificates?.data}
                 columns={columns}
                 disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                paginationModel={paginationModel}
-                onPaginationModelChange={setPaginationModel}
+                hideFooterPagination
+                hideFooter
               />
             </Card>
           </Grid>
@@ -348,6 +345,9 @@ const StudenrCertificate = () => {
         />
 
         <StudentCertificateView certificate={selectedRow} open={isViewModalOpen} handleViewClose={handleViewClose} />
+      </Grid>
+      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={10} color="primary" />
       </Grid>
     </>
   );
