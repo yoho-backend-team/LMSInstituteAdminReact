@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid';
-import UserSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
-import { selectLoading as selectUserLoading, selectUsers } from 'features/user-management/users-page/redux/userSelectors';
+import { selectUsers } from 'features/user-management/users-page/redux/userSelectors';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import UserAddDrawer from 'features/user-management/users-page/users-overview-page/components/UserAddDrawer';
 import UserBodySection from 'features/user-management/users-page/users-overview-page/components/UserBodySection';
@@ -13,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 const UserList = () => {
   const dispatch = useDispatch();
   const users = useSelector(selectUsers);
-  const userLoading = useSelector(selectUserLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [groups, setGroups] = useState([]);
 
@@ -40,7 +38,7 @@ const UserList = () => {
 
   // Fetch users when selectedBranchId or userRefetch changes
   useEffect(() => {
-    dispatch(getAllUsers({ branch_id: selectedBranchId }));
+    dispatch(getAllUsers({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, userRefetch]);
 
   return (
@@ -63,13 +61,10 @@ const UserList = () => {
         </Grid>
 
         {/* Display Skeleton or User Body Section based on loading state */}
-        {userLoading ? (
-          <UserSkeleton />
-        ) : (
-          <Grid item xs={12}>
-            <UserBodySection groups={groups} users={users?.users} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
-          </Grid>
-        )}
+
+        <Grid item xs={12}>
+          <UserBodySection groups={groups} users={users} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
+        </Grid>
 
         {/* Add User Drawer */}
         <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} />
