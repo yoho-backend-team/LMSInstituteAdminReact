@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
-import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
 import { Card, Grid, Stack } from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
 import FormProvider from 'features/course-management/courses-page/course-add-page/components/FormProvider';
+import PropTypes from 'prop-types';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
 import CoursePdfInput from './CoursePdfInput';
 
 export default function CourseValidate({ setCourseSyllabus }) {

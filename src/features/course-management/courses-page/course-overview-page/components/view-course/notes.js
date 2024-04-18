@@ -4,9 +4,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 import { default as DeleteDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import CourseNotesView from './CourseNotesView';
-import PropTypes from 'prop-types';
 
 const Notes = ({ notes }) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -16,7 +16,7 @@ const Notes = ({ notes }) => {
   const handleRowClick = (params) => {
     setSelectedRow(params);
   };
-  
+
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
@@ -84,7 +84,6 @@ const Notes = ({ notes }) => {
       headerName: 'Actions',
       renderCell: ({ row }) => <RowOptions row={row} />
     }
-  
   ];
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
@@ -106,7 +105,7 @@ const Notes = ({ notes }) => {
         description="Are you sure you want to delete this item?"
         title="Delete"
       />
-    <CourseNotesView open={isViewModalOpen} handleViewClose={handleViewClose} notes={selectedRow}/>
+      <CourseNotesView open={isViewModalOpen} handleViewClose={handleViewClose} notes={selectedRow} />
     </Box>
   );
 };

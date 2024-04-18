@@ -1,13 +1,13 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Grid, IconButton } from '@mui/material';
+import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { PDFViewer } from 'react-view-pdf';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import CustomChip from 'components/mui/chip';
 import PropTypes from 'prop-types';
+import { PDFViewer } from 'react-view-pdf';
 
 const CourseNotesView = ({ open, handleViewClose, notes }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
@@ -67,7 +67,7 @@ const CourseNotesView = ({ open, handleViewClose, notes }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={notes?.is_active === "1" ? 'Active' : 'Inactive'}
+                  label={notes?.is_active === '1' ? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>

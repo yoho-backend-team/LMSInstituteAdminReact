@@ -1,12 +1,12 @@
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-import { TextField } from '@mui/material';
-import { useState, useCallback } from 'react';
-import CategoryAddModal from './CategoryAddModal';
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
-import PropTypes from 'prop-types';
+import CategoryAddModal from './CategoryAddModal';
 
 const CategoryCardHeader = (props) => {
   // ** Props
@@ -25,7 +25,6 @@ const CategoryCardHeader = (props) => {
       const searchInput = e.target.value;
       dispatch(getAllCourseCategories({ search: searchInput }));
       setSearchValue(searchInput);
-
     },
     [dispatch]
   );

@@ -5,12 +5,12 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
+import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
-import PropTypes from 'prop-types';
 
 const CategoryFilter = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
@@ -58,7 +58,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     fullWidth
                     onChange={(e, newValue) => {
                       const data = {
-                        course_id: newValue?.course_id, 
+                        course_id: newValue?.course_id,
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllCourseCategories(data));

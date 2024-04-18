@@ -9,21 +9,22 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
-import DeleteDialog from 'components/modal/DeleteModel';
-import StatusChangeDialog from 'components/modal/DeleteModel';
+import { default as DeleteDialog, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import CustomChip from 'components/mui/chip';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { updateCourseStatus } from '../../services/courseServices';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import { updateCourseStatus } from '../../services/courseServices';
 
 const CourseCard = (props) => {
   const { sx, course, setCourseRefetch } = props;
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const imageUrl = course?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.logo}` : 'https://assets.newredo.com/large_image_default_4f2d3c136b.png';
+  const imageUrl = course?.logo
+    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.logo}`
+    : 'https://assets.newredo.com/large_image_default_4f2d3c136b.png';
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -49,10 +50,7 @@ const CourseCard = (props) => {
     <Grid item xs={12} sm={6} md={4}>
       <Card sx={{ ...sx }}>
         <CardContent sx={{ pb: 0 }}>
-          <CardMedia
-            sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }}
-            image={imageUrl}
-          >
+          <CardMedia sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }} image={imageUrl}>
             <CustomChip
               sx={{
                 position: 'absolute',
@@ -67,11 +65,14 @@ const CourseCard = (props) => {
               label={course?.learning_format}
               rounded
               color={
-                course?.learning_format === 'online' ? 'success' :
-                course?.learning_format === 'offline' ? 'primary' :
-                course?.learning_format === 'hybrid' ? 'secondary' :
-                'warning'
-            }
+                course?.learning_format === 'online'
+                  ? 'success'
+                  : course?.learning_format === 'offline'
+                  ? 'primary'
+                  : course?.learning_format === 'hybrid'
+                  ? 'secondary'
+                  : 'warning'
+              }
               size="small"
               variant="outlined"
             />
@@ -89,7 +90,7 @@ const CourseCard = (props) => {
               variant="outlined"
             />
           </Box>
-          <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column',height:'50px' }}>
+          <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column', height: '50px' }}>
             <Typography
               variant="h4"
               sx={{
@@ -136,7 +137,7 @@ const CourseCard = (props) => {
             <TextField
               size="small"
               select
-              sx={{width:100}}
+              sx={{ width: 100 }}
               label="Status"
               SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
             >
@@ -144,8 +145,14 @@ const CourseCard = (props) => {
               <MenuItem value="0">Inactive</MenuItem>
             </TextField>
           </Grid>
-          <Button  component={Link} to="courses/view" state={{ id: course?.course_id }} size="medium" variant="contained" color="primary"
-          sx={{mt:0.4,py:0.8,width:100}}
+          <Button
+            component={Link}
+            to="courses/view"
+            state={{ id: course?.course_id }}
+            size="medium"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 0.4, py: 0.8, width: 100 }}
           >
             View
           </Button>
