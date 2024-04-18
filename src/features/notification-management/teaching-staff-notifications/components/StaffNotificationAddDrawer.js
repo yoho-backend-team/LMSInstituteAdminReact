@@ -69,8 +69,6 @@ const StaffNotificationAddDrawer = (props) => {
       branch_id: selectedBranchId
     };
     const result = await getAllActiveTeachingStaffs(data);
-
-    console.log('active staffs : ', result.data);
     setActiveStaffs(result.data.data);
   };
 
@@ -95,7 +93,6 @@ const StaffNotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     var bodyFormData = new FormData();
     data?.staff?.forEach((staff) => {
       bodyFormData.append('staff_ids[]', staff?.staff_id);

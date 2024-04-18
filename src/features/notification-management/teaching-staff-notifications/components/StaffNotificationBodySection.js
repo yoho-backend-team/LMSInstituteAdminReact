@@ -2,16 +2,15 @@ import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
 import { resendStaffNotification } from '../services/staffNotificationServices';
-import Grid from '@mui/material/Grid';
-const StaffNotificationBodySection = ({ staffNotifications }) => {
-  console.log(staffNotifications);
 
+const StaffNotificationBodySection = ({ staffNotifications }) => {
   const renderClient = (row) => {
     if (row?.avatar?.length) {
       return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;

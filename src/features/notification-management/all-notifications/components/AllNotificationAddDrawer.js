@@ -33,8 +33,6 @@ const AllNotificationAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -83,7 +81,6 @@ const AllNotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('image', selectedImage);
     bodyFormData.append('branch', data.branch);
