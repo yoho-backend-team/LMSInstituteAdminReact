@@ -7,9 +7,9 @@ import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import CustomAvatar from 'components/mui/avatar';
 import OptionsMenu from 'components/option-menu';
+import PropTypes from 'prop-types';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
-import PropTypes from 'prop-types';
 import UserProfileRight from './UserProfileRight';
 
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
