@@ -8,15 +8,11 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { updateStudentTicket } from '../services/studentTicketService';
 
 const TicketResolveDrawer = (props) => {
   const { open, toggle, ticket, setRefetch } = props;
-
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -51,8 +47,6 @@ const TicketResolveDrawer = (props) => {
       solution: data.solution,
       ticket_id: ticket.ticket_id
     };
-
-    console.log(inputData);
 
     const result = await updateStudentTicket(inputData);
 

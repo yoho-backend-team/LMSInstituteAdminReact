@@ -13,9 +13,6 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 }));
 
 const SubscriptionDataTable = ({ Subscription }) => {
-  // ** State
-  console.log('Subscription :', Subscription);
-
   const Columns = [
     {
       flex: 0.1,

@@ -1,24 +1,23 @@
-import { forwardRef, useEffect, useState } from 'react';
-import { Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
-import toast from 'react-hot-toast';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
-import Autocomplete from '@mui/material/Autocomplete';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import DatePicker from 'react-datepicker';
-import { useSelector } from 'react-redux';
-import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
+import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
+import { forwardRef, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
+import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -53,7 +52,6 @@ const FeesAddDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
   const [activeCourse, setActiveCourse] = useState([]);
-  console.log(activeCourse);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeStaffs, setActiveStaffs] = useState([]);
@@ -67,8 +65,6 @@ const FeesAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -78,8 +74,6 @@ const FeesAddDrawer = (props) => {
       branch_id: selectedBranchId
     };
     const result = await getAllActiveTeachingStaffs(data);
-
-    console.log('active staffs : ', result.data);
     setActiveStaffs(result.data.data);
   };
 
@@ -90,6 +84,8 @@ const FeesAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
+
+  console.log(activeCourse);
 
   const {
     handleSubmit,
@@ -130,7 +126,6 @@ const FeesAddDrawer = (props) => {
     bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
 
     const result = await addTeachingStaffSalary(bodyFormData);
-    console.log(data);
     if (result.success) {
       toast.success(result.message);
       handleClose();

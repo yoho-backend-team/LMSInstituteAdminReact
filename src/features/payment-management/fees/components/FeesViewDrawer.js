@@ -6,8 +6,6 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 
 const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
-  console.log(selectedRowDetails);
-
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -53,7 +51,10 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRowDetails?.students?.image}`} sx={{ mr: 2.5, height: 38, width: 38 }} />
+                  <Avatar
+                    src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRowDetails?.students?.image}`}
+                    sx={{ mr: 2.5, height: 38, width: 38 }}
+                  />
                   <Box>
                     <Typography variant="h4"> Refund Id</Typography>
                     <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
@@ -101,6 +102,6 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
 FeesViewDrawer.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
-  selectedRowDetails: PropTypes.any,
+  selectedRowDetails: PropTypes.any
 };
 export default FeesViewDrawer;

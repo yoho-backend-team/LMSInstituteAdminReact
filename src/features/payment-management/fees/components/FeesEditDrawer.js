@@ -1,21 +1,19 @@
-import { useEffect, useState, forwardRef } from 'react';
-import { Button, Grid, Typography, Avatar } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Avatar, Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
+import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
-import { useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 import { updateStudentFee } from '../services/studentFeeServices';
-import DatePicker from 'react-datepicker';
-import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -43,8 +41,8 @@ const FeesEditDrawer = (props) => {
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedStatus, setSelectedStatus] = useState(selectedRows?.payment_date ? new Date(selectedRows?.payment_date) : new Date());
   const [selectedDate, setSelectedDate] = useState();
+
   console.log(selectedStatus);
-  console.log(selectedRows);
 
   const defaultValues = {
     transaction_id: '',
@@ -127,7 +125,6 @@ const FeesEditDrawer = (props) => {
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    console.log(setImgSrc);
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);
@@ -137,8 +134,6 @@ const FeesEditDrawer = (props) => {
       }
     }
   };
-
-  console.log(selectedDate);
 
   const handleStatusChange = (e) => {
     setSelectedStatus(e.target.value);

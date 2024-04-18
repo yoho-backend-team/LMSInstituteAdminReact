@@ -6,6 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
@@ -30,7 +31,6 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
-import Pagination from '@mui/material/Pagination';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -94,19 +94,11 @@ const FeesTable = () => {
     return formattedDateString;
   }
 
-  console.log(convertDateFormat(startDateRange));
-  console.log(endDateRange);
-
-  console.log(setRefetch);
-  console.log(selectedRows);
-
   const dispatch = useDispatch();
   const StudentFees = useSelector(selectStudentFees);
   const StudentFeesLoading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
-  console.log(StudentFees);
 
   useEffect(() => {
     dispatch(
@@ -119,7 +111,6 @@ const FeesTable = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
   };
 
   const handleRowClick = (rowData) => {
@@ -159,7 +150,6 @@ const FeesTable = () => {
   const [feeDeleteModelOpen, setFeeDeleteModelOpen] = useState(false);
 
   const [selectedFeeDeleteId, setSelectedFeeDeleteId] = useState(null);
-  console.log(selectedFeeDeleteId);
 
   const handleDelete = useCallback((itemId) => {
     setSelectedFeeDeleteId(itemId);
@@ -168,7 +158,7 @@ const FeesTable = () => {
 
   // Handle branch deletion
   const handleFeeDelete = async () => {
-    const result = await deleteStudentFee({ id: selectedRows.id });
+    const result = await deleteStudentFee({ id: selectedFeeDeleteId });
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -179,7 +169,6 @@ const FeesTable = () => {
   const [feesViewOpen, setFeesViewUserOpen] = useState(false);
   const toggleFeesViewDrawer = () => {
     setFeesViewUserOpen(!feesViewOpen);
-    console.log('Toggle drawer');
   };
 
   const defaultColumns = [
@@ -326,7 +315,7 @@ const FeesTable = () => {
                     options={batches}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
-                      const selectedBatchId = newValue?.batch_id || ''; 
+                      const selectedBatchId = newValue?.batch_id || '';
                       const data = {
                         batch_id: selectedBatchId,
                         branch_id: selectedBranchId

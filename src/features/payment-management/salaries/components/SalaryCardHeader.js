@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-import { TextField } from '@mui/material';
+import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllStaffSalaries } from '../teaching-staffs/redux/teachingStaffSalariesThunks';
@@ -62,6 +62,6 @@ const SalaryCardHeader = (props) => {
 };
 SalaryCardHeader.propTypes = {
   toggle: PropTypes.any,
-  selectedBranchId: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 export default SalaryCardHeader;

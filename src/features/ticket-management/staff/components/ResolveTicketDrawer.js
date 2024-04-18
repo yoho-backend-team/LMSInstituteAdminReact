@@ -1,28 +1,20 @@
-import { Avatar, Button, Grid, Typography } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Avatar, Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { TextField } from '@mui/material';
-import PropTypes from 'prop-types';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import * as yup from 'yup';
 import { updateStaffTicket } from '../services/staffTicketService';
 
 const TicketResolveDrawer = (props) => {
   // ** Props
   const { open, toggle, ticket, setRefetch } = props;
-
-  console.log(ticket);
-
   // ** State
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
-  // console.log(selectedTicket);
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -57,8 +49,6 @@ const TicketResolveDrawer = (props) => {
       solution: data.solution,
       ticket_id: ticket.ticket_id
     };
-
-    console.log(inputData);
 
     const result = await updateStaffTicket(inputData);
 
