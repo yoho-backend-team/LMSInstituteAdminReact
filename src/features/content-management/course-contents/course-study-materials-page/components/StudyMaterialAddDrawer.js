@@ -18,7 +18,6 @@ import { addCourseStudyMaterial } from '../services/studyMaterialServices';
 
 const StudyMaterialAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
-
   // ** State
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
 

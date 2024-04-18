@@ -46,7 +46,6 @@ const UserViewConnection = ({ id }) => {
     }
   };
 
-  console.log('TeacheractivityLog:', activityLog);
 
   return (
     <Grid container spacing={6}>

@@ -1,17 +1,11 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid';
-
-// ** Demo Components Imports
-// import UserViewLeft from 'src/views/apps/user/view/UserViewLeft'
-// import UserViewRight from 'src/views/apps/user/view/UserViewRight'
 import UserViewLeft from './UserViewLeft';
 import UserViewRight from './UserViewRight';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-// import { getUserById } from 'features/user-management/users-page/services/userServices';
-
 import { getUserProfileById } from 'features/user-management/users-page/services/userServices';
 
 const UserView = () => {
@@ -59,9 +53,6 @@ const UserView = () => {
           <Grid item xs={12} md={5} lg={4}>
             <UserViewLeft id={userData?.id} userData={userData} setRefetch={setRefetch} />
           </Grid>
-          {/* <div>
-helloo
-        </div> */}
           <Grid item xs={12} md={7} lg={8}>
             <UserViewRight id={userData?.id} userData={userData} setRefetch={setRefetch} />
           </Grid>

@@ -83,6 +83,7 @@ const StudentFilter = (props) => {
                   renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Filter By Course" />}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   fullWidth

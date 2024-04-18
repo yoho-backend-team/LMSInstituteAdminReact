@@ -27,7 +27,7 @@ export default function SocialsButton({ item, initialColor = false, simple = tru
     },
 
     {
-      name: `${item.student.is_active==='1' ? 'Active':'Inactive'}`,
+      name: `${item.student.is_active === '1' ? 'Active' : 'Inactive'}`,
       icon: 'eva:person-done-fill',
       socialColor: 'primary.dark',
       path: links.twitter || ''

@@ -33,7 +33,6 @@ const StudyMaterialHeader = (props) => {
     }
   };
 
-
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };

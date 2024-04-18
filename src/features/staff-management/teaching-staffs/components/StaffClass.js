@@ -21,7 +21,7 @@ const LiveClassCard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const dispatch = useDispatch();
-  console.log(liveClasses);
+
 
   useEffect(() => {
     const data = {

@@ -14,7 +14,6 @@ const calendarsColor = {
 
 const AppCalendar = ({ attendance }) => {
   const [calendarApi, setCalendarApi] = useState(null);
-
   const skin = 'default';
   const direction = 'ltr';
   const mdAbove = useMediaQuery((theme) => theme.breakpoints.up('md'));

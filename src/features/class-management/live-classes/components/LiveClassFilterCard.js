@@ -6,7 +6,6 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import format from 'date-fns/format';
-// import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';

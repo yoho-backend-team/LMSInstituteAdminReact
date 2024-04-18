@@ -10,7 +10,7 @@ const FaqTableHeader = (props) => {
   const { toggle, selectedBranchId } = props;
 
   const [searchValue, setSearchValue] = useState('');
-
+  
   // Dispatch function
   const dispatch = useDispatch();
 

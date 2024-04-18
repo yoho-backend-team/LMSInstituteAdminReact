@@ -34,7 +34,7 @@ const defaultValues = {
 
 const FaqAddDrawer = (props) => {
   const { open, toggle, faqCategories, setRefetch } = props;
-
+  
   const {
     reset,
     control,

@@ -11,7 +11,6 @@ import { PDFViewer } from 'react-view-pdf';
 
 const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-
   return (
     <div>
       <Dialog

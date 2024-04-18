@@ -19,6 +19,7 @@ import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
 import { getAllUsers } from '../../redux/userThunks';
 import { useDispatch } from 'react-redux';
+
 const userStatusObj = {
   1: 'success',
   0: 'error'

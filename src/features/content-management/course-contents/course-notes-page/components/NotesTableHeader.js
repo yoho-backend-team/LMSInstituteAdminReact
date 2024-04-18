@@ -17,6 +17,7 @@ const NotesHeader = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const [courses, setCourses] = useState([]);
+
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId

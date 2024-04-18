@@ -21,7 +21,6 @@ import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
-
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);

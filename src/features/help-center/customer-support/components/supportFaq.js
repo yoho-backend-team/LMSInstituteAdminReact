@@ -66,7 +66,7 @@ const SupportFaq = ({ faqCategories }) => {
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-
+  
   const renderTabContent = () => {
     return faqCategories?.map((tab) => {
       return (

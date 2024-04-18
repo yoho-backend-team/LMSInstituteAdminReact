@@ -17,7 +17,6 @@ import { addCourseModule } from '../services/moduleServices';
 
 const CourseModuleAddDrawer = (props) => {
   const { open, toggle, branches } = props;
-
   const [activeCourse, setActiveCourse] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);

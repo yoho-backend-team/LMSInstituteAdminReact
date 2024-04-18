@@ -23,6 +23,7 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
   const handleDelete = () => {
     setStaffDeleteModelOpen(true);
   };
+  
   const Navigate = useNavigate();
   const handleStaffDelete = async () => {
     const data = { id: staffID };

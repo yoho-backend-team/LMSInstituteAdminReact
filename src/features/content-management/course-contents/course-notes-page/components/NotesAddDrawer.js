@@ -18,7 +18,7 @@ import { addCourseNote } from '../services/noteServices';
 
 const CourseNotesAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
-
+  
   // ** State
   const [notesPdf, setnotesPdf] = useState('');
 

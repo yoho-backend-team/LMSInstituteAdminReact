@@ -17,8 +17,6 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
-  console.log('non teaching details', staff);
-
   const handleDelete = () => {
     setStaffDeleteModelOpen(true);
   };
@@ -35,7 +33,6 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
       toast.error(result.message);
     }
   };
-  console.log('gettingId', staffID);
 
   return (
     <Grid container spacing={4}>
