@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
-import { default as DeleteDialog } from 'components/modal/DeleteModel';
 import Icon from 'components/icon';
-import { useState } from 'react';
+import { default as DeleteDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
-import CourseStudyMaterialView from './CourseStudyMaterialView';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import CourseStudyMaterialView from './CourseStudyMaterialView';
 
 const StudyMaterials = ({ materials }) => {
   const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -16,7 +16,7 @@ const StudyMaterials = ({ materials }) => {
   const handleRowClick = (params) => {
     setSelectedRow(params);
   };
-  
+
   const handleViewClose = () => {
     setViewModalOpen(false);
   };
@@ -53,7 +53,7 @@ const StudyMaterials = ({ materials }) => {
         const { row } = params;
 
         return (
-          <Box sx={{ my:2 }}>
+          <Box sx={{ my: 2 }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
               {row.title}
             </Typography>
@@ -105,7 +105,7 @@ const StudyMaterials = ({ materials }) => {
         description="Are you sure you want to delete this item?"
         title="Delete"
       />
-     <CourseStudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
+      <CourseStudyMaterialView open={isViewModalOpen} handleViewClose={handleViewClose} StudyMaterials={selectedRow} />
     </Box>
   );
 };

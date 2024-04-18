@@ -1,13 +1,12 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Icon from 'components/icon';
-import Grid from '@mui/material/Grid';
-import { useDropzone } from 'react-dropzone';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 const CoursePdfInput = ({ setCourseSyllabus }) => {
-
   const [files, setFiles] = useState([]);
 
   const { getRootProps, getInputProps } = useDropzone({

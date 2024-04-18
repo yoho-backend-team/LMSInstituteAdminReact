@@ -1,11 +1,11 @@
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
-import { TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { getAllCourses } from '../../redux/courseThunks';
 
 const CourseCardHeader = ({ selectedBranchId }) => {
@@ -35,7 +35,7 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
         <TextField
@@ -47,7 +47,14 @@ const CourseCardHeader = ({ selectedBranchId }) => {
           onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
-          <Button sx={{py:1.5,borderRadius:'0.5rem'}}variant="contained" component={Link} to="courses/add" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button
+            sx={{ py: 1.5, borderRadius: '0.5rem' }}
+            variant="contained"
+            component={Link}
+            to="courses/add"
+            color="primary"
+            startIcon={<Icon icon="tabler:plus" />}
+          >
             Add New Course
           </Button>
         </Box>

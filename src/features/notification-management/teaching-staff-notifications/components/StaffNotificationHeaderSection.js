@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import StaffNotificationHeaderCard from './StaffNotificationHeaderCard';
 
 const StaffNotificationHeaderSection = ({ staffNotifications }) => {
-  console.log(staffNotifications);
   return (
     <>
       <Grid container spacing={2}>

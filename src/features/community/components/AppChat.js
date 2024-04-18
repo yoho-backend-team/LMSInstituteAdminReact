@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import dummydata from './dummydata';
 export const fetchUserProfile = createAsyncThunk('appChat/fetchUserProfile', async () => {
   return dummydata.profileUser;
@@ -16,8 +16,7 @@ export const selectChat = createAsyncThunk('appChat/selectChat', async (id) => {
 });
 
 export const sendMsg = createAsyncThunk('appChat/sendMsg', async (obj) => {
-  const newMessageData = {
-  };
+  const newMessageData = {};
 
   return { newMessageData, id: obj.contact.id };
 });

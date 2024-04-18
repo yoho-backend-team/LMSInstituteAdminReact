@@ -6,12 +6,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
-import { PDFViewer } from 'react-view-pdf';
 import PropTypes from 'prop-types';
+import { PDFViewer } from 'react-view-pdf';
 
 const CourseStudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
- 
+
   return (
     <div>
       <Dialog
@@ -68,7 +68,7 @@ const CourseStudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={StudyMaterials?.is_active === "1" ? 'Active' : 'Inactive'}
+                  label={StudyMaterials?.is_active === '1' ? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>

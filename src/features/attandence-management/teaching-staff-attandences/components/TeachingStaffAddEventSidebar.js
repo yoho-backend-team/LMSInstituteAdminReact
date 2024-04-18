@@ -33,7 +33,6 @@ const TeachingStaffAddEventSidebar = (props) => {
     }
   }, [selected]);
 
-
   const { control, setValue, clearErrors, handleSubmit } = useForm({ defaultValues: defaultState });
 
   const handleSidebarClose = async () => {

@@ -6,12 +6,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../../services/courseCategoryServices';
-import PropTypes from 'prop-types';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
@@ -224,4 +224,3 @@ CategoryEditModal.propTypes = {
 };
 
 export default CategoryEditModal;
- 
