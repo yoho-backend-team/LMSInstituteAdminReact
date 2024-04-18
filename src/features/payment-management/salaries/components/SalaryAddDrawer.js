@@ -85,6 +85,8 @@ const FeesAddDrawer = (props) => {
     }
   };
 
+  console.log(activeCourse);
+
   const {
     handleSubmit,
     control,

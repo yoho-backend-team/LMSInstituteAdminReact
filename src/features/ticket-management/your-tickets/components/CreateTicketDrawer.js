@@ -10,9 +10,8 @@ import * as yup from 'yup';
 import Icon from 'components/icon';
 import { useSelector } from 'react-redux';
 import { CreateTicket } from '../services/ticketService';
- 
-const CreateTicketDrawer = (props) => {
 
+const CreateTicketDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
@@ -52,7 +51,8 @@ const CreateTicketDrawer = (props) => {
   const onSubmit = async (data) => {
     try {
       const inputData = {
-        query: data.query
+        query: data.query,
+        branch_id: selectedBranchId
       };
 
       const result = await CreateTicket(inputData);
@@ -100,8 +100,8 @@ const CreateTicketDrawer = (props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12}>
             <Controller
-              name="query" 
-              control={control} 
+              name="query"
+              control={control}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -135,7 +135,7 @@ const CreateTicketDrawer = (props) => {
 CreateTicketDrawer.propTypes = {
   open: PropTypes.any,
   toggle: PropTypes.any,
-  setRefetch: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default CreateTicketDrawer;

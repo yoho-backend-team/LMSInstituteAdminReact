@@ -8,7 +8,6 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { updateStaffTicket } from '../services/staffTicketService';
 
@@ -16,7 +15,6 @@ const TicketResolveDrawer = (props) => {
   // ** Props
   const { open, toggle, ticket, setRefetch } = props;
   // ** State
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',

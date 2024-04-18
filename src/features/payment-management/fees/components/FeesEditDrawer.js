@@ -42,6 +42,8 @@ const FeesEditDrawer = (props) => {
   const [selectedStatus, setSelectedStatus] = useState(selectedRows?.payment_date ? new Date(selectedRows?.payment_date) : new Date());
   const [selectedDate, setSelectedDate] = useState();
 
+  console.log(selectedStatus);
+
   const defaultValues = {
     transaction_id: '',
     paid_amount: '',
