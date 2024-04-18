@@ -1,11 +1,12 @@
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
 import PropTypes from 'prop-types';
-import Grid from '@mui/material/Grid';
+import toast from 'react-hot-toast';
 
 const AllNotificationBodySection = ({ allNotifications }) => {
   const handleSubmit = async (id) => {

@@ -70,7 +70,7 @@ const StudentCertificateTableHeader = (props) => {
         <Card>
           <CardHeader title="Student Certificates" />
           <CardContent sx={{ pt: 0, pb: 0 }}>
-            <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
+            <Grid container spacing={2} sx={{ alignItems: 'center', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12} sx={{ mb: 3 }}>
                 <Grid container spacing={4}>
                   <Grid item xs={12} sm={6}>
@@ -87,21 +87,20 @@ const StudentCertificateTableHeader = (props) => {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
-                      // multiple
                       fullWidth
                       options={batches}
                       filterSelectedOptions
                       onChange={(e, newValue) => {
-                        console.log(newValue);
+                        const selectedBatchId = newValue?.batch_id || '';
                         const data = {
-                          batch_id: newValue.batch_id,
+                          batch_id: selectedBatchId,
                           branch_id: selectedBranchId
                         };
                         dispatch(getAllStudentCertificates(data));
                       }}
                       id="autocomplete-multiple-outlined"
                       getOptionLabel={(option) => option.batch_name || ''}
-                      renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
+                      renderInput={(params) => <TextField {...params} label="Batches" placeholder="Favorites" />}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>

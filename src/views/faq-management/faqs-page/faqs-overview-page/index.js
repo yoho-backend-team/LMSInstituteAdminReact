@@ -117,7 +117,7 @@ const FaqDataGrid = () => {
       }
     },
     {
-      flex: 2.2,
+      flex: 1.5,
       field: 'title',
       headerName: 'Faq Name',
       renderCell: ({ row }) => {
@@ -146,7 +146,7 @@ const FaqDataGrid = () => {
       }
     },
     {
-      flex: 1.5,
+      flex: 1,
       field: 'Category',
       headerName: 'Category',
       renderCell: ({ row }) => {

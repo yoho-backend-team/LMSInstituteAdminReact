@@ -28,7 +28,7 @@ const FaqCategoriesTableHeader = (props) => {
   return (
     <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
       <Grid item xs={12} sx={{ my: 3 }}>
-        <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Grid item sm={5} xs={12}>
             <TextField
               value={searchValue}

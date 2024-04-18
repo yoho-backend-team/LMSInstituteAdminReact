@@ -326,9 +326,9 @@ const FeesTable = () => {
                     options={batches}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
-                      console.log(newValue);
+                      const selectedBatchId = newValue?.batch_id || ''; 
                       const data = {
-                        batch_id: newValue.batch_id,
+                        batch_id: selectedBatchId,
                         branch_id: selectedBranchId
                       };
                       dispatch(getAllStudentFees(data));
