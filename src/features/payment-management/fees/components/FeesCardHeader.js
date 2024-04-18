@@ -1,11 +1,11 @@
+import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
-import { TextField } from '@mui/material';
-import { getAllStudentFees } from '../redux/studentFeeThunks';
-import { useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getAllStudentFees } from '../redux/studentFeeThunks';
 
 const FeesCardHeader = (props) => {
   const { toggle, selectedBranchId } = props;
@@ -57,6 +57,6 @@ const FeesCardHeader = (props) => {
 
 FeesCardHeader.propTypes = {
   toggle: PropTypes.any,
-  selectedBranchId: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 export default FeesCardHeader;

@@ -10,13 +10,11 @@ import * as yup from 'yup';
 import Icon from 'components/icon';
 import { useSelector } from 'react-redux';
 import { CreateTicket } from '../services/ticketService';
-
+ 
 const CreateTicketDrawer = (props) => {
 
   const { open, toggle, setRefetch } = props;
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
-
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',

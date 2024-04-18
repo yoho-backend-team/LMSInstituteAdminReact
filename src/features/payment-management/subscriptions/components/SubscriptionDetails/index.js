@@ -27,8 +27,6 @@ const SubscriptionDetails = (props) => {
   // ** Props
   const { data } = props;
 
-  console.log('Subscriptions Plan', data);
-
   const renderFeatures = () => {
     if (!Array.isArray(data?.features)) {
       return null;

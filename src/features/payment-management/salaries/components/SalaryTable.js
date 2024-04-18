@@ -80,7 +80,6 @@ const SalaryTable = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
   };
 
   const [salariesDeleteModelOpen, setSalariesDeleteModelOpen] = useState(false);
@@ -125,7 +124,6 @@ const SalaryTable = () => {
   const [salaryViewOpen, setSalaryViewUserOpen] = useState(false);
   const toggleSalaryViewDrawer = () => {
     setSalaryViewUserOpen(!salaryViewOpen);
-    console.log('Toggle drawer');
   };
 
   const defaultColumns = [

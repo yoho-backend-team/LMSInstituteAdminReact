@@ -1,19 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Button, Grid, Typography , Avatar} from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Avatar, Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { TextField } from '@mui/material';
 import Icon from 'components/icon';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 import { updateTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
-import { useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -30,11 +28,10 @@ const schema = yup.object().shape({
 const SalaryEditDrawer = (props) => {
   const { open, toggle, selectedRows, setRefetch } = props;
   const image =
-  'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
-  console.log(selectedRows);
 
   const defaultValues = {
     transaction_id: '',
@@ -57,12 +54,11 @@ const SalaryEditDrawer = (props) => {
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (selectedRows) {
-      setValue('image',selectedRows?.selectedImage || '');
+      setValue('image', selectedRows?.selectedImage || '');
       setValue('transaction_id', selectedRows?.transaction_id || '');
       setValue('salary_amount', selectedRows?.salary_amount || '');
     }
   }, [selectedRows, setValue]);
-
 
   const handleClose = () => {
     setValue('contact', Number(''));
@@ -78,7 +74,6 @@ const SalaryEditDrawer = (props) => {
     inputData.append('id', selectedRows.id);
 
     const result = await updateTeachingStaffSalary(inputData);
-    console.log(data);
     if (result.success) {
       toast.success(result.message);
       handleClose();
@@ -105,7 +100,6 @@ const SalaryEditDrawer = (props) => {
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    console.log(setImgSrc);
     if (files && files.length !== 0) {
       reader.onload = () => setImgSrc(reader.result);
       setSelectedImage(files[0]);
@@ -115,8 +109,6 @@ const SalaryEditDrawer = (props) => {
       }
     }
   };
-
-
 
   return (
     <DatePickerWrapper>
@@ -148,7 +140,7 @@ const SalaryEditDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Avatar
                   src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${selectedRows?.staff?.image}`}

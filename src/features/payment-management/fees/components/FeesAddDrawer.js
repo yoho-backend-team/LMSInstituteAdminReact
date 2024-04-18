@@ -1,25 +1,24 @@
-import { forwardRef, useEffect, useState } from 'react';
-import { Button, Grid, Typography, MenuItem } from '@mui/material';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-import { TextField } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
 import Icon from 'components/icon';
 import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import PropTypes from 'prop-types';
+import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import * as yup from 'yup';
 import { addStudentFee } from '../services/studentFeeServices';
-import PropTypes from 'prop-types';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -75,8 +74,6 @@ const FeesAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -131,7 +128,6 @@ const FeesAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('payment_proof', selectedImage);
     bodyFormData.append('branch_id', data.branch);

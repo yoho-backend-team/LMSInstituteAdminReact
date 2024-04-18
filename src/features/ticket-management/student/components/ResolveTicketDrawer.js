@@ -16,7 +16,6 @@ const TicketResolveDrawer = (props) => {
   const { open, toggle, ticket, setRefetch } = props;
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -51,8 +50,6 @@ const TicketResolveDrawer = (props) => {
       solution: data.solution,
       ticket_id: ticket.ticket_id
     };
-
-    console.log(inputData);
 
     const result = await updateStudentTicket(inputData);
 
