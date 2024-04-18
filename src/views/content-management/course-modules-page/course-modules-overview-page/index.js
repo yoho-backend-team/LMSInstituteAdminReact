@@ -158,7 +158,6 @@ const Modules = () => {
 
   const columns = [
     {
-      // flex: 0.4,
       minWidth: 150,
       headerName: 'Id',
       field: 'employee_id',
@@ -191,7 +190,6 @@ const Modules = () => {
               </Typography>
               <Typography
                 sx={{
-                  // textAlign: 'justify',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   mt: 1
@@ -205,7 +203,6 @@ const Modules = () => {
       }
     },
     {
-      // flex: 1.5,
       minWidth: 220,
       field: 'course',
       headerName: 'course',
@@ -213,13 +210,7 @@ const Modules = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
-              // noWrap
               sx={{
-                // overflow: 'hidden',
-                // display: '-webkit-box',
-                // WebkitLineClamp: 1,
-                // WebkitBoxOrient: 'vertical',
-                // textOverflow: 'ellipsis',
                 color: 'text.secondary',
                 textTransform: 'capitalize'
               }}
@@ -231,7 +222,6 @@ const Modules = () => {
       }
     },
     {
-      // flex: 0.4,
       minWidth: 180,
       field: 'status',
       headerName: 'Status',
@@ -263,7 +253,6 @@ const Modules = () => {
       }
     },
     {
-      // flex: 0.4,
       minWidth: 180,
       sortable: false,
       field: 'actions',
@@ -311,7 +300,7 @@ const Modules = () => {
           </Card>
         </Grid>
 
-        <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />
+        <ModuleAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} setRefetch={setrefetch} />
         <ModuleEdit open={editUserOpen} toggle={toggleEditUserDrawer} modules={selectedRow} setRefetch={setrefetch} />
         <ModulesDeleteModal
           open={ModulesDeleteModalOpen}

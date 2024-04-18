@@ -16,7 +16,7 @@ import * as yup from 'yup';
 import { addCourseModule } from '../services/moduleServices';
 
 const CourseModuleAddDrawer = (props) => {
-  const { open, toggle, branches } = props;
+  const { open, toggle, branches,setRefetch } = props;
   const [activeCourse, setActiveCourse] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -92,6 +92,7 @@ const CourseModuleAddDrawer = (props) => {
     const result = await addCourseModule(inputData);
 
     if (result.success) {
+      setRefetch((state) => !state);
       toast.success(result.message);
       reset();
       toggle();

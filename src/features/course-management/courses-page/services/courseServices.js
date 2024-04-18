@@ -149,7 +149,7 @@ export const deleteCourse = async (data) => {
       },
       params: data
     });
-    console.log(data);
+    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Course deleted successfully' };
     } else {

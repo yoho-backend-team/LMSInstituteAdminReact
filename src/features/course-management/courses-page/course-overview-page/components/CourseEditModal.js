@@ -16,7 +16,7 @@ import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourse } from '../../services/courseServices';
 
-const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) => {
+const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRefetch }) => {
   const [activeCategories, setActiveCategories] = useState([]);
 
   const image =
@@ -146,6 +146,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
         const result = await updateCourse(formData);
 
         if (result.success) {
+          setRefetch((state) => !state);
           toast.success(result.message);
           handleClose();
         } else {
@@ -158,8 +159,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId }) =>
     },
     [course]
   );
-
-  console.log(onSubmit);
 
   // Close the modal
   const handleClose = useCallback(() => {

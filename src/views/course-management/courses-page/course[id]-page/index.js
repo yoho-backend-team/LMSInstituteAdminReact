@@ -29,17 +29,18 @@ import toast from 'react-hot-toast';
 import ReactPlayer from 'react-player';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
-
+  const navigate = useNavigate();
   const location = useLocation();
   const courseId = location.state?.id;
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [courseDeleteModelOpen, setCourseDeleteModelOpen] = useState(false);
   const [selectedCourseDeleteId, setSelectedCourseDeleteId] = useState(null);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
+  const [refetch, setRefetch] = useState(false);
   const [expanded, setExpanded] = useState(null);
   const [course, setCourse] = useState(null);
 
@@ -49,7 +50,7 @@ const CourseViewPage = () => {
     if (courseId && selectedBranchId) {
       getCourseData(courseId);
     }
-  }, [courseId, selectedBranchId]);
+  }, [courseId, selectedBranchId, refetch]);
 
   console.log('course', course);
 
@@ -91,6 +92,7 @@ const CourseViewPage = () => {
     const result = await deleteCourse(data);
     if (result.success) {
       toast.success(result.message);
+      navigate(-1);
     } else {
       toast.error(result.message);
     }
@@ -170,7 +172,7 @@ const CourseViewPage = () => {
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton onClick={() => handleDelete(course?.id)} color="secondary">
+              <IconButton onClick={() => handleDelete(course?.institute_course_branch?.id)} color="secondary">
                 <Icon icon="mdi:delete-outline" />
               </IconButton>
             </Box>
@@ -191,7 +193,13 @@ const CourseViewPage = () => {
           </Button>
           <div style={{ overflow: 'auto', height: '73vh' }}>{course?.course_module?.map(createAccordion)}</div>
           {/* Edit Modal */}
-          <CourseEditModal selectedBranchId={selectedBranchId} course={course} open={isEditModalOpen} handleEditClose={handleEditClose} />
+          <CourseEditModal
+            setRefetch={setRefetch}
+            selectedBranchId={selectedBranchId}
+            course={course}
+            open={isEditModalOpen}
+            handleEditClose={handleEditClose}
+          />
 
           {/* Delete Modal */}
           <CourseDeleteModel
