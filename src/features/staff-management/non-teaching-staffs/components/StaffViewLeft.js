@@ -19,7 +19,6 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }));
 
 const NonTeachingViewBanner = ({ staff }) => {
-  console.log('nonTeachingViewww:', staff);
 
   const imageUrl = staff?.teachingStaff?.image
     ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staff.teachingStaff.image}`

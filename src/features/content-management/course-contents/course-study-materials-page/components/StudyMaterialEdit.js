@@ -39,7 +39,7 @@ const defaultValues = {
 
 const StudyMaterialEdit = (props) => {
   const { open, toggle, StudyMaterials, setRefetch } = props;
-
+  
   const {
     handleSubmit,
     control,

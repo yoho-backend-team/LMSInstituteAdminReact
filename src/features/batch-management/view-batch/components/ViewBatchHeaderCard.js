@@ -11,7 +11,6 @@ import CustomChip from 'components/mui/chip';
 const EcommerceStatistics = ({ batchData, theme }) => {
   console.log('batchData2:', batchData);
   const CardStyle = styled(Card)(({ theme }) => ({
-    // border: '2px dotted',
     borderColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main,
     background: theme.palette.mode === 'light' ? theme.palette.secondary.light : theme.palette.dark.main,
     marginTop: '16px',
@@ -23,9 +22,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
       position: 'absolute',
       width: '289px',
       height: '200px',
-      // border: '100px solid ',
       borderColor: theme.palette.primary.main,
-      // borderRadius: '50%',
       top: '-27px',
       right: '-8px'
     }
@@ -51,7 +48,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
               />
               <CardContent sx={{ mt: 0, pt: 0 }}>
                 <Grid container>
-                  <Grid item xs={12} sm={5} sx={{ display: 'flex', alignItems: 'center',mt:2 }}>
+                  <Grid item xs={12} sm={5} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <Typography variant="h5">Course Name :</Typography>
                     <Typography
                       variant="h5"
@@ -60,12 +57,12 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                       {batchData?.institute_course?.institute_course_branch?.course_name}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center',mt:2 }}>
+                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <Typography>
                       <CustomChip label={batchData.batch_id} rounded color="primary" variant="contained"></CustomChip>
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center',mt:2 }}>
+                  <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <Typography variant="h5">Duration:</Typography>
                     <Typography
                       variant="h4"
@@ -75,7 +72,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                     </Typography>
                     <Typography sx={{ ml: 0.5 }}>days</Typography>
                   </Grid>
-                  <Grid item xs={12} sm={3} sx={{mt:2}}>
+                  <Grid item xs={12} sm={3} sx={{ mt: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
                       <CustomChip label={batchData.start_date} size="large" color="secondary" variant="tonal" skin="dark" rounded />
                       <div className="connect" />

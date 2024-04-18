@@ -45,7 +45,6 @@ const TabList = styled(MuiTabList)(({ theme }) => ({
 const UserViewRight = ({ id }) => {
   const tab = 'account';
   const [activeTab, setActiveTab] = useState('account');
-
   const handleChange = (event, value) => {
     setActiveTab(value);
   };

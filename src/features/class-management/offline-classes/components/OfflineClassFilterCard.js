@@ -16,7 +16,6 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const [selectedBatch, setSelectedBatch] = useState(null);
-
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };

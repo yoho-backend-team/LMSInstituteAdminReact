@@ -25,7 +25,7 @@ const useTimeout = (callback, delay) => {
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
-
+  
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);

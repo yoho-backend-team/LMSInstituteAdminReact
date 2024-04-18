@@ -34,7 +34,6 @@ const TeacherFilter = (props) => {
     [dispatch]
   );
 
-  console.log(statusValue);
   return (
     <Grid container spacing={2} px={1}>
       <Grid item xs={12}>

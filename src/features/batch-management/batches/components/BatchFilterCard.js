@@ -94,79 +94,72 @@ const BatchFilterCard = (props) => {
 
   return (
     <DatePickerWrapper>
-        <Grid item xs={12} sm={12}>
-          <Card >
-            <CardHeader title="Batches" />
-            <CardContent>
-              <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Search By Status"
-                    defaultValue={''}
-                    SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
-                  >
-                    <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <DatePicker
-                    isClearable
-                    selectsRange
-                    monthsShown={2}
-                    endDate={endDateRange}
-                    selected={startDateRange}
-                    startDate={startDateRange}
-                    shouldCloseOnSelect={false}
-                    id="date-range-picker-months"
-                    onChange={handleOnChangeRange}
-                    customInput={
-                      <CustomInput
-                        dates={dates}
-                        setDates={setDates}
-                        label="Search Between Dates"
-                        end={endDateRange}
-                        start={startDateRange}
-                      />
-                    }
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    fullWidth
-                    onChange={(e, newValue) => {
-                      const data = {
-                        course_id: newValue?.course_id || '',
-                        branch_id: selectedBranchId
-                      };
-                      dispatch(getAllBatches(data));
-                    }}
-                    options={courses}
-                    getOptionLabel={(option) => option.course_name || ''}
-                    renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
-                  />
-                </Grid>
-                <Grid xs={12} sm={4}></Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
-                </Grid>
-
-                <Grid item xs={12} sm={4} > 
-                  <Box component={Link} to={'batches/add'}>
-                    <Button variant="contained" size="medium" fullWidth sx={{py:1.7,borderRadius:2}}>
-                      Add New Batch
-                    </Button>
-                  </Box>
-                </Grid>
+      <Grid item xs={12} sm={12}>
+        <Card>
+          <CardHeader title="Batches" />
+          <CardContent>
+            <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  select
+                  fullWidth
+                  label="Search By Status"
+                  defaultValue={''}
+                  SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
+                >
+                  <MenuItem value="">Select Status</MenuItem>
+                  <MenuItem value="1">Active</MenuItem>
+                  <MenuItem value="0">Inactive</MenuItem>
+                </TextField>
               </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-     
+              <Grid item xs={12} sm={4}>
+                <DatePicker
+                  isClearable
+                  selectsRange
+                  monthsShown={2}
+                  endDate={endDateRange}
+                  selected={startDateRange}
+                  startDate={startDateRange}
+                  shouldCloseOnSelect={false}
+                  id="date-range-picker-months"
+                  onChange={handleOnChangeRange}
+                  customInput={
+                    <CustomInput dates={dates} setDates={setDates} label="Search Between Dates" end={endDateRange} start={startDateRange} />
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  fullWidth
+                  onChange={(e, newValue) => {
+                    const data = {
+                      course_id: newValue?.course_id || '',
+                      branch_id: selectedBranchId
+                    };
+                    dispatch(getAllBatches(data));
+                  }}
+                  options={courses}
+                  getOptionLabel={(option) => option.course_name || ''}
+                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
+                />
+              </Grid>
+              <Grid xs={12} sm={4}></Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <Box component={Link} to={'batches/add'}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.7, borderRadius: 2 }}>
+                    Add New Batch
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
     </DatePickerWrapper>
   );
 };

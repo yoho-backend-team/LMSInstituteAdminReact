@@ -22,6 +22,7 @@ const UserViewSecurity = ({ id }) => {
     confirmNewPassword: '',
     showConfirmNewPassword: false
   });
+  
   const [passwordsMatch, setPasswordsMatch] = useState(true);
 
   const handleNewPasswordChange = (prop) => (event) => {

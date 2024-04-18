@@ -18,7 +18,6 @@ const UserViewAccount = ({ student }) => {
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
-  console.log('students Course :', student);
   const [studentDeleteModelOpen, setStudentDeleteModelOpen] = useState(false);
   const [selectedStudentDeleteId, setSelectedStudentDeleteId] = useState(null);
 

@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-// import { updateUser } from '../../services/userServices';
 import { updateUser } from 'features/user-management/users-page/services/userServices';
 import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
 

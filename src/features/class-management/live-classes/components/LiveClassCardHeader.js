@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import LiveClassAddModal from './add-LiveClass/LiveClassAddModal';
-
 import { getAllLiveClasses } from '../redux/liveClassThunks';
 
 const LiveClassCardHeader = (props) => {

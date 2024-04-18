@@ -42,7 +42,7 @@ const NotesEdit = (props) => {
   const { open, toggle, notes, setRefetch } = props;
   console.log('NotesEdit - open:', props.open);
   console.log('NotesEdit - toggle:', props.toggle);
-
+  
   const {
     handleSubmit,
     control,

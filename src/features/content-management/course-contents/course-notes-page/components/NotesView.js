@@ -11,7 +11,7 @@ import { PDFViewer } from 'react-view-pdf';
 
 const NotesView = ({ open, handleViewClose, notes }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-
+  
   return (
     <div>
       <Dialog

@@ -26,7 +26,6 @@ const OfflineClassCardHeader = (props) => {
   const handleAddClose = () => {
     setAddModalOpen(false);
   };
-
   const handleAdd = () => {
     setAddModalOpen(true);
   };

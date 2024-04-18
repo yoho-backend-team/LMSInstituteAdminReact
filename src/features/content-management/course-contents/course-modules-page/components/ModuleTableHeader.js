@@ -17,7 +17,7 @@ const ModuleHeader = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
-
+  
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {

@@ -16,7 +16,7 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
   const handleClose = () => {
     toggle();
   };
-
+  
   return (
     <>
       <Drawer
