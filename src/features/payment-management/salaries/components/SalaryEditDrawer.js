@@ -121,7 +121,7 @@ const SalaryEditDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h5">Edit Salaries</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
