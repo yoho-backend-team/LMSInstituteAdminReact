@@ -245,54 +245,52 @@ const Batch = () => {
 
   return (
     <>
-      <Grid>
-        <Grid container className="match-height">
-          <Grid item xs={12}>
-            <BatchFilterCard selectedBranchId={selectedBranchId} setBatchRefetch={setBatchRefetch} />
-          </Grid>
+      <Grid container>
+        <Grid item xs={12} sm={12}>
+          <BatchFilterCard selectedBranchId={selectedBranchId} setBatchRefetch={setBatchRefetch} />
+        </Grid>
+        <Grid item xs={12}>
           {batchLoading ? (
             <BatchSkeleton />
           ) : (
-            <Grid>
-              {' '}
-              <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-                {renderCards()}
-              </Grid>
-              {batches?.last_page !== 1 && (
-                <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Pagination
-                    count={batches?.last_page}
-                    color="primary"
-                    onChange={(e, page) => {
-                      dispatch(getAllBatches({ branch_id: selectedBranchId, page: page }));
-                    }}
-                  />
-                </Grid>
-              )}
-              <BatchEditModal
-                open={isEditModalOpen}
-                handleEditClose={handleEditClose}
-                setBatchRefetch={setBatchRefetch}
-                selectedBatch={selectedBatch}
-              />
-              <StatusChangeDialog
-                open={statusChangeDialogOpen}
-                setOpen={setStatusChangeDialogOpen}
-                description="Are you sure you want to Change Status"
-                title="Change Status"
-                handleSubmit={handleStatusChangeApi}
-              />
-              <BatchDeleteModel
-                open={batchDeleteModelOpen}
-                setOpen={setBatchDeleteModelOpen}
-                description="Are you sure you want to delete this Batch?"
-                title="Delete"
-                handleSubmit={handleBatchDelete}
-              />
+            <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+              {renderCards()}
             </Grid>
           )}
         </Grid>
+        {batches?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={batches?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllBatches({ branch_id: selectedBranchId, page: page }));
+              }}
+            />
+          </Grid>
+        )}
       </Grid>
+
+      <BatchEditModal
+        open={isEditModalOpen}
+        handleEditClose={handleEditClose}
+        setBatchRefetch={setBatchRefetch}
+        selectedBatch={selectedBatch}
+      />
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to Change Status"
+        title="Change Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+      <BatchDeleteModel
+        open={batchDeleteModelOpen}
+        setOpen={setBatchDeleteModelOpen}
+        description="Are you sure you want to delete this Batch?"
+        title="Delete"
+        handleSubmit={handleBatchDelete}
+      />
     </>
   );
 };

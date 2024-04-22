@@ -89,7 +89,7 @@ const BatchFilterCard = (props) => {
       dispatch(getAllBatches({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
     },
-    [dispatch]
+    [dispatch, selectedBranchId]
   );
 
   return (
