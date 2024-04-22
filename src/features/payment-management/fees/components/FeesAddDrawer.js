@@ -336,7 +336,7 @@ const FeesAddDrawer = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={6} sx={{ mb: 2 }}>
+              <Grid item xs={12} sx={{ mb: 2 }}>
                 <Controller
                   name="payment_date"
                   control={control}

@@ -3,7 +3,6 @@ import { Avatar, Button, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
@@ -39,11 +38,7 @@ const FeesEditDrawer = (props) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
-  const [selectedStatus, setSelectedStatus] = useState(selectedRows?.payment_date ? new Date(selectedRows?.payment_date) : new Date());
   const [selectedDate, setSelectedDate] = useState();
-
-  console.log(selectedStatus);
-
   const defaultValues = {
     transaction_id: '',
     paid_amount: '',
@@ -135,10 +130,6 @@ const FeesEditDrawer = (props) => {
     }
   };
 
-  const handleStatusChange = (e) => {
-    setSelectedStatus(e.target.value);
-  };
-
   return (
     <DatePickerWrapper>
       <Drawer
@@ -217,14 +208,6 @@ const FeesEditDrawer = (props) => {
             </Box>
             <Grid container>
               <Grid item xs={12} sm={12}>
-                <TextField sx={{ mb: 2 }} defaultValue={'0'} select fullWidth label="Status" onChange={(e) => handleStatusChange(e)}>
-                  <MenuItem value="0">Paid</MenuItem>
-                  <MenuItem value="1">Refund</MenuItem>
-                  <MenuItem value="2">Pending</MenuItem>
-                </TextField>
-              </Grid>
-
-              <Grid item xs={12} sm={12}>
                 <Controller
                   name="transaction_id"
                   control={control}
@@ -262,7 +245,7 @@ const FeesEditDrawer = (props) => {
                 />
               </Grid>
 
-              <Grid item xs={6} sx={{ mb: 2 }}>
+              <Grid item xs={12} sm={12} sx={{ mb: 2 }}>
                 <Controller
                   name="payment_date"
                   control={control}
