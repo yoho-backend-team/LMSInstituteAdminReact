@@ -15,7 +15,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import CustomChip from 'components/mui/chip';
-import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { forwardRef, useEffect, useState } from 'react';
@@ -25,6 +24,8 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
+import { checkUserName } from 'features/user-management/users-page/services/userServices';
+import { useNavigate } from 'react-router-dom';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -54,49 +55,55 @@ const StepperLinearWithValidation = () => {
   const personalSchema = yup.object().shape({
     name: yup
       .string()
-      .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets')
-      .required('Name is required'),
+      .required('Full Name is required')
+      .matches(/^[a-zA-Z\s]+$/, 'Full Name should only contain alphabets'),
     email: yup
       .string()
-      .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format')
-      .required('Email is required'),
+      .required('Email is required')
+      .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format'),
     phone: yup
       .string()
-      .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits')
-      .required('Phone number is required'),
+      .required('Phone number is required')
+      .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits'),
     alt_phone: yup
       .string()
-      .matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits')
-      .required('Alternate phone number is required'),
+      .required('Alternate phone number is required')
+      .matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits'),
     designation: yup
       .string()
-      .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets')
-      .required('Designation is required'),
+      .required('Designation is required')
+      .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets'),
+    education_qualification: yup
+      .string()
+      .required('Educational Qualification is required')
+      .matches(/^[a-zA-Z\s]+$/, 'Educational Qualification should only contain alphabets'),
     state: yup
       .string()
-      .matches(/^[a-zA-Z\s]+$/, 'State should only contain alphabets')
-      .required('State is required'),
+      .required('State is required')
+      .matches(/^[a-zA-Z\s]+$/, 'State should only contain alphabets'),
+
     city: yup
       .string()
-      .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets')
-      .required('City is required'),
+      .required('City is required')
+      .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets'),
+
     pin_code: yup
       .string()
-      .matches(/^\d{6}$/, 'Pin code must be 6 digits')
-      .required('Pin code is required'),
+      .required('Pin code is required')
+      .matches(/^\d{6}$/, 'Pin code must be 6 digits'),
+
     address_line_one: yup.string().required('Address line one is required'),
     address_line_two: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
-    // branch: yup.string().required('Branch is required'),
     username: yup
       .string()
-      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
       .required('Username is required')
+      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
   // ** States
-
+  const navigate = useNavigate();
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
 
@@ -116,21 +123,10 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-  const [activeBranches, setActiveBranches] = useState([]);
-  useEffect(() => {
-    getActiveBranchesByUser();
-  }, []);
-
-  const getActiveBranchesByUser = async () => {
-    const result = await getActiveBranches();
-
-    console.log(result.data);
-    setActiveBranches(result.data.data);
-  };
-
   const {
-    control: personalControl,
     setValue,
+    setError,
+    control: personalControl,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
@@ -197,7 +193,7 @@ const StepperLinearWithValidation = () => {
   console.log(logo);
 
   const onSubmit = async () => {
-    console.log('hello')
+    console.log('hello');
     const personalData = personalControl?._formValues;
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
 
@@ -211,7 +207,7 @@ const StepperLinearWithValidation = () => {
     data.append('alternate_number', personalData?.alt_phone);
     data.append('designation', personalData?.designation);
     data.append('type', 'teaching');
-    data.append('branch_id', personalData?.branch.branch_id);
+    data.append('branch_id', selectedBranchId);
     data.append('image', logo);
     data.append('gender', personalData?.gender);
     data.append('address_line_1', personalData?.address_line_one);
@@ -222,17 +218,25 @@ const StepperLinearWithValidation = () => {
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
+    const isUserNameTaken = await checkUserName(personalData?.username);
 
-    try {
-      const result = await addTeachingStaff(data);
-      if (result.success) {
-        toast.success(result.message);
-        navigate(-1);
-      } else {
-        toast.error(result.message);
+    if (!isUserNameTaken.success) {
+      setError('username', {
+        type: 'manual',
+        message: 'Username is already taken'
+      });
+    } else if (isUserNameTaken.success) {
+      try {
+        const result = await addTeachingStaff(data);
+        if (result.success) {
+          toast.success(result.message);
+          navigate(-1);
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -275,9 +279,9 @@ const StepperLinearWithValidation = () => {
                   label="Full Name"
                   onChange={onChange}
                   placeholder="Leonard"
-                  error={Boolean(personalErrors['name'])}
                   aria-describedby="stepper-linear-personal-institute_name"
-                  {...(personalErrors['name'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.name)}
+                  {...(personalErrors.name && { helperText: personalErrors.name.message })}
                 />
               )}
             />
@@ -295,9 +299,9 @@ const StepperLinearWithValidation = () => {
                   label="Email"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['email'])}
                   aria-describedby="stepper-linear-personal-official_email"
-                  {...(personalErrors['email'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.email)}
+                  {...(personalErrors.email && { helperText: personalErrors.email.message })}
                 />
               )}
             />
@@ -317,9 +321,9 @@ const StepperLinearWithValidation = () => {
                   customInput={
                     <CustomInput
                       label="Date Of Birth"
-                      error={Boolean(personalErrors['date_of_birth'])}
                       aria-describedby="stepper-linear-personal-date_of_birth"
-                      {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
+                      error={Boolean(personalErrors.date_of_birth)}
+                      {...(personalErrors.date_of_birth && { helperText: personalErrors.date_of_birth.message })}
                     />
                   }
                   onChange={onChange}
@@ -340,44 +344,14 @@ const StepperLinearWithValidation = () => {
                   onChange={onChange}
                   label="Gender"
                   placeholder="Select Gender"
-                  error={Boolean(personalErrors['gender'])}
                   aria-describedby="stepper-linear-personal-gender"
-                  {...(personalErrors['gender'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.gender)}
+                  {...(personalErrors.gender && { helperText: personalErrors.gender.message })}
                 >
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </CustomTextField>
-              )}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="branch"
-              control={personalControl}
-              rules={{ required: true }}
-              render={({ field: { value } }) => (
-                <Autocomplete
-                  fullWidth
-                  options={activeBranches}
-                  getOptionLabel={(option) => option.branch_name}
-                  value={activeBranches.find((branch) => branch.branch_id === value) || null}
-                  onChange={(event, newValue) => {
-                    setValue('branch', newValue ? newValue.branch_id : '');
-                    getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Select Branch"
-                      error={Boolean(personalErrors['branch'])}
-                      helperText={personalErrors.branch?.message}
-                      id="custom-select"
-                      aria-describedby="stepper-linear-personal-branch"
-                    />
-                  )}
-                />
               )}
             />
           </Grid>
@@ -437,8 +411,6 @@ const StepperLinearWithValidation = () => {
                 </div>
               )}
               isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
-            // selectAllText="Select All"
-            // SelectAllProps={{ sx: { fontWeight: 'bold' } }}
             />
           </Grid>
 
@@ -453,9 +425,27 @@ const StepperLinearWithValidation = () => {
                   value={value}
                   label="Qualification"
                   onChange={onChange}
-                  error={Boolean(personalErrors.state)}
                   aria-describedby="stepper-linear-personal-qualification-helper"
-                  {...(personalErrors.state && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.education_qualification)}
+                  {...(personalErrors.education_qualification && { helperText: personalErrors.education_qualification.message })}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="designation"
+              control={personalControl}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <CustomTextField
+                  fullWidth
+                  value={value}
+                  label="designation"
+                  onChange={onChange}
+                  aria-describedby="stepper-linear-personal-designation-helper"
+                  error={Boolean(personalErrors.designation)}
+                  {...(personalErrors.designation && { helperText: personalErrors.designation.message })}
                 />
               )}
             />
@@ -471,9 +461,9 @@ const StepperLinearWithValidation = () => {
                   value={value}
                   label="State"
                   onChange={onChange}
-                  error={Boolean(personalErrors.state)}
                   aria-describedby="stepper-linear-personal-state-helper"
-                  {...(personalErrors.state && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.state)}
+                  {...(personalErrors.state && { helperText: personalErrors.state.message })}
                 />
               )}
             />
@@ -489,9 +479,9 @@ const StepperLinearWithValidation = () => {
                   value={value}
                   label="City"
                   onChange={onChange}
-                  error={Boolean(personalErrors.city)}
                   aria-describedby="stepper-linear-personal-city-helper"
-                  {...(personalErrors.city && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.city)}
+                  {...(personalErrors.city && { helperText: personalErrors.city.message })}
                 />
               )}
             />
@@ -509,9 +499,9 @@ const StepperLinearWithValidation = () => {
                   type="number"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['pin_code'])}
                   aria-describedby="stepper-linear-personal-pin_code"
-                  {...(personalErrors['pin_code'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.pin_code)}
+                  {...(personalErrors.pin_code && { helperText: personalErrors.pin_code.message })}
                 />
               )}
             />
@@ -528,9 +518,9 @@ const StepperLinearWithValidation = () => {
                   label="Address Line 1"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['address_line_one'])}
                   aria-describedby="stepper-linear-personal-address_line_one"
-                  {...(personalErrors['address_line_one'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.address_line_one)}
+                  {...(personalErrors.address_line_one && { helperText: personalErrors.address_line_one.message })}
                 />
               )}
             />
@@ -547,9 +537,9 @@ const StepperLinearWithValidation = () => {
                   label="Address Line 2"
                   onChange={onChange}
                   placeholder="Carter"
-                  error={Boolean(personalErrors['address_line_two'])}
                   aria-describedby="stepper-linear-personal-address_line_two"
-                  {...(personalErrors['address_line_two'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.address_line_two)}
+                  {...(personalErrors.address_line_two && { helperText: personalErrors.address_line_two.message })}
                 />
               )}
             />
@@ -567,12 +557,12 @@ const StepperLinearWithValidation = () => {
                   label="Phone Number"
                   onChange={onChange}
                   placeholder=""
-                  error={Boolean(personalErrors['phone'])}
                   aria-describedby="stepper-linear-personal-phone"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">+91</InputAdornment>
                   }}
-                  {...(personalErrors['phone'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.phone)}
+                  {...(personalErrors.phone && { helperText: personalErrors.phone.message })}
                 />
               )}
             />
@@ -590,12 +580,12 @@ const StepperLinearWithValidation = () => {
                   label="Alt Phone Number"
                   onChange={onChange}
                   placeholder=""
-                  error={Boolean(personalErrors['alt_phone'])}
                   aria-describedby="stepper-linear-personal-alt_phone"
                   InputProps={{
                     startAdornment: <InputAdornment position="start">+91</InputAdornment>
                   }}
-                  {...(personalErrors['alt_phone'] && { helperText: 'This field is required' })}
+                  error={Boolean(personalErrors.alt_phone)}
+                  {...(personalErrors.alt_phone && { helperText: personalErrors.alt_phone.message })}
                 />
               )}
             />
@@ -606,16 +596,31 @@ const StepperLinearWithValidation = () => {
               name="username"
               control={personalControl}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <CustomTextField
+              render={({ field: { value } }) => (
+                <TextField
                   fullWidth
                   value={value}
-                  label="Username"
-                  onChange={onChange}
-                  placeholder="carterLeonard"
-                  error={Boolean(personalErrors['username'])}
-                  aria-describedby="stepper-linear-account-username"
-                  {...(personalErrors['username'] && { helperText: 'This field is required' })}
+                  sx={{ mb: 4 }}
+                  label="UserName"
+                  onChange={async (e) => {
+                    setValue('username', e.target.value);
+                    const result = await checkUserName(e.target.value);
+
+                    if (result.success) {
+                      setError('username', {
+                        type: 'manual',
+                        message: ''
+                      });
+                    } else {
+                      setError('username', {
+                        type: 'manual',
+                        message: 'Username is already taken'
+                      });
+                    }
+                  }}
+                  placeholder="John Doe"
+                  error={Boolean(personalErrors.username)}
+                  {...(personalErrors.username && { helperText: personalErrors.username.message })}
                 />
               )}
             />

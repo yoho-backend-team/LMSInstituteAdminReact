@@ -38,7 +38,7 @@ const StudyMaterials = () => {
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-
+  console.log(selectedDeleteId);
   const dispatch = useDispatch();
   const StudyMaterials = useSelector(selectCourseStudyMaterials);
   const StudyMaterialsLoading = useSelector(selectLoading);
@@ -67,7 +67,7 @@ const StudyMaterials = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedDeleteId };
+    const data = { id: selectedRow.id };
     const result = await deleteCourseStudyMaterial(data);
     if (result.success) {
       toast.success(result.message);
@@ -107,7 +107,6 @@ const StudyMaterials = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    y;
   };
 
   const handleRowClick = (params) => {

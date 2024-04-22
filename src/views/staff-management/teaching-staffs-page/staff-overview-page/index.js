@@ -98,7 +98,7 @@ const Teaching = () => {
                               size="small"
                               select
                               defaultValue={item.staff?.is_active}
-                              label={item?.staff?.is_active == '1' ? 'Active' : 'Inactive'}
+                              label="status"
                               SelectProps={{ onChange: (e) => handleStatusValue(e, item?.staff) }}
                               sx={{ width: 100 }}
                             >

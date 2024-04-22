@@ -113,7 +113,6 @@ const Notes = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('toogle pressed');
   };
 
   const RowOptions = ({ row }) => {
