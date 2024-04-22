@@ -40,16 +40,18 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   const schema = yup.object().shape({
     class_name: yup
       .string()
+      .required('Class Name field is required')
       .min(3, (obj) => showErrors('Class', obj.value.length, obj.min))
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
-      .required('Class Name field is required'),
+      .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters'),
     classDate: yup.date().nullable().required('Class Date field is required'),
+    start_time: yup.string().required('Class StartTime field is required'),
+    end_time: yup.string().required('Class EndTime field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
     coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
 
   const defaultValues = {
-    class_name: '',
+    class_name: '', 
     classDate: new Date(),
     start_time: null,
     end_time: null,
