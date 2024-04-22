@@ -34,13 +34,13 @@ const defaultValues = {
 
 const FaqAddDrawer = (props) => {
   const { open, toggle, faqCategories, setRefetch } = props;
-  
+
   const {
     reset,
     control,
     setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues,
     mode: 'onChange',
@@ -49,8 +49,9 @@ const FaqAddDrawer = (props) => {
 
   const handleClose = () => {
     setValue('contact', Number(''));
-    toggle();
+    setValue('category', '');
     reset();
+    toggle();
   };
 
   const onSubmit = async (data) => {
@@ -64,8 +65,9 @@ const FaqAddDrawer = (props) => {
     const result = await addFaq(inputData);
     if (result.success) {
       toast.success(result.message);
-      toggle();
       setRefetch((state) => !state);
+      toggle();
+      reset();
     } else {
       toast.error(result.message);
     }
