@@ -29,15 +29,9 @@ const NotificationBodySection = ({ studentNotifications }) => {
 
   const handleSubmit = async (id) => {
     try {
-      const selectedNotification = studentNotifications.find((notification) => notification.id === id);
-
-      if (!selectedNotification) {
-        throw new Error('Notification not found');
-      }
-
       const data = {
         id: id,
-        notification_id: selectedNotification.notification_id // Include the notification_id field
+        notification_id: id
       };
 
       const response = await resendStudentNotification(data);
@@ -157,7 +151,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions id={row?.notification_id} />
     }
   ];
 

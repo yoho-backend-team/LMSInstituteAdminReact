@@ -31,7 +31,7 @@ const defaultValues = {
 
 const FaqCategoriesAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
-  
+
   const {
     handleSubmit,
     control,
@@ -44,6 +44,12 @@ const FaqCategoriesAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
+  const handleClose = () => {
+    setValue('contact', Number(''));
+    reset();
+    toggle();
+  };
+
   const onSubmit = async (data) => {
     const InputData = {
       title: data.name,
@@ -54,15 +60,10 @@ const FaqCategoriesAddDrawer = (props) => {
       toast.success(result.message);
       setRefetch((state) => !state);
       toggle();
+      reset();
     } else {
       toast.error(result.message);
     }
-  };
-
-  const handleClose = () => {
-    setValue('contact', Number(''));
-    toggle();
-    reset();
   };
 
   return (
