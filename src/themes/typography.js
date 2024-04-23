@@ -4,6 +4,7 @@
  */
 
 export default function themeTypography(theme) {
+  console.log(theme,"theme")
   return {
     fontFamily: theme?.customization?.fontFamily,
 
