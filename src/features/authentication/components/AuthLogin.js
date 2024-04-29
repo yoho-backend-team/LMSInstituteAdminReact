@@ -23,7 +23,7 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project imports
-import useScriptRef from 'hooks/useScriptRef';
+// import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'components/extended/AnimateButton';
 
 // assets
@@ -39,7 +39,7 @@ import { Link } from 'react-router-dom';
 
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
-  const scriptedRef = useScriptRef();
+  // const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
 
@@ -65,19 +65,35 @@ const FirebaseLogin = ({ ...others }) => {
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
-          if (scriptedRef.current) {
+          // Call your backend API for user authentication
+          const response = await fetch('http://localhost:3003/api/Institute/auth/student/login', {
+       
+          method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+          });
+
+          // Parse the response
+          const data = await response.json()
+          console.log(data);
+
+          if (response.ok) {
+            // Dispatch login action if authentication is successful
             dispatch(login(values.email, values.password));
             setStatus({ success: true });
-            setSubmitting(false);
-          }
-        } catch (err) {
-          console.error(err);
-          if (scriptedRef.current) {
+          } else {
+            // Set errors if authentication fails
+            setErrors({ submit: data.error });
             setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
           }
+        } catch (error) {
+          console.error('Error:', error);
+          setStatus({ success: false });
         }
+
+        setSubmitting(false);
       }}
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
