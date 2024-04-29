@@ -7,6 +7,7 @@ import MainLayout from 'layout/MainLayout';
 import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
+import { status } from 'nprogress';
 // view imports
 
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -145,22 +146,25 @@ const Protected = () => {
 const ApplicationRoutes = () => {
   const permissions = useSelector((state) => state.auth.permissions);
 
-  const hasPermission = (permissionCode) => {
-    return permissions?.some((obj) => obj.permission_code === permissionCode);
+  const hasPermission = (permissionCode,permission) => {
+    return permissionCode === permission.read_permission.code
+    // return permissions?.some((obj) => obj.identity === permissionCode);
   };
-  // ProtectedRoute component for route protection and permission checks
-  const ProtectedRoute = ({ element, permissionCode }) => {
-    const hasAccess = hasPermission(permissionCode);
+  
+  const ProtectedRoute = ({ element, permissionCode,module }) => {
+    const permission = permissions?.filter((obj) => obj.identity === module)
+    const hasAccess = hasPermission(permissionCode,permission[0]);
 
     return hasAccess ? element : <Navigate to="/unauthorized" />;
   };
+
   return (
     <Routes>
       <Route element={<Protected />}>
         {/* Dashboard Routes */}
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Navigate to={permissions ? permissions[0]?.url : '/'} />} />
-          <Route element={<ProtectedRoute element={<DashboardDefault />} permissionCode={'inst_perm_dashboard_view'} />}>
+          <Route index element={<Navigate to={permissions ? permissions[30]?.urls[0] : '/'} />} />
+          <Route element={<ProtectedRoute element={<DashboardDefault />} permissionCode={"can_read_dashboard"} module={"dashboard"} />}>
             <Route path="dashboard" element={<DashboardDefault />} />
           </Route>
         </Route>

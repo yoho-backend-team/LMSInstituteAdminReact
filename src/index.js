@@ -15,10 +15,9 @@ import config from './config';
 import ErrorBoundary from 'components/ErrorBoundary';
 import ToastProvider from 'components/ToastProvider';
 
-// ==============================|| REACT DOM RENDER  ||============================== //
 
 const container = document.getElementById('root');
-const root = createRoot(container); // createRoot(container!) if you use TypeScript
+const root = createRoot(container); 
 root.render(
   <Provider store={store}>
     <HashRouter basename={config.basename}>
@@ -31,7 +30,5 @@ root.render(
   </Provider>
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+
+// serviceWorker.unregister();

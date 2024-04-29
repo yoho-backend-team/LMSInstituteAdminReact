@@ -25,7 +25,7 @@ const dashboard = {
           url: '/dashboard',
           icon: icons.IconDashboard,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_dashboard_view')
+          visible: hasPermission('can_read_dashboard','dashboard')
         }
       ]
     }

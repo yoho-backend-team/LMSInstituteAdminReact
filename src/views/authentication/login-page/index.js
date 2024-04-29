@@ -58,7 +58,7 @@ const Login = () => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const [otp, setOtp] = useState(false);
-  const handleOtpPage = () => setOtp(!otp);
+  const handleotppage = () => setOtp(!otp);
 
   // ** State
   const [isBackspace, setIsBackspace] = useState(false);
@@ -157,7 +157,7 @@ const Login = () => {
                       </Grid>
                     </Grid>
                     <Grid item xs={12}>
-                      <AuthLogin otp={otp} setOtp={setOtp} handleOtpPage={handleOtpPage} />
+                      <AuthLogin otp={otp} setOtp={setOtp} handleotppage={handleotppage} />
                     </Grid>
                   </Grid>
                 </AuthCardWrapper>

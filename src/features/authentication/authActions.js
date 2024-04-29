@@ -2,13 +2,13 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/login`;
+const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
-import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
-import { requestForToken } from '../../firebase';
+// import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
+// import { requestForToken } from '../../firebase';
 export const login = (username, password) => async (dispatch) => {
   let data = {
-    username: username,
+    email: username,
     password: password
   };
   try {
@@ -18,30 +18,30 @@ export const login = (username, password) => async (dispatch) => {
         'Content-Type': 'application/json'
       }
     });
+   
+    console.log(response,response.data);
 
-    console.log(response);
-
-    if (response.data.status) {
+    if (response.data.status==="success") {
       // Store token and user ID in localStorage
       localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userData', JSON.stringify(response.data.userData));
-      localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
-      localStorage.setItem('branches', JSON.stringify(response.data.branches));
+      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('userData', JSON.stringify(response.data.data.user));
+      localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
+      localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
       // Dispatch success action
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
-          token: response.data.token,
-          userData: response.data.userData,
-          permissions: response.data.permissions,
-          branches: response.data.branches,
-          selectedBranchId: response.data.branches[0]?.branch_id
+          token: response.data.data.token,
+          userData: response.data.data.user,
+          permissions: response.data.data.permissions,
+          branches: response.data.data.branches,
+          selectedBranchId: response.data.data.branches[0]?._id
         }
       });
-      const fcmToken = await requestForToken();
-      const updateToken = await updateFcmToken({ fcm_token: fcmToken });
-      console.log(updateToken);
+      // const fcmToken = await requestForToken();
+      // const updateToken = await updateFcmToken({ fcm_token: fcmToken });
+      // console.log(updateToken);
       window.location.replace('/');
       toast.success('Login Successful');
       return { success: true, message: 'Login successfully' };
@@ -55,6 +55,7 @@ export const login = (username, password) => async (dispatch) => {
     }
   } catch (error) {
     // Dispatch error action
+    console.log(error)
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error.response.data.message
