@@ -35,7 +35,7 @@ const pages = {
           icon: icons.IconIdBadge,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_id_cards_view')
+          visible: hasPermission('inst_perm_student_id_cards_view','Student IDCards')
         },
         {
           id: 'staff-id-cards',
@@ -45,7 +45,7 @@ const pages = {
           icon: icons.IconIdBadge2,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_staff_id_cards_view')
+          visible: hasPermission('inst_perm_staff_id_cards_view','Staff IdCards')
         }
       ]
     }

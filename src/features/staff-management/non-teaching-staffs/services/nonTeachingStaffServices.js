@@ -1,7 +1,7 @@
 // NonTeachingStaffservice.js
 import axios from 'axios';
 
-const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/non-teaching-staff`;
+const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/Non-teaching-staff`;
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
@@ -81,10 +81,10 @@ export const searchNonTeachingStaffs = async (searchQuery) => {
 
 export const addNonTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);

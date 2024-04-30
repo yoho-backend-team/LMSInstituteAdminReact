@@ -46,7 +46,7 @@ const BranchViewPage = () => {
       console.log(error);
     }
   };
-  console.log('branchData:', branchData.StaffCount);
+  console.log('branchData:', branchData.StaffCount,branchData,"branchData");
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>

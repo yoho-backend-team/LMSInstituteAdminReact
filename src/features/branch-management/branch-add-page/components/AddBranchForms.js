@@ -13,7 +13,7 @@ import * as yup from 'yup';
 const AddBranchForms = () => {
   const navigate = useNavigate();
   const initialValues = {
-    branchName: '',
+    branch_identity: '',
     phone: Number(''),
     alternatePhone: Number(''),
     address: '',
@@ -24,7 +24,7 @@ const AddBranchForms = () => {
   };
 
   const branchSchema = yup.object().shape({
-    branchName: yup
+    branch_identity: yup
       .string()
       .required('Branch Name is required')
       .matches(/^[a-zA-Z0-9\s]+$/, 'Branch Name should not contain special characters'),
@@ -66,14 +66,16 @@ const AddBranchForms = () => {
 
   const onSubmit = async (data) => {
     const inputData = {
-      branch_name: data.branchName,
-      address: data.address,
+      branch_identity: data.branch_identity,
+      contact_info:{ 
+        address: data.address,
       city: data.city,
       state: data.state,
-      pin_code: data.pinCode,
+      pincode: data.pinCode,
       landmark: data.landmark,
-      phone_number: data.phone,
-      alternate_number: data.alternatePhone
+      phone_no: data.phone,
+      alternate_no: data.alternatePhone
+      }
     };
 
     try {
@@ -97,7 +99,7 @@ const AddBranchForms = () => {
           <Grid container spacing={4}>
             <Grid item xs={12} sm={12}>
               <Controller
-                name="branchName"
+                name="branch_identity"
                 control={control}
                 render={({ field }) => (
                   <CustomTextField

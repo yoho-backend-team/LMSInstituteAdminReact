@@ -11,16 +11,16 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-import { onMessageListener} from './firebase';
+// import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
-  onMessageListener()
-  .then((payload) => {
-    console.log(payload);
-  })
-  .catch((err) => console.log('failed: ', err));
+  // onMessageListener()
+  // .then((payload) => {
+  //   console.log(payload);
+  // })
+  // .catch((err) => console.log('failed: ', err));
 
   // useEffect(()=>{
   //   requestForToken()

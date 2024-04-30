@@ -34,7 +34,7 @@ const pages = {
           icon: icons.IconCertificate2,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_certificates_view')
+          visible: hasPermission('inst_perm_student_certificates_view','Student Certificates')
         }
       ]
     }

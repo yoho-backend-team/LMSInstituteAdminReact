@@ -33,7 +33,7 @@ const pages = {
           icon: icons.IconNotebook,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_study_materials_view')
+          visible: hasPermission('can_read_institute_study_materials','Study Materials')
         },
         {
           id: 'notes',
@@ -43,7 +43,7 @@ const pages = {
           url: '/content-management/notes',
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_course_notes_view')
+          visible: hasPermission('can_read_institute_course_notes','Course Notes')
         },
         {
           id: 'modules',
@@ -53,7 +53,7 @@ const pages = {
           url: '/content-management/modules',
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_course_module_view')
+          visible: hasPermission('can_read_institute_course_modules','Course Modules')
         }
       ]
     }

@@ -21,6 +21,7 @@ const Categories = () => {
       branch_id: selectedBranchId,
       page: '1'
     };
+    console.log(selectedBranchId,"select")
     dispatch(getAllCourseCategories(data));
   }, [dispatch, selectedBranchId, categoryRefetch]);
 

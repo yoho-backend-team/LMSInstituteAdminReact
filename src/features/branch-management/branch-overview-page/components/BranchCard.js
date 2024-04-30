@@ -36,9 +36,10 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
+    console.log(data,"data")
     const response = await updateBranchStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -52,7 +53,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(branch);
   };
-
+  console.log(branch,"branch")
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{ position: 'relative', minHeight: 300 }}>
@@ -72,8 +73,8 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
                 icon: <Icon icon="tabler:eye" fontSize={20} />,
                 menuItemProps: {
                   component: Link,
-                  to: `branches/${branch?.branch_id}`,
-                  state: { id: branch?.branch_id }
+                  to: `branches/${branch?.uuid}`,
+                  state: { id: branch?.uuid }
                 }
               },
               {
@@ -93,7 +94,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
                 text: 'Delete',
                 icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
                 menuItemProps: {
-                  onClick: () => handleDelete(branch?.id)
+                  onClick: () => handleDelete(branch?.uuid)
                 }
               }
             ]}
@@ -123,7 +124,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {branch?.branch_name}
+            {branch?.branch_identity}
           </Typography>
           <Typography
             variant="h6"
@@ -136,7 +137,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {branch?.address}, {branch?.city}, {branch?.state}, {branch?.pin_code}
+            {branch?.contact_info?.address}, {branch?.contact_info?.city}, {branch?.contact_info?.state}, {branch?.contact_info?.pincode}
           </Typography>
           <Box sx={{ mt: 1.75 }}>
             <TextField
@@ -146,8 +147,8 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
               label="Status"
               SelectProps={{ value: branch?.is_active, onChange: (e) => handleStatusValue(e, branch) }}
             >
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
+              <MenuItem value="true">Active</MenuItem>
+              <MenuItem value="false">Inactive</MenuItem>
             </TextField>
           </Box>
         </CardContent>

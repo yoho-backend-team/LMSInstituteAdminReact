@@ -19,6 +19,7 @@ const initialState = {
   userData: JSON.parse(localStorage.getItem('userData')) || null,
   permissions: JSON.parse(localStorage.getItem('permissions')) || null,
   branches: JSON.parse(localStorage.getItem('branches')) || null,
+  institute: JSON.parse(localStorage.getItem("institute")) || null,
   selectedBranchId: haveBranchId(),
   errorMessage: ''
 };
@@ -34,6 +35,7 @@ const authReducer = (state = initialState, action) => {
         permissions: action.payload.permissions,
         branches: action.payload.branches,
         selectedBranchId: action.payload.branches[0]?.branch_id,
+        institute:action.payload.institute,
         errorMessage: ''
       };
     case 'LOGIN_FAILURE':

@@ -393,8 +393,8 @@ const StepperLinearWithValidation = () => {
                       {...(personalErrors['branch'] && { helperText: 'This field is required' })}
                     >
                       {activeBranches.map((item, index) => (
-                        <MenuItem key={index} value={item.branch_id}>
-                          {item.branch_name}
+                        <MenuItem key={index} value={item.id}>
+                          {item.branch_identity}
                         </MenuItem>
                       ))}
                     </TextField>

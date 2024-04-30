@@ -28,6 +28,8 @@ export const login = (username, password) => async (dispatch) => {
       localStorage.setItem('userData', JSON.stringify(response.data.data.user));
       localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
       localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
+      localStorage.setItem("institute",JSON.stringify(response.data.data.institue))
+      
       // Dispatch success action
       dispatch({
         type: 'LOGIN_SUCCESS',
@@ -36,6 +38,7 @@ export const login = (username, password) => async (dispatch) => {
           userData: response.data.data.user,
           permissions: response.data.data.permissions,
           branches: response.data.data.branches,
+          institute: response.data.data.institue,
           selectedBranchId: response.data.data.branches[0]?._id
         }
       });

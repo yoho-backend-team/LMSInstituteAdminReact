@@ -146,15 +146,16 @@ const Protected = () => {
 const ApplicationRoutes = () => {
   const permissions = useSelector((state) => state.auth.permissions);
 
-  const hasPermission = (permissionCode,permission) => {
-    return permissionCode === permission.read_permission.code
+  const hasPermission = (permissionCode,permission,action) => {
+    return permissionCode === permission[action].code
     // return permissions?.some((obj) => obj.identity === permissionCode);
   };
   
-  const ProtectedRoute = ({ element, permissionCode,module }) => {
+  const ProtectedRoute = ({ element, permissionCode,module ,permissionReq }) => {
     const permission = permissions?.filter((obj) => obj.identity === module)
-    const hasAccess = hasPermission(permissionCode,permission[0]);
-
+    const action = permissionReq ? permissionReq : "read_permission"
+    const hasAccess = hasPermission(permissionCode,permission[0],action);
+  
     return hasAccess ? element : <Navigate to="/unauthorized" />;
   };
 
@@ -163,7 +164,7 @@ const ApplicationRoutes = () => {
       <Route element={<Protected />}>
         {/* Dashboard Routes */}
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<Navigate to={permissions ? permissions[30]?.urls[0] : '/'} />} />
+          <Route index element={<Navigate to={permissions ? permissions[0]?.urls[0] : '/'} />} />
           <Route element={<ProtectedRoute element={<DashboardDefault />} permissionCode={"can_read_dashboard"} module={"dashboard"} />}>
             <Route path="dashboard" element={<DashboardDefault />} />
           </Route>
@@ -171,95 +172,95 @@ const ApplicationRoutes = () => {
         {/* Branch Management Routes */}
         <Route path="/branch-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/branch-management/branches" />} />
-          <Route element={<ProtectedRoute element={<BranchesPage />} permissionCode={'inst_perm_branch_view'} />}>
+          <Route element={<ProtectedRoute element={<BranchesPage />} permissionCode={'can_read_branches'} module={"Branches"} />}>
             <Route path="branches" element={<BranchesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddBranchPage />} permissionCode={'inst_perm_branch_create'} />}>
+          <Route element={<ProtectedRoute element={<AddBranchPage />} permissionCode={'can_create_branches'} permissionReq={"create_permission"} module={"Branches"} />}>
             <Route path="branches/add" element={<AddBranchPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewBranchPage />} permissionCode={'inst_perm_branch_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewBranchPage />} permissionCode={'can_read_branches'} module={"Branches"} />}>
             <Route path="branches/:id" element={<ViewBranchPage />} />
           </Route>
         </Route>
         {/* User Management Routes */}
         <Route path="/user-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/user-management/groups" />} />
-          <Route element={<ProtectedRoute element={<GroupsPage />} permissionCode={'inst_perm_group_view'} />}>
+          <Route element={<ProtectedRoute element={<GroupsPage />} permissionCode={'can_read_institute_group'} module={'Groups'} />}>
             <Route path="groups" element={<GroupsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddGroupPage />} permissionCode={'inst_perm_group_create'} />}>
+          <Route element={<ProtectedRoute element={<AddGroupPage />} permissionCode={'can_create_institute_group'} module={'Groups'} />}>
             <Route path="groups/add" element={<AddGroupPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewGroupPage />} permissionCode={'inst_perm_group_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewGroupPage />} permissionCode={'inst_perm_group_details_view'} module={'Groups'} />}>
             <Route path="groups/view" element={<ViewGroupPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<EditGroupPage />} permissionCode={'inst_perm_group_update'} />}>
+          <Route element={<ProtectedRoute element={<EditGroupPage />} permissionCode={'can_update_institute_group'} module={'Groups'} />}>
             <Route path="groups/:id/edit/" element={<EditGroupPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<UsersPage />} permissionCode={'inst_perm_admin_users_view'} />}>
+          <Route element={<ProtectedRoute element={<UsersPage />} permissionCode={'can_read_institute_user'} module={'Users'} />}>
             <Route path="admin-users" element={<UsersPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewUserPage />} permissionCode={'inst_perm_admin_user_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewUserPage />} permissionCode={'can_read_institute_user_details'} module={'User Details'} />}>
             <Route path="admin-users/:id" element={<ViewUserPage />} />
           </Route>
         </Route>
         {/* Course Management Routes */}
         <Route path="/course-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/course-management/categories" />} />
-          <Route element={<ProtectedRoute element={<CategoriesPage />} permissionCode={'inst_perm_categories_view'} />}>
+          <Route element={<ProtectedRoute element={<CategoriesPage />} permissionCode={'can_read_institute_category'} module={'Categories'} />}>
             <Route path="categories" element={<CategoriesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<CoursesPage />} permissionCode={'inst_perm_course_view'} />}>
+          <Route element={<ProtectedRoute element={<CoursesPage />} permissionCode={'can_read_institute_course'} module={'Courses'} />}>
             <Route path="courses" element={<CoursesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddCoursePage />} permissionCode={'inst_perm_course_create'} />}>
+          <Route element={<ProtectedRoute element={<AddCoursePage />} permissionCode={'can_create_institute_course'} module={'Courses'} />}>
             <Route path="courses/add" element={<AddCoursePage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewCoursePage />} permissionCode={'inst_perm_course_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewCoursePage />} permissionCode={'can_read_institute_course_details'} module={"Course Details"} />}>
             <Route path="courses/:id" element={<ViewCoursePage />} />
           </Route>
         </Route>
         {/* Content Management Routes */}
         <Route path="/content-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/content-management/study-materials" />} />
-          <Route element={<ProtectedRoute element={<StudyMaterialsPage />} permissionCode={'inst_perm_study_materials_view'} />}>
+          <Route element={<ProtectedRoute element={<StudyMaterialsPage />} permissionCode={'can_read_institute_study_materials'} module={'Study Materials'} />}>
             <Route path="study-materials" element={<StudyMaterialsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<NotesPage />} permissionCode={'inst_perm_course_notes_view'} />}>
+          <Route element={<ProtectedRoute element={<NotesPage />} permissionCode={'can_read_institute_course_notes'} module={'Course Notes'} />}>
             <Route path="notes" element={<NotesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ModulesPage />} permissionCode={'inst_perm_course_module_view'} />}>
+          <Route element={<ProtectedRoute element={<ModulesPage />} permissionCode={'can_read_institute_course_modules'} module={'Course Modules'} />}>
             <Route path="modules" element={<ModulesPage />} />
           </Route>
         </Route>
         {/* Staff Management Routes */}
         <Route path="/staff-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/staff-management/teaching-staffs" />} />
-          <Route element={<ProtectedRoute element={<TeachingStaffsPage />} permissionCode={'inst_perm_teaching_staff_view'} />}>
+          <Route element={<ProtectedRoute element={<TeachingStaffsPage />} permissionCode={'can_read_institute_teaching_staffs'} module={'TeachingStaffs'} />}>
             <Route path="teaching-staffs" element={<TeachingStaffsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddNewTeachingStaff />} permissionCode={'inst_perm_teaching_staff_create'} />}>
+          <Route element={<ProtectedRoute element={<AddNewTeachingStaff />} permissionCode={'can_create_institute_teaching_staffs'} module={'TeachingStaffs'} permissionReq={"create_permission"} />}>
             <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
           </Route>
-          <Route element={<ProtectedRoute element={<EditTeachingStaff />} permissionCode={'inst_perm_teaching_staff_update_status'} />}>
+          <Route element={<ProtectedRoute element={<EditTeachingStaff />} permissionCode={'can_update_institute_teching_staffs'} module={'TeachingStaffs'} />}>
             <Route path="teaching-staffs/:id/edit" element={<EditTeachingStaff />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewTeachingProfile />} permissionCode={'inst_perm_teaching_staff_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewTeachingProfile />} permissionCode={'can_view_staff_details'} module={'TeachingStaff Details'} />}>
             <Route path="teaching-staffs/:id" element={<ViewTeachingProfile />} />
           </Route>
-          <Route element={<ProtectedRoute element={<NonTeachingStaffsPage />} permissionCode={'inst_perm_non_teaching_staff_view'} />}>
+          <Route element={<ProtectedRoute element={<NonTeachingStaffsPage />} permissionCode={'can_view_non_teaching_staffs'} module={'Non TeachingStaffs'} />}>
             <Route path="non-teaching-staffs" element={<NonTeachingStaffsPage />} />
           </Route>
           <Route
-            element={<ProtectedRoute element={<ViewNonTeachingProfile />} permissionCode={'inst_perm_non_teaching_staff_details_view'} />}
+            element={<ProtectedRoute element={<ViewNonTeachingProfile />} permissionCode={'can_view_non_teaching_staff_details'} module={'Non TeachingStaff Details'} />}
           >
             <Route path="non-teaching-staffs/:id" element={<ViewNonTeachingProfile />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddNewNonTeachingStaff />} permissionCode={'inst_perm_non_teaching_staff_create'} />}>
+          <Route element={<ProtectedRoute element={<AddNewNonTeachingStaff />} permissionCode={'can_create_non_teaching_staffs'} module={'Non TeachingStaffs'} permissionReq={"create_permission"} />}>
             <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
           </Route>
           <Route
-            element={<ProtectedRoute element={<EditNonTeachingStaff />} permissionCode={'inst_perm_non_teaching_staff_details_update'} />}
+            element={<ProtectedRoute element={<EditNonTeachingStaff />} permissionCode={'can_update_non_teaching_staff_details'} module={'Non TeachingStaff Details'} />}
           >
             <Route path="non-teaching-staffs/:id/edit" element={<EditNonTeachingStaff />} />
           </Route>
@@ -267,64 +268,64 @@ const ApplicationRoutes = () => {
         {/* Student Management Routes */}
         <Route path="/student-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/student-management/students" />} />
-          <Route element={<ProtectedRoute element={<StudentsPage />} permissionCode={'inst_perm_student_view'} />}>
+          <Route element={<ProtectedRoute element={<StudentsPage />} permissionCode={'can_view_students'} module={'Students'} />}>
             <Route path="students" element={<StudentsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewStudentProfile />} permissionCode={'inst_perm_student_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewStudentProfile />} permissionCode={'can_view_student_details'} module={'Student Details'} />}>
             <Route path="students/:id" element={<ViewStudentProfile />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddNewStudent />} permissionCode={'inst_perm_student_create'} />}>
+          <Route element={<ProtectedRoute element={<AddNewStudent />} permissionCode={'can_create_students'} module={'Students'} permissionReq={"create_permission"} />}>
             <Route path="students/add" element={<AddNewStudent />} />
           </Route>
-          <Route element={<ProtectedRoute element={<EditStudent />} permissionCode={'inst_perm_student_details_update'} />}>
+          <Route element={<ProtectedRoute element={<EditStudent />} permissionCode={'can_update_student_details'} module={'Student Details'} />}>
             <Route path="students/:id/edit" element={<EditStudent />} />
           </Route>
         </Route>
         {/* Batch Management Routes */}
         <Route path="/batch-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/batch-management/batches" />} />
-          <Route element={<ProtectedRoute element={<BatchesPage />} permissionCode={'inst_perm_batches_view'} />}>
+          <Route element={<ProtectedRoute element={<BatchesPage />} permissionCode={'can_view_batches'} module={'Batches'} />}>
             <Route path="batches" element={<BatchesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddBatchPage />} permissionCode={'inst_perm_batches_create'} />}>
+          <Route element={<ProtectedRoute element={<AddBatchPage />} permissionCode={'can_create_batches'} module={'Batches'} />}>
             <Route path="batches/add" element={<AddBatchPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewBatchPage />} permissionCode={'inst_perm_batch_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewBatchPage />} permissionCode={'can_view_batch_details'} module={'Batch Details'} />}>
             <Route path="batches/:id" element={<ViewBatchPage />} />
           </Route>
         </Route>
         {/* Class Management Routes */}
         <Route path="/class-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/class-management/live-classes" />} />
-          <Route element={<ProtectedRoute element={<LiveClassesPage />} permissionCode={'inst_perm_live_classes_view'} />}>
+          <Route element={<ProtectedRoute element={<LiveClassesPage />} permissionCode={'can_view_live_classes'} module={'Live Classes'}/>}>
             <Route path="live-classes" element={<LiveClassesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewLiveClass />} permissionCode={'inst_perm_live_classes_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewLiveClass />} permissionCode={'can_view_live_classes_details'} module={'LiveClass Details'} />}>
             <Route path="live-classes/:id" element={<ViewLiveClass />} />
           </Route>
-          <Route element={<ProtectedRoute element={<OfflineClassesPage />} permissionCode={'inst_perm_offline_classes_view'} />}>
+          <Route element={<ProtectedRoute element={<OfflineClassesPage />} permissionCode={'can_view_offline_classes'} module={'Offline Classes'} />}>
             <Route path="offline-classes" element={<OfflineClassesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewOfflineClass />} permissionCode={'inst_perm_offline_classes_details_view'} />}>
+          <Route element={<ProtectedRoute element={<ViewOfflineClass />} permissionCode={'can_view_offline_class_details'} module={'OfflineClass Details'} />}>
             <Route path="offline-classes/:id" element={<ViewOfflineClass />} />
           </Route>
         </Route>
         {/* Attendance Management Routes */}
         <Route path="/attendance-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/attendance-management/student-attendances" />} />
-          <Route element={<ProtectedRoute element={<StudentAttendancesPage />} permissionCode={'inst_perm_student_attendances_view'} />}>
+          <Route element={<ProtectedRoute element={<StudentAttendancesPage />} permissionCode={'can_view_student_attendances'} module={'Student Attendances'} />}>
             <Route path="student-attendances" element={<StudentAttendancesPage />} />
           </Route>
           <Route
             element={
-              <ProtectedRoute element={<StudentAttendanceViewPage />} permissionCode={'inst_perm_student_attendances_details_view'} />
+              <ProtectedRoute element={<StudentAttendanceViewPage />} permissionCode={'can_view_student_attendance_details'} module={'Student Attendances Details'} />
             }
           >
             <Route path="student-attendances/:id" element={<StudentAttendanceViewPage />} />
           </Route>
           <Route
             element={
-              <ProtectedRoute element={<TeachingStaffAttendancesPage />} permissionCode={'inst_perm_teaching_staff_attendance_view'} />
+              <ProtectedRoute element={<TeachingStaffAttendancesPage />} permissionCode={'can_view_teaching_staff_attendance'} module={'TeachingStaff Attendances'} />
             }
           >
             <Route path="teaching-staff-attendances" element={<TeachingStaffAttendancesPage />} />
@@ -333,7 +334,8 @@ const ApplicationRoutes = () => {
             element={
               <ProtectedRoute
                 element={<TeachingStaffViewAttendancesPage />}
-                permissionCode={'inst_perm_teaching_staff_attendance_details_view'}
+                permissionCode={'can_view_teaching_staff_attendance_details'}
+                module={'TeachingStaff Attendance Details'}
               />
             }
           >
@@ -343,7 +345,8 @@ const ApplicationRoutes = () => {
             element={
               <ProtectedRoute
                 element={<NonTeachingStaffAttendancesPage />}
-                permissionCode={'inst_perm_non_teaching_staff_attendance_view'}
+                permissionCode={'can_view_non_teaching_staff_attendance'}
+                module={'NonTeachingStaff Attendances'}
               />
             }
           >
@@ -353,7 +356,8 @@ const ApplicationRoutes = () => {
             element={
               <ProtectedRoute
                 element={<NonTeachingStaffViewAttendancesPage />}
-                permissionCode={'inst_perm_non_teaching_staff_attendance_details_view'}
+                permissionCode={'can_view_non_teaching_staff_attendance'}
+                module={'NonTeachingStaff Attendances'}
               />
             }
           >
@@ -363,59 +367,59 @@ const ApplicationRoutes = () => {
         {/* Payment Management Routes */}
         <Route path="/payment-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/payment-management/fees" />} />
-          <Route element={<ProtectedRoute element={<FeesPage />} permissionCode={'inst_perm_student_fees_payment_management_view'} />}>
+          <Route element={<ProtectedRoute element={<FeesPage />} permissionCode={'inst_perm_student_fees_payment_management_view'} module={"Fees"} />}>
             <Route path="fees" element={<FeesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<SalariesPage />} permissionCode={'inst_perm_staff_salaries_view'} />}>
+          <Route element={<ProtectedRoute element={<SalariesPage />} permissionCode={'inst_perm_staff_salaries_view'} module={'Staff Salaries'} />}>
             <Route path="salaries" element={<SalariesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<SubscriptionsPage />} permissionCode={'inst_perm_subscriptions_view'} />}>
+          <Route element={<ProtectedRoute element={<SubscriptionsPage />} permissionCode={'inst_perm_subscriptions_view'} module={'Subscriptions'} />}>
             <Route path="subscriptions" element={<SubscriptionsPage />} />
           </Route>
         </Route>
         {/* Refund Management Routes */}
         <Route path="/refund-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/refund-management/refunds" />} />
-          <Route element={<ProtectedRoute element={<RefundsPage />} permissionCode={'inst_perm_student_fees_refund_management_view'} />}>
+          <Route element={<ProtectedRoute element={<RefundsPage />} permissionCode={'inst_perm_student_fees_refund_management_view'} module={'Student Fees'} />}>
             <Route path="refunds" element={<RefundsPage />} />
           </Route>
         </Route>
         {/* Notification Management Routes */}
         <Route path="/notification-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/notification-management/all-notifications" />} />
-          <Route element={<ProtectedRoute element={<AllNotificationsPage />} permissionCode={'inst_perm_all_notification_view'} />}>
+          <Route element={<ProtectedRoute element={<AllNotificationsPage />} permissionCode={'inst_perm_all_notification_view'} module={'All Notifications'} />}>
             <Route path="all-notifications" element={<AllNotificationsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_staff_notification_view'} />}>
+          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_staff_notification_view'} module={'Student Notifications'} />}>
             <Route path="staff-notifications" element={<StaffNotificationsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<StudentNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} />}>
+          <Route element={<ProtectedRoute element={<StudentNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} module={'Student Notifications'} />}>
             <Route path="student-notifications" element={<StudentNotificationsPage />} />
           </Route>
         </Route>
         {/* Certificate Management Routes */}
         <Route path="/certificate-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/certificate-management/student-certificates" />} />
-          <Route element={<ProtectedRoute element={<StudentCertificatesPage />} permissionCode={'inst_perm_student_certificates_view'} />}>
+          <Route element={<ProtectedRoute element={<StudentCertificatesPage />} permissionCode={'inst_perm_student_certificates_view'} module={'Student Certificates'} />}>
             <Route path="student-certificates" element={<StudentCertificatesPage />} />
           </Route>
         </Route>
         <Route path="/id-card-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/id-card-management/student-id-cards" />} />
-          <Route element={<ProtectedRoute element={<StudentIdCardsPage />} permissionCode={'inst_perm_student_id_cards_view'} />}>
+          <Route element={<ProtectedRoute element={<StudentIdCardsPage />} permissionCode={'can_read_institute_student_id_cards'} module={'Student IdCards'} />}>
             <Route path="student-id-cards" element={<StudentIdCardsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<StaffIdCardsPage />} permissionCode={'inst_perm_student_id_cards_view'} />}>
+          <Route element={<ProtectedRoute element={<StaffIdCardsPage />} permissionCode={'inst_perm_staff_id_cards_view'} module={"Staff IdCards"} />}>
             <Route path="staff-id-cards" element={<StaffIdCardsPage />} />
           </Route>
         </Route>
         {/* Faq Management Routes */}
         <Route path="/faq-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/faq-management/categories" />} />
-          <Route element={<ProtectedRoute element={<FaqCategoriesPage />} permissionCode={'inst_perm_faq_categories_view'} />}>
+          <Route element={<ProtectedRoute element={<FaqCategoriesPage />} permissionCode={'can_read_institute_faq_categoreis'} module={"Faq Categories"} />}>
             <Route path="categories" element={<FaqCategoriesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<FaqFaqsPage />} permissionCode={'inst_perm_faqs_view'} />}>
+          <Route element={<ProtectedRoute element={<FaqFaqsPage />} permissionCode={'can_read_institute_faqs'} module={"Faqs"} />}>
             <Route path="faqs" element={<FaqFaqsPage />} />
           </Route>
         </Route>
@@ -435,14 +439,14 @@ const ApplicationRoutes = () => {
         {/* Help Center Routes */}
         <Route path="/help-center" element={<MainLayout />}>
           <Route index element={<Navigate to="/help-center/help-faqs" />} />
-          <Route element={<ProtectedRoute element={<CustomerSupportPage />} permissionCode={'inst_help_faqs_support_view'} />}>
+          <Route element={<ProtectedRoute element={<CustomerSupportPage />} permissionCode={'inst_help_faqs_support_view'} module={"Help Faqs"} />}>
             <Route path="help-faqs" element={<CustomerSupportPage />} />
           </Route>
         </Route>
         {/* Community Management Routes */}
         <Route path="/community-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/community" />} />
-          <Route element={<ProtectedRoute element={<Community />} permissionCode={'inst_perm_community_view'} />}>
+          <Route element={<ProtectedRoute element={<Community />} permissionCode={'can_read_institute_community'} module={'Community'} />}>
             <Route path="community" element={<Community />} />
           </Route>
         </Route>

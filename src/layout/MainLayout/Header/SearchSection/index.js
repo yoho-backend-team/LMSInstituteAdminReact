@@ -167,8 +167,8 @@ const SearchSection = () => {
           label="Branch"
         >
           {branches?.map((branch, index) => (
-            <MenuItem value={branch?.branch_id} key={index}>
-              {branch?.branch_name}
+            <MenuItem value={branch?.id} key={index}>
+              {branch?.branch_identity}
             </MenuItem>
           ))}
         </OutlineInputStyle>
