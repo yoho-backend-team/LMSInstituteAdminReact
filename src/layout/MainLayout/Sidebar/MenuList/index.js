@@ -28,7 +28,7 @@ const MenuList = () => {
       }
     }
   });
-
+  console.log(filteredData,"filterData",menuItem)
   const navItems = filteredData.map((item) => {
     switch (item.type) {
       case 'group':

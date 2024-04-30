@@ -1,5 +1,7 @@
-export const hasPermission = (permissionCode) => {
+export const hasPermission = (permissionCode,module) => {
     const permissions = JSON.parse(localStorage.getItem('permissions'));
-    return permissions?.some((obj) => obj.permission_code === permissionCode);
+    const permission = permissions?.filter((obj) => obj.identity === module)
+    // return permissions?.some((obj) => obj.permission_code === permissionCode);
+    return permission ? permissionCode === permission[0]?.read_permission?.code : false
   };
 

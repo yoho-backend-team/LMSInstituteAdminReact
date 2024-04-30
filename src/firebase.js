@@ -18,25 +18,25 @@ initializeApp(firebaseConfig);
 
 export const messaging = getMessaging();
 
-export const requestForToken = () => {
-  return getToken(messaging, { vapidKey: 'BHeYavKgkyJ0aUZ2WNaiVDuffpWiqB5Ul-T_OhVqMMbL0fywSmJYcQLf2xlQbbQb-3gwzJWW4pv6YR274t_46ek' })
-    .then((currentToken) => {
-      if (currentToken) {
-        return currentToken;
-        // Perform any other neccessary action with the token
-      } else {
-        // Show permission request UI
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    })
-    .catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
-};
-export const onMessageListener = () =>
-  new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      console.log('payload', payload);
-      resolve(payload);
-    });
-  });
+// export const requestForToken = () => {
+//   return getToken(messaging, { vapidKey: 'BHeYavKgkyJ0aUZ2WNaiVDuffpWiqB5Ul-T_OhVqMMbL0fywSmJYcQLf2xlQbbQb-3gwzJWW4pv6YR274t_46ek' })
+//     .then((currentToken) => {
+//       if (currentToken) {
+//         return currentToken;
+//         // Perform any other neccessary action with the token
+//       } else {
+//         // Show permission request UI
+//         console.log('No registration token available. Request permission to generate one.');
+//       }
+//     })
+//     .catch((err) => {
+//       console.log('An error occurred while retrieving token. ', err);
+//     });
+// };
+// export const onMessageListener = () =>
+//   new Promise((resolve) => {
+//     onMessage(messaging, (payload) => {
+//       console.log('payload', payload);
+//       resolve(payload);
+//     });
+//   });

@@ -24,7 +24,6 @@ const DefaultPalette = () => {
   const darkColor = '208, 212, 241';
   const darkPaperBgColor = '#2F3349';
   const mainColor = mode === 'light' ? '#2F2B3D' : '#D0D4F1';
-  console.log(isDarkMode)
   // const primary = generatePrimaryObject('#D80032');
   // const secondary = generatePrimaryObject('#F79BD3');
   const defaultBgColor = () => {

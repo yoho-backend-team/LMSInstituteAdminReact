@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import {useEffect} from 'react'
+// import {useEffect} from 'react'
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
@@ -11,20 +11,20 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-import { onMessageListener,requestForToken } from './firebase';
+// import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
-  onMessageListener()
-  .then((payload) => {
-    console.log(payload);
-  })
-  .catch((err) => console.log('failed: ', err));
+  // onMessageListener()
+  // .then((payload) => {
+  //   console.log(payload);
+  // })
+  // .catch((err) => console.log('failed: ', err));
 
-  useEffect(()=>{
-    requestForToken()
-  },[])
+  // useEffect(()=>{
+  //   requestForToken()
+  // },[])
 
   return (
     <StyledEngineProvider injectFirst>
