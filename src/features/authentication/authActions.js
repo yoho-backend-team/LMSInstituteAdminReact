@@ -39,7 +39,7 @@ export const login = (username, password) => async (dispatch) => {
           permissions: response.data.data.permissions,
           branches: response.data.data.branches,
           institute: response.data.data.institue,
-          selectedBranchId: response.data.data.branches[0]?._id
+          selectedBranchId: response.data.data.branches[0]?.uuid
         }
       });
       // const fcmToken = await requestForToken();

@@ -1,16 +1,38 @@
+const backEndUrl = process.env.REACT_APP_PUBLIC_API_URL;
+
 const getInstituteDetails = () => {
     if(typeof(localStorage) !== "undefined"){
     const institute = localStorage.getItem("institute")
-    return institute
+    return JSON.parse(institute)
     }else{
      return undefined
     }
 }
-const backEndUrl = process.env.REACT_APP_PUBLIC_API_URL
-const institute = getInstituteDetails()
-console.log(institute,"institute")
-export const HTTP_END_POINTS ={
-     category:{
-        getAll : `${backEndUrl}institutes/${institute.uuid}/categories/`
-     }
-}
+
+const generateEndpoints = () => {
+    const institute = getInstituteDetails();
+
+    if (!institute) {
+        return {}; 
+    }
+
+    const instituteId = institute.uuid;
+
+    return {
+        category: {
+            getAll: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
+            create: `${backEndUrl}/api/institutes/${instituteId}/categories`
+        },
+        course: {
+            get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,
+            update: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
+            add :`/api/institutes/${instituteId}/categories/`
+        },
+        file: {
+            upload: `${backEndUrl}/api/upload/`
+        }
+    };
+};
+
+
+export const HTTP_END_POINTS = generateEndpoints();

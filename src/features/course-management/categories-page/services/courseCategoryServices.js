@@ -20,7 +20,7 @@ export const getAllCourseCategoriesByInstitute = async (data) => {
     const response = await axios.get(HTTP_END_POINTS.category.getAll+`?${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
 
@@ -43,11 +43,11 @@ export const getAllCourseCategoriesByInstitute = async (data) => {
 };
 export const addCourseCategory = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/create`, data, {
+    const response = await axios.post(HTTP_END_POINTS.category.create, data, {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
@@ -64,12 +64,11 @@ export const addCourseCategory = async (data) => {
 };
 export const deleteCourseCategory = async (data) => {
   try {
-    const response = await axios.delete(`${COURSE_CATEGORY_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${HTTP_END_POINTS.category.create}/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
 
     console.log(response);
@@ -85,10 +84,10 @@ export const deleteCourseCategory = async (data) => {
 };
 export const updateCourseCategory = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/update`, data, {
+    const response = await axios.put(`${HTTP_END_POINTS.category.create}/${data.id}`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
@@ -105,10 +104,10 @@ export const updateCourseCategory = async (data) => {
 };
 export const updateCourseCategoryStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_CATEGORY_API_END_POINT}/status-change`, data, {
+    const response = await axios.put(`${HTTP_END_POINTS.category.create}/${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
@@ -128,7 +127,7 @@ export const getAllCourseCategories = async (data) => {
     const response = await axios.get(HTTP_END_POINTS.category.getAll, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });

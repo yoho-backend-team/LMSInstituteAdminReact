@@ -22,14 +22,15 @@ const CourseCard = (props) => {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
-  const imageUrl = course?.logo
-    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course.logo}`
+  const imageUrl = course?.image
+    ? `${process.env.REACT_APP_PUBLIC_API_URL}/${course.image}`
     : 'https://assets.newredo.com/large_image_default_4f2d3c136b.png';
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid,
+      category:course.category.uuid
     };
     const response = await updateCourseStatus(data);
     if (response.success) {
@@ -39,7 +40,7 @@ const CourseCard = (props) => {
       toast.error(response.message);
     }
   };
-
+  console.log(course,"course",course.class_type.includes("online"))
   const handleStatusValue = (event, course) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(course);
@@ -62,14 +63,14 @@ const CourseCard = (props) => {
                   height: '2rem'
                 }
               }}
-              label={course?.learning_format}
+              label={course?.class_type}
               rounded
               color={
-                course?.learning_format === 'online'
+                course.class_type.includes('online')
                   ? 'success'
-                  : course?.learning_format === 'offline'
+                  : course.class_type.includes('offline')
                   ? 'primary'
-                  : course?.learning_format === 'hybrid'
+                  : course.class_type.includes('hybrid')
                   ? 'secondary'
                   : 'warning'
               }
@@ -83,7 +84,7 @@ const CourseCard = (props) => {
             <CustomChip
               sx={{ px: 0, py: 2 }}
               skin="light"
-              label={course?.course?.course_categories?.category_name}
+              label={course?.category?.category_name}
               rounded
               color="secondary"
               size="small"
@@ -127,7 +128,7 @@ const CourseCard = (props) => {
             </Grid>
             <Grid>
               <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>
-                ₹ {course?.course_price}
+                ₹ {course?.price}
               </Typography>
             </Grid>
           </Box>
@@ -141,14 +142,14 @@ const CourseCard = (props) => {
               label="Status"
               SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
             >
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
+              <MenuItem value="true">Active</MenuItem>
+              <MenuItem value="false">Inactive</MenuItem>
             </TextField>
           </Grid>
           <Button
             component={Link}
             to="courses/view"
-            state={{ id: course?.course_id }}
+            state={{ id: course?.uuid }}
             size="medium"
             variant="contained"
             color="primary"

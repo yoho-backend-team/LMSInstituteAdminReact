@@ -55,12 +55,14 @@ const CourseViewPage = () => {
   console.log('course', course);
 
   const getCourseData = async (id) => {
+    console.log(id,course)
     const data = {
-      course_id: id
+    id: id,
+    category:"39cab3db-4c46-4685-aab8-99a4b4375d50"
     };
     const result = await getCourseDetails(data);
     setCourse(result?.data?.data);
-    setVideoUrl(result?.data?.data?.course_module[0].video_url);
+    setVideoUrl(result?.data?.data?.course_module?result?.data?.data?.course_module[0]?.video_url:"https://youtu.be/7CqJlxBYj-M?si=FVmXcY6AODVxpu7V");
   };
 
   const handleSwitch = (event, newValue) => {
@@ -71,7 +73,7 @@ const CourseViewPage = () => {
     setExpanded(isExpanded ? panel : false);
   };
   console.log(handleChange);
-  console.log(expanded);
+  console.log(expanded,course);
 
   const handleEditClose = () => {
     setEditModalOpen(false);
@@ -121,12 +123,12 @@ const CourseViewPage = () => {
     </Box>
   );
 
-  if (!course || !course.course_module) {
-    return null;
-  }
+  // if (!course || !course.course_module) {
+  //   return null;
+  // }
 
   return (
-    <Grid container xs={12} spacing={2}>
+    <Grid container xs={12} item spacing={2}>
       <Grid item xs={12} sm={12} md={12} lg={7.5}>
         <Card>
           <ReactPlayer
@@ -142,16 +144,16 @@ const CourseViewPage = () => {
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h3">{course?.institute_course_branch?.course_name}</Typography>
+                <Typography variant="h3">{course?.course_name}</Typography>
               </Box>
               <Box sx={{ mt: 1 }}>
                 <Typography variant="h5" mb={1}>
                   Description
                 </Typography>
-                <Typography sx={{ ml: 1 }}>{course?.institute_course_branch?.description}</Typography>
+                <Typography sx={{ ml: 1 }}>{course?.description}</Typography>
               </Box>
               <Box>
-                <CustomChip label={course?.course_categories?.category_name} color="secondary" skin="light" size="small" sx={{ mt: 1 }} />
+                <CustomChip label={course?.category?.category_name} color="secondary" skin="light" size="small" sx={{ mt: 1 }} />
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
@@ -160,26 +162,26 @@ const CourseViewPage = () => {
                     <span style={{ marginTop: '4px' }}>Duration</span>
                   </Typography>
                   <Typography variant="h5" sx={{ ml: 1, mt: 0.5 }}>
-                    {course?.institute_course_branch?.course_duration}
+                    {course?.duration}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'end', mt: 1 }}>
                   <Typography sx={{ ml: 1 }} variant="h3">
-                    ₹ {course?.institute_course_branch?.course_price}
+                    ₹ {course?.price}
                   </Typography>
                 </Box>
               </Box>
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton onClick={() => handleDelete(course?.institute_course_branch?.id)} color="secondary">
+              <IconButton onClick={() => handleDelete(course?.uuid)} color="secondary">
                 <Icon icon="mdi:delete-outline" />
               </IconButton>
             </Box>
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={12} lg={4.4}>
+       <Grid item xs={12}  sm={12} lg={4.4}>
         <Card sx={{ pb: 1, backgroundColor: 'secondary.light' }} className="CourseModules-Card">
           <Button
             fullWidth
@@ -210,17 +212,17 @@ const CourseViewPage = () => {
             handleSubmit={handleCourseDelete}
           />
         </Card>
-      </Grid>
+      </Grid> 
       <Grid item xs={12}>
         <Card>
           <TabContext value={value}>
-            <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
+            {/* <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
               <Tab value="1" label="Study Materials" />
               <Tab value="2" label="Notes" />
-            </TabList>
-            <TabPanel value="1">
+            </TabList> */}
+            {/* <TabPanel value="1">
               <StudyMaterials materials={course?.course_study_materials} />
-            </TabPanel>
+            </TabPanel> */}
 
             <TabPanel value="2">
               <Notes notes={course?.course_notes} />

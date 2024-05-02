@@ -84,7 +84,7 @@ export const addNonTeachingStaff = async (data) => {
     const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);

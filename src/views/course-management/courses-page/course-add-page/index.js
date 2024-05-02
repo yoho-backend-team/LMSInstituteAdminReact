@@ -11,10 +11,12 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
+import client from 'api/client';
 import CustomChip from 'components/mui/chip';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourseCategories } from 'features/course-management/categories-page/services/courseCategoryServices';
 import { addCourse } from 'features/course-management/courses-page/services/courseServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 import { Fragment, useEffect, useRef, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -49,19 +51,25 @@ const AddCoursePage = () => {
   console.log('selectedLogo', selectedLogo);
   console.log('selectedTemplate', selectedTemplate);
 
-  const handleInputLogoImageChange = (file) => {
+  const handleInputLogoImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
-      reader.onload = () => setImgSrcLogo(reader.result);
-      setSelectedLogo(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputLogoValue(reader.result);
-      }
+      const data = new FormData()
+      data.append("file",files[0])
+      console.log(data,"file",files,file.target.files[0])
+     const response = await client.file.upload(data)
+     console.log(response,"response",response.data.file)
+     setSelectedLogo(response.data.file)
+     console.log(selectedLogo)
+      // setSelectedLogo(files[0]);
+      // reader.readAsDataURL(files[0]);
+      // if (reader.result !== null) {
+      //   setInputLogoValue(reader.result);
+      // }
     }
   };
-
+  console.log(selectedLogo,"selectedLogo")
   const handleInputTemplateImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -161,7 +169,7 @@ const AddCoursePage = () => {
       branch_id: branchIds
     };
     const result = await getAllCourseCategories(data);
-
+    console.log(result,"result")
     if (result.data) {
       setActiveCategories(result.data);
     }
@@ -169,7 +177,7 @@ const AddCoursePage = () => {
 
   const getAllBranches = async () => {
     const result = await getActiveBranches();
-
+    console.log(result.data,"result")
     if (result.data.data) {
       setBranches(result.data.data);
     }
@@ -213,6 +221,18 @@ const AddCoursePage = () => {
 
   const onSubmit = async () => {
     const personalData = courseControl?._formValues;
+    console.log(courseName)
+    const data = {
+      course_name : personalData.category_name,
+      description : personalData.description,
+      image : selectedLogo,
+      duration : personalData.course_duration,
+      category : personalData.course_category.uuid,
+      branch_id : selectedBranchId,
+      institute_id : useInstitute().getInstituteId(),
+      price : personalData.course_price,
+      class_type : personalData.learning_format
+    }
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
@@ -327,15 +347,15 @@ const AddCoursePage = () => {
                   getOptionLabel={(option) => option.branch_name}
                   value={selectedBranches}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.branch_id === 'selectAll')) {
-                      setSelectedBranches(branches.filter((option) => option.branch_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                      setSelectedBranches(branches.filter((option) => option.id !== 'selectAll'));
                     } else {
                       setSelectedBranches(newValue);
                     }
                   }}
                   renderInput={(params) => (
                     <Controller
-                      name="branches"
+                      name="branches.branch_identity"
                       control={courseControl}
                       rules={{ required: true }}
                       render={({ field: { value, onChange } }) => (
@@ -364,15 +384,15 @@ const AddCoursePage = () => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.branch_name}
+                      {option.branch_identity}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.branch_id}
-                          label={option.branch_name}
+                          key={option.id}
+                          label={option.branch_identity}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -384,7 +404,7 @@ const AddCoursePage = () => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

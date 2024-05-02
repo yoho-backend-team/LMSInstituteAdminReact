@@ -8,7 +8,7 @@ export const getAllBranchesByInstitute = async (data) => {
     const response = await axios.get(`${BRANCH_API_ENDPOINT}?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -34,7 +34,7 @@ export const getActiveBranches = async () => {
     const response = await axios.get(`${BRANCH_API_ENDPOINT}?is_active=true`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
@@ -61,7 +61,7 @@ export const addBranch = async (data) => {
     const response = await axios.post(`${BRANCH_API_ENDPOINT}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
@@ -82,7 +82,7 @@ export const deleteBranch = async (data) => {
     const response = await axios.delete(`${BRANCH_API_ENDPOINT}${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
 
@@ -102,7 +102,7 @@ export const updateBranch = async (data) => {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
@@ -124,7 +124,7 @@ export const updateBranchStatus = async (data) => {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
@@ -146,7 +146,7 @@ export const getBranchById = async (data) => {
     const response = await axios.get(`${BRANCH_API_ENDPOINT}${data.branch_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
     console.log('getBranchById:', response);

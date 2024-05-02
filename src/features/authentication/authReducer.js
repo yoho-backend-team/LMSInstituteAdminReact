@@ -34,7 +34,7 @@ const authReducer = (state = initialState, action) => {
         userData: action.payload.userData,
         permissions: action.payload.permissions,
         branches: action.payload.branches,
-        selectedBranchId: action.payload.branches[0]?.branch_id,
+        selectedBranchId: action.payload.branches[0]?.uuid,
         institute:action.payload.institute,
         errorMessage: ''
       };
