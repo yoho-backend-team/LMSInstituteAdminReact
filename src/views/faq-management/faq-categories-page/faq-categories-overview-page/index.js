@@ -38,9 +38,13 @@ const CategoriesDataGrid = () => {
   const faqCategoryLoading = useSelector(selectLoading);
 
   useEffect(() => {
+
+    const institute = JSON.parse(localStorage.getItem('institute'))
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      instituteid: institute._id
     };
+   
     dispatch(getAllFaqCategories(data));
   }, [dispatch, selectedBranchId, refetch]);
 
@@ -108,7 +112,7 @@ const CategoriesDataGrid = () => {
     },
     {
       flex: 2.2,
-      field: 'title',
+      field: 'category_name',
       headerName: 'Category Name',
       renderCell: ({ row }) => {
         return (
@@ -125,7 +129,7 @@ const CategoriesDataGrid = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.title}
+                {row?.category_name}
               </Typography>
               <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
                 {row?.description}
@@ -143,8 +147,8 @@ const CategoriesDataGrid = () => {
         return (
           <div>
             <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
+              <MenuItem value="true">Active</MenuItem>
+              <MenuItem value="false">Inactive</MenuItem>
             </CustomTextField>
           </div>
         );
@@ -224,6 +228,7 @@ const CategoriesDataGrid = () => {
             <Card>
               <DataGrid
                 autoHeight
+                key={"id"}
                 rowHeight={80}
                 rows={faqCategories}
                 columns={columns}
