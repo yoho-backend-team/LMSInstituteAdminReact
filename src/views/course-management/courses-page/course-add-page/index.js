@@ -52,24 +52,15 @@ const AddCoursePage = () => {
   console.log('selectedTemplate', selectedTemplate);
 
   const handleInputLogoImageChange = async (file) => {
-    const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
       const data = new FormData()
       data.append("file",files[0])
-      console.log(data,"file",files,file.target.files[0])
      const response = await client.file.upload(data)
-     console.log(response,"response",response.data.file)
      setSelectedLogo(response.data.file)
-     console.log(selectedLogo)
-      // setSelectedLogo(files[0]);
-      // reader.readAsDataURL(files[0]);
-      // if (reader.result !== null) {
-      //   setInputLogoValue(reader.result);
-      // }
     }
   };
-  console.log(selectedLogo,"selectedLogo")
+  
   const handleInputTemplateImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -126,12 +117,12 @@ const AddCoursePage = () => {
       .matches(/^[0-9]+$/, 'Course Price should be digits'),
     description: yup
       .string()
-      .required('Course Description is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
+      .required('Course Description is required'),
+      // .matches(/^[a-zA-Z0-9\s]+$/, 'Course Description should not contain special characters'),
     course_overview: yup
       .string()
-      .required('Course Overview is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
+      .required('Course Overview is required'),
+      // .matches(/^[a-zA-Z0-9\s]+$/, 'Course Overview should not contain special characters'),
     learning_format: yup.string().required('Learning Format is required'),
     course_category: yup.object().required('Course Category is required'),
     branches: yup
@@ -221,9 +212,9 @@ const AddCoursePage = () => {
 
   const onSubmit = async () => {
     const personalData = courseControl?._formValues;
-    console.log(courseName)
+    // console.log(courseName)
     const data = {
-      course_name : personalData.category_name,
+      course_name : personalData.course_name,
       description : personalData.description,
       image : selectedLogo,
       duration : personalData.course_duration,
@@ -231,27 +222,28 @@ const AddCoursePage = () => {
       branch_id : selectedBranchId,
       institute_id : useInstitute().getInstituteId(),
       price : personalData.course_price,
-      class_type : personalData.learning_format
+      class_type : [personalData.learning_format],
+      overview : personalData.course_overview
     }
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
       const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
-      console.log(selectedBranches);
+      // console.log(selectedBranches);
 
-      let data = new FormData();
-      filteredBranchId.forEach((id) => {
-        data.append(`branch_id[]`, id);
-      });
-      data.append('course_name', personalData?.course_name);
-      data.append('description', personalData?.description);
-      data.append('course_overview', personalData?.course_overview);
-      data.append('course_duration', personalData?.course_duration);
-      data.append('institute_category_id', personalData?.course_category.category_id);
-      data.append('course_price', personalData?.course_price);
-      data.append('learning_format', personalData?.learning_format);
-      data.append('logo', selectedLogo);
-      data.append('image', selectedTemplate);
-      data.append('syllabus', courseSyllabus);
+      // let data = new FormData();
+      // filteredBranchId.forEach((id) => {
+      //   data.append(`branch_id[]`, id);
+      // });
+      // data.append('course_name', personalData?.course_name);
+      // data.append('description', personalData?.description);
+      // data.append('course_overview', personalData?.course_overview);
+      // data.append('course_duration', personalData?.course_duration);
+      // data.append('institute_category_id', personalData?.course_category.category_id);
+      // data.append('course_price', personalData?.course_price);
+      // data.append('learning_format', personalData?.learning_format);
+      // data.append('logo', selectedLogo);
+      // data.append('image', selectedTemplate);
+      // data.append('syllabus', courseSyllabus);
       console.log(personalData);
       const result = await addCourse(data);
 
@@ -466,7 +458,7 @@ const AddCoursePage = () => {
                 <Controller
                   name="course_overview"
                   control={courseControl}
-                  rules={{ required: true }}
+                  // rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth

@@ -32,7 +32,7 @@ class HttpClient{
       return response.data
      }
 
-     async post(url,params){
+     async post(url,data,params){
       const response = await Axios.post(url,data,params)
       return response.data
      }

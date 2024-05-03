@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
+import client from 'api/client';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addStudent } from 'features/student-management/students/services/studentService';
@@ -20,6 +21,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -176,17 +178,19 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState(
-    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
-  );
+  const [logoSrc, setLogoSrc] = useState('');
 
-  const handleInputImageChange = (file) => {
+  const handleInputImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {
       reader.onload = () => setLogoSrc(reader.result);
       reader.readAsDataURL(files[0]);
       setLogo(files[0]);
+      const data = new FormData()
+      data.append("file",data)
+      const response = client.file.upload(data)
+      setLogo(response.data.file)
     }
   };
 
@@ -199,29 +203,30 @@ const StepperLinearWithValidation = () => {
 
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
-    console.log(personalData);
-    const data = new FormData();
-    data.append('student_first_name', personalData?.student_first_name);
-    data.append('student_last_name', personalData?.student_last_name);
-    data.append('student_email', personalData?.student_email);
-    data.append('student_phone_no', personalData?.student_phone_no);
-    data.append('alternate_number', personalData?.alt_phone);
-    data.append('branch_id', personalData?.branch);
-    data.append('course_id', personalData?.course);
-    data.append('image', logo);
-    data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_one);
-    data.append('address_line_2', personalData?.address_line_two);
-    data.append('city', personalData?.city);
-    data.append('state', personalData?.state);
-    data.append('pincode', personalData?.pin_code);
-    data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    data.append('username', personalData?.username);
-    data.append('education_qualification', personalData?.qualification);
+    const student_data = {
+      first_name : personalData.student_first_name,
+      last_name : personalData.student_last_name,
+      email : personalData.student_email,
+      institute_id :useInstitute().getInstituteId() ,
+      contact_info : {
+        state : personalData.state,
+        city : personalData.city,
+        pincode : personalData.pin_code,
+        address1 : personalData.address_line_one,
+        address2 : personalData.address_line_two,
+        phone_number : "+91"+personalData.student_phone_no
+      },
+      qualification : personalData.qualification,
+      username : personalData.username,
+      dob : convertDateFormat(personalData.date_of_birth),
+      gender : personalData.gender,
+      branch_id : personalData.branch,
+      course : personalData.course     
+    }
     console.log(personalData);
 
     try {
-      const result = await addStudent(data);
+      const result = await addStudent(student_data);
 
       if (result.success) {
         toast.success(result.message);
@@ -368,9 +373,9 @@ const StepperLinearWithValidation = () => {
                     aria-describedby="stepper-linear-personal-gender"
                     helperText={personalErrors.gender?.message}
                   >
-                    <MenuItem value="male">Male</MenuItem>
-                    <MenuItem value="female">Female</MenuItem>
-                    <MenuItem value="other">Other</MenuItem>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
                   </CustomTextField>
                 )}
               />
@@ -385,11 +390,11 @@ const StepperLinearWithValidation = () => {
                   <Autocomplete
                     fullWidth
                     options={activeBranches}
-                    getOptionLabel={(option) => option.branch_name}
-                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                    getOptionLabel={(option) => option.branch_identity}
+                    value={activeBranches.find((branch) => branch.uuid === value) || null}
                     onChange={(event, newValue) => {
-                      setValue('branch', newValue ? newValue.branch_id : '');
-                      getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                      setValue('branch', newValue ? newValue.uuid : '');
+                      getActiveCoursesByBranch(newValue ? newValue.uuid : '');
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -415,9 +420,9 @@ const StepperLinearWithValidation = () => {
                     fullWidth
                     options={activeCourse}
                     getOptionLabel={(option) => option.course_name}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    value={activeCourse.find((course) => course.uuid === value) || null}
                     onChange={(event, newValue) => {
-                      onChange(newValue ? newValue.course_id : '');
+                      onChange(newValue ? newValue.uuid : '');
                     }}
                     renderInput={(params) => (
                       <TextField

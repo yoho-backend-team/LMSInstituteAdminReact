@@ -365,8 +365,8 @@ const StepperLinearWithValidation = () => {
               getOptionLabel={(option) => option.course_name}
               value={selectedCourses}
               onChange={(e, newValue) => {
-                if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                  setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
+                if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                  setSelectedCourses(activeCourse.filter((option) => option.id !== 'selectAll'));
                 } else {
                   setSelectedCourses(newValue);
                 }
@@ -397,7 +397,7 @@ const StepperLinearWithValidation = () => {
                 <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                   {value.map((option, index) => (
                     <CustomChip
-                      key={option.course_id}
+                      key={option.id}
                       label={option.course_name}
                       onDelete={() => {
                         const updatedValue = [...value];
@@ -410,7 +410,7 @@ const StepperLinearWithValidation = () => {
                   ))}
                 </div>
               )}
-              isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
             />
           </Grid>
 
