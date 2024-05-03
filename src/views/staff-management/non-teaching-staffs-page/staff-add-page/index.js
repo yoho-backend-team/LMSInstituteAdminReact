@@ -36,6 +36,11 @@ const StepperLinearWithValidation = () => {
       .string()
       .required('Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets'),
+      password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/^[a-zA-Z0-9]+$/, 'Password should only contain alphabets and numbers'),
     email: yup
       .string()
       .required('Email is required')
@@ -82,6 +87,7 @@ const StepperLinearWithValidation = () => {
 
   const defaultPersonalValues = {
     name: '',
+    password:"",
     email: '',
     phone: '',
     alt_phone: '',
@@ -203,7 +209,41 @@ const StepperLinearWithValidation = () => {
   };
   console.log(logo);
 
+  const getInstituteDetails = () => {
+    if(typeof(localStorage) !== "undefined"){
+    const institute = localStorage.getItem("institute")
+    return JSON.parse(institute)
+    }else{
+     return undefined
+    }
+}
+
+
+
   const onSubmit = async () => {
+    const formData = personalControl._formValues;
+   
+    const non_teaching_staffdata = {
+      email: formData.email,
+      full_name: formData.name,
+      password: formData.password,
+      institute_id: getInstituteDetails()._id,
+      branch_id: '6613946752e4291f77489fc0',
+      username: formData.username,
+      dob: "29.08.2024",
+      gender: "Male",
+      qualification: "bsc",
+      contact_info: {
+        state: formData.state,
+        city: formData.city,
+        pincode: formData.pin_code,
+        address1: formData.address1,
+        address2: formData.address2,
+        phone_number: formData.phone
+      },
+      designation: formData.designation,
+      role: '6613946752e4291f77489fc0'
+    };
     const personalData = personalControl?._formValues;
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
@@ -228,7 +268,7 @@ const StepperLinearWithValidation = () => {
       data.append('education_qualification', personalData?.education_qualification);
 
       try {
-        const result = await addNonTeachingStaff(data);
+        const result = await addNonTeachingStaff(non_teaching_staffdata);
 
         if (result.success) {
           toast.success(result.message);
@@ -283,6 +323,7 @@ const StepperLinearWithValidation = () => {
                   </div>
                 </Box>
               </Grid>
+              
               <Grid item xs={12} sm={6}>
                 <Controller
                   name="name"
@@ -298,6 +339,27 @@ const StepperLinearWithValidation = () => {
                       error={Boolean(personalErrors['name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
                       helperText={personalErrors?.name?.message}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="password"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label="Password"
+                      type="password"
+                      onChange={onChange}
+                      placeholder=""
+                      error={Boolean(personalErrors['password'])}
+                      aria-describedby="stepper-linear-personal-institute_name"
+                      helperText={personalErrors?.password?.message}
                     />
                   )}
                 />
@@ -393,8 +455,8 @@ const StepperLinearWithValidation = () => {
                       {...(personalErrors['branch'] && { helperText: 'This field is required' })}
                     >
                       {activeBranches.map((item, index) => (
-                        <MenuItem key={index} value={item.branch_id}>
-                          {item.branch_name}
+                        <MenuItem key={index} value={item.id}>
+                          {item.branch_identity}
                         </MenuItem>
                       ))}
                     </TextField>

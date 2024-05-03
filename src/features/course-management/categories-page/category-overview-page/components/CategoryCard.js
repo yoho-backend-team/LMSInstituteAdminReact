@@ -115,7 +115,7 @@ const CategoryCard = (props) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {category?.category_name}
+            {category?.category_identity}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
             {category?.course?.length} Courses

@@ -33,7 +33,7 @@ const pages = {
           icon: icons.IconCategory,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_categories_view')
+          visible: hasPermission('can_read_institute_category','Categories')
         },
         {
           id: 'courses',
@@ -44,7 +44,7 @@ const pages = {
           target: false,
 
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_course_view')
+          visible: hasPermission('can_read_institute_course','Courses')
         }
       ]
     }

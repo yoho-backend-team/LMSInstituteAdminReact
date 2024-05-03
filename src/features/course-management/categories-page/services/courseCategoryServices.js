@@ -1,16 +1,27 @@
 // courseCategories.js
 import axios from 'axios';
+import { HTTP_END_POINTS } from 'api/urls';
 
+const getInstituteDetails = () => {
+  if(typeof localStorage !== "undefined"){
+    const institute = localStorage.getItem("institute")
+    return institute
+  }else{
+    return undefined
+  }
+  
+}
+const institute = getInstituteDetails()
+console.log(institute)
 const COURSE_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/course-categories`;
 
 export const getAllCourseCategoriesByInstitute = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/get-by-institute-id?page=${data?.page}`, {
+    const response = await axios.get(HTTP_END_POINTS.category.getAll+`?${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
 
     console.log(response);
@@ -114,7 +125,7 @@ export const updateCourseCategoryStatus = async (data) => {
 };
 export const getAllCourseCategories = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_CATEGORY_API_END_POINT}/get-all`, {
+    const response = await axios.get(HTTP_END_POINTS.category.getAll, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

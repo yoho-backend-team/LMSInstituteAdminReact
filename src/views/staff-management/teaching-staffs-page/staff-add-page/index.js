@@ -30,6 +30,7 @@ import { useNavigate } from 'react-router-dom';
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
     name: '',
+    password:"",
     email: '',
     phone: '',
     alt_phone: '',
@@ -57,6 +58,11 @@ const StepperLinearWithValidation = () => {
       .string()
       .required('Full Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Full Name should only contain alphabets'),
+      password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/^[a-zA-Z0-9]+$/, 'Password should only contain alphabets and numbers'),
     email: yup
       .string()
       .required('Email is required')
@@ -158,6 +164,14 @@ const StepperLinearWithValidation = () => {
       textAlign: 'center'
     }
   }));
+  const getInstituteDetails = () => {
+    if(typeof(localStorage) !== "undefined"){
+    const institute = localStorage.getItem("institute")
+    return JSON.parse(institute)
+    }else{
+     return undefined
+    }
+}
 
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(4),
@@ -193,7 +207,30 @@ const StepperLinearWithValidation = () => {
   console.log(logo);
 
   const onSubmit = async () => {
-    console.log('hello');
+    const formData = personalControl._formValues;
+   
+    const teaching_staffdata = {
+      email: formData.email,
+      full_name: formData.name,
+      password: formData.password,
+      course: "6613946752e4291f77489fc0",
+      institute_id: getInstituteDetails()._id,
+      branch_id: '6613946752e4291f77489fc0',
+      username: formData.username,
+      dob: "29.08.2024",
+      gender: "Male",
+      qualification: "bsc",
+      contact_info: {
+        state: formData.state,
+        city: formData.city,
+        pincode: formData.pin_code,
+        address1: formData.address1,
+        address2: formData.address2,
+        phone_number: formData.phone
+      },
+      designation: formData.designation,
+      role: '6613946752e4291f77489fc0'
+    };
     const personalData = personalControl?._formValues;
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
 
@@ -218,16 +255,16 @@ const StepperLinearWithValidation = () => {
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
-    const isUserNameTaken = await checkUserName(personalData?.username);
+    // const isUserNameTaken = await checkUserName(personalData?.username);
 
-    if (!isUserNameTaken.success) {
-      setError('username', {
-        type: 'manual',
-        message: 'Username is already taken'
-      });
-    } else if (isUserNameTaken.success) {
+    // if (!isUserNameTaken.success) {
+    //   setError('username', {
+    //     type: 'manual',
+    //     message: 'Username is already taken'
+    //   });
+    // } else if (isUserNameTaken.success) {
       try {
-        const result = await addTeachingStaff(data);
+        const result = await addTeachingStaff(teaching_staffdata);
         if (result.success) {
           toast.success(result.message);
           navigate(-1);
@@ -237,7 +274,7 @@ const StepperLinearWithValidation = () => {
       } catch (error) {
         console.log(error);
       }
-    }
+    // }
   };
 
   const getStepContent = () => {
@@ -286,6 +323,27 @@ const StepperLinearWithValidation = () => {
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+                <Controller
+                  name="password"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label="Password"
+                      type="password"
+                      onChange={onChange}
+                      placeholder=""
+                      error={Boolean(personalErrors['password'])}
+                      aria-describedby="stepper-linear-personal-institute_name"
+                      helperText={personalErrors?.password?.message}
+                    />
+                  )}
+                />
+              </Grid>
+
 
           <Grid item xs={12} sm={6}>
             <Controller

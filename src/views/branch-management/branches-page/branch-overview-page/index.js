@@ -20,7 +20,7 @@ const BranchesOverviewPage = () => {
   useEffect(() => {
     getAllBranchesCallback();
   }, [getAllBranchesCallback, refetchBranch]);
-
+  console.log(branches)
   return (
     <Grid container spacing={1} className="match-height">
       <Grid container spacing={2}>
@@ -30,7 +30,7 @@ const BranchesOverviewPage = () => {
         {branchLoading ? (
           <BranchMainSkeleton />
         ) : (
-          branches?.data?.map((branch, index) => <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />)
+          branches?.map((branch, index) => <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />)
         )}
 
         {/* Pagination */}

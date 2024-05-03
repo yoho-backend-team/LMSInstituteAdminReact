@@ -34,7 +34,7 @@ const pages = {
           icon: icons.IconBellRinging,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_notification_view')
+          visible: hasPermission('inst_perm_student_notification_view','Student Notifications')
         },
         {
           id: 'staff-notifications',
@@ -44,7 +44,7 @@ const pages = {
           icon: icons.IconBellRinging,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_staff_notification_view')
+          visible: hasPermission('can_read_institute_staff_notifications','Staff Notifications')
         },
         {
           id: 'all-notifications',
@@ -54,7 +54,7 @@ const pages = {
           icon: icons.IconBellRinging,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_all_notification_view')
+          visible: hasPermission('inst_perm_all_notification_view','All Notifications')
         }
       ]
     }

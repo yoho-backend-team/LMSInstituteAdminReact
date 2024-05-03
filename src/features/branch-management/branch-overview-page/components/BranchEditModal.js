@@ -57,30 +57,32 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (selectedBranch) {
-      setValue('branchName', selectedBranch.branch_name || '');
-      setValue('phone', selectedBranch.phone_number || '');
-      setValue('alternatePhone', selectedBranch.alternate_number || '');
-      setValue('address', selectedBranch.address || '');
-      setValue('pinCode', selectedBranch.pin_code || '');
-      setValue('landmark', selectedBranch.landmark || '');
-      setValue('city', selectedBranch.city || '');
-      setValue('state', selectedBranch.state || '');
+      setValue('branchName', selectedBranch?.branch_identity || '');
+      setValue('phone', selectedBranch?.contact_info?.phone_no || '');
+      setValue('alternatePhone', selectedBranch?.contact_info?.alternate_no || '');
+      setValue('address', selectedBranch?.contact_info?.address || '');
+      setValue('pinCode', selectedBranch?.contact_info?.pincode || '');
+      setValue('landmark', selectedBranch?.contact_info?.landmark || '');
+      setValue('city', selectedBranch?.contact_info?.city || '');
+      setValue('state', selectedBranch?.contact_info?.state || '');
     }
   }, [selectedBranch, setValue]);
-
+  console.log(selectedBranch,"selectedBranch")
   // Handle form submission
   const onSubmit = useCallback(
     async (data) => {
       const dummyData = {
-        branch_name: data.branchName,
+        branch_identity: data.branchName,
         id: selectedBranch.id,
+        contact_info:{
         address: data.address,
         city: data.city,
         state: data.state,
-        pin_code: data.pinCode,
+        pincode: data.pinCode,
         landmark: data.landmark,
-        phone_number: data.phone,
-        alternate_number: data.alternatePhone
+        phone_no: data.phone,
+        alternate_no: data.alternatePhone},
+        uuid:selectedBranch.uuid
       };
 
       try {

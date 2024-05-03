@@ -1,7 +1,7 @@
 // TeachingStaffservice.js
 import axios from 'axios';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff/`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {
@@ -81,10 +81,10 @@ export const searchTeachingStaffs = async (searchQuery) => {
 
 export const addTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
