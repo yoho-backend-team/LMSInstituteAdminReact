@@ -144,27 +144,28 @@ console.log(activeCourse);
         state,
         city,
         pincode,
-        address_line_1,
-        address_line_2,
-        date_of_birth,
+        address1,
+        address2,
+        dob,
         gender,
-        education_qualification,
-        username
+        qualification,
+        username,
+        contact_info
       } = studentData;
 
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
-      setValue('phone_no', phone_no || '');
+      setValue('phone_no', contact_info.phone_number || '');
       setValue('alternate_number', alternate_number || '');
-      setValue('state', state || '');
-      setValue('city', city || '');
-      setValue('pincode', pincode || '');
-      setValue('address_line_1 ', address_line_1 || '');
-      setValue('address_line_2', address_line_2 || '');
-      setValue('date_of_birth', date_of_birth || '');
+      setValue('state', contact_info.state || '');
+      setValue('city', contact_info.city || '');
+      setValue('pincode', contact_info.pincode || '');
+      setValue('address_line_1 ', contact_info.address1 || '');
+      setValue('address_line_2', contact_info.address2 || '');
+      setValue('dob', new Date(dob) || '');
       setValue('gender', gender || '');
-      setValue('education_qualification', education_qualification || '');
+      setValue('education_qualification', qualification || '');
       setValue('username', username || '');
       // setSelectedCourses(studentData?.institute_student_courses);
     }
@@ -252,7 +253,7 @@ console.log(activeCourse);
     data.append('city', personalData?.city);
     data.append('state', personalData?.state);
     data.append('pincode', personalData?.pincode);
-    data.append('dob', convertDateFormat(personalData?.date_of_birth));
+    data.append('dob', convertDateFormat(personalData?.dob));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
     data.append('id', studentData.id);
@@ -360,10 +361,11 @@ console.log(activeCourse);
 
             <Grid item xs={12} sm={6}>
               <Controller
-                name="date_of_birth"
+                name="dob"
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
+                 
                   <DatePicker
                     id="issue-date"
                     dateFormat={'dd/MM/yyyy'}
@@ -399,9 +401,9 @@ console.log(activeCourse);
                     aria-describedby="stepper-linear-personal-gender"
                     helperText={personalErrors.gender?.message}
                   >
-                    <MenuItem value="male">Male</MenuItem>
-                    <MenuItem value="female">Female</MenuItem>
-                    <MenuItem value="other">Other</MenuItem>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
                   </CustomTextField>
                 )}
               />
