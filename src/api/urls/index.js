@@ -44,7 +44,8 @@ const generateEndpoints = () => {
         },
         users :{
             verifyOtp : "/api/institutes/auth/admin/verify-otp/",
-            studentRegister : "/api/institutes/auth/student/register"
+            studentRegister : "/api/institutes/auth/student/register",
+            logout : `/api/institutes/auth/admin/logout`
         },
         student : {
             get : `/api/institutes/${instituteId}/branches/${branchId}/students`,

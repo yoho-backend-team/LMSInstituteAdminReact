@@ -239,7 +239,7 @@ const StepperLinearWithValidation = () => {
       }
     }
   };
-
+  console.log(selectedCourses,"selected")
   const getStepContent = () => {
     return (
       <form onSubmit={handlePersonalSubmit(onSubmit)}>
