@@ -17,6 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
@@ -32,7 +33,7 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup
+    full_name: yup
       .string()
       .required('Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Name should only contain alphabets'),
@@ -225,24 +226,24 @@ const StepperLinearWithValidation = () => {
    
     const non_teaching_staffdata = {
       email: formData.email,
-      full_name: formData.name,
+      full_name: formData.full_name,
       password: formData.password,
-      institute_id: getInstituteDetails()._id,
-      branch_id: '6613946752e4291f77489fc0',
+      institute_id: useInstitute().getInstituteId(),
+      branch_id: localStorage.getItem("selectedBranchId"),
       username: formData.username,
-      dob: "29.08.2024",
-      gender: "Male",
-      qualification: "bsc",
+      dob: convertDateFormat(formData.date_of_birth),
+      gender: formData.gender,
+      qualification: formData.education_qualification,
       contact_info: {
         state: formData.state,
         city: formData.city,
         pincode: formData.pin_code,
-        address1: formData.address1,
-        address2: formData.address2,
+        address1: formData.address_line_one,
+        address2: formData.address_line_two,
         phone_number: formData.phone
       },
       designation: formData.designation,
-      role: '6613946752e4291f77489fc0'
+      role: formData.role
     };
     const personalData = personalControl?._formValues;
     setActiveStep(activeStep + 1);
@@ -326,7 +327,7 @@ const StepperLinearWithValidation = () => {
               
               <Grid item xs={12} sm={6}>
                 <Controller
-                  name="name"
+                  name="full_name"
                   control={personalControl}
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
@@ -336,7 +337,7 @@ const StepperLinearWithValidation = () => {
                       label="FullName"
                       onChange={onChange}
                       placeholder="Leonard"
-                      error={Boolean(personalErrors['name'])}
+                      error={Boolean(personalErrors['full_name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
                       helperText={personalErrors?.name?.message}
                     />

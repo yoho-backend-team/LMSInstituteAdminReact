@@ -26,6 +26,7 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { checkUserName } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -54,7 +55,7 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup
+    full_name: yup
       .string()
       .required('Full Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Full Name should only contain alphabets'),
@@ -207,31 +208,30 @@ const StepperLinearWithValidation = () => {
   console.log(logo);
 
   const onSubmit = async () => {
-    const formData = personalControl._formValues;
-   
+    const personalData = personalControl._formValues;
+    const courseUUIDs = selectedCourses.map(option => option.uuid);
     const teaching_staffdata = {
-      email: formData.email,
-      full_name: formData.name,
-      password: formData.password,
-      course: "6613946752e4291f77489fc0",
-      institute_id: getInstituteDetails()._id,
-      branch_id: '6613946752e4291f77489fc0',
-      username: formData.username,
-      dob: "29.08.2024",
-      gender: "Male",
-      qualification: "bsc",
+      email: personalData.email,
+      full_name: personalData.full_name,
+      password: personalData.password,
+      course: courseUUIDs,
+      institute_id: useInstitute().getInstituteId(),
+      username: personalData.username,
+      dob: convertDateFormat(personalData.date_of_birth),
+      gender: personalData.gender,
+      branch_id : localStorage.getItem("selectedBranchId"),
+      qualification:personalData.education_qualification,
       contact_info: {
-        state: formData.state,
-        city: formData.city,
-        pincode: formData.pin_code,
-        address1: formData.address1,
-        address2: formData.address2,
-        phone_number: formData.phone
+        state: personalData.state,
+        city: personalData.city,
+        pincode: personalData.pin_code,
+        address1: personalData.address_line_one,
+        address2: personalData.address_line_two,
+        phone_number: personalData.phone
       },
-      designation: formData.designation,
-      role: '6613946752e4291f77489fc0'
+      designation: personalData.designation,
+      role: personalData.role
     };
-    const personalData = personalControl?._formValues;
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
 
     let data = new FormData();
@@ -276,7 +276,7 @@ const StepperLinearWithValidation = () => {
       }
     // }
   };
-
+  console.log(selectedCourses,"selected")
   const getStepContent = () => {
     return (
       <form onSubmit={handlePersonalSubmit(onSubmit)}>
@@ -306,7 +306,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="name"
+              name="full_name"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -317,7 +317,7 @@ const StepperLinearWithValidation = () => {
                   onChange={onChange}
                   placeholder="Leonard"
                   aria-describedby="stepper-linear-personal-institute_name"
-                  error={Boolean(personalErrors.name)}
+                  error={Boolean(personalErrors.full_name)}
                   {...(personalErrors.name && { helperText: personalErrors.name.message })}
                 />
               )}
