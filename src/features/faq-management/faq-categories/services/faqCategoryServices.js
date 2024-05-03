@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/faq`;
+const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/faq/category`;
 
 export const getActiveFaqCategories = async (data) => {
   try {
@@ -13,17 +13,12 @@ export const getActiveFaqCategories = async (data) => {
       params: data
     });
 
-    // console.log(response);
-
-    // Check if the response status is successful
     if (response.data.status) {
       return response;
     } else {
-      // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch FaqCategories. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllFaqCategories:', error);
 
     // Throw the error again to propagate it to the calling function/component
@@ -34,7 +29,7 @@ export const getActiveFaqCategories = async (data) => {
 
 export const getAllFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/category`, {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -62,14 +57,14 @@ export const getAllFaqCategories = async (data) => {
 
 export const searchFaqCategories = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { search: searchQuery }
+      params: { keyword: searchQuery } 
     });
-
+    
     if (response.data) {
       return { success: true, data: response.data };
     } else {
@@ -80,21 +75,19 @@ export const searchFaqCategories = async (searchQuery) => {
     throw error;
   }
 };
-
 export const addFaqCategory = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}`, data, {
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
-      return { success: true, message: 'FaqCategory created successfully' };
+      return { success: true, message: response.data.message }; 
     } else {
-      return { success: false, message: 'Failed to create FaqCategory' };
+      return { success: false, message: response.data.message }; 
     }
   } catch (error) {
     console.error('Error in addFaqCategory:', error);
@@ -102,9 +95,10 @@ export const addFaqCategory = async (data) => {
   }
 };
 
+
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await axios.delete(`${FAQ_CATEGORY_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${FAQ_CATEGORY_API_END_POINT}/delete/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -112,7 +106,7 @@ export const deleteFaqCategory = async (data) => {
       params: data
     });
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
     } else {
       return { success: false, message: 'Failed to delete FaqCategory' };
@@ -143,14 +137,17 @@ export const updateStatusFaqCategory = async (data) => {
   }
 };
 
-export const updateFaqCategory = async (data) => {
+export const updateFaqCategory = async (data) => {   
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/update`, data, {
+    const { uuid } = data;
+    console.log(data)
+    const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
+      } 
     });
+    
 
     if (response.data.status) {
       console.log(response);

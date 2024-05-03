@@ -32,10 +32,18 @@ const defaultValues = {
 const FaqCategoriesAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
 
+  const institute = JSON.parse(localStorage.getItem('institute'));
+  const selectedBranchId = localStorage.getItem('selectedBranchId');
+
+  const requestData = {
+    branchid: selectedBranchId,
+    institute_id: institute ? institute._id : ''
+  }; 
+
+
   const {
     handleSubmit,
     control,
-    setValue,
     formState: { errors },
     reset
   } = useForm({
@@ -45,27 +53,35 @@ const FaqCategoriesAddDrawer = (props) => {
   });
 
   const handleClose = () => {
-    setValue('contact', Number(''));
     reset();
     toggle();
   };
 
   const onSubmit = async (data) => {
-    const InputData = {
-      title: data.name,
-      description: data.description
+    const inputData = {
+      category_name: data.name,
+      description: data.description,
+      ...requestData 
     };
-    const result = await addFaqCategory(InputData);
-    if (result.success) {
-      toast.success(result.message);
-      setRefetch((state) => !state);
-      toggle();
-      reset();
-    } else {
-      toast.error(result.message);
+  
+    console.log(inputData);
+    try {
+      const result = await addFaqCategory(inputData);
+    
+      if (result.success) {
+        toast.success(result.message); 
+        setRefetch((state) => !state);
+        toggle(); 
+        reset();
+      } else {
+        toast.error(result.response.data.message); 
+      }
+    } catch (error) {
+      console.error('Error in creating FaqCategory:', error);
+      toast.error('Failed to create FaqCategory',error);
     }
   };
-
+  
   return (
     <DatePickerWrapper>
       <Drawer
@@ -124,7 +140,7 @@ const FaqCategoriesAddDrawer = (props) => {
                     fullWidth
                     value={value}
                     sx={{ mb: 2 }}
-                    label="description"
+                    label="Description"
                     onChange={onChange}
                     error={Boolean(errors.description)}
                     {...(errors.description && { helperText: errors.description.message })}
