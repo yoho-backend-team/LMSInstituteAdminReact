@@ -2,15 +2,16 @@
 import axios from 'axios';
 
 const COURSE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses`;
+import { HTTP_END_POINTS } from 'api/urls';
+import client from 'api/client';
 
 export const getAllCoursesByBranch = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/get-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${HTTP_END_POINTS.course.get}${data.id}/courses`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
     console.log('getAllCourses', response);
     // Check if the response status is successful
@@ -30,10 +31,10 @@ export const getAllCoursesByBranch = async (data) => {
 };
 export const updateCourseStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_END_POINT}/status-change`, data, {
+    const response = await axios.put(`${HTTP_END_POINTS.course.update}${data.category}/courses/${data.id}`, {is_active:data.is_active}, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
@@ -50,12 +51,12 @@ export const updateCourseStatus = async (data) => {
 };
 export const getCourseDetails = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/read-by-id`, {
+    console.log(data,"data")
+    const response = await axios.get(`${HTTP_END_POINTS.course.update}${data.category}/courses/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
     console.log(response);
     // Check if the response status is successful
@@ -101,15 +102,16 @@ export const getAllCourses = async (data) => {
 };
 export const addCourse = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    // const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
+    //   headers: {
+    //     // 'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   }
+    // });
+    const response = await client.course.create(data)
     console.log(response);
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'Course created successfully' };
     } else {
       return { success: false, message: 'Failed to create Course' };

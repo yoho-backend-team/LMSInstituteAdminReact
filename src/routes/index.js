@@ -213,7 +213,7 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<CoursesPage />} permissionCode={'can_read_institute_course'} module={'Courses'} />}>
             <Route path="courses" element={<CoursesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddCoursePage />} permissionCode={'can_create_institute_course'} module={'Courses'} />}>
+          <Route element={<ProtectedRoute element={<AddCoursePage />} permissionCode={'can_create_institute_course'} module={'Courses'} permissionReq={"create_permission"} />}>
             <Route path="courses/add" element={<AddCoursePage />} />
           </Route>
           <Route element={<ProtectedRoute element={<ViewCoursePage />} permissionCode={'can_read_institute_course_details'} module={"Course Details"} />}>
@@ -287,7 +287,7 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<BatchesPage />} permissionCode={'can_view_batches'} module={'Batches'} />}>
             <Route path="batches" element={<BatchesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddBatchPage />} permissionCode={'can_create_batches'} module={'Batches'} />}>
+          <Route element={<ProtectedRoute element={<AddBatchPage />} permissionCode={'can_create_batches'} module={'Batches'} permissionReq={"create_permission"} />}>
             <Route path="batches/add" element={<AddBatchPage />} />
           </Route>
           <Route element={<ProtectedRoute element={<ViewBatchPage />} permissionCode={'can_view_batch_details'} module={'Batch Details'} />}>

@@ -104,12 +104,13 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
 
   // Form submission handler
   const onSubmit = useCallback(
+    
     async (data) => {
       var bodyFormData = new FormData();
       bodyFormData.append('logo', selectedImage);
       bodyFormData.append('category_name', data.category);
 
-      const result = await addCourseCategory(bodyFormData);
+      const result = await addCourseCategory({category_name:data.category});
 
       if (result.success) {
         reset();

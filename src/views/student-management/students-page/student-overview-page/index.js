@@ -31,7 +31,7 @@ const Students = () => {
       return address;
     }
   };
-
+  console.log(Students,"students")
   return (
     <>
       <Grid>
@@ -46,14 +46,14 @@ const Students = () => {
             ) : (
               <Box>
                 <Grid container spacing={2}>
-                  {Students?.data?.map((item, index) => (
+                  {Students?.map((item, index) => (
                     <Grid key={index} item xs={12} sm={6} md={3}>
                       <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
                         <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
                           <Box>
                             <Avatar
                               alt="image"
-                              src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.student?.image}`}
+                              src={`${item.logo}`}
                               sx={{
                                 width: 68,
                                 height: 68,
@@ -67,14 +67,14 @@ const Students = () => {
                           </Box>
 
                           <Typography variant="h3" sx={{ mt: 6 }}>
-                            {capitalizeFirstLetter(item.student.first_name)}
+                            {capitalizeFirstLetter(item.first_name)}
                           </Typography>
                           <CustomChip
                             rounded
                             variant="tonal"
                             color={item?.student?.is_active === '1' ? 'success' : 'error'}
                             skin="light"
-                            label={item.student.email}
+                            label={item.email}
                             sx={{ mb: 1, mt: 1 }}
                             size="x-small"
                           />
@@ -92,7 +92,7 @@ const Students = () => {
                               }}
                             >
                               {formattedAddress(
-                                `${item.student.address_line_1}, ${item.student.city}, ${item.student.state}, ${item.student.pincode}`
+                                `${item.contact_info.address1}, ${item.contact_info.city}, ${item.contact_info.state}, ${item.contact_info.pincode}`
                               )}
                             </Typography>
                           </Box>

@@ -223,7 +223,7 @@ const CategoriesDataGrid = () => {
                 // to: `/apps/invoice/delete/${row.id}`,
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
-                menuItemProps: {
+                menuItemProps: {  
                   onClick: () => {
                     handleDelete();
                   }

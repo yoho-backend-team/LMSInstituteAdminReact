@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/help-faq-modules`;
+const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/faq`;
 
 export const getActiveFaqCategories = async (data) => {
   try {
@@ -34,14 +34,14 @@ export const getActiveFaqCategories = async (data) => {
 
 export const getAllFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/read-all`, {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/category`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: data
+      params: data 
     });
-
+    console.log(data);
     console.log(response);
 
     // Check if the response status is successful

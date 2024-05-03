@@ -108,14 +108,19 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   // Form submission handler
   const onSubmit = useCallback(
     async (data) => {
-      const inputData = new FormData();
-      inputData.append('category_id', category?.category_id);
-      inputData.append('logo', selectedImage);
-      inputData.append('category_name', data?.category_name);
-      inputData.append('id', category?.id);
+      
+      const data1 ={
+            category_name:data.category_name,
+            id:category.uuid
+      }
+      // const inputData = new FormData();
+      // inputData.append('category_id', category?.category_id);
+      // inputData.append('logo', selectedImage);
+      // inputData.append('category_name', data?.category_name);
+      // inputData.append('id', category?.id);
 
       try {
-        const result = await updateCourseCategory(inputData);
+        const result = await updateCourseCategory(data1);
         if (result.success) {
           setCategoryRefetch((state) => !state);
           toast.success(result.message);

@@ -261,7 +261,7 @@ const AddBatchPage = () => {
                             getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
                           }}
                           options={activeBranches}
-                          getOptionLabel={(option) => option.branch_name || ''}
+                          getOptionLabel={(option) => option.branch_identity || ''}
                           renderInput={(params) => (
                             <CustomTextField
                               {...params}

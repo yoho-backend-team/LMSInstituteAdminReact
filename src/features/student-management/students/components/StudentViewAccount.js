@@ -63,8 +63,8 @@ const UserViewAccount = ({ student }) => {
                         rounded
                         skin="light"
                         size="small"
-                        label={student.is_active === '1' ? 'Active' : 'Inactive'}
-                        color={student.is_active === '1' ? 'success' : 'error'}
+                        label={student.is_active? 'Active' : 'Inactive'}
+                        color={student.is_active? 'success' : 'error'}
                         sx={{
                           textTransform: 'capitalize'
                         }}
@@ -82,26 +82,26 @@ const UserViewAccount = ({ student }) => {
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
                       <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                        {student.education_qualification}
+                        {student.qualification}
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>+91 {student.phone_no}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>+91 {student?.contact_info?.phone_number}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Contact:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>+91 {student.alternate_number}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>+91 {student?.contact_info?.phone_number}</Typography>
                     </Box>
                     <Box sx={{ mb: 3 }}>
                       <Typography sx={{ mr: 2, mb: 1, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 1 }}>
-                        {student.address_line_1}, {student.address_line_2}
+                        {student.contact_info.addres1}, {student?.contact_info?.address2}
                       </Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 1 }}>
-                        {student.city}-{student.pincode}
+                        {student.city}-{student?.contact_info?.pincode}
                       </Typography>
-                      <Typography sx={{ color: 'text.secondary', mb: 1 }}>{student.state}</Typography>
+                      <Typography sx={{ color: 'text.secondary', mb: 1 }}>{student?.contact_info?.state}</Typography>
                     </Box>
                   </Box>
                 </Grid>

@@ -1,4 +1,5 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/student`;
@@ -13,7 +14,7 @@ export const getAllStudentsByBatch = async (data) => {
       params: data
     });
 
-    console.log(response);
+    console.log(response,"students");
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response?.data?.data };
@@ -31,17 +32,17 @@ export const getAllStudentsByBatch = async (data) => {
 };
 export const getAllStudents = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
+    // const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   },
+    //   params: data
+    // });
+   const response = await client.users.studentsAll()
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -58,12 +59,7 @@ export const getAllStudents = async (data) => {
 
 export const addStudent = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_API_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.users.studentRegister(data)
 
     console.log(response);
 
@@ -125,17 +121,11 @@ export const updateStudent = async (data) => {
 
 export const studentById = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+       const response = await client.users.getStudentWithId(data)
+    console.log(response,data);
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
+    if (response.status) {
+      return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch a student. Status: ${response.status}`);

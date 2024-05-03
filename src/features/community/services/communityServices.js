@@ -1,12 +1,14 @@
 // groupService.js
 import axios from 'axios';
+                           
 
-const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/community-management`;
+const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/chat`;
 
 export const getAllCommunities = async (data) => {
   try {
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/get-by-branch-id`, {
-      headers: {
+    console.log(data)
+    const response = await axios.get(`${COMMUNITY_API_END_POINT}/`,{data}, {
+      headers: {  
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },

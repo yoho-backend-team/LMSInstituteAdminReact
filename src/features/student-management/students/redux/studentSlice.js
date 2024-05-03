@@ -9,6 +9,7 @@ const studentSlice = createSlice({
   },
   reducers: {
     setStudents: (state, action) => {
+      console.log(state.data,action.payload)
       state.data = action.payload;
     },
     setLoading: (state, action) => {

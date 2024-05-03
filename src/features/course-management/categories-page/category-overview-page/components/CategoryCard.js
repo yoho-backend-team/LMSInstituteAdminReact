@@ -49,8 +49,8 @@ const CategoryCard = (props) => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
     const response = await updateCourseCategoryStatus(data);
     if (response.success) {
@@ -95,7 +95,7 @@ const CategoryCard = (props) => {
                     text: 'Delete',
                     icon: <Icon icon="mdi:delete-outline" />,
                     menuItemProps: {
-                      onClick: () => handleDelete(category?.id)
+                      onClick: () => handleDelete(category?.uuid)
                     }
                   }
                 ]}
@@ -115,11 +115,12 @@ const CategoryCard = (props) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {category?.category_identity}
+            {category?.category_name}
           </Typography>
-          <Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
+         { category?.course?.length&&<Typography variant="body1" sx={{ mb: 1, color: 'text.disabled' }}>
             {category?.course?.length} Courses
           </Typography>
+          }
           {/* Category Status Selector */}
           <Grid sx={{ mt: 2 }}>
             <TextField
@@ -129,8 +130,8 @@ const CategoryCard = (props) => {
               label="Status"
               SelectProps={{ value: category?.is_active, onChange: (e) => handleStatusValue(e, category) }}
             >
-              <MenuItem value="1">Active</MenuItem>
-              <MenuItem value="0">Inactive</MenuItem>
+              <MenuItem value="true">Active</MenuItem>
+              <MenuItem value="false">Inactive</MenuItem>
             </TextField>
           </Grid>
         </CardContent>

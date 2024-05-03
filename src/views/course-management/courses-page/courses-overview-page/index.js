@@ -20,12 +20,12 @@ const Courses = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      id: selectedBranchId,
       page: '1'
     };
     dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId, courseRefetch]);
-
+  console.log(selectedBranchId,courses)
   return (
     <>
       <Grid container>
@@ -39,7 +39,7 @@ const Courses = () => {
           <Grid item xs={12}>
             {/* Display courses */}
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-              {courses?.data?.map((course, index) => (
+              {courses?.map((course, index) => (
                 <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} />
               ))}
             </Grid>

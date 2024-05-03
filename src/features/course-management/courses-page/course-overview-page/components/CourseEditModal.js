@@ -355,7 +355,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 />
               </Grid>
 
-              <Grid container xs={12} sx={{ mt: 5 }} spacing={2}>
+              <Grid container item xs={12} sx={{ mt: 5 }} spacing={2}>
                 <Grid item xs={12} md={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
                     {!selectedImage && (

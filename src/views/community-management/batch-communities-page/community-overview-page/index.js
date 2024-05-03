@@ -49,8 +49,12 @@ const Community = () => {
   };
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"))
+    const institute = JSON.parse(localStorage.getItem('institute'))
     const data = {
-      institute_branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      userId:user._id,
+      institute_id: institute._id
     };
     dispatch(getAllCommunities(data));
   }, [dispatch, selectedBranchId]);

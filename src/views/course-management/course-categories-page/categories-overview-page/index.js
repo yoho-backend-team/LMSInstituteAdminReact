@@ -27,7 +27,7 @@ const Categories = () => {
 
   // Memoize categories data to prevent unnecessary re-renders
   const memoizedCategories = useMemo(() => courseCategories || [], [courseCategories]);
-
+  console.log(memoizedCategories,courseCategories,"course overview")
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -39,7 +39,7 @@ const Categories = () => {
       ) : (
         <Grid item xs={12}>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {memoizedCategories?.data?.map((category, index) => (
+            {memoizedCategories?.map((category, index) => (
               <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
             ))}
           </Grid>

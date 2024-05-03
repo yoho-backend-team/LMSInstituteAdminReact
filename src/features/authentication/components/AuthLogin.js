@@ -42,6 +42,7 @@ const FirebaseLogin = ({ ...others }) => {
   const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
+  const {handleotppage} = others
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -56,7 +57,7 @@ const FirebaseLogin = ({ ...others }) => {
     <Formik
       initialValues={{
         email: 'chandran.yoho@gmail.com',
-        password: 'Wecandoit@2024', //kVgfd3fk
+        password: 'Wecandoit@2024', 
         submit: null
       }}
       validationSchema={Yup.object().shape({
@@ -66,9 +67,13 @@ const FirebaseLogin = ({ ...others }) => {
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
-            dispatch(login(values.email, values.password));
-            setStatus({ success: true });
-            setSubmitting(false);
+          const response =  dispatch(login(values.email, values.password));
+          console.log(response,"response")
+          if(response.otpVerify){
+            handleotppage()
+          }
+          setStatus({ success: true });
+          setSubmitting(false);
           }
         } catch (err) {
           console.error(err);
