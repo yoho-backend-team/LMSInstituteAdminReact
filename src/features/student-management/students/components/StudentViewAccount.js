@@ -37,7 +37,7 @@ const UserViewAccount = ({ student }) => {
     }
   };
 
-  if (student) {
+  if (student&&Object.keys(student).length!==0) {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} md={12}>
@@ -139,7 +139,7 @@ const UserViewAccount = ({ student }) => {
               <Button
                 component={Link}
                 state={{ student: student }}
-                to={`students/${student?.student_id}/edit`}
+                to={`students/${student?.uuid}/edit`}
                 variant="contained"
                 sx={{ mr: 2 }}
               >

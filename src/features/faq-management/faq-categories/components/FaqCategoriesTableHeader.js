@@ -37,6 +37,7 @@ const FaqCategoriesTableHeader = (props) => {
               }}
               placeholder="Search Category"
               onChange={(e) => handleSearch(e)}
+              readonly
             />
           </Grid>
 

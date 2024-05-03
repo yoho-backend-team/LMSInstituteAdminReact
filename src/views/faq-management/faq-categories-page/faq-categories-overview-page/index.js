@@ -15,10 +15,12 @@ import FaqCategoriesEdit from 'features/faq-management/faq-categories/components
 import FaqCategoriesTableHeader from 'features/faq-management/faq-categories/components/FaqCategoriesTableHeader';
 import { selectFaqCategories, selectLoading } from 'features/faq-management/faq-categories/redux/faqCategorySelectors';
 import { getAllFaqCategories } from 'features/faq-management/faq-categories/redux/faqCategoryThunks';
-import { deleteFaqCategory, updateStatusFaqCategory } from 'features/faq-management/faq-categories/services/faqCategoryServices';
+import { deleteFaqCategory, updateStatusFaqCategory} from 'features/faq-management/faq-categories/services/faqCategoryServices';
+import { updateFaqCategory } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
@@ -39,10 +41,11 @@ const CategoriesDataGrid = () => {
 
   useEffect(() => {
 
-    const institute = JSON.parse(localStorage.getItem('institute'))
+    
     const data = {
-      branch_id: selectedBranchId,
-      instituteid: institute._id
+      branchid: selectedBranchId,
+      instituteid: useInstitute().getInstituteId()
+      
     };
    
     dispatch(getAllFaqCategories(data));
@@ -60,10 +63,10 @@ const CategoriesDataGrid = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: selectedFaqCategoryStatus,
-      id: selectedFaqCategory?.id
+      is_active: selectedFaqCategoryStatus,
+      uuid: selectedFaqCategory?.uuid
     };
-    const response = await updateStatusFaqCategory(data);
+    const response = await updateFaqCategory(data); 
     if (response.success) {
       toast.success(response.message);
       setRefetch((state) => !state);
@@ -181,7 +184,7 @@ const CategoriesDataGrid = () => {
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row?.id);
+                    handleDelete(row?.uuid);
                   }
                 }
               }

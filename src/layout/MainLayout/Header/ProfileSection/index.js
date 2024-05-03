@@ -59,7 +59,9 @@ const ProfileSection = () => {
    * */
   const anchorRef = useRef(null);
   const handleLogout = async () => {
-    dispatch(logout());
+    const user = JSON.parse(localStorage.getItem("userData"))
+    
+    dispatch(logout({email:user.email}));
   };
 
   const handleClose = (event) => {

@@ -223,25 +223,6 @@ const StepperLinearWithValidation = () => {
       branch_id : personalData.branch,
       course : personalData.course     
     }
-    console.log(personalData,"personal data");
-    const data = new FormData();
-    data.append('student_first_name', personalData?.student_first_name);
-    data.append('student_last_name', personalData?.student_last_name);
-    data.append('student_email', personalData?.student_email);
-    data.append('student_phone_no', personalData?.student_phone_no);
-    data.append('alternate_number', personalData?.alt_phone);
-    data.append('branch_id', personalData?.branch);
-    data.append('course_id', personalData?.course);
-    data.append('image', logo);
-    data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_one);
-    data.append('address_line_2', personalData?.address_line_two);
-    data.append('city', personalData?.city);
-    data.append('state', personalData?.state);
-    data.append('pincode', personalData?.pin_code);
-    data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    data.append('username', personalData?.username);
-    data.append('education_qualification', personalData?.qualification);
     console.log(personalData);
 
     try {

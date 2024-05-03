@@ -21,8 +21,9 @@ export const login = (username, password) => async (dispatch) => {
     });
    
     console.log(response,response.data);
-    if(response.data.otpVerify){
-       localStorage.setItem("otp",response.data.data)
+    if(response.data.data.otpVerify){
+       localStorage.setItem("otp",JSON.stringify(response.data.data))
+       toast.success(response.data.message)
        return {otpVerify:true}
     }
 
@@ -121,33 +122,36 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
   }
 }
 
-export const logout = () => async (dispatch) => {
+export const logout = (data) => async (dispatch) => {
   try {
-    // Make API request to login
-    const response = await axios.post(
-      LOGOUT_API_ENDPOINT,
-      {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      }
-    );
+    
+    // const response = await axios.post(
+    //   LOGOUT_API_ENDPOINT,
+    //   {},
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${localStorage.getItem('token')}`
+    //     }
+    //   }
+    // );
+    const response = await client.users.logout(data)
     console.log(response);
-    if (response.data.status) {
+    if (response.status) {
       // Remove token and user ID from localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('userData');
       localStorage.removeItem('permissions');
       localStorage.removeItem('isAuthenticated');
       localStorage.removeItem('branches');
+      localStorage.removeItem("institute")
+      
 
       // Dispatch logout action
       dispatch({
         type: 'LOGOUT',
         payload: {
-          message: response.data.message
+          message: response.message
         }
       });
       window.location.replace('/login');

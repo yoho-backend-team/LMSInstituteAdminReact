@@ -67,7 +67,7 @@ const FirebaseLogin = ({ ...others }) => {
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
-          const response =  dispatch(login(values.email, values.password));
+          const response = await dispatch(await login(values.email, values.password));
           console.log(response,"response")
           if(response.otpVerify){
             handleotppage()
