@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const COURSE_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/course-management/institute-courses`;
 import { HTTP_END_POINTS } from 'api/urls';
+import client from 'api/client';
 
 export const getAllCoursesByBranch = async (data) => {
   try {
@@ -101,15 +102,16 @@ export const getAllCourses = async (data) => {
 };
 export const addCourse = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    // const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
+    //   headers: {
+    //     // 'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //   }
+    // });
+    const response = await client.course.create(data)
     console.log(response);
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'Course created successfully' };
     } else {
       return { success: false, message: 'Failed to create Course' };

@@ -9,8 +9,19 @@ const getInstituteDetails = () => {
     }
 }
 
+const getSelectedBranchId = () => {
+    if(typeof(localStorage)!== "undefined"){
+    const branch = localStorage.getItem("selectedBranchId")
+    return branch
+    
+    }else{
+        return undefined
+    }
+}
+
 const generateEndpoints = () => {
     const institute = getInstituteDetails();
+    const branchId = getSelectedBranchId()
 
     if (!institute) {
         return {}; 
@@ -30,6 +41,14 @@ const generateEndpoints = () => {
         },
         file: {
             upload: `${backEndUrl}/api/upload/`
+        },
+        users :{
+            verifyOtp : "/api/institutes/auth/admin/verify-otp/",
+            studentRegister : "/api/institutes/auth/student/register"
+        },
+        student : {
+            get : `/api/institutes/${instituteId}/branches/${branchId}/students`,
+            getWithId : `/api/institutes/${instituteId}/students/`
         }
     };
 };

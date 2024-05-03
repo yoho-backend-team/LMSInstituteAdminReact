@@ -22,6 +22,7 @@ const UserViewLeft = ({ student }) => {
   const imageUrl = student?.image
     ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.image}`
     : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+    console.log(student,"student")
     return (
     <Card>
       <CardMedia
@@ -79,9 +80,9 @@ const UserViewLeft = ({ student }) => {
               </Box>
             </Box>
           </Box>
-          <Button color={student.is_active === '1' ? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+          <Button color={student.is_active? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon icon="tabler:check" fontSize="1.125rem" />
-            {student.is_active === '1' ? 'Active' : 'Inactive'}
+            {student.is_active? 'Active' : 'Inactive'}
           </Button>
         </Box>
       </CardContent>

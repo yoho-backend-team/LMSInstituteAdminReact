@@ -1,6 +1,7 @@
 // authActions.js
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import client from 'api/client';
 
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
@@ -12,7 +13,7 @@ export const login = (username, password) => async (dispatch) => {
     password: password
   };
   try {
-    // Make API request to login
+    
     const response = await axios.post(LOGIN_API_ENDPOINT, data, {
       headers: {
         'Content-Type': 'application/json'
@@ -20,16 +21,20 @@ export const login = (username, password) => async (dispatch) => {
     });
    
     console.log(response,response.data);
+    if(response.data.otpVerify){
+       localStorage.setItem("otp",response.data.data)
+       return {otpVerify:true}
+    }
 
     if (response.data.status==="success") {
-      // Store token and user ID in localStorage
+      
       localStorage.setItem('isAuthenticated', true);
       localStorage.setItem('token', response.data.data.token);
       localStorage.setItem('userData', JSON.stringify(response.data.data.user));
       localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
       localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
-      localStorage.setItem("institute",JSON.stringify(response.data.data.institue))
-      
+      localStorage.setItem("institute",JSON.stringify(response.data.data.institute))
+      console.log(response,"response",response.data.data.institute)
       // Dispatch success action
       dispatch({
         type: 'LOGIN_SUCCESS',
@@ -65,6 +70,56 @@ export const login = (username, password) => async (dispatch) => {
     });
   }
 };
+
+export const VerifyOtp = (otp,email,token) => async (dispatch) => {
+  
+  try {
+    
+    const response = await client.users.verifyOtp({otp,email,token})
+
+    if (response.data.status==="success") {
+      
+      localStorage.setItem('isAuthenticated', true);
+      localStorage.setItem('token', response.data.data.token);
+      localStorage.setItem('userData', JSON.stringify(response.data.data.user));
+      localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
+      localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
+      localStorage.setItem("institute",JSON.stringify(response.data.data.institue))
+      
+      // Dispatch success action
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: {
+          token: response.data.data.token,
+          userData: response.data.data.user,
+          permissions: response.data.data.permissions,
+          branches: response.data.data.branches,
+          institute: response.data.data.institue,
+          selectedBranchId: response.data.data.branches[0]?.uuid
+        }
+      });
+      // const fcmToken = await requestForToken();
+      // const updateToken = await updateFcmToken({ fcm_token: fcmToken });
+      // console.log(updateToken);
+      window.location.replace('/');
+      toast.success('Login Successful');
+      return { success: true, message: 'Login successfully' };
+    } else {
+      dispatch({
+        type: 'LOGIN_FAILURE',
+        payload: response.data.message
+      });
+      toast.error(response.data.message);
+      return { success: false, message: 'Failed to delete group' };
+    }
+  } catch (error) {
+    console.log(error)
+    dispatch({
+      type: 'LOGIN_FAILURE',
+      payload: error.response.data.message
+    });
+  }
+}
 
 export const logout = () => async (dispatch) => {
   try {
