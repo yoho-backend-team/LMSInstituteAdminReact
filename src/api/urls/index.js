@@ -50,6 +50,10 @@ const generateEndpoints = () => {
         student : {
             get : `/api/institutes/${instituteId}/branches/${branchId}/students`,
             getWithId : `/api/institutes/${instituteId}/students/`
+        },
+        staff : {
+            get : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
+            getWithId : `/api/institutes/${instituteId}/staff/`
         }
     };
 };

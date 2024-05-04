@@ -5,10 +5,10 @@ const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/getall/Nonteachstaff`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -32,10 +32,10 @@ export const getAllNonTeachingStaffs = async (data) => {
 };
 export const getAllActiveNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/active`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -60,10 +60,11 @@ export const getAllActiveNonTeachingStaffs = async (data) => {
 
 export const searchNonTeachingStaffs = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get
+    (`${NON_TEACHING_STAFF_API_END_POINT}/search`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -102,10 +103,10 @@ export const addNonTeachingStaff = async (data) => {
 
 export const deleteNonTeachingStaff = async (nonTeachingStaffId) => {
   try {
-    const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT}/:id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { id: nonTeachingStaffId }
     });
@@ -126,7 +127,7 @@ export const updateNonTeachingStaff = async (data) => {
     const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/update`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
@@ -144,7 +145,7 @@ export const updateNonTeachingStaff = async (data) => {
 
 export const nonTeachingStaffById = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/read-by-id`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/:id`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

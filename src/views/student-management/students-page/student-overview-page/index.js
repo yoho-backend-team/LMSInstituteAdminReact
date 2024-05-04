@@ -67,7 +67,7 @@ const Students = () => {
                           </Box>
 
                           <Typography variant="h3" sx={{ mt: 6 }}>
-                            {capitalizeFirstLetter(item.first_name)}
+                            {capitalizeFirstLetter(item.full_name)}
                           </Typography>
                           <CustomChip
                             rounded

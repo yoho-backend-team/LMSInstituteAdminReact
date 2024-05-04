@@ -230,7 +230,8 @@ const StepperLinearWithValidation = () => {
         phone_number: personalData.phone
       },
       designation: personalData.designation,
-      role: personalData.role
+      role: personalData.role,
+      user_details: 'InstituteTeachingStaff'
     };
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
 
@@ -265,7 +266,7 @@ const StepperLinearWithValidation = () => {
     // } else if (isUserNameTaken.success) {
       try {
         const result = await addTeachingStaff(teaching_staffdata);
-        if (result.success) {
+        if (result. success) {
           toast.success(result.message);
           navigate(-1);
         } else {
