@@ -108,7 +108,7 @@ export const addFaq = async (data) => {
 
 export const deleteFaq = async (data) => {
   try {
-    const response = await axios.delete(`${FAQ_API_END_POINT}/delete`, {
+    const response = await axios.delete(`${FAQ_API_END_POINT}/delete/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -131,8 +131,8 @@ export const deleteFaq = async (data) => {
 
 export const updateFaq = async (data) => {
   try {
-    const {id} = data
-    const response = await axios.put(`${FAQ_API_END_POINT}/update/${id}`, data, {
+    const {uuid} = data
+    const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

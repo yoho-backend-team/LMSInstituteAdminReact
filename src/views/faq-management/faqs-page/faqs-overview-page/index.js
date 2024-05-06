@@ -67,7 +67,7 @@ const FaqDataGrid = () => {
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId?.id);
+    setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
 
@@ -93,7 +93,7 @@ const FaqDataGrid = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedFaqStatus,
-      id: selectedFaq?._id
+      uuid: selectedFaq?.uuid
     };
     const response = await updateStatusFaq(data);
     if (response.success) {
@@ -207,7 +207,7 @@ const FaqDataGrid = () => {
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row);
+                    handleDelete(row?.uuid);
                   }
                 }
               }
