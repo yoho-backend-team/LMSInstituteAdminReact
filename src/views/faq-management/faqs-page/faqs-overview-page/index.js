@@ -21,6 +21,7 @@ import { deleteFaq, updateStatusFaq } from 'features/faq-management/faqs/service
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
@@ -44,9 +45,14 @@ const FaqDataGrid = () => {
   }, []);
 
   useEffect(() => {
+    const institute = JSON.parse(localStorage.getItem('institute'))
+  
     const data = {
-      branch_id: selectedBranchId
+      branchid: selectedBranchId,      
+      instituteId: institute._id
+      
     };
+    console.log(data)
     dispatch(getAllFaqs(data));
   }, [dispatch, selectedBranchId, refetch]);
 
@@ -86,8 +92,8 @@ const FaqDataGrid = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: selectedFaqStatus,
-      id: selectedFaq?.id
+      is_active: selectedFaqStatus,
+      id: selectedFaq?._id
     };
     const response = await updateStatusFaq(data);
     if (response.success) {
@@ -253,6 +259,7 @@ const FaqDataGrid = () => {
                 rowHeight={80}
                 rows={faqs}
                 columns={columns}
+                getRowId={(row) => row._id} 
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter

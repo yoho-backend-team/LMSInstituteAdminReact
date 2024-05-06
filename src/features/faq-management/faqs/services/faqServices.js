@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FAQ_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/help-faqs`;
+const FAQ_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute/faq`;
 
 const FaqS_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/Faq-management/institute-Faqs/active-s`;
 
@@ -36,7 +36,7 @@ export const getActivesByBranch = async (data) => {
 
 export const getAllFaqs = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_API_END_POINT}/read`, {
+    const response = await axios.get(`${FAQ_API_END_POINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -86,7 +86,7 @@ export const searchFaqs = async (searchQuery) => {
 
 export const addFaq = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${FAQ_API_END_POINT}/`, data, {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
@@ -131,7 +131,8 @@ export const deleteFaq = async (data) => {
 
 export const updateFaq = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_API_END_POINT}/update`, data, {
+    const {id} = data
+    const response = await axios.put(`${FAQ_API_END_POINT}/update/${id}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -153,12 +154,12 @@ export const updateFaq = async (data) => {
 
 export const updateStatusFaq = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_API_END_POINT}/status`, data, {
+    const {id} = data
+    const response = await axios.post(`${FAQ_API_END_POINT}/updatestatus/${id}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
+      }
     });
 
     if (response.data.status) {

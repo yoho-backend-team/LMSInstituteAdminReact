@@ -6,15 +6,13 @@ const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/ins
 
 export const getAllCommunities = async (data) => {
   try {
-    console.log(data)
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/`,{data}, {
+    const response = await axios.get(`${COMMUNITY_API_END_POINT}/chat/${data.instituteId}/${data.branchid}/${data.userId}`, {
       headers: {  
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
+      }
     });
-
+    
     console.log(response);
 
     // Check if the response status is successful
