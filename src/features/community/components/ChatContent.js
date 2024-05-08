@@ -108,12 +108,12 @@ const ChatContent = (props) => {
                     color={selectedChat?.avatarColor}
                     sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                   >
-                    {getInitials(selectedBatch?.batch_community?.batch?.batch_name)}
+                    {getInitials(selectedBatch?.chatName)}
                   </CustomAvatar>
                 )}
               </Badge>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h5">{selectedBatch?.batch_community?.batch?.batch_name}</Typography>
+                <Typography variant="h5">{selectedBatch?.chatName}</Typography>
                 <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
                   {selectedBatch?.batch_community?.batch?.institute_course_branch?.course_name}
                 </Typography>

@@ -21,6 +21,7 @@ import { deleteFaq, updateStatusFaq } from 'features/faq-management/faqs/service
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
@@ -44,9 +45,14 @@ const FaqDataGrid = () => {
   }, []);
 
   useEffect(() => {
+    const institute = JSON.parse(localStorage.getItem('institute'))
+  
     const data = {
-      branch_id: selectedBranchId
+      branchid: selectedBranchId,      
+      instituteId: institute._id
+      
     };
+    console.log(data)
     dispatch(getAllFaqs(data));
   }, [dispatch, selectedBranchId, refetch]);
 
@@ -61,7 +67,7 @@ const FaqDataGrid = () => {
 
   const handleDelete = (itemId) => {
     console.log('Delete clicked for item ID:', itemId);
-    setDeletingItemId(itemId?.id);
+    setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
 
@@ -86,8 +92,8 @@ const FaqDataGrid = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: selectedFaqStatus,
-      id: selectedFaq?.id
+      is_active: selectedFaqStatus,
+      uuid: selectedFaq?.uuid
     };
     const response = await updateStatusFaq(data);
     if (response.success) {
@@ -153,7 +159,7 @@ const FaqDataGrid = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.institute_faq_module?.title}
+              {row?.title}
             </Typography>
           </Box>
         );
@@ -201,7 +207,7 @@ const FaqDataGrid = () => {
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row);
+                    handleDelete(row?.uuid);
                   }
                 }
               }
@@ -253,6 +259,7 @@ const FaqDataGrid = () => {
                 rowHeight={80}
                 rows={faqs}
                 columns={columns}
+                getRowId={(row) => row._id} 
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter

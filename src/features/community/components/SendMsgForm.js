@@ -25,7 +25,7 @@ const SendMsgForm = (props) => {
   const [msg, setMsg] = useState('');
   console.log(selectedBatch);
   const getMessages = async () => {
-    const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?.batch_community?.institute_branch_comm_id });
+    const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?._id });
     if (result) {
       setChats(result?.data?.data);
     }
