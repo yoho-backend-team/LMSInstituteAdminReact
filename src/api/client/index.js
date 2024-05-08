@@ -14,7 +14,7 @@ class Client {
     }
     batch = {
       create : (data,options) => HttpClient.post(HTTP_END_POINTS.batch.create+`${data.branch_id}/courses/${data.course}/batches`,data),
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll,params),
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll+params.branch_id+"/batches/all"),
       getWithId : (params) => HttpClient.get(HTTP_END_POINTS.batch.getWithId+`${params.batch_id}`)
     }
     users = {
@@ -26,7 +26,8 @@ class Client {
       logout : (data) => HttpClient.post(HTTP_END_POINTS.users.logout,data)
     }
     community ={
-     getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branch_id+'/all-community/')
+     getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branchid+'/all-community/'),
+     getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId)
     }
 }
 console.log(HTTP_END_POINTS.users,"verifyOtp")

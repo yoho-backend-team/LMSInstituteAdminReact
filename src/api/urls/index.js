@@ -41,7 +41,7 @@ const generateEndpoints = () => {
         },
         batch : {
             create : `/api/institutes/${instituteId}/branches/`,
-            getAll : `/api/institutes/${instituteId}/branches/${branchId}/batches/all`,
+            getAll : `/api/institutes/${instituteId}/branches/`,
             getWithId : `/api/institutes/${instituteId}/branches/${branchId}/batches/`
         },
         file: {
@@ -58,7 +58,8 @@ const generateEndpoints = () => {
             getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`
         },
         community : {
-            all : `/api/institute/community/${instituteId}/branches/`
+            all : `/api/institute/community/${instituteId}/branches/`,
+            messages : `/api/institute/community/messages/`
         }
     };
 };

@@ -8,10 +8,10 @@ export const getAllCommunities = async (data) => {
     console.log(data)
     const response = await client.community.getAll(data)
 
-    console.log(response);
+    console.log(response,"response");
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       // Return the response directly, without extracting chatId
       return response;
     } else {
@@ -53,18 +53,13 @@ export const getCommunityDetails = async (data) => {
 
 export const getAllBatchChats = async (chatId) => {
   try {
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/message/${chatId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.community.getCommunityMessage(chatId)
 
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
-      return response.data.data;
+    if (response.status) {
+      return response;
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch Communities. Status: ${response.status}`);
