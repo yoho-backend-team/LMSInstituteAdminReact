@@ -123,17 +123,11 @@ export const addCourse = async (data) => {
 };
 export const getStudentByCourse = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_END_POINT}/get-by-course-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.users.getStudentsWithCourse(data)
 
     console.log(response);
 
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       return { success: false, message: 'Failed to Fetch Active student' };

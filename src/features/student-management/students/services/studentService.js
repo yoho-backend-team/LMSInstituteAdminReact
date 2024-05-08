@@ -39,7 +39,7 @@ export const getAllStudents = async (data) => {
     //   },
     //   params: data
     // });
-   const response = await client.users.studentsAll()
+   const response = await client.users.studentsAll(data)
     console.log(response);
     // Check if the response status is successful
     if (response.status) {

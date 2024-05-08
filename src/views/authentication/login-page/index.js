@@ -20,6 +20,9 @@ import CleaveWrapper from 'styles/libs/react-cleave';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 import 'cleave.js/dist/addons/cleave-phone.us';
 import AuthIllustrationV1Wrapper from 'features/authentication/components/AuthIllustrationV1Wrapper';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import {checkAuthState,getOtpDetails} from 'utils/check-auth-state';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -61,11 +64,22 @@ const Login = () => {
   const [otp, setOtp] = useState(false);
   const [values,setValues] = useState(Array(6).fill(''))
   const handleotppage = () => setOtp(!otp);
+  const dispatch = useDispatch()
 
   // ** State
   const [isBackspace, setIsBackspace] = useState(false);
 
   // ** Hooks
+
+  useEffect(()=>{
+    const checkLoginState = () => {
+      console.log(checkAuthState())
+      if(checkAuthState()){
+        setOtp(true)
+      }
+    }
+    checkLoginState()
+  })
 
   const {
     control,
@@ -184,20 +198,20 @@ const Login = () => {
                           OTP
                         </Typography>
                       </Box>
-                      <Box sx={{ mb: 6 }}>
+                      <Box sx={{ mb: 2 }}>
                         <Typography variant="h4" sx={{ mb: 1.5 }}>
                           Two-Step Verification 💬
                         </Typography>
                         <Typography sx={{ mb: 1.5, color: 'text.secondary' }}>
-                          We sent a verification code to your mobile. Enter the code from the mobile in the field below.
+                          We sent a verification code to your email. Enter the code from the emil in the field below.
                         </Typography>
-                        <Typography variant="h6">******9763</Typography>
+                        <Typography variant="h6">{getOtpDetails().email}</Typography>
                       </Box>
                       <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>Type your 6 digit security code</Typography>
                       <form onSubmit={handleSubmit(async() => {
                         const otp = values.join(" ").toString().replace(/\s+/g, '')
                         const otpToken =JSON.parse(localStorage.getItem("otp"))
-                        await VerifyOtp(otp,otpToken.email,otpToken.token)
+                        await dispatch(VerifyOtp(otp,otpToken.email,otpToken.token))
                         console.log(defaultValues,"defaultValues",values.join(" ").toString().replace(/\s+/g, ''))})}>
                         <CleaveWrapper
                           sx={{

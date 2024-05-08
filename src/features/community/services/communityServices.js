@@ -1,19 +1,13 @@
 // groupService.js
 import axios from 'axios';
-                           
+import client from 'api/client';            
 
 const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/chat`;
 
 export const getAllCommunities = async (data) => {
   try {
     console.log(data)
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/`,{data}, {
-      headers: {  
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.community.getAll(data)
 
     console.log(response);
 

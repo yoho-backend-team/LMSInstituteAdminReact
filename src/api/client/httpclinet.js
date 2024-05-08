@@ -28,7 +28,6 @@ class HttpClient{
 
      async get(url,params){
       const response = await Axios.get(url,{params})
-      console.log(response,"get response")
       return response.data
      }
 

@@ -189,15 +189,15 @@ const ProfileSection = () => {
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
-                      <UpgradePlanCard />
-                      <Divider />
-                      <Card
+                      {/* <UpgradePlanCard /> */}
+                      {/* <Divider /> */}
+                      {/* <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
                           my: 2
                         }}
-                      >
-                        <CardContent>
+                      > */}
+                        {/* <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
                               <Grid item container alignItems="center" justifyContent="space-between">
@@ -231,9 +231,9 @@ const ProfileSection = () => {
                               </Grid>
                             </Grid>
                           </Grid>
-                        </CardContent>
-                      </Card>
-                      <Divider />
+                        </CardContent> */}
+                      {/* </Card> */}
+                      {/* <Divider /> */}
                       <List
                         component="nav"
                         sx={{

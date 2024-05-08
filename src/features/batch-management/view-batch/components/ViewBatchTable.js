@@ -16,7 +16,7 @@ const ViewBatchTable = ({ students }) => {
     return null;
   }
 
-  const filteredStudents = students.filter((student) => student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredStudents = students.filter((student) => student?.full_name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   console.log(filteredStudents);
 
@@ -28,7 +28,7 @@ const ViewBatchTable = ({ students }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.student?.student_id}
+            {row?.id}
           </Typography>
         );
       }
@@ -40,7 +40,7 @@ const ViewBatchTable = ({ students }) => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar src={row?.student?.image} alt={row?.student?.first_name} />
+            <Avatar src={row?.student?.image} alt={row?.first_name} />
             <Box sx={{ display: 'flex', flexDirection: 'column', marginLeft: 1.65 }}>
               <Typography
                 sx={{
@@ -53,7 +53,7 @@ const ViewBatchTable = ({ students }) => {
                 {row?.student?.first_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.student?.email}
+                {row?.email}
               </Typography>
             </Box>
           </Box>
@@ -76,13 +76,13 @@ const ViewBatchTable = ({ students }) => {
             }}
           >
             <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-              +91 {row?.student?.phone_no}
+              +91 {row?.contact_info?.phone_number}
             </Typography>
             <div>
               <Typography
                 sx={{ display: 'flex', color: 'text.secondary', textTransform: 'capitalize', flexShrink: 1, wordWrap: 'break-word', mt: 1 }}
               >
-                {row?.student?.address_line_1} {row?.student?.address_line_2} {row?.city} {row?.student?.state} {row?.student?.pin_code}
+                {row?.contact_info?.address1} {row?.contact_info?.address2} {row?.contact_info?.city} {row?.contact_info?.state} {row?.contact_info?.pincode}
               </Typography>
             </div>
           </Box>
