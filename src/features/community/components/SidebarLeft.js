@@ -45,7 +45,8 @@ const SidebarLeft = (props) => {
     handleUserProfileLeftSidebarToggle,
     communities,
     setChats,
-    setSelectedBatch
+    setSelectedBatch,
+    chats
   } = props;
 
   const [query, setQuery] = useState('');
@@ -57,13 +58,13 @@ const SidebarLeft = (props) => {
     setActive(community);
     setSelectedBatch(community);
   
-   
-    if (community && community.id) {
+    console.log(community&&community._id,"check",community,"comunity",typeof(chats))
+    if (community && community._id&&typeof chats === "undefined") {
       try {
-        const response = await getAllBatchChats({ chatId: community.id });
+        const response = await getAllBatchChats({ chatId: community._id });
         
         if (response) {
-          setChats(response.data.data);
+          setChats(response.data);
         }
       } catch (error) {
         console.error('Error in handleChatClick:', error);
@@ -86,7 +87,7 @@ const SidebarLeft = (props) => {
 
   const hasActiveId = (id) => {
     if (communities !== null) {
-      const arr = communities.filter((i) => i.id === id);
+      const arr = communities.filter((i) => i.uuid === id);
 
       return !!arr.length;
     }
@@ -104,13 +105,13 @@ const SidebarLeft = (props) => {
 
       return arrToMap !== null
         ? arrToMap?.map((contact, index) => {
-            const activeCondition = active !== null && active.id === contact.id;
+            const activeCondition = active !== null && active._id === contact._id;
 
             return (
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
                 <ListItemButton
                   disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact)}
+                  onClick={() => handleChatClick(hasActiveId(contact._id) ? 'chat' : 'contact', contact)}
                   sx={{
                     py: 2,
                     px: 3,

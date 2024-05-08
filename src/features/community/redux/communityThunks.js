@@ -6,7 +6,7 @@ export const getAllCommunities = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllCommunities(data);
-    dispatch(setCommunities(response?.data?.data));
+    dispatch(setCommunities(response?.data));
   } catch (error) {
     console.error(error);
   } finally {
