@@ -1,5 +1,5 @@
 // FaqCategoryThunks.js
-import { getAllCommunities as fetchAllCommunities } from '../services/communityServices'; // Replace with your service file
+import { getAllCommunities as fetchAllCommunities } from '../services/communityServices'; 
 import { setCommunities, setLoading } from './communitySlice';
 
 export const getAllCommunities = (data) => async (dispatch) => {
