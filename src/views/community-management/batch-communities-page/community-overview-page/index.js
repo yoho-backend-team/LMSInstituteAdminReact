@@ -48,27 +48,87 @@ const Community = () => {
     offline: 'secondary'
   };
 
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("userData"))
+  //   const institute = JSON.parse(localStorage.getItem('institute'))
+  //   const data = {
+  //     branchid: selectedBranchId,
+  //     userId:user._id,
+  //     instituteId: institute._id
+  //   };    
+  //   console.log(data) 
+  //   dispatch(getAllCommunities(data));
+  // }, [dispatch, selectedBranchId]);
+  // useEffect(() => {
+  //   dispatch(fetchUserProfile());
+  // }, [dispatch]);
+
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const institute = JSON.parse(localStorage.getItem('institute'));
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData"))
-    const institute = JSON.parse(localStorage.getItem('institute'))
-    const data = {
-      branchid: selectedBranchId,
-      userId:user._id,
-      instituteId: institute._id
+    const fetchData = async () => {
+      const data = {
+        branchid: selectedBranchId,
+        userId: userData._id,
+        instituteId: institute._id
+      };
+      
+     console.log("....................................")
+      const response = await dispatch(getAllCommunities(data));
+
+   
+      if (response && response.data.data && response.data.data.length > 0) {
+        const chatId = response.data.data[0]._id; 
+        const updatedData = { ...data, chatId };
+        console.log(updatedData);
+     
+      }
     };
-    console.log(data) 
-    dispatch(getAllCommunities(data));
-  }, [dispatch, selectedBranchId]);
+    
+    console.log("***********************************************8")
+
+    fetchData();
+  }, [dispatch, selectedBranchId, userData._id, institute._id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = {
+        branchid: selectedBranchId,
+        userId: userData._id,
+        instituteId: institute._id
+      };
+      
+      const response = await dispatch(getAllCommunities(data));
+  
+      if (response && response.data.data && response.data.data.length > 0) {
+        const chatId = response.data.data[0]._id; // Set chatId from response
+        const updatedData = { ...data, chatId };
+  
+        // Call getAllBatchChats with updatedData
+        const messages = await getAllBatchChats(updatedData);
+        if (messages) {
+          setChats(messages.data);
+        }
+      }
+    };
+    
+    fetchData();
+  }, [dispatch, selectedBranchId, userData._id, institute._id]);
+  
+
+
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
 
+
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = async () => {
-    const result = await getCommunityDetails({ batch_id: selectedBatch?.batch_community?.institute_batch_id });
+    const result = await getCommunityDetails({ chatId: selectedBatch._id });
     if (result) {
-      setCommunityDetails(result?.data?.data);
+      setCommunityDetails(result?.data);
     }
     console.log('result  yuyueyu ', result);
     setUserProfileRightOpen(!userProfileRightOpen);
@@ -79,7 +139,7 @@ const Community = () => {
   useTimeout(() => {
     setLoading(false);
   }, 1000);
-
+  console.log(communities,"communities")
   return (
     <>
       {loading ? (

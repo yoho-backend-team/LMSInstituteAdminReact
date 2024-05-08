@@ -13,8 +13,11 @@ export const getActiveFaqCategories = async (data) => {
       params: data
     });
 
-    if (response.data.status) {
+    
+    if (response.data.status) {     
+
       return response;
+   
     } else {
       throw new Error(`Failed to fetch FaqCategories. Status: ${response.status}`);
     }

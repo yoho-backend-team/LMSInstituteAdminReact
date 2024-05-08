@@ -159,7 +159,7 @@ const FaqDataGrid = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.institute_faq_module?.title}
+              {row?.title}
             </Typography>
           </Box>
         );

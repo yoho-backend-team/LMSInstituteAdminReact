@@ -27,6 +27,8 @@ const ScrollWrapper = ({ children, hidden }) => {
   }
 };
 
+
+
 const SidebarLeft = (props) => {
   const {
     store,
@@ -49,21 +51,32 @@ const SidebarLeft = (props) => {
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(null);
   console.log(communities);
-
+  
   const handleChatClick = async (type, community) => {
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
-    const response = await getAllBatchChats({ inst_batch_community_id: community?.id });
-    if (response) {
-      setChats(response?.data?.data);
+  
+   
+    if (community && community.id) {
+      try {
+        const response = await getAllBatchChats({ chatId: community.id });
+        
+        if (response) {
+          setChats(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error in handleChatClick:', error);
+      }
+    } else {
+      console.error('Error: Missing community ID');
     }
-
+  
     if (!mdAbove) {
       handleLeftSidebarToggle();
     }
   };
-
+  
   useEffect(() => {
     dispatch(removeSelectedChat());
     return () => {
@@ -135,7 +148,7 @@ const SidebarLeft = (props) => {
                           outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                         }}
                       >
-                        {getInitials(contact?.batch_community?.batch?.batch_name)}
+                        {getInitials(contact?.chatName)}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -145,7 +158,7 @@ const SidebarLeft = (props) => {
                       ml: 3,
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                    primary={<Typography variant="h5">{contact?.batch_community?.batch?.batch_name}</Typography>}
+                    primary={<Typography variant="h5">{contact?.chatName}</Typography>}
                     secondary={
                       <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
                         {contact?.batch_community?.batch?.institute_course_branch?.course_name}
