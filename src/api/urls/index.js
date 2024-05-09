@@ -12,6 +12,7 @@ const getInstituteDetails = () => {
 const getSelectedBranchId = () => {
     if(typeof(localStorage)!== "undefined"){
     const branch = localStorage.getItem("selectedBranchId")
+    console.log(branch,"branch")
     return branch
     
     }else{
@@ -48,11 +49,12 @@ const generateEndpoints = () => {
             logout : `/api/institutes/auth/admin/logout`
         },
         student : {
-            get : `/api/institutes/${instituteId}/branches/${branchId}/students`,
+            get : `/api/institutes/${instituteId}/branches/`,
             getWithId : `/api/institutes/${instituteId}/students/`
         },
         staff : {
-            get : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
+            get : `/api/institutes/${instituteId}/Non-teaching-staff/`,
+            get : `/api/institutes/${instituteId}/teaching-staff/`,
             getWithId : `/api/institutes/${instituteId}/staff/`
         }
     };

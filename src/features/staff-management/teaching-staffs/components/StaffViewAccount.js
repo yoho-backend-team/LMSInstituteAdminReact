@@ -16,7 +16,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { deleteTeachingStaff } from '../services/teachingStaffServices';
 import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 
-const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
+const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
@@ -37,7 +37,7 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
       toast.error(result.message);
     }
   };
-
+  console.log(staff?.data,"staff-teaching")
   if (staff) {
     return (
       <Grid container spacing={2}>
@@ -50,42 +50,42 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.users?.username}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.userDetail?.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.email}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.teachingStaff?.designation}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.data?.userDetail?.desigination}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.gender}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.gender}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{formattedDate(`${staff?.teachingStaff?.dob}`)}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.dob}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.teachingStaff?.phone_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.data?.contact_info?.phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.teachingStaff?.alternate_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.data?.contact_info?.phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.education_qualification}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.qualification}</Typography>
                 </Box>
                 <Box>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>
-                    {staff?.teachingStaff?.address_line_1}, {staff?.teachingStaff?.address_line_2}
+                    {staff?.data?.contact_info?.address1}, {staff?.data?.contact_info?.address2}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.teachingStaff?.city}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.contact_info?.city}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -93,15 +93,16 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
               <Box
                 component={Link}
-                to={`teaching-staffs/${staff?.teachingStaff?.staff_id}/edit`}
-                state={{ staff: staff?.teachingStaff, id: staff?.teachingStaff?.id }}
+                to={`teaching-staffs/${staff?.data?.uuid}/edit`}
+                state={{ staff: staff, id: staff?.data?.uuid }}
+                
               >
                 <Button variant="contained" sx={{ mr: 2, width: 100 }}>
                   Edit
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.teachingStaff?.id)}>
+                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete}>
                   Delete
                 </Button>
               </Box>
@@ -238,7 +239,6 @@ const UserViewAccount = ({ staff, formattedDate, staffID, setRefetch }) => {
 
 UserViewAccount.propTypes = {
   staff: PropTypes.any,
-  formattedDate: PropTypes.any,
   staffID: PropTypes.any,
   setRefetch: PropTypes.any
 };

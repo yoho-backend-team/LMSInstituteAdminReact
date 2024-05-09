@@ -68,7 +68,7 @@ const NonTeaching = () => {
     setStatusChangeDialogOpen(true);
     setStatusValue(staff);
   };
-
+  console.log(nonTeachingStaffs,"non_teaching-staffs")
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />

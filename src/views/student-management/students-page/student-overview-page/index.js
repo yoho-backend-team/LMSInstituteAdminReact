@@ -20,6 +20,7 @@ const Students = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   useEffect(() => {
+    console.log(selectedBranchId)
     dispatch(getAllStudents({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId]);
 

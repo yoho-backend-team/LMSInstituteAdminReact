@@ -250,7 +250,7 @@ const StepperLinearWithValidation = () => {
     if (activeStep === steps.length - 1) {
       let data = new FormData();
 
-      data.append('name', personalData?.name);
+      data.append('name', personalData?.full_name);
       data.append('email', personalData?.email);
       data.append('phone_number', personalData?.phone);
       data.append('alternate_number', personalData?.alt_phone);
@@ -339,7 +339,7 @@ const StepperLinearWithValidation = () => {
                       placeholder="Leonard"
                       error={Boolean(personalErrors['full_name'])}
                       aria-describedby="stepper-linear-personal-institute_name"
-                      helperText={personalErrors?.name?.message}
+                      helperText={personalErrors?.full_name?.message}
                     />
                   )}
                 />

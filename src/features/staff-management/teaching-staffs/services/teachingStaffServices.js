@@ -1,22 +1,16 @@
 // TeachingStaffservice.js
+import client from 'api/client';
 import axios from 'axios';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/:instituteId/teaching-staff/`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/getall/staff`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
+    const response = await client.TeachingStaff.get(data)
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -123,7 +117,7 @@ export const deleteTeachingStaff = async (data) => {
 
 export const updateTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}`,  {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
@@ -144,7 +138,7 @@ export const updateTeachingStaff = async (data) => {
 
 export const TeachingStaffById = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/:id`, {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
@@ -154,7 +148,7 @@ export const TeachingStaffById = async (data) => {
     console.log('teachingStaff:', response);
     // Check if the response status is successful
     if (response.data.status) {
-      return { success: true, data: response.data.data };
+      return { success: true, data: response.data};
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);

@@ -74,7 +74,7 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup
+    full_name: yup
       .string()
       .required('Full Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Full Name should only contain alphabets'),
@@ -186,7 +186,7 @@ const StepperLinearWithValidation = () => {
   useEffect(() => {
     if (staffData) {
       setValue('id', staffId);
-      setValue('name', staffData.staff_name);
+      setValue('full_name', staffData.full_name);
       setValue('email', staffData?.email);
       setValue('phone', staffData?.phone_number);
       setValue('alt_phone', staffData?.alternate_number);
@@ -234,7 +234,7 @@ const StepperLinearWithValidation = () => {
     });
 
     data.append('id', staffData?.id);
-    data.append('staff_name', personalData?.name);
+    data.append('full_name', personalData?.full_name);
     data.append('email', personalData?.email);
     data.append('phone_number', personalData?.phone);
     data.append('alternate_number', personalData?.alt_phone);
@@ -310,7 +310,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="name"
+              name="full_name"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -322,7 +322,7 @@ const StepperLinearWithValidation = () => {
                   onChange={onChange}
                   placeholder="Leonard"
                   aria-describedby="stepper-linear-personal-institute_name"
-                  error={Boolean(personalErrors.name)}
+                  error={Boolean(personalErrors.fullname)}
                   {...(personalErrors.name && { helperText: personalErrors.name.message })}
                 />
               )}
@@ -349,7 +349,7 @@ const StepperLinearWithValidation = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="date_of_birth"
               control={personalControl}
@@ -373,7 +373,7 @@ const StepperLinearWithValidation = () => {
                 />
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={6}>
             <Controller
               name="gender"

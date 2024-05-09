@@ -106,7 +106,7 @@ const Teaching = () => {
                               <MenuItem value="false">Inactive</MenuItem>
                             </TextField>
                           </Grid>
-                          <Box component={Link} to={`teaching-staffs/${item?.uuid?.toString()}`} state={{ id: item?.uuid }}>
+                          <Box component={Link} to={`teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>
                             <Button variant="tonal" size="medium" sx={{ m: 0, px: 2 }}>
                               View Profile
                             </Button>

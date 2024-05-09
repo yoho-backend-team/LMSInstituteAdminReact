@@ -70,6 +70,7 @@ const UserViewRight = ({ tab, setRefetch }) => {
     setLoading(true);
     const data = { id: staffID };
     const result = await nonTeachingStaffById(data);
+    console.log(data);
     if (result.success) {
       setStaff(result.data);
       setLoading(false);

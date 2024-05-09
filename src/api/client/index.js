@@ -15,9 +15,15 @@ class Client {
     users = {
       verifyOtp : (data,options) => HttpClient.post(HTTP_END_POINTS.users.verifyOtp,data,options),
       studentRegister : (data,options) => HttpClient.post(HTTP_END_POINTS.users.studentRegister,data,options),
-      studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get,params),
+      studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+`${params.branch_id}/students`,params),
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
       logout : (data) => HttpClient.post(HTTP_END_POINTS.users.logout,data)
+    }
+    nonTeachingStaff = {
+      get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/non-teaching-staff")
+    }
+    TeachingStaff = {
+      get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff")
     }
 }
 
