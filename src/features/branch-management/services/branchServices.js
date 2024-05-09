@@ -1,20 +1,15 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/`;
 
 export const getAllBranchesByInstitute = async (data) => {
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.branch.getAll(data)
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error

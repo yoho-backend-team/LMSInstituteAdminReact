@@ -1,20 +1,15 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/batch-management/institute-batches`;
 
 export const getAllBatchesByBranch = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.batch.getAll(data)
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -81,19 +76,13 @@ export const getBatchesByCourse = async (data) => {
 
 export const getBatchDetails = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/read-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.batch.getWithId(data)
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return {
         success: true,
-        data: response?.data?.data
+        data: response?.data
       };
     } else {
       // If the response status is not successful, throw an error
@@ -136,14 +125,9 @@ export const getAllActiveBatchesByCourse = async (data) => {
 
 export const addBatch = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.batch.create(data)
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'Batch created successfully' };
     } else {
       return { success: false, message: 'Failed to create batch' };
@@ -212,6 +196,7 @@ export const updateBatchStatus = async (data) => {
       return { success: false, message: 'Failed to update batch' };
     }
   } catch (error) {
+    console.log(error)
     console.error('Error in updateBatch:', error);
     throw error;
   }

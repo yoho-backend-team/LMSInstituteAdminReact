@@ -1,6 +1,7 @@
 // courseCategories.js
 import axios from 'axios';
 import { HTTP_END_POINTS } from 'api/urls';
+import client from 'api/client';
 
 const getInstituteDetails = () => {
   if(typeof localStorage !== "undefined"){
@@ -84,12 +85,8 @@ export const deleteCourseCategory = async (data) => {
 };
 export const updateCourseCategory = async (data) => {
   try {
-    const response = await axios.put(`${HTTP_END_POINTS.category.create}/${data.id}`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.category.update(data)
+    
     console.log(response);
     if (response.data.status) {
       console.log(response);

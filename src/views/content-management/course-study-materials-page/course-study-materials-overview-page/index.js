@@ -281,7 +281,7 @@ const StudyMaterials = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={StudyMaterials?.data}
+                rows={StudyMaterials?StudyMaterials?.data:[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination

@@ -1,20 +1,23 @@
 // groupService.js
 import axios from 'axios';
 
-const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/faq/category`;
+const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/general/faq/category`;
 
 export const getActiveFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}/get-active-faq-modules`, {
+    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
 
-    if (response.data.status) {
+    
+    if (response.data.status) {     
+
       return response;
+   
     } else {
       throw new Error(`Failed to fetch FaqCategories. Status: ${response.status}`);
     }

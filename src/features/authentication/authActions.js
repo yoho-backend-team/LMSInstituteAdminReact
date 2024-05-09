@@ -2,6 +2,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import client from 'api/client';
+import { HTTP_END_POINTS } from 'api/urls';
 
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
@@ -73,20 +74,25 @@ export const login = (username, password) => async (dispatch) => {
 };
 
 export const VerifyOtp = (otp,email,token) => async (dispatch) => {
-  
+  const data ={
+    otp : otp,
+    email : email ,
+    token : token 
+  }
   try {
     
-    const response = await client.users.verifyOtp({otp,email,token})
-
-    if (response.data.status==="success") {
+  
+    const response = await client.users.verifyOtp(data)
+    console.log(response,"response")
+    if (response.status==="success") {
       
       localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('userData', JSON.stringify(response.data.data.user));
-      localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
-      localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
-      localStorage.setItem("institute",JSON.stringify(response.data.data.institue))
-      
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userData', JSON.stringify(response.data.user));
+      localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
+      localStorage.setItem('branches', JSON.stringify(response.data.branches));
+      localStorage.setItem("institute",JSON.stringify(response.data.institue))
+      localStorage.removeItem("otp")
       // Dispatch success action
       dispatch({
         type: 'LOGIN_SUCCESS',

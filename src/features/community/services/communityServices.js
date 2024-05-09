@@ -1,24 +1,18 @@
-// groupService.js
 import axios from 'axios';
-                           
+import client from 'api/client';            
 
-const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/chat`;
+const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute`;
 
 export const getAllCommunities = async (data) => {
   try {
     console.log(data)
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/`,{data}, {
-      headers: {  
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.community.getAll(data)
 
-    console.log(response);
+    console.log(response,"response");
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
+      // Return the response directly, without extracting chatId
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -27,11 +21,10 @@ export const getAllCommunities = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in get all Communities:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
+
 export const getCommunityDetails = async (data) => {
   try {
     const response = await axios.get(`${COMMUNITY_API_END_POINT}/get-by-batch-id`, {
@@ -54,25 +47,18 @@ export const getCommunityDetails = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in get Community Details:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
-export const getAllBatchChats = async (data) => {
+
+export const getAllBatchChats = async (chatId) => {
   try {
-    const response = await axios.get(`${COMMUNITY_API_END_POINT}/message-get`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.community.getCommunityMessage(chatId)
 
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -81,9 +67,7 @@ export const getAllBatchChats = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in get all Communities:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
 

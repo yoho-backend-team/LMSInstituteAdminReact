@@ -20,7 +20,7 @@ const BranchesOverviewPage = () => {
   useEffect(() => {
     getAllBranchesCallback();
   }, [getAllBranchesCallback, refetchBranch]);
-  console.log(branches)
+  
   return (
     <Grid container spacing={1} className="match-height">
       <Grid container spacing={2}>

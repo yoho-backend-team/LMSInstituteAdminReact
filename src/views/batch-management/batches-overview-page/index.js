@@ -114,7 +114,7 @@ const Batch = () => {
   };
 
   const renderCards = () => {
-    return batches?.data?.map((item, index) => (
+    return batches?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <CardStyle sx={{ position: 'relative' }}>
           <CardContent>
@@ -136,8 +136,8 @@ const Batch = () => {
                       // icon: <Icon icon="tabler:eye" fontSize={20} />,
                       menuItemProps: {
                         component: Link,
-                        to: `batches/${item?.batch?.batch_id}`,
-                        state: { id: item?.batch?.batch_id }
+                        to: `batches/${item?.uuid}`,
+                        state: { id: item?.uuid }
                       }
                     },
                     {
@@ -154,7 +154,7 @@ const Batch = () => {
                       text: 'Delete',
                       // icon: <Icon color="primary" icon="tabler:archive-filled" fontSize={20} />,
                       menuItemProps: {
-                        onClick: () => handleDelete(item.batch?.id)
+                        onClick: () => handleDelete(item.uuid)
                       }
                     }
                   ]}
@@ -172,7 +172,7 @@ const Batch = () => {
                     textOverflow: 'ellipsis'
                   }}
                 >
-                  {item?.batch?.batch_name}
+                  {item?.batch_name}
                 </Typography>
               </Grid>
             </Grid>
@@ -192,29 +192,29 @@ const Batch = () => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {item?.batch?.institute_course?.institute_course_branch?.course_name}
+                {item?.course?.course_name}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, justifyContent: 'space-around' }}>
-              <CustomChip label={item?.batch?.start_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
+              <CustomChip label={item?.start_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
               <div className="connect" />
-              <CustomChip label={item?.batch?.end_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
+              <CustomChip label={item?.end_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
                 <Icon fontSize="1.25rem" icon="tabler:user-square" color="primary" />
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                  {item?.students?.length}
+                  {item?.student?.length}
                 </Typography>
                 <Typography variant="h5" sx={{ ml: 0.5, color: 'text.secondary' }}>
-                  {item?.students?.length > 1 ? 'Students' : 'Student'}
+                  {item?.student?.length > 1 ? 'Students' : 'Student'}
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Icon fontSize="1.25rem" icon="tabler:clock-filled" />
                 <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                  {item.totalDays}
+                  {item.duration}
                 </Typography>
                 <Typography variant="h5" sx={{ ml: 0.5, color: 'text.secondary' }}>
                   Days
@@ -230,10 +230,10 @@ const Batch = () => {
                   select
                   width={100}
                   label="Status"
-                  SelectProps={{ value: item.batch?.is_active, onChange: (e) => handleStatusValue(e, item.batch) }}
+                  SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.batch) }}
                 >
-                  <MenuItem value="1">Active</MenuItem>
-                  <MenuItem value="0">Inactive</MenuItem>
+                  <MenuItem value="true">Active</MenuItem>
+                  <MenuItem value="false">Inactive</MenuItem>
                 </TextField>
               </Box>
             </Box>
@@ -247,7 +247,7 @@ const Batch = () => {
     <>
       <Grid container>
         <Grid item xs={12} sm={12}>
-          <BatchFilterCard selectedBranchId={selectedBranchId} setBatchRefetch={setBatchRefetch} />
+          <BatchFilterCard selectedBranchId={selectedBranchId} batches={batches} setBatchRefetch={setBatchRefetch} />
         </Grid>
         <Grid item xs={12}>
           {batchLoading ? (

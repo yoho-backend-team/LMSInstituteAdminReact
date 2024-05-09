@@ -27,7 +27,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
       right: '-8px'
     }
   }));
-
+ console.log(batchData,"batchData")
   const renderStats = () => {
     return (
       <Grid item xs={12} md={12}>
@@ -54,12 +54,12 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                       variant="h5"
                       sx={{ color: `${theme.palette.mode === 'light' ? theme.palette.dark.main : theme.palette.light}`, ml: 1 }}
                     >
-                      {batchData?.institute_course?.institute_course_branch?.course_name}
+                      {batchData?.course?.course_name}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
                     <Typography>
-                      <CustomChip label={batchData.batch_id} rounded color="primary" variant="contained"></CustomChip>
+                      <CustomChip label={batchData.id} rounded color="primary" variant="contained"></CustomChip>
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
@@ -68,7 +68,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                       variant="h4"
                       sx={{ ml: 1, color: `${theme.palette.mode === 'light' ? theme.palette.dark.main : theme.palette.light}` }}
                     >
-                      {batchData?.institute_course?.institute_course_branch?.course_duration}
+                      {batchData?.course?.duration}
                     </Typography>
                     <Typography sx={{ ml: 0.5 }}>days</Typography>
                   </Grid>

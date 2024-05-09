@@ -66,7 +66,7 @@ const ViewBatch = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <ViewBatchTable students={batchData?.institute_batch_student} />
+            <ViewBatchTable students={batchData?.student} />
           </Grid>
         </Grid>
       )}

@@ -70,12 +70,12 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
 
   useEffect(() => {
     if (selectedBatch) {
-      setValue('batch_name', selectedBatch?.batch?.batch_name || '');
-      setValue('start_date', selectedBatch?.batch?.start_date || '');
-      setValue('end_date', selectedBatch?.batch?.end_date || '');
+      setValue('batch_name', selectedBatch?.batch_name || '');
+      setValue('start_date', selectedBatch?.start_date || '');
+      setValue('end_date', selectedBatch?.end_date || '');
 
-      setStartDate(new Date(selectedBatch.batch.start_date || null));
-      setEndDate(new Date(selectedBatch.batch.end_date || null));
+      setStartDate(new Date(selectedBatch?.start_date || null));
+      setEndDate(new Date(selectedBatch?.end_date || null));
     }
   }, [selectedBatch, setValue]);
 

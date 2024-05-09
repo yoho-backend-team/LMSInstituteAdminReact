@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useInstitute } from 'utils/get-institute-details';
 import * as yup from 'yup';
 
 const AddBatchPage = () => {
@@ -122,7 +123,7 @@ const AddBatchPage = () => {
 
   const handleStudentsChange = (event) => {
     setValue('students', event.target.value);
-    const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student.student_id));
+    const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student.uuid));
     console.log('event', event.target.value);
     console.log('filter', filteredStudents);
     setSelectedStudentIds(event.target.value);
@@ -131,8 +132,8 @@ const AddBatchPage = () => {
 
   const getStudentByCourseId = async (courseId) => {
     const result = await getStudentByCourse({ course_id: courseId });
-    console.log(result.data.data);
-    setActiveStudents(result.data.data);
+    console.log(result.data);
+    setActiveStudents(result.data);
   };
 
   console.log('Active Students :', activeStudents);
@@ -140,13 +141,15 @@ const AddBatchPage = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
+    const instituteId = useInstitute().getInstituteId()
     const inputData = {
       batch_name: data.batchName,
       start_date: convertDateFormat(data.startDate),
       end_date: convertDateFormat(data.endDate),
       branch_id: data.branch,
-      course_id: data.course,
-      student_ids: data.students
+      course: data.course,
+      student: data.students,
+      institute_id : instituteId
     };
     const result = await addBatch(inputData);
 
@@ -173,7 +176,7 @@ const AddBatchPage = () => {
     setValue('endDate', date);
     setEndDate(date);
   };
-  console.log(activeStudents);
+  console.log(activeStudents,selectedStudents,"selectedStudents");
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
       <Grid item xs={12}>
@@ -257,7 +260,7 @@ const AddBatchPage = () => {
                         <Autocomplete
                           value={value}
                           onChange={(event, newValue) => {
-                            setValue('branch', newValue ? newValue.branch_id : '');
+                            setValue('branch', newValue ? newValue.uuid : '');
                             getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
                           }}
                           options={activeBranches}
@@ -283,8 +286,8 @@ const AddBatchPage = () => {
                         <Autocomplete
                           value={value}
                           onChange={(event, newValue) => {
-                            setValue('course', newValue ? newValue.course_id : '');
-                            getStudentByCourseId(newValue.course_id);
+                            setValue('course', newValue ? newValue.uuid : '');
+                            getStudentByCourseId(newValue.uuid);
                           }}
                           options={activeCourse}
                           getOptionLabel={(option) => option.course_name || ''}
@@ -320,8 +323,8 @@ const AddBatchPage = () => {
                               <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                                 {selectedStudents.map((student) => (
                                   <CustomChip
-                                    key={student?.student_id}
-                                    label={`${student?.first_name} ${student?.last_name}`}
+                                    key={student?.uuid}
+                                    label={`${student?.full_name}`}
                                     sx={{ m: 0.75 }}
                                     skin="light"
                                     color="primary"
@@ -334,8 +337,8 @@ const AddBatchPage = () => {
                           helperText={errors.students?.message}
                         >
                           {activeStudents.map((student, index) => (
-                            <MenuItem key={index} value={student?.student_id}>
-                              {student?.first_name} {student?.last_name}
+                            <MenuItem key={index} value={student?.uuid}>
+                              {student?.full_name}
                             </MenuItem>
                           ))}
                         </CustomTextField>

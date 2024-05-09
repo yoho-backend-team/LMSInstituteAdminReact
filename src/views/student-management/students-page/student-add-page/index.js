@@ -22,6 +22,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
+import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
+import { imagePlaceholder } from 'utils/placeholders';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -181,17 +184,12 @@ const StepperLinearWithValidation = () => {
   const [logoSrc, setLogoSrc] = useState('');
 
   const handleInputImageChange = async (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setLogoSrc(reader.result);
-      reader.readAsDataURL(files[0]);
-      setLogo(files[0]);
+      const { files } = file.target;
       const data = new FormData()
-      data.append("file",data)
-      const response = client.file.upload(data)
+      data.append("file",files[0])
+      const response = await client.file.upload(data)
+      console.log(response,"response")
       setLogo(response.data.file)
-    }
   };
 
   const handleInputImageReset = () => {
@@ -239,7 +237,7 @@ const StepperLinearWithValidation = () => {
     }
     // }
   };
-
+  console.log(logo,"logo")
   return (
     <Card>
       <CardContent>
@@ -255,7 +253,7 @@ const StepperLinearWithValidation = () => {
             </Grid>
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={logoSrc} alt="Profile Pic" />
+                <ImgStyled src={logo?getImageUrl(logo):imagePlaceholder } alt="Profile Pic" />
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload Profile Picture

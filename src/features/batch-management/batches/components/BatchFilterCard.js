@@ -17,6 +17,8 @@ import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllBatches } from '../redux/batchThunks';
 import PropTypes from 'prop-types';
+import SearchIcon from "@mui/icons-material/Search"
+import { serialize } from 'stylis';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -29,7 +31,7 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 const BatchFilterCard = (props) => {
-  const { selectedBranchId } = props;
+  const { selectedBranchId ,batches} = props;
 
   const [startDateRange, setStartDateRange] = useState(null);
   const [dates, setDates] = useState([]);
@@ -39,7 +41,7 @@ const BatchFilterCard = (props) => {
 
   const handleFilterByStatus = (e) => {
     setFilterStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const data = { is_active: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllBatches(data));
   };
 
@@ -69,12 +71,17 @@ const BatchFilterCard = (props) => {
 
   const dispatch = useDispatch();
   const [courses, setCourses] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
     };
-    getCourses(data);
-  }, [selectedBranchId]);
+    if (batches.length > 0) {
+      setSuggestions(batches);
+    }   
+     getCourses(data);
+  }, [selectedBranchId,batches]);
 
   const getCourses = async (data) => {
     const result = await getAllCourses(data);
@@ -85,12 +92,20 @@ const BatchFilterCard = (props) => {
 
   const handleSearch = useCallback(
     (e) => {
-      const searchInput = e.target.value;
-      dispatch(getAllBatches({ search: searchInput, branch_id: selectedBranchId }));
-      setSearchValue(searchInput);
+      dispatch(getAllBatches({ batch_name: searchValue}));
     },
     [dispatch, selectedBranchId]
   );
+
+
+  const handleSearchIconClick = () => {
+    
+    const data = {
+      search: searchValue,
+      branch_id: selectedBranchId
+    };
+    dispatch(getAllBatches(data));
+  };
 
   return (
     <DatePickerWrapper>
@@ -108,8 +123,8 @@ const BatchFilterCard = (props) => {
                   SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
                 >
                   <MenuItem value="">Select Status</MenuItem>
-                  <MenuItem value="1">Active</MenuItem>
-                  <MenuItem value="0">Inactive</MenuItem>
+                  <MenuItem value="true">Active</MenuItem>
+                  <MenuItem value="false">Inactive</MenuItem>
                 </TextField>
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -134,7 +149,7 @@ const BatchFilterCard = (props) => {
                   fullWidth
                   onChange={(e, newValue) => {
                     const data = {
-                      course_id: newValue?.course_id || '',
+                      course: newValue?._id || '',
                       branch_id: selectedBranchId
                     };
                     dispatch(getAllBatches(data));
@@ -146,7 +161,29 @@ const BatchFilterCard = (props) => {
               </Grid>
               <Grid xs={12} sm={4}></Grid>
               <Grid item xs={12} sm={4}>
-                <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
+              <Autocomplete
+                fullWidth
+                value={searchValue}
+                onChange={(e,newValue)=>setSearchValue(newValue.batch_name)}
+                // onChange={handleSearch}
+                options={suggestions}
+                getOptionLabel={(option) => option?option?.batch_name:""}
+                defaultValue={''}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Search Batch"
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <Button onClick={handleSearch} sx={{ p: 0 }}>
+                          <SearchIcon />
+                        </Button>
+                      )
+                    }}
+                  />
+                )}
+              />
               </Grid>
 
               <Grid item xs={12} sm={4}>
