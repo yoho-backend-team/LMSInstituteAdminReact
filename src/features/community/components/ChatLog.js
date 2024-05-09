@@ -22,9 +22,10 @@ const ChatLog = (props) => {
       chatArea.current.scrollTop = chatArea.current.scrollHeight;
     }
   };
+  console.log(chats,"chats",data)
   const renderChats = () => {
-    if (chats) {
-      return chats.map((message, index) => (
+    if (data) {
+      return data.map((message, index) => (
         <Box key={index} mb={3}>
           <CustomAvatar src={message.sender.avatar} />
           <Typography>{message.content}</Typography>

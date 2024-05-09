@@ -12,10 +12,12 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourseCategory } from '../../services/courseCategoryServices';
+import client from 'api/client';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
-  const image = 'https://www.svgrepo.com/download/508699/landscape-placeholder.svg';
 
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
@@ -53,7 +55,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   });
 
   const [inputValue, setInputValue] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState(category?.image);
   const [selectedImage, setSelectedImage] = useState('');
 
   // Function to handle closing the dialog
@@ -64,17 +66,16 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   }, [setValue, handleEditClose, reset]);
 
   // Function to handle image input change
-  const handleInputImageChange = useCallback((file) => {
+  const handleInputImageChange = useCallback(async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
+    const data = new FormData()
+    data.append("file",files[0])
+    const response = await client.file.upload(data)
+    setSelectedImage(response?.data?.file)
+    setImgSrc(response?.data.file)
+    setValue("image",response?.data?.file)
+    console.log(response,"response")
   }, []);
 
   // Styled components
@@ -102,7 +103,9 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
 
   // Effect to set the default value for category_name field
   useEffect(() => {
-    setValue('category_name', category?.category_name || ''); // Set the default value for category_name
+    setValue('category_name', category?.category_name || '');
+    setValue("image",category?.image) 
+    // Set the default value for category_name
   }, [category?.category_name, setValue]);
 
   // Form submission handler
@@ -111,8 +114,11 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       
       const data1 ={
             category_name:data.category_name,
+            image : category?.image,
             id:category.uuid
       }
+      console.log(data,"data",data1)
+      
       // const inputData = new FormData();
       // inputData.append('category_id', category?.category_id);
       // inputData.append('logo', selectedImage);
@@ -166,12 +172,12 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
                 {!selectedImage && (
                   <ImgStyled
-                    src={category?.logo ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}` : imgSrc}
+                    src={category?.image ? `${getImageUrl(category.image)}` : imagePlaceholder}
                     alt="Profile Pic"
                   />
                 )}
 
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                {selectedImage && <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload New Image

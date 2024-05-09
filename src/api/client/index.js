@@ -2,10 +2,16 @@ import HttpClient from "./httpclinet";
 import { HTTP_END_POINTS } from "api/urls";
 
 class Client {
+    branch = {
+       getAll : (params) => HttpClient.get(HTTP_END_POINTS.branch.getAll,params),
+    }
     file = {
         upload: (data, options) => {
             return HttpClient.uploadFile(HTTP_END_POINTS.file.upload, data);
         }
+    }
+    category = {
+      update : (data) => {HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data)}
     }
     course ={
       create : (data,options) => {

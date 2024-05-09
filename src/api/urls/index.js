@@ -30,9 +30,12 @@ const generateEndpoints = () => {
     const instituteId = institute? institute?.uuid  :""
 
     return {
+        branch : {
+             getAll : `/api/institutes/${instituteId}/branches/`
+        },
         category: {
             getAll: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
-            create: `${backEndUrl}/api/institutes/${instituteId}/categories`
+            create: `/api/institutes/${instituteId}/categories`
         },
         course: {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,
@@ -58,8 +61,8 @@ const generateEndpoints = () => {
             getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`
         },
         community : {
-            all : `/api/institute/community/${instituteId}/branches/`,
-            messages : `/api/institute/community/messages/`
+            all : `/api/institutes/community/${instituteId}/branches/`,
+            messages : `/api/institutes/community/messages/`
         }
     };
 };
