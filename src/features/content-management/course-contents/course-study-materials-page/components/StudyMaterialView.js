@@ -8,9 +8,11 @@ import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import PropTypes from 'prop-types';
 import { PDFViewer } from 'react-view-pdf';
+import { getImageUrl } from 'utils/imageUtils';
 
 const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
+  console.log(StudyMaterials,"studyMaterials")
   return (
     <div>
       <Dialog
@@ -62,7 +64,7 @@ const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
               <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 1 }}>
                 <Typography variant="h3">Course Name :</Typography>
                 <Typography variant="body1" sx={{ ml: 1 }}>
-                  {StudyMaterials?.institute_branch_courses?.course_name}
+                  {StudyMaterials?.course?.course_name}
                 </Typography>
               </Box>
 
@@ -74,12 +76,12 @@ const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={StudyMaterials?.is_active === '1' ? 'Active' : 'Inactive'}
+                  label={StudyMaterials?.is_active? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} sx={{ mb: 4, mt: 1.5 }}>
-              <PDFViewer url={savedPdfUrl} />
+              <PDFViewer url={StudyMaterials?.file?getImageUrl(StudyMaterials?.file):savedPdfUrl} />
             </Grid>
           </Grid>
         </DialogContent>

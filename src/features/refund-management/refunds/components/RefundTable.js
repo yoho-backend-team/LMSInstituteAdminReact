@@ -254,7 +254,7 @@ const RefundTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={studentFeeRefunds?.data}
+                rows={studentFeeRefunds?studentFeeRefunds:[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
@@ -263,7 +263,7 @@ const RefundTable = () => {
               />
             </Card>
           )}
-          {studentFeeRefunds?.last_page !== 1 && (
+          {/* {studentFeeRefunds?.last_page !== 1 && (
             <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
               <Pagination
                 count={studentFeeRefunds?.last_page}
@@ -273,7 +273,7 @@ const RefundTable = () => {
                 }}
               />
             </Grid>
-          )}
+          )} */}
           <RefundAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
 
           <RefundViewDrawer open={refundViewOpen} toggle={toggleRefundViewDrawer} selectedRowDetails={selectedRowDetails} />
