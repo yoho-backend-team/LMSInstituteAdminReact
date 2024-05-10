@@ -1,31 +1,21 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-study-materials`;
 
 export const getAllStudyMaterials = async (data) => {
   try {
-    const response = await axios.get(`${COURSE_STUDY_MATERIALS_END_POINT}/read?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.study_material.getAll(data)
+    
     console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Courses Study Materials. Status: ${response.status}`);
-    }
+  
+    return response;
+   
   } catch (error) {
+    throw new Error(`Failed to fetch Courses Study Materials. Status: ${error}`);
     // Log the error for debugging purposes
-    console.error('Error in getAllCourseStudyMaterials:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+   
   }
 };
 

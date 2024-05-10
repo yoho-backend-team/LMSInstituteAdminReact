@@ -19,7 +19,7 @@ Axios.interceptors.request.use((config)=> {
 Axios.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.log(error,"error",error.response && error.response.status === 401 && error.response.statusText === "Unauthorized",error.response , error.response.status === 401 , error.response.statusText === "Unauthorized")
+        console.log(error,"error")
         if(error.response && error.response.status === 401 && error.response.statusText === "Unauthorized"){
             localStorage.removeItem('token');
             localStorage.removeItem('userData');
@@ -49,7 +49,13 @@ class HttpClient{
 
      async update(url,data){
         const response = await Axios.put(url,data)
+        console.log(response,"update")
         return response.data
+     }
+     
+     async delete(url){
+        const response = await Axios.delete(url)
+        return response
      }
 
      async uploadFile(url, data) {

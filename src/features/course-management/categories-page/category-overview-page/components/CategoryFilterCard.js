@@ -33,7 +33,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value };
+    const data = { is_active: e.target.value };
     dispatch(getAllCourseCategories(data));
   };
 
@@ -48,8 +48,8 @@ const CategoryFilter = ({ selectedBranchId }) => {
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
+                    <MenuItem value="true">Active</MenuItem>
+                    <MenuItem value="false">Inactive</MenuItem>
                   </TextField>
                 </Grid>
 

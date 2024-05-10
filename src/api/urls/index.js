@@ -35,13 +35,21 @@ const generateEndpoints = () => {
              getAll : `/api/institutes/${instituteId}/branches/`
         },
         category: {
-            getAll: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
+            getAll: `/api/institutes/${instituteId}/categories/`,
             create: `/api/institutes/${instituteId}/categories`
         },
         course: {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,
             update: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
             add :`/api/institutes/${instituteId}/categories/`
+        },
+        course_module : {
+            get : "/api/institutes/course-module/",
+            update_status : "/api/institutes/course-module/update-status/",
+            update : '/api/institutes/course-module/update/'
+        },
+        study_material : {
+            get : "api/institutes/study-material/"
         },
         batch : {
             create : `/api/institutes/${instituteId}/branches/`,

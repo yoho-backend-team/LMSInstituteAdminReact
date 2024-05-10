@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { deleteCourseCategory, updateCourseCategoryStatus } from '../../services/courseCategoryServices';
 import CategoryEditModal from './CategoryEditModal';
+import { getImageUrl } from 'utils/imageUtils';
 
 const CategoryCard = (props) => {
   // Props
@@ -21,7 +22,7 @@ const CategoryCard = (props) => {
   const [selectedCategoryDeleteId, setSelectedCategoryDeleteId] = useState(null);
 
   // Memoized variables
-  const categoryLogoSrc = useMemo(() => `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${category?.logo}`, [category]);
+  const categoryLogoSrc = useMemo(() => `${getImageUrl(category?.image)}`, [category]);
 
   // Event handlers
   const handleEditClick = useCallback(() => {
