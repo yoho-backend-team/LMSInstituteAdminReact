@@ -164,7 +164,7 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-  console.log(logo);
+  
 
   useEffect(() => {
     if (staffData) {
@@ -188,15 +188,18 @@ const StepperLinearWithValidation = () => {
   }, [staffData]);
 
   const onSubmit = async () => {
+    try {
     const personalData = personalControl?._formValues;
-    console.log('personalData:', personalData);
+    console.log(staffData,staffData[0].userDetail._id)
+    
     const non_teaching = {
       id : staffId,
       email: personalData.email,
       full_name: personalData.full_name,
-      username: personalData.full_name,
-      dob: convertDateFormat(personalData.date_of_birth),
+      username: personalData.username,
+      dob: (personalData.date_of_birth),
       gender: personalData.gender,
+      userDetail:staffData[0].userDetail._id,
       qualification: personalData.education_qualification,
       contact_info: {
         state: personalData.state,
@@ -236,8 +239,13 @@ const StepperLinearWithValidation = () => {
     } else {
       toast.error(result.message);
     }
+  } catch (error) {
+    console.error("Error while updating non-teaching staff:", error);
+    toast.error("An error occurred while updating non-teaching staff.");
+  }
   };
-  console.log(defaultPersonalValues,personalControl._formValues)
+
+
   const getStepContent = () => {
     return (
       <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
@@ -330,7 +338,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { value } }) => (
                 <DatePicker
                   id="issue-date"
-                  dateFormat={'dd/MM/yyyy'}
+                  dateFormat={'dd-MM-yyyy'}
                   value={value}
                   selected={value}
                   onChange={(date) => {
@@ -558,7 +566,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.[0]?.full_name}
+                  defaultValue={staffData?.[0]?.userDetail?.username}
                   label="Username"
                   onChange={onChange}
                   placeholder="carterLeonard"

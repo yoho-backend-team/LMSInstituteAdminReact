@@ -50,7 +50,7 @@ const NonTeaching = () => {
   }, 1000);
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
+    
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue.id
@@ -68,7 +68,7 @@ const NonTeaching = () => {
     setStatusChangeDialogOpen(true);
     setStatusValue(staff);
   };
-  console.log(nonTeachingStaffs,"non_teaching-staffs")
+  
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />

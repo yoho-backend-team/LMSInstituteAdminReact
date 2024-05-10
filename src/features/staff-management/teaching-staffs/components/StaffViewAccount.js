@@ -37,7 +37,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
       toast.error(result.message);
     }
   };
-  console.log(staff?.data,"staff-teaching")
+  // console.log(staff?.data,"staff-teaching")
   if (staff) {
     return (
       <Grid container spacing={2}>

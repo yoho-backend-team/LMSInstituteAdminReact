@@ -20,14 +20,12 @@ const UserView = () => {
     setLoading(true);
     const data = { id: staffID };
     const result = await TeachingStaffById(data);
-    console.log(data);
     if (result.success) {
       setStaff(result.data);
       setLoading(false);
     }
     setLoading(false);
   };
-  console.log('Teaching-staff:', staff);
 
   function formattedDate(inputDate) {
     const [day, month, year] = inputDate.split('/');

@@ -37,7 +37,7 @@ export const getAllActiveNonTeachingStaffs = async (data) => {
       params: data
     });
 
-    console.log(response);
+    
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -85,7 +85,7 @@ export const addNonTeachingStaff = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
+    
 
     if (response.data.status) {
       return { success: true, message: 'NonTeachingStaff created successfully' };
@@ -121,16 +121,16 @@ export const deleteNonTeachingStaff = async (nonTeachingStaffId) => {
 
 export const updateNonTeachingStaff = async (data) => {
   try {
-    console.log(data,"data")
+    
     const response = await axios.put(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/update/${data.id}`, data, {
       headers: {
         // 'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
+    
     if (response.data.status) {
-      console.log(response);
+      
       return { success: true, message: 'NonTeachingStaff updated successfully' };
     } else {
       return { success: false, message: 'Failed to update NonTeachingStaff' };

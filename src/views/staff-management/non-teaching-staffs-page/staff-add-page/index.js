@@ -114,7 +114,7 @@ const StepperLinearWithValidation = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log(result.data);
+    
     setActiveBranches(result.data.data);
   };
 
@@ -208,7 +208,7 @@ const StepperLinearWithValidation = () => {
     setLogo('');
     setLogoSrc('/images/avatars/15.png');
   };
-  console.log(logo);
+  
 
   const getInstituteDetails = () => {
     if(typeof(localStorage) !== "undefined"){

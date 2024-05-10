@@ -33,7 +33,7 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
       toast.error(result.message);
     }
   };
-  console.log(staffID,staff,"chandran")
+  
   return (
     <Grid container spacing={4}>
       <Grid item xs={12}>
@@ -45,7 +45,7 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
             <Box sx={{ pt: 4 }}>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.full_name}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.userDetail?.username}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>

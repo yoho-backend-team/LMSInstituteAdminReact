@@ -1,8 +1,9 @@
 // TeachingStaffservice.js
 import client from 'api/client';
 import axios from 'axios';
+import { useBranchId, useInstitute } from 'utils/get-institute-details';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/:instituteId/teaching-staff/`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {
@@ -117,12 +118,14 @@ export const deleteTeachingStaff = async (data) => {
 
 export const updateTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}`,  {
+    console.log(localStorage.getItem("token"))
+    const institute = useInstitute().getInstituteId()
+    const branch = useBranchId()
+    const response = await axios.put(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${institute}/branches/${branch}/teaching-staff/update/${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
     console.log(response);
     if (response.data.status) {
