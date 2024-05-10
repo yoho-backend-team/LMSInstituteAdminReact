@@ -62,7 +62,7 @@ const ModuleView = ({ open, handleViewClose, modules }) => {
               <Box sx={{ display: 'flex', alignItems: 'flex-end', mt: 1 }}>
                 <Typography variant="h3">Course Name :</Typography>
                 <Typography variant="body1" sx={{ ml: 1 }}>
-                  {modules?.institute_branch_courses?.course_name}
+                  {modules?.coures?.course_name}
                 </Typography>
               </Box>
 
@@ -74,7 +74,7 @@ const ModuleView = ({ open, handleViewClose, modules }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={modules?.is_active === '1' ? 'Active' : 'Inactive'}
+                  label={modules?.is_active? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>

@@ -114,7 +114,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
       
       const data1 ={
             category_name:data.category_name,
-            image : category?.image,
+            image : category?.image?category.image:data.image,
             id:category.uuid
       }
       console.log(data,"data",data1)

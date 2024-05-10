@@ -11,7 +11,20 @@ class Client {
         }
     }
     category = {
-      update : (data) => {HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data)}
+      get    : (params) => HttpClient.get(HTTP_END_POINTS.category.getAll,params),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
+      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)
+    }
+    course_module ={
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.course_module.get,params),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.course_module.get,data),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.course_module.update+data.uuid,data),
+      update_status : (data) => HttpClient.update(HTTP_END_POINTS.course_module.update_status+data.module_id,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.course_module.get+data.id)
+    }
+    study_material = {
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.study_material.get,params)
     }
     course ={
       create : (data,options) => {
