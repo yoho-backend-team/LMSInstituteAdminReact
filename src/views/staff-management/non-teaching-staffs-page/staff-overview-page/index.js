@@ -50,7 +50,7 @@ const NonTeaching = () => {
   }, 1000);
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
+    
     const data = {
       status: statusValue?.is_active === '1' ? '0' : '1',
       id: statusValue.id
@@ -68,7 +68,7 @@ const NonTeaching = () => {
     setStatusChangeDialogOpen(true);
     setStatusValue(staff);
   };
-
+  
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />
@@ -77,7 +77,8 @@ const NonTeaching = () => {
       ) : (
         <Grid>
           <Grid container spacing={2} mt={2}>
-            {nonTeachingStaffs?.data?.map((item, i) => (
+            { 
+            nonTeachingStaffs?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
                 <Card sx={{ position: 'relative' }}>
                   <CardContent sx={{ pt: 3 }}>
@@ -87,10 +88,10 @@ const NonTeaching = () => {
                         sx={{ mb: 2, width: 70, height: 70 }}
                       />
                       <Typography variant="h4" sx={{ mb: 1 }}>
-                        {item.staff?.staff_name}
+                        {item.username}
                       </Typography>
                       <Typography variant="h5" sx={{ mb: 4 }}>
-                        {item?.staff.email}
+                        {item?.email}
                       </Typography>
 
                       <Box
@@ -114,7 +115,7 @@ const NonTeaching = () => {
                             <MenuItem value="0">Inactive</MenuItem>
                           </TextField>
                         </Grid>
-                        <Box component={Link} to={`non-teaching-staffs/${item?.staff?.id.toString()}`} state={{ id: item?.staff?.id }}>
+                        <Box component={Link} to={`non-teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>
                           <Button size="medium" variant="tonal" sx={{ m: 0, px: 2 }}>
                             View Profile
                           </Button>

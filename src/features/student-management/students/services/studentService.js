@@ -2,7 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 
-const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/student-management/students`;
+const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/student`;
 
 export const getAllStudentsByBatch = async (data) => {
   try {

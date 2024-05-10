@@ -2,10 +2,29 @@ import HttpClient from "./httpclinet";
 import { HTTP_END_POINTS } from "api/urls";
 
 class Client {
+    branch = {
+       getAll : (params) => HttpClient.get(HTTP_END_POINTS.branch.getAll,params),
+    }
     file = {
         upload: (data, options) => {
             return HttpClient.uploadFile(HTTP_END_POINTS.file.upload, data);
         }
+    }
+    category = {
+      get    : (params) => HttpClient.get(HTTP_END_POINTS.category.getAll,params),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
+      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)
+    }
+    course_module ={
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.course_module.get,params),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.course_module.get,data),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.course_module.update+data.uuid,data),
+      update_status : (data) => HttpClient.update(HTTP_END_POINTS.course_module.update_status+data.module_id,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.course_module.get+data.id)
+    }
+    study_material = {
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.study_material.get,params)
     }
     course ={
       create : (data,options) => {
@@ -20,15 +39,21 @@ class Client {
     users = {
       verifyOtp : (data,options) => HttpClient.post(HTTP_END_POINTS.users.valiateOtp,data,options),
       studentRegister : (data,options) => HttpClient.post(HTTP_END_POINTS.users.studentRegister,data,options),
+      studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+`${params.branch_id}/students`,params),
       studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+params.branch_id+"/students"),
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithcourse+`${data.course_id}/students`),
       logout : (data) => HttpClient.post(HTTP_END_POINTS.users.logout,data)
     }
-    community ={
-     getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branchid+'/all-community/'),
-     getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId)
+    nonTeachingStaff = {
+      get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/non-teaching-staff")
     }
-}
-console.log(HTTP_END_POINTS.users,"verifyOtp")
+    TeachingStaff = {
+      get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff")
+    }
+    community ={
+      getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branchid+'/all-community/'),
+      getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId)
+     }
+  }
 export default new Client();

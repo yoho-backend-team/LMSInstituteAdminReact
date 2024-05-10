@@ -67,8 +67,8 @@ const Teaching = () => {
       ) : (
         <Grid>
           <Grid container mt={1}>
-            {teachingStaffs?.data &&
-              teachingStaffs?.data?.map((item, i) => (
+            {teachingStaffs &&
+              teachingStaffs?.map((item, i) => (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
                   <Card sx={{ position: 'relative', mb: 2 }}>
                     <CardContent sx={{ pt: 3 }}>
@@ -78,10 +78,10 @@ const Teaching = () => {
                           sx={{ mb: 2, width: 70, height: 70 }}
                         />
                         <Typography variant="h4" sx={{ mb: 1 }}>
-                          {item.staff?.staff_name}
+                          {item.username}
                         </Typography>
                         <Typography variant="h5" sx={{ mb: 4 }}>
-                          {item?.staff?.email}
+                          {item?.email}
                         </Typography>
                         <Box
                           sx={{
@@ -97,16 +97,16 @@ const Teaching = () => {
                             <TextField
                               size="small"
                               select
-                              defaultValue={item.staff?.is_active}
+                              defaultValue={item.is_active}
                               label="status"
                               SelectProps={{ onChange: (e) => handleStatusValue(e, item?.staff) }}
                               sx={{ width: 100 }}
                             >
-                              <MenuItem value="0">Active</MenuItem>
-                              <MenuItem value="1">Inactive</MenuItem>
+                              <MenuItem value="true">Active</MenuItem>
+                              <MenuItem value="false">Inactive</MenuItem>
                             </TextField>
                           </Grid>
-                          <Box component={Link} to={`teaching-staffs/${item?.staff?.id?.toString()}`} state={{ id: item?.staff?.id }}>
+                          <Box component={Link} to={`teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>
                             <Button variant="tonal" size="medium" sx={{ m: 0, px: 2 }}>
                               View Profile
                             </Button>

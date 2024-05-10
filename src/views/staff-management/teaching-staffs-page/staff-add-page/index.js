@@ -26,10 +26,12 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { checkUserName } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
     name: '',
+    password:"",
     email: '',
     phone: '',
     alt_phone: '',
@@ -53,10 +55,15 @@ const StepperLinearWithValidation = () => {
   });
 
   const personalSchema = yup.object().shape({
-    name: yup
+    full_name: yup
       .string()
       .required('Full Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Full Name should only contain alphabets'),
+      password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/^[a-zA-Z0-9]+$/, 'Password should only contain alphabets and numbers'),
     email: yup
       .string()
       .required('Email is required')
@@ -158,6 +165,14 @@ const StepperLinearWithValidation = () => {
       textAlign: 'center'
     }
   }));
+  const getInstituteDetails = () => {
+    if(typeof(localStorage) !== "undefined"){
+    const institute = localStorage.getItem("institute")
+    return JSON.parse(institute)
+    }else{
+     return undefined
+    }
+}
 
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(4),
@@ -193,8 +208,31 @@ const StepperLinearWithValidation = () => {
   console.log(logo);
 
   const onSubmit = async () => {
-    console.log('hello');
-    const personalData = personalControl?._formValues;
+    const personalData = personalControl._formValues;
+    const courseUUIDs = selectedCourses.map(option => option.uuid);
+    const teaching_staffdata = {
+      email: personalData.email,
+      full_name: personalData.full_name,
+      password: personalData.password,
+      course: courseUUIDs,
+      institute_id: useInstitute().getInstituteId(),
+      username: personalData.username,
+      dob: convertDateFormat(personalData.date_of_birth),
+      gender: personalData.gender,
+      branch_id : localStorage.getItem("selectedBranchId"),
+      qualification:personalData.education_qualification,
+      contact_info: {
+        state: personalData.state,
+        city: personalData.city,
+        pincode: personalData.pin_code,
+        address1: personalData.address_line_one,
+        address2: personalData.address_line_two,
+        phone_number: personalData.phone
+      },
+      designation: personalData.designation,
+      role: personalData.role,
+      user_details: 'InstituteTeachingStaff'
+    };
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
 
     let data = new FormData();
@@ -218,17 +256,17 @@ const StepperLinearWithValidation = () => {
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
     data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
-    const isUserNameTaken = await checkUserName(personalData?.username);
+    // const isUserNameTaken = await checkUserName(personalData?.username);
 
-    if (!isUserNameTaken.success) {
-      setError('username', {
-        type: 'manual',
-        message: 'Username is already taken'
-      });
-    } else if (isUserNameTaken.success) {
+    // if (!isUserNameTaken.success) {
+    //   setError('username', {
+    //     type: 'manual',
+    //     message: 'Username is already taken'
+    //   });
+    // } else if (isUserNameTaken.success) {
       try {
-        const result = await addTeachingStaff(data);
-        if (result.success) {
+        const result = await addTeachingStaff(teaching_staffdata);
+        if (result. success) {
           toast.success(result.message);
           navigate(-1);
         } else {
@@ -237,7 +275,7 @@ const StepperLinearWithValidation = () => {
       } catch (error) {
         console.log(error);
       }
-    }
+    // }
   };
   console.log(selectedCourses,"selected")
   const getStepContent = () => {
@@ -269,7 +307,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="name"
+              name="full_name"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -280,12 +318,33 @@ const StepperLinearWithValidation = () => {
                   onChange={onChange}
                   placeholder="Leonard"
                   aria-describedby="stepper-linear-personal-institute_name"
-                  error={Boolean(personalErrors.name)}
+                  error={Boolean(personalErrors.full_name)}
                   {...(personalErrors.name && { helperText: personalErrors.name.message })}
                 />
               )}
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+                <Controller
+                  name="password"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      value={value}
+                      label="Password"
+                      type="password"
+                      onChange={onChange}
+                      placeholder=""
+                      error={Boolean(personalErrors['password'])}
+                      aria-describedby="stepper-linear-personal-institute_name"
+                      helperText={personalErrors?.password?.message}
+                    />
+                  )}
+                />
+              </Grid>
+
 
           <Grid item xs={12} sm={6}>
             <Controller

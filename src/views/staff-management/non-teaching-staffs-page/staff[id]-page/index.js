@@ -61,7 +61,7 @@ const UserViewRight = ({ tab, setRefetch }) => {
   const [staff, setStaff] = useState('');
   const location = useLocation();
   const staffID = location.state.id;
-  console.log('staffId:', staffID);
+ 
   useEffect(() => {
     getStaffData(staffID);
   }, [staffID]);
@@ -76,7 +76,6 @@ const UserViewRight = ({ tab, setRefetch }) => {
     }
     setLoading(false);
   };
-  console.log('NON-Teaching-staff:', staff);
 
   function formattedDate(inputDate) {
     const [day, month, year] = inputDate.split('/');

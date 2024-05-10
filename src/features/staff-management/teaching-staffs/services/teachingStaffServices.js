@@ -1,22 +1,17 @@
 // TeachingStaffservice.js
+import client from 'api/client';
 import axios from 'axios';
+import { useBranchId, useInstitute } from 'utils/get-institute-details';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/staff-management/teaching-staff`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
+    const response = await client.TeachingStaff.get(data)
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+    if (response.status) {
       return response;
     } else {
       // If the response status is not successful, throw an error
@@ -32,10 +27,10 @@ export const getAllTeachingStaffs = async (data) => {
 };
 export const getAllActiveTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/get-staff-by-status`, {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/active`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -60,10 +55,10 @@ export const getAllActiveTeachingStaffs = async (data) => {
 
 export const searchTeachingStaffs = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/search`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -81,10 +76,10 @@ export const searchTeachingStaffs = async (searchQuery) => {
 
 export const addTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/create`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
@@ -123,12 +118,14 @@ export const deleteTeachingStaff = async (data) => {
 
 export const updateTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/update`, data, {
+    console.log(localStorage.getItem("token"))
+    const institute = useInstitute().getInstituteId()
+    const branch = useBranchId()
+    const response = await axios.put(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${institute}/branches/${branch}/teaching-staff/update/${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
     console.log(response);
     if (response.data.status) {
@@ -144,17 +141,17 @@ export const updateTeachingStaff = async (data) => {
 
 export const TeachingStaffById = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/read-by-id`, {
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
     console.log('teachingStaff:', response);
     // Check if the response status is successful
     if (response.data.status) {
-      return { success: true, data: response.data.data };
+      return { success: true, data: response.data};
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
@@ -170,10 +167,10 @@ export const TeachingStaffById = async (data) => {
 
 export const staffChangePassword = async (data) => {
   try {
-    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/status-update`, data, {
+    const response = await axios.put(`${TEACHING_STAFF_API_END_POINT}/change-password`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -194,7 +191,7 @@ export const staffStatusChange = async (data) => {
     const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -206,6 +203,26 @@ export const staffStatusChange = async (data) => {
     }
   } catch (error) {
     console.error('Error in staff:', error);
+    throw error;
+  }
+};
+
+export const staffById = async (data) => {
+  try {
+       const response = await client.users.getStudentWithId(data)
+    console.log(response,data);
+    // Check if the response status is successful
+    if (response.status) {
+      return { success: true, data: response.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch a student. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in fetching  student:', error);
+
+    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

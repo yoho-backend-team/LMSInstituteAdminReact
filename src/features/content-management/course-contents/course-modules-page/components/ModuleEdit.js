@@ -108,14 +108,17 @@ const ModuleEdit = (props) => {
   console.log('modules', modules);
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('video_url', data.videourl);
-    bodyFormData.append('id', modules.id);
-    console.log(bodyFormData);
+    console.log(data,"data",modules)
 
-    const result = await updateCourseModule(bodyFormData);
+    const updateData = {
+      title : data.title,
+      description : data.description,
+      video : data.video_url,
+      uuid : modules.uuid
+    }
+   
+
+    const result = await updateCourseModule(updateData);
 
     if (result.success) {
       toast.success(result.message);

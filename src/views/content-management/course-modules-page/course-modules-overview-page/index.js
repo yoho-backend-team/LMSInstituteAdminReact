@@ -24,6 +24,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute,useBranchId } from 'utils/get-institute-details';
 
 const Modules = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -35,8 +36,14 @@ const Modules = () => {
   const [ModulesDeleteModalOpen, setModulesDeleteModalOpen] = useState(false);
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [refetch, setrefetch] = useState(false);
+  const [reFetch, setRefetch] = useState(false);
   const [statusValue, setStatusValue] = useState({});
 
+  const dispatch = useDispatch();
+  const Module = useSelector(selectCourseModules);
+  const ModuleLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const institute_id = useInstitute().getInstituteId()
   console.log(selectedDeleteId);
 
   useEffect(() => {
@@ -50,8 +57,8 @@ const Modules = () => {
     setActiveBranches(result.data.data);
   };
   const userStatusObj = {
-    1: 'success',
-    0: 'error'
+    true: 'success',
+    false: 'error'
   };
 
   const handleRowClick = (params) => {
@@ -64,10 +71,10 @@ const Modules = () => {
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
+    console.log('entered', statusValue,module);
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      module_id: statusValue?.uuid
     };
     const response = await updateCourseModulesStatus(data);
     if (response.success) {
@@ -93,7 +100,7 @@ const Modules = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedRow.id };
+    const data = { id: selectedRow.uuid };
     const result = await deleteCourseModule(data);
     if (result.success) {
       toast.success(result.message);
@@ -103,14 +110,13 @@ const Modules = () => {
     }
   };
 
-  const dispatch = useDispatch();
-  const Module = useSelector(selectCourseModules);
-  const ModuleLoading = useSelector(selectLoading);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+ 
 
   console.log(Module);
   useEffect(() => {
-    dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllCourseModules(
+      { branch_id: selectedBranchId,institute_id:institute_id, page: '1' }
+    ));
   }, [dispatch, selectedBranchId, refetch]);
 
   const RowOptions = ({ row }) => {
@@ -215,7 +221,7 @@ const Modules = () => {
                 textTransform: 'capitalize'
               }}
             >
-              {row?.institute_branch_courses?.course_name}
+              {row?.course?.course_name}
             </Typography>
           </Box>
         );
@@ -240,13 +246,13 @@ const Modules = () => {
               onChange={(e) => handleStatusValue(e, row)}
               SelectProps={{
                 sx: {
-                  borderColor: row.is_active === '1' ? 'success' : 'error',
+                  borderColor: row.is_active? 'success' : 'error',
                   color: userStatusObj[row?.is_active]
                 }
               }}
             >
-              <MenuItem value={1}>Active</MenuItem>
-              <MenuItem value={0}>Inactive</MenuItem>
+              <MenuItem value={true}>Active</MenuItem>
+              <MenuItem value={false}>Inactive</MenuItem>
             </TextField>
           </div>
         );
@@ -277,7 +283,7 @@ const Modules = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={Module?.data}
+                rows={Module}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
@@ -291,7 +297,7 @@ const Modules = () => {
                     count={Module?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllCourseModules({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllCourseModules({ branch_id: selectedBranchId,institute_id:institute_id, page: page }));
                     }}
                   />
                 </Grid>

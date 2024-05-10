@@ -35,7 +35,7 @@ const CourseModuleAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
-
+  console.log(branches,"branches")
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -79,32 +79,25 @@ const CourseModuleAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
+    console.log(data,"data")
     const inputData = {
-      branch_id: data.branch.branch_id,
-      course_id: data.course.course_id,
+      branch: data.branch.uuid,
+      course: data.course.uuid,
       title: data.title,
       description: data.description,
-      video_url: data.video_url
+      video: data.video_url
     };
 
     console.log(inputData);
-
-    const result = await addCourseModule(inputData);
-
-    if (result.success) {
-      setRefetch((state) => !state);
-      toast.success(result.message);
-      reset();
-      toggle();
-    } else {
-      let errorMessage = '';
-      Object?.values(result.message)?.forEach((errors) => {
-        errors?.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      });
-      toast.error(errorMessage.trim());
-      toast.error(result.message);
+    try {
+      const result = await addCourseModule(inputData);
+      console.log(result,"result")
+        setRefetch((state) => !state);
+        toast.success(result.message);
+        reset();
+        toggle();
+    } catch (error) {
+      throw error
     }
   };
 
@@ -156,7 +149,7 @@ const CourseModuleAddDrawer = (props) => {
                     getActiveCoursesByBranch(newValue);
                   }}
                   options={branches ?? []}
-                  getOptionLabel={(option) => option.branch_name}
+                  getOptionLabel={(option) => option.branch_identity}
                   renderInput={(params) => (
                     <TextField
                       sx={{ mb: 2 }}

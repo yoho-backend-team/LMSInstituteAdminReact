@@ -9,3 +9,7 @@ export function useInstitute(){
     }
 }
 
+export function useBranchId(){
+      const id = localStorage.getItem("selectedBranchId")
+    return id
+}

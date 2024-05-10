@@ -114,7 +114,7 @@ const Community = () => {
     };
     
     fetchData();
-  }, [dispatch, selectedBranchId, userData._id, institute._id]);
+  }, [dispatch, selectedBranchId,chats]);
   
 
 
@@ -139,7 +139,7 @@ const Community = () => {
   useTimeout(() => {
     setLoading(false);
   }, 1000);
-  console.log(communities,"communities")
+  console.log(communities,"communities",chats)
   return (
     <>
       {loading ? (
@@ -179,6 +179,7 @@ const Community = () => {
             handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
             communities={communities}
             setChats={setChats}
+            chats={chats}
             setSelectedBatch={setSelectedBatch}
             setCommunityDetails={setCommunityDetails}
             communityDetails={communityDetails}

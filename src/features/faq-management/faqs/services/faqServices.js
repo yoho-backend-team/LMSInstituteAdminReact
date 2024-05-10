@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FAQ_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute/faq`;
+const FAQ_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/general/FAQ`;
 
 const FaqS_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/Faq-management/institute-Faqs/active-s`;
 
@@ -90,12 +90,12 @@ export const addFaq = async (data) => {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
 
-    if (response.data.status) {
+    if (response.data.success) {
       return { success: true, message: 'Faq created successfully' };
     } else {
       return { success: false, message: 'Failed to create Faq' };
@@ -135,7 +135,7 @@ export const updateFaq = async (data) => {
     const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);

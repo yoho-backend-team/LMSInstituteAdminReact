@@ -31,11 +31,11 @@ const SendMsgForm = (props) => {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(getMessages, 5000);
-    getMessages();
-    return () => clearInterval(intervalId);
-  }, [selectedBatch]);
+  // useEffect(() => {
+  //   const intervalId = setInterval(getMessages, 5000);
+  //   getMessages();
+  //   return () => clearInterval(intervalId);
+  // }, [selectedBatch]);
 
   const handleSendMsg = async (e) => {
     e.preventDefault();

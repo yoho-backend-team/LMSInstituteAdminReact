@@ -51,6 +51,7 @@ const SidebarLeft = (props) => {
 
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(null);
+  const [getchatsState,setChatsState] = useState(false)
   console.log(communities);
   
   const handleChatClick = async (type, community) => {
@@ -58,12 +59,13 @@ const SidebarLeft = (props) => {
     setActive(community);
     setSelectedBatch(community);
   
-    console.log(community&&community._id,"check",community,"comunity",typeof(chats))
-    if (community && community._id&&typeof chats === "undefined") {
+    console.log(community&&community._id,"check",community,"comunity",typeof(chats),getchatsState)
+    if (community && community._id&&!getchatsState) {
       try {
         const response = await getAllBatchChats({ chatId: community._id });
         
         if (response) {
+          setChatsState(true)
           setChats(response.data);
         }
       } catch (error) {
@@ -92,7 +94,7 @@ const SidebarLeft = (props) => {
       return !!arr.length;
     }
   };
-
+  console.log(chats,"chats")
   const renderContacts = () => {
     if (communities === undefined) {
       return (

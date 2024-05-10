@@ -48,10 +48,11 @@ const ChatContent = (props) => {
       handleLeftSidebarToggle();
     }
   };
+  console.log(chats,"chats")
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
-
+      console.log(selectedChat,chats)
       return (
         <Box
           sx={{

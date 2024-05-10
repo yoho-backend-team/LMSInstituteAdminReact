@@ -159,11 +159,11 @@ const StudyMaterials = () => {
       // flex: 0.4,
       minWidth: 150,
       headerName: 'Id',
-      field: 'employee_id',
+      field: '_id',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
+            {row?._id}
           </Typography>
         );
       }
@@ -217,7 +217,7 @@ const StudyMaterials = () => {
                 textTransform: 'capitalize'
               }}
             >
-              {row?.institute_branch_courses?.course_name}
+              {row?.course?.course_name}
             </Typography>
           </Box>
         );
@@ -244,13 +244,13 @@ const StudyMaterials = () => {
               onChange={(e) => handleStatusValue(e, row)}
               SelectProps={{
                 sx: {
-                  borderColor: row.is_active === '1' ? 'success' : 'error',
+                  borderColor: row.is_active? 'success' : 'error',
                   color: userStatusObj[row?.is_active]
                 }
               }}
             >
-              <MenuItem value={1}>Active</MenuItem>
-              <MenuItem value={0}>Inactive</MenuItem>
+              <MenuItem value={true}>Active</MenuItem>
+              <MenuItem value={false}>Inactive</MenuItem>
             </TextField>
           </div>
         );
@@ -265,7 +265,7 @@ const StudyMaterials = () => {
       renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
-
+  console.log(StudyMaterials,"studyMaterials")
   return (
     <>
       <Grid container spacing={2}>
@@ -281,7 +281,7 @@ const StudyMaterials = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={StudyMaterials?.data}
+                rows={StudyMaterials?StudyMaterials:[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination

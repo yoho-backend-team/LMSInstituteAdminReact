@@ -72,7 +72,7 @@ const CourseViewPage = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  console.log(handleChange);
+  
   console.log(expanded,course);
 
   const handleEditClose = () => {
@@ -193,7 +193,7 @@ const CourseViewPage = () => {
           >
             Edit Course
           </Button>
-          <div style={{ overflow: 'auto', height: '73vh' }}>{course?.course_module?.map(createAccordion)}</div>
+          <div style={{ overflow: 'auto', height: 'auto' }}>{course?.coursemodules?.map(createAccordion)}</div>
           {/* Edit Modal */}
           <CourseEditModal
             setRefetch={setRefetch}

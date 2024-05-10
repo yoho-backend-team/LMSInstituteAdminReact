@@ -12,10 +12,13 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { addCourseCategory } from '../../services/courseCategoryServices';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
+import client from 'api/client';
 
 const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   const image =
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
+    '';
 
   // Function to handle error messages
   const showErrors = useCallback((field, valueLen, min) => {
@@ -41,7 +44,8 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   );
 
   const defaultValues = {
-    course: ''
+    course: '',
+    image : ''
   };
 
   // Form control using react-hook-form
@@ -57,7 +61,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   });
 
   const [inputValue, setInputValue] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
 
   const handleClose = useCallback(() => {
@@ -66,17 +70,13 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
   }, [reset, handleAddClose]);
 
   // Function to handle image input change
-  const handleInputImageChange = useCallback((file) => {
-    const reader = new FileReader();
+  const handleInputImageChange = useCallback(async(file) => {
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
+    const data = new FormData()
+    data.append("file",files[0])
+    const response = await client.file.upload(data)
+    setSelectedImage(response.data.file)
+    setImgSrc(response.data.file)
   }, []);
 
   // Styled components
@@ -104,23 +104,17 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
 
   // Form submission handler
   const onSubmit = useCallback(
-    
     async (data) => {
-      var bodyFormData = new FormData();
-      bodyFormData.append('logo', selectedImage);
-      bodyFormData.append('category_name', data.category);
-
-      const result = await addCourseCategory({category_name:data.category});
-
-      if (result.success) {
+      try {
+        const result = await addCourseCategory({category_name:data.category,image:selectedImage});
         reset();
         handleAddClose();
         setCategoryRefetch((state) => !state);
         toast.success(result.message);
         setSelectedImage('');
-        setImgSrc(image);
-      } else {
-        toast.error(result.message);
+        setImgSrc(image);  
+      } catch (error) {
+        toast.error(error.message);
       }
     },
     [selectedImage, reset, handleAddClose, setCategoryRefetch]
@@ -156,7 +150,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-                <ImgStyled src={imgSrc} alt="Profile Pic" />
+                <ImgStyled src={imgSrc?getImageUrl(imgSrc):imagePlaceholder} alt="Profile Pic" />
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload

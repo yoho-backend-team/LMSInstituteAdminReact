@@ -242,7 +242,7 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<AddNewTeachingStaff />} permissionCode={'can_create_institute_teaching_staffs'} module={'TeachingStaffs'} permissionReq={"create_permission"} />}>
             <Route path="teaching-staffs/add" element={<AddNewTeachingStaff />} />
           </Route>
-          <Route element={<ProtectedRoute element={<EditTeachingStaff />} permissionCode={'can_update_institute_teching_staffs'} module={'TeachingStaffs'} />}>
+          <Route element={<ProtectedRoute element={<EditTeachingStaff />} permissionCode={'can_update_institute_teching_staffs'} permissionReq={"update_permission"} module={'TeachingStaffs'} />}>
             <Route path="teaching-staffs/:id/edit" element={<EditTeachingStaff />} />
           </Route>
           <Route element={<ProtectedRoute element={<ViewTeachingProfile />} permissionCode={'can_view_staff_details'} module={'TeachingStaff Details'} />}>
@@ -260,7 +260,7 @@ const ApplicationRoutes = () => {
             <Route path="non-teaching-staffs/add" element={<AddNewNonTeachingStaff />} />
           </Route>
           <Route
-            element={<ProtectedRoute element={<EditNonTeachingStaff />} permissionCode={'can_update_non_teaching_staff_details'} module={'Non TeachingStaff Details'} />}
+            element={<ProtectedRoute element={<EditNonTeachingStaff />} permissionReq={"update_permission"} permissionCode={'can_update_non_teaching_staff_details'} module={'Non TeachingStaff Details'} />}
           >
             <Route path="non-teaching-staffs/:id/edit" element={<EditNonTeachingStaff />} />
           </Route>

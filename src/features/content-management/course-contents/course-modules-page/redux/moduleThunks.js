@@ -6,7 +6,7 @@ export const getAllCourseModules = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllCourseModules(data); // Implement this function in your services
-    dispatch(setCourseModules(response?.data?.data));
+    dispatch(setCourseModules(response.data));
   } catch (error) {
     console.error(error);
   } finally {
