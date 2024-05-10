@@ -1,12 +1,14 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import client from 'api/client';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import toast from 'react-hot-toast';
 
-const CoursePdfInput = ({ setCourseNotePdf }) => {
+const CoursePdfInput = ({ setCourseNotePdf,setValue }) => {
   const [files, setFiles] = useState([]);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -15,6 +17,15 @@ const CoursePdfInput = ({ setCourseNotePdf }) => {
       'file/*': ['.pdf']
     },
     onDrop: (acceptedFiles) => {
+      console.log(acceptedFiles,"accepeted")
+      acceptedFiles.map(async(file)=>{
+        const fileData = new FormData()
+        fileData.append("file",file)
+        const uploadFile = await client.file.upload(fileData)
+        toast.success(uploadFile.message)
+        console.log(uploadFile,"uploadFile")
+        setValue("pdf_file",uploadFile.data.file)
+      })
       setFiles(acceptedFiles.map((file) => Object.assign(file)));
       setCourseNotePdf(acceptedFiles[0]);
     }

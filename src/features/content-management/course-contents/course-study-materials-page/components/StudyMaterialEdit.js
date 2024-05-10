@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
 import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
+import { getImageUrl } from 'utils/imageUtils';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -70,7 +71,7 @@ const StudyMaterialEdit = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
   const [inputValue, setInputValue] = useState('');
-
+  console.log(StudyMaterials,"studyMaterials")
   const handleFileUpload = useCallback((file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -155,7 +156,7 @@ const StudyMaterialEdit = (props) => {
           <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
+                {!selectedFile && <PDFViewer url={StudyMaterials?.file?getImageUrl(StudyMaterials.file):savedPdfUrl} />}
                 {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
 
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>

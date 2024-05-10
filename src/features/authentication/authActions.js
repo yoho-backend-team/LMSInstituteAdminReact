@@ -97,12 +97,12 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
-          token: response.data.data.token,
-          userData: response.data.data.user,
-          permissions: response.data.data.permissions,
-          branches: response.data.data.branches,
-          institute: response.data.data.institue,
-          selectedBranchId: response.data.data.branches[0]?.uuid
+          token: response.data.token,
+          userData: response.data.user,
+          permissions: response.data.permissions,
+          branches: response.data.branches,
+          institute: response.data.institue,
+          selectedBranchId: response.data.branches[0]?.uuid
         }
       });
       // const fcmToken = await requestForToken();

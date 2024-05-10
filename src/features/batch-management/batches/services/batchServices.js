@@ -27,20 +27,14 @@ export const getAllBatches = async (data) => {
   try {
     const response = await client.batch.getAll(data)
     console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.
-        data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batches. Status: ${response.status}`);
-    }
+   
+    return { success: true, data: response.data };
+   
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllBatches:', error);
-
+ 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch batches. Status: ${error}`);
   }
 };
 export const getBatchesByCourse = async (data) => {

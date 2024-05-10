@@ -38,7 +38,7 @@ const StudyMaterials = () => {
   const [selectedDeleteId, SetSelectedDeleteId] = useState(null);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-  console.log(selectedDeleteId);
+  
   const dispatch = useDispatch();
   const StudyMaterials = useSelector(selectCourseStudyMaterials);
   const StudyMaterialsLoading = useSelector(selectLoading);
@@ -159,11 +159,11 @@ const StudyMaterials = () => {
       // flex: 0.4,
       minWidth: 150,
       headerName: 'Id',
-      field: '_id',
+      field: 'id',
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?._id}
+            {row?.id}
           </Typography>
         );
       }
@@ -265,7 +265,8 @@ const StudyMaterials = () => {
       renderCell: ({ row }) => <RowOptions row={row} />
     }
   ];
-  console.log(StudyMaterials,"studyMaterials")
+  
+  
   return (
     <>
       <Grid container spacing={2}>

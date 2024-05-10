@@ -7,7 +7,7 @@ const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL
 export const getAllStudyMaterials = async (data) => {
   try {
     const response = await client.study_material.getAll(data)
-    
+
     console.log(response);
   
     return response;
@@ -42,21 +42,16 @@ export const searchCourseStudyMaterials = async (searchQuery) => {
 
 export const addCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'CourseStudyMaterial created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create CourseStudyMaterial' };
-    }
+    const response = await client.study_material.create(data)
+
+    console.log(response,"file");
+   
+    return { success: true, message: 'CourseStudyMaterial created successfully' };
+   
   } catch (error) {
     console.error('Error in addCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to create CourseStudyMaterial' };
+   
   }
 };
 
