@@ -6,7 +6,7 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 
 export const getAllBatchesByBranch = async (data) => {
   try {
-    const response = await client.batch.getAll(data)
+    const response = await client.branch.getAll(data)
     console.log(response);
     // Check if the response status is successful
     if (response.status) {
@@ -25,17 +25,12 @@ export const getAllBatchesByBranch = async (data) => {
 };
 export const getAllBatches = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/get-all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.batch.getAll(data)
     console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
-      return { success: true, data: response.data.data };
+      return { success: true, data: response.
+        data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch batches. Status: ${response.status}`);
@@ -53,7 +48,7 @@ export const getBatchesByCourse = async (data) => {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/get-batch-by-course-id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -102,7 +97,7 @@ export const getAllActiveBatchesByCourse = async (data) => {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-course-id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -143,7 +138,7 @@ export const deleteBatch = async (data) => {
     const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -164,7 +159,7 @@ export const updateBatch = async (data) => {
     const response = await axios.post(`${BATCH_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
@@ -185,7 +180,7 @@ export const updateBatchStatus = async (data) => {
     const response = await axios.post(`${BATCH_API_ENDPOINT}/status-change`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 

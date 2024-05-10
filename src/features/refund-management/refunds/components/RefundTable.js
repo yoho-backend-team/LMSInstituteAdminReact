@@ -254,7 +254,7 @@ const RefundTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={studentFeeRefunds?.data}
+                rows={studentFeeRefunds?studentFeeRefunds:[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
