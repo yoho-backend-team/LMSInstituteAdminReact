@@ -132,6 +132,7 @@ const RefundAddDrawer = (props) => {
         };
 
         const result = await addStudentFeeRefund(InputData);
+        console.log(result.data)
 
         if (result.success) {
           toast.success(result.message);
@@ -212,13 +213,13 @@ const RefundAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(option) => option?.batch_name}
+                    getOptionLabel={(batch) => batch?.batch_name}
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
                       getStudentsByBatch(newValue?.batch_id);
                     }}
-                    value={field.value}
+                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -243,7 +244,7 @@ const RefundAddDrawer = (props) => {
                     select
                     fullWidth
                     label="Student"
-                    value={value}
+                    value={students}
                     onChange={(e) => {
                       setValue('student', e.target.value);
                       getStudentByStudentFee(e.target.value);
@@ -252,7 +253,7 @@ const RefundAddDrawer = (props) => {
                     helperText={errors.student?.message}
                   >
                     {students.map((student) => (
-                      <MenuItem key={student?.student_id} value={student?.student_id}>
+                      <MenuItem key={student?.uuid} value={student?.full_name}>
                         {`${student?.first_name} ${student?.last_name}`}
                       </MenuItem>
                     ))}

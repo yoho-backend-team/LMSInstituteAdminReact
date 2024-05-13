@@ -24,7 +24,8 @@ class Client {
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.course_module.get+data.id)
     }
     study_material = {
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.study_material.get,params)
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.study_material.get,params),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.study_material.get,data)
     }
     course ={
       create : (data,options) => {

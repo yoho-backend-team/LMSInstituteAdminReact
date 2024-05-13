@@ -1,14 +1,14 @@
 // studentFeeRefundservice.js
 import axios from 'axios';
 
-const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/refund-management/student-fee-refunds`;
+const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/refund/`;
 
 export const getAllStudentFeeRefunds = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}/read-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -57,7 +57,7 @@ export const addStudentFeeRefund = async (data) => {
     const response = await axios.post(`${STUDENT_FEE_REFUND_API_ENDPOINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
