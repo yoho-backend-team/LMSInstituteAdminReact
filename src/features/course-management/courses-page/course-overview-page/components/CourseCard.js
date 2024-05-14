@@ -124,7 +124,7 @@ const CourseCard = (props) => {
               }}
             >
               <Icon icon="tabler:augmented-reality" fontSize={20} />
-              <Typography sx={{ color: 'text.secondary' }}>{course?.course?.course_module?.length} Modules</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{course?.coursemodules?.length} Modules</Typography>
             </Grid>
             <Grid>
               <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>

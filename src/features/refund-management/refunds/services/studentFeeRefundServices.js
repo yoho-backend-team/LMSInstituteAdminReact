@@ -62,14 +62,10 @@ export const addStudentFeeRefund = async (data) => {
       }
     });
 
-    if (response.data.status) {
-      return { success: true, message: 'StudentFeeRefund created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StudentFeeRefund' };
-    }
+    
+    return { success: true, message: 'StudentFeeRefund created successfully' };
   } catch (error) {
-    console.error('Error in addStudentFeeRefund:', error);
-    throw error;
+    return { success: false, message: 'Failed to create StudentFeeRefund' };
   }
 };
 

@@ -40,7 +40,9 @@ class Client {
     course ={
       create : (data,options) => {
         return HttpClient.post(HTTP_END_POINTS.course.add+`${data.category}/courses/`,data,options)
-      }
+      },
+      update : (data) => HttpClient.update(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.course}`,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.id}`)
     }
     batch = {
       create : (data,options) => HttpClient.post(HTTP_END_POINTS.batch.create+`${data.branch_id}/courses/${data.course}/batches`,data),

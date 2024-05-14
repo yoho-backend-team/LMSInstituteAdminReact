@@ -124,15 +124,18 @@ const RefundAddDrawer = (props) => {
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
       try {
+        console.log(data,"data",selectedStudentFee)
+        
         const InputData = {
           student: data.student,
+          institute_id: useInstitute().getInstituteId(),
           // course_id: data.course,
-          batch_name: data.batch.batch_name,
-          course_name: data.batch.course.course_name,
+          batch_name: data.batch._id,
+          course_name: data.batch.course.uuid,
           amount: data.amount,
           institute_id : useInstitute().getInstituteId(),
-          branch_name : data.batch.course.course_name,
-          studentfees: selectedStudentFee.studentfee_id,
+          branch_name : data.batch.branch_id.uuid,
+          studentfees: selectedStudentFee._id,
           // branch_id: selectedBranchId,
           payment_date: new Date()
         };

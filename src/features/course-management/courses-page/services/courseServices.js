@@ -140,41 +140,22 @@ export const getStudentByCourse = async (data) => {
 };
 export const deleteCourse = async (data) => {
   try {
-    const response = await axios.delete(`${COURSE_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.course.delete(data)
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Course deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Course' };
-    }
+    return { success: true, message: 'Course deleted successfully' }; 
   } catch (error) {
-    console.error('Error in deleteCourse:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete Course' };
   }
 };
 export const updateCourse = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.course.update(data)
 
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Course updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Course' };
-    }
+   
+    return { success: true, message: 'Course updated successfully' };
   } catch (error) {
     console.error('Error in updateCourse:', error);
-    throw error;
+    return { success: false, message: 'Failed to update Course' };
   }
 };

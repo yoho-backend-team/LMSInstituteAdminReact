@@ -83,14 +83,14 @@ const CourseViewPage = () => {
     setEditModalOpen(true);
   };
 
-  const handleDelete = useCallback((itemId) => {
-    setSelectedCourseDeleteId(itemId);
+  const handleDelete = useCallback((course) => {
+    setSelectedCourseDeleteId(course);
     setCourseDeleteModelOpen(true);
     setVideoUrl(null);
   }, []);
 
   const handleCourseDelete = async () => {
-    const data = { id: selectedCourseDeleteId };
+    const data = { id: course.uuid,category:course.category.uuid };
     const result = await deleteCourse(data);
     if (result.success) {
       toast.success(result.message);
@@ -109,7 +109,7 @@ const CourseViewPage = () => {
         <AccordionDetails sx={{ textAlign: 'justify' }}>{item.description}</AccordionDetails>
         <AccordionActions>
           <Button
-            onClick={() => setVideoUrl(item?.video_url)}
+            onClick={() => setVideoUrl(item?.video)}
             color="primary"
             variant="contained"
             fullWidth
@@ -174,7 +174,7 @@ const CourseViewPage = () => {
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton onClick={() => handleDelete(course?.uuid)} color="secondary">
+              <IconButton onClick={() => handleDelete(course)} color="secondary">
                 <Icon icon="mdi:delete-outline" />
               </IconButton>
             </Box>
@@ -225,7 +225,7 @@ const CourseViewPage = () => {
             </TabPanel> */}
 
             <TabPanel value="2">
-              <Notes notes={course?.course_notes} />
+              <Notes notes={course?.notes} />
             </TabPanel>
           </TabContext>
         </Card>

@@ -15,6 +15,9 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateCourse } from '../../services/courseServices';
+import client from 'api/client';
+import { imagePlaceholder } from 'utils/placeholders';
+import { getImageUrl } from 'utils/imageUtils';
 
 const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRefetch }) => {
   const [activeCategories, setActiveCategories] = useState([]);
@@ -53,7 +56,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
     learning_format: '',
     course_category: ''
   };
-
+  console.log(course,"course")
   const {
     handleSubmit,
     control,
@@ -68,13 +71,13 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (course) {
-      setValue('course_duration', course?.institute_course_branch?.course_duration || '');
-      setValue('course_name', course?.institute_course_branch?.course_name || '');
-      setValue('course_price', course?.institute_course_branch?.course_price || '');
-      setValue('description', course?.institute_course_branch?.description || '');
-      setValue('course_overview', course?.institute_course_branch?.course_overview || '');
-      setValue('learning_format', course?.institute_course_branch?.learning_format || '');
-      setValue('course_category', course?.institute_category_id || '');
+      setValue('course_duration', course?.duration || '');
+      setValue('course_name', course?.course_name || '');
+      setValue('course_price', course?.price || '');
+      setValue('description', course?.description || '');
+      setValue('course_overview', course?.overview || '');
+      setValue('learning_format', course?.class_type[0] || '');
+      setValue('course_category', course?.category?.uuid || '');
     }
   }, [course, setValue]);
 
@@ -88,17 +91,14 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
   const [selectedTemplate, setSelectedTemplate] = useState('');
   console.log(selectedTemplate);
 
-  const handleInputImageChange = (file) => {
+  const handleInputImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
+    const data = new FormData()
+    data.append("file",files[0])
+    const uploadFile = await client.file.upload(data)
+    setSelectedImage(uploadFile?.data?.file)
+    setImgSrc(uploadFile?.data?.file)
   };
 
   const handleInputTemplateChange = (file) => {
@@ -131,19 +131,20 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
   // Handle form submission
   const onSubmit = useCallback(
     async (data) => {
-      const formData = new FormData();
-      formData.append('course_name', data.course_name);
-      formData.append('course_duration', data.course_duration);
-      formData.append('course_price', data.course_price);
-      formData.append('course_category', data.course_category);
-      formData.append('learning_format', data.learning_format);
-      formData.append('course_overview', data.course_overview);
-      formData.append('description', data.description);
-      formData.append('course_id', course.institute_course_branch.course_id);
-      formData.append('branch_id', selectedBranchId);
-
+     
+      const course_data = {
+        course_name : data.course_name,
+        duration : data.course_duration,
+        price : data.course_price,
+        category : data.course_category,
+        class_type : data.learning_format,
+        overview : data.overview,
+        description : data.description,
+        course : course.uuid,
+        image : selectedImage ? imgSrc : course?.image
+      }
       try {
-        const result = await updateCourse(formData);
+        const result = await updateCourse(course_data);
 
         if (result.success) {
           setRefetch((state) => !state);
@@ -286,7 +287,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                       value={value}
                     >
                       {activeCategories?.map((item, index) => (
-                        <MenuItem key={index} value={item.category_id}>
+                        <MenuItem key={index} value={item.uuid}>
                           {item.category_name}
                         </MenuItem>
                       ))}
@@ -361,15 +362,15 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                     {!selectedImage && (
                       <ImgStyled
                         src={
-                          course?.institute_course_branch?.logo
-                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.logo}`
-                            : imgSrc
+                          course?.image
+                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/${course?.image}`
+                            : imagePlaceholder
                         }
                         alt="Profile Pic"
                       />
                     )}
 
-                    {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                    {selectedImage && <ImgStyled src={ getImageUrl(imgSrc)} alt="Profile Pic" />}
                     <div>
                       <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                         update New logo
