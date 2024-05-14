@@ -7,6 +7,7 @@ import ViewBatchTable from 'features/batch-management/view-batch/components/View
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
+import { useInstitute } from 'utils/get-institute-details';
 
 
 
@@ -26,6 +27,7 @@ const ViewBatch = () => {
   const location = useLocation();
   const batchId = location.state.id;
   const [batchData, setBatchData] = useState([]);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useTimeout(() => {
     setLoading(false);
@@ -33,7 +35,9 @@ const ViewBatch = () => {
 
   useEffect(() => {
     const data = {
-      batch_id: batchId
+      batch_id: batchId,
+      branchId: selectedBranchId,
+      instituteId: useInstitute().getInstituteId()    
     };
     getBatchData(data);
   }, [dispatch, batchId]);

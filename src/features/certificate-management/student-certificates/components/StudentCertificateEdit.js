@@ -32,7 +32,7 @@ const Header = styled(Box)(({ theme }) => ({
 
 const schema = yup.object().shape({
   description: yup.string().required(),
-  name: yup
+  certificate_name: yup
     .string()
     .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
     .required()
@@ -40,7 +40,7 @@ const schema = yup.object().shape({
 
 const defaultValues = {
   description: '',
-  name: ''
+  certificate_name: ''
 };
 
 const StudentCertificateEdit = (props) => {
@@ -75,14 +75,20 @@ const StudentCertificateEdit = (props) => {
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    bodyFormData.append('name', data.name);
+    bodyFormData.append('certificate_name', data.certificate_name);
     bodyFormData.append('description', data.description);
     bodyFormData.append('id', props.initialValues.id);
     bodyFormData.append('certificate_file', setSelectedFile);
 
+     if (props.certificateid) {
+      bodyFormData.append('certificateid', props.certificateid);
+    }
+
+
     console.log(bodyFormData);
 
-    const result = await updateStudentCertificate(bodyFormData);
+   const result = await updateStudentCertificate(props.certificateid, bodyFormData);
+
 
     if (result.success) {
       toast.success(result.message);
@@ -170,7 +176,7 @@ const StudentCertificateEdit = (props) => {
           </Grid>
 
           <Controller
-            name="name"
+            name="certificate_name"
             control={control}
             rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
@@ -181,8 +187,8 @@ const StudentCertificateEdit = (props) => {
                 label="Title"
                 onChange={onChange}
                 placeholder="John Doe"
-                error={Boolean(errors.name)}
-                {...(errors.name && { helperText: errors.name.message })}
+                error={Boolean(errors.certificate_name)}
+                {...(errors.certificate_name && { helperText: errors.certificate_name.message })}
               />
             )}
           />
