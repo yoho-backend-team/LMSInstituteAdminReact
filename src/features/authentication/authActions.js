@@ -91,9 +91,9 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
       localStorage.setItem('userData', JSON.stringify(response.data.user));
       localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
       localStorage.setItem('branches', JSON.stringify(response.data.branches));
-      localStorage.setItem("institute",JSON.stringify(response.data.institue))
+      localStorage.setItem("institute",JSON.stringify(response.data.institute))
       localStorage.removeItem("otp")
-      // Dispatch success action
+    
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -101,7 +101,7 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
           userData: response.data.user,
           permissions: response.data.permissions,
           branches: response.data.branches,
-          institute: response.data.institue,
+          institute: response.data.institute,
           selectedBranchId: response.data.branches[0]?.uuid
         }
       });

@@ -67,7 +67,7 @@ const FaqAccordian = ({ faqCategories ,faqs}) => {
     console.log(newValue);
     setActiveTab(newValue);
   };
-  console.log(faqs,"faqs",activeTab,typeof(activeTab),activeTab===faqs[1].category_id)
+
   const renderTabContent = () => {
     return faqCategories?.map((tab) => {
       return (

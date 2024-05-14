@@ -6,7 +6,7 @@ export const getAllCourseNotes = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllCourseNotes(data); // Implement this function in your services
-    dispatch(setCourseNotes(response?.data?.data));
+    dispatch(setCourseNotes(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

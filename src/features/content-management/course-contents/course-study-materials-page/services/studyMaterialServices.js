@@ -57,63 +57,36 @@ export const addCourseStudyMaterial = async (data) => {
 
 export const deleteCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.delete(`${COURSE_STUDY_MATERIALS_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.study_material.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'CourseStudyMaterial deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete CourseStudyMaterial' };
-    }
+    return { success: true, message: 'CourseStudyMaterial deleted successfully' };
   } catch (error) {
     console.error('Error in deleteCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete CourseStudyMaterial' }; 
   }
 };
 
 export const updateCourseStudyMaterial = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/update`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.study_material.update(data)
 
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'CourseStudyMaterial updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseStudyMaterial' };
-    }
+   
+    return { success: true, message: 'CourseStudyMaterial updated successfully' }; 
   } catch (error) {
     console.error('Error in updateCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to update CourseStudyMaterial' };
   }
 };
+
 export const updateCourseStudyMaterialStatus = async (data) => {
   try {
-    const response = await axios.post(`${COURSE_STUDY_MATERIALS_END_POINT}/status`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.study_material.update_status(data)
     console.log('studymaterialresponse:', response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'CourseStudyMaterial status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseStudyMaterial status' };
-    }
+   
+    return { success: true, message: 'CourseStudyMaterial status updated successfully' };
   } catch (error) {
     console.error('Error in updateCourseStudyMaterial:', error);
-    throw error;
+    return { success: false, message: 'Failed to update CourseStudyMaterial status' };
   }
 };

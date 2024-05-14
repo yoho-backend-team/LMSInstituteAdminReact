@@ -20,7 +20,7 @@ const NotesHeader = (props) => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch: selectedBranchId
     };
     getCourses(data);
   }, [selectedBranchId]);
@@ -34,21 +34,22 @@ const NotesHeader = (props) => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch: selectedBranchId
     };
     dispatch(getAllCourseNotes(data));
   }, [dispatch, selectedBranchId]);
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const data = { is_active: e.target.value, branch: selectedBranchId };
     dispatch(getAllCourseNotes(data));
   };
 
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllCourseNotes({ search: searchInput, branch_id: selectedBranchId }));
+      e.preventDefault()
+      // dispatch(getAllCourseNotes({ search: searchInput, branch: selectedBranchId }));
       setSearchValue(searchInput);
     },
     [dispatch]
@@ -70,8 +71,8 @@ const NotesHeader = (props) => {
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
                       <MenuItem value="">Select Status</MenuItem>
-                      <MenuItem value="1">Active</MenuItem>
-                      <MenuItem value="0">Inactive</MenuItem>
+                      <MenuItem value="true">Active</MenuItem>
+                      <MenuItem value="false">Inactive</MenuItem>
                     </TextField>
                   </Grid>
 
@@ -81,8 +82,8 @@ const NotesHeader = (props) => {
                       onChange={(e, newValue) => {
                         console.log('selectedBranchid:', selectedBranchId);
                         const data = {
-                          course_id: newValue.course_id,
-                          branch_id: selectedBranchId
+                          course: newValue._id,
+                          branch: selectedBranchId
                         };
 
                         dispatch(getAllCourseNotes(data));
