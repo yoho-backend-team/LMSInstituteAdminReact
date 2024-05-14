@@ -6,22 +6,12 @@ const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/insti
 
 export const getAllStudentsByBatch = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_API_END_POINT}/get-by-batch-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.users.getStudentsWithBatch(data)
 
     console.log(response,"students");
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response?.data?.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Students. Status: ${response.status}`);
-    }
+  
+      return { success: true, data: response?.data };
+      
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudents:', error);

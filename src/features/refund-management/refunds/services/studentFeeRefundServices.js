@@ -54,7 +54,8 @@ export const searchStudentFeeRefunds = async (searchQuery) => {
 
 export const addStudentFeeRefund = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_FEE_REFUND_API_ENDPOINT}/create`, data, {
+    
+    const response = await axios.post(`${STUDENT_FEE_REFUND_API_ENDPOINT}create`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`

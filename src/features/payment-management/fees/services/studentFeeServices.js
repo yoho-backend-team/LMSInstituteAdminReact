@@ -1,14 +1,14 @@
 // studentFeeService.js
 import axios from 'axios';
 
-const STUDENT_FEE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/student-fees`;
+const STUDENT_FEE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/student-fee`;
 
 export const getAllStudentFees = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/read-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -30,27 +30,22 @@ export const getAllStudentFees = async (data) => {
 };
 export const getFeeByStudentId = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/read-by-student-id`, {
+    const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/${data.student_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
-      params: data
     });
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentFees. Status: ${response.status}`);
-    }
+    
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentFees:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch StudentFees. Status: ${response.status}`);
   }
 };
 
@@ -80,7 +75,7 @@ export const addStudentFee = async (data) => {
     const response = await axios.post(`${STUDENT_FEE_API_ENDPOINT}/create`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 

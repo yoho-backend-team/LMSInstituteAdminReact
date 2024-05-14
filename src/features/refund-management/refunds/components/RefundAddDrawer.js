@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addStudentFeeRefund } from '../services/studentFeeRefundServices';
 import { getAllStudentsByBatch } from 'features/student-management/students/services/studentService';
+import { useInstitute } from 'utils/get-institute-details';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -73,8 +74,9 @@ const RefundAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
-
+  console.log(activeBatches,"activeBathces")
   const getActiveBatchesByCourse = async (courseId) => {
+    console.log(courseId)
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
     if (result?.success) {
@@ -123,14 +125,18 @@ const RefundAddDrawer = (props) => {
     if (selectedStudentFee) {
       try {
         const InputData = {
-          student_id: data.student,
-          course_id: data.course,
-          batch_id: data.batch,
+          student: data.student,
+          // course_id: data.course,
+          batch_name: data.batch.batch_name,
+          course_name: data.batch.course.course_name,
           amount: data.amount,
-          institute_student_fee_id: selectedStudentFee.fee_id,
-          branch_id: selectedBranchId
+          institute_id : useInstitute().getInstituteId(),
+          branch_name : data.batch.course.course_name,
+          studentfees: selectedStudentFee.studentfee_id,
+          // branch_id: selectedBranchId,
+          payment_date: new Date()
         };
-
+        console.log(data,"data",InputData)
         const result = await addStudentFeeRefund(InputData);
         console.log(result.data)
 
@@ -191,10 +197,10 @@ const RefundAddDrawer = (props) => {
                     options={activeCourse}
                     getOptionLabel={(course) => course.course_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.course_id);
-                      getActiveBatchesByCourse(newValue?.course_id);
+                      onChange(newValue?.uuid);
+                      getActiveBatchesByCourse(newValue?.uuid);
                     }}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    value={activeCourse.find((course) => course.uuid === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                     )}
@@ -217,9 +223,9 @@ const RefundAddDrawer = (props) => {
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
-                      getStudentsByBatch(newValue?.batch_id);
+                      getStudentsByBatch(newValue?.uuid);
                     }}
-                    value={activeBatches.find((batch) => batch.batch_id === value) || null}
+                    // value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -244,7 +250,7 @@ const RefundAddDrawer = (props) => {
                     select
                     fullWidth
                     label="Student"
-                    value={students}
+                    value={value}
                     onChange={(e) => {
                       setValue('student', e.target.value);
                       getStudentByStudentFee(e.target.value);
@@ -253,8 +259,8 @@ const RefundAddDrawer = (props) => {
                     helperText={errors.student?.message}
                   >
                     {students.map((student) => (
-                      <MenuItem key={student?.uuid} value={student?.full_name}>
-                        {`${student?.first_name} ${student?.last_name}`}
+                      <MenuItem key={student?.student} value={student?._id}>
+                        {`${student?.first_name&&student?.last_name?student?.first_name+student?.last_name:student.full_name}`}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -272,12 +278,12 @@ const RefundAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeStudentsFee}
-                    getOptionLabel={(studentFee) => `${studentFee.fee_id}`}
+                    getOptionLabel={(studentFee) => `${studentFee.studentfee_id}`}
                     onChange={(event, newValue) => {
                       setSelectedStudentFee(newValue);
-                      field.onChange(newValue?.fee_id);
+                      field.onChange(newValue.studentfee_id);
                     }}
-                    value={selectedStudentFee}
+                    value={selectedStudentFee?._id}
                     renderInput={(params) => (
                       <TextField
                         {...params}

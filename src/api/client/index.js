@@ -34,7 +34,7 @@ class Client {
     }
     batch = {
       create : (data,options) => HttpClient.post(HTTP_END_POINTS.batch.create+`${data.branch_id}/courses/${data.course}/batches`,data),
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll+params.branch_id+"/batches/all"),
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll+params.branch_id+"/batches/all",params),
       getWithId : (params) => HttpClient.get(HTTP_END_POINTS.batch.getWithId+`${params.batch_id}`)
     }
     users = {
@@ -44,6 +44,7 @@ class Client {
       studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+params.branch_id+"/students"),
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithcourse+`${data.course_id}/students`),
+      getStudentsWithBatch : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithBatch+data.branch_id+"/batches/batch-students",data),
       logout : (data) => HttpClient.post(HTTP_END_POINTS.users.logout,data)
     }
     nonTeachingStaff = {
