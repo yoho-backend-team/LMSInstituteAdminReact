@@ -154,8 +154,8 @@ export const updateFaq = async (data) => {
 
 export const updateStatusFaq = async (data) => {
   try {
-    const {id} = data
-    const response = await axios.post(`${FAQ_API_END_POINT}/updatestatus/${id}`, data, {
+    const {uuid} = data
+    const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
