@@ -25,7 +25,17 @@ class Client {
     }
     study_material = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.study_material.get,params),
-      create : (data) => HttpClient.post(HTTP_END_POINTS.study_material.get,data)
+      create : (data) => HttpClient.post(HTTP_END_POINTS.study_material.get,data),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.study_material.get+data.uuid,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.study_material.get+data.id),
+      update_status : (data) => HttpClient.update(HTTP_END_POINTS.study_material.update_status+data.id,data)
+    }
+    notes = {
+      get : (params) => HttpClient.get(HTTP_END_POINTS.notes.index,params),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.notes.index,data),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.notes.index+`/update/${data.uuidid}`),
+      update_status : (data) => HttpClient.update(HTTP_END_POINTS.notes.update_status+data.id,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.notes.index+"/"+data.id)
     }
     course ={
       create : (data,options) => {
@@ -45,6 +55,7 @@ class Client {
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithcourse+`${data.course_id}/students`),
       getStudentsWithBatch : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithBatch+data.branch_id+"/batches/batch-students",data),
+      getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithCourse+`${data.branch_id}/${data.course_id}/students`),
       logout : (data) => HttpClient.post(HTTP_END_POINTS.users.logout,data)
     }
     nonTeachingStaff = {

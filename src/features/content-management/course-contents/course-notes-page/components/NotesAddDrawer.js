@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseNote } from '../services/noteServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 const CourseNotesAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
@@ -85,15 +86,18 @@ const CourseNotesAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    var bodyFormData = new FormData();
-    bodyFormData.append('branch_id', data.branch?.branch_id);
-    bodyFormData.append('course_id', data.course?.course_id);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('document', notesPdf);
-    console.log(bodyFormData);
+    const note_data = {
+      branch : data.branch.uuid,
+      course : data.course._id,
+      institute : useInstitute().getInstituteId(),
+      title  : data.title,
+      description : data.description,
+      file : data.pdf_file
+    }
+    
+    // console.log(bodyFormData);
 
-    const result = await addCourseNote(bodyFormData);
+    const result = await addCourseNote(note_data);
 
     if (result.success) {
       setRefetch((state) => !state);
@@ -113,7 +117,7 @@ const CourseNotesAddDrawer = (props) => {
 
   const handleSetPdf = (data) => {
     setnotesPdf(data);
-    setValue('pdf_file', data);
+    // setValue('pdf_file', data);
   };
 
   const handleClose = () => {
@@ -152,7 +156,7 @@ const CourseNotesAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
           </Grid>
 
@@ -170,7 +174,7 @@ const CourseNotesAddDrawer = (props) => {
                     getActiveCoursesByBranch(newValue);
                   }}
                   options={branches ?? []}
-                  getOptionLabel={(option) => option.branch_name}
+                  getOptionLabel={(option) => option.branch_identity}
                   renderInput={(params) => (
                     <TextField
                       sx={{ mb: 2 }}

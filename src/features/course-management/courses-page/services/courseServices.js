@@ -123,6 +123,7 @@ export const addCourse = async (data) => {
 };
 export const getStudentByCourse = async (data) => {
   try {
+    console.log(data,"data")
     const response = await client.users.getStudentsWithCourse(data)
 
     console.log(response);

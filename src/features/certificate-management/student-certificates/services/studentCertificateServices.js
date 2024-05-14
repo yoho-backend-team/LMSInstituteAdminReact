@@ -1,11 +1,11 @@
 // studentCertificateService.js
 import axios from 'axios';
 
-const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/certificate-management/student-certificates`;
+const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}	/api/certificate`;
 
 export const getAllStudentCertificates = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/read-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/${data?.InstituteId}/${data?.branchid}?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -74,12 +74,12 @@ export const addStudentCertificate = async (data) => {
 
 export const deleteStudentCertificate = async (data) => {
   try {
-    const response = await axios.delete(`${STUDENT_CERTIFICATE_API_ENDPOINT}/delete`, {
+    const response = await axios.delete(`${STUDENT_CERTIFICATE_API_ENDPOINT}/delete/${data?.id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { id: data }
+      params: { data }
     });
 
     if (response.data.status) {

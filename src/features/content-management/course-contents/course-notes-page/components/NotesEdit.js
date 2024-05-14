@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
 import { updateCourseNote } from '../services/noteServices';
+import { getImageUrl } from 'utils/imageUtils';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -66,14 +67,20 @@ const NotesEdit = (props) => {
   }, [notes, setValue]);
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('id', notes.id);
-    bodyFormData.append('document', selectedFile);
-    console.log(bodyFormData);
-
-    const result = await updateCourseNote(bodyFormData);
+    const note_data = {
+       title : data.title,
+       description : data.description,
+       uuid : notes.uuid,
+       file : selectedFile ? data.pdf_file : notes.file
+    }
+    if(selectedFile){
+      console.log("selected itle is true")
+    }else{
+      console.log("false")
+    }
+    console.log(note_data,data);
+    
+    const result = await updateCourseNote(note_data);
 
     if (result.success) {
       toast.success(result.message);
@@ -155,8 +162,8 @@ const NotesEdit = (props) => {
           <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                {!selectedFile && <PDFViewer url={savedPdfUrl} />}
-                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {!selectedFile && <PDFViewer url={getImageUrl(notes?.file)} setValue={setValue} />}
+                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} setValue={setValue} />}
 
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
                   Upload New File

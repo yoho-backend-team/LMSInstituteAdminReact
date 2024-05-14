@@ -13,6 +13,7 @@ import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
 import { updateCourseStudyMaterial } from '../services/studyMaterialServices';
 import { getImageUrl } from 'utils/imageUtils';
+import client from 'api/client';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -72,22 +73,28 @@ const StudyMaterialEdit = (props) => {
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
   const [inputValue, setInputValue] = useState('');
   console.log(StudyMaterials,"studyMaterials")
-  const handleFileUpload = useCallback((file) => {
+  const handleFileUpload = useCallback(async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
+  
+    
     if (files && files.length !== 0) {
       const uploadedFile = files[0];
       const mimeType = uploadedFile.type;
 
       // Check if the file is a PDF
       if (mimeType === 'application/pdf') {
-        reader.onload = () => {
-          setSavedPdfUrl(reader.result);
-          setSelectedFile(uploadedFile);
-          setInputValue(uploadedFile);
-        };
+        const formData = new FormData()
+        formData.append("file",files[0])
+        const file = await client.file.upload(formData)
+        toast.success(file.message)
+        setSelectedFile(file.data.file)
+        // reader.onload = () => {
+        //   setSavedPdfUrl(reader.result);
+        //   setInputValue(uploadedFile);
+        // };
 
-        reader.readAsDataURL(uploadedFile);
+        // reader.readAsDataURL(uploadedFile);
       } else {
         toast.error('Only PDF files are allowed');
       }
@@ -95,14 +102,16 @@ const StudyMaterialEdit = (props) => {
   }, []);
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('description', data.description);
-    bodyFormData.append('id', props.initialValues.id);
-    bodyFormData.append('document', setSelectedFile);
-
-    const result = await updateCourseStudyMaterial(bodyFormData);
-
+    const Update_data = {
+      title : data.title,
+      description : data.description,
+      uuid : props.initialValues.uuid,
+      file : selectedFile ? selectedFile : props.initialValues.file
+    }
+     console.log(Update_data,data,selectedFile)
+     
+    const result = await updateCourseStudyMaterial(Update_data);
+   
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);
@@ -157,7 +166,7 @@ const StudyMaterialEdit = (props) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
                 {!selectedFile && <PDFViewer url={StudyMaterials?.file?getImageUrl(StudyMaterials.file):savedPdfUrl} />}
-                {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
+                {selectedFile && <PDFViewer url={getImageUrl(selectedFile)} />}
 
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
                   Upload New File

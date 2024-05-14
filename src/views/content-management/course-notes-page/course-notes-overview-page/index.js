@@ -39,8 +39,8 @@ const Notes = () => {
   console.log(selectedDeleteId);
 
   const userStatusObj = {
-    1: 'success',
-    0: 'error'
+    true: 'success',
+    false: 'error'
   };
 
   const handleStatusValue = (event, users) => {
@@ -51,8 +51,8 @@ const Notes = () => {
   const handleStatusChangeApi = async () => {
     console.log('entered', statusValue);
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
     const response = await updateCourseNotesStatus(data);
     if (response.success) {
@@ -74,7 +74,7 @@ const Notes = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedRow.id };
+    const data = { id: selectedRow.uuid };
     const result = await deleteCourseNote(data);
     if (result.success) {
       toast.success(result.message);
@@ -91,7 +91,7 @@ const Notes = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseNotes({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllCourseNotes({ branch: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -219,7 +219,7 @@ const Notes = () => {
                 textTransform: 'capitalize'
               }}
             >
-              {row?.institute_branch_courses?.course_name}
+              {row?.course?.course_name}
             </Typography>
           </Box>
         );
@@ -246,13 +246,13 @@ const Notes = () => {
               onChange={(e) => handleStatusValue(e, row)}
               SelectProps={{
                 sx: {
-                  borderColor: row.is_active === '1' ? 'success' : 'error',
+                  borderColor: row.is_active? 'success' : 'error',
                   color: userStatusObj[row?.is_active]
                 }
               }}
             >
-              <MenuItem value={1}>Active</MenuItem>
-              <MenuItem value={0}>Inactive</MenuItem>
+              <MenuItem value={"true"}>Active</MenuItem>
+              <MenuItem value={"false"}>Inactive</MenuItem>
             </TextField>
           </div>
         );
@@ -284,7 +284,7 @@ const Notes = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
-                rows={Notes?.data}
+                rows={Notes}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
@@ -299,7 +299,7 @@ const Notes = () => {
                     count={Notes?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllCourseNotes({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllCourseNotes({ branch: selectedBranchId, page: page }));
                     }}
                   />
                 </Grid>

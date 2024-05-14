@@ -45,7 +45,7 @@ const StudyMaterials = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   useEffect(() => {
-    dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllCourseStudyMaterials({ branch: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -67,7 +67,7 @@ const StudyMaterials = () => {
   }, []);
 
   const handleContentDelete = async () => {
-    const data = { id: selectedRow.id };
+    const data = { id: selectedRow.uuid };
     const result = await deleteCourseStudyMaterial(data);
     if (result.success) {
       toast.success(result.message);
@@ -78,8 +78,8 @@ const StudyMaterials = () => {
   };
 
   const userStatusObj = {
-    1: 'success',
-    0: 'error'
+    true: 'success',
+    false: 'error'
   };
 
   const handleStatusValue = (event, users) => {
@@ -89,8 +89,8 @@ const StudyMaterials = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      id: statusValue?.uuid
     };
     const response = await updateCourseStudyMaterialStatus(data);
     if (response.success) {
@@ -297,7 +297,7 @@ const StudyMaterials = () => {
                     count={StudyMaterials?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllCourseStudyMaterials({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllCourseStudyMaterials({ branch: selectedBranchId, page: page }));
                     }}
                   />
                 </Grid>

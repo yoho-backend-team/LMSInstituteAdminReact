@@ -35,13 +35,14 @@ const StudyMaterialHeader = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const data = { is_active: e.target.value, branch: selectedBranchId };
     dispatch(getAllCourseStudyMaterials(data));
   };
 
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
+      e.preventDefault()
       dispatch(getAllCourseStudyMaterials({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
     },
@@ -65,8 +66,8 @@ const StudyMaterialHeader = (props) => {
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
                       <MenuItem value="">Select Status</MenuItem>
-                      <MenuItem value="1">Active</MenuItem>
-                      <MenuItem value="0">Inactive</MenuItem>
+                      <MenuItem value="true">Active</MenuItem>
+                      <MenuItem value="false">Inactive</MenuItem>
                     </TextField>
                   </Grid>
 
@@ -76,8 +77,8 @@ const StudyMaterialHeader = (props) => {
                       // value={value}
                       onChange={(e, newValue) => {
                         const data = {
-                          course_id: newValue.course_id,
-                          branch_id: selectedBranchId
+                          course: newValue._id,
+                          branch: selectedBranchId
                         };
                         dispatch(getAllCourseStudyMaterials(data));
                       }}

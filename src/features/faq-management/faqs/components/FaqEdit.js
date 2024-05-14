@@ -67,7 +67,7 @@ const FaqEdit = (props) => {
 
   const onSubmit = async (data) => {
     const inputData = { title: data.title, description: data.description, uuid: props.initialValues.uuid };
-    const result = await updateFaq(inputData);
+     const result = await updateFaq(inputData);
     if (result.success) {
       toast.success(result.message);
       toggle();

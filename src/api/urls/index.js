@@ -14,9 +14,6 @@ const getSelectedBranchId = () => {
     const branch = localStorage.getItem("selectedBranchId")
     console.log(branch,"branch")
     return branch
-    
-    }else{
-        return undefined
     }
 }
 
@@ -49,7 +46,12 @@ const generateEndpoints = () => {
             update : '/api/institutes/course-module/update/'
         },
         study_material : {
-            get : "api/institutes/study-material/"
+            get : "api/institutes/study-material/",
+            update_status : "/api/institutes/study-material/update-status/"
+        },
+        notes : {
+         index : '/api/institutes/course/note',
+         update_status : '/api/institutes/course/note/update-status/'
         },
         batch : {
             create : `/api/institutes/${instituteId}/branches/`,
@@ -67,7 +69,8 @@ const generateEndpoints = () => {
         student : {
             get : `/api/institutes/${instituteId}/branches/`,
             getWithId : `/api/institutes/${instituteId}/students/`,
-            getWithBatch : `/api/institutes/${instituteId}/branches/`
+            getWithBatch : `/api/institutes/${instituteId}/branches/`,
+            getWithCourse: `/api/institutes/${instituteId}/branches/`
         },
         staff : {
             get : `/api/institutes/${instituteId}/Non-teaching-staff/`,

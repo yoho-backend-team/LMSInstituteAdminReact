@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import { useInstitute } from 'utils/get-institute-details';
 
 const roleColors = {
   admin: 'error',
@@ -41,7 +42,7 @@ const StudentIdCard = () => {
   const [studentIdRefetch, setStudentIdRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentIdCards({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllStudentIdCards({ branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' }));
   }, [dispatch, selectedBranchId, studentIdRefetch]);
 
   const [flipped, setFlipped] = useState(false);
@@ -96,6 +97,7 @@ const StudentIdCard = () => {
     dispatch(getAllStudentIdCards(data));
   };
 
+
   return (
     <>
       <Grid container>
@@ -113,7 +115,7 @@ const StudentIdCard = () => {
             <IdCardSkeleton />
           ) : (
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-              {StudentIdCards?.data?.map((item, index) => (
+              {StudentIdCards?.map((item, index) => (
                 <Grid
                   key={index}
                   item
@@ -155,27 +157,27 @@ const StudentIdCard = () => {
                   >
                     <Card className="front" sx={{ width: '100%', minHeight: 435 }}>
                       <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        {item.student.image ? (
+                        {item.image ? (
                           <CustomAvatar
-                            src={item.student.image}
-                            alt={item.student.first_name}
+                            src={item.image}
+                            alt={item.name}
                             variant="light"
                             sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
                           />
                         ) : (
                           <CustomAvatar skin="light" color={statusColors.active} sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}>
-                            {getInitials(item.student.first_name)}
+                            {getInitials(item.name)}
                           </CustomAvatar>
                         )}
                         <Typography variant="h4" sx={{ mb: 2 }}>
-                          {item.student.first_name} {item.student.last_name}
+                          {item.name} 
                         </Typography>
-                        <CustomChip rounded skin="light" size="small" label={`${item.student.email}`} color={statusColors.active} />
+                        <CustomChip rounded skin="light" size="small" label={`${item.email}`} color={statusColors.active} />
                         <Box mt={3}>
                           <img
                             style={{ borderRadius: '10px' }}
                             height={100}
-                            src="https://static.vecteezy.com/system/resources/previews/000/406/024/original/vector-qr-code-illustration.jpg"
+                            src={item.qr_code}
                             alt="qrCode"
                           />
                         </Box>
@@ -190,24 +192,24 @@ const StudentIdCard = () => {
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                             <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
                             <Typography sx={{ color: 'text.secondary' }}>
-                              {item.student.first_name} {item.student.last_name}
+                              {item.name} 
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                             <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>{item.student.email}</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.email}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                             <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                            <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>student</Typography>
+                            <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{item.role.identity}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                             <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}> ID:</Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>{item.student.student_id}</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.roll_no}</Typography>
                           </Box>
                           <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
                             <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                            <Typography sx={{ color: 'text.secondary' }}>{item.student.phone_no}</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.contact}</Typography>
                           </Box>
 
                           <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -222,8 +224,7 @@ const StudentIdCard = () => {
                                 textOverflow: 'ellipsis'
                               }}
                             >
-                              {item.student.address_line_1}, {item.student.address_line_2}, {item.student.city}, {item.student.state},{' '}
-                              {item.student.pincode},
+                              {item.address}
                             </Typography>
                           </Box>
                         </Box>
@@ -236,8 +237,8 @@ const StudentIdCard = () => {
                             label="Status"
                             SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                           >
-                            <MenuItem value="1">Active</MenuItem>
-                            <MenuItem value="0">Inactive</MenuItem>
+                            <MenuItem value="true">Active</MenuItem>
+                            <MenuItem value="false">Inactive</MenuItem>
                           </TextField>
                         </Box>
                       </CardContent>

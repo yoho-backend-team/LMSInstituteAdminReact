@@ -35,17 +35,17 @@ const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box>
               <Avatar
-                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.students?.image}`}
+                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.student?.image}`}
                 sx={{ mr: 2.5, height: 48, width: 48 }}
               />
             </Box>
             <Box>
               <Typography variant="h3">
-                {certificate?.students?.first_name}
-                {certificate?.students?.last_name}
+                {certificate?.student?.first_name}
+                {certificate?.student?.last_name}
               </Typography>
               <Typography variant="h5" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                {certificate?.students?.email}
+                {certificate?.student?.email}
               </Typography>
             </Box>
           </Box>
