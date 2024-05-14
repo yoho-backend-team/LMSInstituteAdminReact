@@ -77,7 +77,7 @@ export const getCourseDetails = async (data) => {
 export const getAllCourses = async (data) => {
   try {
     console.log(process.env.REACT_APP_PUBLIC_API_URL)
-    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/ca7cb92c-7a64-4178-9694-27a3150c12ba/courses`, {
+    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/ca7cb92c-7a64-4178-9694-27a3150c12ba/courses`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer Token ${localStorage.getItem('token')}`

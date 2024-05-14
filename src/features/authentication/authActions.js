@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import client from 'api/client';
 import { HTTP_END_POINTS } from 'api/urls';
 
-const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
+const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
 // import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
 // import { requestForToken } from '../../firebase';

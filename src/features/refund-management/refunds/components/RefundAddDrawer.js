@@ -130,9 +130,9 @@ const RefundAddDrawer = (props) => {
           batch_name: data.batch.batch_name,
           course_name: data.batch.course.course_name,
           amount: data.amount,
-          institute_id : useInstitute().getInstituteId(),
-          branch_name : data.batch.course.course_name,
-          studentfees: selectedStudentFee.studentfee_id,
+          institute_id : data.batch.course.institute_id,
+          branch_name : data.batch.course.branch_id,
+          studentfees: selectedStudentFee._id,
           // branch_id: selectedBranchId,
           payment_date: new Date()
         };
@@ -197,10 +197,10 @@ const RefundAddDrawer = (props) => {
                     options={activeCourse}
                     getOptionLabel={(course) => course.course_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.uuid);
-                      getActiveBatchesByCourse(newValue?.uuid);
+                      onChange(newValue?._id);
+                      getActiveBatchesByCourse(newValue?._id);
                     }}
-                    value={activeCourse.find((course) => course.uuid === value) || null}
+                    value={activeCourse.find((course) => course._id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                     )}
@@ -223,7 +223,7 @@ const RefundAddDrawer = (props) => {
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
-                      getStudentsByBatch(newValue?.uuid);
+                      getStudentsByBatch(newValue?._id);
                     }}
                     // value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (
@@ -278,10 +278,10 @@ const RefundAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeStudentsFee}
-                    getOptionLabel={(studentFee) => `${studentFee.studentfee_id}`}
+                    getOptionLabel={(studentFee) => `${studentFee._id}`}
                     onChange={(event, newValue) => {
                       setSelectedStudentFee(newValue);
-                      field.onChange(newValue.studentfee_id);
+                      field.onChange(newValue._id);
                     }}
                     value={selectedStudentFee?._id}
                     renderInput={(params) => (
