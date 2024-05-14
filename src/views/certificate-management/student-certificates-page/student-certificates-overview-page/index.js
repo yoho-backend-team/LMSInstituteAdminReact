@@ -30,6 +30,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
+import { useInstitute } from 'utils/get-institute-details';
 
 const userStatusObj = {
   1: 'success',
@@ -47,11 +48,15 @@ const StudenrCertificate = () => {
   const [studentCertificateDeleteModelOpen, setStudentCertificateDeleteModelOpen] = useState(false);
   const [selectedStudentCertificateDeleteId, setSelectedStudentCertificateDeleteId] = useState(null);
 
+  const handleRowClick = useCallback((params) => {
+    setSelectedRow(params);
+  }, []);
+
   const renderClient = (row) => {
     if (row?.students?.image) {
       return (
         <CustomAvatar
-          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.students?.image}`}
+          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.student?.image}`}
           sx={{ mr: 2.5, width: 38, height: 38 }}
         />
       );
@@ -61,15 +66,13 @@ const StudenrCertificate = () => {
           skin="light"
           sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
         >
-          {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+          {getInitials(row?.name ? row?.name : 'name')}
         </CustomAvatar>
       );
     }
   };
 
-  const handleRowClick = (params) => {
-    setSelectedRow(params);
-  };
+ 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleStatusChangeApi = async () => {
@@ -112,7 +115,8 @@ const StudenrCertificate = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      branchid: selectedBranchId,
+      InstituteId: useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllStudentCertificates(data));
@@ -132,6 +136,8 @@ const StudenrCertificate = () => {
       toast.error(result.message);
     }
   };
+
+  console.log(studentCertificates,"srudent")
 
   const RowOptions = ({ row }) => {
     return (
@@ -210,10 +216,10 @@ const StudenrCertificate = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.students?.first_name}
+                {row?.student?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.students?.email}
+                {row?.student?.email}
               </Typography>
             </Box>
           </Box>
@@ -237,7 +243,7 @@ const StudenrCertificate = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
+                {row?.certificate_name}
               </Typography>
               <Typography noWrap sx={{ color: 'text.secondary', mt: 0.8, fontSize: '14px' }}>
                 {row?.description}
