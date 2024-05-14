@@ -26,6 +26,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { PDFViewer } from 'react-view-pdf';
 import * as yup from 'yup';
+import { imagePlaceholder } from 'utils/placeholders';
+import { getImageUrl } from 'utils/imageUtils';
 
 const AddCoursePage = () => {
   const navigate = useNavigate();
@@ -57,6 +59,7 @@ const AddCoursePage = () => {
       const data = new FormData()
       data.append("file",files[0])
      const response = await client.file.upload(data)
+     toast.success(response.message)
      setSelectedLogo(response.data.file)
     }
   };
@@ -499,7 +502,7 @@ const AddCoursePage = () => {
 
               <Grid item xs={12} sm={6}>
                 <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
-                  <ImgStyled src={imgSrcLogo} alt="Profile Pic" />
+                  <ImgStyled src={selectedLogo?getImageUrl(selectedLogo):imagePlaceholder} alt="Profile Pic" />
                 </Grid>
                 <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
                   <ButtonStyled component="label" variant="contained" htmlFor="logo-settings-upload-image">

@@ -32,7 +32,7 @@ const pages = {
           icon: icons.IconUsers,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('can_create_institute_group','Groups')
+          visible: hasPermission('can_create_institute_group','Groups',"create_permission")
         },
         {
           id: 'users',

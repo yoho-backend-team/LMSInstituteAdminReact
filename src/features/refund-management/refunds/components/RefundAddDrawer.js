@@ -140,6 +140,7 @@ const RefundAddDrawer = (props) => {
           payment_date: new Date()
         };
         console.log(data,"data",InputData)
+        console.log(InputData)
         const result = await addStudentFeeRefund(InputData);
         console.log(result.data)
 

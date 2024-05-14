@@ -30,7 +30,7 @@ const BranchesOverviewPage = () => {
         {branchLoading ? (
           <BranchMainSkeleton />
         ) : (
-          branches?.map((branch, index) => <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />)
+          branches?.data?.map((branch, index) => <BranchCard key={index} branch={branch} setRefetchBranch={setRefetchBranch} />)
         )}
 
         {/* Pagination */}

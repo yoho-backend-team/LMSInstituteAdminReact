@@ -13,21 +13,14 @@ export const getAllStudentFeeRefunds = async (data) => {
       params: data
     });
 
-    console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentFeeRefunds. Status: ${response.status}`);
-    }
+    return response;
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentFeeRefunds:', error);
-
+    throw new Error(`Failed to fetch StudentFeeRefunds. Status: ${error}`);
     // Throw the error again to propagate it to the calling function/component
-    throw error;
   }
 };
 

@@ -60,7 +60,7 @@ const defaultColumns = [
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
-      const { students } = row.student_fees[0];
+      const { students } = row?.student_fees[0];
       const studentName = `${students.first_name} ${students.last_name}`;
       const studentEmail = students.email;
 
@@ -160,7 +160,7 @@ const RefundTable = () => {
       toast.error(result.message);
     }
   };
-
+  console.log(studentFeeRefunds,"studentFeesRefunds")
   const columns = [
     ...defaultColumns,
     {
