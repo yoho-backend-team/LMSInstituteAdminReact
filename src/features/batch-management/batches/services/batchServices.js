@@ -2,7 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 
-const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute/admin/batch-management/institute-batches`;
+const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute`;
 
 export const getAllBatchesByBranch = async (data) => {
   try {
