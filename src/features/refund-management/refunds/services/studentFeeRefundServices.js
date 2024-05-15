@@ -1,10 +1,11 @@
 // studentFeeRefundservice.js
 import axios from 'axios';
 
-const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/institutes/payments/refund/`;
+const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/refund/`;
 
 export const getAllStudentFeeRefunds = async (data) => {
   try {
+    console.log(`${STUDENT_FEE_REFUND_API_ENDPOINT}all`)
     const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}all`, {
       headers: {
         'Content-Type': 'application/json',
@@ -16,18 +17,14 @@ export const getAllStudentFeeRefunds = async (data) => {
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+    
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentFeeRefunds. Status: ${response.status}`);
-    }
+   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentFeeRefunds:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch StudentFeeRefunds. Status: ${error}`);
+ 
   }
 };
 

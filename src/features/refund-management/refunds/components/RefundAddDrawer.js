@@ -140,6 +140,7 @@ const RefundAddDrawer = (props) => {
           payment_date: new Date()
         };
         console.log(data,"data",InputData)
+        console.log("Inputdata",InputData)
         const result = await addStudentFeeRefund(InputData);
         console.log(result.data)
 
@@ -226,7 +227,7 @@ const RefundAddDrawer = (props) => {
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
-                      getStudentsByBatch(newValue?._id);
+                      getStudentsByBatch(newValue?.uuid);
                     }}
                     // value={activeBatches.find((batch) => batch.batch_id === value) || null}
                     renderInput={(params) => (

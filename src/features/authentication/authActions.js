@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import client from 'api/client';
 import { HTTP_END_POINTS } from 'api/urls';
 
-const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}api/institutes/auth/admin/login/`;
+const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
 // import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
 // import { requestForToken } from '../../firebase';
@@ -14,7 +14,7 @@ export const login = (username, password) => async (dispatch) => {
     password: password
   };
   try {
-    
+     console.log(LOGIN_API_ENDPOINT,"login api end point")
     const response = await axios.post(LOGIN_API_ENDPOINT, data, {
       headers: {
         'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ export const login = (username, password) => async (dispatch) => {
     console.log(error)
     dispatch({
       type: 'LOGIN_FAILURE',
-      payload: error.response.data.message
+      payload: error?.response?.data?.message
     });
   }
 };

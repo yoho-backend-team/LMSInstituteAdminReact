@@ -71,11 +71,11 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
 
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <Typography sx={{ width: 150 }}>Student Id : </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.student_id}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.data[0]?.student_id}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <Typography sx={{ width: 150 }}>Student Name : </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.students?.first_name}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.data[0]?.student?.first_name}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <Typography sx={{ width: 150 }}>Student Email : </Typography>
@@ -83,11 +83,11 @@ const RefundViewDrawer = ({ open, toggle, selectedRowDetails }) => {
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <Typography sx={{ width: 150 }}>Paid Amount : </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.paid_amount}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.data[0]?.course?.paid_amount}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <Typography sx={{ width: 150 }}>Payment Date : </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student_fees[0]?.payment_date}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.payment_date}</Typography>
                 </Box>
               </Grid>
             </Grid>
