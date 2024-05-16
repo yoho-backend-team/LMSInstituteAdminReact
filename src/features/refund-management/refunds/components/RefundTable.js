@@ -209,7 +209,7 @@ const RefundTable = () => {
       setBatches(result?.data);
     }
   };
-
+  console.log(studentFeeRefunds,"studentFes")
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>

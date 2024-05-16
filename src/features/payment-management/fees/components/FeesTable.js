@@ -175,11 +175,11 @@ const FeesTable = () => {
     {
       flex: 0.1,
       minWidth: 100,
-      field: 'id',
+      field: '_id',
       headerName: 'ID',
       renderCell: ({ row }) => (
-        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-          {`#${row.id}`}
+        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.uuid}`}>
+          {`#${row._id}`}
         </Typography>
       )
     },
@@ -201,10 +201,10 @@ const FeesTable = () => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.students.first_name}
+                {row.students?.data.first_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row.students.email}
+                {row.students?.data.email}
               </Typography>
             </Box>
           </Box>
@@ -216,7 +216,7 @@ const FeesTable = () => {
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paidAmount || 0}`}</Typography>
     },
     {
       flex: 1.25,
@@ -300,7 +300,7 @@ const FeesTable = () => {
       )
     }
   ];
-
+  console.log(StudentFees,"studentFees")
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -373,7 +373,7 @@ const FeesTable = () => {
                 autoHeight
                 pagination
                 rowHeight={62}
-                rows={StudentFees?.data}
+                rows={StudentFees}
                 columns={columns}
                 hideFooter
                 disableRowSelectionOnClick

@@ -14,18 +14,13 @@ export const getAllStudentFees = async (data) => {
     });
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentFees. Status: ${response.status}`);
-    }
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentFees:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch StudentFees. Status: ${error}`);
   }
 };
 export const getFeeByStudentId = async (data) => {
