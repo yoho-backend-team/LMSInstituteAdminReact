@@ -52,18 +52,15 @@ const StudentIdCard = () => {
   const [searchValue, setSearchValue] = useState('');
   const [filterstatusValue, setFilterStatusValue] = useState('');
 
+
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      student_id: statusValue?.student?.student_id
+      is_active: statusValue?.is_active === true ? false : true,
     };
-
-    if (!data.student_id) {
-      toast.error('Student ID is missing.');
-      return;
-    }
-
-    const response = await updateStudentIdCardStatus(data);
+    console.log(data);
+    const response = await updateStudentIdCardStatus(statusValue.uuid, data); 
+    console.log(statusValue.uuid,"uuid")
+  
     if (response.success) {
       toast.success(response.message);
       setStudentIdRefetch((state) => !state);

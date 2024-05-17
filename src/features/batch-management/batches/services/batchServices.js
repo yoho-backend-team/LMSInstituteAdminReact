@@ -39,7 +39,7 @@ export const getAllBatches = async (data) => {
 };
 export const getBatchesByCourse = async (data) => {
   try {
-    const response = await axios.get(`${BATCH_API_ENDPOINT}/${data?.InstituteId}/branches/${data?.branchid}/batches/all/`, {
+    const response = await axios.get(`${BATCH_API_ENDPOINT}/${data?.InstituteId}/branches/${data?.branchid}/batches/all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`

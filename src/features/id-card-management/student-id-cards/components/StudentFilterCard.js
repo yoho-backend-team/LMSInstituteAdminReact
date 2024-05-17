@@ -11,18 +11,22 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StudentFilterCard = (props) => {
   const dispatch = useDispatch();
+  const [statusValue, setStatusValue] = useState('');
 
-  const { handleSearch, selectedBranchId, searchValue, filterstatusValue, handleFilterByStatus } = props;
+  const { handleSearch, selectedBranchId, searchValue, filterstatusValue } = props;
 
   const [batches, setBatches] = useState([]);
+
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branchid: selectedBranchId,
     };
     getBatches(data);
+    console.log(data,"searcd")
   }, [selectedBranchId]);
 
   const getBatches = async (data) => {
@@ -30,6 +34,13 @@ const StudentFilterCard = (props) => {
     if (result?.success) {
       setBatches(result?.data);
     }
+  };
+
+  
+  const handleFilterByStatus = (e) => {
+    setStatusValue(e.target.value);
+    const data = { isActive: e.target.value, branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' };
+    dispatch(getAllStudentIdCards(data));
   };
 
   return (
@@ -49,14 +60,17 @@ const StudentFilterCard = (props) => {
                       if (!newValue) {
                         const data = {
                           batch_id: '',
-                          branch_id: selectedBranchId
+                          branchid: selectedBranchId,
+                          instituteid: useInstitute().getInstituteId()
                         };
                         dispatch(getAllStudentIdCards(data));
                       } else {
                         const data = {
-                          batch_id: newValue.batch_id,
-                          branch_id: selectedBranchId
+                          batch_id: newValue._id,
+                          branchid: selectedBranchId,
+                          instituteid: useInstitute().getInstituteId()
                         };
+                 
                         dispatch(getAllStudentIdCards(data));
                       }
                     }}
@@ -72,14 +86,13 @@ const StudentFilterCard = (props) => {
                     fullWidth
                     label="Status"
                     defaultValue={''}
-                    SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
+                    SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                   >
                     <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
+                    <MenuItem value={true}>Active</MenuItem>
+                    <MenuItem value={false}>Inactive</MenuItem>
                   </TextField>
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
                   <TextField value={searchValue} fullWidth placeholder="Search Student" onChange={(e) => handleSearch(e)} />
                 </Grid>
