@@ -72,30 +72,30 @@ export const addStudentCertificate = async (data) => {
   }
 };
 
-export const deleteStudentCertificate = async (data) => {
-  try {
-    const response = await axios.delete(`${STUDENT_CERTIFICATE_API_ENDPOINT}/delete/${data?.id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { data }
-    });
+  export const deleteStudentCertificate = async (certificateid) => {
+    try {
+      const response = await axios.delete(`${STUDENT_CERTIFICATE_API_ENDPOINT}/delete/${certificateid}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+      });
+      console.log(response)
 
-    if (response.data.status) {
-      return { success: true, message: 'StudentCertificate deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete StudentCertificate' };
+      if (response.data.status) {
+        return { success: true, message: 'StudentCertificate deleted successfully' };
+      } else {
+        return { success: false, message: 'Failed to delete StudentCertificate' };
+      }
+    } catch (error) {
+      console.error('Error in deleteStudentCertificate:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error in deleteStudentCertificate:', error);
-    throw error;
-  }
-};
+  };
 
-export const updateStudentCertificate = async (data) => {
+export const updateStudentCertificate = async (certificateid, data) => {
   try {
-    const response = await axios.post(`${STUDENT_CERTIFICATE_API_ENDPOINT}/update`, data, {
+    const response = await axios.put(`${STUDENT_CERTIFICATE_API_ENDPOINT}/update/${certificateid}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -114,15 +114,18 @@ export const updateStudentCertificate = async (data) => {
   }
 };
 
-export const updateStudentCertificateStatus = async (data) => {
+export const updateStudentCertificateStatus = async (certificateid, data) => {
   try {
-    const response = await axios.post(`${STUDENT_CERTIFICATE_API_ENDPOINT}/status-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await axios.put(
+      `${STUDENT_CERTIFICATE_API_ENDPOINT}/updatestatus/${certificateid}`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    );
     console.log(response);
     if (response.data.status) {
       return { success: true, message: 'StudentCertificate status updated successfully' };
@@ -130,7 +133,7 @@ export const updateStudentCertificateStatus = async (data) => {
       return { success: false, message: response.data.message };
     }
   } catch (error) {
-    console.error('Error in addStudentCertificate:', error);
+    console.error('Error in updateStudentCertificateStatus:', error);
     throw error;
   }
 };

@@ -49,12 +49,14 @@
     const [searchValue, setSearchValue] = useState('');
     const [filterstatusValue, setFilterStatusValue] = useState('');
 
+
     const handleStatusChangeApi = async () => {
       const data = {
-        status: statusValue?.is_active === '1' ? '0' : '1',
-        staff_id: statusValue?.staff?.staff_id
+        is_active: statusValue?.is_active === true ? false : true,
       };
-      const response = await updateStaffIdCardStatus(data);
+      console.log(data);
+      const response = await updateStaffIdCardStatus(statusValue.uuid, data); 
+    
       if (response.success) {
         toast.success(response.message);
         setStaffIdRefetch((state) => !state);
@@ -62,6 +64,8 @@
         toast.error(response.message);
       }
     };
+    
+    
 
     const handleStatusValue = (event, staff) => {
       setStatusChangeDialogOpen(true);

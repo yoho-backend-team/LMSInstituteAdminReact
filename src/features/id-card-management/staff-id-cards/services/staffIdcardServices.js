@@ -1,7 +1,7 @@
 // StaffIdCardService.js
 import axios from 'axios';
 
-const STAFF_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/staffidcard/`;
+const STAFF_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/staffidcard`;
 
 export const getAllStaffIdCards = async (data) => {
   try {
@@ -112,9 +112,9 @@ export const updateStaffIdCard = async (data) => {
   }
 };
 
-export const updateStaffIdCardStatus = async (data) => {
+export const updateStaffIdCardStatus = async (uuid, data) => {
   try {
-    const response = await axios.post(`${STAFF_ID_CARDS_API_ENDPOINT}/status-update`, data, {
+    const response = await axios.put(`${STAFF_ID_CARDS_API_ENDPOINT}/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

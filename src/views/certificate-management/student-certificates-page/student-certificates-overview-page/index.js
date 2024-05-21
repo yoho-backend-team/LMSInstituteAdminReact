@@ -76,20 +76,29 @@ const StudenrCertificate = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleStatusChangeApi = async () => {
+    if (!selectedRow?.uuid) {
+      console.error('UUID is undefined');
+      return;
+    }
+  
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: statusValue?.is_active === true ? false : true
     };
-    const response = await updateStudentCertificateStatus(data);
+    console.log(data)
+    const response = await updateStudentCertificateStatus(selectedRow.uuid, data);
+    console.log(response,"response")
     if (response.success) {
       toast.success(response.message);
-      setStudentCertificateRefetch();
+      setStudentCertificateRefetch((state) => !state);
+ 
     } else {
       toast.error(response.message);
     }
   };
-
-  const handleStatusValue = (event, users) => {
+  
+  
+    const handleStatusValue = (event, users) => {
+    setSelectedRow(users)
     setStatusChangeDialogOpen(true);
     setStatusValue(users);
   };
@@ -122,11 +131,12 @@ const StudenrCertificate = () => {
     dispatch(getAllStudentCertificates(data));
   }, [dispatch, selectedBranchId, studentCertificateRefetch]);
 
-  const handleDelete = useCallback((itemId) => {
-    setSelectedStudentCertificateDeleteId(itemId);
+  const handleDelete = useCallback((certificateid) => {
+    setSelectedStudentCertificateDeleteId(certificateid);
     setStudentCertificateDeleteModelOpen(true);
   }, []);
 
+  
   const handleStudentCertificateDelete = async () => {
     const result = await deleteStudentCertificate(selectedStudentCertificateDeleteId);
     if (result.success) {
@@ -136,8 +146,9 @@ const StudenrCertificate = () => {
       toast.error(result.message);
     }
   };
+  
 
-  console.log(studentCertificates,"srudent")
+  console.log(studentCertificates,"srudent",selectedRow)
 
   const RowOptions = ({ row }) => {
     return (
@@ -174,7 +185,7 @@ const StudenrCertificate = () => {
             icon: <Icon icon="mdi:delete-outline" />,
             menuItemProps: {
               onClick: () => {
-                handleDelete(row.id);
+                handleDelete(row.uuid);
                 handleRowClick(row);
               }
             }
@@ -272,13 +283,13 @@ const StudenrCertificate = () => {
             onChange={(e) => handleStatusValue(e, row)}
             SelectProps={{
               sx: {
-                borderColor: row.is_active === '1' ? 'success' : 'error',
+                borderColor: row.is_active? 'success' : 'error',
                 color: userStatusObj[row?.is_active]
               }
             }}
           >
-            <MenuItem value={1}>Active</MenuItem>
-            <MenuItem value={0}>Inactive</MenuItem>
+            <MenuItem value={true}>Active</MenuItem>
+            <MenuItem value={false}>Inactive</MenuItem>
           </TextField>
         );
       }
@@ -307,11 +318,12 @@ const StudenrCertificate = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificates?.data}
+                rows={studentCertificates}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter
+                onRowClick={(params) => handleRowClick(params.row)}
               />
             )}
             <CardContent>
@@ -343,6 +355,7 @@ const StudenrCertificate = () => {
           initialValues={selectedRow}
           toggle={toggleEditUserDrawer}
           setStudentCertificateRefetch={setStudentCertificateRefetch}
+          certificateid={selectedRow?.uuid}
         />
         {/* Delete */}
         <StudentCertificateDeleteModel

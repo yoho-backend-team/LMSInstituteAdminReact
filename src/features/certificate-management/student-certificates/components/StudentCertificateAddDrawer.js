@@ -32,7 +32,7 @@ const schema = yup.object().shape({
   branch: yup.string().required('Branch is required'),
   batch: yup.object().required('Batch is required'),
   student: yup.string().required('Students is required'),
-  name: yup.string().required('Certificate Name is required')
+  certificate_name: yup.string().required('Certificate Name is required')
 });
 
 const defaultValues = {
@@ -40,7 +40,7 @@ const defaultValues = {
   course: '',
   batch: null,
   student: '',
-  name: '',
+  certificate_name: '',
   description: ''
 };
 
@@ -121,7 +121,7 @@ const StudentCertificateAddDrawer = (props) => {
     var bodyFormData = new FormData();
     bodyFormData.append('certificate_file', studymaterialPdf);
     bodyFormData.append('institute_student_id', data.student);
-    bodyFormData.append('name', data.name);
+    bodyFormData.append('certificate_name', data.certificate_name);
     bodyFormData.append('description', data.description);
     bodyFormData.append('institute_branch_id', selectedBranchId);
 
@@ -185,12 +185,12 @@ const StudentCertificateAddDrawer = (props) => {
                   <Autocomplete
                     fullWidth
                     options={activeBranches}
-                    getOptionLabel={(branch) => branch.branch_name}
+                    getOptionLabel={(branch) => branch.branch_identity}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.branch_id);
-                      getActiveCoursesByBranch(newValue?.branch_id);
+                      onChange(newValue?._id);
+                      getActiveCoursesByBranch(newValue?._id);
                     }}
-                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                    value={activeBranches.find((branch) => branch._id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
                     )}
@@ -210,10 +210,10 @@ const StudentCertificateAddDrawer = (props) => {
                     options={activeCourse}
                     getOptionLabel={(course) => course.course_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.course_id);
-                      getActiveBatchesByCourse(newValue?.course_id);
+                      onChange(newValue?._id);
+                      getActiveBatchesByCourse(newValue?._id);
                     }}
-                    value={activeCourse.find((course) => course.course_id === value) || null}
+                    value={activeCourse.find((course) => course._id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                     )}
@@ -280,7 +280,7 @@ const StudentCertificateAddDrawer = (props) => {
 
             <Grid item xs={12} sm={12}>
               <Controller
-                name="name"
+                name="certificate_name"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -291,8 +291,8 @@ const StudentCertificateAddDrawer = (props) => {
                     label="Certificate Name"
                     onChange={onChange}
                     placeholder="John Doe"
-                    error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
+                    error={Boolean(errors.certificate_name)}
+                    {...(errors.certificate_name && { helperText: errors.certificate_name.message })}
                   />
                 )}
               />
