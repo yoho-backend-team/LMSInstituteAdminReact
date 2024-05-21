@@ -369,7 +369,7 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<FeesPage />} permissionCode={'inst_perm_student_fees_payment_management_view'} module={"Fees"} />}>
             <Route path="fees" element={<FeesPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<SalariesPage />} permissionCode={'inst_perm_staff_salaries_view'} module={'Staff Salaries'} />}>
+          <Route element={<ProtectedRoute element={<SalariesPage />} permissionCode={'inst_perm_staff_salaries_view'} module={'staff_salaries'} />}>
             <Route path="salaries" element={<SalariesPage />} />
           </Route>
           <Route element={<ProtectedRoute element={<SubscriptionsPage />} permissionCode={'inst_perm_subscriptions_view'} module={'Subscriptions'} />}>

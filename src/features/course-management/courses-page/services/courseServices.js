@@ -76,19 +76,8 @@ export const getCourseDetails = async (data) => {
 };
 export const getAllCourses = async (data) => {
   try {
-<<<<<<< HEAD
-    console.log(process.env.REACT_APP_PUBLIC_API_URL)
-    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/ca7cb92c-7a64-4178-9694-27a3150c12ba/courses`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: ` Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-=======
     console.log(process.env.REACT_APP_PUBLIC_API_URL,data,"data")
     const response = await client.course.getWithBranch(data)
->>>>>>> fd19a8c759c27e39eb23d5e35b78f9026183979a
     console.log(response);
     // Check if the response status is successful
     return { data: response.data };

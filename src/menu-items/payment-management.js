@@ -42,7 +42,7 @@ const pages = {
           icon: icons.IconCash,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_staff_salaries_view','Staff Salaries')
+          visible: hasPermission('inst_perm_staff_salaries_view','staff_salaries')
         },
         {
           id: 'subscriptions',
