@@ -97,7 +97,7 @@ const Teaching = () => {
                             <TextField
                               size="small"
                               select
-                              defaultValue={item.is_active}
+                              defaultValue={item?.is_active}
                               label="status"
                               SelectProps={{ onChange: (e) => handleStatusValue(e, item?.staff) }}
                               sx={{ width: 100 }}

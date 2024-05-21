@@ -124,7 +124,7 @@ const RefundAddDrawer = (props) => {
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
       try {
-        console.log(data,"data",selectedStudentFee)
+        console.log(data,"refunddata",selectedStudentFee)
         
         const InputData = {
           student: data.student,
@@ -282,12 +282,12 @@ const RefundAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeStudentsFee}
-                    getOptionLabel={(studentFee) => `${studentFee._id}`}
+                    getOptionLabel={(studentFee) => `${studentFee.studentfee_id}`}
                     onChange={(event, newValue) => {
                       setSelectedStudentFee(newValue);
-                      field.onChange(newValue._id);
+                      field.onChange(newValue.studentfee_id);
                     }}
-                    value={selectedStudentFee?._id}
+                    value={selectedStudentFee?.studentfee_id}
                     renderInput={(params) => (
                       <TextField
                         {...params}

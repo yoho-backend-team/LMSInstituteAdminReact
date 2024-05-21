@@ -30,10 +30,10 @@ export const getAllStudentFeeRefunds = async (data) => {
 
 export const searchStudentFeeRefunds = async (searchQuery) => {
   try {
-    const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
+    await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}search`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -56,7 +56,8 @@ export const addStudentFeeRefund = async (data) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
-      }
+      },
+      params:data,
     });
 
     
@@ -68,22 +69,19 @@ export const addStudentFeeRefund = async (data) => {
 
 export const deleteStudentFeeRefund = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_FEE_REFUND_API_ENDPOINT}/delete`, data, {
+    
+    const response = await axios.delete(`${STUDENT_FEE_REFUND_API_ENDPOINT}${data.transaction_id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       data: data
     });
-    console.log(response.data);
-    if (response.data.status) {
+    
       return { success: true, message: 'StudentFeeRefund deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete StudentFeeRefund' };
-    }
   } catch (error) {
     console.error('Error in deleteStudentFeeRefund:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message? error?.response?.data?.message: 'Failed to delete Refund Details' };
   }
 };
 

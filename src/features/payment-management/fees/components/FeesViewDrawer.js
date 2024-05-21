@@ -73,15 +73,15 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
 
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Student Id : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.students?.student_id}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.transaction_id}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Student Name : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.students?.first_name}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student?.full_name}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Student Email : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.students?.email}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Paid Amount : </Typography>

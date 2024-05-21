@@ -31,6 +31,8 @@ import FeesAddDrawer from './FeesAddDrawer';
 import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
+import jsPDF from 'jspdf';
+
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -43,7 +45,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 const renderClient = (row) => {
   if (row?.students?.image) {
     return (
-      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.students?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
+      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.paid_amount}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
     );
   } else {
     return (
@@ -52,7 +54,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.name || 'John Doe')}
+        {getInitials(row?.student?.data?.data?.fullname || '')}
       </Avatar>
     );
   }
@@ -116,6 +118,15 @@ const FeesTable = () => {
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
   };
+  const handleDownload = (row) => {
+    const doc = new jsPDF();
+    doc.text(`Transaction ID: ${row.transaction_id}`, 10, 10);
+    doc.text(`Student Name: ${row.student.full_name}`, 10, 20);
+    doc.text(`Amount Paid: $${row.paid_amount || 0}`, 10, 30);
+    doc.text(`Payment Date: ${row.payment_date}`, 10, 40);
+    doc.save(`Transaction_${row.transaction_id}.pdf`);
+  };
+  
 
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
@@ -158,7 +169,7 @@ const FeesTable = () => {
 
   // Handle branch deletion
   const handleFeeDelete = async () => {
-    const result = await deleteStudentFee({ id: selectedFeeDeleteId });
+    const result = await deleteStudentFee({ transaction_id: selectedFeeDeleteId });
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -178,8 +189,8 @@ const FeesTable = () => {
       field: '_id',
       headerName: 'ID',
       renderCell: ({ row }) => (
-        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.uuid}`}>
-          {`#${row._id}`}
+        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row?.studentfee_id}`}>
+          {`#${row?.studentfee_id}`}
         </Typography>
       )
     },
@@ -188,7 +199,7 @@ const FeesTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transaction_id}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.transaction_id}</Typography>
     },
     {
       flex: 1.25,
@@ -201,10 +212,10 @@ const FeesTable = () => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.students?.data.first_name}
+                {row?.student?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row.students?.data.email}
+                {row?.student?.email}
               </Typography>
             </Box>
           </Box>
@@ -216,7 +227,7 @@ const FeesTable = () => {
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paidAmount || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
     },
     {
       flex: 1.25,
@@ -231,13 +242,14 @@ const FeesTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
+        const isActive = row?.is_active;
         return (
           <CustomChip
             rounded
             skin="light"
             size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
+            label={isActive ? 'Active' : 'Inactive'}
+            color={isActive ? 'success' : 'error'}
             sx={{ textTransform: 'capitalize' }}
           />
         );
@@ -256,7 +268,7 @@ const FeesTable = () => {
       renderCell: ({ row }) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <OptionsMenu
-            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 1 } } }}
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
@@ -285,14 +297,17 @@ const FeesTable = () => {
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete();
-                    handleRowClick(row);
+                    handleDelete(row._id);
+                    handleRowClick(row._id);
                   }
                 }
               },
               {
                 text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
+                icon: <Icon icon="tabler:download" fontSize={20} />,
+                menuItemProps: {
+                  onClick: () => handleDownload(row)
+                }
               }
             ]}
           />
@@ -372,6 +387,7 @@ const FeesTable = () => {
                 sx={{ p: 2 }}
                 autoHeight
                 pagination
+                style={{overflowX:"scroll"}}
                 rowHeight={62}
                 rows={StudentFees}
                 columns={columns}

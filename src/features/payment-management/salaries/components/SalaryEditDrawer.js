@@ -71,9 +71,16 @@ const SalaryEditDrawer = (props) => {
     inputData.append('image', selectedImage);
     inputData.append('transaction_id', data.transaction_id);
     inputData.append('salary_amount', data.salary_amount);
-    inputData.append('id', selectedRows.id);
+    inputData.append('_id', selectedRows._id);
 
-    const result = await updateTeachingStaffSalary(inputData);
+    const salary_data = {
+      image : selectedImage,
+      transaction_id : data.transaction_id,
+      salary_amount : data.salary_amount,
+      _id : selectedRows._id
+    }
+
+    const result = await updateTeachingStaffSalary(salary_data);
     if (result.success) {
       toast.success(result.message);
       handleClose();

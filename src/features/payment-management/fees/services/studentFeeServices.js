@@ -87,42 +87,33 @@ export const addStudentFee = async (data) => {
 
 export const deleteStudentFee = async (data) => {
   try {
-    const response = await axios.delete(`${STUDENT_FEE_API_ENDPOINT}/delete`, {
+    const response = await axios.delete(`${STUDENT_FEE_API_ENDPOINT}/${data.transaction_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
-    console.log(response);
-    if (response.data.status) {
+   
       return { success: true, message: 'StudentFee deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete StudentFee' };
-    }
   } catch (error) {
     console.error('Error in deleteStudentFee:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message? error?.response?.data?.message: 'Failed to delete student fees' };
   }
 };
 
 export const updateStudentFee = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_FEE_API_ENDPOINT}/update`, data, {
+    const response = await axios.put(`${STUDENT_FEE_API_ENDPOINT}/update/${data._id}`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
-    if (response.data.status) {
-      console.log(response);
+   
       return { success: true, message: 'StudentFee updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update StudentFee' };
-    }
   } catch (error) {
     console.error('Error in updateStudentFee:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message? error?.response?.data?.message:'Failed to update Student Fees' };
   }
 };

@@ -74,15 +74,15 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
 
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Staff Id : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.staff_id}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.roll_no}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Staff Name : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.staff_name}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.username}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Staff Email : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.email}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Salary Amount : </Typography>
@@ -90,7 +90,7 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Paid Date : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.paid_date}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.payment_date}</Typography>
               </Box>
             </Grid>
           )}
