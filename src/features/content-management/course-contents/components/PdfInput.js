@@ -8,8 +8,7 @@ import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import toast from 'react-hot-toast';
 
-const CoursePdfInput = ({ setCourseNotePdf,setValue }) => {
-  const [files, setFiles] = useState([]);
+const CoursePdfInput = ({ setCourseNotePdf,setValue,files,setFiles }) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,

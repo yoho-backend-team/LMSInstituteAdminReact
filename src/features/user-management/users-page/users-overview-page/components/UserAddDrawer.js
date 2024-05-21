@@ -16,6 +16,11 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addUser, checkUserName } from '../../services/userServices';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
+import client from 'api/client';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -52,11 +57,10 @@ const SidebarAddUser = (props) => {
   const { open, toggle, groups } = props;
   const branches = useSelector((state) => state.auth.branches);
   const [inputValue, setInputValue] = useState('');
+  const { show ,hide} = useSpinner()
 
-  const image =
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-
-  const [imgSrc, setImgSrc] = useState(image);
+ 
+  const [imgSrc, setImgSrc] = useState(null);
   const [selectedImage, setSelectedImage] = useState('');
 
   const showErrors = (field, valueLen, min) => {
@@ -88,6 +92,7 @@ const SidebarAddUser = (props) => {
       .required()
       .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
       .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
+      lastName : yup.string().required(),
     userName: yup
       .string()
       .required()
@@ -114,48 +119,40 @@ const SidebarAddUser = (props) => {
   });
 
   const onSubmit = async (data) => {
-    const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_name));
+    show()
+    console.log(data,"data",selectedImage,imgSrc)
+  
+    hide()
+    const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_identity));
+    console.log(filteredBranches,"filterBranches")
+    const new_user = {
+      branch : filteredBranches?.[0]?._id,
+      image : imgSrc,
+      first_name : data.fullName,
+      last_name : data.lastName,
+      email : data.email,
+      phone_number : "+91"+data.contact,
+      username : data.userName,
+      password : data.password,
+      confirm_password : data.confirm_password,
+      designation : data.designation,
+      role : data.role,
+      institute_id : useInstitute().getInstituteId()
+    }
 
-    var bodyFormData = new FormData();
-
-    filteredBranches.forEach((branch) => {
-      bodyFormData.append('branch_ids[]', branch.branch_id);
-    });
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('name', data.fullName);
-    bodyFormData.append('email', data.email);
-    bodyFormData.append('mobile', data.contact);
-    bodyFormData.append('username', data.userName);
-    bodyFormData.append('password', data.password);
-    bodyFormData.append('c_password', data.confirm_password);
-    bodyFormData.append('designation', data.designation);
-    bodyFormData.append('role_id', data.role);
-
-    const isUserNameTaken = await checkUserName(data.userName);
-
-    if (!isUserNameTaken.success) {
-      setError('userName', {
-        type: 'manual',
-        message: 'Username is already taken'
-      });
-    } else if (isUserNameTaken.success) {
-      const result = await addUser(bodyFormData);
+      const result = await addUser(new_user);
 
       if (result.success) {
+        hide()
         setError('');
         toggle();
         reset();
         toast.success('User created successfully');
       } else {
-        let errorMessage = '';
-        Object.values(result.message).forEach((errors) => {
-          errors.forEach((error) => {
-            errorMessage += `${error}\n`;
-          });
-        });
-        toast.error(errorMessage.trim());
+        hide()
+       
+        toast.error(result?.message);
       }
-    }
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({
@@ -172,16 +169,18 @@ const SidebarAddUser = (props) => {
     }
   }));
 
-  const handleInputImageChange = (file) => {
+  const handleInputImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
+    const data = new FormData()
+    data.append("file",files[0])
+    try {
+      const fileUpload = await client.file.upload(data)
+      console.log(fileUpload,"upload")
+      setImgSrc(fileUpload?.data?.file)  
+      toast.success(fileUpload?.message)
+    } catch (error) {
+      toast.error(error?.response?.data?.message)
     }
   };
 
@@ -221,7 +220,7 @@ const SidebarAddUser = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4 }}>
-            <ImgStyled src={imgSrc} alt="Profile Pic" />
+            <ImgStyled src={imgSrc?getImageUrl(imgSrc):profilePlaceholder} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                 Upload
@@ -260,9 +259,9 @@ const SidebarAddUser = (props) => {
                   helperText={errors.branch?.message}
                 >
                   {branches?.map((item, index) => (
-                    <MenuItem key={index} value={item?.branch_name}>
-                      <Checkbox checked={value.includes(item.branch_name)} />
-                      <ListItemText primary={item.branch_name} />
+                    <MenuItem key={index} value={item?.branch_identity}>
+                      <Checkbox checked={value.includes(item.identity)} />
+                      <ListItemText primary={item.branch_identity} />
                     </MenuItem>
                   ))}
                 </TextField>
@@ -279,11 +278,28 @@ const SidebarAddUser = (props) => {
                 fullWidth
                 value={value}
                 sx={{ mb: 4 }}
-                label="Full Name"
+                label="First Name"
                 onChange={onChange}
                 placeholder="John Doe"
                 error={Boolean(errors.fullName)}
                 {...(errors.fullName && { helperText: errors.fullName.message })}
+              />
+            )}
+          />
+          <Controller
+            name="lastName"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { value, onChange } }) => (
+              <TextField
+                fullWidth
+                value={value}
+                sx={{ mb: 4 }}
+                label="Last Name"
+                onChange={onChange}
+                placeholder="John Doe"
+                error={Boolean(errors.lastName)}
+                {...(errors.lastName && { helperText: errors.lastName.message })}
               />
             )}
           />
@@ -362,7 +378,7 @@ const SidebarAddUser = (props) => {
               >
                 {groups?.map((group, index) => (
                   <MenuItem key={index} value={group?.id}>
-                    {group?.name}
+                    {group?.identity}
                   </MenuItem>
                 ))}
               </TextField>
@@ -380,19 +396,19 @@ const SidebarAddUser = (props) => {
                 label="UserName"
                 onChange={async (e) => {
                   setValue('userName', e.target.value);
-                  const result = await checkUserName(e.target.value);
+                  // const result = await checkUserName(e.target.value);
 
-                  if (result.success) {
-                    setError('userName', {
-                      type: 'manual',
-                      message: ''
-                    });
-                  } else {
-                    setError('userName', {
-                      type: 'manual',
-                      message: 'Username is already taken'
-                    });
-                  }
+                  // if (result.success) {
+                  //   setError('userName', {
+                  //     type: 'manual',
+                  //     message: ''
+                  //   });
+                  // } else {
+                  //   setError('userName', {
+                  //     type: 'manual',
+                  //     message: 'Username is already taken'
+                  //   });
+                  // }
                 }}
                 placeholder="John Doe"
                 error={Boolean(errors.userName)}

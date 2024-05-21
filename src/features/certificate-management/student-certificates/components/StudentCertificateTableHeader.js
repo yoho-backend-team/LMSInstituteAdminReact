@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllStudentCertificates } from '../redux/studentCertificateThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StudentCertificateTableHeader = (props) => {
   const { toggle, selectedBranchId } = props;
@@ -60,7 +61,8 @@ const StudentCertificateTableHeader = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const data = { is_active: e.target.value, branchid: selectedBranchId ,InstituteId: useInstitute().getInstituteId(), page: '1'};
+    console.log(data,"statusssssssssss")
     dispatch(getAllStudentCertificates(data));
   };
 
@@ -81,8 +83,8 @@ const StudentCertificateTableHeader = (props) => {
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
                       <MenuItem value="">Select Status</MenuItem>
-                      <MenuItem value="1">Active</MenuItem>
-                      <MenuItem value="0">Inactive</MenuItem>
+                      <MenuItem value={true}>Active</MenuItem>
+                      <MenuItem value={false}>Inactive</MenuItem>
                     </TextField>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -91,11 +93,12 @@ const StudentCertificateTableHeader = (props) => {
                       options={batches}
                       filterSelectedOptions
                       onChange={(e, newValue) => {
-                        const selectedBatchId = newValue?.batch_id || '';
+                        const selectedBatchId = newValue?._id || '';
                         const data = {
                           batch_id: selectedBatchId,
-                          branch_id: selectedBranchId
+                          branchid: selectedBranchId ,InstituteId: useInstitute().getInstituteId(), page: '1'
                         };
+                        console.log(data,"baattttccchh")
                         dispatch(getAllStudentCertificates(data));
                       }}
                       id="autocomplete-multiple-outlined"
@@ -110,11 +113,13 @@ const StudentCertificateTableHeader = (props) => {
                       options={courses}
                       filterSelectedOptions
                       onChange={(e, newValue) => {
-                        const courseId = newValue.map((item) => item.course_id);
+                        const courseId = newValue.map((item) => item._id);
                         const data = {
                           course_id: courseId,
-                          branch_id: selectedBranchId
+                          branch_id: selectedBranchId,
+                          branchid: selectedBranchId ,InstituteId: useInstitute().getInstituteId(), page: '1'
                         };
+                        console.log(data,"coursessid")
                         dispatch(getAllStudentCertificates(data));
                       }}
                       id="autocomplete-multiple-outlined"

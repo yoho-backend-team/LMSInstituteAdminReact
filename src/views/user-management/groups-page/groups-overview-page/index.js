@@ -43,6 +43,8 @@ import toast from 'react-hot-toast';
 
 //React Router Import
 import { Link } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const GroupManagement = () => {
   // State variables
@@ -51,6 +53,7 @@ const GroupManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
   const [statusValue, setStatusValue] = useState('');
+  const {show,hide} = useSpinner()
 
   // Redux
   const dispatch = useDispatch();
@@ -61,7 +64,9 @@ const GroupManagement = () => {
 
   // Fetch groups when selectedBranchId changes
   useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId, page: '1' }));
+    show()
+    dispatch(getAllGroups({ institute_id:useInstitute().getInstituteId(), page: '1' }));
+    hide()
   }, [dispatch, selectedBranchId]);
 
   // Memoized callback for deleting a group
@@ -85,7 +90,7 @@ const GroupManagement = () => {
     setStatusChangeDialogOpen(true);
     setStatusValue(item);
   }, []);
-
+ 
   // Callback for handling status change via API
   const handleStatusChangeApi = useCallback(async () => {
     const data = {
@@ -114,10 +119,10 @@ const GroupManagement = () => {
     },
     [dispatch]
   );
-
+  console.log(groups,"groups")
   // Memoized render function for group cards
   const renderCards = useMemo(() => {
-    return groups?.data?.map((item, index) => (
+    return groups?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         {/* Card content here */}
         <Card sx={{ minHeight: 175 }}>
@@ -140,7 +145,7 @@ const GroupManagement = () => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography variant="h4" sx={{ mb: 1 }}>
-                {item?.name}
+                {item?.identity}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
@@ -151,8 +156,8 @@ const GroupManagement = () => {
                 label="Status"
                 SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
               >
-                <MenuItem value="1">Active</MenuItem>
-                <MenuItem value="0">Inactive</MenuItem>
+                <MenuItem value="true">Active</MenuItem>
+                <MenuItem value="false">Inactive</MenuItem>
               </TextField>
 
               <OptionsMenu
@@ -171,17 +176,17 @@ const GroupManagement = () => {
                     text: 'Delete',
                     menuItemProps: {
                       onClick: () => {
-                        setSelectedDeleteGroupId(item?.id);
+                        setSelectedDeleteGroupId(item?.uuid);
                         setDeleteDialogOpen(true);
                       }
                     }
-                  },
+                  }, 
                   {
                     text: 'Edit',
                     menuItemProps: {
                       component: Link,
                       to: `groups/${item?.id}/edit`,
-                      state: { id: item?.id, name: item?.name }
+                      state: { id: item?.id, name: item?.identity }
                     }
                   }
                 ]}
@@ -192,6 +197,10 @@ const GroupManagement = () => {
       </Grid>
     ));
   }, [groups?.data, handleStatusValue]);
+ 
+  if(groupLoading && groups.length===0){
+    show()
+ }
 
   return (
     <Grid>

@@ -34,7 +34,7 @@ const pages = {
           icon: icons.IconTicket,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_staff_ticket_view')
+          visible: hasPermission('inst_perm_staff_ticket_view','staff_tickets')
         },
         {
           id: 'student-ticket',
@@ -44,7 +44,7 @@ const pages = {
           icon: icons.IconTicket,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_ticket_view')
+          visible: hasPermission('inst_perm_student_ticket_view',"Student Tickets")
         },
          {
           id: 'your-ticket',
@@ -54,7 +54,7 @@ const pages = {
           icon: icons.IconTicket,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_perm_student_ticket_view')
+          visible: hasPermission('inst_perm_student_ticket_view',"Student Tickets")
         },
       ]
     }

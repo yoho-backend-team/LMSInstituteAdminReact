@@ -46,7 +46,8 @@ const SidebarLeft = (props) => {
     communities,
     setChats,
     setSelectedBatch,
-    chats
+    chats,
+    socket
   } = props;
 
   const [query, setQuery] = useState('');
@@ -58,9 +59,14 @@ const SidebarLeft = (props) => {
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
-  
-    console.log(community&&community._id,"check",community,"comunity",typeof(chats),getchatsState)
-    if (community && community._id&&!getchatsState) {
+    const communityId = community?._id
+    console.log(community,community._id,"check",community,"comunity",typeof(chats),getchatsState,type)
+    socket.emit("join",{group:communityId,user:"user"},(error)=>{
+      console.log(error,"socketError")
+    })
+    // const message = socket.emit("new message",community)
+    // console.log(message,"message")
+    if (community && community._id) {
       try {
         const response = await getAllBatchChats({ chatId: community._id });
         
@@ -151,7 +157,7 @@ const SidebarLeft = (props) => {
                           outline: (theme) => `2px solid ${activeCondition ? theme.palette.common.white : 'transparent'}`
                         }}
                       >
-                        {getInitials(contact?.chatName)}
+                        {getInitials(contact?.group)}
                       </CustomAvatar>
                     )}
                   </ListItemAvatar>
@@ -161,10 +167,10 @@ const SidebarLeft = (props) => {
                       ml: 3,
                       ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
                     }}
-                    primary={<Typography variant="h5">{contact?.chatName}</Typography>}
+                    primary={<Typography variant="h5">{contact?.group}</Typography>}
                     secondary={
                       <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
-                        {contact?.batch_community?.batch?.institute_course_branch?.course_name}
+                        {contact?.batch?.course?.course_name}
                       </Typography>
                     }
                   />

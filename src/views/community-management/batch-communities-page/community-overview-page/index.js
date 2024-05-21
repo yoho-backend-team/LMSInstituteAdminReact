@@ -12,6 +12,7 @@ import SidebarLeft from 'features/community/components/SidebarLeft';
 import { getAllCommunities } from 'features/community/redux/communityThunks';
 import { selectCommunities } from 'features/community/redux/communitySelectors';
 import { getCommunityDetails } from 'features/community/services/communityServices';
+import { io } from 'socket.io-client';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -40,6 +41,7 @@ const Community = () => {
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
   const sidebarWidth = smAbove ? 360 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
+  const [socket,setSocket] = useState(null)
 
   const statusObj = {
     busy: 'error',
@@ -48,6 +50,10 @@ const Community = () => {
     offline: 'secondary'
   };
 
+  useEffect(()=>{
+    const socket = io(process.env.REACT_APP_PUBLIC_API_URL)
+    setSocket(socket)
+  },[])
   // useEffect(() => {
   //   const user = JSON.parse(localStorage.getItem("userData"))
   //   const institute = JSON.parse(localStorage.getItem('institute'))
@@ -183,6 +189,7 @@ const Community = () => {
             setSelectedBatch={setSelectedBatch}
             setCommunityDetails={setCommunityDetails}
             communityDetails={communityDetails}
+            socket ={socket}
           />
           <ChatContent
             store={store}
@@ -200,6 +207,7 @@ const Community = () => {
             selectedBatch={selectedBatch}
             setChats={setChats}
             communityDetails={communityDetails}
+            socket ={socket}
           />
         </Box>
       )}

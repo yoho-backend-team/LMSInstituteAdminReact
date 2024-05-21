@@ -30,6 +30,8 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { useSpinner } from 'context/spinnerContext';
+import { useInstitute } from 'utils/get-institute-details';
 
 const GroupAddPage = () => {
   // State variables
@@ -42,13 +44,15 @@ const GroupAddPage = () => {
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
+  const [SelectedPermissions,setSelectedPermissions] = useState([])
+  const {show,hide} = useSpinner()
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId }));
+    dispatch(getAllGroups({ branch_id: selectedBranchId }))
   }, [dispatch, selectedBranchId]);
-
+  
   // Fetch permissions on component mount
   useEffect(() => {
     getPermissions();
@@ -70,14 +74,17 @@ const GroupAddPage = () => {
     mode: 'onChange',
     resolver: yupResolver(addGroupYupSchema)
   });
-
+  
   // Function to handle form submission
   const onSubmit = useCallback(
     async (data) => {
+      console.log(data,"data",selectedCheckbox,SelectedPermissions)
+      show()
       try {
         const inputData = {
-          name: data.groupName,
-          permissions: selectedCheckbox
+          identity: data.groupName,
+          permissions: SelectedPermissions,
+          institute_id : useInstitute().getInstituteId()
         };
 
         // Check if the group name already exists
@@ -95,10 +102,12 @@ const GroupAddPage = () => {
           navigate(-1);
           toast.success(result.message);
         } else {
+          hide()
           toast.error(result.message);
         }
       } catch (error) {
         console.log(error);
+        hide()
         toast.error('Group Name Already Exists');
       }
     },
@@ -118,13 +127,22 @@ const GroupAddPage = () => {
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
+    console.log(isIndeterminateCheckbox)
     if (isIndeterminateCheckbox) {
+      setSelectedPermissions([])
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
     } else {
-      const allPermissionsIds = permissions.flatMap((module) =>
-        module.screens.flatMap((screen) => screen.permissions.map((permission) => permission.id))
-      );
+      const permissionList = permissions?.map(module => ({
+        id: module.id,
+        identity: module.identity,
+        permission: module.permission.map(perm => ({
+          [perm.name]: perm.is_active,
+          _id: perm._id
+        }))
+      }));
+      setSelectedPermissions(permissionList)
+      const allPermissionsIds = permissions.flatMap((module) => module.permission.map((permission) => permission._id))
       setSelectedCheckbox(allPermissionsIds);
       setIsIndeterminateCheckbox(true);
     }
@@ -134,6 +152,7 @@ const GroupAddPage = () => {
   const getPermissions = useCallback(async () => {
     try {
       setLoading(true);
+      show()
       const result = await getAllPermissions();
       if (result.success) {
         setPermissions(result.data);
@@ -144,15 +163,55 @@ const GroupAddPage = () => {
       console.log(error);
       toast.error('An error occurred while fetching permissions');
     } finally {
+      hide()
       setLoading(false);
     }
   }, []);
 
+  const handleSelectPermissions = (module, permission, index, e) => {
+    setSelectedPermissions((prevData) => {
+      
+      const moduleIndex = prevData.findIndex((item) => item.id === module.id);
+      
+      if (moduleIndex !== -1) {
+       
+        return prevData.map((item, idx) => {
+          if (idx === moduleIndex) {
+           
+            const updatedPermissions = item.permission.map((perm) => {
+              if (perm._id === permission._id) {
+                return { ...perm, [permission.name]: e.target.checked };
+              }
+              return perm;
+            });
+  
+            if (!updatedPermissions.find((perm) => perm._id === permission._id)) {
+              updatedPermissions.push({ [permission.name]: e.target.checked, _id: permission._id });
+            }
+  
+            return { ...item, permission: updatedPermissions };
+          }
+          return item;
+        });
+      } else {
+       
+        return [
+          ...prevData,
+          {
+            id: module.id,
+            identity: module.identity,
+            permission: [{ [permission.name]: e.target.checked, _id: permission._id }],
+          },
+        ];
+      }
+    });
+  };
+  
+
   // Render permissions table rows
   const renderPermissions = useMemo(() => {
     return permissions.map((module) =>
-      module.screens.map((screen, index) => (
-        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-child': { pl: '0 !important' } }}>
+      <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
           <TableCell
             sx={{
               fontWeight: 600,
@@ -160,9 +219,9 @@ const GroupAddPage = () => {
               fontSize: (theme) => theme.typography.h6.fontSize
             }}
           >
-            {screen.screen_name}
+            {module?.identity}
           </TableCell>
-          {screen.permissions.map((permission, index) => (
+          {module?.permission?.map((permission, index) => (
             <TableCell key={index}>
               <FormControlLabel
                 label={permission.name}
@@ -170,16 +229,21 @@ const GroupAddPage = () => {
                 control={
                   <Checkbox
                     size="small"
-                    id={`${index}-write`}
-                    onChange={() => togglePermission(permission.id)}
-                    checked={selectedCheckbox.includes(permission.id)}
+                    id={permission?._id}
+                    onChange={(e) => {togglePermission(permission._id),handleSelectPermissions(module,permission,index,e)}}
+                    checked={selectedCheckbox.includes(permission._id)}
+                    sx={{
+                      '& svg': {
+                        border: !selectedCheckbox.includes(permission._id) && '1px solid #000', 
+                        borderRadius: '4px',
+                      }
+                    }}
                   />
                 }
               />
             </TableCell>
           ))}
         </TableRow>
-      ))
     );
   }, [permissions, selectedCheckbox, togglePermission]);
 
@@ -260,6 +324,12 @@ const GroupAddPage = () => {
                               onChange={handleSelectAllCheckbox}
                               indeterminate={isIndeterminateCheckbox}
                               checked={selectedCheckbox.length === permissions.length}
+                              sx={{
+                                '& svg': {
+                                  border: !isIndeterminateCheckbox && '1px solid #000', 
+                                  borderRadius: '4px',
+                                }
+                              }}
                             />
                           }
                         />

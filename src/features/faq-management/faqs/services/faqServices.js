@@ -111,7 +111,7 @@ export const deleteFaq = async (data) => {
     const response = await axios.delete(`${FAQ_API_END_POINT}/delete/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -158,7 +158,7 @@ export const updateStatusFaq = async (data) => {
     const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 

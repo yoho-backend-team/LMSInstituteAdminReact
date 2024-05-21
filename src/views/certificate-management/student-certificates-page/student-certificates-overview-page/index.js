@@ -86,9 +86,11 @@ const StudenrCertificate = () => {
     };
     console.log(data)
     const response = await updateStudentCertificateStatus(selectedRow.uuid, data);
+    console.log(response,"response")
     if (response.success) {
       toast.success(response.message);
-      setStudentCertificateRefetch(true);
+      setStudentCertificateRefetch((state) => !state);
+ 
     } else {
       toast.error(response.message);
     }
@@ -96,6 +98,7 @@ const StudenrCertificate = () => {
   
   
     const handleStatusValue = (event, users) => {
+    setSelectedRow(users)
     setStatusChangeDialogOpen(true);
     setStatusValue(users);
   };
@@ -145,7 +148,7 @@ const StudenrCertificate = () => {
   };
   
 
-  console.log(studentCertificates,"srudent")
+  console.log(studentCertificates,"srudent",selectedRow)
 
   const RowOptions = ({ row }) => {
     return (
@@ -280,7 +283,7 @@ const StudenrCertificate = () => {
             onChange={(e) => handleStatusValue(e, row)}
             SelectProps={{
               sx: {
-                borderColor: row.is_active === '1' ? 'success' : 'error',
+                borderColor: row.is_active? 'success' : 'error',
                 color: userStatusObj[row?.is_active]
               }
             }}

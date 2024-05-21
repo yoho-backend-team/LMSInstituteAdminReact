@@ -38,6 +38,7 @@ Axios.interceptors.response.use(
 class HttpClient{
 
      async get(url,params){
+      console.log(url,params)
       const response = await Axios.get(url,{params})
       return response.data
      }

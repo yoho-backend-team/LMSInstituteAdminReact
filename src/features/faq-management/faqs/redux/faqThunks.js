@@ -6,7 +6,7 @@ export const getAllFaqs = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllFaqs(data); // Implement this function in your services
-    dispatch(setFaqs(response?.data?.data));
+    dispatch(setFaqs(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

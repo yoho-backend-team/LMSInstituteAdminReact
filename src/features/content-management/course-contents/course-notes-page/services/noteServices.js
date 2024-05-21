@@ -7,12 +7,9 @@ const COURSE_NOTE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/i
 export const getAllCourseNotes = async (data) => {
   try {
     const response = await client.notes.get(data)
-    console.log(response);
    
     return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllCourseNotes:', error);
     throw new Error(`Failed to fetch CourseNotes. Status: ${error}`);
    
    
@@ -48,7 +45,7 @@ export const addCourseNote = async (data) => {
    
   } catch (error) {
     console.error('Error in addCourseNote:', error);
-    return { success: false, message: 'Failed to create CourseNote' };
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create CourseNote' };
   }
 };
 
@@ -66,21 +63,17 @@ export const deleteCourseNote = async (data) => {
 export const updateCourseNote = async (data) => {
   try {
     const response = await client.notes.update(data)
-    console.log('updatenotes:', response);
    
-    return { success: true, message: 'CourseNote updated successfully' };
+    return { success: true, message: response?.message };
   } catch (error) {
-  
-    return { success: false, message: 'Failed to update CourseNote' };
+    return { success: false, message: error?.response?.data.message?error?.response?.data?.message:'Failed to update CourseNote' };
   }
 };
 
 export const updateCourseNotesStatus = async (data) => {
   try {
     const response = await client.notes.update_status(data)
-    console.log('Notesresponse:', response);
    
-    console.log(response);
     return { success: true, message: 'CourseNotes status updated successfully' };
   
   } catch (error) {

@@ -49,12 +49,13 @@ const Notes = () => {
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue);
+    
     const data = {
       is_active: !statusValue?.is_active,
       id: statusValue?.uuid
     };
     const response = await updateCourseNotesStatus(data);
+
     if (response.success) {
       toast.success(response.message);
       setRefetch((state) => !state);
@@ -102,7 +103,6 @@ const Notes = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 

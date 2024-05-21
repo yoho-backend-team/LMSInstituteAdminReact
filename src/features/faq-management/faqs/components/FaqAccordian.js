@@ -60,7 +60,7 @@ const FaqAccordian = ({ faqCategories ,faqs}) => {
   const [activeTab, setActiveTab] = useState(faqCategories?.id);
 
   useEffect(() => {
-    setActiveTab(faqCategories[0]?.id);
+    setActiveTab(faqCategories?.[0]?.id);
   }, [faqCategories]);
 
   const handleChange = (event, newValue) => {

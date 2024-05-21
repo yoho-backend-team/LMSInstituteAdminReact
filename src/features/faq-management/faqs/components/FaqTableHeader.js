@@ -18,8 +18,10 @@ const FaqTableHeader = (props) => {
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllFaqs({ search: searchInput, branch_id: selectedBranchId }));
+      // dispatch(getAllFaqs({ search: searchInput, branch_id: selectedBranchId }));
+
       setSearchValue(searchInput);
+      e.target.value
     },
     [dispatch]
   );

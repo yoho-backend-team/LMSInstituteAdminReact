@@ -21,8 +21,8 @@ import { getAllUsers } from '../../redux/userThunks';
 import { useDispatch } from 'react-redux';
 
 const userStatusObj = {
-  1: 'success',
-  0: 'error'
+  true: 'success',
+  false: 'error'
 };
 
 const renderClient = (row) => {
@@ -154,10 +154,10 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.name}
+                {row?.first_name+row?.last_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.institution_users?.email}
+                {row?.email}
               </Typography>
             </Box>
           </Box>
@@ -172,7 +172,7 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.institution_users?.mobile}
+            {row?.phone_number}
           </Typography>
         );
       }
@@ -186,7 +186,7 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.role_groups?.role?.name}
+              {row?.role?.identity}
             </Typography>
           </Box>
         );
@@ -211,13 +211,13 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
             onChange={(e) => handleStatusValue(e, row)}
             SelectProps={{
               sx: {
-                borderColor: row.is_active === '1' ? 'success' : 'error',
+                borderColor: row.is_active? 'success' : 'error',
                 color: userStatusObj[row?.is_active]
               }
             }}
           >
-            <MenuItem value={1}>Active</MenuItem>
-            <MenuItem value={0}>Inactive</MenuItem>
+            <MenuItem value={true}>Active</MenuItem>
+            <MenuItem value={false}>Inactive</MenuItem>
           </TextField>
         );
       }

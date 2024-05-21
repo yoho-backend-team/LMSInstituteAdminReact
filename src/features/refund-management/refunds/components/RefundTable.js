@@ -162,7 +162,7 @@ const RefundTable = () => {
       toast.error(result.message);
     }
   };
-
+  console.log(studentFeeRefunds,"studentFeesRefunds")
   const columns = [
     ...defaultColumns,
     {

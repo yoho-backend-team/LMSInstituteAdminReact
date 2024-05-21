@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 // third party
 import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { SpinnerProvider } from 'context/spinnerContext';
 
 // project imports
 import * as serviceWorker from 'serviceWorker';
@@ -20,6 +21,7 @@ import ToastProvider from 'components/ToastProvider';
 const container = document.getElementById('root');
 const root = createRoot(container); 
 root.render(
+  <SpinnerProvider>
   <Provider store={store}>
     <HashRouter basename={config.basename}>
       <ErrorBoundary>
@@ -29,6 +31,7 @@ root.render(
       </ErrorBoundary>
     </HashRouter>
   </Provider>
+  </SpinnerProvider>
 );
 
 

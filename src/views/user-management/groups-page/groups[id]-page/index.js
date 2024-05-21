@@ -34,7 +34,8 @@ const GroupViewPage = () => {
   const getPermissions = async (id) => {
     try {
       setLoading(true);
-      const result = await getAllPermissionsByRoleId(id);
+      const result = await getAllPermissionsByRoleId({role:id});
+      console.log(result,"result")
       if (result.success) {
         setPermissions(result.data);
       } else {
@@ -46,13 +47,13 @@ const GroupViewPage = () => {
       setLoading(false);
     }
   };
-
+  console.log(permissions,"permissions")
   // Memoized rendering of permissions to prevent unnecessary re-renders
   const renderPermissions = useMemo(() => {
     return permissions?.map((module, moduleIndex) => (
       <React.Fragment key={moduleIndex}>
-        {module?.screens?.map((screen, screenIndex) => (
-          <TableRow key={screenIndex} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
+        {/* {module?.screens?.map((screen, screenIndex) => ( */}
+          <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
             <TableCell
               sx={{
                 fontWeight: 600,
@@ -60,19 +61,48 @@ const GroupViewPage = () => {
                 fontSize: (theme) => theme.typography.h6.fontSize
               }}
             >
-              {screen?.screen_name}
+              {module?.identity}
             </TableCell>
-            {screen?.permissions?.map((permission, permissionIndex) => (
-              <TableCell key={permissionIndex}>
+            {/* {module?.permissions?.map((permission, permissionIndex) => ( */}
+             {
+              module?.create_permission?.permission &&<TableCell key={module._id}>
                 <FormControlLabel
-                  label={permission}
+                  label={"create"}
                   sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
-                  control={<Checkbox size="small" id={`${permissionIndex}-write`} checked={true} />}
+                  control={<Checkbox size="small" id={`${module?._id}-write`} checked={module?.create_permission?.permission} />}
                 />
               </TableCell>
-            ))}
+             }
+             {
+              module?.read_permission?.permission &&<TableCell key={module._id}>
+                <FormControlLabel
+                  label={"read"}
+                  sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                  control={<Checkbox size="small" id={`${module?._id}-write`} checked={module?.read_permission?.permission} />}
+                />
+              </TableCell>
+             }
+             {
+              module?.create_permission?.permission &&<TableCell key={module._id}>
+                <FormControlLabel
+                  label={"update"}
+                  sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                  control={<Checkbox size="small" id={`${module?._id}-write`} checked={module?.update_permission?.permission} />}
+                />
+              </TableCell>
+             }
+             {
+              module?.delete_permission?.permission &&<TableCell key={module._id}>
+                <FormControlLabel
+                  label={"delete"}
+                  sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                  control={<Checkbox size="small" id={`${module?._id}-write`} checked={module?.delete_permission?.permission} />}
+                />
+              </TableCell>
+             }
+             {/* ))} */}
           </TableRow>
-        ))}
+        {/* ))} */}
       </React.Fragment>
     ));
   }, [permissions]);
@@ -90,7 +120,7 @@ const GroupViewPage = () => {
               px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
               pt: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
             }}
-            title={group?.name}
+            title={group?.identity}
           ></CardHeader>
           <CardContent
             sx={{

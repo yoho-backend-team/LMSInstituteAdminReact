@@ -14,7 +14,6 @@ export const getAllStudentFeeRefunds = async (data) => {
       params: data
     });
 
-    console.log(response);
 
     // Check if the response status is successful
     
