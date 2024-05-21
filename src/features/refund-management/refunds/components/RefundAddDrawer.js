@@ -124,7 +124,7 @@ const RefundAddDrawer = (props) => {
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
       try {
-        console.log(data,"data",selectedStudentFee)
+        console.log(data,"refunddata",selectedStudentFee)
         
         const InputData = {
           student: data.student,
@@ -140,7 +140,7 @@ const RefundAddDrawer = (props) => {
           payment_date: new Date()
         };
         console.log(data,"data",InputData)
-        console.log(InputData)
+        console.log("Inputdata",InputData)
         const result = await addStudentFeeRefund(InputData);
         console.log(result.data)
 
@@ -201,10 +201,10 @@ const RefundAddDrawer = (props) => {
                     options={activeCourse}
                     getOptionLabel={(course) => course.course_name}
                     onChange={(event, newValue) => {
-                      onChange(newValue?.uuid);
-                      getActiveBatchesByCourse(newValue?.uuid);
+                      onChange(newValue?._id);
+                      getActiveBatchesByCourse(newValue?._id);
                     }}
-                    value={activeCourse.find((course) => course.uuid === value) || null}
+                    value={activeCourse.find((course) => course._id === value) || null}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                     )}
@@ -287,7 +287,7 @@ const RefundAddDrawer = (props) => {
                       setSelectedStudentFee(newValue);
                       field.onChange(newValue.studentfee_id);
                     }}
-                    value={selectedStudentFee?._id}
+                    value={selectedStudentFee?.studentfee_id}
                     renderInput={(params) => (
                       <TextField
                         {...params}

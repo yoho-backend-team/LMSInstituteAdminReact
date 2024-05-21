@@ -41,7 +41,7 @@ const defaultColumns = [
     headerName: 'Refund ID',
     renderCell: ({ row }) => (
       <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-        {`#${row.refund_id}`}
+        {`#${row?.studentfees?.transaction_id}`}
       </Typography>
     )
   },
@@ -51,7 +51,7 @@ const defaultColumns = [
     headerName: 'Student ID',
     renderCell: ({ row }) => (
       <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-        {`#${row.institute_student_fee_id}`}
+        {`#${row?.studentfees?.studentfee_id}`}
       </Typography>
     )
   },
@@ -60,9 +60,9 @@ const defaultColumns = [
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
-      const { students } = row?.student_fees[0];
-      const studentName = `${students.first_name} ${students.last_name}`;
-      const studentEmail = students.email;
+      const { students } = row?.studentfees;
+      const studentName = `${row?.student.first_name} ${row?.student.last_name}`;
+      const studentEmail = row?.student?.email;
 
       return (
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -80,13 +80,13 @@ const defaultColumns = [
     minWidth: 120,
     field: 'paidAmount',
     headerName: 'Paid Amount',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.paid_amount}</Typography>
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.studentfees?.paid_amount}</Typography>
   },
   {
     minWidth: 150,
     field: 'paymentDate',
     headerName: 'Payment Date',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.student_fees[0]?.payment_date}</Typography>
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.studentfees?.payment_date}</Typography>
   },
   {
     minWidth: 150,
@@ -99,7 +99,7 @@ const defaultColumns = [
           size="medium"
           skin="light"
           color={row.status === 'success' ? 'success' : 'error'} // Dynamically set chip color based on status
-          label={row.status}
+          label={row?.studentfees?.is_active?'Active' : 'Inactive'}
         />
       </>
     )
@@ -146,12 +146,14 @@ const RefundTable = () => {
   const [selectedRefundDeleteId, setSelectedRefundDeleteId] = useState(null);
 
   const handleDelete = useCallback((itemId) => {
+    console.log(itemId)
     setSelectedRefundDeleteId(itemId);
     setRefundDeleteModelOpen(true);
   }, []);
 
   const handleRefundDelete = async () => {
-    const data = { refund_id: selectedRefundDeleteId };
+    console.log(selectedRefundDeleteId)
+    const data = { transaction_id: selectedRefundDeleteId };
     const result = await deleteStudentFeeRefund(data);
     if (result.success) {
       toast.success(result.message);
@@ -184,7 +186,8 @@ const RefundTable = () => {
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
-                    handleDelete(row.refund_id);
+                    console.log(row.transaction_id,row)
+                    handleDelete(row._id);
                   }
                 }
               }
@@ -209,7 +212,7 @@ const RefundTable = () => {
       setBatches(result?.data);
     }
   };
-
+  console.log(studentFeeRefunds,"studentFes")
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>

@@ -108,11 +108,11 @@ const NonTeaching = () => {
                             size="small"
                             select
                             label="Status"
-                            SelectProps={{ value: item?.staff?.is_active, onChange: (e) => handleStatusValue(e, item.staff) }}
+                            SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.staff) }}
                             sx={{ width: 100 }}
                           >
-                            <MenuItem value="1">Active</MenuItem>
-                            <MenuItem value="0">Inactive</MenuItem>
+                            <MenuItem value="true">Active</MenuItem>
+                            <MenuItem value="false">Inactive</MenuItem>
                           </TextField>
                         </Grid>
                         <Box component={Link} to={`non-teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>

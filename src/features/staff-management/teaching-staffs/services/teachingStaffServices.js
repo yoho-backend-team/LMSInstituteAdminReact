@@ -38,18 +38,16 @@ export const getAllActiveTeachingStaffs = async (data) => {
     console.log(response);
 
     // Check if the response status is successful
-    if (response.data.status) {
+   
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
-    }
+    
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllTeachingStaffs:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch TeachingStaffs. Status: ${error.response.data.message}`);
+
   }
 };
 
@@ -100,19 +98,16 @@ export const deleteTeachingStaff = async (data) => {
     const response = await axios.post(`${TEACHING_STAFF_API_END_POINT}/delete`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
-    console.log(response);
-    if (response.data.status) {
+   
       return { success: true, message: 'TeachingStaff deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete TeachingStaff' };
-    }
+   
   } catch (error) {
     console.error('Error in deleteTeachingStaff:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message? error?.response?.data?.message: 'Failed to delete StaffSalaies' };
   }
 };
 

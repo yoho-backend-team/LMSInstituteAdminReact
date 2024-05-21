@@ -90,9 +90,16 @@ const FeesEditDrawer = (props) => {
     inputData.append('transaction_id', data.transaction_id);
     inputData.append('paid_amount', data.paid_amount);
     inputData.append('payment_date', convertDateFormat(data.payment_date));
-    inputData.append('id', selectedRows.id);
+    inputData.append('_id', selectedRows._id);
 
-    const result = await updateStudentFee(inputData);
+    const studentfee_data = {
+      logo : selectedImage,
+      transaction_id : data.transaction_id,
+      paid_amount: data.paid_amount,
+      payment_date:data.payment_date,
+      _id : selectedRows._id
+    }
+    const result = await updateStudentFee(studentfee_data);
 
     if (result.success) {
       toast.success(result.message);

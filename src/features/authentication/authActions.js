@@ -14,7 +14,7 @@ export const login = (username, password) => async (dispatch) => {
     password: password
   };
   try {
-    
+     console.log(LOGIN_API_ENDPOINT,"login api end point")
     const response = await axios.post(LOGIN_API_ENDPOINT, data, {
       headers: {
         'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ export const login = (username, password) => async (dispatch) => {
     console.log(error)
     dispatch({
       type: 'LOGIN_FAILURE',
-      payload: error.response.data.message
+      payload: error?.response?.data?.message
     });
   }
 };

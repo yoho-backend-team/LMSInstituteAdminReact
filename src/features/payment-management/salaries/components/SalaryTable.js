@@ -29,6 +29,8 @@ import SalaryAddDrawer from './SalaryAddDrawer';
 import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
 import SalaryViewDrawer from './SalaryViewDrawer';
+import jsPDF from 'jspdf';
+
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -40,7 +42,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row) => {
   if (row?.staff?.image) {
-    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.staff?.image}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.data?.username}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -48,7 +50,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.name || 'John Doe')}
+        {getInitials(row?.data?.username || '')}
       </Avatar>
     );
   }
@@ -105,6 +107,16 @@ const SalaryTable = () => {
     setSelectedRows(rowData);
   };
 
+  const handleDownload = (row) => {
+    const doc = new jsPDF();
+    doc.text(`Transaction ID: ${row.transaction_id}`, 10, 10);
+    doc.text(`Staff Name: ${row.staff.username}`, 10, 20);
+    doc.text(`Email: ${row.staff.email}`, 10, 30);
+    doc.text(`Salary Amount: $${row.salary_amount || 0}`, 10, 40);
+    doc.text(`Payment Date: ${row.payment_date}`, 10, 50);
+    doc.save(`Transaction_${row.transaction_id}.pdf`);
+  };
+
   const handleDelete = useCallback((itemId) => {
     setSelectedSalariesDeleteId(itemId);
     setSalariesDeleteModelOpen(true);
@@ -112,7 +124,7 @@ const SalaryTable = () => {
 
   // Handle branch deletion
   const handleSalariesDelete = async () => {
-    const result = await deleteTeachingStaffSalary({ id: selectedSalariesDeleteId });
+    const result = await deleteTeachingStaffSalary({ transaction_id: selectedSalariesDeleteId });
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
@@ -156,7 +168,7 @@ const SalaryTable = () => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row.staff?.staff_name}
+                {row?.staff?.username}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
                 {row.staff?.email}
@@ -178,7 +190,7 @@ const SalaryTable = () => {
       minWidth: 150,
       field: 'PaymentDate',
       headerName: 'Payment Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.paid_date}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.payment_date}</Typography>
     },
     {
       flex: 1.25,
@@ -186,13 +198,14 @@ const SalaryTable = () => {
       field: 'status',
       headerName: 'Status',
       renderCell: ({ row }) => {
+        const isActive = row?.staff?.is_active;
         return (
           <CustomChip
             rounded
             skin="light"
             size="small"
-            label={row.status}
-            color={userStatusObj[row.status]}
+            label={isActive ? 'Active' : 'Inactive'}
+          color={isActive ? 'success' : 'error'}
             sx={{ textTransform: 'capitalize' }}
           />
         );
@@ -237,13 +250,16 @@ const SalaryTable = () => {
               },
               {
                 text: 'Download',
-                icon: <Icon icon="tabler:download" fontSize={20} />
+                icon: <Icon icon="tabler:download" fontSize={20} />,
+                menuItemProps: {
+                  onClick: () => handleDownload(row)
+                }
               },
               {
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
-                  onClick: () => handleDelete(row.id)
+                  onClick: () => handleDelete(row._id)
                 }
               }
             ]}

@@ -1,11 +1,11 @@
 // groupService.js
 import axios from 'axios';
 
-const NON_TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/payment-management/non-teaching-staff-salaries`;
+const NON_TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/staff-salary`;
 
 export const getAllNonTeachingStaffSalaries = async (selectedBranchId) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/read-by-branch-id`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

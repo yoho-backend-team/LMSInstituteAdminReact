@@ -18,6 +18,8 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addTeachingStaffSalary } from '../teaching-staffs/services/teachingStaffSalariesServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -69,11 +71,12 @@ const FeesAddDrawer = (props) => {
   };
 
   const getActiveStaffsByBranch = async (selectedBranchId, type) => {
-    const data = {
-      type: type,
-      branch_id: selectedBranchId
-    };
-    const result = await getAllActiveTeachingStaffs(data);
+    let result;
+    if (type === 'Teaching') {
+      result = await getAllActiveTeachingStaffs({ branch_id: selectedBranchId });
+    } else {
+      result = await getAllActiveNonTeachingStaffs({ branch_id: selectedBranchId });
+    }
     setActiveStaffs(result.data.data);
   };
 
@@ -85,7 +88,7 @@ const FeesAddDrawer = (props) => {
     }
   };
 
-  console.log(activeCourse);
+  console.log("active course",activeCourse);
 
   const {
     handleSubmit,
@@ -117,15 +120,28 @@ const FeesAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('payment_proof', selectedImage);
-    bodyFormData.append('branch_id', data.branch);
-    bodyFormData.append('institute_staff_id', data.staff.staff_id);
-    bodyFormData.append('transaction_id', data.transaction_id);
-    bodyFormData.append('salary_amount', data.salary_amount);
-    bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
-
-    const result = await addTeachingStaffSalary(bodyFormData);
+    console.log(data,"data",activeBranches,activeBranches[0].branch_identity===data.branch,data.branch,activeBranches[0].branch_identity)
+    const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
+    console.log("branch",branch)
+    // var bodyFormData = new FormData();
+    // bodyFormData.append('payment_proof', selectedImage);
+    // bodyFormData.append('branch_id', data.branch);
+    // bodyFormData.append('institute_staff_id', data.staff);
+    // bodyFormData.append('transaction_id', data.transaction_id);
+    // bodyFormData.append('salary_amount', data.salary_amount);
+    // bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
+    const InputData = {
+      staff: data.staff._id,
+      branch_name:data.branch_id,
+      branch_id : branch[0].uuid,
+      institute_id: useInstitute().getInstituteId(),
+      salary_amount: data.salary_amount,
+      staff_type:  data.staff_type,
+      balance: data.balance,
+      transaction_id : data.transaction_id,
+      payment_date: new Date()
+    };
+    const result = await addTeachingStaffSalary(InputData);
     if (result.success) {
       toast.success(result.message);
       handleClose();
@@ -161,7 +177,7 @@ const FeesAddDrawer = (props) => {
       textAlign: 'center'
     }
   }));
-
+  console.log(activeStaffs,"actveStaffs")
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -223,27 +239,27 @@ const FeesAddDrawer = (props) => {
             </Box>
 
             <Grid item xs={12} sx={{ mb: 2 }}>
-              <Controller
-                name="branch"
-                control={control}
-                rules={{ required: 'Branch field is required' }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeBranches}
-                    getOptionLabel={(branch) => branch.branch_name}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?.branch_id);
-                      getActiveCoursesByBranch({ branch_id: newValue?.branch_id });
-                    }}
-                    value={activeBranches.find((branch) => branch.branch_id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
+                <Controller
+                  name="branch"
+                  control={control}
+                  rules={{ required: 'Branch field is required' }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeBranches}
+                      getOptionLabel={(branch) => branch.branch_identity}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.branch_identity);
+                        getActiveCoursesByBranch(newValue?.branch_identity);
+                      }}
+                      value={activeBranches.find((branch) => branch.branch_identity === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
 
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
@@ -283,7 +299,7 @@ const FeesAddDrawer = (props) => {
                     value={value}
                     onChange={(event, newValue) => onChange(newValue)}
                     options={activeStaffs}
-                    getOptionLabel={(staff) => staff.staff_name}
+                    getOptionLabel={(staff) => staff?.username}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
                     )}
