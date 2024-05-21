@@ -137,10 +137,10 @@ const FirebaseLogin = ({ ...others }) => {
             )}
           </FormControl>
           <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
               label="Remember me"
-            />
+            /> */}
 
             <Typography
               component={Link}

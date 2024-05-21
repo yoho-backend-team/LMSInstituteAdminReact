@@ -38,7 +38,6 @@ Axios.interceptors.response.use(
 class HttpClient{
 
      async get(url,params){
-      console.log(url,params)
       const response = await Axios.get(url,{params})
       return response.data
      }
@@ -50,7 +49,6 @@ class HttpClient{
 
      async update(url,data){
         const response = await Axios.put(url,data)
-        console.log(response,"update")
         return response.data
      }
      
@@ -61,7 +59,6 @@ class HttpClient{
 
      async uploadFile(url, data) {
         const response = await Axios.post(url, data, { headers: { "Content-Type": "multipart/form-data" } });
-        console.log(response, "response");
         return response.data;
     }
 }

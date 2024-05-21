@@ -45,6 +45,10 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
+
+// Imports...
 
 const GroupManagement = () => {
   // State variables
@@ -53,7 +57,6 @@ const GroupManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
   const [statusValue, setStatusValue] = useState('');
-  const {show,hide} = useSpinner()
 
   // Redux
   const dispatch = useDispatch();
@@ -64,16 +67,13 @@ const GroupManagement = () => {
 
   // Fetch groups when selectedBranchId changes
   useEffect(() => {
-    show()
-    dispatch(getAllGroups({ institute_id:useInstitute().getInstituteId(), page: '1' }));
-    hide()
+    dispatch(getAllGroups({ institute_id: useInstitute().getInstituteId(), page: '1' }));
   }, [dispatch, selectedBranchId]);
 
   // Memoized callback for deleting a group
   const handleDeleteGroup = useCallback(async () => {
     try {
       const result = await deleteGroup(selectedDeleteGroupId);
-
       if (result.success) {
         toast.success(result.message);
         dispatch(getAllGroups());
@@ -119,8 +119,7 @@ const GroupManagement = () => {
     },
     [dispatch]
   );
-  console.log(groups,"groups")
-  // Memoized render function for group cards
+
   const renderCards = useMemo(() => {
     return groups?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
@@ -136,11 +135,11 @@ const GroupManagement = () => {
                   '& .MuiAvatar-root': { width: 32, height: 32, fontSize: (theme) => theme.typography.body2.fontSize }
                 }}
               >
-                {item?.users?.map((user, index) => (
+              {item?.users?.map((user, index) => (
                   <Tooltip key={index} title={user?.name}>
-                    <Avatar alt={item?.name} src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${user?.institution_users?.image}`} />
+                    <Avatar alt={item?.name} src={`${user?.image?getImageUrl(user?.image):imagePlaceholder}`} />
                   </Tooltip>
-                ))}
+              ))}
               </AvatarGroup>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -197,23 +196,17 @@ const GroupManagement = () => {
       </Grid>
     ));
   }, [groups?.data, handleStatusValue]);
- 
-  if(groupLoading && groups.length===0){
-    show()
- }
+
+  console.log(groups, "groups");
 
   return (
     <Grid>
-      {/* Header */}
       <Header title="Groups" handleSearch={handleSearch} searchQuery={searchQuery} />
 
-      {/* Render loading skeleton or group cards */}
       {groupLoading ? (
         <GroupSkeleton />
       ) : (
         <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-          {/* Add New Group card */}
-
           <Grid item xs={12} sm={6} lg={4}>
             <Card sx={{ cursor: 'pointer' }}>
               <Grid container sx={{ height: '100%' }}>
@@ -244,26 +237,20 @@ const GroupManagement = () => {
             </Card>
           </Grid>
           {renderCards}
-
-          {/* Pagination */}
           {groups?.last_page !== 1 && (
             <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
               <Pagination
                 count={groups?.last_page}
                 color="primary"
-                onChange={async (e, page) => {
-                  dispatch(getAllGroups({ branch_id: selectedBranchId, page: page }));
-                }}
+                onChange={(e, page) => dispatch(getAllGroups({ branch_id: selectedBranchId, page }))}
               />
             </Grid>
           )}
         </Grid>
       )}
 
-      {/* Group delete dialog */}
       <GroupDeleteDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} handleDeleteGroup={handleDeleteGroup} />
 
-      {/* Status change dialog */}
       <GroupStatusChangeDialog
         open={statusChangeDialogOpen}
         setOpen={setStatusChangeDialogOpen}

@@ -147,9 +147,7 @@ const ApplicationRoutes = () => {
   const permissions = useSelector((state) => state.auth.permissions);
 
   const hasPermission = (permissionCode,permission,action) => {
-    console.log(permission,action,permissionCode)
     return permissionCode === permission?.[action]?.code
-    // return permissions?.some((obj) => obj.identity === permissionCode);
   };
   
   const ProtectedRoute = ({ element, permissionCode,module ,permissionReq }) => {

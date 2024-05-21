@@ -12,7 +12,6 @@ const getInstituteDetails = () => {
 const getSelectedBranchId = () => {
     if(typeof(localStorage)!== "undefined"){
     const branch = localStorage.getItem("selectedBranchId")
-    console.log(branch,"branch")
     return branch
     }
 }
@@ -29,7 +28,8 @@ const generateEndpoints = () => {
 
     return {
         permission : {
-            getAll : `/api/admin/institutes/permissions/all`
+            getAll : `/api/admin/institutes/permissions/all`,
+            update : `/api/admin/institutes/groups/permissions`
         },
         group : {
             create : "/api/admin/institutes/role",
@@ -97,5 +97,4 @@ const generateEndpoints = () => {
     };
 };
 
-console.log(generateEndpoints())
 export const HTTP_END_POINTS = generateEndpoints();

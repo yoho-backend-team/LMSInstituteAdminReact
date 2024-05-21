@@ -3,7 +3,8 @@ import { HTTP_END_POINTS } from "api/client/http_end_points";
 
 class Client {
     permission = {
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll)
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.permission.update,data)
     }
     group = {
       create : (data) => HttpClient.post(HTTP_END_POINTS.group.create,data),
