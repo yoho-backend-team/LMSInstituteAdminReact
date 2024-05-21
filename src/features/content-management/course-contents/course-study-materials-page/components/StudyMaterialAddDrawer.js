@@ -24,6 +24,7 @@ const StudyMaterialAddDrawer = (props) => {
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [files, setFiles] = useState([]);
 
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
@@ -157,7 +158,7 @@ const StudyMaterialAddDrawer = (props) => {
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+            <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
           </Grid>
 

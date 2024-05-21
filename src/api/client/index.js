@@ -1,7 +1,19 @@
 import HttpClient from "./httpclinet"; 
-import { HTTP_END_POINTS } from "api/urls";
+import { HTTP_END_POINTS } from "api/client/http_end_points";
 
 class Client {
+    permission = {
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll)
+    }
+    group = {
+      create : (data) => HttpClient.post(HTTP_END_POINTS.group.create,data),
+      getAll : (data) => HttpClient.get(HTTP_END_POINTS.group.getAll+data.institute_id),
+      permissionWithRole : (data) => HttpClient.get(HTTP_END_POINTS.group.permissions,data)
+    }
+    user = {
+      add : (data) => HttpClient.post(HTTP_END_POINTS.user.add,data),
+      getAll : (data) => HttpClient.get(HTTP_END_POINTS.user.all,data)
+    }
     branch = {
        getAll : (params) => HttpClient.get(HTTP_END_POINTS.branch.getAll,params),
     }
@@ -33,7 +45,7 @@ class Client {
     notes = {
       get : (params) => HttpClient.get(HTTP_END_POINTS.notes.index,params),
       create : (data) => HttpClient.post(HTTP_END_POINTS.notes.index,data),
-      update : (data) => HttpClient.update(HTTP_END_POINTS.notes.index+`/update/${data.uuidid}`),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.notes.index+`/update/${data.uuid}`,data),
       update_status : (data) => HttpClient.update(HTTP_END_POINTS.notes.update_status+data.id,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.notes.index+"/"+data.id)
     }
@@ -41,6 +53,7 @@ class Client {
       create : (data,options) => {
         return HttpClient.post(HTTP_END_POINTS.course.add+`${data.category}/courses/`,data,options)
       },
+      getWithBranch : (data) => HttpClient.get(HTTP_END_POINTS.course.withBranch+data.branch_id+"/courses") ,
       update : (data) => HttpClient.update(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.course}`,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.id}`)
     }

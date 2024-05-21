@@ -40,8 +40,13 @@ const NotesHeader = (props) => {
   }, [dispatch, selectedBranchId]);
 
   const handleFilterByStatus = (e) => {
-    setStatusValue(e.target.value);
-    const data = { is_active: e.target.value, branch: selectedBranchId };
+    const value = e.target.value;
+    setStatusValue(value);
+
+    let data = { branch: selectedBranchId };
+    if (value !== "") {
+      data = { ...data, is_active: value};
+    }
     dispatch(getAllCourseNotes(data));
   };
 

@@ -44,8 +44,9 @@ const CategoriesDataGrid = () => {
     
     const data = {
       branchid: selectedBranchId,
-      instituteid: useInstitute().getInstituteId()
-      
+      instituteid: useInstitute().getInstituteId(),
+      page : 1,
+      perPage :10
     };
    
     dispatch(getAllFaqCategories(data));
@@ -233,7 +234,7 @@ const CategoriesDataGrid = () => {
                 autoHeight
                 key={"id"}
                 rowHeight={80}
-                rows={faqCategories}
+                 rows={faqCategories?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
@@ -261,7 +262,20 @@ const CategoriesDataGrid = () => {
         />
       </Grid>
       <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
+      {faqCategories?.last_page !== 1 && (
+          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={faqCategories?.last_page}
+              color="primary"
+              onChange={async (e, page) => {
+                const data = {
+                  page: page
+                };
+                dispatch(getAllFaqCategories(data));
+              }}
+            />
+          </Grid>
+        )}
       </Grid>
     </>
   );

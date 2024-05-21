@@ -41,8 +41,6 @@ const defaultValues = {
 const NotesEdit = (props) => {
   // ** Props
   const { open, toggle, notes, setRefetch } = props;
-  console.log('NotesEdit - open:', props.open);
-  console.log('NotesEdit - toggle:', props.toggle);
   
   const {
     handleSubmit,
@@ -55,8 +53,6 @@ const NotesEdit = (props) => {
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-
-  console.log('notes :', notes);
 
   useEffect(() => {
     if (notes) {
@@ -73,13 +69,7 @@ const NotesEdit = (props) => {
        uuid : notes.uuid,
        file : selectedFile ? data.pdf_file : notes.file
     }
-    if(selectedFile){
-      console.log("selected itle is true")
-    }else{
-      console.log("false")
-    }
-    console.log(note_data,data);
-    
+  
     const result = await updateCourseNote(note_data);
 
     if (result.success) {
@@ -87,9 +77,7 @@ const NotesEdit = (props) => {
       setRefetch((state) => !state);
       toggle();
     } else {
-      let errorMessage = '';
-
-      toast.error(errorMessage.trim());
+      toast.error(result?.message);
     }
   };
 
@@ -117,7 +105,6 @@ const NotesEdit = (props) => {
     }
   }, []);
 
-  console.log(setSelectedFile);
 
   const ButtonStyled = useMemo(
     () =>

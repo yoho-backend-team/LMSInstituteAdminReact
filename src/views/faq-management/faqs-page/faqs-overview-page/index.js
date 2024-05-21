@@ -49,8 +49,9 @@ const FaqDataGrid = () => {
   
     const data = {
       branchid: selectedBranchId,      
-      instituteId: institute._id
-      
+      instituteId: institute._id,
+      page : 1,
+      perPage :10
     };
     console.log(data)
     dispatch(getAllFaqs(data));
@@ -60,10 +61,12 @@ const FaqDataGrid = () => {
     const institute = JSON.parse(localStorage.getItem('institute'))
     const data = {
       branchid: selectedBranchId,      
-      instituteid: institute.uuid,is_active:true
+      instituteid: institute.uuid,is_active:true,
+      page : 1,
+      perPage :10
     };
     const result = await getActiveFaqCategories(data);
-    setFaqCategories(result.data.data);
+    setFaqCategories(result.data);
   };
 
   console.log(deletingItemId);
@@ -244,12 +247,12 @@ const FaqDataGrid = () => {
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
   };
-  console.log(faqCategories,"faqCategories")
+  console.log(faqCategories,"faqCategories",faqs)
   return (
     <>
       <Grid container>
         <Grid item xs={12}>
-          <FaqAccordian faqCategories={faqCategories} faqs={faqs} />
+          <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} />
         </Grid>
         <Grid item xs={12}>
           <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
@@ -262,7 +265,7 @@ const FaqDataGrid = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={faqs}
+                rows={faqs?.data?faqs?.data:[]}
                 columns={columns}
                 getRowId={(row) => row._id} 
                 disableRowSelectionOnClick
@@ -273,12 +276,12 @@ const FaqDataGrid = () => {
             </Card>
           </Grid>
         )}
-        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories} setRefetch={setRefetch} />
+        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories?.data} setRefetch={setRefetch} />
         <FaqEdit
           open={editUserOpen}
           toggle={toggleEditUserDrawer}
           initialValues={selectedRow}
-          faqCategories={faqCategories}
+          faqCategories={faqCategories?.data}
           setRefetch={setRefetch}
         />
         <DeleteDialog
@@ -297,7 +300,20 @@ const FaqDataGrid = () => {
         />
       </Grid>
       <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
+      {faqs?.last_page !== 1 && (
+          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={faqs?.last_page}
+              color="primary"
+              onChange={async (e, page) => {
+                const data = {
+                  page: page
+                };
+                dispatch(getActiveFaqCategories(data));
+              }}
+            />
+          </Grid>
+        )}
       </Grid>
     </>
   );

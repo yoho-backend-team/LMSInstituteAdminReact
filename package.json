@@ -2,7 +2,7 @@
   "name": "lms-institution-admin-software",
   "version": "3.3.2",
   "private": true,
-  "homepage": "http://lms.yohotechnologies.in",
+  "homepage": "http://192.168.29.174:3000",
   "dependencies": {
     "@emotion/cache": "11.10.8",
     "@emotion/react": "^11.11.3",

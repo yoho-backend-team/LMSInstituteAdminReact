@@ -27,6 +27,7 @@ export default function CourseValidate({ setCourseSyllabus }) {
   });
 
   const { reset, handleSubmit, watch } = methods;
+  const [files, setFiles] = useState([]);
 
   const values = watch();
 
@@ -49,7 +50,7 @@ export default function CourseValidate({ setCourseSyllabus }) {
             <Stack spacing={3}>
               <div>
                 <CardHeader title="Course Syllabus" />
-                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} />
+                <CoursePdfInput setCourseSyllabus={setCourseSyllabus} files={files} setFiles={setFiles} />
               </div>
             </Stack>
           </Card>

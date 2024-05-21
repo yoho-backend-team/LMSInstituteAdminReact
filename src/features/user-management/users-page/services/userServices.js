@@ -1,4 +1,5 @@
 // userService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const USER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/user-management/user`;
@@ -8,27 +9,16 @@ const PROFILE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/instit
 
 export const getAllUsers = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/get-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.user.getAll(data)
     console.log('users', response);
     // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch users. Status: ${response.status}`);
-    }
+    return response;
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllUsers:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch users. Status: ${error?.response.data?.message}`);
   }
 };
 export const getUserActivityLog = async (data) => {
@@ -142,23 +132,15 @@ export const updateUser = async (data) => {
 };
 export const addUser = async (data) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'User created successfully' };
-    } else {
-      return { success: false, message: response.data.message };
-    }
+    const response = await client.user.add(data)
+   
+    return { success: true, message: 'User created successfully' };
   } catch (error) {
     console.error('Error in addUser:', error);
-    throw error;
+    return { success: false, message: error?.response.data.message };
   }
 };
+
 export const checkUserName = async (userName) => {
   try {
     const response = await axios.post(

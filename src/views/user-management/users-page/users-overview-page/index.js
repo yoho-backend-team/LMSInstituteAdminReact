@@ -8,6 +8,7 @@ import UserFilterCard from 'features/user-management/users-page/users-overview-p
 import UserHeaderSection from 'features/user-management/users-page/users-overview-page/components/UserHeaderSection';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,8 @@ const UserList = () => {
   }, [dispatch, selectedBranchId]);
 
   const getGroups = async () => {
-    const result = await getAllGroups();
+    const result = await getAllGroups({institute_id:useInstitute().getInstituteId()});
+    console.log(result,"result")
     if (result.data) {
       setGroups(result.data);
     }
@@ -38,15 +40,15 @@ const UserList = () => {
 
   // Fetch users when selectedBranchId or userRefetch changes
   useEffect(() => {
-    dispatch(getAllUsers({ branch_id: selectedBranchId, page: '1' }));
+    dispatch(getAllUsers({ branch_id: selectedBranchId, page: '1',institute_id:useInstitute().getInstituteId() }));
   }, [dispatch, selectedBranchId, userRefetch]);
-
+  console.log(users,"users")
   return (
     <>
       <Grid container spacing={3}>
         {/* User Header Section */}
         <Grid item xs={12}>
-          <UserHeaderSection users={users} groups={groups} />
+          <UserHeaderSection users={users?.data} groups={groups} />
         </Grid>
 
         {/* User Filter Card */}

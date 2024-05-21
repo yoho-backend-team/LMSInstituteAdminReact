@@ -74,6 +74,12 @@ const GroupEditDialog = () => {
   const onSubmit = useCallback(
     async (data) => {
       try {
+        console.log(selectedCheckbox,"selectedCheckBox")
+        selectedCheckbox?.map((i)=>{
+          const [type,id] = i.match(/[a-zA-Z]+|\d+/g)
+          console.log(type,id,"type and id")
+        })
+        d
         const inputData = {
           id: groupId,
           name: data.roleName === groupName ? '' : data?.roleName,
@@ -110,9 +116,16 @@ const GroupEditDialog = () => {
   const getPermissions = useCallback(async () => {
     try {
       const result = await getAllPermissions();
+      console.log(result,"permissions getAll")
       if (result.success) {
-        setPermissions(result.data);
-        setPermissionCount(result.permissions);
+        // setPermissions(result.data);
+        // result?.permissions?.forEach((permission) => {
+        //   togglePermission("create"+permission.id);
+        //   togglePermission("read"+permission.id);
+        //   togglePermission("update"+permission.id);
+        //   togglePermission("delete"+permission.id);
+        // });
+        // setPermissionCount(result.permissions);
       } else {
         console.log(result.message);
       }
@@ -126,12 +139,16 @@ const GroupEditDialog = () => {
     try {
       setLoading(true);
       const result = await getPermissionsByRole(id);
-
+      console.log(result,"result permissionsByRole")
       if (result.success) {
         result.data?.forEach((permission) => {
-          togglePermission(permission);
+          permission?.create_permission?.permission && togglePermission("create"+permission.id);
+          permission?.read_permission?.permission && togglePermission("read"+permission.id);
+          permission?.update_permission?.permission && togglePermission("update"+permission.id);
+          permission?.delete_permission?.permission && togglePermission("delete"+permission.id);
         });
         setLoading(false);
+        setPermissions(result?.data)
       } else {
         console.log(result.message);
         setLoading(false);
@@ -167,11 +184,11 @@ const GroupEditDialog = () => {
       setIsIndeterminateCheckbox(true);
     }
   }, [isIndeterminateCheckbox, permissionCount]);
-
+  console.log(selectedCheckbox,"selected",permissions)
   // Render permissions table rows
   const renderPermissions = useMemo(() => {
-    return permissions?.map((module) =>
-      module?.screens?.map((screen, index) => (
+    return permissions?.map((module,index) =>
+      // module?.screens?.map((screen, index) => (
         <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
           <TableCell
             sx={{
@@ -180,26 +197,73 @@ const GroupEditDialog = () => {
               fontSize: (theme) => theme.typography.h6.fontSize
             }}
           >
-            {screen?.screen_name}
+            {module?.identity}
           </TableCell>
-          {screen?.permissions?.map((permission, index) => (
-            <TableCell key={index}>
+          {/* {screen?.permissions?.map((permission, index) => ( */}
+            {
+              module?.create_permission?.permission &&<TableCell key={module?.id+module._id+index+module?.identity}>
               <FormControlLabel
-                label={permission?.name}
+                label={"create"}
                 sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
                 control={
                   <Checkbox
                     size="small"
-                    id={`${index}-write`}
-                    onChange={() => togglePermission(permission?.id)}
-                    checked={selectedCheckbox?.includes(permission?.id)}
+                    id={`${index}-create`}
+                    onChange={() => togglePermission("create"+module?.id)}
+                    checked={selectedCheckbox?.includes("create"+module?.id)}
                   />
                 }
               />
             </TableCell>
-          ))}
+            }
+            {module?.read_permission?.permission&&<TableCell key={module?._id+module.id+index+module?.identity}>
+              <FormControlLabel
+                label={"read"}
+                sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                control={
+                  <Checkbox
+                    size="small"
+                    id={`${index}-read`}
+                    onChange={() => togglePermission("read"+module?.id)}
+                    checked={selectedCheckbox?.includes("read"+module?.id)}
+                  />
+                }
+              />
+            </TableCell>
+            }
+            {module?.update_permission?.permission&&<TableCell key={index+module.id+module?._id+module?.identity}>
+              <FormControlLabel
+                label={"update"}
+                sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                control={
+                  <Checkbox
+                    size="small"
+                    id={`${index}-update`}
+                    onChange={() => togglePermission("update"+module?.id)}
+                    checked={selectedCheckbox?.includes("update"+module?.id)}
+                  />
+                }
+              />
+            </TableCell>
+            }
+            {module?.delete_permission?.permission&&<TableCell key={index+module.id+module?.identity+module?._id}>
+              <FormControlLabel
+                label={"delete"}
+                sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+                control={
+                  <Checkbox
+                    size="small"
+                    id={`${index}-delete`}
+                    onChange={() => {togglePermission("delete"+module?.id);console.log(selectedCheckbox?.includes("delete"+module?.id),module?.id)}}
+                    checked={selectedCheckbox?.includes("delete"+module?.id)}
+                  />
+                }
+              />
+            </TableCell>
+            }
+          {/* ))} */}
         </TableRow>
-      ))
+      // ))
     );
   }, [permissions, selectedCheckbox, togglePermission]);
 

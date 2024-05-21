@@ -28,8 +28,20 @@ const generateEndpoints = () => {
     const instituteId = institute? institute?.uuid  :""
 
     return {
+        permission : {
+            getAll : `/api/admin/institutes/permissions/all`
+        },
+        group : {
+            create : "/api/admin/institutes/role",
+            getAll : "/api/admin/institutes/groups/all/",
+            permissions : "/api/lms/institutes/groups/permissions/"
+        },
+        user : {
+            add : "/api/institutes/auth/admin/register",
+            all : "/api/institutes/auth/admin/users/all"
+        },
         branch : {
-             getAll : `/api/institutes/${instituteId}/branches/`
+            getAll : `/api/institutes/${instituteId}/branches/`
         },
         category: {
             getAll: `/api/institutes/${instituteId}/categories/`,
@@ -38,6 +50,7 @@ const generateEndpoints = () => {
         course: {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,
             update: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
+            withBranch : `/api/institutes/${instituteId}/branches/`,
             add :`/api/institutes/${instituteId}/categories/`
         },
         course_module : {

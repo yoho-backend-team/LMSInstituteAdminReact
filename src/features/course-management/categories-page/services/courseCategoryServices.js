@@ -1,6 +1,6 @@
 // courseCategories.js
 import axios from 'axios';
-import { HTTP_END_POINTS } from 'api/urls';
+import { HTTP_END_POINTS } from 'api/client/http_end_points';
 import client from 'api/client';
 
 

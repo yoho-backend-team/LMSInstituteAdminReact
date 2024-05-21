@@ -147,7 +147,8 @@ const ApplicationRoutes = () => {
   const permissions = useSelector((state) => state.auth.permissions);
 
   const hasPermission = (permissionCode,permission,action) => {
-    return permissionCode === permission[action].code
+    console.log(permission,action,permissionCode)
+    return permissionCode === permission?.[action]?.code
     // return permissions?.some((obj) => obj.identity === permissionCode);
   };
   
@@ -188,13 +189,13 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<GroupsPage />} permissionCode={'can_read_institute_group'} module={'Groups'} />}>
             <Route path="groups" element={<GroupsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<AddGroupPage />} permissionCode={'can_create_institute_group'} module={'Groups'} />}>
+          <Route element={<ProtectedRoute element={<AddGroupPage />} permissionCode={'can_create_institute_group'} permissionReq={"create_permission"} module={'Groups'} />}>
             <Route path="groups/add" element={<AddGroupPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<ViewGroupPage />} permissionCode={'inst_perm_group_details_view'} module={'Groups'} />}>
+          <Route element={<ProtectedRoute element={<ViewGroupPage />} permissionCode={'can_read_institute_group'} module={'Groups'} />}>
             <Route path="groups/view" element={<ViewGroupPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<EditGroupPage />} permissionCode={'can_update_institute_group'} module={'Groups'} />}>
+          <Route element={<ProtectedRoute element={<EditGroupPage />} permissionCode={'can_update_institute_group'} module={'Groups'} permissionReq={"update_permission"} />}>
             <Route path="groups/:id/edit/" element={<EditGroupPage />} />
           </Route>
           <Route element={<ProtectedRoute element={<UsersPage />} permissionCode={'can_read_institute_user'} module={'Users'} />}>
@@ -426,13 +427,13 @@ const ApplicationRoutes = () => {
         {/* Ticket Management Routes */}
         <Route path="/ticket-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/ticket-management/staff-ticket" />} />
-          <Route element={<ProtectedRoute element={<StaffTicketPage />} permissionCode={'inst_perm_staff_ticket_view'} />}>
+          <Route element={<ProtectedRoute element={<StaffTicketPage />} permissionCode={'inst_perm_staff_ticket_view'} module={"staff_tickets"} />}>
             <Route path="staff-ticket" element={<StaffTicketPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<StudentTicketPage />} permissionCode={'inst_perm_student_ticket_view'} />}>
+          <Route element={<ProtectedRoute element={<StudentTicketPage />} permissionCode={'inst_perm_student_ticket_view'} module={"Student Tickets"} />}>
             <Route path="student-ticket" element={<StudentTicketPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<YourTicketPage />} permissionCode={'inst_perm_student_ticket_view'} />}>
+          <Route element={<ProtectedRoute element={<YourTicketPage />} permissionCode={'inst_perm_student_ticket_view'} module={"Student Tickets"} />}  >
             <Route path="your-ticket" element={<YourTicketPage />} />
           </Route>
         </Route>

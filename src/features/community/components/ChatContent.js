@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 import ChatLog from './ChatLog';
 import SendMsgForm from './SendMsgForm';
 import UserProfileRight from './UserProfileRight';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -40,15 +42,23 @@ const ChatContent = (props) => {
     chats,
     selectedBatch,
     setChats,
-    communityDetails
+    communityDetails,
+    socket
   } = props;
+  const [messages,setMessages] =useState([])
 
   const handleStartConversation = () => {
     if (!mdAbove) {
       handleLeftSidebarToggle();
     }
   };
-  console.log(chats,"chats")
+  useEffect(()=>{
+    // const ioInit = io(process.env.REACT_APP_PUBLIC_API_URL)
+    socket.on("message",(message)=>{
+      setMessages((messages)=>[...messages,message])
+    })
+  },[])
+  console.log(chats,"chats",messages)
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
@@ -116,7 +126,7 @@ const ChatContent = (props) => {
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant="h5">{selectedBatch?.chatName}</Typography>
                 <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
-                  {selectedBatch?.batch_community?.batch?.institute_course_branch?.course_name}
+                  {selectedBatch?.batch?.batch?.course_name}
                 </Typography>
               </Box>
             </Box>
@@ -131,8 +141,8 @@ const ChatContent = (props) => {
             </Box>
           </Box>
 
-          {selectedChat ? <ChatLog hidden={hidden} data={selectedChat} /> : null}
-          <SendMsgForm store={store} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
+          {messages ? <ChatLog hidden={hidden} data={messages} /> : null}
+          <SendMsgForm store={store} socket={socket} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
           <UserProfileRight
             store={store}
             hidden={hidden}
