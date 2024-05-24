@@ -40,8 +40,8 @@ const ViewOfflineClass = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredStudents = offlineClassData?.data?.batch_class?.batch?.institute_batch_student?.filter((student) =>
-    student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = offlineClassData?.batch?.student?.filter((student) =>
+    student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearchChange = (event) => {
@@ -50,7 +50,7 @@ const ViewOfflineClass = () => {
 
   useEffect(() => {
     const data = {
-      class_id: offlineClassId
+      id: offlineClassId
     };
     getOfflineClassData(data);
   }, [dispatch, offlineClassId]);
@@ -77,7 +77,7 @@ const ViewOfflineClass = () => {
       field: 'student_id',
       renderCell: ({ row }) => (
         <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {row?.student?.student_id}
+          {row?.id}
         </Typography>
       )
     },
@@ -86,7 +86,7 @@ const ViewOfflineClass = () => {
       field: 'full_name',
       headerName: 'Student Name',
       renderCell: (params) => {
-        const student = params?.row?.student;
+        const student = params?.row;
         const fullName = `${student.first_name} ${student.last_name}`;
         const email = student.email;
         return (
@@ -117,8 +117,8 @@ const ViewOfflineClass = () => {
       field: 'City',
       headerName: 'city',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const city = student.city;
+        const student = params?.row;
+        const city = student?.contact_info?.city;
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
@@ -133,8 +133,8 @@ const ViewOfflineClass = () => {
       field: 'address',
       headerName: 'Address',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const address = `${student.address_line_1} ${student.address_line_2}`;
+        const student = params?.row;
+        const address = `${student?.contact_info?.address1} ${student?.contact_info?.address2}`;
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
@@ -151,7 +151,7 @@ const ViewOfflineClass = () => {
       <Grid container>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title={offlineClassData?.data?.class_name} />
+            <CardHeader title={offlineClassData?.class_name} />
             <CardContent sx={{ mt: 0, pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item>
@@ -159,7 +159,7 @@ const ViewOfflineClass = () => {
                     Course
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_name}
+                    {offlineClassData?.batch?.course?.course_name}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -167,7 +167,7 @@ const ViewOfflineClass = () => {
                     Batch
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.batch_id}
+                    {offlineClassData?.batch?.id}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -175,7 +175,7 @@ const ViewOfflineClass = () => {
                     Duration
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_duration}
+                    {offlineClassData?.batch?.course?.duration}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -183,7 +183,7 @@ const ViewOfflineClass = () => {
                     Date
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.class_date}
+                    {offlineClassData?.start_date}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -191,7 +191,7 @@ const ViewOfflineClass = () => {
                     Sarted At
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.start_date}
+                    {offlineClassData?.batch?.start_date}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -199,7 +199,7 @@ const ViewOfflineClass = () => {
                     Ended At
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.end_date}
+                    {offlineClassData?.batch?.end_date}
                   </Typography>
                 </Grid>
               </Grid>

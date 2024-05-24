@@ -17,7 +17,6 @@ const OfflineClass = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const data = {
-      type: 'offline',
       branch: selectedBranchId,
       institute : useInstitute().getInstituteId(),
       page: '1'

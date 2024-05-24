@@ -73,7 +73,8 @@ class Client {
       getWithId : (data) => HttpClient.get(HTTP_END_POINTS.online_class.getWithId+data.class_id)
     }
     offline_class = {
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.offline_class.getAll,params)
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.offline_class.getAll,params),
+      getWithId : (params) => HttpClient.get(HTTP_END_POINTS.offline_class.getWithId+params?.id)
     }
     users = {
       verifyOtp : (data,options) => HttpClient.post(HTTP_END_POINTS.users.valiateOtp,data,options),

@@ -103,29 +103,19 @@ export const updateOfflineClass = async (data) => {
 
 export const getOfflineClassDetails = async (data) => {
   try {
-    const response = await axios.get(`${OFFLINE_CLASS_API_END_POINT}/list-offline-class-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.offline_class.getWithId(data)
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
+   
       return {
         success: true,
         data: response?.data
       };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batch. Status: ${response.status}`);
-    }
+    
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getOfflineClassDetails:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch batch. Status: ${error?.response?.data?.message}`);
   }
 };
