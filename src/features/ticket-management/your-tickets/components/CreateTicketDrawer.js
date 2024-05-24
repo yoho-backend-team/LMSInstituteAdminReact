@@ -10,10 +10,12 @@ import * as yup from 'yup';
 import Icon from 'components/icon';
 import { useSelector } from 'react-redux';
 import { CreateTicket } from '../services/ticketService';
+import { useInstitute } from 'utils/get-institute-details';
 
 const CreateTicketDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+   
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -52,7 +54,8 @@ const CreateTicketDrawer = (props) => {
     try {
       const inputData = {
         query: data.query,
-        branch_id: selectedBranchId
+        branch_id : selectedBranchId,
+        institute_id: useInstitute().getInstituteId(),
       };
 
       const result = await CreateTicket(inputData);

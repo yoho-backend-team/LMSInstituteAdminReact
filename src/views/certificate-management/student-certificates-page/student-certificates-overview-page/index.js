@@ -31,6 +31,8 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import { useInstitute } from 'utils/get-institute-details';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const userStatusObj = {
   1: 'success',
@@ -66,12 +68,61 @@ const StudenrCertificate = () => {
           skin="light"
           sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
         >
-          {getInitials(row?.name ? row?.name : 'name')}
+          {getInitials(row?.student?.fullname ||  '')}
         </CustomAvatar>
       );
     }
   };
+  const downloadPDF = (row) => {
+  const doc = new jsPDF();
+  const marginLeft = 10;
+  const marginTop = 10;
+  const lineHeight = 10;
 
+  // Set document properties
+  doc.setProperties({
+    title: 'Student Certificate',
+  });
+
+  // Add title
+  doc.setFontSize(16);
+  doc.text('Student Certificate', marginLeft, marginTop);
+
+  // Add details
+  doc.setFontSize(12);
+  doc.text(`Certificate Name: ${row.certificate_name}`, marginLeft, marginTop + lineHeight * 2);
+  doc.text(`Description: ${row.description}`, marginLeft, marginTop + lineHeight * 3);
+  doc.text(`Student Name: ${row.student[0].full_name}`, marginLeft, marginTop + lineHeight * 4);
+  doc.text(`Student Email: ${row.student[0].email}`, marginLeft, marginTop + lineHeight * 5);
+  doc.text(`Status: ${row.is_active ? 'Active' : 'Inactive'}`, marginLeft, marginTop + lineHeight * 6);
+
+  // Add table with autoTable
+  autoTable(doc, {
+    startY: marginTop + lineHeight * 8,
+    head: [['Field', 'Value']],
+    body: [
+      ['Certificate Name', row.certificate_name],
+      ['Description', row.description],
+      ['Student Name', row.student[0].full_name],
+      ['Student Email', row.student[0].email],
+      ['Status', row.is_active ? 'Active' : 'Inactive'],
+    ],
+    styles: { fontSize: 12 },
+    headStyles: { fillColor: [22, 160, 133] },
+    alternateRowStyles: { fillColor: [240, 240, 240] },
+  });
+
+  // Add footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.getWidth() - marginLeft - 10, doc.internal.pageSize.getHeight() - 10);
+  }
+
+  // Save PDF
+  doc.save('student_certificate.pdf');
+};
  
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -158,7 +209,10 @@ const StudenrCertificate = () => {
         options={[
           {
             text: 'Download',
-            icon: <Icon icon="tabler:download" fontSize={20} />
+            icon: <Icon icon="tabler:download" fontSize={20} />,
+            menuItemProps: {
+              onClick: () => downloadPDF(row)
+            }
           },
           {
             text: 'Edit',
@@ -227,10 +281,10 @@ const StudenrCertificate = () => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.student?.full_name}
+                {row?.student[0]?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.student?.email}
+                {row?.student[0]?.email}
               </Typography>
             </Box>
           </Box>

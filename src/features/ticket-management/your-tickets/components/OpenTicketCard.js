@@ -13,9 +13,9 @@ const OpenTicketCard = ({ ticket }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src={ticket?.institute?.logo} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5">{ticket?.institute?.name}</Typography>
+                <Typography variant="h5">{ticket?.institute_id?.institute_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                  {ticket?.institute?.email}
+                  {ticket?.institute_id?.email}
                 </Typography>
               </Box>
             </Box>
@@ -34,7 +34,7 @@ const OpenTicketCard = ({ ticket }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {ticket?.tickets?.query}
+            {ticket?.query}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -44,7 +44,7 @@ const OpenTicketCard = ({ ticket }) => {
                 size="small"
                 skin="light"
                 color={'error'}
-                label={`Priority:${ticket?.priority}`}
+                label={`Priority:${ticket?.is_active}`}
               />
             </Box>
           </Box>

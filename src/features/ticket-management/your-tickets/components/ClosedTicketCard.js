@@ -13,9 +13,9 @@ const ClosedTicketCard = ({ ticket }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src={ticket?.institute?.logo} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5">{ticket?.institute?.name}</Typography>
+                <Typography variant="h5">{ticket?.institute_id?.institute_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                  {ticket?.institute?.email}
+                  {ticket?.institute_id?.email}
                 </Typography>
               </Box>
             </Box>
@@ -34,9 +34,9 @@ const ClosedTicketCard = ({ ticket }) => {
               textOverflow: 'ellipsis'
             }}
           >
-            {ticket?.tickets?.solution}
+            {ticket?.query}
           </Typography>
-          <Typography sx={{ my: 2, color: 'text.secondary' }}>{ticket?.solution}</Typography>
+          <Typography sx={{ my: 2, color: 'text.secondary' }}>{ticket?.query}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomChip
@@ -45,7 +45,7 @@ const ClosedTicketCard = ({ ticket }) => {
                 size="small"
                 skin="light"
                 color={'error'}
-                label={`Priority:${ticket?.priority}`}
+                label={`Priority:${ticket?.is_active}`}
               />
             </Box>
           </Box>

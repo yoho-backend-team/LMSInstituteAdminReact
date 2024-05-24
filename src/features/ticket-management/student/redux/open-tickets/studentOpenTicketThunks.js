@@ -6,7 +6,7 @@ export const getAllStudentOpenTickets = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllStaffOpenTickets(data); // Implement this function in your services
-    dispatch(setStudentOpenTickets(response?.data?.data));
+    dispatch(setStudentOpenTickets(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

@@ -20,7 +20,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       field: 'id',
       headerName: 'ID',
       renderCell: ({ row }) => (
-        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
+        <Typography component={LinkStyled} to={`/apps/invoice/preview/${row?.subscription_id}`}>
           {`#${row?.id}`}
         </Typography>
       )
@@ -37,7 +37,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.subscription_amount || 0}`}</Typography>
     },
     {
       flex: 1.25,
@@ -46,7 +46,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       headerName: 'Issued Date',
       renderCell: ({ row }) => (
         <Typography sx={{ color: 'text.secondary' }}>
-          {row.start_date} - {row.end_date}
+          {row?.payment_date} - {row?.payment_date}
         </Typography>
       )
     },
@@ -55,10 +55,10 @@ const SubscriptionDataTable = ({ Subscription }) => {
       minWidth: 120,
       field: 'price',
       headerName: 'price',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.price || 0}`}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.subscription_amount || 0}`}</Typography>
     }
   ];
-
+  console.log(Subscription,"c")
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
