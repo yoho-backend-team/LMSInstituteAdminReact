@@ -41,8 +41,8 @@ const ViewLiveClass = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredStudents = liveClassData?.data?.batch_class?.batch?.institute_batch_student?.filter((student) =>
-    student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = liveClassData?.batch?.student?.filter((student) =>
+    student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearchChange = (event) => {
@@ -78,7 +78,7 @@ const ViewLiveClass = () => {
       field: 'student_id',
       renderCell: ({ row }) => (
         <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {row?.student?.student_id}
+          {row?.id}
         </Typography>
       )
     },
@@ -87,9 +87,9 @@ const ViewLiveClass = () => {
       field: 'full_name',
       headerName: 'Student Name',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const fullName = `${student.first_name} ${student.last_name}`;
-        const email = student.email;
+        const student = params?.row;
+        const fullName = `${student?.first_name} ${student?.last_name}`;
+        const email = student?.email;
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(params.row)}
@@ -118,8 +118,8 @@ const ViewLiveClass = () => {
       field: 'City',
       headerName: 'city',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const city = student.city;
+        const student = params?.row;
+        const city = student?.contact_info?.city;
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
@@ -134,8 +134,9 @@ const ViewLiveClass = () => {
       field: 'address',
       headerName: 'Address',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const address = `${student.address_line_1} ${student.address_line_2}`;
+        const student = params?.row;
+        console.log(student,params?.row)
+        const address = `${student?.contact_info?.address1} ${student?.contact_info?.address2}`;
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
@@ -146,13 +147,13 @@ const ViewLiveClass = () => {
       }
     }
   ];
-
+  console.log(liveClassData,"liveClassData")
   return (
     <Box>
       <Grid container>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title={liveClassData?.data?.class_name} />
+            <CardHeader title={liveClassData?.class_name} />
             <CardContent sx={{ mt: 0, pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item>
@@ -160,7 +161,7 @@ const ViewLiveClass = () => {
                     Course
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_name}
+                    {liveClassData?.batch?.course?.course_name}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -168,7 +169,7 @@ const ViewLiveClass = () => {
                     Batch
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.data?.batch_class?.batch?.batch_id}
+                    {liveClassData?.batch?.id}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -176,7 +177,7 @@ const ViewLiveClass = () => {
                     Duration
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_duration}
+                    {liveClassData?.batch?.course?.duration}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -184,7 +185,7 @@ const ViewLiveClass = () => {
                     Date
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.data?.class_date}
+                    {liveClassData?.start_date}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -192,7 +193,7 @@ const ViewLiveClass = () => {
                     Sarted At
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.data?.batch_class?.batch?.start_date}
+                    {liveClassData?.batch?.start_date}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -200,7 +201,7 @@ const ViewLiveClass = () => {
                     Ended At
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.data?.batch_class?.batch?.end_date}
+                    {liveClassData?.batch?.end_date}
                   </Typography>
                 </Grid>
               </Grid>
@@ -241,7 +242,7 @@ const ViewLiveClass = () => {
                     Class Type
                   </Typography>
                   <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Typography variant="h4">{liveClassData?.data?.type}</Typography>
+                    <Typography variant="h4">{liveClassData?.type}</Typography>
                   </Box>
                 </Grid>
 
@@ -250,7 +251,7 @@ const ViewLiveClass = () => {
                     Class Link
                   </Typography>
                   <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Typography variant="h4">{liveClassData?.data?.class_link}</Typography>
+                    <Typography variant="h4">{liveClassData?.class_link}</Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -272,7 +273,7 @@ const ViewLiveClass = () => {
               disableRowSelectionOnClick
               pagination
               pageSize={paginationModel.pageSize}
-              rowCount={filteredStudents.length}
+              rowCount={filteredStudents?.length}
               paginationMode="server"
               onPageChange={(page) => setPaginationModel((prevModel) => ({ ...prevModel, page }))}
             />

@@ -34,11 +34,16 @@ const generateEndpoints = () => {
         group : {
             create : "/api/admin/institutes/role",
             getAll : "/api/admin/institutes/groups/all/",
-            permissions : "/api/lms/institutes/groups/permissions/"
+            permissions : "/api/lms/institutes/groups/permissions/",
+            update_status : "/api/admin/institutes/groups/update-status/",
+            delete : "/api/admin/institutes/group/delete/"
         },
         user : {
             add : "/api/institutes/auth/admin/register",
-            all : "/api/institutes/auth/admin/users/all"
+            all : "/api/institutes/auth/admin/users/all",
+            getWihtId : '/api/institutes/auth/admin/user/',
+            update : "/api/institutes/auth/admin/user/update/",
+            delete : "/api/institutes/auth/admin/user/delete/"
         },
         branch : {
             getAll : `/api/institutes/${instituteId}/branches/`
@@ -70,6 +75,13 @@ const generateEndpoints = () => {
             create : `/api/institutes/${instituteId}/branches/`,
             getAll : `/api/institutes/${instituteId}/branches/`,
             getWithId : `/api/institutes/${instituteId}/branches/${branchId}/batches/`
+        },
+        online_class : {
+            getAll : `/api/institutes/class/online/all`,
+            getWithId : `/api/institutes/class/online/`
+        },
+        offline_class : {
+            getAll : `/api/institutes/class/offline/all`
         },
         file: {
             upload: `${backEndUrl}/api/upload/`

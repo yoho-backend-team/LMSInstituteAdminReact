@@ -84,7 +84,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                 </Grid>
                 <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
                   <AvatarGroup className="pull-up" max={4}>
-                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                    {card?.batch?.student?.map((student, studentIndex) => {
                       return (
                         <Avatar
                           key={studentIndex}
@@ -97,7 +97,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                 </Grid>
 
                 <Grid item justifyContent="center" display="flex">
-                  <Typography sx={{ fontWeight: '500' }}>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
+                  <Typography sx={{ fontWeight: '500' }}>{card?.batch?.student?.length ?? 0} Students on this class</Typography>
                 </Grid>
 
                 <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
@@ -116,7 +116,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                     <IconButton onClick={() => handleCopyText(card.class_link)} sx={{ color: 'primary.main' }} aria-label="copy-link">
                       <FileCopyIcon />
                     </IconButton>
-                    <Typography>{card?.class_link}</Typography>
+                    <Typography>{card?.video_url}</Typography>
                   </Box>
                 </Grid>
 
@@ -126,8 +126,8 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                       variant="contained"
                       size="medium"
                       component={Link}
-                      state={{ id: card?.class_id }}
-                      to={`live-classes/${card?.class_id}`}
+                      state={{ id: card?.uuid }}
+                      to={`live-classes/${card?.uuid}`}
                     >
                       View More
                     </Button>
@@ -143,7 +143,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                           menuItemProps: {
                             component: Link,
                             to: `live-classes/view`,
-                            state: { id: card?.class_id }
+                            state: { id: card?.uuid }
                           }
                         },
                         {
@@ -160,7 +160,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
-                            onClick: () => handleDelete(card?.class_id)
+                            onClick: () => handleDelete(card?.uuid)
                           }
                         }
                       ]}

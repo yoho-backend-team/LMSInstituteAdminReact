@@ -21,6 +21,8 @@ import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
 import client from 'api/client';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
+import { useDispatch } from 'react-redux';
+import { getAllUsers } from '../../redux/userThunks';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -54,10 +56,11 @@ const defaultValues = {
 };
 
 const SidebarAddUser = (props) => {
-  const { open, toggle, groups } = props;
+  const { open, toggle, groups,branch_id } = props;
   const branches = useSelector((state) => state.auth.branches);
   const [inputValue, setInputValue] = useState('');
   const { show ,hide} = useSpinner()
+  const dispatch = useDispatch()
 
  
   const [imgSrc, setImgSrc] = useState(null);
@@ -143,6 +146,7 @@ const SidebarAddUser = (props) => {
       const result = await addUser(new_user);
 
       if (result.success) {
+        dispatch(getAllUsers({branch_id:branch_id,institute_id:useInstitute().getInstituteId(),page:"1"}))
         hide()
         setError('');
         toggle();
@@ -376,7 +380,7 @@ const SidebarAddUser = (props) => {
                 error={Boolean(errors.role)}
                 {...(errors.role && { helperText: errors.role.message })}
               >
-                {groups?.map((group, index) => (
+                {groups?.data?.map((group, index) => (
                   <MenuItem key={index} value={group?.id}>
                     {group?.identity}
                   </MenuItem>

@@ -242,7 +242,7 @@ const Batch = () => {
       </Grid>
     ));
   };
-
+  console.log(batches,"batches")
   return (
     <>
       <Grid container>

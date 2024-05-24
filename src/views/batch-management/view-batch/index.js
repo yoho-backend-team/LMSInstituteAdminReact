@@ -5,7 +5,7 @@ import { getBatchDetails } from 'features/batch-management/batches/services/batc
 import HeaderCard from 'features/batch-management/view-batch/components/ViewBatchHeaderCard';
 import ViewBatchTable from 'features/batch-management/view-batch/components/ViewBatchTable';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
 import { useLocation } from 'react-router';
 import { useInstitute } from 'utils/get-institute-details';
 
