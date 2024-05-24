@@ -3,28 +3,37 @@ import client from 'api/client';
 import axios from 'axios';
 import { useBranchId, useInstitute } from 'utils/get-institute-details';
 
-const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff`;
+const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teachingstaff`;
+
+
+const TEACHING_STAFF_API_END_POINT_get = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes`;
 
 export const getAllTeachingStaffs = async (data) => {
   try {
-    const response = await client.TeachingStaff.get(data)
-    console.log(response);
+    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/non-teachingstaff`, {
+      headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Token ${localStorage.getItem('token')}`
+    },
+  params: {
+        page: data.page,
+        is_active: data.is_active
+      }, 
+  });
+  console.log(response);
 
-    // Check if the response status is successful
-    if (response.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllTeachingStaffs:', error);
+  if (response.data.status) {
+    return response;
+} else {
+throw new Error(`Failed to fetch TeachingStaffs. Status: ${response.status}`);
+}
+} catch (error) {
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
+console.error('Error in getAllTeachingStaffs:', error);
+throw error;
+}
 };
+
 export const getAllActiveTeachingStaffs = async (data) => {
   try {
     const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/active`, {
@@ -221,3 +230,7 @@ export const staffById = async (data) => {
     throw error;
   }
 };
+
+
+
+

@@ -52,7 +52,6 @@ const StudentCertificateAddDrawer = (props) => {
   const [activeBatches, setActiveBatches] = useState([]);
   const [students, setStudents] = useState([]);
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
-  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -173,7 +172,7 @@ const StudentCertificateAddDrawer = (props) => {
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-              <CoursePdfInput setCourseNotePdf={handleSetPdf} files={files} setFiles={setFiles} />
+              <CoursePdfInput setCourseNotePdf={handleSetPdf} />
             </Grid>
 
             <Grid item xs={12} sx={{ mb: 2 }}>
@@ -339,3 +338,5 @@ StudentCertificateAddDrawer.propTypes = {
 };
 
 export default StudentCertificateAddDrawer;
+
+

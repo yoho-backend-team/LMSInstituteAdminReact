@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import TeacherFilter from '../../../../features/staff-management/non-teaching-staffs/components/TeacherFilterCard';
+import { useInstitute } from 'utils/get-institute-details';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -38,10 +39,12 @@ const NonTeaching = () => {
 
   useEffect(() => {
     const data = {
-      type: 'non_teaching',
-      branch_id: selectedBranchId,
+      branchid: selectedBranchId,
+      instituteId: useInstitute().getInstituteId(),
       page: '1'
     };
+
+    console.log(data,"inputss")
 
     dispatch(getAllNonTeachingStaffs(data));
   }, [dispatch, selectedBranchId, refetch]);
@@ -49,12 +52,11 @@ const NonTeaching = () => {
     setLoading(false);
   }, 1000);
 
-  const handleStatusChangeApi = async () => {
-    
+  const handleStatusChangeApi = async () => {    
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue.id
+      is_active: statusValue?.is_active === '1' ? '0' : '1',
     };
+    console.log(data,"activeeeee")
     const response = await staffStatusChange(data);
     if (response.success) {
       toast.success(response.message);
@@ -68,6 +70,7 @@ const NonTeaching = () => {
     setStatusChangeDialogOpen(true);
     setStatusValue(staff);
   };
+  console.log(nonTeachingStaffs,"ssssssss")
   
   return (
     <>
@@ -78,7 +81,7 @@ const NonTeaching = () => {
         <Grid>
           <Grid container spacing={2} mt={2}>
             { 
-            nonTeachingStaffs?.map((item, i) => (
+            nonTeachingStaffs?.data?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
                 <Card sx={{ position: 'relative' }}>
                   <CardContent sx={{ pt: 3 }}>
@@ -111,8 +114,8 @@ const NonTeaching = () => {
                             SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.staff) }}
                             sx={{ width: 100 }}
                           >
-                            <MenuItem value="true">Active</MenuItem>
-                            <MenuItem value="false">Inactive</MenuItem>
+                            <MenuItem value={true}>Active</MenuItem>
+                            <MenuItem value={false}>Inactive</MenuItem>
                           </TextField>
                         </Grid>
                         <Box component={Link} to={`non-teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>
@@ -133,7 +136,7 @@ const NonTeaching = () => {
                 count={nonTeachingStaffs?.last_page}
                 color="primary"
                 onChange={(e, page) => {
-                  dispatch(getAllNonTeachingStaffs({ branch_id: selectedBranchId, page: page }));
+                  dispatch(getAllNonTeachingStaffs({ branchid: selectedBranchId, page: page }));
                 }}
               />
             </Grid>
