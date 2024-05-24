@@ -9,11 +9,16 @@ class Client {
     group = {
       create : (data) => HttpClient.post(HTTP_END_POINTS.group.create,data),
       getAll : (data) => HttpClient.get(HTTP_END_POINTS.group.getAll+data.institute_id),
-      permissionWithRole : (data) => HttpClient.get(HTTP_END_POINTS.group.permissions,data)
+      permissionWithRole : (data) => HttpClient.get(HTTP_END_POINTS.group.permissions,data),
+      updateStatus : (data) => HttpClient.update(HTTP_END_POINTS.group.update_status,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.group.delete+data?.id)
     }
     user = {
       add : (data) => HttpClient.post(HTTP_END_POINTS.user.add,data),
-      getAll : (data) => HttpClient.get(HTTP_END_POINTS.user.all,data)
+      getAll : (data) => HttpClient.get(HTTP_END_POINTS.user.all,data),
+      getWithId : (data) => HttpClient.get(HTTP_END_POINTS.user.getWihtId+data.id),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.user.update+data?.userId,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.user.delete+data?.userId)
     }
     branch = {
        getAll : (params) => HttpClient.get(HTTP_END_POINTS.branch.getAll,params),
@@ -62,6 +67,13 @@ class Client {
       create : (data,options) => HttpClient.post(HTTP_END_POINTS.batch.create+`${data.branch_id}/courses/${data.course}/batches`,data),
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll+params.branch_id+"/batches/all",params),
       getWithId : (params) => HttpClient.get(HTTP_END_POINTS.batch.getWithId+`${params.batch_id}`)
+    }
+    online_class = {
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.online_class.getAll,params),
+      getWithId : (data) => HttpClient.get(HTTP_END_POINTS.online_class.getWithId+data.class_id)
+    }
+    offline_class = {
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.offline_class.getAll,params)
     }
     users = {
       verifyOtp : (data,options) => HttpClient.post(HTTP_END_POINTS.users.valiateOtp,data,options),

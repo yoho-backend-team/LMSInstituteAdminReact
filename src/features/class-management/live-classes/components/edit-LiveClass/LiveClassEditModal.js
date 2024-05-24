@@ -87,12 +87,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
       return '';
     }
   };
-
+ console.log(liveClasses,"liveClass")
   useEffect(() => {
     if (liveClasses) {
       setValue('class_name', liveClasses.class_name || '');
-      setValue('class_id', liveClasses.class_id || '');
-      setValue('classDate', new Date(liveClasses.class_date) || new Date());
+      setValue('class_id', liveClasses.id || '');
+      setValue('classDate', new Date(liveClasses.start_date) || new Date());
       setValue('start_time', dayjs(liveClasses?.start_time) || null);
       setValue('end_time', dayjs(liveClasses?.end_time) || null);
       setValue('instructors', liveClasses.instructors || []);
@@ -228,7 +228,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              {/* <Grid item xs={6}>
                 <Controller
                   name="classDate"
                   control={control}
@@ -245,7 +245,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   )}
                 />
                 {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message}</p>}
-              </Grid>
+              </Grid> */}
 
               <Grid container item xs={6} spacing={2}>
                 <Grid item md={6} sm={12}>
@@ -301,7 +301,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 </Grid>
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
@@ -365,9 +365,9 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
@@ -431,7 +431,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <TextField

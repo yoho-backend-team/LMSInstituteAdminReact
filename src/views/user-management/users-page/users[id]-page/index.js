@@ -5,6 +5,7 @@ import UserViewLeft from 'features/user-management/users-page/user-view-page/com
 import UserViewRight from 'features/user-management/users-page/user-view-page/components/UserViewRight';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useSpinner } from 'context/spinnerContext';
 
 const UserView = () => {
   const location = useLocation();
@@ -17,6 +18,7 @@ const UserView = () => {
   const [loading, setLoading] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const [userData, setUserData] = useState([]);
+  const {show,hide} = useSpinner()
 
   useEffect(() => {
     getUserData(userId);
@@ -28,13 +30,16 @@ const UserView = () => {
         id: id
       };
       setLoading(true);
+      show()
       const result = await getUserById(data);
       if (result.success) {
         setUserData(result.data);
         setLoading(false);
+        hide()
       } else {
         console.log(result.message);
         setLoading(false);
+        hide()
       }
     } catch (error) {
       console.log(error);

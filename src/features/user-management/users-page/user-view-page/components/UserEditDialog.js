@@ -21,6 +21,12 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { updateUser } from '../../services/userServices';
+import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
+import { getImageUrl } from 'utils/imageUtils';
+import { useInstitute } from 'utils/get-institute-details';
+import client from 'api/client';
+import { hide } from '@popperjs/core';
+import { useSpinner } from 'context/spinnerContext';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -33,10 +39,14 @@ const showErrors = (field, valueLen, min) => {
 };
 
 const schema = yup.object().shape({
-  full_name: yup
+  first_name: yup
     .string()
     .required()
     .min(3, (obj) => showErrors('First Name', obj.value.length, obj.min))
+    .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
+  last_name: yup
+    .string()
+    .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters'),
   user_name: yup
     .string()
@@ -44,38 +54,38 @@ const schema = yup.object().shape({
     .min(3, (obj) => showErrors('User Name', obj.value.length, obj.min))
     .matches(/^[a-zA-Z0-9\s]+$/, ' User Name should not contain special characters'),
   email: yup.string().email().required(),
-  contact: yup
+  phone_number: yup
     .string()
     .required('Contact Number field is required')
     .matches(/^[0-9]+$/, 'Contact number must contain only digits')
-    .max(10, 'Contact number cannot exceed 10 digits'),
+    .max(13, 'Contact number cannot exceed 10 digits'),
   designation: yup
     .string()
     .required()
     .matches(/^[a-zA-Z0-9\s]+$/, 'Name should not contain special characters')
     .max(50, `Designation can't exceed 50 characters`),
-  branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
+  // branch: yup.array().min(1, 'Select at least one branch').required('Select at least one branch')
 });
 
 const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => {
   const branches = useSelector((state) => state.auth.branches);
-  const image =
-    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-
+  
   const [inputValue, setInputValue] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState();
   const [groups, setGroups] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState([]);
   const defaultValues = {
-    full_name: '',
+    first_name: '',
+    last_name : '',
     user_name: '',
     email: '',
-    contact: Number(''),
+    phone_number: '',
     designation: '',
     role: '',
     branch: []
   };
+  const {show,hide} = useSpinner()
   const {
     reset,
     control,
@@ -90,21 +100,24 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (userData) {
-      setValue('full_name', userData.name || '');
+      setValue('first_name', userData.first_name || '');
+      setValue("last_name",userData?.last_name || '')
       setValue('user_name', userData.username || '');
-      setValue('email', userData?.institution_users?.email || '');
-      setValue('contact', userData?.institution_users?.mobile || '');
-      setValue('designation', userData?.institution_users?.designation || '');
-      setValue('branch', userData?.branches || []);
-      setValue('role', userData?.role_groups?.role?.id || '');
-      setSelectedBranch(userData?.branches);
+      setValue('email', userData?.email || '');
+      setValue('phone_number', userData?.phone_number?.slice(3) || '');
+      setValue('designation', userData?.designation || '');
+      setValue('branch', userData?.branche || []);
+      setValue('role', userData?.role?.id || '');
+      setSelectedBranch([userData?.branch]);
+      console.log(userData?.phone_number?.slice(3))
     }
   }, [userData, setValue]);
   const handleClose = () => {
-    setValue('full_name', '');
+    setValue('first_name', '');
+    setValue("last_name",'')
     setValue('user_name', '');
     setValue('email', '');
-    setValue('contact', Number(''));
+    setValue('phone_number', '');
     setValue('designation', '');
     setValue('branch', []);
     setValue('role', Number(''));
@@ -119,7 +132,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
 
   const getGroups = async () => {
     try {
-      const result = await getAllGroups();
+      const result = await getAllGroups({branch_id:selectedBranch,institute_id:useInstitute().getInstituteId()});
       if (result.success) {
         setGroups(result.data);
       } else {
@@ -144,46 +157,48 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   }));
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
+  const handleInputImageChange = async (file) => {
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
+    const form_data = new FormData()
+    form_data.append("file",files[0])
+    const data = await client.file.upload(form_data)
+    console.log(data,"fileUploadResponse")
+    toast.success(data.message)
+    setSelectedImage(data?.data?.file)
+    setImgSrc(data?.data?.file)
   };
 
   const onSubmit = async (data) => {
-    console.log(data?.branch);
+    show()
+    const role = groups?.filter((i)=>i.id === data?.role)
+    console.log(role,"role")
+    const new_form_data = {
+      first_name : data?.first_name,
+      last_name : data?.last_name,
+      username : data?.username,
+      email : data?.email,
+      phone_number : "+91"+data?.phone_number,
+      designation : data?.designation,
+      role : role?.[0]?._id,
+      userId : userData?.uuid,
+      image : selectedImage ? selectedImage : userData?.image
+    }
+    console.log(data,new_form_data)
 
-    const InputData = new FormData();
-    data?.branch.forEach((branch) => {
-      InputData.append('branch_id[]', branch.branch_id);
-    });
-    InputData.append('name', data.full_name);
-    InputData.append('user_name', data.user_name);
-    InputData.append('email', data.email);
-    InputData.append('mobile', data.contact);
-    InputData.append('designation', data.designation);
-    InputData.append('role_id', data.role);
-    InputData.append('image', selectedImage);
-    InputData.append('id', userData.id);
-
-    const result = await updateUser(InputData);
+    const result = await updateUser(new_form_data);
 
     if (result.success) {
       toast.success(result.message);
       setRefetch((state) => !state);
       handleEditClose();
+      hide()
     } else {
+      hide()
       toast.error(result.message);
     }
   };
-
+ 
+  console.log(userData,"userData")
   return (
     <Dialog
       open={openEdit}
@@ -216,15 +231,15 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 {!selectedImage && (
                   <ImgStyled
                     src={
-                      userData?.institution_users?.image
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`
-                        : imgSrc
+                      userData?.image
+                        ? `${getImageUrl(userData?.image)}`
+                        : profilePlaceholder
                     }
                     alt="Profile Pic"
                   />
                 )}
 
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                {selectedImage && <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload New Image
@@ -242,7 +257,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="full_name"
+                name="first_name"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
@@ -251,9 +266,27 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     value={value}
                     label="Full Name"
                     onChange={onChange}
-                    placeholder="John Doe"
+                    placeholder="John"
+                    error={Boolean(errors.first_name)}
+                    {...(errors.first_name && { helperText: errors.first_name.message })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="last_name"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    label="Last Name"
+                    onChange={onChange}
+                    placeholder="Doe"
                     error={Boolean(errors.full_name)}
-                    {...(errors.full_name && { helperText: errors.full_name.message })}
+                    {...(errors.last_name && { helperText: errors.last_name.message })}
                   />
                 )}
               />
@@ -297,19 +330,21 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
-                name="contact"
+                name="phone_number"
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
+                 
                   <TextField
                     fullWidth
-                    type="number"
+                    type="text"
                     defaultValue={value}
                     label="Contact"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
-                    error={Boolean(errors.contact)}
-                    {...(errors.contact && { helperText: errors.contact.message })}
+                    error={Boolean(errors.phone_number)}
+                    {...(errors.phone_number && { helperText: errors.phone_number.message })}
+                    {...(console.log(value,"value"))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">+91</InputAdornment>
                     }}
@@ -318,13 +353,13 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            {/* <Grid item xs={12} sm={12}>
               <Autocomplete
                 multiple
                 disableCloseOnSelect
                 id="select-multiple-chip"
-                options={branches}
-                getOptionLabel={(option) => option.branch_name}
+                options={branches?branches:[]}
+                getOptionLabel={(option) => option?.branch_identity}
                 value={selectedBranch}
                 onChange={(e, newValue) => {
                   setSelectedBranch(newValue);
@@ -349,15 +384,15 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                       style={{ marginRight: 8 }}
                       checked={selected}
                     />
-                    {option.branch_name}
+                    {option.branch_identity}
                   </li>
                 )}
                 renderTags={(value) => (
                   <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                     {value.map((option, index) => (
                       <CustomChip
-                        key={option.branch_id}
-                        label={option.branch_name}
+                        key={option._id}
+                        label={option.branch_identity}
                         // defaultValue={}
                         onDelete={() => {
                           const updatedValue = [...value];
@@ -371,9 +406,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     ))}
                   </div>
                 )}
-                isOptionEqualToValue={(option, value) => option.branch_id === value.branch_id}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
               />
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={12} sm={6}>
               <Controller
@@ -403,7 +438,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   <TextField
                     select
                     fullWidth
-                    defaultValue={userData?.role_groups?.role?.id}
+                    defaultValue={userData?.role?.id}
                     onChange={(e) => {
                       setValue('role', e.target.value);
                     }}
@@ -411,7 +446,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     {/* <MenuItem value="">Select Role</MenuItem> */}
                     {groups?.map((group, index) => (
                       <MenuItem key={index} value={group?.id}>
-                        {group?.name}
+                        {group?.identity}
                       </MenuItem>
                     ))}
                   </TextField>

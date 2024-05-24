@@ -48,27 +48,17 @@ export const getUserActivityLog = async (data) => {
 };
 export const getUserById = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/query-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.user.getWithId(data)
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch users. Status: ${response.status}`);
-    }
+    
+      return { success: true, data: response.data };
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllUsers:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch users. Status: ${response.status}`);
   }
 };
 export const updateUserStatus = async (data) => {
@@ -113,21 +103,13 @@ export const userChangePassword = async (data) => {
 };
 export const updateUser = async (data) => {
   try {
-    const response = await axios.post(`${USER_API_ENDPOINT}/update`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.user.update(data)
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'User updated successfully' };
-    } else {
-      return { success: false, message: response.data.message };
-    }
+   
+    return { success: true, message: 'User updated successfully' };
   } catch (error) {
     console.error('Error in editUser:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 export const addUser = async (data) => {
@@ -167,24 +149,15 @@ export const checkUserName = async (userName) => {
 };
 export const deleteUsers = async (userId) => {
   try {
-    const response = await axios.delete(`${USER_API_ENDPOINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: userId }
-    });
+    const response = await client?.user?.delete({userId:userId})
 
     console.log(response);
 
-    if (response.data.status) {
-      return { success: true, message: 'User deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete group' };
-    }
+    return { success: true, message: 'User deleted successfully' };
+    
   } catch (error) {
     console.error('Error in deleteUser:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete group' };
   }
 };
 export const getUserProfileById = async (data) => {

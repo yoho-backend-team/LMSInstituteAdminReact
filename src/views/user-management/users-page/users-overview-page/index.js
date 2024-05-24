@@ -9,12 +9,14 @@ import UserHeaderSection from 'features/user-management/users-page/users-overvie
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const UserList = () => {
   const dispatch = useDispatch();
   const users = useSelector(selectUsers);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [groups, setGroups] = useState([]);
+  const {show,hide} = useSpinner()
 
   // Fetch groups when selectedBranchId changes
   useEffect(() => {
@@ -22,11 +24,13 @@ const UserList = () => {
   }, [dispatch, selectedBranchId]);
 
   const getGroups = async () => {
+    show()
     const result = await getAllGroups({institute_id:useInstitute().getInstituteId()});
     console.log(result,"result")
-    if (result.data) {
-      setGroups(result.data);
+    if (result) {
+      setGroups(result);
     }
+    hide()
   };
 
   // State for controlling the visibility of the Add User Drawer
@@ -40,15 +44,17 @@ const UserList = () => {
 
   // Fetch users when selectedBranchId or userRefetch changes
   useEffect(() => {
+    show()
     dispatch(getAllUsers({ branch_id: selectedBranchId, page: '1',institute_id:useInstitute().getInstituteId() }));
+    hide()
   }, [dispatch, selectedBranchId, userRefetch]);
-  console.log(users,"users")
+  console.log(users,"users",groups)
   return (
     <>
       <Grid container spacing={3}>
         {/* User Header Section */}
         <Grid item xs={12}>
-          <UserHeaderSection users={users?.data} groups={groups} />
+          <UserHeaderSection users={users} groups={groups} />
         </Grid>
 
         {/* User Filter Card */}
@@ -58,6 +64,7 @@ const UserList = () => {
             groups={groups}
             setUserRefetch={setUserRefetch}
             selectedBranchId={selectedBranchId}
+            userRefetch = {userRefetch}
             toggle={toggleAddUserDrawer}
           />
         </Grid>
@@ -69,7 +76,7 @@ const UserList = () => {
         </Grid>
 
         {/* Add User Drawer */}
-        <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} />
+        <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} branch_id={selectedBranchId} />
       </Grid>
     </>
   );

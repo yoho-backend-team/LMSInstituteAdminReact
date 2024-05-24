@@ -8,6 +8,7 @@ import LiveClassFilterCard from 'features/class-management/live-classes/componen
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import { selectLiveClasses, selectLoading } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
+import { useInstitute } from 'utils/get-institute-details';
 const LiveClass = () => {
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -17,8 +18,8 @@ const LiveClass = () => {
 
   useEffect(() => {
     const data = {
-      type: 'live',
-      branch_id: selectedBranchId,
+      branch: selectedBranchId,
+      institute : useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllLiveClasses(data));

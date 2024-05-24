@@ -81,14 +81,10 @@ export const deleteBranch = async (data) => {
       },
     });
 
-    if (response.data.status) {
-      return { success: true, message: 'Branch deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Branch' };
-    }
+    return { success: true, message: 'Branch deleted successfully' };
   } catch (error) {
     console.error('Error in deleteBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to delete Branch' };
   }
 };
 
@@ -102,14 +98,11 @@ export const updateBranch = async (data) => {
     });
 
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Branch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Branch' };
-    }
+    
+    return { success: true, message: 'Branch updated successfully' };
   } catch (error) {
     console.error('Error in updateBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to update Branch' };
   }
 };
 
@@ -124,14 +117,11 @@ export const updateBranchStatus = async (data) => {
     });
 
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Branch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Branch' };
-    }
+   
+    return { success: true, message: 'Branch updated successfully' };
   } catch (error) {
     console.error('Error in updateBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 

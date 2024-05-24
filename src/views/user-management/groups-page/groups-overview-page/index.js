@@ -47,6 +47,9 @@ import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder } from 'utils/placeholders';
+import { setGroups } from 'features/user-management/groups-page/redux/groupSlice';
+import client from 'api/client';
+import { set } from 'nprogress';
 
 // Imports...
 
@@ -57,6 +60,10 @@ const GroupManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDeleteGroupId, setSelectedDeleteGroupId] = useState('');
   const [statusValue, setStatusValue] = useState('');
+  const [groupList,setGroupList] = useState([])
+  const {show,hide} = useSpinner()
+  const [search,setSearch]= useState(false)
+
 
   // Redux
   const dispatch = useDispatch();
@@ -68,7 +75,14 @@ const GroupManagement = () => {
   // Fetch groups when selectedBranchId changes
   useEffect(() => {
     dispatch(getAllGroups({ institute_id: useInstitute().getInstituteId(), page: '1' }));
+   
   }, [dispatch, selectedBranchId]);
+
+  useEffect(() => {
+    if(groups&&groupList.length===0){
+      setGroupList(groups)
+    }
+  },[groupList])
 
   // Memoized callback for deleting a group
   const handleDeleteGroup = useCallback(async () => {
@@ -76,7 +90,7 @@ const GroupManagement = () => {
       const result = await deleteGroup(selectedDeleteGroupId);
       if (result.success) {
         toast.success(result.message);
-        dispatch(getAllGroups());
+        dispatch(getAllGroups({institute_id:useInstitute().getInstituteId()}));
       } else {
         toast.error(result.message);
       }
@@ -94,26 +108,59 @@ const GroupManagement = () => {
   // Callback for handling status change via API
   const handleStatusChangeApi = useCallback(async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
+      is_active: !statusValue?.is_active,
       id: statusValue?.id
     };
     const response = await updateStatus(data);
     if (response.success) {
       toast.success(response.message);
-      dispatch(getAllGroups({ branch_id: selectedBranchId }));
+      dispatch(getAllGroups({ branch_id: selectedBranchId,institute_id:useInstitute().getInstituteId() }));
     } else {
       toast.error(response.message);
     }
   }, [dispatch, selectedBranchId, statusValue]);
+  
+  const handleSearchKeyChange = (value) => {
+    if(value.length === 0 ){
+      setSearch(false)
+    }
+    setSearchQuery(value)
+  }
 
   // Callback for handling search
   const handleSearch = useCallback(
     async (value) => {
       try {
-        setSearchQuery(value);
-        const data = { search: value };
-        dispatch(getAllGroups(data));
+        if(groups){
+          hide()
+          const data = groups?.data?.filter((group)=>group.identity.toLowerCase().includes(value))
+
+          if(data){
+            setSearch(true)
+            dispatch(setGroups({data:data}))
+          }
+        }else if(groups?.data?.length===0 && groupList?.data?.length === 0 ){
+          
+          show()
+          const data = await client.group.getAll({ branch_id: selectedBranchId,institute_id:useInstitute().getInstituteId() })
+          const filterGroups = data?.data?.filter((group)=>group.identity.toLowerCase().includes(value))
+          setGroupList(data)
+          
+          if(filterGroups){
+            setSearch(true)
+            dispatch(setGroups({data:filterGroups}))
+          }
+         
+          hide()
+         }else if(groupList){
+          const filterGroups = groupList?.data?.filter((group)=>group.identity.toLowerCase().includes(value))
+          if(filterGroups){
+            setSearch(true)
+            dispatch(setGroups({data:filterGroups}))
+          }
+         }
       } catch (error) {
+        setSearch(false)
         console.log(error);
       }
     },
@@ -121,7 +168,7 @@ const GroupManagement = () => {
   );
 
   const renderCards = useMemo(() => {
-    return groups?.map((item, index) => (
+    return groups?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         {/* Card content here */}
         <Card sx={{ minHeight: 175 }}>
@@ -197,11 +244,9 @@ const GroupManagement = () => {
     ));
   }, [groups?.data, handleStatusValue]);
 
-  console.log(groups, "groups");
-
   return (
     <Grid>
-      <Header title="Groups" handleSearch={handleSearch} searchQuery={searchQuery} />
+      <Header title="Groups" search={search} setSearch={setSearch} handleSearch={handleSearch} handleSearchKeyChange={handleSearchKeyChange} searchQuery={searchQuery} />
 
       {groupLoading ? (
         <GroupSkeleton />
@@ -242,7 +287,7 @@ const GroupManagement = () => {
               <Pagination
                 count={groups?.last_page}
                 color="primary"
-                onChange={(e, page) => dispatch(getAllGroups({ branch_id: selectedBranchId, page }))}
+                onChange={(e, page) => dispatch(getAllGroups({ institute_id:useInstitute().getInstituteId(),branch_id: selectedBranchId, page }))}
               />
             </Grid>
           )}

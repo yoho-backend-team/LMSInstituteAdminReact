@@ -188,7 +188,7 @@ const StudentCertificateAddDrawer = (props) => {
                     getOptionLabel={(branch) => branch.branch_identity}
                     onChange={(event, newValue) => {
                       onChange(newValue?._id);
-                      getActiveCoursesByBranch(newValue?._id);
+                      getActiveCoursesByBranch(newValue?.uuid);
                     }}
                     value={activeBranches.find((branch) => branch._id === value) || null}
                     renderInput={(params) => (

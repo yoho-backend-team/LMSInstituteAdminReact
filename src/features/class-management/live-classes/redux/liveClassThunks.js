@@ -6,7 +6,7 @@ export const getAllLiveClasses = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllLiveClasses(data); // Implement this function in your services
-    dispatch(setLiveClasses(response?.data?.data));
+    dispatch(setLiveClasses(response));
   } catch (error) {
     console.error(error);
   } finally {

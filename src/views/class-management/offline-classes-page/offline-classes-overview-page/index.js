@@ -7,6 +7,7 @@ import { selectOfflineClasses, selectLoading } from 'features/class-management/o
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllOfflineClasses } from 'features/class-management/offline-classes/redux/offlineClassThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const OfflineClass = () => {
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
@@ -17,7 +18,8 @@ const OfflineClass = () => {
   useEffect(() => {
     const data = {
       type: 'offline',
-      branch_id: selectedBranchId,
+      branch: selectedBranchId,
+      institute : useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllOfflineClasses(data));

@@ -19,6 +19,7 @@ import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
 import { getAllUsers } from '../../redux/userThunks';
 import { useDispatch } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const userStatusObj = {
   true: 'success',
@@ -228,7 +229,7 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
     }
   ];
   return (
@@ -272,6 +273,7 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
                   onChange={(e, page) => {
                     const data = {
                       branch_id: selectedBranchId,
+                      institute_id : useInstitute().getInstituteId(),
                       page: page
                     };
                     dispatch(getAllUsers(data));

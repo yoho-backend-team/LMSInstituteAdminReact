@@ -15,7 +15,7 @@ const ViewBatchTable = ({ students }) => {
   if (!students) {
     return null;
   }
-
+  console.log(students,"students")
   const filteredStudents = students.filter((student) => student?.full_name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   console.log(filteredStudents);

@@ -6,20 +6,15 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 
 export const getAllBatchesByBranch = async (data) => {
   try {
-    const response = await client.branch.getAll(data)
-    console.log(response);
+    const response = await client.batch.getAll(data)
+    console.log(response,"response batches");
     // Check if the response status is successful
-    if (response.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batches. Status: ${response.status}`);
-    }
+
+    return response;   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllBatches:', error);
 
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

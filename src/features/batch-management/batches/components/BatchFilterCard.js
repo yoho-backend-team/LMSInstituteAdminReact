@@ -159,7 +159,7 @@ const BatchFilterCard = (props) => {
                   renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
                 />
               </Grid>
-              <Grid xs={12} sm={4}></Grid>
+              <Grid item xs={12} sm={4}></Grid>
               <Grid item xs={12} sm={4}>
               <Autocomplete
                 fullWidth

@@ -32,66 +32,38 @@ export const getAllGroupsByInstitute = async (data) => {
 
 export const deleteGroup = async (groupId) => {
   try {
-    const response = await axios.delete(`${GROUP_API_ENDPOINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: { id: groupId }
-    });
+    const response = await client.group.delete({ id: groupId })
 
     console.log(response);
-
-    if (response.data.status) {
-      return { success: true, message: 'Group deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete group' };
-    }
+    return { success: true, message: 'Group deleted successfully' };
   } catch (error) {
     console.error('Error in deleteGroup:', error);
-    throw error;
+    return { success: false, message: 'Failed to delete group' };
   }
 };
 
 export const updateStatus = async (data) => {
   try {
-    const response = await axios.put(`${GROUP_API_ENDPOINT}/change-status`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.group.updateStatus(data)
 
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Group status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update group' };
-    }
+    
+    return { success: true, message: 'Group status updated successfully' };
   } catch (error) {
     console.error('Error in updateGroup:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateGroup = async (data) => {
   try {
-    const response = await axios.put(`${GROUP_API_ENDPOINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.permission.update(data)
 
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Group updated successfully' };
-    } else {
-      return { success: false, message: response?.data?.message };
-    }
+    return { success: true, message: 'Group updated successfully' };
   } catch (error) {
     console.error('Error in updateGroup:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 

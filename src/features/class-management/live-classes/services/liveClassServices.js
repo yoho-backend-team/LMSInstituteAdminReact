@@ -1,33 +1,20 @@
 // liveClassService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/live-class`;
 
 export const getAllLiveClasses = async (data) => {
   try {
-    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/get-live-class-by-branch-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
+    const response = await client.online_class.getAll(data)
     console.log('getAllLiveClasses:', response);
-
     // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch LiveClasses. Status: ${response.status}`);
-    }
+    return response;
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in getAllLiveClasses:', error);
-
+    console.error('Error in getAllLiveClasses:', error)
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch LiveClasses. Status: ${error?.response?.data?.message}`);
   }
 };
 
@@ -116,29 +103,16 @@ export const updateLiveClass = async (data) => {
 
 export const getLiveClassDetails = async (data) => {
   try {
-    const response = await axios.get(`${LIVE_CLASS_API_END_POINT}/list-live-class-by-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.online_class.getWithId(data)
     console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return {
-        success: true,
-        data: response?.data
-      };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batch. Status: ${response.status}`);
-    }
+   
+    return {
+      success: true,
+      data: response?.data
+    };
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getliveClassDetails:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`${error?.response?.data?.message}`);
   }
 };
