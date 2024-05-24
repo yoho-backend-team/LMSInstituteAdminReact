@@ -69,10 +69,10 @@ const SubscriptionDetails = (props) => {
         />
       ) : null}
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
-        <img width={data?.imgWidth} src={`${data?.imgSrc}`} height={data?.imgHeight} alt={`${data?.plan_name}-plan-img`} />
+        <img width={data?.imgWidth} src={`${data?.imgSrc}`} height={data?.imgHeight} alt={`${data?.subscription_history?.plan_name}-plan-img`} />
       </Box>
       <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.plan_name}</Typography>
+        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.subscription_history?.plan_name}</Typography>
         <Typography sx={{ color: 'text.secondary' }}>{data?.description}</Typography>
         <Box sx={{ my: 7, position: 'relative' }}>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>

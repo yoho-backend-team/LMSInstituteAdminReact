@@ -7,7 +7,7 @@ import SubscriptionHeader from 'features/payment-management/subscriptions/compon
 import SubscriptionPlans from 'features/payment-management/subscriptions/components/SubscriptionPlans';
 import { selectSubscriptions } from 'features/payment-management/subscriptions/redux/selectors';
 import { getSubscriptions } from 'features/payment-management/subscriptions/redux/thunks';
-import { getAllSubscriptionPlans } from 'features/payment-management/subscriptions/services';
+import { getAllSubscriptionPlans, getAllSubscriptions } from 'features/payment-management/subscriptions/services';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Grid from '@mui/material/Grid';

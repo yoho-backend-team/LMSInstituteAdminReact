@@ -6,6 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PropTypes from 'prop-types';
 import { PDFViewer } from 'react-view-pdf';
+import { getImageUrl } from 'utils/imageUtils';
 
 const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
   const savedPdfUrl = `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`;
@@ -62,7 +63,7 @@ const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
           }}
         >
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <PDFViewer url={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`} />
+            <PDFViewer url={getImageUrl(certificate?.file_upload)} />
           </Grid>
         </DialogContent>
       </Dialog>
