@@ -71,7 +71,7 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.dob}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.dob}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>

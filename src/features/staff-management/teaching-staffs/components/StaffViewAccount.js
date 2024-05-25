@@ -15,10 +15,16 @@ import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { deleteTeachingStaff } from '../services/teachingStaffServices';
 import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSelector } from 'react-redux';
 
 const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
+  
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { getInstituteId } = useInstitute();
+  const instituteId = getInstituteId();
 
   const handleDelete = () => {
     setStaffDeleteModelOpen(true);
@@ -26,7 +32,11 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
   
   const Navigate = useNavigate();
   const handleStaffDelete = async () => {
-    const data = { id: staffID };
+    const data = { id: staffID,
+      instituteId,
+      branchid: selectedBranchId,
+
+     };
     const result = await deleteTeachingStaff(data);
 
     if (result.success) {
@@ -37,7 +47,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
       toast.error(result.message);
     }
   };
-  // console.log(staff?.data,"staff-teaching")
+  console.log(staff,"staff-teaching")
   if (staff) {
     return (
       <Grid container spacing={2}>
@@ -58,7 +68,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.data?.userDetail?.desigination}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.data?.userDetail?.designation}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
@@ -74,7 +84,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.data?.contact_info?.phone_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.data?.contact_info?.alternate_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
@@ -102,7 +112,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete}>
+                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.data?.uuid)}>
                   Delete
                 </Button>
               </Box>

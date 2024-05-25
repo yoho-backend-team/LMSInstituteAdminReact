@@ -127,25 +127,29 @@ export const deleteNonTeachingStaff = async (data) => {
 
 export const updateNonTeachingStaff = async (data) => {
   try {
-    
-    const response = await axios.put(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/update/${data.id}`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/update/${data.id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
       }
-    });
-    console.log('non-teachingStaff update:', response);
-    if (response.data) {
-      
-      return response;
+    );
+
+    console.log('Non-teaching staff update response:', response.data);
+
+    if (response.data.status) {
+      return { success: true, message: response.data.message, response: response.data };
     } else {
-      return { success: false, message: 'Failed to update NonTeachingStaff' };
+      return { success: false, message: 'Failed to update non-teaching staff' };
     }
   } catch (error) {
     console.error('Error in updateNonTeachingStaff:', error);
     throw error;
   }
 };
+
 
 export const nonTeachingStaffById = async (data) => {
   try {
@@ -162,11 +166,11 @@ export const nonTeachingStaffById = async (data) => {
       return { success: true, data: response.data.data};
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+      throw new Error(`Failed to fetch non teaching staffs. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in teaching staffs:', error);
+    console.error('Error in non teaching staffs:', error);
 
     // Throw the error again to propagate it to the calling function/component
     throw error;
@@ -174,3 +178,26 @@ export const nonTeachingStaffById = async (data) => {
 };
 
 
+export const nonteachstaffStatusChange = async (uuid,data) => {
+  try {
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/updatestatus/${uuid}`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
+      }
+    );
+
+    if (response.data.status) {
+      return { success: true, message: response.data.message };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in staff status change:', error);
+    throw error;
+  }
+};
