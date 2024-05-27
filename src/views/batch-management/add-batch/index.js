@@ -262,7 +262,8 @@ const AddBatchPage = () => {
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('branch', newValue ? newValue.uuid : '');
-                            getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                            console.log(newValue,"newValue")
+                            getActiveCoursesByBranch(newValue ? {branch_id : newValue.uuid} : '');
                           }}
                           options={activeBranches}
                           getOptionLabel={(option) => option.branch_identity || ''}

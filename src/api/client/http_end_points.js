@@ -78,11 +78,14 @@ const generateEndpoints = () => {
         },
         online_class : {
             getAll : `/api/institutes/class/online/all`,
-            getWithId : `/api/institutes/class/online/`
+            getWithId : `/api/institutes/class/online/`,
         },
         offline_class : {
+            create : `/api/institutes/class/offline`,
             getAll : `/api/institutes/class/offline/all`,
-            getWithId : `/api/institutes/class/offline/`
+            getWithId : `/api/institutes/class/offline/`,
+            update : `/api/institutes/class/offline/update/`,
+            delete : `/api/institutes/class/offline/`
         },
         file: {
             upload: `${backEndUrl}/api/upload/`

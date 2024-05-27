@@ -40,64 +40,35 @@ export const searchOfflineClasses = async (searchQuery) => {
 
 export const addOfflineClass = async (data) => {
   try {
-    const response = await axios.post(`${OFFLINE_CLASS_API_END_POINT}/create-offline-class`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'OfflineClass created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create OfflineClass' };
-    }
+    const response = await client.offline_class.create(data)
+    console.log(response); 
+    return { success: true, message: 'OfflineClass created successfully' };
   } catch (error) {
     console.error('Error in addOfflineClass:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create OfflineClass' };
   }
 };
 
 export const deleteOfflineClass = async (data) => {
   try {
-    const response = await axios.delete(`${OFFLINE_CLASS_API_END_POINT}/offline-class-delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.offline_class.delete(data)
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'OfflineClass deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete OfflineClass' };
-    }
+
+    return { success: true, message: 'OfflineClass deleted successfully' };
   } catch (error) {
     console.error('Error in deleteOfflineClass:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to delete OfflineClass' };
   }
 };
 
 export const updateOfflineClass = async (data) => {
   try {
-    const response = await axios.put(`${OFFLINE_CLASS_API_END_POINT}/update-offline-class`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.offline_class.update(data)
     console.log(response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'OfflineClass updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update OfflineClass' };
-    }
+    return { success: true, message: 'OfflineClass updated successfully' };
   } catch (error) {
     console.error('Error in updateOfflineClass:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to update OfflineClass' };
   }
 };
 

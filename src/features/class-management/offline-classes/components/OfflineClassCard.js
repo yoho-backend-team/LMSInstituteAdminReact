@@ -17,11 +17,13 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
+import { useSpinner } from 'context/spinnerContext';
 
 const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const {show,hide} = useSpinner()
 
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
 
@@ -41,12 +43,15 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   }, []);
 
   const handleOfflineClassDelete = async () => {
-    const data = { class_id: selectedOfflineClassDeleteId };
+    show()
+    const data = { uuid: selectedOfflineClassDeleteId };
     const result = await deleteOfflineClass(data);
     if (result.success) {
+      hide()
       toast.success(result.message);
       setofflineClassRefetch((state) => !state);
     } else {
+      hide()
       toast.error(result.message);
     }
   };

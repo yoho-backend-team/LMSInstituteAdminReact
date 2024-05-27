@@ -63,22 +63,13 @@ export const getUserById = async (data) => {
 };
 export const updateUserStatus = async (data) => {
   try {
-    const response = await axios.put(`${USER_API_ENDPOINT}/status-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = client.user.update(data)
     console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'User status updated successfully' };
-    } else {
-      return { success: false, message: response.data.message };
-    }
+  
+    return { success: true, message: 'User status updated successfully' };
   } catch (error) {
     console.error('Error in addUser:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 export const userChangePassword = async (data) => {

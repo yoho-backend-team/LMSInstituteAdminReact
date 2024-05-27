@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { getInitials } from 'utils/get-initials';
+import { profilePlaceholder } from 'utils/placeholders';
 
 const renderClient = (row) => {
   if (row?.student?.image) {
@@ -213,11 +214,11 @@ const ViewOfflineClass = () => {
 
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {offlineClassData?.instructor?.class_staff.map((staff) => (
-                        <Tooltip key={staff.id} title={staff.staff.staff_name}>
+                      {offlineClassData?.instructors?.map((staff) => (
+                        <Tooltip key={staff.id} title={staff.full_name}>
                           <Avatar
-                            src={staff.staff.image_url} // Assuming the image URL is available in the staff object
-                            alt={staff.staff.staff_name}
+                            src={staff.image?staff?.image:profilePlaceholder}
+                            alt={staff?.full_name}
                             sx={{ width: 25, height: 25 }}
                           />
                         </Tooltip>
@@ -231,9 +232,9 @@ const ViewOfflineClass = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {offlineClassData?.coordinator?.class_staff.map((staff) => (
-                        <Tooltip key={staff.id} title={staff.staff.staff_name}>
-                          <Avatar src={staff.staff.image_url} alt={staff.staff.staff_name} sx={{ width: 25, height: 25 }} />
+                      {offlineClassData?.coordinators?.map((staff) => (
+                        <Tooltip key={staff.id} title={staff.full_name}>
+                          <Avatar src={staff?.image?staff?.image:profilePlaceholder} alt={staff.full_name} sx={{ width: 25, height: 25 }} />
                         </Tooltip>
                       ))}
                     </AvatarGroup>
@@ -244,10 +245,10 @@ const ViewOfflineClass = () => {
                     Class Type
                   </Typography>
                   <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h4">{offlineClassData?.data?.type}</Typography>
-                    <Typography variant="h5" sx={{ color: theme.palette.primary.main, ml: 1 }}>
+                    <Typography variant="h4">{"offline"}</Typography>
+                    {/* <Typography variant="h5" sx={{ color: theme.palette.primary.main, ml: 1 }}>
                       Visit Previous Class
-                    </Typography>
+                    </Typography> */}
                   </Box>
                 </Grid>
               </Grid>

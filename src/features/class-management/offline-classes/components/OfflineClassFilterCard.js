@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const OfflineClassFilterCard = ({ selectedBranchId }) => {
   const [statusValue, setStatusValue] = useState('');
@@ -41,15 +42,17 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
     if (!newValue) {
       setSelectedBatch(null);
       const data = {
-        branch_id: selectedBranchId,
-        batch_id: ''
+        branch: selectedBranchId,
+        batch_id: '',
+        institute : useInstitute().getInstituteId()
       };
       dispatch(getAllOfflineClasses(data));
     } else {
       setSelectedBatch(newValue);
       const data = {
-        batch_id: newValue.batch_id,
-        branch_id: selectedBranchId
+        batch: newValue._id,
+        branch: selectedBranchId,
+        institute : useInstitute().getInstituteId()
       };
       dispatch(getAllOfflineClasses(data));
     }
@@ -64,11 +67,11 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  {/* <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
-                  </TextField>
+                  </TextField> */}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete

@@ -27,7 +27,7 @@ const OfflineClass = () => {
     <>
       <Grid>
         <OfflineClassFilterCard selectedBranchId={selectedBranchId} />
-        <OfflineClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} />
+        <OfflineClassCardHeader offlineClasses={offlineClasses} selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} offlineClassRefetch={offlineClassRefetch} />
         {loading ? (
           <ClassSkeleton />
         ) : (
@@ -45,7 +45,7 @@ const OfflineClass = () => {
               count={offlineClasses?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllOfflineClasses({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllOfflineClasses({ branch: selectedBranchId,institute:useInstitute().getInstituteId(),page: page }));
               }}
             />
           </Grid>

@@ -16,7 +16,7 @@ import CustomChip from 'components/mui/chip';
 import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
@@ -27,6 +27,8 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addOfflineClass } from '../../services/offlineClassServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -39,6 +41,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
+  const {show,hide} = useSpinner()
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -67,24 +70,28 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-    setActiveTeachingStaff(result.data.data);
+  
+    setActiveTeachingStaff(result?.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveNonTeachingStaffs(data);
-    setActiveNonTeachingStaff(result.data.data);
+    const result = await getAllNonTeachingStaffs(data);
+    
+    setActiveNonTeachingStaff(result.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId, branch_id: selectedBranchId };
+    const data = { course: courseId, branch_id: selectedBranchId };
     const result = await getBatchesByCourse(data);
     if (result?.success) {
       setActiveBatches(result.data);
     }
   };
 
+  
+
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-
+  
   const showErrors = (field, valueLen, min) => {
     if (valueLen === 0) {
       return `${field} field is required`;
@@ -143,6 +150,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     setValue('end_time', null);
     setValue('instructor', []);
     setValue('coordinator', []);
+    setSelectedCoordinates([])
+    setSelectedInstructors([])
     reset();
   };
 
@@ -157,23 +166,24 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data);
-    const filteredInstructorId = data.instructor?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data.coordinator?.map((staff) => staff.staff_id);
+    show()
+    const filteredInstructorId = data.instructor?.map((staff) => staff._id);
+    const filteredCoordinatorId = data.coordinator?.map((staff) => staff._id);
+    
     const dummyData = {
+      institute:useInstitute().getInstituteId(),
       class_name: data.class_name,
-      branch_id: data.branch,
-      course_id: data.course,
-      batch_id: data.batch.batch_id,
-      class_date: convertDateFormat(data.classDate),
+      branch: data.branch,
+      course: data.course,
+      batch: data.batch._id,
+      start_date: convertDateFormat(data.classDate),
       start_time: data.start_time,
       end_time: data.end_time,
-      instructor_staff_ids: filteredInstructorId,
-      coordinator_staff_ids: filteredCoordinatorId,
-      type: 'offline',
-      status: 'pending'
+      instructors: filteredInstructorId,
+      coordinators: filteredCoordinatorId,
     };
-
+    
+    
     try {
       const result = await addOfflineClass(dummyData);
 
@@ -181,15 +191,18 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
         setRefetch((state) => !state);
         handleClose();
         reset();
+        hide()
         toast.success(result.message);
       } else {
+        hide()
         toast.error(result.message);
       }
     } catch (error) {
+      hide()
       console.log(error);
     }
   };
-
+  
   return (
     <Dialog
       open={open}
@@ -247,12 +260,12 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     <Autocomplete
                       fullWidth
                       options={activeBranches}
-                      getOptionLabel={(option) => option.branch_name}
+                      getOptionLabel={(option) => option.branch_identity}
                       onChange={(event, newValue) => {
-                        onChange(newValue?.branch_id);
-                        getActiveCoursesByBranch(newValue?.branch_id);
+                        onChange(newValue?._id);
+                        getActiveCoursesByBranch(newValue?.uuid);
                       }}
-                      value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                      value={activeBranches.find((branch) => branch._id === value) || null}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
                       )}
@@ -271,10 +284,10 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       options={activeCourse}
                       getOptionLabel={(course) => course.course_name}
                       onChange={(event, newValue) => {
-                        onChange(newValue?.course_id);
-                        getActiveBatchesByCourse(newValue?.course_id);
+                        onChange(newValue?._id);
+                        getActiveBatchesByCourse(newValue?._id);
                       }}
-                      value={activeCourse.find((course) => course.course_id === value) || null}
+                      value={activeCourse.find((course) => course._id === value) || null}
                       renderInput={(params) => (
                         <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
                       )}
@@ -389,15 +402,15 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
-                  getOptionLabel={(option) => option.staff_name}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option}
                   value={selectedInstructors}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'instructor',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
@@ -423,15 +436,15 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option._id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -444,7 +457,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
@@ -455,15 +468,15 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
-                  getOptionLabel={(option) => option.coordinate_name}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeNonTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
                   value={selectedCoordinates}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'coordinator',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
@@ -489,15 +502,15 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option._id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -510,7 +523,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />

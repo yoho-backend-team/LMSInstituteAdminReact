@@ -27,13 +27,7 @@ export const getAllTeachingStaffs = async (data) => {
 };
 export const getAllActiveTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_API_END_POINT}/active`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client?.TeachingStaff.get(data)
 
     console.log(response);
 

@@ -170,7 +170,7 @@ const GroupEditDialog = () => {
       console.log(result,"common permissions")
       if (result.success) {
         setPermissions(result.data);
-        setPermissionCount(result.permissions);
+        // setPermissionCount(result.permissions);
       } else {
         console.log(result.message);
       }
@@ -187,13 +187,22 @@ const GroupEditDialog = () => {
       console.log(result,"Role Permissions")
       if (result.success) {
         result.data?.forEach((permission) => {
-          permission?.create_permission?.permission && togglePermission(permission?.identity+"-"+"create");
-          permission?.read_permission?.permission && togglePermission(permission?.identity+"-"+"read");
-          permission?.update_permission?.permission && togglePermission(permission?.identity + "-"+"update");
-          permission?.delete_permission?.permission && togglePermission(permission?.identity +"-"+"delete");
+          permission?.create_permission?.permission && togglePermission(permission?.identity+"-"+"create")
+          permission?.read_permission?.permission && togglePermission(permission?.identity+"-"+"read")
+          permission?.update_permission?.permission && togglePermission(permission?.identity + "-"+"update")
+          permission?.delete_permission?.permission && togglePermission(permission?.identity +"-"+"delete")
+
+          permission?.create_permission?.permission && setPermissionCount((per)=>[...per,permission.create_permission])
+          permission?.read_permission?.permission && setPermissionCount((per)=>[...per,permission.read_permission])
+          permission?.update_permission?.permission && setPermissionCount((per)=>[...per,permission.update_permission])
+          permission?.delete_permission?.permission && setPermissionCount((per)=>[...per,permission.delete_permission])
+
+
         });
         setLoading(false);
         setRolePermissions(result?.data)
+        // setPermissionCount(result?.data);
+
       } else {
         console.log(result.message);
         setLoading(false);
@@ -233,7 +242,7 @@ const GroupEditDialog = () => {
       setIsIndeterminateCheckbox(true);
     }
   }, [isIndeterminateCheckbox, permissionCount]);
-  console.log(permissions,"permissions",selectedCheckbox,rolePermissions)
+  console.log(permissions,"permissions",selectedCheckbox,rolePermissions,permissionCount)
 
   // Render permissions table rows
 
@@ -280,7 +289,7 @@ const GroupEditDialog = () => {
       // ))
     );
   }, [permissions, selectedCheckbox, togglePermission]);
-
+  
   return (
     <>
       {loading ? (
