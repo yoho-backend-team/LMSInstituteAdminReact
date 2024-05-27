@@ -32,8 +32,6 @@ export const getAllFaqCategories = async (data) => {
       },
       params: data 
     });
-    console.log(data);
-    console.log(response);
 
     // Check if the response status is successful
   
@@ -132,7 +130,7 @@ export const updateStatusFaqCategory = async (data) => {
 export const updateFaqCategory = async (data) => {   
   try {
     const { uuid } = data;
-    console.log(data)
+
     const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
@@ -142,7 +140,6 @@ export const updateFaqCategory = async (data) => {
     
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'FaqCategory updated successfully' };
     } else {
       return { success: false, message: 'Failed to update FaqCategory' };

@@ -81,7 +81,7 @@ const StepperLinearWithValidation = () => {
   });
 
   const [activeStep, setActiveStep] = useState(0);
-  console.log(activeStep);
+
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -130,8 +130,6 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
-console.log(studentData);
-console.log(activeCourse);
 
   useEffect(() => {
     if (studentData) {
@@ -230,7 +228,6 @@ console.log(activeCourse);
     );
   };
 
-  console.log(logo);
 
   const onSubmit = useCallback(async () => {
     const personalData = personalControl?._formValues;

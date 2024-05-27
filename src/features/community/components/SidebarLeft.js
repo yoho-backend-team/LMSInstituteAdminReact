@@ -53,19 +53,18 @@ const SidebarLeft = (props) => {
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(null);
   const [getchatsState,setChatsState] = useState(false)
-  console.log(communities);
   
   const handleChatClick = async (type, community) => {
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
     const communityId = community?._id
-    console.log(community,community._id,"check",community,"comunity",typeof(chats),getchatsState,type)
+
     socket.emit("join",{group:communityId,user:"user"},(error)=>{
       console.log(error,"socketError")
     })
     // const message = socket.emit("new message",community)
-    // console.log(message,"message")
+
     if (community && community._id) {
       try {
         const response = await getAllBatchChats({ chatId: community._id });
@@ -100,7 +99,7 @@ const SidebarLeft = (props) => {
       return !!arr.length;
     }
   };
-  console.log(chats,"chats")
+
   const renderContacts = () => {
     if (communities === undefined) {
       return (

@@ -66,7 +66,6 @@ const StudentCertificateAddDrawer = (props) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -139,10 +138,8 @@ const uploadFileToS3 = async (file) => {
     // const s3UploadResponse = await uploadFileToS3(studymaterialPdf);
     
     // Assuming s3UploadResponse contains the URL of the uploaded file
-    console.log(data,data.pdf_file)
     
     
-    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('file_upload', studymaterialPdf);
     bodyFormData.append('student', data.student);
@@ -151,7 +148,7 @@ const uploadFileToS3 = async (file) => {
     bodyFormData.append('branch_id', selectedBranchId);
 
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
-    console.log(branch)
+
     const InputData = {
       file_upload:data.pdf_file,
       student: data.student,

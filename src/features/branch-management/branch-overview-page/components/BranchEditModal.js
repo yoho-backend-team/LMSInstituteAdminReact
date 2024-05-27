@@ -67,7 +67,7 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
       setValue('state', selectedBranch?.contact_info?.state || '');
     }
   }, [selectedBranch, setValue]);
-  console.log(selectedBranch,"selectedBranch")
+
   // Handle form submission
   const onSubmit = useCallback(
     async (data) => {

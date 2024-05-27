@@ -205,7 +205,6 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-  console.log(logo);
 
   const onSubmit = async () => {
     const personalData = personalControl._formValues;
@@ -278,7 +277,7 @@ const StepperLinearWithValidation = () => {
       }
     // }
   };
-  console.log(selectedCourses,"selected")
+
   const getStepContent = () => {
     return (
       <form onSubmit={handlePersonalSubmit(onSubmit)}>

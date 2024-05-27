@@ -3,7 +3,7 @@ import UserHeaderCard from 'features/user-management/users-page/users-overview-p
 import PropTypes from 'prop-types';
 
 const UserHeaderSection = ({ users, groups }) => {
-  console.log(groups,"groups")
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={3} sm={6}>

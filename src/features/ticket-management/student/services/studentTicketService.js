@@ -13,7 +13,6 @@ export const getAllStudentTickets = async (data) => {
       },
       params: data
     });
-    console.log('getAllStudentTickets:', response);
     // Check if the response status is successful
     
       return response;
@@ -37,7 +36,6 @@ export const updateStudentTicket = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentTicket updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentTicket' };

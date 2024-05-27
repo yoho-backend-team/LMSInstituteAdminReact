@@ -58,7 +58,7 @@ const SubscriptionDataTable = ({ Subscription }) => {
       renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.subscription_amount || 0}`}</Typography>
     }
   ];
-  console.log(Subscription,"c")
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

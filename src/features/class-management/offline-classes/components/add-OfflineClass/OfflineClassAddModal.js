@@ -75,8 +75,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllNonTeachingStaffs(data);
-    
+    const result = await getAllNonTeachingStaffs(data); 
     setActiveNonTeachingStaff(result.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {

@@ -31,8 +31,6 @@ export default function CourseValidate({ setCourseSyllabus }) {
 
   const values = watch();
 
-  console.log(values);
-
   const onSubmit = async () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));

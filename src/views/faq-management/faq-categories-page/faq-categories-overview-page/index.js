@@ -91,14 +91,12 @@ const CategoriesDataGrid = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
   };
 
   const columns = [
@@ -202,10 +200,9 @@ const CategoriesDataGrid = () => {
         setValue(val);
         const result = await searchUsers(val);
         if (result.success) {
-          console.log('Search results:', result.data);
           dispatch(setUsers(result.data));
         } else {
-          console.log(result.message);
+          toast.error(result.message);
         }
       } catch (error) {
         console.log(error);

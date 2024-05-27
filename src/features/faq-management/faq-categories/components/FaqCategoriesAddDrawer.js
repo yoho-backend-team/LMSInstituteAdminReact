@@ -64,7 +64,6 @@ const FaqCategoriesAddDrawer = (props) => {
       ...requestData 
     };
   
-    console.log(inputData);
     try {
       const result = await addFaqCategory(inputData);
     

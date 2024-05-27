@@ -29,7 +29,6 @@ const TableHeader = (props) => {
   const handleSearch = useCallback(
     (value) => {
      
-      console.log(users,"users","called",value)
       const data = users?.filter((i)=>(i.first_name.toLowerCase()+i.last_name.toLowerCase()).includes(value))
 
       if(data){
@@ -39,7 +38,7 @@ const TableHeader = (props) => {
     },
     [dispatch,users]
   );
-  console.log(users,"users")
+
   return (
     <Grid container spacing={2} sx={{ alignItems: 'center', mt: 2 }}>
       <Grid item sm={6} xs={12}></Grid>

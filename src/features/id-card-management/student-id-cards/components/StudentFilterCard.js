@@ -26,7 +26,6 @@ const StudentFilterCard = (props) => {
       branchid: selectedBranchId,
     };
     getBatches(data);
-    console.log(data,"searcd")
   }, [selectedBranchId]);
 
   const getBatches = async (data) => {

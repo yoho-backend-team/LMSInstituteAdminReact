@@ -13,8 +13,6 @@ export const getAllStaffTickets = async (data) => {
       },
       params: data
     });
-
-    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -41,7 +39,6 @@ export const updateStaffTicket = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StaffTicket updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StaffTicket' };

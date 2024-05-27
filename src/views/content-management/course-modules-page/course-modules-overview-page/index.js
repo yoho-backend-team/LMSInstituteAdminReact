@@ -44,7 +44,6 @@ const Modules = () => {
   const ModuleLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const institute_id = useInstitute().getInstituteId()
-  console.log(selectedDeleteId);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -53,7 +52,6 @@ const Modules = () => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log(result.data);
     setActiveBranches(result.data.data);
   };
   const userStatusObj = {
@@ -71,7 +69,7 @@ const Modules = () => {
   };
 
   const handleStatusChangeApi = async () => {
-    console.log('entered', statusValue,module);
+
     const data = {
       is_active: !statusValue?.is_active,
       module_id: statusValue?.uuid
@@ -91,7 +89,6 @@ const Modules = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('toogle pressed');
   };
 
   const handleDelete = useCallback((itemId) => {
@@ -112,7 +109,6 @@ const Modules = () => {
 
  
 
-  console.log(Module);
   useEffect(() => {
     dispatch(getAllCourseModules(
       { branch_id: selectedBranchId,institute_id:institute_id, page: '1' }
@@ -267,7 +263,6 @@ const Modules = () => {
     }
   ];
 
-  console.log(selectedRow);
   return (
     <>
       <Grid container spacing={2}>

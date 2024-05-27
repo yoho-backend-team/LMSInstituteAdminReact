@@ -12,7 +12,7 @@ export const getAllStudentFees = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
       return response;
   } catch (error) {
@@ -31,7 +31,7 @@ export const getFeeByStudentId = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
-    console.log(response);
+
     // Check if the response status is successful
       return response;
     

@@ -23,7 +23,6 @@ const TeacherFilter = (props) => {
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { is_active: e.target.value, branchid: selectedBranchId, instituteId: useInstitute().getInstituteId() };
-    console.log(data,"sytatius")
     dispatch(getAllNonTeachingStaffs(data));
   };
 

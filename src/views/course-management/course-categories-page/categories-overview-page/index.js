@@ -21,13 +21,12 @@ const Categories = () => {
       branch_id: selectedBranchId,
       page: '1'
     };
-    console.log(selectedBranchId,"select")
     dispatch(getAllCourseCategories(data));
   }, [dispatch, selectedBranchId, categoryRefetch]);
 
   // Memoize categories data to prevent unnecessary re-renders
   const memoizedCategories = useMemo(() => courseCategories || [], [courseCategories]);
-  console.log(memoizedCategories,courseCategories,"course overview")
+
   return (
     <Grid container>
       <Grid item xs={12}>

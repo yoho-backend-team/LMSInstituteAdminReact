@@ -75,7 +75,6 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
     setSelectedImage(response?.data?.file)
     setImgSrc(response?.data.file)
     setValue("image",response?.data?.file)
-    console.log(response,"response")
   }, []);
 
   // Styled components
@@ -117,7 +116,6 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
             image : category?.image?category.image:data.image,
             id:category.uuid
       }
-      console.log(data,"data",data1)
       
       // const inputData = new FormData();
       // inputData.append('category_id', category?.category_id);

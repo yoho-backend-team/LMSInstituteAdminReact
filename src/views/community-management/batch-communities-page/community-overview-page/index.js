@@ -32,7 +32,7 @@ const Community = () => {
   const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(communities);
+
   const theme = useTheme();
   const dispatch = useDispatch();
   const hidden = useMediaQuery(theme.breakpoints.down('lg'));
@@ -62,7 +62,6 @@ const Community = () => {
   //     userId:user._id,
   //     instituteId: institute._id
   //   };    
-  //   console.log(data) 
   //   dispatch(getAllCommunities(data));
   // }, [dispatch, selectedBranchId]);
   // useEffect(() => {
@@ -80,19 +79,16 @@ const Community = () => {
         instituteId: institute._id
       };
       
-     console.log("....................................")
       const response = await dispatch(getAllCommunities(data));
 
    
       if (response && response.data.data && response.data.data.length > 0) {
         const chatId = response.data.data[0]._id; 
         const updatedData = { ...data, chatId };
-        console.log(updatedData);
      
       }
     };
     
-    console.log("***********************************************8")
 
     fetchData();
   }, [dispatch, selectedBranchId, userData._id, institute._id]);
@@ -136,16 +132,15 @@ const Community = () => {
     if (result) {
       setCommunityDetails(result?.data);
     }
-    console.log('result  yuyueyu ', result);
     setUserProfileRightOpen(!userProfileRightOpen);
   };
-  console.log(selectChat);
+
   const [loading, setLoading] = useState(true);
 
   useTimeout(() => {
     setLoading(false);
   }, 1000);
-  console.log(communities,"communities",chats)
+
   return (
     <>
       {loading ? (

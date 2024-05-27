@@ -6,7 +6,6 @@ export const getAllCourseCategories = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllCourseCategories(data);
-    console.log(response.data,"response") // Implement this function in your services
     dispatch(setCourseCategories(response?.data));
   } catch (error) {
     console.error(error);

@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllLiveClasses } from '../redux/liveClassThunks';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -37,7 +38,8 @@ const LiveClassFilterCard = (props) => {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch: selectedBranchId,
+      institute : useInstitute().getInstituteId()
     };
     getCourses(data);
   }, [selectedBranchId]);
@@ -104,8 +106,9 @@ const LiveClassFilterCard = (props) => {
     } else {
       setSelectedBatch(newValue);
       const data = {
-        batch_id: newValue.batch_id,
-        branch_id: selectedBranchId
+        batch: newValue._id,
+        branch: selectedBranchId,
+        institute : useInstitute().getInstituteId()
       };
       dispatch(getAllLiveClasses(data));
     }
@@ -120,19 +123,21 @@ const LiveClassFilterCard = (props) => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  {/* <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
-                  </TextField>
+                  </TextField> */}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
                     onChange={(e, newValue) => {
                       const data = {
-                        course_id: newValue?.course_id || '',
-                        branch_id: selectedBranchId
+                        institute:useInstitute().getInstituteId(),
+                        course: newValue?._id || '',
+                        branch: selectedBranchId,
+                        institute : useInstitute().getInstituteId()
                       };
                       dispatch(getAllLiveClasses(data));
                     }}

@@ -19,7 +19,6 @@ export const addGroup = async (data) => {
 export const getAllGroupsByInstitute = async (data) => {
   try {
     const response = await client.group.getAll(data)
-    console.log(response);
     // Check if the response status is successful
     return response;
   } catch (error) {
@@ -33,8 +32,6 @@ export const getAllGroupsByInstitute = async (data) => {
 export const deleteGroup = async (groupId) => {
   try {
     const response = await client.group.delete({ id: groupId })
-
-    console.log(response);
     return { success: true, message: 'Group deleted successfully' };
   } catch (error) {
     console.error('Error in deleteGroup:', error);
@@ -45,8 +42,6 @@ export const deleteGroup = async (groupId) => {
 export const updateStatus = async (data) => {
   try {
     const response = await client.group.updateStatus(data)
-
-    console.log(response);
     
     return { success: true, message: 'Group status updated successfully' };
   } catch (error) {
@@ -59,7 +54,6 @@ export const updateGroup = async (data) => {
   try {
     const response = await client.permission.update(data)
 
-    console.log(response);
     return { success: true, message: 'Group updated successfully' };
   } catch (error) {
     console.error('Error in updateGroup:', error);
@@ -70,7 +64,6 @@ export const updateGroup = async (data) => {
 export const getAllGroups = async (data) => {
   try {
     const response = await client.group.getAll(data)
-    console.log(response);
 
     // Check if the response status is successful
     return { success: true, data: response.data };
@@ -85,9 +78,7 @@ export const getAllGroups = async (data) => {
 
 export const getAllPermissionsByRoleId = async (roleId) => {
   try {
-    console.log(roleId,"roleId")
     const response = await client.group.permissionWithRole(roleId)
-    console.log(response);
 
     return { success: true, data: response.data };
   } catch (error) {
@@ -98,7 +89,6 @@ export const getAllPermissionsByRoleId = async (roleId) => {
 export const getAllPermissions = async () => {
   try {
     const response = await client.permission.getAll()
-    console.log(response);
 
     return { success: true, data: response?.data, permissions: response.data };
   } catch (error) {

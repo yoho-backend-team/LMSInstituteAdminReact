@@ -10,8 +10,7 @@ import { getImageUrl } from 'utils/imageUtils';
 
 const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
   const savedPdfUrl = `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`;
-  console.log(savedPdfUrl);
-  console.log('certificate :', certificate);
+
   return (
     <div>
       <Dialog

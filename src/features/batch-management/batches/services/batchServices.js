@@ -7,7 +7,7 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 export const getAllBatchesByBranch = async (data) => {
   try {
     const response = await client.batch.getAll(data)
-    console.log(response,"response batches");
+
     // Check if the response status is successful
 
     return response;   
@@ -21,7 +21,6 @@ export const getAllBatchesByBranch = async (data) => {
 export const getAllBatches = async (data) => {
   try {
     const response = await client.batch.getAll(data)
-    console.log(response);
    
     return { success: true, data: response.data };
    
@@ -34,9 +33,7 @@ export const getAllBatches = async (data) => {
 };
 export const getBatchesByCourse = async (data) => {
   try {
-    console.log(data,"data")
     const response = await client.batch.getAll(data)
-    console.log(response);
     // Check if the response status is successful
     
       return { success: true, data: response.data };
@@ -51,7 +48,7 @@ export const getBatchesByCourse = async (data) => {
 export const getBatchDetails = async (data) => {
   try {
     const response = await client.batch.getWithId(data)
-    console.log(response);
+
     // Check if the response status is successful
     if (response.status) {
       return {
@@ -80,7 +77,7 @@ export const getAllActiveBatchesByCourse = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -143,7 +140,6 @@ export const updateBatch = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Batch updated successfully' };
     } else {
       return { success: false, message: 'Failed to update batch' };
@@ -163,7 +159,6 @@ export const updateBatchStatus = async (data) => {
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Batch updated successfully' };
     } else {

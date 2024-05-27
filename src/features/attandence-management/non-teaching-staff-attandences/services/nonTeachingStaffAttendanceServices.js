@@ -13,8 +13,6 @@ export const getAllNonTeachingStaffAttendances = async (data) => {
       params: data
     });
 
-    console.log(response);
-
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -61,8 +59,6 @@ export const getNonTeachingStaffAttendanceById = async (data) => {
       },
       params: data
     });
-
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -131,7 +127,6 @@ export const updateNonTeachingStaffAttendance = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'NonTeachingStaffAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update NonTeachingStaffAttendance' };

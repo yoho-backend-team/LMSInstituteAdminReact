@@ -7,8 +7,6 @@ const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/insti
 export const getAllStudentsByBatch = async (data) => {
   try {
     const response = await client.users.getStudentsWithBatch(data)
-
-    console.log(response,"students");
   
       return { success: true, data: response?.data };
       
@@ -30,7 +28,6 @@ export const getAllStudents = async (data) => {
     //   params: data
     // });
    const response = await client.users.studentsAll(data)
-    console.log(response);
     // Check if the response status is successful
     if (response.status) {
       return response;
@@ -50,8 +47,6 @@ export const getAllStudents = async (data) => {
 export const addStudent = async (data) => {
   try {
     const response = await client.users.studentRegister(data)
-
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Student created successfully' };
@@ -95,10 +90,7 @@ export const updateStudent = async (data) => {
       params: data
     });
 
-    console.log('studentupdate', response);
-
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Student updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Student' };
@@ -112,7 +104,6 @@ export const updateStudent = async (data) => {
 export const studentById = async (data) => {
   try {
        const response = await client.users.getStudentWithId(data)
-    console.log(response,data);
     // Check if the response status is successful
     if (response.status) {
       return { success: true, data: response.data };

@@ -70,7 +70,10 @@ class Client {
     }
     online_class = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.online_class.getAll,params),
-      getWithId : (data) => HttpClient.get(HTTP_END_POINTS.online_class.getWithId+data.class_id)
+      getWithId : (data) => HttpClient.get(HTTP_END_POINTS.online_class.getWithId+data.class_id),
+      create : (data) => HttpClient.post(HTTP_END_POINTS.online_class.create,data),
+      update : (data) => HttpClient.update(HTTP_END_POINTS.online_class.update+data?.uuid,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.online_class.create+"/"+data.id)
     }
     offline_class = {
       create : (data) => HttpClient.post(HTTP_END_POINTS.offline_class.create,data),

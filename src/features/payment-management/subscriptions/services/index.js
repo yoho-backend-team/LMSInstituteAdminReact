@@ -13,7 +13,6 @@ export const getAllSubscriptions = async (data) => {
             },
             params: data
         });
-        console.log(response);
         
         return response;
     } catch (error) {
@@ -34,7 +33,6 @@ export const getAllSubscriptionPlans = async (data) => {
             },
             params: data
         });
-        console.log(response);
         return response;
     } catch (error) {
         // Log the error for debugging purposes

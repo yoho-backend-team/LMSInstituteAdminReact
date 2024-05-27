@@ -39,7 +39,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
       is_active: !statusValue?.is_active,
       id: statusValue?.uuid
     };
-    console.log(data,"data")
+
     const response = await updateBranchStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -53,7 +53,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(branch);
   };
-  console.log(branch,"branch")
+
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{ position: 'relative', minHeight: 300 }}>

@@ -37,7 +37,6 @@ const UserView = () => {
         setLoading(false);
         hide()
       } else {
-        console.log(result.message);
         setLoading(false);
         hide()
       }
@@ -45,7 +44,6 @@ const UserView = () => {
       console.log(error);
     }
   };
-  console.log('user Data', userData);
 
   return (
     <Grid>

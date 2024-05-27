@@ -17,7 +17,6 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
   const [role, setRole] = useState('');
   const {show ,hide} = useSpinner()
   
-  console.log(users,"users Filter Card")
   const [filterstatusValue, setFilterStatusValue] = useState('');
   
   const dispatch = useDispatch();
@@ -41,7 +40,6 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
   const handleFilterByStatus = (e) => {
     show()
     setFilterStatusValue(e.target.value);
-    console.log(e.target.value)
     const filteRole = {role:role?role:null ,is_active:e.target.value ? e.target?.value:null}
     const data = { ...filteRole,branch_id: selectedBranchId ,institute_id:useInstitute().getInstituteId()};
     dispatch(getAllUsers(data));

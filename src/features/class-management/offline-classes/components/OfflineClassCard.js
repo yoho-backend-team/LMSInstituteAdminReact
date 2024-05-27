@@ -91,7 +91,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                         <Avatar
                           key={studentIndex}
                           src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
-                          alt={student?.first_name}
+                          alt={student?.full_name}
                         />
                       );
                     })}

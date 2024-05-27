@@ -12,7 +12,6 @@ export const getAllFaqCategorywithFaq = async () => {
       }
     });
 
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -39,7 +38,7 @@ export const getAllCustomerSupports = async (selectedBranchId) => {
       },
       params: { branch_id: selectedBranchId }
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -128,7 +127,6 @@ export const updateCustomerSupport = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'CustomerSupport updated successfully' };
     } else {
       return { success: false, message: 'Failed to update CustomerSupport' };

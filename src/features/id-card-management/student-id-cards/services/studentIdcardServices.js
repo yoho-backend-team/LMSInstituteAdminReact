@@ -12,7 +12,7 @@ export const getAllStudentIdCards = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -101,7 +101,6 @@ export const updateStudentIdCard = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentIdCard updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentIdCard' };
@@ -121,7 +120,6 @@ export const updateStudentIdCardStatus = async (uuid,data) => {
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Student updated successfully' };
     } else {

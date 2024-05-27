@@ -31,7 +31,6 @@ const LiveClassCard = () => {
   }, [dispatch, selectedBranchId]);
 
   const handleCopyLink = (index) => {
-    console.log(`Link copied for card at index ${index}`);
     toast.success('Link copied to clipboard');
   };
 

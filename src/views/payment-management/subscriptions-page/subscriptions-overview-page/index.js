@@ -185,10 +185,7 @@ const Subscription = () => {
     );
   }, [dispatch, selectedBranchId, refetch]);
 
-  console.log(setRefetch);
-  console.log(Subscription);
 
-  console.log(subscriptions);
 
   return (
     <Card>

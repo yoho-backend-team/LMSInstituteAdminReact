@@ -64,7 +64,6 @@ const AddBatchPage = () => {
   });
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
 
   useEffect(() => {
     const data = {
@@ -98,7 +97,6 @@ const AddBatchPage = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -124,24 +122,17 @@ const AddBatchPage = () => {
   const handleStudentsChange = (event) => {
     setValue('students', event.target.value);
     const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student.uuid));
-    console.log('event', event.target.value);
-    console.log('filter', filteredStudents);
     setSelectedStudentIds(event.target.value);
     setSelectedStudents(filteredStudents);
   };
 
   const getStudentByCourseId = async (courseId) => {
-    console.log(defaultValues,"defaultValues")
     const result = await getStudentByCourse({ branch_id:defaultValues.branch,course_id: courseId });
-    console.log(result.data);
     setActiveStudents(result.data);
   };
 
-  console.log('Active Students :', activeStudents);
-  console.log('Selected Students :', selectedStudents);
 
   const onSubmit = async (data) => {
-    console.log(data);
     const instituteId = useInstitute().getInstituteId()
     const inputData = {
       batch_name: data.batchName,
@@ -177,7 +168,7 @@ const AddBatchPage = () => {
     setValue('endDate', date);
     setEndDate(date);
   };
-  console.log(activeStudents,selectedStudents,"selectedStudents");
+
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
       <Grid item xs={12}>
@@ -262,7 +253,6 @@ const AddBatchPage = () => {
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('branch', newValue ? newValue.uuid : '');
-                            console.log(newValue,"newValue")
                             getActiveCoursesByBranch(newValue ? {branch_id : newValue.uuid} : '');
                           }}
                           options={activeBranches}

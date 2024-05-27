@@ -58,11 +58,11 @@ const ChatContent = (props) => {
       setMessages((messages)=>[...messages,message])
     })
   },[])
-  console.log(chats,"chats",messages)
+
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
-      console.log(selectedChat,chats)
+
       return (
         <Box
           sx={{

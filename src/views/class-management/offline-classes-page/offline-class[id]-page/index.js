@@ -8,6 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { default as Avatar, default as CustomAvatar } from 'components/mui/avatar';
 import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { getInitials } from 'utils/get-initials';
@@ -62,7 +63,7 @@ const ViewOfflineClass = () => {
       if (result.success) {
         setOfflineClassData(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);

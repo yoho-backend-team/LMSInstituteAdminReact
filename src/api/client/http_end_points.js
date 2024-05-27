@@ -79,6 +79,8 @@ const generateEndpoints = () => {
         online_class : {
             getAll : `/api/institutes/class/online/all`,
             getWithId : `/api/institutes/class/online/`,
+            create : `/api/institutes/class/online`,
+            update : `/api/institutes/class/online/update/`
         },
         offline_class : {
             create : `/api/institutes/class/offline`,

@@ -21,7 +21,6 @@ export const getAllTeachingStaffs = async (data) => {
         course_id: data.course_id
       }, 
   });
-  console.log(response);
 
   if (response.data.status) {
     return response;
@@ -38,8 +37,6 @@ throw error;
 export const getAllActiveTeachingStaffs = async (data) => {
   try {
     const response = await client?.TeachingStaff.get(data)
-
-    console.log(response);
 
     // Check if the response status is successful
    
@@ -84,7 +81,6 @@ export const addTeachingStaff = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'TeachingStaff created successfully' };
@@ -131,7 +127,6 @@ export const updateTeachingStaff = async (data) => {
       }
     );
 
-    console.log('Teaching staff update response:', response.data);
 
     if (response.data.status) {
       return { success: true, message: response.data.message, response: response.data };
@@ -175,7 +170,7 @@ export const staffChangePassword = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'User status updated successfully' };
     } else {
@@ -217,7 +212,6 @@ export const staffStatusChange = async (uuid,data) => {
 export const staffById = async (data) => {
   try {
        const response = await client.users.getStudentWithId(data)
-    console.log(response,data);
     // Check if the response status is successful
     if (response.status) {
       return { success: true, data: response.data };

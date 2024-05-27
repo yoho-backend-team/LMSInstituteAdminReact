@@ -90,7 +90,6 @@ const StudentFilter = (props) => {
                   options={batch}
                   filterSelectedOptions
                   onChange={(e, newValue) => {
-                    console.log(newValue);
                     const data = {
                       batch_id: newValue.batch.batch_id,
                       branch_id: selectedBranchId

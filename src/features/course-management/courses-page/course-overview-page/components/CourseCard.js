@@ -40,7 +40,7 @@ const CourseCard = (props) => {
       toast.error(response.message);
     }
   };
-  console.log(course,"course",course.class_type.includes("online"))
+
   const handleStatusValue = (event, course) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(course);

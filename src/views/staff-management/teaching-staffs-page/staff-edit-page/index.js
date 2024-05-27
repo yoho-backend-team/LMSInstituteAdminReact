@@ -252,38 +252,8 @@ const StepperLinearWithValidation = () => {
       userDetail : staffData?.data?.userDetail?._id
     };
 
-    // let data = new FormData();
-    // filteredCourseId?.forEach((id) => {
-    //   data.append(`course_ids[]`, id);
-    // });
-
-    // data.append('id', staffData?.id);
-    // data.append('full_name', personalData?.full_name);
-    // data.append('email', personalData?.email);
-    // data.append('phone_number', personalData?.phone_number);
-    // data.append('alternate_number', personalData?.alternate_number);
-    // data.append('designation', personalData?.designation);
-    // data.append('image', logo);
-    // data.append('gender', personalData?.gender);
-    // data.append('address_line_1', personalData?.address1);
-    // data.append('address_line_2', personalData?.address2
-    // );
-    // data.append('city', personalData?.city);
-    // data.append('state', personalData?.state);
-    // data.append('pincode', personalData?.pincode);
-    // data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    // data.append('username', personalData?.username);
-    // data.append('qualification', personalData?.qualification);
-    // const isUserNameTaken = await checkUserName(personalData?.username);
-    console.log(data,"dddddddddd")
-
     const result = await updateTeachingStaff(teaching);
-    // if (!isUserNameTaken.success) {
-    //   setError('username', {
-    //     type: 'manual',
-    //     message: 'Username is already taken'
-    //   });
-    // } else if (isUserNameTaken.success) {
+    
       if (result.success) {
         toast.success(result.message);
         navigate(-1);

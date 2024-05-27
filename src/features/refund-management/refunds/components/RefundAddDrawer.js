@@ -74,9 +74,7 @@ const RefundAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
-  console.log(activeBatches,"activeBathces")
   const getActiveBatchesByCourse = async (courseId) => {
-    console.log(courseId)
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
     if (result?.success) {
@@ -124,7 +122,6 @@ const RefundAddDrawer = (props) => {
   const onSubmit = async (data) => {
     if (selectedStudentFee) {
       try {
-        console.log(data,"refunddata",selectedStudentFee)
         
         const InputData = {
           student: data.student,
@@ -139,10 +136,8 @@ const RefundAddDrawer = (props) => {
           // branch_id: selectedBranchId,
           payment_date: new Date()
         };
-        console.log(data,"data",InputData)
-        console.log("Inputdata",InputData)
+        
         const result = await addStudentFeeRefund(InputData);
-        console.log(result.data)
 
         if (result.success) {
           toast.success(result.message);

@@ -5,7 +5,6 @@ const STUDENT_FEE_REFUND_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}
 
 export const getAllStudentFeeRefunds = async (data) => {
   try {
-    console.log(`${STUDENT_FEE_REFUND_API_ENDPOINT}all`)
     const response = await axios.get(`${STUDENT_FEE_REFUND_API_ENDPOINT}all`, {
       headers: {
         'Content-Type': 'application/json',
@@ -94,7 +93,6 @@ export const updateStudentFeeRefund = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentFeeRefund updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentFeeRefund' };

@@ -24,9 +24,7 @@ const OfflineClassCardHeader = (props) => {
   }
 
   const handleSearchSubmit = (value) => {
-    console.log(offlineClasses,offlineClasses?.data[0].class_name.toLowerCase(),offlineClasses?.data[0].class_name.toLowerCase(value),value)
      const data = offlineClasses?.data?.filter((i)=>i.class_name.toLowerCase().includes(value.toLowerCase()))
-     console.log(data,"data")
      if(data && data.length !==0){
       setSearch(!search)
       dispatch(setOfflineClasses({data:data}))

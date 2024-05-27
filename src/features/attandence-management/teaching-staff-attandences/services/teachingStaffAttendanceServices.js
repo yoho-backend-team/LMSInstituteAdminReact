@@ -12,7 +12,6 @@ export const getAllTeachingStaffAttendances = async (data) => {
       },
       params: data
     });
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -38,8 +37,6 @@ export const getTeachingStaffAttendanceById = async (data) => {
       },
       params: data
     });
-
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -86,7 +83,6 @@ export const addTeachingStaffAttendance = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'TeachingStaffAttendance created successfully' };
@@ -130,7 +126,6 @@ export const updateTeachingStaffAttendance = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'TeachingStaffAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TeachingStaffAttendance' };

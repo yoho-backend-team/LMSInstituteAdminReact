@@ -8,17 +8,14 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 const ViewBatchTable = ({ students }) => {
-  console.log('Students', students);
 
   const [searchQuery, setSearchQuery] = useState('');
 
   if (!students) {
     return null;
   }
-  console.log(students,"students")
   const filteredStudents = students.filter((student) => student?.full_name.toLowerCase().includes(searchQuery.toLowerCase()));
 
-  console.log(filteredStudents);
 
   const columns = [
     {

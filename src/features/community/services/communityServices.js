@@ -5,10 +5,7 @@ const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/ins
 
 export const getAllCommunities = async (data) => {
   try {
-    console.log(data)
     const response = await client.community.getAll(data)
-
-    console.log(response,"response");
 
     // Check if the response status is successful
     if (response.status) {
@@ -35,8 +32,6 @@ export const getCommunityDetails = async (data) => {
       params: data
     });
 
-    console.log(response);
-
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -54,8 +49,6 @@ export const getCommunityDetails = async (data) => {
 export const getAllBatchChats = async (chatId) => {
   try {
     const response = await client.community.getCommunityMessage(chatId)
-
-    console.log(response);
 
     // Check if the response status is successful
     if (response.status) {
@@ -80,7 +73,6 @@ export const sendMessage = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Community created successfully' };
@@ -103,8 +95,6 @@ export const deleteCommunity = async (data) => {
       params: data
     });
 
-    console.log(response);
-
     if (response.data.status) {
       return { success: true, message: 'Community deleted successfully' };
     } else {
@@ -124,10 +114,8 @@ export const updateCommunity = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Community updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Community' };

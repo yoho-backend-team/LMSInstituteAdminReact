@@ -81,7 +81,6 @@ const Batch = () => {
     } else {
       toast.error(response.message);
     }
-    console.log('getAllBatches', response);
   };
 
   const handleStatusValue = (event, batch) => {
@@ -242,7 +241,7 @@ const Batch = () => {
       </Grid>
     ));
   };
-  console.log(batches,"batches")
+
   return (
     <>
       <Grid container>

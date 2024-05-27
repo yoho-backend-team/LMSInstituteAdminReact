@@ -10,27 +10,12 @@ const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-     const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/non-teaching-staff`, {
-       headers: {
-       'Content-Type': 'application/json',
-       Authorization: `Token ${localStorage.getItem('token')}`
-     },
-   params: {
-         page: data.page,
-         is_active: data.is_active
-       }, 
-   });
-   console.log(response);
+     const response = await client.nonTeachingStaff.get(data)
  
-   if (response.data.status) {
-     return response;
-} else {
- throw new Error(`Failed to fetch NonTeachingStaffs. Status: ${response.status}`);
-}
-} catch (error) {
-
-console.error('Error in getAllNonTeachingStaffs:', error);
-throw error;
+  return response;
+ } catch (error) {
+  console.error('Error in getAllNonTeachingStaffs:', error);
+  throw new Error(`Failed to fetch NonTeachingStaffs. Status: ${error?.response?.data?.message}`);
 }
 };
 
@@ -137,8 +122,6 @@ export const updateNonTeachingStaff = async (data) => {
       }
     );
 
-    console.log('Non-teaching staff update response:', response.data);
-
     if (response.data.status) {
       return { success: true, message: response.data.message, response: response.data };
     } else {
@@ -160,7 +143,7 @@ export const nonTeachingStaffById = async (data) => {
       },
       params: data
     });
-    console.log('non-teachingStaff:', response);
+
     // Check if the response status is successful
     if (response.data) {
       return { success: true, data: response.data.data};

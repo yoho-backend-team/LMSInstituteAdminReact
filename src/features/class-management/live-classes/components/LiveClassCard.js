@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteLiveClass } from '../services/liveClassServices';
 import LiveClassEditModal from './edit-LiveClass/LiveClassEditModal';
+import { useSpinner } from 'context/spinnerContext';
 
 const LiveClassCard = ({ setRefetch, liveClasses }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -26,6 +27,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
   const [selectedClass, setSelectedClass] = useState('');
   const [liveclassDeleteModelOpen, setLiveclassDeleteModelOpen] = useState(false);
   const [selectedLiveclassDeleteId, setSelectedLiveclassDeleteId] = useState(null);
+  const {show,hide} = useSpinner()
 
   const handleDelete = useCallback((itemId) => {
     setSelectedLiveclassDeleteId(itemId);
@@ -33,12 +35,15 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
   }, []);
 
   const handleLiveclassDelete = async () => {
-    const data = { class_id: selectedLiveclassDeleteId };
+    show()
+    const data = { id: selectedLiveclassDeleteId };
     const result = await deleteLiveClass(data);
     if (result.success) {
+      hide()
       toast.success(result.message);
       setRefetch((state) => !state);
     } else {
+      hide()
       toast.error(result.message);
     }
   };

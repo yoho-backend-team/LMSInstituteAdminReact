@@ -9,7 +9,7 @@ import { Box } from '@mui/material';
 import CustomChip from 'components/mui/chip';
 
 const EcommerceStatistics = ({ batchData, theme }) => {
-  console.log('batchData2:', batchData);
+
   const CardStyle = styled(Card)(({ theme }) => ({
     borderColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main,
     background: theme.palette.mode === 'light' ? theme.palette.secondary.light : theme.palette.dark.main,
@@ -27,7 +27,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
       right: '-8px'
     }
   }));
- console.log(batchData,"batchData")
+
   const renderStats = () => {
     return (
       <Grid item xs={12} md={12}>

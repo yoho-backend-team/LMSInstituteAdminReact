@@ -36,8 +36,6 @@ const Notes = () => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
 
-  console.log(selectedDeleteId);
-
   const userStatusObj = {
     true: 'success',
     false: 'error'

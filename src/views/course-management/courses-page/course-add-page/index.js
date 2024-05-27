@@ -49,9 +49,6 @@ const AddCoursePage = () => {
   const [imgSrcTemplate, setImgSrcTemplate] = useState(imageTemplate);
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
-  console.log(setCourseSyllabus);
-  console.log('selectedLogo', selectedLogo);
-  console.log('selectedTemplate', selectedTemplate);
 
   const handleInputLogoImageChange = async (file) => {
     const { files } = file.target;
@@ -163,7 +160,6 @@ const AddCoursePage = () => {
       branch_id: branchIds
     };
     const result = await getAllCourseCategories(data);
-    console.log(result,"result")
     if (result.data) {
       setActiveCategories(result.data);
     }
@@ -171,7 +167,6 @@ const AddCoursePage = () => {
 
   const getAllBranches = async () => {
     const result = await getActiveBranches();
-    console.log(result.data,"result")
     if (result.data.data) {
       setBranches(result.data.data);
     }
@@ -215,14 +210,13 @@ const AddCoursePage = () => {
 
   const onSubmit = async () => {
     const personalData = courseControl?._formValues;
-    // console.log(courseName)
+
     const data = {
       course_name : personalData.course_name,
       description : personalData.description,
       image : selectedLogo,
       duration : personalData.course_duration,
       category : personalData.course_category.uuid,
-      branch_id : selectedBranchId,
       institute_id : useInstitute().getInstituteId(),
       price : personalData.course_price,
       class_type : [personalData.learning_format],
@@ -230,24 +224,8 @@ const AddCoursePage = () => {
     }
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
-      const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
-      // console.log(selectedBranches);
-
-      // let data = new FormData();
-      // filteredBranchId.forEach((id) => {
-      //   data.append(`branch_id[]`, id);
-      // });
-      // data.append('course_name', personalData?.course_name);
-      // data.append('description', personalData?.description);
-      // data.append('course_overview', personalData?.course_overview);
-      // data.append('course_duration', personalData?.course_duration);
-      // data.append('institute_category_id', personalData?.course_category.category_id);
-      // data.append('course_price', personalData?.course_price);
-      // data.append('learning_format', personalData?.learning_format);
-      // data.append('logo', selectedLogo);
-      // data.append('image', selectedTemplate);
-      // data.append('syllabus', courseSyllabus);
-      console.log(personalData);
+      const filteredBranchId = selectedBranches?.map((branch) => branch?.uuid);
+      data.branch_id = filteredBranchId
       const result = await addCourse(data);
 
       if (result.success) {
@@ -412,7 +390,6 @@ const AddCoursePage = () => {
                       fullWidth
                       value={value || null}
                       onChange={(event, newValue) => {
-                        console.log(event);
                         onChange(newValue);
                       }}
                       options={activeCategories ?? []}

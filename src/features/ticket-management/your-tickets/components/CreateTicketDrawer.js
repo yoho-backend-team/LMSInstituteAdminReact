@@ -61,7 +61,6 @@ const CreateTicketDrawer = (props) => {
       const result = await CreateTicket(inputData);
 
       if (result.success) {
-        console.log('Ticket created successfully');
         handleClose();
         setRefetch((state) => !state);
       } else {

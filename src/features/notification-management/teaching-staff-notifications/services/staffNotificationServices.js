@@ -12,7 +12,7 @@ export const getAllStaffNotifications = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -37,7 +37,7 @@ export const addStaffNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'StaffNotification created successfully' };
     } else {
@@ -80,7 +80,6 @@ export const updateStaffNotification = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StaffNotification updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StaffNotification' };
@@ -99,8 +98,6 @@ export const resendStaffNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'StafftNotification Resend successfully' };

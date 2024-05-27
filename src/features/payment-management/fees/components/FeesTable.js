@@ -315,7 +315,7 @@ const FeesTable = () => {
       )
     }
   ];
-  console.log(StudentFees,"studentFees")
+
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>

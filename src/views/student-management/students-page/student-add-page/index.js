@@ -128,8 +128,6 @@ const StepperLinearWithValidation = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log(result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -188,7 +186,6 @@ const StepperLinearWithValidation = () => {
       const data = new FormData()
       data.append("file",files[0])
       const response = await client.file.upload(data)
-      console.log(response,"response")
       setLogo(response.data.file)
   };
 
@@ -219,9 +216,9 @@ const StepperLinearWithValidation = () => {
       dob : convertDateFormat(personalData.date_of_birth),
       gender : personalData.gender,
       branch_id : personalData.branch,
-      course : personalData.course     
+      course : personalData.course,
+      image : logo     
     }
-    console.log(personalData);
 
     try {
       const result = await addStudent(student_data);
@@ -237,7 +234,7 @@ const StepperLinearWithValidation = () => {
     }
     // }
   };
-  console.log(logo,"logo")
+
   return (
     <Card>
       <CardContent>

@@ -89,7 +89,7 @@ const GroupEditDialog = () => {
           delete: false
         };
       }
-      console.log(result,"result")
+      
       switch (action) {
         case 'create':
           result[identity].create = true;
@@ -127,7 +127,6 @@ const GroupEditDialog = () => {
       try {
         show()
         const PermissionList = transformPermissions(selectedCheckbox)
-        console.log(PermissionList,"permissionList",data.roleName,groupName,groupId)
         
         const inputData = {
           id: groupId,
@@ -167,12 +166,12 @@ const GroupEditDialog = () => {
   const getPermissions = useCallback(async () => {
     try {
       const result = await getAllPermissions();
-      console.log(result,"common permissions")
+      
       if (result.success) {
         setPermissions(result.data);
         // setPermissionCount(result.permissions);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -184,7 +183,7 @@ const GroupEditDialog = () => {
     try {
       setLoading(true);
       const result = await getPermissionsByRole(id);
-      console.log(result,"Role Permissions")
+
       if (result.success) {
         result.data?.forEach((permission) => {
           permission?.create_permission?.permission && togglePermission(permission?.identity+"-"+"create")
@@ -204,11 +203,9 @@ const GroupEditDialog = () => {
         // setPermissionCount(result?.data);
 
       } else {
-        console.log(result.message);
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   }, []);
@@ -226,7 +223,7 @@ const GroupEditDialog = () => {
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
-    console.log(permissions,isIndeterminateCheckbox)
+    
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
@@ -237,12 +234,11 @@ const GroupEditDialog = () => {
           arr.push(permission?.identity+"-"+i.name)
          )
       });
-      console.log(arr,"add")
+      
       setSelectedCheckbox(arr);
       setIsIndeterminateCheckbox(true);
     }
   }, [isIndeterminateCheckbox, permissionCount]);
-  console.log(permissions,"permissions",selectedCheckbox,rolePermissions,permissionCount)
 
   // Render permissions table rows
 

@@ -5,6 +5,7 @@ import { getBatchDetails } from 'features/batch-management/batches/services/batc
 import HeaderCard from 'features/batch-management/view-batch/components/ViewBatchHeaderCard';
 import ViewBatchTable from 'features/batch-management/view-batch/components/ViewBatchTable';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch ,useSelector} from 'react-redux';
 import { useLocation } from 'react-router';
 import { useInstitute } from 'utils/get-institute-details';
@@ -47,11 +48,10 @@ const ViewBatch = () => {
       setLoading(true);
       const result = await getBatchDetails(data);
       if (result.success) {
-        console.log('Batches:', result.data);
         setBatchData(result.data);
         setLoading(false);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
         setLoading(false);
       }
     } catch (error) {

@@ -12,7 +12,6 @@ export const getAllStudentAttendances = async (data) => {
       },
       params: data
     });
-    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -101,7 +100,6 @@ export const updateStudentAttendance = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentAttendance' };
@@ -121,7 +119,7 @@ export const getClassDetails = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return {
@@ -149,9 +147,8 @@ export const updateStudentAttendanceStatus = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-    console.log('Notesresponse:', response);
+
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentAttendance status updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentAttendance status' };

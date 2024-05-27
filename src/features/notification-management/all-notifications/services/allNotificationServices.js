@@ -12,7 +12,7 @@ export const getAllNotifications = async (data) => {
       },
       params: data
     });
-    console.log('getAllNotifications:', response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -101,7 +101,6 @@ export const updateNotification = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Notification updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Notification' };
@@ -121,7 +120,6 @@ export const resendNotification = async (data) => {
       }
     });
 
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Notification Resend successfully' };
@@ -143,7 +141,7 @@ export const getAllNotificationsByAuth = async (data) => {
       },
       params: data
     });
-    console.log('getAllNotificationsByAuth:', response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response?.data?.data };
@@ -169,7 +167,7 @@ export const getLastNotifications = async (data) => {
       },
       params: data
     });
-    console.log('getLastNotifications:', response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response?.data?.data };

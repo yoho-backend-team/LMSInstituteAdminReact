@@ -146,13 +146,11 @@ const RefundTable = () => {
   const [selectedRefundDeleteId, setSelectedRefundDeleteId] = useState(null);
 
   const handleDelete = useCallback((itemId) => {
-    console.log(itemId)
     setSelectedRefundDeleteId(itemId);
     setRefundDeleteModelOpen(true);
   }, []);
 
   const handleRefundDelete = async () => {
-    console.log(selectedRefundDeleteId)
     const data = { transaction_id: selectedRefundDeleteId };
     const result = await deleteStudentFeeRefund(data);
     if (result.success) {
@@ -162,7 +160,7 @@ const RefundTable = () => {
       toast.error(result.message);
     }
   };
-  console.log(studentFeeRefunds,"studentFeesRefunds")
+
   const columns = [
     ...defaultColumns,
     {
@@ -186,7 +184,6 @@ const RefundTable = () => {
                 icon: <Icon icon="tabler:trash" />,
                 menuItemProps: {
                   onClick: () => {
-                    console.log(row.transaction_id,row)
                     handleDelete(row._id);
                   }
                 }
@@ -212,7 +209,7 @@ const RefundTable = () => {
       setBatches(result?.data);
     }
   };
-  console.log(studentFeeRefunds,"studentFes")
+
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>

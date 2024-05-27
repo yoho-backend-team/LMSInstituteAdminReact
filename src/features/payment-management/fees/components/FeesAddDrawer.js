@@ -129,16 +129,9 @@ const FeesAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    // var bodyFormData = new FormData();
-    // bodyFormData.append('payment_proof', selectedImage);
-    // bodyFormData.append('branch_id', data.branch);
-    // bodyFormData.append('student_id', data.data.data[1].student);
-    // bodyFormData.append('transaction_id', data.transaction_id);
-    // bodyFormData.append('paid_amount', data.paidAmount);
-    // bodyFormData.append('payment_date', convertDateFormat(data.payment_date));
-    console.log(data,"data",activeBranches,activeBranches[0].branch_identity===data.branch,data.branch,activeBranches[0].branch_identity)
+   
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
-    console.log(branch)
+
     const InputData = {
       student: data.student,
       branch_name:data.branch_id,
@@ -154,7 +147,7 @@ const FeesAddDrawer = (props) => {
     };
 
     const result = await addStudentFee(InputData);
-console.log("data arrived by",InputData)
+
     if (result.success) {
       toast.success(result.message);
       handleClose();

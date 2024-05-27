@@ -73,7 +73,6 @@ const Login = () => {
 
   useEffect(()=>{
     const checkLoginState = () => {
-      console.log(checkAuthState())
       if(checkAuthState()){
         setOtp(true)
       }

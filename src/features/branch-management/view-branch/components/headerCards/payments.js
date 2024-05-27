@@ -51,7 +51,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const PaymentsCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
-  console.log('dataCheck', branchData.InstituteUserCount);
   return (
     <>
       {isLoading ? (

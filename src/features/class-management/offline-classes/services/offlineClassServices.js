@@ -7,7 +7,6 @@ const OFFLINE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api
 export const getAllOfflineClasses = async (data) => {
   try {
     const response = await client?.offline_class?.getAll(data)
-    console.log(response);
     // Check if the response status is successful
     return response;
   } catch (error) {
@@ -41,7 +40,6 @@ export const searchOfflineClasses = async (searchQuery) => {
 export const addOfflineClass = async (data) => {
   try {
     const response = await client.offline_class.create(data)
-    console.log(response); 
     return { success: true, message: 'OfflineClass created successfully' };
   } catch (error) {
     console.error('Error in addOfflineClass:', error);
@@ -52,7 +50,6 @@ export const addOfflineClass = async (data) => {
 export const deleteOfflineClass = async (data) => {
   try {
     const response = await client.offline_class.delete(data)
-    console.log(response);
 
     return { success: true, message: 'OfflineClass deleted successfully' };
   } catch (error) {
@@ -64,7 +61,6 @@ export const deleteOfflineClass = async (data) => {
 export const updateOfflineClass = async (data) => {
   try {
     const response = await client.offline_class.update(data)
-    console.log(response);
     return { success: true, message: 'OfflineClass updated successfully' };
   } catch (error) {
     console.error('Error in updateOfflineClass:', error);
@@ -75,7 +71,6 @@ export const updateOfflineClass = async (data) => {
 export const getOfflineClassDetails = async (data) => {
   try {
     const response = await client.offline_class.getWithId(data)
-    console.log(response);
     // Check if the response status is successful
    
       return {

@@ -54,7 +54,7 @@
       const data = {
         is_active: statusValue?.is_active === true ? false : true,
       };
-      console.log(data);
+
       const response = await updateStaffIdCardStatus(statusValue.uuid, data); 
     
       if (response.success) {

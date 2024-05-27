@@ -72,7 +72,7 @@ const StudyMaterialEdit = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
   const [inputValue, setInputValue] = useState('');
-  console.log(StudyMaterials,"studyMaterials")
+
   const handleFileUpload = useCallback(async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -108,7 +108,6 @@ const StudyMaterialEdit = (props) => {
       uuid : props.initialValues.uuid,
       file : selectedFile ? selectedFile : props.initialValues.file
     }
-     console.log(Update_data,data,selectedFile)
      
     const result = await updateCourseStudyMaterial(Update_data);
    

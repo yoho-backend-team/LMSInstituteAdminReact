@@ -121,16 +121,13 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-    console.log(result,"teaching")
     setActiveTeachingStaff(result.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
     const result = await getAllNonTeachingStaffs(data);
-    console.log(result,"non_teaching")
     setActiveNonTeachingStaff(result.data);
   };
-  console.log("offlineClasses",offlineClasses)
 
   useEffect(() => {
     show()
@@ -351,11 +348,9 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
-                            console.log(updatedValue,"updateValue")
                             setSelectedInstructors(updatedValue);
                             setValue('instructors', updatedValue);
                           }}
-                          {...console.log(option,value)}
                           color="primary"
                           sx={{ m: 0.75 }}
                         />

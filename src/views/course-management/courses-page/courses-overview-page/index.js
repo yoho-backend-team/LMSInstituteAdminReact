@@ -25,7 +25,7 @@ const Courses = () => {
     };
     dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId, courseRefetch]);
-  console.log(selectedBranchId,courses)
+
   return (
     <>
       <Grid container>

@@ -12,7 +12,7 @@ export const getAllStudentNotifications = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -59,7 +59,6 @@ export const addStudentNotification = async (data) => {
       }
     });
 
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'StudentNotification created successfully' };
@@ -103,7 +102,6 @@ export const updateStudentNotification = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentNotification updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentNotification' };
@@ -122,8 +120,6 @@ export const resendStudentNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Notification Resend successfully' };
