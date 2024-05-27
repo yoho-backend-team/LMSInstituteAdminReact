@@ -6,34 +6,44 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { default as DeleteModal } from 'components/modal/DeleteModel';
-import { deleteTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
+import { deleteNonTeachingStaff } from '../services/nonTeachingStaffServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSelector } from 'react-redux';
 
 const UserViewAccount = ({ staff, staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
 
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { getInstituteId } = useInstitute();
+  const instituteId = getInstituteId();
+  const navigate = useNavigate();
+
   const handleDelete = () => {
     setStaffDeleteModelOpen(true);
   };
 
-  const Navigate = useNavigate();
   const handleStaffDelete = async () => {
-    const data = { id: staffID };
-    const result = await deleteTeachingStaff(data);
+    const data = {
+      id: staffID,
+      instituteId,
+      branchid: selectedBranchId,
+    };
+    const result = await deleteNonTeachingStaff(data);
     if (result.success) {
       toast.success(result.message);
-      Navigate(-1);
+      navigate(-1);
       setRefetch((state) => !state);
     } else {
       toast.error(result.message);
     }
   };
-  
+
   return (
     <Grid container spacing={4}>
       <Grid item xs={12}>
@@ -45,42 +55,42 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
             <Box sx={{ pt: 4 }}>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.userDetail?.username}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.userDetail?.username}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.email}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.[0]?.userDetail?.designation}</Typography>
+                <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.userDetail?.designation}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.gender}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.gender}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.dob}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.dob}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.[0]?.contact_info?.phone_number}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.contact_info?.phone_number}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.[0]?.contact_info?.alternate_number}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.contact_info?.alternate_number}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.qualification}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.qualification}</Typography>
               </Box>
               <Box>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
-                  {staff?.[0]?.contact_info?.address1}, {staff?.[0]?.contact_info?.address2}
+                  {staff?.[0]?.contact_info?.address1}, {staff?.contact_info?.address2}
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.[0]?.contact_info?.city}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.contact_info?.city}</Typography>
               </Box>
             </Box>
           </CardContent>
@@ -88,15 +98,15 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
           <CardActions sx={{ display: 'flex', justifyContent: '' }}>
             <Box
               component={Link}
-              to={`non-teaching-staffs/${staff?.[0]?.uuid}/edit`}
-              state={{ staff: staff, id: staff?.[0]?.uuid }}
+              to={`non-teaching-staffs/${staff?.uuid}/edit`}
+              state={{ staff: staff, id: staff?.uuid }}
             >
               <Button variant="contained" size="medium" sx={{ px: 4 }}>
                 Edit
               </Button>
             </Box>
             <Box>
-              <Button color="error" variant="tonal" sx={{ px: 3 }} onClick={() => handleDelete(staff?.[0]?.uuid)}>
+              <Button color="error" variant="tonal" sx={{ px: 3 }} onClick={() => handleDelete(staff?.uuid)}>
                 Delete
               </Button>
             </Box>

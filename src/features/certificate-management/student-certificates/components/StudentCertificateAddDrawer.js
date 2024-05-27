@@ -54,7 +54,6 @@ const StudentCertificateAddDrawer = (props) => {
   const [activeBatches, setActiveBatches] = useState([]);
   const [students, setStudents] = useState([]);
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
-  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -380,3 +379,5 @@ StudentCertificateAddDrawer.propTypes = {
 };
 
 export default StudentCertificateAddDrawer;
+
+

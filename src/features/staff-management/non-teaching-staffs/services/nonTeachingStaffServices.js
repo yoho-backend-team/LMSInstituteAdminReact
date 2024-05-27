@@ -4,29 +4,36 @@ import axios from 'axios';
 import { useInstitute } from 'utils/get-institute-details';
 import { useBranchId } from 'utils/get-institute-details';
 
+const NON_TEACHING_STAFF_API_END_POINT_get = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes`;
+
 const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/Non-teaching-staff`;
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await client.nonTeachingStaff.get(data)
+     const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/non-teaching-staff`, {
+       headers: {
+       'Content-Type': 'application/json',
+       Authorization: `Token ${localStorage.getItem('token')}`
+     },
+   params: {
+         page: data.page,
+         is_active: data.is_active
+       }, 
+   });
+   console.log(response);
+ 
+   if (response.data.status) {
+     return response;
+} else {
+ throw new Error(`Failed to fetch NonTeachingStaffs. Status: ${response.status}`);
+}
+} catch (error) {
 
-    console.log('Non-teachingStaffs:', response);
-
-    // Check if the response status is successful
-    if (response.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch NonTeachingStaffs. Status: ${response.status}`);
-    }
-  } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllNonTeachingStaffs:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
+console.error('Error in getAllNonTeachingStaffs:', error);
+throw error;
+}
 };
+
 export const getAllActiveNonTeachingStaffs = async (data) => {
   try {
     const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/active`, {
@@ -98,14 +105,13 @@ export const addNonTeachingStaff = async (data) => {
   }
 };
 
-export const deleteNonTeachingStaff = async (nonTeachingStaffId) => {
+export const deleteNonTeachingStaff = async (data) => {
   try {
-    const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT}/:id`, {
+    const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/non-teaching-staff/${data?.id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: { id: nonTeachingStaffId }
+      }
     });
 
     if (response.data.status) {
@@ -115,31 +121,35 @@ export const deleteNonTeachingStaff = async (nonTeachingStaffId) => {
     }
   } catch (error) {
     console.error('Error in deleteNonTeachingStaff:', error);
-    throw error;
+    throw error;  
   }
 };
 
 export const updateNonTeachingStaff = async (data) => {
   try {
-    
-    const response = await axios.put(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/update/${data.id}`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/update/${data.id}`,
+      data,
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
       }
-    });
-    
+    );
+
+    console.log('Non-teaching staff update response:', response.data);
+
     if (response.data.status) {
-      
-      return { success: true, message: 'NonTeachingStaff updated successfully' };
+      return { success: true, message: response.data.message, response: response.data };
     } else {
-      return { success: false, message: 'Failed to update NonTeachingStaff' };
+      return { success: false, message: 'Failed to update non-teaching staff' };
     }
   } catch (error) {
     console.error('Error in updateNonTeachingStaff:', error);
     throw error;
   }
 };
+
 
 export const nonTeachingStaffById = async (data) => {
   try {
@@ -152,17 +162,42 @@ export const nonTeachingStaffById = async (data) => {
     });
     console.log('non-teachingStaff:', response);
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
+    if (response.data) {
+      return { success: true, data: response.data.data};
     } else {
       // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+      throw new Error(`Failed to fetch non teaching staffs. Status: ${response.status}`);
     }
   } catch (error) {
     // Log the error for debugging purposes
-    console.error('Error in teaching staffs:', error);
+    console.error('Error in non teaching staffs:', error);
 
     // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
+};
+
+
+export const nonteachstaffStatusChange = async (uuid,data) => {
+  try {
+    const response = await axios.put(
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/updatestatus/${uuid}`,
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${localStorage.getItem('token')}`
+        }
+      }
+    );
+
+    if (response.data.status) {
+      return { success: true, message: response.data.message };
+    } else {
+      return { success: false, message: response.data.message };
+    }
+  } catch (error) {
+    console.error('Error in staff status change:', error);
     throw error;
   }
 };

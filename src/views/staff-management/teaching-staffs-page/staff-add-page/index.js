@@ -227,7 +227,8 @@ const StepperLinearWithValidation = () => {
         pincode: personalData.pin_code,
         address1: personalData.address_line_one,
         address2: personalData.address_line_two,
-        phone_number: personalData.phone
+        phone_number: personalData.phone,
+        alternate_number: personalData.alt_phone
       },
       designation: personalData.designation,
       role: personalData.role,

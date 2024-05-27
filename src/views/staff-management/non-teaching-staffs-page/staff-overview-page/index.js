@@ -12,12 +12,14 @@ import StatusChangeDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
 import { selectNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nonTeachingStaffSelectors';
 import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/redux/nontTeachingStaffThunks';
-import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import TeacherFilter from '../../../../features/staff-management/non-teaching-staffs/components/TeacherFilterCard';
+import TeacherFilter from 'features/staff-management/non-teaching-staffs/components/TeacherFilterCard';
+import { useInstitute } from 'utils/get-institute-details';
+import { nonteachstaffStatusChange } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import axios from 'axios';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -29,8 +31,8 @@ const useTimeout = (callback, delay) => {
 const NonTeaching = () => {
   const [loading, setLoading] = useState(true);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
-  const [statusValue, setStatusValue] = useState('');
-  const [refetch, setRefetch] = useState('');
+  const [statusValue, setStatusValue] = useState({});
+  const [refetch, setRefetch] = useState(false);
   const nonTeachingStaffs = useSelector(selectNonTeachingStaffs);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -38,37 +40,50 @@ const NonTeaching = () => {
 
   useEffect(() => {
     const data = {
-      type: 'non_teaching',
-      branch_id: selectedBranchId,
+      branchid: selectedBranchId,
+      instituteId: useInstitute().getInstituteId(),
       page: '1'
     };
 
+
     dispatch(getAllNonTeachingStaffs(data));
   }, [dispatch, selectedBranchId, refetch]);
+
   useTimeout(() => {
     setLoading(false);
   }, 1000);
 
+  const handleStatusValue = (event, staff) => {
+    setStatusValue(staff);
+    setStatusChangeDialogOpen(true);
+  };
+
   const handleStatusChangeApi = async () => {
-    
-    const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue.id
-    };
-    const response = await staffStatusChange(data);
-    if (response.success) {
-      toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
+    try {
+
+      if (!statusValue || !statusValue.uuid) {
+        console.error('Status value or UUID is undefined');
+        return;
+      }
+
+      const data = {
+        is_active: statusValue.is_active === true ? false : true,
+      };
+
+
+      const response = await nonteachstaffStatusChange(statusValue.uuid, data);
+
+      if (response.success) {
+        toast.success(response.message);
+        setRefetch((state) => !state); 
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.error('Error in status change:', error);
     }
   };
 
-  const handleStatusValue = (event, staff) => {
-    setStatusChangeDialogOpen(true);
-    setStatusValue(staff);
-  };
-  
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />
@@ -77,55 +92,57 @@ const NonTeaching = () => {
       ) : (
         <Grid>
           <Grid container spacing={2} mt={2}>
-            { 
-            nonTeachingStaffs?.map((item, i) => (
-              <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
-                <Card sx={{ position: 'relative' }}>
-                  <CardContent sx={{ pt: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <Avatar
-                        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.staff?.image}`}
-                        sx={{ mb: 2, width: 70, height: 70 }}
-                      />
-                      <Typography variant="h4" sx={{ mb: 1 }}>
-                        {item.username}
-                      </Typography>
-                      <Typography variant="h5" sx={{ mb: 4 }}>
-                        {item?.email}
-                      </Typography>
+            {nonTeachingStaffs?.data?.map((item, i) => {
+              console.log("Item:", item); // Debug log
+              return (
+                <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
+                  <Card sx={{ position: 'relative' }}>
+                    <CardContent sx={{ pt: 3 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                        <Avatar
+                          src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.staff?.image}`}
+                          sx={{ mb: 2, width: 70, height: 70 }}
+                        />
+                        <Typography variant="h4" sx={{ mb: 1 }}>
+                          {item.username}
+                        </Typography>
+                        <Typography variant="h5" sx={{ mb: 4 }}>
+                          {item?.email}
+                        </Typography>
 
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          width: '100%',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          textDecoration: 'none'
-                        }}
-                      >
-                        <Grid>
-                          <TextField
-                            size="small"
-                            select
-                            label="Status"
-                            SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.staff) }}
-                            sx={{ width: 100 }}
-                          >
-                            <MenuItem value="true">Active</MenuItem>
-                            <MenuItem value="false">Inactive</MenuItem>
-                          </TextField>
-                        </Grid>
-                        <Box component={Link} to={`non-teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>
-                          <Button size="medium" variant="tonal" sx={{ m: 0, px: 2 }}>
-                            View Profile
-                          </Button>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            textDecoration: 'none'
+                          }}
+                        >
+                          <Grid>
+                            <TextField
+                              size="small"
+                              select
+                              label="Status"
+                              SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }} // Pass the whole item here
+                              sx={{ width: 100 }}
+                            >
+                              <MenuItem value={true}>Active</MenuItem>
+                              <MenuItem value={false}>Inactive</MenuItem>
+                            </TextField>
+                          </Grid>
+                          <Box component={Link} to={`non-teaching-staffs/${item?.uuid.toString()}`} state={{ id: item?.uuid }}>
+                            <Button size="medium" variant="tonal" sx={{ m: 0, px: 2 }}>
+                              View Profile
+                            </Button>
+                          </Box>
                         </Box>
                       </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
           </Grid>
           {nonTeachingStaffs?.last_page !== 1 && (
             <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
@@ -133,7 +150,7 @@ const NonTeaching = () => {
                 count={nonTeachingStaffs?.last_page}
                 color="primary"
                 onChange={(e, page) => {
-                  dispatch(getAllNonTeachingStaffs({ branch_id: selectedBranchId, page: page }));
+                  dispatch(getAllNonTeachingStaffs({ branchid: selectedBranchId, page: page }));
                 }}
               />
             </Grid>
