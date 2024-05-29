@@ -79,7 +79,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
+            {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
@@ -162,7 +162,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={studentNotifications?.data}
+        rows={studentNotifications?studentNotifications:[]}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

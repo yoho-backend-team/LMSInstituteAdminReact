@@ -46,58 +46,32 @@ export const getAllStudents = async (data) => {
 
 export const addStudent = async (data) => {
   try {
-    const response = await client.users.studentRegister(data)
-
-    if (response.data.status) {
-      return { success: true, message: 'Student created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Student' };
-    }
+    const response = await client.users.studentRegister(data)  
+    return { success: true, message: 'Student created successfully' };
   } catch (error) {
     console.error('Error in addStudent:', error);
-    throw error;
-  }
+    return { success: false, message: error?.response?.data?.message };  }
 };
 
 export const deleteStudent = async (data) => {
   try {
-    const response = await axios.delete(`${STUDENT_API_END_POINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.student.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Student deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Student' };
-    }
+    return { success: true, message: 'Student deleted successfully' };
   } catch (error) {
     console.error('Error in deleteStudent:', error);
-    throw error;
+    return { success: false, message:error?.response?.data?.message };
   }
 };
 
 export const updateStudent = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_API_END_POINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.student.update(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Student updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Student' };
-    }
+    return { success: true, message: 'Student updated successfully' };
   } catch (error) {
     console.error('Error in updateStudent:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 

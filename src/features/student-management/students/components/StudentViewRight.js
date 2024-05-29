@@ -68,7 +68,7 @@ const UserViewRight = ({ tab, student }) => {
         sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value="account" label="Info" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
-        <Tab value="security" label="Security" icon={<Icon fontSize="1.125rem" icon="tabler:lock" />} />
+        {/* <Tab value="security" label="Security" icon={<Icon fontSize="1.125rem" icon="tabler:lock" />} /> */}
         <Tab value="class" label="Classes" icon={<Icon fontSize="1.125rem" icon="tabler:books" />} />
         <Tab value="attendance" label="Attendance" icon={<Icon fontSize="1.125rem" icon="tabler:calendar-plus" />} />
         <Tab value="activity" label="Activity" icon={<Icon fontSize="1.125rem" icon="tabler:link" />} />

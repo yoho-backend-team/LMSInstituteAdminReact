@@ -28,7 +28,7 @@ const UserViewAccount = ({ student }) => {
 
   // Handle branch deletion
   const handleStudentDelete = async () => {
-    const data = { id: selectedStudentDeleteId };
+    const data = { uuid: selectedStudentDeleteId };
     const result = await deleteStudent(data);
     if (result.success) {
       toast.success(result.message);
@@ -51,7 +51,7 @@ const UserViewAccount = ({ student }) => {
                   <Box sx={{ pt: 4 }}>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>@{student.username}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>@{student.full_name}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -112,23 +112,23 @@ const UserViewAccount = ({ student }) => {
                   <Box sx={{ pt: 4 }}>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Course Id :</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{student?.institute_student_courses?.course_id}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>{student?.userDetail?.course?.id}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Course Name :</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{student?.institute_student_courses?.course_name}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>{student?.userDetail?.course?.course_name}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Course Duration :</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{student?.institute_student_courses?.course_duration}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>{student?.userDetail?.course?.duration}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Course Price :</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{student?.institute_student_courses?.course_price}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>{student?.userDetail?.course?.price}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Learning Format :</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>{student?.institute_student_courses?.learning_format}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>{student?.userDetail?.course?.class_type[0]}</Typography>
                     </Box>
                   </Box>
                 </Grid>
@@ -145,7 +145,7 @@ const UserViewAccount = ({ student }) => {
               >
                 Edit
               </Button>
-              <Button color="error" variant="tonal" onClick={() => handleDelete(student?.id)}>
+              <Button color="error" variant="tonal" onClick={() => handleDelete(student?.uuid)}>
                 Delete
               </Button>
             </CardActions>

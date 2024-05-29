@@ -48,7 +48,7 @@ const StudentNotification = () => {
               <NotificationSkeleton />
             ) : (
               <NotificationBodySection
-                studentNotifications={studentNotifications}
+                studentNotifications={studentNotifications?studentNotifications:[]}
                 setStudentNotificationRefetch={setStudentNotificationRefetch}
                 selectedBranchId={selectedBranchId}
               />

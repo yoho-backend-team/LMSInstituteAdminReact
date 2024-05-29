@@ -72,11 +72,11 @@ const StaffNotification = () => {
             )}
           </Card>
         </Grid>
-        <StaffNotificationAddDrawer
+        {/* <StaffNotificationAddDrawer
           open={addUserOpen}
           toggle={toggleAddUserDrawer}
           setStaffNotificationRefetch={setStaffNotificationRefetch}
-        />
+        /> */}
       </Grid>
     </>
   );

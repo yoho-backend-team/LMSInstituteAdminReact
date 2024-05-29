@@ -165,7 +165,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={staffNotifications?.data}
+        rows={staffNotifications?staffNotifications : []}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

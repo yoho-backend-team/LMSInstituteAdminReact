@@ -99,6 +99,10 @@ class Client {
     TeachingStaff = {
       get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff")
     }
+    student = {
+      update : (data) => HttpClient.update(HTTP_END_POINTS.student.update+data?.uuid,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.student.delete+data.uuid)
+    }
     community ={
       getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branchid+'/all-community/'),
       getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId)

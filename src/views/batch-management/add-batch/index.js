@@ -24,6 +24,7 @@ const AddBatchPage = () => {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [selectedBranch,setSelectedBranch] = useState('')
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
@@ -127,7 +128,7 @@ const AddBatchPage = () => {
   };
 
   const getStudentByCourseId = async (courseId) => {
-    const result = await getStudentByCourse({ branch_id:defaultValues.branch,course_id: courseId });
+    const result = await getStudentByCourse({ branch_id:selectedBranch,course_id: courseId })
     setActiveStudents(result.data);
   };
 
@@ -254,6 +255,7 @@ const AddBatchPage = () => {
                           onChange={(event, newValue) => {
                             setValue('branch', newValue ? newValue.uuid : '');
                             getActiveCoursesByBranch(newValue ? {branch_id : newValue.uuid} : '');
+                            setSelectedBranch(newValue?.uuid)
                           }}
                           options={activeBranches}
                           getOptionLabel={(option) => option.branch_identity || ''}

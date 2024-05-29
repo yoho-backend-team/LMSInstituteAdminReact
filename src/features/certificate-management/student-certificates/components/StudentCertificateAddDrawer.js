@@ -209,7 +209,7 @@ const uploadFileToS3 = async (file) => {
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-              <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} />
+              {/* <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} /> */}
             </Grid>
 
             <Grid item xs={12} sx={{ mb: 2 }}>

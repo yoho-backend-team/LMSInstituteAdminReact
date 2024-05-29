@@ -227,7 +227,7 @@ const StepperLinearWithValidation = () => {
         address1: personalData.address_line_one,
         address2: personalData.address_line_two,
         phone_number: personalData.phone,
-        alternate_number: personalData.alt_phone
+        alternate_phone_number: personalData.alt_phone
       },
       designation: personalData.designation,
       role: personalData.role,
@@ -407,8 +407,8 @@ const StepperLinearWithValidation = () => {
                   error={Boolean(personalErrors.gender)}
                   {...(personalErrors.gender && { helperText: personalErrors.gender.message })}
                 >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </CustomTextField>
               )}

@@ -369,7 +369,7 @@ const StudenrCertificate = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificates}
+                rows={studentCertificates?studentCertificates :[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination

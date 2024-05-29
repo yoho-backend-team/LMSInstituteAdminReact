@@ -17,12 +17,16 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import * as yup from 'yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CustomChip from 'components/mui/chip';
 import Checkbox from '@mui/material/Checkbox';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
+import { Link } from 'react-router-dom';
+import client from 'api/client';
 
 const StepperLinearWithValidation = () => {
   const location = useLocation();
@@ -71,7 +75,7 @@ const StepperLinearWithValidation = () => {
       .matches(/^[0-9]{6}$/, 'PIN Code should be exactly 6 digits'),
     address_line_1: yup.string().required('Address Line One is required'),
     address_line_2: yup.string().required('Address Line Two is required'),
-    date_of_birth: yup.string().required(),
+    dob: yup.string().required(),
     gender: yup.string().required(),
     username: yup
       .string()
@@ -104,7 +108,7 @@ const StepperLinearWithValidation = () => {
     pincode: '',
     address_line_1: '',
     address_line_2: '',
-    date_of_birth: '',
+    dob: '',
     gender: '',
     course: '',
     branch: selectedBranchId,
@@ -154,18 +158,19 @@ const StepperLinearWithValidation = () => {
       setValue('first_name', first_name || '');
       setValue('last_name', last_name || '');
       setValue('email', email || '');
-      setValue('phone_no', contact_info.phone_number || '');
-      setValue('alternate_number', alternate_number || '');
+      setValue('phone_no', contact_info.phone_number?.slice(3) || '');
+      setValue('alternate_number', contact_info?.alternate_phone_number?.slice(3) || '');
       setValue('state', contact_info.state || '');
       setValue('city', contact_info.city || '');
       setValue('pincode', contact_info.pincode || '');
-      setValue('address_line_1 ', contact_info.address1 || '');
+      setValue('address_line_1', contact_info.address1 || '');
       setValue('address_line_2', contact_info.address2 || '');
       setValue('dob', new Date(dob) || '');
       setValue('gender', gender || '');
       setValue('education_qualification', qualification || '');
       setValue('username', username || '');
-      // setSelectedCourses(studentData?.institute_student_courses);
+      setValue("course",studentData?.userDetail?.course?._id)
+      setSelectedCourses([studentData?.userDetail?.course]);
     }
   }, [studentData, setValue]);
 
@@ -207,18 +212,18 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState(
-    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
-  );
+  const [logoSrc, setLogoSrc] = useState('');
 
-  const handleInputImageChange = (file) => {
+
+  const handleInputImageChange = async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setLogoSrc(reader.result);
-      reader.readAsDataURL(files[0]);
-      setLogo(files[0]);
-    }
+    const data = new FormData()
+    data.append("file",files[0])
+    const file_upload = await client.file.upload(data)
+    toast.success(file_upload?.message)
+    setLogoSrc(file_upload?.data?.file)
+    setLogo(file_upload?.data?.file)
   };
 
   const handleInputImageReset = () => {
@@ -231,31 +236,28 @@ const StepperLinearWithValidation = () => {
 
   const onSubmit = useCallback(async () => {
     const personalData = personalControl?._formValues;
-    const filteredCourseId = selectedCourses?.map((course) => course.course_id);
+    const filteredCourseId = selectedCourses?.map((course) => course._id);
     const data = new FormData();
-    filteredCourseId?.forEach((id) => {
-      data.append(`course_ids[]`, id);
-    });
-    data.append('first_name', personalData?.first_name);
-    data.append('last_name', personalData?.last_name);
-    data.append('email', personalData?.email);
-    data.append('phone_no', personalData?.phone_no);
-    data.append('alternate_number', personalData?.alternate_number);
-    data.append('branch_id', personalData?.branch);
-    data.append('course_id', personalData?.course);
-    data.append('image', logo);
-    data.append('gender', personalData?.gender);
-    data.append('address_line_1', personalData?.address_line_1);
-    data.append('address_line_2', personalData?.address_line_2);
-    data.append('city', personalData?.city);
-    data.append('state', personalData?.state);
-    data.append('pincode', personalData?.pincode);
-    data.append('dob', convertDateFormat(personalData?.dob));
-    data.append('username', personalData?.username);
-    data.append('education_qualification', personalData?.education_qualification);
-    data.append('id', studentData.id);
-
-    const result = await updateStudent(data);
+    const new_user_data = {
+      course : filteredCourseId,
+      first_name : personalData?.first_name,
+      last_name : personalData?.last_name,
+      email : personalData?.email,
+      contact_info : {
+        phone_number : "+91"+personalData?.phone_no,
+        alternate_phone_number : "+91"+personalData?.alternate_number,
+        address1 : personalData?.address_line_1,
+        address2 : personalData?.address_line_2,
+        city : personalData?.city,
+        pincode : personalData?.pincode,
+        state : personalData?.state
+      },
+      uuid : studentData?.uuid,
+      username : personalData?.username,
+      image : logo ? logo : studentData?.image
+    }
+    console.log(new_user_data,"newUserData")
+    const result = await updateStudent(new_user_data);
 
     if (result.success) {
       toast.success(result.message);
@@ -279,7 +281,7 @@ const StepperLinearWithValidation = () => {
             </Grid>
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={logoSrc} alt="Profile Pic" />
+                <ImgStyled src={logo?getImageUrl(logo):getImageUrl(studentData?.image)} alt="Profile Pic" />
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload your Logo
@@ -371,9 +373,9 @@ const StepperLinearWithValidation = () => {
                     customInput={
                       <CustomInput
                         label="Date Of Birth"
-                        error={Boolean(personalErrors['date_of_birth'])}
+                        error={Boolean(personalErrors["dob"])}
                         aria-describedby="stepper-linear-personal-date_of_birth"
-                        {...(personalErrors['date_of_birth'] && { helperText: 'This field is required' })}
+                        {...(personalErrors["dob"] && { helperText: 'This field is required' })}
                       />
                     }
                     onChange={onChange}
@@ -415,12 +417,12 @@ const StepperLinearWithValidation = () => {
                     multiple
                     disableCloseOnSelect
                     id="select-multiple-chip"
-                    options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
+                    options={[{ _id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
                     getOptionLabel={(option) => option.course_name}
                     value={selectedCourses}
                     onChange={(e, newValue) => {
-                      if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                        setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
+                      if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                        setSelectedCourses(activeCourse.filter((option) => option._id !== 'selectAll'));
                       } else {
                         setSelectedCourses(newValue);
                         setValue('course', newValue);
@@ -455,7 +457,7 @@ const StepperLinearWithValidation = () => {
                       <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                         {value.map((option, index) => (
                           <CustomChip
-                            key={option.course_id}
+                            key={option._id}
                             label={option.course_name}
                             onDelete={() => {
                               const updatedValue = [...value];
@@ -469,7 +471,7 @@ const StepperLinearWithValidation = () => {
                         ))}
                       </div>
                     )}
-                    isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                   />
                 )}
               />
@@ -595,7 +597,7 @@ const StepperLinearWithValidation = () => {
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
-                    type="number"
+                    type="text"
                     value={value}
                     label="Phone Number"
                     onChange={onChange}
@@ -616,7 +618,7 @@ const StepperLinearWithValidation = () => {
                   <CustomTextField
                     fullWidth
                     value={value}
-                    type="number"
+                    type="text"
                     label="Alt Phone Number"
                     onChange={onChange}
                     placeholder="Carter"
@@ -649,7 +651,7 @@ const StepperLinearWithValidation = () => {
             </Grid>
 
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button variant="tonal" color="secondary" onClick={handleBack}>
+              <Button component={Link} variant="tonal"  color="secondary" state={{id:studentData?.uuid}} to= {`/student-management/students/${studentData?.uuid}/`} >
                 Cancel
               </Button>
 

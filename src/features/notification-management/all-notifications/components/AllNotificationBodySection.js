@@ -118,7 +118,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={allNotifications?.data}
+        rows={allNotifications?allNotifications:[]}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination
