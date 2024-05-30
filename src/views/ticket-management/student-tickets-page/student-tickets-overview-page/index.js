@@ -15,6 +15,7 @@ import { selectLoading, selectStudentOpenTickets } from 'features/ticket-managem
 import { getAllStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StudentTicketsPage = () => {
   // States
@@ -29,10 +30,10 @@ const StudentTicketsPage = () => {
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, type: 'opened' }));
+    dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId,institute_id:useInstitute().getInstituteId(),status: 'opened' }));
   }, [selectedBranchId, dispatch, refetch]);
   useEffect(() => {
-    dispatch(getAllStudentClosedTickets({ branch_id: selectedBranchId, type: 'closed' }));
+    dispatch(getAllStudentClosedTickets({ branch_id: selectedBranchId,institute_id:useInstitute().getInstituteId(),status: 'closed' }));
   }, [selectedBranchId, dispatch, refetch]);
 
   const handleCloseDrawer = () => {

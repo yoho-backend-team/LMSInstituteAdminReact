@@ -61,12 +61,15 @@ class Client {
       },
       getWithBranch : (data) => HttpClient.get(HTTP_END_POINTS.course.withBranch+data.branch_id+"/courses") ,
       update : (data) => HttpClient.update(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.course}`,data),
-      delete : (data) => HttpClient.delete(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.id}`)
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.course.add+`${data.category}/courses/${data.id}`),
+      add_template : (data) => HttpClient.post(HTTP_END_POINTS.course.template,data)
     }
     batch = {
       create : (data,options) => HttpClient.post(HTTP_END_POINTS.batch.create+`${data.branch_id}/courses/${data.course}/batches`,data),
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll+params.branch_id+"/batches/all",params),
-      getWithId : (params) => HttpClient.get(HTTP_END_POINTS.batch.getWithId+`${params.batch_id}`)
+      getWithId : (params) => HttpClient.get(HTTP_END_POINTS.batch.getWithId+`${params.batch_id}`),
+      update : (params) => HttpClient.update(HTTP_END_POINTS.batch.update+params?.uuid,params),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.batch.delete+data?.uuid)
     }
     online_class = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.online_class.getAll,params),
@@ -86,7 +89,6 @@ class Client {
       verifyOtp : (data,options) => HttpClient.post(HTTP_END_POINTS.users.valiateOtp,data,options),
       studentRegister : (data,options) => HttpClient.post(HTTP_END_POINTS.users.studentRegister,data,options),
       studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+`${params.branch_id}/students`,params),
-      studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+params.branch_id+"/students"),
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithcourse+`${data.course_id}/students`),
       getStudentsWithBatch : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithBatch+data.branch_id+"/batches/batch-students",data),
@@ -100,12 +102,20 @@ class Client {
       get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff")
     }
     student = {
+      activity : (data) => HttpClient.get(HTTP_END_POINTS.student.activity+data.id),
+      class : (data) => HttpClient.get(HTTP_END_POINTS.student.classess+data.uuid,data),
       update : (data) => HttpClient.update(HTTP_END_POINTS.student.update+data?.uuid,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.student.delete+data.uuid)
     }
     community ={
       getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branchid+'/all-community/'),
       getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId)
-     }
+    }
+    ticket = {
+      student_tickets : (data) => HttpClient.get(HTTP_END_POINTS.ticket.student_ticket,data),
+      update_student_ticket : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update+data?.uuid,data),
+      staff_ticket : (data) => HttpClient.get(HTTP_END_POINTS.ticket.staff_ticket,data),
+      staff_ticket_update : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update_staff_ticket+data.uuid,data)
+    }
   }
 export default new Client();

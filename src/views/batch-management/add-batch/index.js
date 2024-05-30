@@ -344,7 +344,7 @@ const AddBatchPage = () => {
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 6, marginBottom: 12 }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                    Update
+                    Add
                   </Button>
                   <Button variant="tonal" color="error" onClick={() => navigate(-1)}>
                     Cancel

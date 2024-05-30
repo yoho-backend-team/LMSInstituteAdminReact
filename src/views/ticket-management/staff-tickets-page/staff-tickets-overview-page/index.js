@@ -15,6 +15,7 @@ import { selectStaffOpenTickets } from 'features/ticket-management/staff/redux/o
 import { getAllStaffOpenTickets } from 'features/ticket-management/staff/redux/open-tickets/staffOpenTicketThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StaffTicketsPage = () => {
   // States
@@ -30,11 +31,11 @@ const StaffTicketsPage = () => {
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStaffOpenTickets({ branch_id: selectedBranchId, type: 'opened', page: '1' }));
+    dispatch(getAllStaffOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1',institute_id:useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
 
   useEffect(() => {
-    dispatch(getAllStaffClosedTickets({ branch_id: selectedBranchId, type: 'closed', page: '1' }));
+    dispatch(getAllStaffClosedTickets({ branch_id: selectedBranchId, status: 'closed', page: '1',institute_id:useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
 
   const handleCloseDrawer = () => {

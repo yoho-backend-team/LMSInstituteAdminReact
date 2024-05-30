@@ -111,62 +111,34 @@ export const addBatch = async (data) => {
 
 export const deleteBatch = async (data) => {
   try {
-    const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.batch.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Batch deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Batch' };
-    }
+    return { success: true, message: 'Batch deleted successfully' };
   } catch (error) {
     console.error('Error in deleteBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateBatch = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.batch.update(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Batch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update batch' };
-    }
+    return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
     console.error('Error in updateBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateBatchStatus = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/status-change`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
-
-    if (response.data.status) {
-      return { success: true, message: 'Batch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update batch' };
-    }
+    const response = await client.batch.update(data)
+ 
+    return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
     console.log(error)
     console.error('Error in updateBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };

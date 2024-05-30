@@ -22,26 +22,16 @@ export const getAllUsers = async (data) => {
 };
 export const getUserActivityLog = async (data) => {
   try {
-    const response = await axios.get(`${USER_API_ENDPOINT}/activity-log-by-user-id?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.student.activity(data)
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch users. Activity Log: ${response.status}`);
-    }
+    
+    return { success: true, data: response.data };
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllUsers Activity Log:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch users. Activity Log: ${response.status}`);
   }
 };
 export const getUserById = async (data) => {

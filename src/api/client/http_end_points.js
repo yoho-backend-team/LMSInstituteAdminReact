@@ -56,7 +56,8 @@ const generateEndpoints = () => {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,
             update: `${backEndUrl}/api/institutes/${instituteId}/categories/`,
             withBranch : `/api/institutes/${instituteId}/branches/`,
-            add :`/api/institutes/${instituteId}/categories/`
+            add :`/api/institutes/${instituteId}/categories/`,
+            template : `/api/institutes/${instituteId}/branches/${branchId}/course-template`
         },
         course_module : {
             get : "/api/institutes/course-module/",
@@ -74,7 +75,9 @@ const generateEndpoints = () => {
         batch : {
             create : `/api/institutes/${instituteId}/branches/`,
             getAll : `/api/institutes/${instituteId}/branches/`,
-            getWithId : `/api/institutes/${instituteId}/branches/${branchId}/batches/`
+            getWithId : `/api/institutes/${instituteId}/branches/${branchId}/batches/`,
+            update : `/api/institutes/${instituteId}/branches/${branchId}/update/`,
+            delete : `/api/institutes/${instituteId}/branches/${branchId}/batches/`
         },
         online_class : {
             getAll : `/api/institutes/class/online/all`,
@@ -103,7 +106,9 @@ const generateEndpoints = () => {
             getWithBatch : `/api/institutes/${instituteId}/branches/`,
             getWithCourse: `/api/institutes/${instituteId}/branches/`,
             update : `/api/institutes/:instituteId/students/update/`,
-            delete : `/api/institutes/student/student/`
+            delete : `/api/institutes/student/student/`,
+            activity : `/api/institutes/${instituteId}/students/student/activity/`,
+            classess : `/api/institutes/:instituteId/students/student/classes/`
         },
         staff : {
             get : `/api/institutes/${instituteId}/Non-teaching-staff/`,
@@ -113,6 +118,12 @@ const generateEndpoints = () => {
         community : {
             all : `/api/institutes/community/${instituteId}/branches/`,
             messages : `/api/institutes/community/messages/`
+        },
+        ticket : {
+            student_ticket : `/api/institutes/student/ticket/getall`,
+            update : `/api/institutes/student/ticket/update/`,
+            staff_ticket : `/api/institutes/staff/ticket/getall`,
+            update_staff_ticket : `/api/institutes/staff/ticket/update/`
         }
     };
 };

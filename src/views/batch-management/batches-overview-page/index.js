@@ -70,9 +70,11 @@ const Batch = () => {
   }, [dispatch, selectedBranchId, batchRefetch]);
 
   const handleStatusChangeApi = async () => {
+    console.log(statusValue,"statusValue")
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+     is_active: !statusValue?.is_active,
+     uuid: statusValue?.uuid,
+     batch_name:statusValue?.batch_name
     };
     const response = await updateBatchStatus(data);
     if (response.success) {
@@ -101,7 +103,7 @@ const Batch = () => {
   }, []);
 
   const handleBatchDelete = async () => {
-    const data = { id: selectedBatchDeleteId };
+    const data = { uuid: selectedBatchDeleteId };
     const result = await deleteBatch(data);
     if (result.success) {
       toast.success(result.message);
@@ -229,7 +231,7 @@ const Batch = () => {
                   select
                   width={100}
                   label="Status"
-                  SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.batch) }}
+                  SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                 >
                   <MenuItem value="true">Active</MenuItem>
                   <MenuItem value="false">Inactive</MenuItem>

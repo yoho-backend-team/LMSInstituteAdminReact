@@ -86,7 +86,7 @@ export const getAllCourses = async (data) => {
     throw new Error(`Failed to fetch ActiveCourses. Status: ${error}`);
   }
 };
-export const addCourse = async (data) => {
+export const addCourse = async (data,file) => {
   try {
     // const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
     //   headers: {
@@ -95,7 +95,8 @@ export const addCourse = async (data) => {
     //   }
     // });
     const response = await client.course.create(data)
-
+    const add_template = await client.course.add_template({course:response?.data?._id,file:file})
+   console.log(add_template,{course:response?.data?._id,file:file})
     if (response.status) {
       return { success: true, message: 'Course created successfully' };
     } else {

@@ -23,17 +23,17 @@ const Timeline = styled(MuiTimeline)({
   }
 });
 
-const UserViewConnection = ({ id }) => {
+const UserViewConnection = ({ id ,student}) => {
   const [activityLog, setActivityLog] = useState([]);
 
   useEffect(() => {
-    getUserLog(id);
+    getUserLog(student?.uuid);
   }, [id]);
-
+  
   const getUserLog = async (userId) => {
     try {
       const data = {
-        user_id: userId
+        id: userId
       };
       const result = await getUserActivityLog(data);
       if (result.success) {

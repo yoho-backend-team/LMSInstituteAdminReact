@@ -73,12 +73,13 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       setValue('batch_name', selectedBatch?.batch_name || '');
       setValue('start_date', selectedBatch?.start_date || '');
       setValue('end_date', selectedBatch?.end_date || '');
-
+      setValue("students",selectedBatch?.student)
+      setSelectedStudents(selectedBatch?.student)
       setStartDate(new Date(selectedBatch?.start_date || null));
       setEndDate(new Date(selectedBatch?.end_date || null));
     }
   }, [selectedBatch, setValue]);
-
+  console.log(selectedBatch,"selectedbatch")
   const handleClose = () => {
     setValue('batch_name', '');
     setValue('start_date', '');
@@ -93,30 +94,20 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       batch_name: data?.batch_name,
       start_date: data?.start_date,
       end_date: data?.end_date,
-      students: data?.students
+      student: data?.student,
+      uuid : selectedBatch?.uuid
     };
     const result = await updateBatch(inputData);
 
     if (result.success) {
       toast.success(result.message);
+      setBatchRefetch((prev)=>!prev)
+      handleEditClose()
+      reset()
     } else {
-      let errorMessage = '';
-      if (Array.isArray(result.message)) {
-        result.message.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      } else if (typeof result.message === 'object' && result.message !== null) {
-        Object.values(result.message).forEach((errors) => {
-          errors.forEach((error) => {
-            errorMessage += `${error}\n`;
-          });
-        });
-      } else {
-        errorMessage = 'Unexpected message format';
-      }
-      toast.error(errorMessage.trim());
+      toast.error(result?.message);
     }
-    [batches, setBatchRefetch];
+    [ setBatchRefetch];
   };
 
   const handleStartDateChange = (date) => {
@@ -231,8 +222,8 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                           <Autocomplete
                             multiple
                             id="students-autocomplete"
-                            options={names}
-                            getOptionLabel={(option) => option}
+                            options={selectedBatch?.student}
+                            getOptionLabel={(option) => option?.full_name}
                             renderInput={(params) => (
                               <CustomTextField
                                 {...params}

@@ -9,10 +9,93 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const TeachingStaffCard = ({ teachingStaffs }) => {
+  const dummyTeachingStaffs = [
+    {
+      staff_id: 1,
+      staff_name: 'Emily Clark',
+      email: 'emily.clark@example.com',
+      img: 'emily_clark.jpg',
+      presentCount: 20,
+      absentCount: 2
+    },
+    {
+      staff_id: 2,
+      staff_name: 'Michael Brown',
+      email: 'michael.brown@example.com',
+      img: 'michael_brown.jpg',
+      presentCount: 22,
+      absentCount: 1
+    },
+    {
+      staff_id: 3,
+      staff_name: 'Sophia Wilson',
+      email: 'sophia.wilson@example.com',
+      img: 'sophia_wilson.jpg',
+      presentCount: 19,
+      absentCount: 3
+    },
+    {
+      staff_id: 4,
+      staff_name: 'James Anderson',
+      email: 'james.anderson@example.com',
+      img: 'james_anderson.jpg',
+      presentCount: 18,
+      absentCount: 4
+    },
+    {
+      staff_id: 5,
+      staff_name: 'Olivia Martinez',
+      email: 'olivia.martinez@example.com',
+      img: 'olivia_martinez.jpg',
+      presentCount: 21,
+      absentCount: 2
+    },
+    {
+      staff_id: 6,
+      staff_name: 'Benjamin Garcia',
+      email: 'benjamin.garcia@example.com',
+      img: 'benjamin_garcia.jpg',
+      presentCount: 23,
+      absentCount: 1
+    },
+    {
+      staff_id: 7,
+      staff_name: 'Emma Rodriguez',
+      email: 'emma.rodriguez@example.com',
+      img: 'emma_rodriguez.jpg',
+      presentCount: 17,
+      absentCount: 5
+    },
+    {
+      staff_id: 8,
+      staff_name: 'Lucas Lee',
+      email: 'lucas.lee@example.com',
+      img: 'lucas_lee.jpg',
+      presentCount: 24,
+      absentCount: 0
+    },
+    {
+      staff_id: 9,
+      staff_name: 'Ava Walker',
+      email: 'ava.walker@example.com',
+      img: 'ava_walker.jpg',
+      presentCount: 20,
+      absentCount: 2
+    },
+    {
+      staff_id: 10,
+      staff_name: 'Ethan Hall',
+      email: 'ethan.hall@example.com',
+      img: 'ethan_hall.jpg',
+      presentCount: 19,
+      absentCount: 3
+    }
+  ];
+    
   return (
     <>
       <Grid container spacing={2} mt={2}>
-        {teachingStaffs?.map((item, i) => (
+        {dummyTeachingStaffs?.map((item, i) => (
           <Grid key={i} item xs={12} sm={6} md={4}>
             <Card sx={{ position: 'relative', p: 1.5 }}>
               <CardContent sx={{ pt: 2.5 }}>

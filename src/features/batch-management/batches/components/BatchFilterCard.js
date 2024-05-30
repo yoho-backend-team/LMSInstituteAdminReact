@@ -164,11 +164,11 @@ const BatchFilterCard = (props) => {
               <Autocomplete
                 fullWidth
                 value={searchValue}
-                onChange={(e,newValue)=>setSearchValue(newValue.batch_name)}
+                onChange={(e,newValue)=>setSearchValue(newValue)}
                 // onChange={handleSearch}
-                options={suggestions}
-                getOptionLabel={(option) => option?option?.batch_name:""}
-                defaultValue={''}
+                options={suggestions||[]}
+                getOptionLabel={(option) => option?.batch_name}
+                defaultValue={'search here'}
                 renderInput={(params) => (
                   <TextField
                     {...params}

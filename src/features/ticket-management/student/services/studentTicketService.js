@@ -1,4 +1,5 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STUDENT_TICKET_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/ticket/`;
@@ -6,13 +7,7 @@ const STUDENT_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_
 
 export const getAllStudentTickets = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_TICKET_END_POINT}/getStudentTicket`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.ticket.student_tickets(data)
     // Check if the response status is successful
     
       return response;
@@ -28,20 +23,11 @@ export const getAllStudentTickets = async (data) => {
 
 export const updateStudentTicket = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_TICKET_UPDATE_API_END_POINT}/updateticket/:id`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client?.ticket?.update_student_ticket(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'StudentTicket updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update StudentTicket' };
-    }
+    return { success: true, message: 'StudentTicket updated successfully' };
   } catch (error) {
     console.error('Error in updateStudentTicket:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };

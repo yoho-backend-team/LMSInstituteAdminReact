@@ -130,11 +130,78 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
     }
   ];
 
+  const dummyClassData = {
+    data: {
+      studentattendance: [
+        {
+          attendance: {
+            attendance_id: 1,
+            student: {
+              student_id: 'S001',
+              first_name: 'John',
+              last_name: 'Doe',
+              email: 'john.doe@example.com',
+              image: 'john_doe.jpg'
+            },
+            title: 'present',
+            id:1
+          },
+          id:1
+        },
+        {
+          id:2,
+          attendance: {
+            attendance_id: 2,
+            student: {
+              student_id: 'S002',
+              first_name: 'Jane',
+              last_name: 'Smith',
+              email: 'jane.smith@example.com',
+              image: 'jane_smith.jpg'
+            },
+            title: 'absent',
+            id : 2
+          }
+        },
+        {
+          id:3,
+          attendance: {
+            attendance_id: 3,
+            student: {
+              student_id: 'S003',
+              first_name: 'Alice',
+              last_name: 'Johnson',
+              email: 'alice.johnson@example.com',
+              image: 'alice_johnson.jpg'
+            },
+            title: 'present',
+            id : 3
+          }
+        },
+        {
+          id:4,
+          attendance: {
+            attendance_id: 4,
+            student: {
+              student_id: 'S004',
+              first_name: 'Bob',
+              last_name: 'Brown',
+              email: 'bob.brown@example.com',
+              image: 'bob_brown.jpg'
+            },
+            title: 'absent',
+            id : 4
+          }
+        }
+      ]
+    }
+  };  
+
   return (
     <>
       <Grid>
         <Card>
-          <DataGrid autoHeight rowHeight={80} rows={ClassData?.data.studentattendance || []} columns={columns} disableRowSelectionOnClick />
+          <DataGrid autoHeight rowHeight={80} rows={dummyClassData?.data?.studentattendance || []} columns={columns} disableRowSelectionOnClick />
         </Card>
         <StatusChangeDialog
           open={statusChangeDialogOpen}

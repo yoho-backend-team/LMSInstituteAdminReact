@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 import CoursePdfInput from './CoursePdfInput';
+import { useState } from 'react';
 
 export default function CourseValidate({ setCourseSyllabus }) {
   const NewProductSchema = Yup.object().shape({

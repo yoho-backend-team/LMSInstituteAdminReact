@@ -15,17 +15,21 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
 
-const LiveClassCard = () => {
+const LiveClassCard = ({student}) => {
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const dispatch = useDispatch();
-
+ console.log(student,"student")
   useEffect(() => {
     const data = {
       type: 'live',
-      branch_id: selectedBranchId
+      branch: selectedBranchId,
+      course : student?.userDetail?.course?._id,
+      institute : useInstitute().getInstituteId(),
+      uuid : student?.uuid
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId]);
@@ -43,11 +47,11 @@ const LiveClassCard = () => {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     return hours + ':' + minutes + ' ' + meridiem;
   }
-
+  console.log(liveClasses)
   return (
     <>
       <Grid container spacing={2}>
-        {liveClasses?.map((card, index) => (
+        {liveClasses?.data?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
               <Grid container direction="column" spacing={1}>
@@ -127,11 +131,17 @@ const LiveClassCard = () => {
           </Grid>
         ))}
       </Grid>
-      <Grid container justifyContent="flex-end" mt={2}>
-        <div className="demo-space-y">
-          <Pagination count={10} color="primary" />
-        </div>
-      </Grid>
+      {liveClasses?.last_page !== 1 && (
+                  <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                    <Pagination
+                      count={liveClasses?.last_page}
+                      color="primary"
+                      onChange={(e, page) => {
+                        dispatch(getAllLiveClasses({ branch: selectedBranchId,institute:useInstitute().getInstituteId(), page: page }));
+                      }}
+                    />
+                  </Grid>
+                )}
     </>
   );
 };
