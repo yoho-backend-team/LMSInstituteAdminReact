@@ -141,6 +141,12 @@ const generateEndpoints = () => {
           student_notification : `/api/institutes/students/notifications`,
           staff_notification : `/api/institutes/staff/notifications`,
           institute_notification : `/api/institutes/branch/notifications`
+        },
+        activity : {
+            get : "/api/institutes/user/activity"
+        },
+        reports : {
+            get : `/api/institutes/${instituteId}/report/${branchId}`
         }
     };
 };

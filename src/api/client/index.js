@@ -145,5 +145,11 @@ class Client {
        get_institute_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.institute_notification,query)
       }
     }
+    activity = {
+      get : (query) => HttpClient.get(HTTP_END_POINTS.activity.get,query)
+    }
+    reports = {
+      get : (query) => HttpClient.get(HTTP_END_POINTS.reports.get,query)
+    }
   }
 export default new Client();
