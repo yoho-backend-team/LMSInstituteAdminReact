@@ -1,51 +1,36 @@
 // StaffNotificationservice.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STAFF_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/staff-notifications`;
 
 export const getAllStaffNotifications = async (data) => {
   try {
-    const response = await axios.get(`${STAFF_NOTIFICATION_API_ENDPOINT}/read-all-staff-notifications?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StaffNotifications. Status: ${response.status}`);
-    }
+    const response = await client.notification.staff.get_staff_notification(data)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllStaffNotifications:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
 
+export const getAllStaffDetailsWithRoleName = async (data) => {
+  try {
+  const response = await client.staff.get(data) 
+  return {success:false,messag:response?.message,data:response} 
+  } catch (error) {
+    return {success:false,message:error?.message}
+  }
+}
+
 export const addStaffNotification = async (data) => {
   try {
-    const response = await axios.post(`${STAFF_NOTIFICATION_API_ENDPOINT}/staff-notification-send`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.notification.staff.add_staff_notification(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'StaffNotification created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StaffNotification' };
-    }
+    return { success: true, message: 'Staff Notification created successfully' };
   } catch (error) {
     console.error('Error in addStaffNotification:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 

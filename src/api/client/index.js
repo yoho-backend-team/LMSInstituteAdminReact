@@ -101,6 +101,9 @@ class Client {
     TeachingStaff = {
       get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff")
     }
+    staff = {
+      get : (query) => HttpClient.get(HTTP_END_POINTS.staff.getWithName,query)
+    }
     student = {
       activity : (data) => HttpClient.get(HTTP_END_POINTS.student.activity+data.id),
       class : (data) => HttpClient.get(HTTP_END_POINTS.student.classess+data.uuid,data),
@@ -116,6 +119,31 @@ class Client {
       update_student_ticket : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update+data?.uuid,data),
       staff_ticket : (data) => HttpClient.get(HTTP_END_POINTS.ticket.staff_ticket,data),
       staff_ticket_update : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update_staff_ticket+data.uuid,data)
+    }
+    attedence = {
+      get_all_student_attedence : (data) => HttpClient.get(HTTP_END_POINTS.attedence.student_all,data),
+      get_with_id : (data) => HttpClient.get(HTTP_END_POINTS.attedence.get_with_id+data?.id),
+      mark_attedence : (data) => HttpClient.post(HTTP_END_POINTS.attedence.student_mark,data),
+      mark_staff_attedence : (data) => HttpClient.post(HTTP_END_POINTS.attedence.staff_mark,data) ,
+      mark_non_staff_attedence : (data) => HttpClient.post(HTTP_END_POINTS.attedence.non_staff_mark,data),
+      get_all_staff_attedence : (params) => HttpClient.get(HTTP_END_POINTS.attedence.staff_all,params),
+      get_all_non_staff_attedence : (params) => HttpClient.get(HTTP_END_POINTS.attedence.non_teaching_all,params),
+      get_staff_attedence_with_id : (params) => HttpClient.get(HTTP_END_POINTS.attedence.get_staff_attedence_with_id+params?.id),
+      get_non_staff_with_id : (params) => HttpClient.get(HTTP_END_POINTS.attedence.get_non_staff_with_id+params?.id)
+    }
+    notification = {
+      student:{
+        add_student_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.student_notification,data),
+        get_student_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.student_notification,query),
+      },
+      staff : {
+        add_staff_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.staff_notification,data),
+        get_staff_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.staff_notification,query)
+      },
+      institute : {
+       add_institute_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.institute_notification,data),
+       get_institute_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.institute_notification,query)
+      }
     }
   }
 export default new Client();

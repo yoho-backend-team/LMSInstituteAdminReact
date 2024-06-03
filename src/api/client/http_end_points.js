@@ -112,6 +112,7 @@ const generateEndpoints = () => {
         },
         staff : {
             get : `/api/institutes/${instituteId}/Non-teaching-staff/`,
+            getWithName : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
             getWithId : `/api/institutes/${instituteId}/staff/`,
             getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`
         },
@@ -124,6 +125,22 @@ const generateEndpoints = () => {
             update : `/api/institutes/student/ticket/update/`,
             staff_ticket : `/api/institutes/staff/ticket/getall`,
             update_staff_ticket : `/api/institutes/staff/ticket/update/`
+        },
+        attedence : {
+          student_all : `/api/institutes/attedance/students`,
+          get_with_id : `/api/institutes/attedance/student/`,
+          student_mark : `/api/institutes/attedance/student/mark-attedence`,
+          staff_mark:`/api/institutes/attedance/staff/attedence`,
+          non_staff_mark :`/api/institutes/non-attedence/non-teaching-staff/attedence`,
+          staff_all : `/api/institutes/attedance/staff/attedence`,
+          non_teaching_all : `/api/institutes/non-attedence/non-teaching-staff/attedence`,
+          get_staff_attedence_with_id : `/api/institutes/attedance/staff/`,
+          get_non_staff_with_id : `/api/institutes/non-attedence/non_teaching_staff/`
+        },
+        notification : {
+          student_notification : `/api/institutes/students/notifications`,
+          staff_notification : `/api/institutes/staff/notifications`,
+          institute_notification : `/api/institutes/branch/notifications`
         }
     };
 };

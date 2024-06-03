@@ -5,8 +5,8 @@ import { setAllNotifications, setLoading } from './allNotificationSlice';
 export const getAllNotifications = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllAllNotifications(data); // Implement this function in your services
-    dispatch(setAllNotifications(response?.data?.data));
+    const response = await fetchAllAllNotifications(data);
+    dispatch(setAllNotifications(response));
   } catch (error) {
     console.error(error);
   } finally {

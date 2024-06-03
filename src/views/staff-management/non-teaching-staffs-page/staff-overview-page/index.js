@@ -83,7 +83,7 @@ const NonTeaching = () => {
       console.error('Error in status change:', error);
     }
   };
-  console.log(nonTeachingStaffs,"non")
+  
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />

@@ -57,7 +57,7 @@ const UserViewRight = ({ tab, student }) => {
       setActiveTab(tab);
     }
   }, [tab]);
-  console.log(student,"student")
+
   return (
     <TabContext value={activeTab}>
       <TabList

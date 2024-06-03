@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllStudentAttendances } from '../redux/studentAttendanceThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
   // ** State
@@ -44,7 +45,8 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllStudentAttendances({ search: searchInput, branch_id: selectedBranchId }));
+      e.preventDefault()
+      // dispatch(getAllStudentAttendances({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
     },
     [dispatch]
@@ -52,19 +54,19 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
 
   const handleBatchChange = (e, newValue) => {
     if (!newValue) {
-      // If newValue is null, clear the batch selection
       setSelectedBatch(null);
       const data = {
         branch_id: selectedBranchId,
-        // Pass empty batch_id to reset the batch filter
+        institute_id:useInstitute().getInstituteId(),
         batch_id: ''
       };
       dispatch(getAllStudentAttendances(data));
     } else {
       setSelectedBatch(newValue);
       const data = {
-        batch_id: newValue.batch_id,
-        branch_id: selectedBranchId
+        batch: newValue._id,
+        branch_id: selectedBranchId,
+        institute_id : useInstitute().getInstituteId()
       };
       dispatch(getAllStudentAttendances(data));
     }
@@ -78,13 +80,13 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
             <CardHeader title="Filters" />
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
                   </TextField>
-                </Grid>
+                </Grid> */}
 
                 <Grid item xs={12} sm={4}>
                   <Autocomplete

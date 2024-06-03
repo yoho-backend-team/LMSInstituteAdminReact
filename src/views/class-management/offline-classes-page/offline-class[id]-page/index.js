@@ -43,7 +43,7 @@ const ViewOfflineClass = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredStudents = offlineClassData?.batch?.student?.filter((student) =>
-    student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+    student?.first_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearchChange = (event) => {

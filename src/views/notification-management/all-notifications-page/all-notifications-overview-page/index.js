@@ -9,6 +9,7 @@ import { selectAllNotifications, selectLoading } from 'features/notification-man
 import { getAllNotifications } from 'features/notification-management/all-notifications/redux/allNotificationThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const AllNotification = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,8 @@ const AllNotification = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      branch: selectedBranchId,
+      institute : useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllNotifications(data));
@@ -29,12 +31,12 @@ const AllNotification = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
+  
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <AllNotificationHeaderSection allNotifications={allNotifications} />
+          <AllNotificationHeaderSection allNotifications={allNotifications?.data} />
         </Grid>
         <Grid item xs={12}>
           <AllNotificationTableHeader toggle={toggleAddUserDrawer} />
@@ -45,7 +47,7 @@ const AllNotification = () => {
               <NotificationSkeleton />
             ) : (
               <AllNotificationBodySection
-                allNotifications={allNotifications}
+                allNotifications={allNotifications?.data}
                 setAllNotificationRefetch={setAllNotificationRefetch}
                 selectedBranchId={selectedBranchId}
               />
@@ -57,7 +59,7 @@ const AllNotification = () => {
                     count={allNotifications?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllNotifications({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllNotifications({ branch: selectedBranchId,institute:useInstitute().getInstituteId(), page: page }));
                     }}
                   />
                 </Grid>

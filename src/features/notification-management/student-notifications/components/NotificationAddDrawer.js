@@ -19,9 +19,13 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addStudentNotification } from '../services/studentNotificationServices';
+import { useSpinner } from 'context/spinnerContext';
+import { title } from '_mock/text';
+import { useInstitute } from 'utils/get-institute-details';
 
 const NotificationAddDrawer = (props) => {
   const { open, toggle, setStudentNotificationRefetch } = props;
+  const {show,hide} = useSpinner()
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -53,7 +57,7 @@ const NotificationAddDrawer = (props) => {
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
-    const data = { course_id: courseId, branch_id: selectedBranchId };
+    const data = { course: courseId, branch_id: selectedBranchId };
     const result = await getBatchesByCourse(data);
 
     if (result?.success) {
@@ -120,18 +124,21 @@ const NotificationAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     const bodyFormData = new FormData();
-    selectedStudents?.forEach((student) => {
-      bodyFormData.append('student_ids[]', student.student_id);
-    });
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('course', data.course.course_id);
-    bodyFormData.append('batch', data.batch.batch_id);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
+    console.log(data,"data")
+    const studentIds = data?.students?.map((user)=>user?._id)
+    const notification = {
+      institute : useInstitute().getInstituteId(),
+      course : data?.course?._id,
+      batch : data?.batch?._id,
+      branch : selectedBranchId,
+      title : data?.title,
+      body : data?.body,
+      student : studentIds
+    }
+    console.log(notification,"notification")
 
-    const result = await addStudentNotification(bodyFormData);
-
+    const result = await addStudentNotification(notification);
+    console.log(result,"result")
     if (result.success) {
       toast.success(result.message);
       handleClose();
@@ -196,7 +203,7 @@ const NotificationAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -211,7 +218,7 @@ const NotificationAddDrawer = (props) => {
                 />
               </ButtonStyled>
             </div>
-          </Box>
+          </Box> */}
 
           <Grid item xs={12} sm={12}>
             <Controller
@@ -227,9 +234,9 @@ const NotificationAddDrawer = (props) => {
                   onChange={(event, newValue) => {
                     field.onChange(newValue);
                     setValue('course', newValue);
-                    getActiveBatchesByCourse(newValue?.course_id);
+                    getActiveBatchesByCourse(newValue?._id);
                   }}
-                  value={activeCourse.find((course) => course.course_id === (field.value ? field.value.course_id : null)) || null}
+                  value={activeCourse.find((course) => course._id === (field.value ? field.value._id : null)) || null}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -259,7 +266,7 @@ const NotificationAddDrawer = (props) => {
                   onChange={(event, newValue) => {
                     field.onChange(newValue);
                     setValue('batch', newValue);
-                    getStudentsByBatch(newValue?.batch_id);
+                    getStudentsByBatch(newValue?.uuid);
                   }}
                   value={field.value}
                   renderInput={(params) => (
@@ -281,7 +288,7 @@ const NotificationAddDrawer = (props) => {
                   disableCloseOnSelect
                   id="select-multiple-chip"
                   options={students}
-                  getOptionLabel={(option) => option?.first_name || ''}
+                  getOptionLabel={(option) => option?.full_name || ''}
                   value={value}
                   onChange={(e, newValue) => {
                     setValue('students', newValue);
@@ -309,15 +316,15 @@ const NotificationAddDrawer = (props) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option?.first_name}
+                      {option?.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value?.map((option, index) => (
                         <CustomChip
-                          key={option?.student_id}
-                          label={option?.first_name}
+                          key={option?._id}
+                          label={option?.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue?.splice(index, 1);
@@ -330,7 +337,7 @@ const NotificationAddDrawer = (props) => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option?.student_id === value?.student_id}
+                  isOptionEqualToValue={(option, value) => option?._id === value?._id}
                 />
               )}
             />

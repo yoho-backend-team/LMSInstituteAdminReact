@@ -32,7 +32,7 @@ const Students = () => {
       return address;
     }
   };
-  console.log(Students,"students")
+  
   return (
     <>
       <Grid>

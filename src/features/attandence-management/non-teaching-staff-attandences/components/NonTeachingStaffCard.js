@@ -9,51 +9,11 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
-  const dummyNonTeachingStaffs = [
-    {
-      staff_id: 1,
-      staff_name: 'John Doe',
-      email: 'john.doe@example.com',
-      img: 'john_doe.jpg',
-      presentCount: 22,
-      absentCount: 3
-    },
-    {
-      staff_id: 2,
-      staff_name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      img: 'jane_smith.jpg',
-      presentCount: 20,
-      absentCount: 5
-    },
-    {
-      staff_id: 3,
-      staff_name: 'Alice Johnson',
-      email: 'alice.johnson@example.com',
-      img: 'alice_johnson.jpg',
-      presentCount: 18,
-      absentCount: 7
-    },
-    {
-      staff_id: 4,
-      staff_name: 'Bob Brown',
-      email: 'bob.brown@example.com',
-      img: 'bob_brown.jpg',
-      presentCount: 25,
-      absentCount: 0
-    },
-    {
-      staff_id: 5,
-      staff_name: 'Charlie Williams',
-      email: 'charlie.williams@example.com',
-      img: 'charlie_williams.jpg',
-      presentCount: 21,
-      absentCount: 4
-    }]  
+  
   return (
     <>
       <Grid container spacing={2} sx={{ display: 'flex', mt: 2 }}>
-        {  dummyNonTeachingStaffs?.map((item, i) => (
+        {  nonTeachingStaffs?.map((item, i) => (
           <Grid key={i} item xs={12} sm={6} md={4}>
             <Card sx={{ position: 'relative', p: 1.5 }}>
               <CardContent sx={{ pt: 2.5 }}>
@@ -92,7 +52,7 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
                       <Button
                         component={Link}
                         state={{ staff: item }}
-                        to={`non-teaching-staff-attendances/${item.staff_id}`}
+                        to={`non-teaching-staff-attendances/${item.staff}`}
                         variant="tonal"
                         sx={{ px: 4 }}
                       >

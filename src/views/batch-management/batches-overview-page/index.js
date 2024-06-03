@@ -70,7 +70,6 @@ const Batch = () => {
   }, [dispatch, selectedBranchId, batchRefetch]);
 
   const handleStatusChangeApi = async () => {
-    console.log(statusValue,"statusValue")
     const data = {
      is_active: !statusValue?.is_active,
      uuid: statusValue?.uuid,

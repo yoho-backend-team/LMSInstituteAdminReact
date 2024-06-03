@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { getAllNonTeachingStaffAttendances } from '../redux/nonTeachingStaffAttendanceThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const NonTeachingStaffFilterCard = (props) => {
   const { selectedBranchId } = props;
@@ -19,8 +21,8 @@ const NonTeachingStaffFilterCard = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
-    dispatch(getAllNonTeachingStaffs(data));
+    const data = { is_active: e.target.value, branch: selectedBranchId,institute:useInstitute().getInstituteId() };
+    dispatch(getAllNonTeachingStaffAttendances(data));
   };
 
   // Callback function to handle search
@@ -45,8 +47,8 @@ const NonTeachingStaffFilterCard = (props) => {
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
+                    <MenuItem value="true">Active</MenuItem>
+                    <MenuItem value="false">Inactive</MenuItem>
                   </TextField>
                 </Grid>
 

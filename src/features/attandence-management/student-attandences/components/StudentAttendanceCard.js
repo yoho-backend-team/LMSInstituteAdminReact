@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import { IconCalendar } from '@tabler/icons';
 import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
 
 const StudentAttendanceCard = ({ studentAttendance }) => {
   function convertTo12HourFormat(timestamp) {
@@ -216,7 +218,7 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
 
   return (
     <Grid container spacing={2}>
-      {dummyStudentAttendance?.map((card, index) => (
+      {studentAttendance?.map((card, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
             <Grid container direction="column" spacing={1}>
@@ -237,19 +239,19 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                     gutterBottom
                     textAlign="center"
                   >
-                    {card?.class_name}
+                    {card?.student_class?.class_name}
                   </Typography>
                 </Box>
               </Grid>
 
               <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 2 }}>
                 <AvatarGroup className="pull-up" max={4}>
-                  {card?.batch_class?.batch?.institute_batch_student?.map((student) => {
+                  {card?.student_class?.batch?.student?.map((student) => {
                     return (
                       <Avatar
                         key={student.id}
-                        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
-                        alt={`${student?.student?.first_name} ${student?.student?.last_name}`}
+                        src={`${student?.image ? getImageUrl(student?.image):profilePlaceholder}`}
+                        alt={`${student?.full_name}`}
                       />
                     );
                   })}
@@ -258,7 +260,7 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
 
               <Grid item justifyContent="center" display="flex">
                 <Typography sx={{ fontWeight: '500' }}>
-                  {card?.batch_class?.batch?.institute_batch_student?.length ?? 0} Students on this class
+                  {card?.student_class?.batch?.student?.length ?? 0} Students on this class
                 </Typography>
               </Grid>
               <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
@@ -267,7 +269,7 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                 </Box>
                 <Box sx={{ ml: 1 }}>
                   <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                    {card?.class_date} / {convertTo12HourFormat(card?.start_time)} to {convertTo12HourFormat(card?.end_time)}{' '}
+                    {card?.student_class?.start_date} / {convertTo12HourFormat(card?.student_class?.start_time)} to {convertTo12HourFormat(card?.student_class?.end_time)}{' '}
                   </Typography>
                 </Box>
               </Grid>
@@ -278,15 +280,15 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                     variant="contained"
                     size="medium"
                     component={Link}
-                    state={{ id: card?.class_id }}
-                    to={`student-attendances/${card?.class_id}`}
+                    state={{ id: card?.uuid }}
+                    to={`student-attendances/${card?.uuid}`}
                   >
                     View Attendance
                   </Button>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <CustomChip rounded size="medium" skin="light" color={'secondary'} label={card?.type} />
-                </Box>
+                </Box> */}
               </Grid>
             </Grid>
           </Card>

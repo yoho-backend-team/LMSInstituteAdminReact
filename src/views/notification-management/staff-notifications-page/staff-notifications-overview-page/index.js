@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StaffNotification = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,8 @@ const StaffNotification = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      institute : useInstitute().getInstituteId(),
+      branch: selectedBranchId,
       page: '1'
     };
     dispatch(getAllStaffNotifications(data));
@@ -36,12 +38,12 @@ const StaffNotification = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
+ console.log(staffNotifications,"staffNotifications")
   return (
     <>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <StaffNotificationHeaderSection staffNotifications={staffNotifications} />
+          <StaffNotificationHeaderSection staffNotifications={staffNotifications?.data} />
         </Grid>
         <Grid item xs={12}>
           <StaffNotificationTableHeader toggle={toggleAddUserDrawer} />
@@ -52,7 +54,7 @@ const StaffNotification = () => {
               <NotificationSkeleton />
             ) : (
               <StaffNotificationBodySection
-                staffNotifications={staffNotifications}
+                staffNotifications={staffNotifications?.data}
                 setStaffNotificationRefetch={setStaffNotificationRefetch}
                 selectedBranchId={selectedBranchId}
               />
@@ -64,7 +66,7 @@ const StaffNotification = () => {
                     count={staffNotifications?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllStaffNotifications({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllStaffNotifications({ branch: selectedBranchId, page: page,institute : useInstitute().getInstituteId() }));
                     }}
                   />
                 </Grid>
@@ -72,11 +74,11 @@ const StaffNotification = () => {
             )}
           </Card>
         </Grid>
-        {/* <StaffNotificationAddDrawer
+        <StaffNotificationAddDrawer
           open={addUserOpen}
           toggle={toggleAddUserDrawer}
           setStaffNotificationRefetch={setStaffNotificationRefetch}
-        /> */}
+        />
       </Grid>
     </>
   );

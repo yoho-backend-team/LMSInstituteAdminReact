@@ -13,6 +13,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addNonTeachingStaffAttendance } from '../services/nonTeachingStaffAttendanceServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 const TeachingStaffAddEventSidebar = (props) => {
   // ** Props
@@ -61,7 +62,14 @@ const TeachingStaffAddEventSidebar = (props) => {
       title: data.title,
       date: convertDateFormat(selectedDate)
     };
-    const result = await addNonTeachingStaffAttendance(inputData);
+    const new_attedence = {
+      institute : useInstitute().getInstituteId(),
+      branch : staff.branch,
+      status:data?.title,
+      date : convertDateFormat(selectedDate),
+      staff : staff?.staff
+    }
+    const result = await addNonTeachingStaffAttendance(new_attedence);
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);

@@ -30,7 +30,7 @@ const ViewAttendance = () => {
 
   useEffect(() => {
     const data = {
-      class_id: ClassId
+      id: ClassId
     };
     getClassData(data);
   }, [dispatch, ClassId, refetch]);

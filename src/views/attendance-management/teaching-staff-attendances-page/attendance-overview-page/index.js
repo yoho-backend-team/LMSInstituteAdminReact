@@ -9,8 +9,10 @@ import {
   selectLoading
 } from 'features/attandence-management/teaching-staff-attandences/redux/teachingStaffAttendanceSelectors';
 import { getAllTeachingStaffAttendances } from 'features/attandence-management/teaching-staff-attandences/redux/teachingStaffAttendanceThunks';
+import { use } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const TeachingStaff = () => {
   const dispatch = useDispatch();
@@ -22,12 +24,13 @@ const TeachingStaff = () => {
   useEffect(() => {
     const data = {
       type: 'teaching',
-      branch_id: selectedBranchId,
+      branch: selectedBranchId,
+      institute:useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllTeachingStaffAttendances(data));
   }, [dispatch, selectedBranchId]);
-
+  console.log(teachingStaffs,"teachingStaffs")
   return (
     <>
       <Grid>
@@ -49,7 +52,7 @@ const TeachingStaff = () => {
               count={teachingStaffs?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllTeachingStaffAttendances({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllTeachingStaffAttendances({ branch: selectedBranchId,institute:useInstitute().getInstituteId(), page: page }));
               }}
             />
           </Grid>
