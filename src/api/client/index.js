@@ -22,6 +22,7 @@ class Client {
     }
     branch = {
        getAll : (params) => HttpClient.get(HTTP_END_POINTS.branch.getAll,params),
+       create : (params) => HttpClient.post(HTTP_END_POINTS.branch.create,params)
     }
     file = {
         upload: (data, options) => {
@@ -95,6 +96,11 @@ class Client {
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithCourse+`${data.branch_id}/${data.course_id}/students`),
       logout : (data) => HttpClient.post(HTTP_END_POINTS.users.logout,data)
     }
+    payment = {
+      student_fee : {
+       create : (data) => HttpClient.post(HTTP_END_POINTS.payment.fee.create,data)
+      }
+    }
     nonTeachingStaff = {
       get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/non-teaching-staff")
     }
@@ -144,6 +150,10 @@ class Client {
        add_institute_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.institute_notification,data),
        get_institute_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.institute_notification,query)
       }
+    }
+    subscription = {
+      get_all_plans : () => HttpClient.get(HTTP_END_POINTS.subscription.all_plans),
+      get_subscription : (params) => HttpClient.get(HTTP_END_POINTS.subscription.institute_subscription+params?.institute) 
     }
     activity = {
       get : (query) => HttpClient.get(HTTP_END_POINTS.activity.get,query)

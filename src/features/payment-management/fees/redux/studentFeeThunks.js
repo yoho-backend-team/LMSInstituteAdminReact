@@ -6,7 +6,7 @@ export const getAllStudentFees = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllStudentFees(data); // Implement this function in your services
-    dispatch(setStudentFees(response?.data?.data));
+    dispatch(setStudentFees(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

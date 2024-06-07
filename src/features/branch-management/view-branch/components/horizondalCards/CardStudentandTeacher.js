@@ -3,7 +3,8 @@ import styled from '@emotion/styled';
 import CardContent from '@mui/material/CardContent';
 import InstituteIcon from 'assets/images/icons/Lovepik_com-402395765-3d-stereo-technology-style-texture-earth-icon-free-model.png';
 
-const CardStudentandTeacher = () => {
+const CardStudentandTeacher = (props) => {
+  const {branchData} = props
   const StyledTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.mode == 'light' ? theme.palette.secondary.light : theme.palette.secondary.light
   }));
@@ -41,7 +42,7 @@ const CardStudentandTeacher = () => {
       }
     }
   }));
-
+  console.log(props,"props")
   return (
     <CardWrapper sx={{ p: 0 }}>
       <CardContent sx={{ p: 2, py: 5 }}>
@@ -54,7 +55,7 @@ const CardStudentandTeacher = () => {
               <StyledTypography variant="h5" sx={{ mb: 1 }}>
                 Welcome to
               </StyledTypography>
-              <StyledTypography variant="h2">Keelkattalai</StyledTypography>
+              <StyledTypography variant="h2">{branchData?.data?.branch_identity}</StyledTypography>
             </Box>
           </Grid>
         </Grid>

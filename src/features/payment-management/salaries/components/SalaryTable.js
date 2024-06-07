@@ -155,7 +155,7 @@ const SalaryTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.transaction_id}</Typography>
+      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.transaction_id}</Typography>
     },
     {
       flex: 1.25,
@@ -320,7 +320,7 @@ const SalaryTable = () => {
                 hideFooterPagination
                 autoHeight
                 rowHeight={62}
-                rows={TeachingStaffSalaries?.data}
+                rows={TeachingStaffSalaries?TeachingStaffSalaries?.data:[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooter

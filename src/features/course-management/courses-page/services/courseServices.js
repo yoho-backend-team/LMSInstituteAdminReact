@@ -8,10 +8,11 @@ import client from 'api/client';
 export const getAllCoursesByBranch = async (data) => {
   try {
     const response = await axios.get(`${HTTP_END_POINTS.course.get}${data.id}/courses`, {
+      params:data,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
-      },
+      }
     });
     // Check if the response status is successful
     if (response.data.status) {
@@ -81,7 +82,7 @@ export const getAllCourses = async (data) => {
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllActu=iveCourse:', error);
-
+    return{success:false,message:error?.response?.data?.message}
     // Throw the error again to propagate it to the calling function/component
     throw new Error(`Failed to fetch ActiveCourses. Status: ${error}`);
   }

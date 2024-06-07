@@ -237,7 +237,7 @@ const FeesAddDrawer = (props) => {
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
-                      options={activeBranches}
+                      options={activeBranches?activeBranches:[]}
                       getOptionLabel={(branch) => branch.branch_identity}
                       onChange={(event, newValue) => {
                         onChange(newValue?.branch_identity);
@@ -289,7 +289,7 @@ const FeesAddDrawer = (props) => {
                     fullWidth
                     value={value}
                     onChange={(event, newValue) => onChange(newValue)}
-                    options={activeStaffs}
+                    options={activeStaffs?activeStaffs:[]}
                     getOptionLabel={(staff) => staff?.username}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />

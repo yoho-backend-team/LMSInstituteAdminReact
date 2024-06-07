@@ -4,12 +4,13 @@ import SubscriptionDetails from './SubscriptionDetails';
 
 const SubscriptionPlans = (props) => {
   // ** Props
-  const { plan, Subscriptions } = props;
+  const { plan, Subscriptions ,data} = props;
+  
   return (
     <Grid container spacing={6}>
       {Subscriptions?.map((item) => (
         <Grid item xs={12} md={4} key={item?.id}>
-          <SubscriptionDetails plan={plan} data={item} />
+          <SubscriptionDetails plan={data} data={item} />
         </Grid>
       ))}
     </Grid>

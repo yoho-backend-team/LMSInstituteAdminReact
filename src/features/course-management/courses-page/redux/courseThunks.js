@@ -6,7 +6,7 @@ export const getAllCourses = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllCourses(data); 
-    dispatch(setCourses(response?.data.data));
+    dispatch(setCourses(response?.data));
   } catch (error) {
     console.error(error);
   } finally {

@@ -32,6 +32,8 @@ import FeesCardHeader from './FeesCardHeader';
 import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
 import jsPDF from 'jspdf';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 
 // ** Styled component for the link in the dataTable
@@ -86,6 +88,7 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  const {show,hide} = useSpinner()
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -146,7 +149,8 @@ const FeesTable = () => {
   const [batches, setBatches] = useState([]);
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId
+      branch_id: selectedBranchId,
+      institute_id : useInstitute().getInstituteId()
     };
     getBatches(data);
   }, [selectedBranchId]);
@@ -186,11 +190,11 @@ const FeesTable = () => {
     {
       flex: 0.1,
       minWidth: 100,
-      field: '_id',
+      field: 'id',
       headerName: 'ID',
       renderCell: ({ row }) => (
         <Typography component={LinkStyled} to={`/apps/invoice/preview/${row?.studentfee_id}`}>
-          {`#${row?.studentfee_id}`}
+          {`#${row?.id}`}
         </Typography>
       )
     },
@@ -389,7 +393,7 @@ const FeesTable = () => {
                 pagination
                 style={{overflowX:"scroll"}}
                 rowHeight={62}
-                rows={StudentFees}
+                rows={StudentFees?.data}
                 columns={columns}
                 hideFooter
                 disableRowSelectionOnClick

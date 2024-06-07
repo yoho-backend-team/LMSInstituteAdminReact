@@ -46,7 +46,8 @@ const generateEndpoints = () => {
             delete : "/api/institutes/auth/admin/user/delete/"
         },
         branch : {
-            getAll : `/api/institutes/${instituteId}/branches/`
+            getAll : `/api/institutes/${instituteId}/branches/`,
+            create : `/api/institutes/${instituteId}/branches/`
         },
         category: {
             getAll: `/api/institutes/${instituteId}/categories/`,
@@ -110,6 +111,11 @@ const generateEndpoints = () => {
             activity : `/api/institutes/${instituteId}/students/student/activity/`,
             classess : `/api/institutes/:instituteId/students/student/classes/`
         },
+        payment : {
+          fee : {
+            create : "/api/institutes/payments/student-fee/create"
+          }
+        },
         staff : {
             get : `/api/institutes/${instituteId}/Non-teaching-staff/`,
             getWithName : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
@@ -141,6 +147,10 @@ const generateEndpoints = () => {
           student_notification : `/api/institutes/students/notifications`,
           staff_notification : `/api/institutes/staff/notifications`,
           institute_notification : `/api/institutes/branch/notifications`
+        },
+        subscription:{
+           all_plans : `/api/institutes/payments/subscription/all`,
+           institute_subscription : `/api/institutes/payments/subscription/`
         },
         activity : {
             get : "/api/institutes/user/activity"

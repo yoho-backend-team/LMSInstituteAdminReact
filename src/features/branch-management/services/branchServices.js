@@ -52,21 +52,12 @@ export const getActiveBranches = async () => {
 
 export const addBranch = async (data) => {
   try {
-    const response = await axios.post(`${BRANCH_API_ENDPOINT}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.branch.create(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Branch created successfully' };
-    } else {
-      return { success: false, message: response.data.error? response.data.error : 'Failed to create Branch' };
-    }
+    return { success: true, message: 'Branch created successfully' };
   } catch (error) {
     console.error('Error in addBranch:', error);
-    return { success: false, message: error.response.data.error? error.response.data.error : 'Failed to create Branch' };
+    return { success: false, message: error.response.data.message? error.response.data.message : 'Failed to create Branch' };
   }
 };
 
