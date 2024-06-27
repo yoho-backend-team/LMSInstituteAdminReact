@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateBatch } from '../../services/batchServices';
+import { getChangedFields } from 'utils/getChanges';
 
 const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
@@ -79,7 +80,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       setEndDate(new Date(selectedBatch?.end_date || null));
     }
   }, [selectedBatch, setValue]);
-  console.log(selectedBatch,"selectedbatch")
   const handleClose = () => {
     setValue('batch_name', '');
     setValue('start_date', '');
@@ -90,13 +90,20 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   };
 
   const onSubmit = async (data) => {
+    const studentIds = data?.students?.map((student) =>student?._id)
     const inputData = {
       batch_name: data?.batch_name,
       start_date: data?.start_date,
       end_date: data?.end_date,
       student: data?.student,
-      uuid : selectedBatch?.uuid
+      uuid : selectedBatch?.uuid,
+      student:studentIds,
     };
+    const changeFields = getChangedFields(selectedBatch,inputData)
+    if(!changeFields.is_changed){
+      toast.error("No changes detected. Please make some changes before updating.")
+      return;
+    }
     const result = await updateBatch(inputData);
 
     if (result.success) {

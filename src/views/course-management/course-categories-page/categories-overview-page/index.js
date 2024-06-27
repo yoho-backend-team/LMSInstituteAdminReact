@@ -38,7 +38,7 @@ const Categories = () => {
       ) : (
         <Grid item xs={12}>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {memoizedCategories?.map((category, index) => (
+            {memoizedCategories?.data?.map((category, index) => (
               <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
             ))}
           </Grid>

@@ -112,9 +112,9 @@ const Batch = () => {
       toast.error(result.message);
     }
   };
-
+  
   const renderCards = () => {
-    return batches?.map((item, index) => (
+    return batches?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <CardStyle sx={{ position: 'relative' }}>
           <CardContent>
@@ -247,7 +247,7 @@ const Batch = () => {
     <>
       <Grid container>
         <Grid item xs={12} sm={12}>
-          <BatchFilterCard selectedBranchId={selectedBranchId} batches={batches} setBatchRefetch={setBatchRefetch} />
+          <BatchFilterCard selectedBranchId={selectedBranchId} batches={batches?.data} setBatchRefetch={setBatchRefetch} />
         </Grid>
         <Grid item xs={12}>
           {batchLoading ? (

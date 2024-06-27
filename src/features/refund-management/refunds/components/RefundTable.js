@@ -221,7 +221,7 @@ const RefundTable = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batches}
+                    options={batches?.data}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       let data = { branch_id: selectedBranchId };

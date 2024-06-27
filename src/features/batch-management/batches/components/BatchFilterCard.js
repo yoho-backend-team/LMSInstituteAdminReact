@@ -77,7 +77,8 @@ const BatchFilterCard = (props) => {
     const data = {
       branch_id: selectedBranchId
     };
-    if (batches.length > 0) {
+    console.log(batches,"batches")
+    if (batches?.length > 0) {
       setSuggestions(batches);
     }   
      getCourses(data);
@@ -92,7 +93,7 @@ const BatchFilterCard = (props) => {
 
   const handleSearch = useCallback(
     (e) => {
-      dispatch(getAllBatches({ batch_name: searchValue}));
+      dispatch(getAllBatches({ batch_name: searchValue?.batch_name,branch_id:selectedBranchId}));
     },
     [dispatch, selectedBranchId]
   );

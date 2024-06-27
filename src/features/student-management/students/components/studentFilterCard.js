@@ -52,7 +52,7 @@ const StudentFilter = (props) => {
       })
     );
   }, [dispatch, selectedBranchId]);
-  console.log(batch,"batch")
+  
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
@@ -89,7 +89,7 @@ const StudentFilter = (props) => {
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   fullWidth
-                  options={batch}
+                  options={batch?.data}
                   filterSelectedOptions
                   onChange={(e, newValue) => {
                     const data = {

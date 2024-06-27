@@ -53,7 +53,7 @@ const StudentFilterCard = (props) => {
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
-                    options={batches}
+                    options={batches?.data}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       if (!newValue) {

@@ -6,7 +6,7 @@ export const getAllBatches = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllBatches(data); // Implement this function in your services
-    dispatch(setBatches(response?.data));
+    dispatch(setBatches(response));
   } catch (error) {
     console.error(error);
   } finally {

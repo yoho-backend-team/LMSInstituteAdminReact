@@ -331,7 +331,7 @@ const FeesTable = () => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batches}
+                    options={batches?.data}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       const selectedBatchId = newValue?.batch_id || '';

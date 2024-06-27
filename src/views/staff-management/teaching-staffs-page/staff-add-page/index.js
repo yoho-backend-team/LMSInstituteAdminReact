@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { checkUserName } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
-import { useInstitute } from 'utils/get-institute-details';
+import { useBranchId, useInstitute } from 'utils/get-institute-details';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -209,6 +209,7 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     const personalData = personalControl._formValues;
     const courseUUIDs = selectedCourses.map(option => option.uuid);
+    
     const teaching_staffdata = {
       email: personalData.email,
       full_name: personalData.full_name,
@@ -218,7 +219,7 @@ const StepperLinearWithValidation = () => {
       username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
-      branch_id : localStorage.getItem("selectedBranchId"),
+      branch_id : useBranchId(),
       qualification:personalData.education_qualification,
       contact_info: {
         state: personalData.state,

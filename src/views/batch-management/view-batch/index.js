@@ -58,7 +58,7 @@ const ViewBatch = () => {
       console.log(error);
     }
   };
-
+  
   return (
     <>
       {loading ? (

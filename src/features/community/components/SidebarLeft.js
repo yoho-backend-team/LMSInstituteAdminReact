@@ -47,7 +47,8 @@ const SidebarLeft = (props) => {
     setChats,
     setSelectedBatch,
     chats,
-    socket
+    socket,
+    setCommunityDetails
   } = props;
 
   const [query, setQuery] = useState('');
@@ -59,7 +60,7 @@ const SidebarLeft = (props) => {
     setActive(community);
     setSelectedBatch(community);
     const communityId = community?._id
-
+    setCommunityDetails(community)
     socket.emit("join",{group:communityId,user:"user"},(error)=>{
       console.log(error,"socketError")
     })

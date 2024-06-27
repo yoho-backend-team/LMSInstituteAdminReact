@@ -8,7 +8,8 @@ import { updateBranch } from 'features/branch-management/services/branchServices
 import PropTypes from 'prop-types';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import toast, { ToastBar } from 'react-hot-toast';
+import { getChangedFields } from 'utils/getChanges';
 import * as yup from 'yup';
 
 const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBranch, setRefetchBranch }) => {
@@ -84,9 +85,15 @@ const BranchEditModal = ({ open, handleEditClose, selectedBranch, setSelectedBra
         alternate_no: data.alternatePhone},
         uuid:selectedBranch.uuid
       };
-
+     const changeFields = getChangedFields(selectedBranch,dummyData)
+     
+     if(!changeFields.is_changed){
+       toast.error("No changes detected. Please make some changes before updating.")
+       return
+     }
+     Object.assign(changeFields,{uuid:selectedBranch?.uuid})
       try {
-        const result = await updateBranch(dummyData);
+        const result = await updateBranch(changeFields);
 
         if (result.success) {
           toast.success(result.message);
