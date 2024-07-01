@@ -1,11 +1,11 @@
 // studentNotificationservice.js
 import axios from 'axios';
 
-const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/student-notifications`;
+const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification`;
 
 export const getAllStudentNotifications = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_NOTIFICATION_API_ENDPOINT}/read-all-student-notifications?page=${data?.page}`, {
+    const response = await axios.get(`${STUDENT_NOTIFICATION_API_ENDPOINT}/${data?.InstituteId}/${data?.branchid}?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -52,7 +52,7 @@ export const searchStudentNotifications = async (searchQuery) => {
 
 export const addStudentNotification = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student-notification-send`, data, {
+    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`

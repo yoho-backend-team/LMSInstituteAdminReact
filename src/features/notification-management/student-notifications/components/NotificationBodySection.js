@@ -12,7 +12,8 @@ import { resendStudentNotification } from '../services/studentNotificationServic
 
 const NotificationBodySection = ({ studentNotifications }) => {
   const renderClient = (row) => {
-    if (row?.avatar?.length) {
+    const student = row?.student?.[0];
+    if (student?.avatar?.length) {
       return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
     } else {
       return (
@@ -21,7 +22,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
           color={row?.avatarColor || 'primary'}
           sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
         >
-          {getInitials(row?.first_name || 'John Doe')}
+          {getInitials(student?.first_name || 'name')}
         </Avatar>
       );
     }
@@ -66,7 +67,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.notification_id}
+            {row?.id}
           </Typography>
         );
       }
@@ -90,10 +91,10 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.students?.first_name} {row?.students?.last_name}
+                {row?.student?.[0].full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.students?.email}
+                {row?.student?.[0].email}
               </Typography>
             </Box>
           </Box>
@@ -123,7 +124,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row?.institute_notifications?.title}
+                {row?.title}
               </Typography>
               <Typography
                 noWrap
@@ -138,7 +139,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row?.institute_notifications?.body}
+                {row?.description}
               </Typography>
             </Box>
           </Box>
@@ -151,7 +152,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.notification_id} />
+      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
     }
   ];
 
@@ -162,7 +163,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={studentNotifications?.data}
+        rows={studentNotifications}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

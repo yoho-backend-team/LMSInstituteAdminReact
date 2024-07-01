@@ -8,7 +8,7 @@ export const getAllStudentIdCards = async (data) => {
     const response = await axios.get(`${STUDENT_ID_CARDS_API_ENDPOINT}/${data?.instituteid}/${data?.branchid}?page=${data?.page}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });

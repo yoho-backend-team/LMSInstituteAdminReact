@@ -82,10 +82,10 @@ const NotificationAddDrawer = (props) => {
       .string()
       .required('Title is required')
       .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
-    body: yup
+    description: yup
       .string()
       .required('Body is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+      .matches(/^[a-zA-Z0-9\s]+$/, 'description should not contain special characters'),
     course: yup.object().required('Course is required'),
     batch: yup.object().required('Batch is required')
   });
@@ -95,7 +95,7 @@ const NotificationAddDrawer = (props) => {
     batch: null,
     students: [],
     title: '',
-    body: ''
+    description: ''
   };
 
   const {
@@ -113,22 +113,25 @@ const NotificationAddDrawer = (props) => {
   const handleClose = () => {
     setInputValue('');
     setImgSrc(image);
-    setSelectedImage('');
+    setSelectedImage(''); 
     reset();
     toggle();
   };
 
+  const instituteId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).institute_id : null;
+
   const onSubmit = async (data) => {
     const bodyFormData = new FormData();
     selectedStudents?.forEach((student) => {
-      bodyFormData.append('student_ids[]', student.student_id);
+      bodyFormData.append('student[]', student._id);
     });
     bodyFormData.append('image', selectedImage);
-    bodyFormData.append('course', data.course.course_id);
-    bodyFormData.append('batch', data.batch.batch_id);
+    bodyFormData.append('course', data.course._id);
+    bodyFormData.append('batch_id', data.batch._id);
     bodyFormData.append('branch_id', selectedBranchId);
     bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
+    bodyFormData.append('description', data.description);
+    bodyFormData.append('institute_id', instituteId);
 
     const result = await addStudentNotification(bodyFormData);
 
@@ -259,7 +262,7 @@ const NotificationAddDrawer = (props) => {
                   onChange={(event, newValue) => {
                     field.onChange(newValue);
                     setValue('batch', newValue);
-                    getStudentsByBatch(newValue?.batch_id);
+                    getStudentsByBatch(newValue?.uuid);
                   }}
                   value={field.value}
                   renderInput={(params) => (
@@ -358,7 +361,7 @@ const NotificationAddDrawer = (props) => {
 
           <Grid item xs={12} sm={12}>
             <Controller
-              name="body"
+              name="description"
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -369,8 +372,8 @@ const NotificationAddDrawer = (props) => {
                   value={value}
                   onChange={onChange}
                   placeholder="Placeholder"
-                  error={Boolean(errors.body)}
-                  helperText={errors.body ? errors.body.message : null}
+                  error={Boolean(errors.description)}
+                  helperText={errors.description ? errors.description.message : null}
                   multiline
                   rows={4}
                 />

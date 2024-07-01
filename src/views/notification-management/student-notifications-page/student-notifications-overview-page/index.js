@@ -12,6 +12,7 @@ import {
 import { getAllStudentNotifications } from 'features/notification-management/student-notifications/redux/studentNotificationThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StudentNotification = () => {
   const dispatch = useDispatch();
@@ -23,7 +24,8 @@ const StudentNotification = () => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      InstituteId: useInstitute().getInstituteId(),
+      branchid: selectedBranchId,
       page: '1'
     };
     dispatch(getAllStudentNotifications(data));
@@ -32,6 +34,8 @@ const StudentNotification = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  
+  console.log(studentNotifications,"nptiiiiiiii")
 
   return (
     <>
@@ -60,7 +64,7 @@ const StudentNotification = () => {
                     count={studentNotifications?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllStudentNotifications({ branch_id: selectedBranchId, page: page }));
+                      dispatch(getAllStudentNotifications({ branchid: selectedBranchId, page: page }));
                     }}
                   />
                 </Grid>
