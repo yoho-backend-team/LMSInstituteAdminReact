@@ -76,7 +76,7 @@ const TeachingStaffFilterCard = (props) => {
                       const data = {
                         course_id: courseId,
                         branch_id: selectedBranchId,
-                        type: 'teaching'
+                        type: 'teaching_staff'
                       };
                       dispatch(getAllTeachingStaffs(data));
                     }}

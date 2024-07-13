@@ -19,7 +19,7 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                   <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
                   <Typography variant="h4" sx={{ mb: 1 }}>
-                    {item.staff_name}
+                    {item.fullname}
                   </Typography>
                   <Typography variant="h6">{item.email}</Typography>
 

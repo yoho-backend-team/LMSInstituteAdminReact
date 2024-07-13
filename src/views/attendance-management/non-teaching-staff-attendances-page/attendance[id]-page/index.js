@@ -35,8 +35,7 @@ const ViewAttendance = () => {
 
   useEffect(() => {
     const data = {
-      staff_id: staff?.staff_id,
-      title: ''
+      staff_id: staff?._id
     };
     getStaffAttendance(data);
   }, [staffStatusChange, refetch]);

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
+import { getInitials } from 'utils/get-initials';
 
 const renderClient = (row) => {
   if (row?.attendance?.student?.image) {
@@ -26,7 +27,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.name || 'John Doe')}
+        {getInitials(row?.studentAttendance?.student?.full_name || '')}
       </Avatar>
     );
   }
@@ -69,7 +70,7 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
         const { row } = params;
         return (
           <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            {row?.attendance?.student?.student_id}
+            {row?.studentAttendance?.[0]?.student?.student_id}
           </Typography>
         );
       }
@@ -86,11 +87,12 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row?.attendance?.student?.first_name}
-                {row?.attendance?.student?.last_name}
+                {console.log(row,row?.studentAttendance)}
+                {row?.studentAttendance?.[0]?.student?.full_name}
+                {/* {row?.studentAttendance?.[0]?.student?.full_name} */}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.attendance?.student?.email}
+                {row?.studentAttendance?.[0]?.student?.email}
               </Typography>
             </Box>
           </Box>
@@ -108,17 +110,17 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
           <TextField
             size="small"
             select
-            value={row?.attendance?.title}
+            value={row?.attendance?.row?.studentAttendance?.student?.is_present}
             label="status"
             id="custom-select"
             sx={{
-              color: userStatusObj[row?.attendance?.title]
+              color: userStatusObj[row?.studentAttendance?.student?.is_present]
             }}
             onChange={(e) => handleStatusValue(e, row)}
             SelectProps={{
               sx: {
-                borderColor: row?.attendance.title === 'present' ? 'success' : 'error',
-                color: userStatusObj[row?.attendance?.title]
+                borderColor: row?.attendance?.title === 'present' ? 'success' : 'error',
+                color: userStatusObj[row?.studentAttendance?.student?.is_present]
               }
             }}
           >
@@ -129,12 +131,12 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
       }
     }
   ];
-
+  console.log(ClassData,"classData")
   return (
     <>
       <Grid>
         <Card>
-          <DataGrid autoHeight rowHeight={80} rows={ClassData?.data.studentattendance || []} columns={columns} disableRowSelectionOnClick />
+          <DataGrid autoHeight rowHeight={80} rows={ClassData?.data || []} columns={columns} disableRowSelectionOnClick />
         </Card>
         <StatusChangeDialog
           open={statusChangeDialogOpen}

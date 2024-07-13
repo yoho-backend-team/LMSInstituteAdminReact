@@ -26,6 +26,8 @@ const TeachingStaffSidebarLeft = (props) => {
   } = props;
 
   const getStaffAttendance = async (data) => {
+    console.log(data,"attendance")
+
     const result = await getTeachingStaffAttendanceById(data);
     if (result) {
       setAttendances(result.data.data);
@@ -48,7 +50,7 @@ const TeachingStaffSidebarLeft = (props) => {
   const handleSidebarToggleSidebar = () => {
     handleAddEventSidebarToggle();
   };
-
+  console.log(staff,"staff")
   return (
     <Drawer
       open={leftSidebarOpen}
@@ -84,9 +86,9 @@ const TeachingStaffSidebarLeft = (props) => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
           <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
           <Box>
-            <Typography variant="h5">{staff?.staff_name}</Typography>
+            <Typography variant="h5">{staff?.user?.full_name}</Typography>
             <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-              {staff?.email}
+              {staff?.user?.email}
             </Typography>
           </Box>
         </Box>

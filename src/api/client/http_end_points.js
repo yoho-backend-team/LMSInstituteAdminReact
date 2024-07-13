@@ -43,7 +43,8 @@ const generateEndpoints = () => {
             all : "/api/institutes/auth/admin/users/all",
             getWihtId : '/api/institutes/auth/admin/user/',
             update : "/api/institutes/auth/admin/user/update/",
-            delete : "/api/institutes/auth/admin/user/delete/"
+            delete : "/api/institutes/auth/admin/user/delete/",
+            getWithRoleName : "/api/institutes/attedance/user-list/"
         },
         branch : {
             getAll : `/api/institutes/${instituteId}/branches/`

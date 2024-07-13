@@ -1,59 +1,47 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
-const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/attendance-management/teaching-staff`;
+const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
 export const getAllTeachingStaffAttendances = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-by-branch-id`, {
+    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/getall`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
     console.log(response);
 
-    // Check if the response status is successful
-    if (response.data.status) {
+    
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${response.status}`);
-    }
+   
   } catch (error) {
-    // Log the error for debugging purposes
+
     console.error('Error in getAllTeachingStaffAttendances:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
+    throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${response.status}`);  }
 };
 export const getTeachingStaffAttendanceById = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/get-staff-attendance`, {
+    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/${data.staff_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
 
     console.log(response);
 
-    // Check if the response status is successful
-    if (response.data.status) {
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${response.status}`);
-    }
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllTeachingStaffAttendances:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${response.status}`);
   }
 };
 
@@ -78,24 +66,30 @@ export const searchTeachingStaffAttendances = async (searchQuery) => {
   }
 };
 
+export const getUserListWithRoleName = async (data) => {
+  try{
+  const userList = await client.user.getWithRoleName(data)
+  return {status:true,data:userList,message:userList?.message}
+  }catch(error){
+    return {status:false,message:error?.response?.data?.message}
+  }
+}
+
 export const addTeachingStaffAttendance = async (data) => {
   try {
     const response = await axios.post(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
     console.log(response);
 
-    if (response.data.status) {
-      return { success: true, message: 'TeachingStaffAttendance created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create TeachingStaffAttendance' };
-    }
+   
+    return { success: true, message: response?.data?.message};
   } catch (error) {
     console.error('Error in addTeachingStaffAttendance:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create TeachingStaffAttendance' };
   }
 };
 

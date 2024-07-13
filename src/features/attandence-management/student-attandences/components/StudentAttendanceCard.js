@@ -63,7 +63,7 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                       <Avatar
                         key={student.id}
                         src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
-                        alt={`${student?.student?.first_name} ${student?.student?.last_name}`}
+                        alt={`${student?.first_name} ${student?.last_name}`}
                       />
                     );
                   })}
@@ -92,8 +92,8 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                     variant="contained"
                     size="medium"
                     component={Link}
-                    state={{ id: card?.class_id }}
-                    to={`student-attendances/${card?.class_id}`}
+                    state={{ id: card?._id }}
+                    to={`student-attendances/${card?._id}`}
                   >
                     View Attendance
                   </Button>

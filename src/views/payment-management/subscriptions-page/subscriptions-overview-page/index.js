@@ -160,6 +160,7 @@ const data = {
 
 const Subscription = () => {
   const [refetch, setRefetch] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
   const Subscription = useSelector(selectSubscriptions);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -180,10 +181,16 @@ const Subscription = () => {
   useEffect(() => {
     dispatch(
       getSubscriptions({
-        branch_id: selectedBranchId
+        branch_id: selectedBranchId,
+        page: currentPage
       })
     );
-  }, [dispatch, selectedBranchId, refetch]);
+  },  [dispatch, selectedBranchId, currentPage, refetch]);
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
 
   console.log(setRefetch);
   console.log(Subscription);
@@ -198,7 +205,12 @@ const Subscription = () => {
         <SubscriptionPlans data={data.pricingTable} Subscriptions={subscriptions} />
 
         <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Pagination count={10} color="primary" />
+        <Pagination
+            count={subscriptions?.last_page || 10}  // assuming `last_page` is available in your subscriptions data
+            page={currentPage}
+            color="primary"
+            onChange={handlePageChange}
+          />
         </Grid>
       </CardContent>
     </Card>

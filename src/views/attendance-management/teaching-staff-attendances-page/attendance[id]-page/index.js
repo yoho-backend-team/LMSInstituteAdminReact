@@ -36,7 +36,7 @@ const ViewAttendance = () => {
 
   useEffect(() => {
     const data = {
-      staff_id: staff?.staff_id,
+      staff_id: staff?._id,
       title: ''
     };
     getStaffAttendance(data);

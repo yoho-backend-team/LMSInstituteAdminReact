@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const TeachingStaffCard = ({ teachingStaffs }) => {
+  console.log(teachingStaffs,"teachingStaffs")
   return (
     <>
       <Grid container spacing={2} mt={2}>
@@ -19,9 +20,9 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                   <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
                   <Typography variant="h4" sx={{ mb: 1 }}>
-                    {item.staff_name}
+                    {item?.user?.full_name}
                   </Typography>
-                  <Typography variant="h6">{item.email}</Typography>
+                  <Typography variant="h6">{item?.user?.email}</Typography>
 
                   <Box
                     sx={{
@@ -51,7 +52,7 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                       <Button
                         component={Link}
                         state={{ staff: item }}
-                        to={`teaching-staff-attendances/${item.staff_id}`}
+                        to={`teaching-staff-attendances/${item._id}`}
                         variant="tonal"
                         sx={{ px: 4 }}
                       >

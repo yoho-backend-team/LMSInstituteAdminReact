@@ -1,32 +1,27 @@
 // groupService.js
 import axios from 'axios';
 
-const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/attendance-management/student`;
+const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
 export const getAllStudentAttendances = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/get-by-branch-id?page=${data?.page}`, {
+    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/getall`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
     console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
+    
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentAttendances. Status: ${response.status}`);
-    }
+   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentAttendances:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
+    throw new Error(`Failed to fetch getAllStudentAttendances. Status: ${error?.response?.data?.message}`);
+    }
 };
 
 export const searchStudentAttendances = async (searchQuery) => {
@@ -114,30 +109,27 @@ export const updateStudentAttendance = async (data) => {
 
 export const getClassDetails = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/get-class-by-id`, {
+    console.log(data,"data")
+    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/${data.class_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
     console.log(response);
     // Check if the response status is successful
-    if (response.data.status) {
+   
       return {
         success: true,
         data: response?.data
       };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch batch. Status: ${response.status}`);
-    }
+    
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getOfflineClassDetails:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    throw new Error(`Failed to fetch getOfflineClassDetails. Status: ${error?.response?.data?.message}`);
   }
 };
 

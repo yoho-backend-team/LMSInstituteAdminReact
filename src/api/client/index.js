@@ -17,6 +17,7 @@ class Client {
       add : (data) => HttpClient.post(HTTP_END_POINTS.user.add,data),
       getAll : (data) => HttpClient.get(HTTP_END_POINTS.user.all,data),
       getWithId : (data) => HttpClient.get(HTTP_END_POINTS.user.getWihtId+data.id),
+      getWithRoleName : (data) => HttpClient.get(HTTP_END_POINTS.user.getWithRoleName,data),
       update : (data) => HttpClient.update(HTTP_END_POINTS.user.update+data?.userId,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.user.delete+data?.userId)
     }
