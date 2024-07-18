@@ -203,7 +203,7 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
     show()
-    
+    console.log(personalData,"personal")
     const student_data = {
       first_name : personalData.student_first_name,
       last_name : personalData.student_last_name,
@@ -215,7 +215,8 @@ const StepperLinearWithValidation = () => {
         pincode : personalData.pin_code,
         address1 : personalData.address_line_one,
         address2 : personalData.address_line_two,
-        phone_number : "+91"+personalData.student_phone_no
+        phone_number : "+91"+personalData.student_phone_no,
+        alternate_phone_number : "+91"+personalData?.alt_phone
       },
       qualification : personalData.qualification,
       username : personalData.username,

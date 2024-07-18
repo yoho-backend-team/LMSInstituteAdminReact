@@ -62,8 +62,7 @@ const StepperLinearWithValidation = () => {
       password: yup
     .string()
     .required('Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .matches(/^[a-zA-Z0-9]+$/, 'Password should only contain alphabets and numbers'),
+    .min(6, 'Password must be at least 6 characters'),
     email: yup
       .string()
       .required('Email is required')
@@ -329,7 +328,7 @@ const StepperLinearWithValidation = () => {
                 <Controller
                   name="password"
                   control={personalControl}
-                  rules={{ required: true }}
+                  // rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth

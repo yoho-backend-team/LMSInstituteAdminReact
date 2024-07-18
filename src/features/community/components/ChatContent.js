@@ -66,16 +66,16 @@ const ChatContent = (props) => {
     }
   };
   useEffect(()=>{
-    socket.on("message",(message)=>{
-      setMessages((messages)=>[...messages,message])
-      console.log(Notification.permission)
-      if (permissionGranted) {
-        console.log(permissionGranted,"permissionGranted")
-        new Notification(communityDetails?.group, {
-          body: message.message,
-        });
-      }
-    })
+    socket.on("message", (message, callback) => {
+      setMessages((messages) => [...messages, message]);
+      if (callback) callback({ status: "success" });
+      // if (permissionGranted) {
+      //   console.log(permissionGranted, "permissionGranted")
+      //   new Notification(communityDetails?.group, {
+      //     body: message.message,
+      //   });
+      // }
+    });
   },[])
   
   const renderContent = () => {
