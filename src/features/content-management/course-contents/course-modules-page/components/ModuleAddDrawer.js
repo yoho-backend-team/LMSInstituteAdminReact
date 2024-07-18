@@ -35,7 +35,7 @@ const CourseModuleAddDrawer = (props) => {
       setActiveCourse(result?.data);
     }
   };
-  console.log(branches,"branches")
+
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -79,7 +79,7 @@ const CourseModuleAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data,"data")
+
     const inputData = {
       branch: data.branch.uuid,
       course: data.course.uuid,
@@ -88,10 +88,9 @@ const CourseModuleAddDrawer = (props) => {
       video: data.video_url
     };
 
-    console.log(inputData);
+
     try {
       const result = await addCourseModule(inputData);
-      console.log(result,"result")
         setRefetch((state) => !state);
         toast.success(result.message);
         reset();

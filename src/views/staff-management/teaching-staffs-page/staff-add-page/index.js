@@ -26,7 +26,7 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { checkUserName } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
-import { useInstitute } from 'utils/get-institute-details';
+import { useBranchId, useInstitute } from 'utils/get-institute-details';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -62,8 +62,7 @@ const StepperLinearWithValidation = () => {
       password: yup
     .string()
     .required('Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .matches(/^[a-zA-Z0-9]+$/, 'Password should only contain alphabets and numbers'),
+    .min(6, 'Password must be at least 6 characters'),
     email: yup
       .string()
       .required('Email is required')
@@ -205,11 +204,11 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-  console.log(logo);
 
   const onSubmit = async () => {
     const personalData = personalControl._formValues;
     const courseUUIDs = selectedCourses.map(option => option.uuid);
+    
     const teaching_staffdata = {
       email: personalData.email,
       full_name: personalData.full_name,
@@ -219,7 +218,7 @@ const StepperLinearWithValidation = () => {
       username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
-      branch_id : localStorage.getItem("selectedBranchId"),
+      branch_id : useBranchId(),
       qualification:personalData.education_qualification,
       contact_info: {
         state: personalData.state,
@@ -228,7 +227,7 @@ const StepperLinearWithValidation = () => {
         address1: personalData.address_line_one,
         address2: personalData.address_line_two,
         phone_number: personalData.phone,
-        alternate_number: personalData.alt_phone
+        alternate_phone_number: personalData.alt_phone
       },
       designation: personalData.designation,
       role: personalData.role,
@@ -278,7 +277,7 @@ const StepperLinearWithValidation = () => {
       }
     // }
   };
-  console.log(selectedCourses,"selected")
+
   const getStepContent = () => {
     return (
       <form onSubmit={handlePersonalSubmit(onSubmit)}>
@@ -329,7 +328,7 @@ const StepperLinearWithValidation = () => {
                 <Controller
                   name="password"
                   control={personalControl}
-                  rules={{ required: true }}
+                  // rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -408,8 +407,8 @@ const StepperLinearWithValidation = () => {
                   error={Boolean(personalErrors.gender)}
                   {...(personalErrors.gender && { helperText: personalErrors.gender.message })}
                 >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
                   <MenuItem value="other">Other</MenuItem>
                 </CustomTextField>
               )}

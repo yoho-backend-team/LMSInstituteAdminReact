@@ -51,7 +51,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const PaymentsCard = ({ isLoading, branchData }) => {
   const theme = useTheme();
-  console.log('dataCheck', branchData.InstituteUserCount);
   return (
     <>
       {isLoading ? (
@@ -81,7 +80,7 @@ const PaymentsCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.StaffCount}
+                      {branchData.profits}
                     </Typography>
                   </Box>
 
@@ -100,7 +99,7 @@ const PaymentsCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.StaffCount}
+                      {branchData.payouts}
                     </Typography>
                   </Box>
 

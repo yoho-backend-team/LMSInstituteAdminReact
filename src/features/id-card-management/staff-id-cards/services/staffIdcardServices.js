@@ -12,7 +12,7 @@ export const getAllStaffIdCards = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -101,7 +101,6 @@ export const updateStaffIdCard = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StaffIdCard updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StaffIdCard' };
@@ -121,7 +120,6 @@ export const updateStaffIdCardStatus = async (uuid, data) => {
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Staff updated successfully' };
     } else {

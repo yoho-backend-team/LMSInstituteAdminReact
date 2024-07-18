@@ -57,9 +57,7 @@ const StudentIdCard = () => {
     const data = {
       is_active: statusValue?.is_active === true ? false : true,
     };
-    console.log(data);
     const response = await updateStudentIdCardStatus(statusValue.uuid, data); 
-    console.log(statusValue.uuid,"uuid")
   
     if (response.success) {
       toast.success(response.message);

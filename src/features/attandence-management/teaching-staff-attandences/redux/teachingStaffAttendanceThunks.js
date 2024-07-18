@@ -5,8 +5,8 @@ import { setTeachingStaffAttendances, setLoading } from './teachingStaffAttendan
 export const getAllTeachingStaffAttendances = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllTeachingStaffAttendances(data); // Implement this function in your services
-    dispatch(setTeachingStaffAttendances(response?.data?.data));
+    const response = await fetchAllTeachingStaffAttendances(data);
+    dispatch(setTeachingStaffAttendances(response));
   } catch (error) {
     console.error(error);
   } finally {

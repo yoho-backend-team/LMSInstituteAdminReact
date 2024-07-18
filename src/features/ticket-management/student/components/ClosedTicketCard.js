@@ -15,10 +15,10 @@ const ClosedTicketCard = ({ ticket }) => {
               <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
                 <Typography variant="h5">
-                  {ticket?.student?.first_name} {ticket?.student?.last_name}
+                  {ticket?.user?.first_name} {ticket?.user?.last_name}
                 </Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                  {ticket?.student?.email}
+                  {ticket?.user?.email}
                 </Typography>
               </Box>
             </Box>

@@ -12,7 +12,7 @@ import { getImageUrl } from 'utils/imageUtils';
 
 const StudyMaterialView = ({ open, handleViewClose, StudyMaterials }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
-  console.log(StudyMaterials,"studyMaterials")
+
   return (
     <div>
       <Dialog

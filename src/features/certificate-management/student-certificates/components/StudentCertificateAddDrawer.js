@@ -19,6 +19,8 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addStudentCertificate } from '../services/studentCertificateServices';
+import { useInstitute } from 'utils/get-institute-details';
+import client from 'api/client';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -64,7 +66,6 @@ const StudentCertificateAddDrawer = (props) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -104,7 +105,7 @@ const StudentCertificateAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  const handleSetPdf = (data) => {
+  const handleSetPdf = async (data) => {
     setstudymaterialPdf(data);
   };
 
@@ -115,16 +116,52 @@ const StudentCertificateAddDrawer = (props) => {
     toggle();
   };
 
+  // Function to upload file to S3
+const uploadFileToS3 = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await client.file.upload()
+
+    if (response.status === 200) {
+      return response.data; // Assume the response data contains the uploaded file URL or relevant data
+    } else {
+      throw new Error('File upload failed');
+    }
+  } catch (error) {
+    console.error('Error uploading file to S3:', error);
+    throw error;
+  }
+};
   const onSubmit = async (data) => {
-    console.log(data);
+    // const s3UploadResponse = await uploadFileToS3(studymaterialPdf);
+    
+    // Assuming s3UploadResponse contains the URL of the uploaded file
+    
+    
     var bodyFormData = new FormData();
-    bodyFormData.append('certificate_file', studymaterialPdf);
-    bodyFormData.append('institute_student_id', data.student);
+    bodyFormData.append('file_upload', studymaterialPdf);
+    bodyFormData.append('student', data.student);
     bodyFormData.append('certificate_name', data.certificate_name);
     bodyFormData.append('description', data.description);
-    bodyFormData.append('institute_branch_id', selectedBranchId);
+    bodyFormData.append('branch_id', selectedBranchId);
 
-    const result = await addStudentCertificate(bodyFormData);
+    const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
+
+    const InputData = {
+      file_upload:data.pdf_file,
+      student: data.student,
+      branch_name:data.branch_id,
+      branch_id : branch[0].uuid,
+      institute_id: useInstitute().getInstituteId(),
+      batch_id: data.batch._id,
+      description: data.description,
+      certificate_name: data.certificate_name,
+      course: data.batch.course.uuid,
+    };
+
+    const result = await addStudentCertificate(InputData);
 
     if (result.success) {
       toast.success(result.message);
@@ -172,7 +209,7 @@ const StudentCertificateAddDrawer = (props) => {
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-              <CoursePdfInput setCourseNotePdf={handleSetPdf} />
+              {/* <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} /> */}
             </Grid>
 
             <Grid item xs={12} sx={{ mb: 2 }}>
@@ -182,21 +219,22 @@ const StudentCertificateAddDrawer = (props) => {
                 rules={{ required: 'Branch field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
-                    fullWidth
-                    options={activeBranches}
-                    getOptionLabel={(branch) => branch.branch_identity}
-                    onChange={(event, newValue) => {
-                      onChange(newValue?._id);
-                      getActiveCoursesByBranch(newValue?._id);
-                    }}
-                    value={activeBranches.find((branch) => branch._id === value) || null}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
-                    )}
-                  />
-                )}
-              />
-            </Grid>
+                      fullWidth
+                      options={activeBranches}
+                      getOptionLabel={(branch) => branch.branch_identity}
+                      onChange={(event, newValue) => {
+                        onChange(newValue?.branch_identity);
+                        getActiveCoursesByBranch(newValue?.uuid);
+                      }}
+                      value={activeBranches.find((branch) => branch.branch_identity === value) || null}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
+
 
             <Grid item xs={12} sx={{ mb: 2 }}>
               <Controller
@@ -231,11 +269,11 @@ const StudentCertificateAddDrawer = (props) => {
                     {...field}
                     fullWidth
                     options={activeBatches}
-                    getOptionLabel={(option) => option?.batch_name}
+                    getOptionLabel={(batch) => batch?.batch_name}
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
-                      getStudentsByBatch(newValue?.batch_id);
+                      getStudentsByBatch(newValue?.uuid);
                     }}
                     value={field.value}
                     renderInput={(params) => (
@@ -268,9 +306,9 @@ const StudentCertificateAddDrawer = (props) => {
                     helperText={errors.student?.message}
                   >
                     {students.map((student) => (
-                      <MenuItem key={student?.student_id} value={student?.student_id}>
-                        {`${student?.first_name} ${student?.last_name}`}
-                      </MenuItem>
+                     <MenuItem key={student?.student} value={student?._id}>
+                     {`${student?.first_name&&student?.last_name?student?.first_name+student?.last_name:student.full_name}`}
+                   </MenuItem>
                     ))}
                   </TextField>
                 )}

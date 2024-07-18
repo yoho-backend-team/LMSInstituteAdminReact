@@ -50,7 +50,7 @@ const GroupAddPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getAllGroups({ branch_id: selectedBranchId }))
+    dispatch(getAllGroups({ branch_id: selectedBranchId ,institute_id:useInstitute().getInstituteId()}))
   }, [dispatch, selectedBranchId]);
   
   // Fetch permissions on component mount
@@ -78,7 +78,7 @@ const GroupAddPage = () => {
   // Function to handle form submission
   const onSubmit = useCallback(
     async (data) => {
-      console.log(data,"data",selectedCheckbox,SelectedPermissions)
+      
       show()
       try {
         const inputData = {
@@ -98,7 +98,7 @@ const GroupAddPage = () => {
 
         if (result.success) {
           // Update groups after adding a new group
-          dispatch(getAllGroups({ branch_id: selectedBranchId }));
+          dispatch(getAllGroups({ institute_id:useInstitute().getInstituteId(),branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
         } else {
@@ -127,7 +127,7 @@ const GroupAddPage = () => {
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
-    console.log(isIndeterminateCheckbox)
+    
     if (isIndeterminateCheckbox) {
       setSelectedPermissions([])
       setSelectedCheckbox([]);

@@ -45,7 +45,7 @@ const TicketResolveDrawer = (props) => {
   const onSubmit = async (data) => {
     const inputData = {
       solution: data.solution,
-      ticket_id: ticket.ticket_id
+      uuid: ticket.uuid
     };
 
     const result = await updateStudentTicket(inputData);

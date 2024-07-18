@@ -24,8 +24,8 @@ const StudentNotification = () => {
 
   useEffect(() => {
     const data = {
-      InstituteId: useInstitute().getInstituteId(),
-      branchid: selectedBranchId,
+      branch: selectedBranchId,
+      institute : useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllStudentNotifications(data));
@@ -44,7 +44,7 @@ const StudentNotification = () => {
           <NotificationHeaderSection studentNotifications={studentNotifications} />
         </Grid>
         <Grid item xs={12}>
-          <NotificationTableHeader studentNotifications={studentNotifications} toggle={toggleAddUserDrawer} />
+          <NotificationTableHeader studentNotifications={studentNotifications?.data} toggle={toggleAddUserDrawer} />
         </Grid>
         <Grid item xs={12}>
           <Card>
@@ -52,7 +52,7 @@ const StudentNotification = () => {
               <NotificationSkeleton />
             ) : (
               <NotificationBodySection
-                studentNotifications={studentNotifications}
+                studentNotifications={studentNotifications?studentNotifications?.data:[]}
                 setStudentNotificationRefetch={setStudentNotificationRefetch}
                 selectedBranchId={selectedBranchId}
               />
@@ -64,7 +64,7 @@ const StudentNotification = () => {
                     count={studentNotifications?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllStudentNotifications({ branchid: selectedBranchId, page: page }));
+                      dispatch(getAllStudentNotifications({ branch: selectedBranchId, page: page,institute:useInstitute().getInstituteId() }));
                     }}
                   />
                 </Grid>

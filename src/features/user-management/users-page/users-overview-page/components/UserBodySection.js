@@ -19,6 +19,8 @@ import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
 import { getAllUsers } from '../../redux/userThunks';
 import { useDispatch } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
 
 const userStatusObj = {
   true: 'success',
@@ -26,10 +28,11 @@ const userStatusObj = {
 };
 
 const renderClient = (row) => {
-  if (row?.institution_users?.image) {
+  
+  if (row?.image) {
     return (
       <CustomAvatar
-        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.institution_users?.image}`}
+        src={`${getImageUrl(row?.image)}`}
         sx={{ mr: 2.5, width: 38, height: 38 }}
       />
     );
@@ -59,8 +62,8 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+      is_active: !statusValue?.is_active,
+      userId: statusValue?.uuid
     };
     const response = await updateUserStatus(data);
     if (response.success) {
@@ -228,7 +231,7 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.id} />
+      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
     }
   ];
   return (
@@ -272,6 +275,7 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
                   onChange={(e, page) => {
                     const data = {
                       branch_id: selectedBranchId,
+                      institute_id : useInstitute().getInstituteId(),
                       page: page
                     };
                     dispatch(getAllUsers(data));

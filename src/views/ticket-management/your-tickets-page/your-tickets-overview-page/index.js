@@ -68,7 +68,7 @@ const YourTicketsPage = () => {
               </CustomTabList>
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentOpenTickets?.data?.map((ticket, index) => (
+                  {studentOpenTickets?.map((ticket, index) => (
                     <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
                   ))}
                   {studentOpenTickets?.last_page !== 1 && (
@@ -86,7 +86,7 @@ const YourTicketsPage = () => {
               </TabPanel>
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentClosedTickets?.data?.map((ticket, index) => (
+                  {studentClosedTickets?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
                   {studentClosedTickets?.last_page !== 1 && (

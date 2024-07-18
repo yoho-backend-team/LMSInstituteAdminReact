@@ -7,7 +7,7 @@ const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institu
 export const getAllBranchesByInstitute = async (data) => {
   try {
     const response = await client.branch.getAll(data)
-    console.log(response);
+
     // Check if the response status is successful
     if (response.status) {
       return response;
@@ -32,10 +32,9 @@ export const getActiveBranches = async () => {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     // Check if the response status is successful
-    console.log(response)
+
     if (response.data.status) {
       return response;
     } else {
@@ -53,22 +52,12 @@ export const getActiveBranches = async () => {
 
 export const addBranch = async (data) => {
   try {
-    const response = await axios.post(`${BRANCH_API_ENDPOINT}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
+    const response = await client.branch.create(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Branch created successfully' };
-    } else {
-      return { success: false, message: response.data.error? response.data.error : 'Failed to create Branch' };
-    }
+    return { success: true, message: 'Branch created successfully' };
   } catch (error) {
     console.error('Error in addBranch:', error);
-    return { success: false, message: error.response.data.error? error.response.data.error : 'Failed to create Branch' };
+    return { success: false, message: error.response.data.message? error.response.data.message : 'Failed to create Branch' };
   }
 };
 
@@ -81,14 +70,10 @@ export const deleteBranch = async (data) => {
       },
     });
 
-    if (response.data.status) {
-      return { success: true, message: 'Branch deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Branch' };
-    }
+    return { success: true, message: 'Branch deleted successfully' };
   } catch (error) {
     console.error('Error in deleteBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to delete Branch' };
   }
 };
 
@@ -101,20 +86,15 @@ export const updateBranch = async (data) => {
       }
     });
 
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Branch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Branch' };
-    }
+    
+    return { success: true, message: 'Branch updated successfully' };
   } catch (error) {
     console.error('Error in updateBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to update Branch' };
   }
 };
 
 export const updateBranchStatus = async (data) => {
-  console.log(data);
   try {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.id}`, data, {
       headers: {
@@ -123,28 +103,22 @@ export const updateBranchStatus = async (data) => {
       }
     });
 
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Branch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update Branch' };
-    }
+   
+    return { success: true, message: 'Branch updated successfully' };
   } catch (error) {
     console.error('Error in updateBranch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const getBranchById = async (data) => {
   try {
-    console.log(data,"data")
     const response = await axios.get(`${BRANCH_API_ENDPOINT}${data.branch_id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
-    console.log('getBranchById:', response);
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response.data };

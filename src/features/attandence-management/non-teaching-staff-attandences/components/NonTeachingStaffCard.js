@@ -9,10 +9,11 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
+  
   return (
     <>
       <Grid container spacing={2} sx={{ display: 'flex', mt: 2 }}>
-        {nonTeachingStaffs?.map((item, i) => (
+        {  nonTeachingStaffs?.map((item, i) => (
           <Grid key={i} item xs={12} sm={6} md={4}>
             <Card sx={{ position: 'relative', p: 1.5 }}>
               <CardContent sx={{ pt: 2.5 }}>
@@ -51,7 +52,7 @@ const NonTeachingStaffCard = ({ nonTeachingStaffs }) => {
                       <Button
                         component={Link}
                         state={{ staff: item }}
-                        to={`non-teaching-staff-attendances/${item.staff_id}`}
+                        to={`non-teaching-staff-attendances/${item.staff}`}
                         variant="tonal"
                         sx={{ px: 4 }}
                       >

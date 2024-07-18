@@ -28,6 +28,8 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const GroupEditDialog = () => {
   // State variables
@@ -39,8 +41,10 @@ const GroupEditDialog = () => {
   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState(false);
   const [permissions, setPermissions] = useState([]);
+  const [rolePermissions,setRolePermissions] = useState([])
   const [permissionCount, setPermissionCount] = useState('');
   const [loading, setLoading] = useState(true);
+  const {show,hide} = useSpinner()
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -85,7 +89,7 @@ const GroupEditDialog = () => {
           delete: false
         };
       }
-  
+      
       switch (action) {
         case 'create':
           result[identity].create = true;
@@ -101,6 +105,18 @@ const GroupEditDialog = () => {
           break;
       }
     });
+
+    rolePermissions?.forEach((permission)=>{
+      if (!result[permission?.identity]) {
+        result[permission?.identity] = {
+          identity:permission?.identity,
+          create: false,
+          read: false,
+          update: false,
+          delete: false
+        };
+      }
+    })
   
     return Object.values(result);
   };
@@ -109,24 +125,26 @@ const GroupEditDialog = () => {
   const onSubmit = useCallback(
     async (data) => {
       try {
+        show()
         const PermissionList = transformPermissions(selectedCheckbox)
-        console.log(PermissionList,"permissionList",data.roleName,groupName,groupId)
-        d
+        
         const inputData = {
           id: groupId,
           identity: data.roleName,
-          permissions: selectedCheckbox
+          permissions: PermissionList,
+          institute_id : useInstitute().getInstituteId()
         };
 
         const result = await updateGroup(inputData);
-
+        
         if (result.success) {
-          dispatch(getAllGroups({ branch_id: selectedBranchId }));
+          dispatch(getAllGroups({institute_id:useInstitute().getInstituteId(), branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
+          hide()
         } else {
           // Handle the error response here
-
+          hide()
           toast.error(result.message);
         }
       } catch (error) {
@@ -148,12 +166,12 @@ const GroupEditDialog = () => {
   const getPermissions = useCallback(async () => {
     try {
       const result = await getAllPermissions();
-      console.log(result,"common permissions")
+      
       if (result.success) {
         setPermissions(result.data);
-        setPermissionCount(result.permissions);
+        // setPermissionCount(result.permissions);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -165,21 +183,29 @@ const GroupEditDialog = () => {
     try {
       setLoading(true);
       const result = await getPermissionsByRole(id);
-      console.log(result,"Role Permissions")
+
       if (result.success) {
         result.data?.forEach((permission) => {
-          permission?.create_permission?.permission && togglePermission(permission?.identity+"-"+"create");
-          permission?.read_permission?.permission && togglePermission(permission?.identity+"-"+"read");
-          permission?.update_permission?.permission && togglePermission(permission?.identity + "-"+"update");
-          permission?.delete_permission?.permission && togglePermission(permission?.identity +"-"+"delete");
+          permission?.create_permission?.permission && togglePermission(permission?.identity+"-"+"create")
+          permission?.read_permission?.permission && togglePermission(permission?.identity+"-"+"read")
+          permission?.update_permission?.permission && togglePermission(permission?.identity + "-"+"update")
+          permission?.delete_permission?.permission && togglePermission(permission?.identity +"-"+"delete")
+
+          permission?.create_permission?.permission && setPermissionCount((per)=>[...per,permission.create_permission])
+          permission?.read_permission?.permission && setPermissionCount((per)=>[...per,permission.read_permission])
+          permission?.update_permission?.permission && setPermissionCount((per)=>[...per,permission.update_permission])
+          permission?.delete_permission?.permission && setPermissionCount((per)=>[...per,permission.delete_permission])
+
+
         });
         setLoading(false);
+        setRolePermissions(result?.data)
+        // setPermissionCount(result?.data);
+
       } else {
-        console.log(result.message);
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   }, []);
@@ -197,19 +223,22 @@ const GroupEditDialog = () => {
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
+    
     if (isIndeterminateCheckbox) {
       setSelectedCheckbox([]);
       setIsIndeterminateCheckbox(false);
     } else {
       const arr = [];
-      permissionCount?.forEach((permission) => {
-        arr.push(permission.id);
+      permissions?.forEach((permission) => {
+         permission?.permission?.map((i)=>
+          arr.push(permission?.identity+"-"+i.name)
+         )
       });
+      
       setSelectedCheckbox(arr);
       setIsIndeterminateCheckbox(true);
     }
   }, [isIndeterminateCheckbox, permissionCount]);
-  console.log(permissions,"permissions",selectedCheckbox)
 
   // Render permissions table rows
 
@@ -256,7 +285,7 @@ const GroupEditDialog = () => {
       // ))
     );
   }, [permissions, selectedCheckbox, togglePermission]);
-
+  
   return (
     <>
       {loading ? (
@@ -332,6 +361,12 @@ const GroupEditDialog = () => {
                               onChange={handleSelectAllCheckbox}
                               indeterminate={isIndeterminateCheckbox}
                               checked={selectedCheckbox?.length === permissionCount?.length}
+                              sx={{
+                                '& svg': {
+                                  border: '1px solid #000', 
+                                  borderRadius: '4px',
+                                }
+                              }}
                             />
                           }
                         />

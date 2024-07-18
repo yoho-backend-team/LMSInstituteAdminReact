@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Typography, Button, TextField } from '@mui/material';
+import { Grid, Typography, Button, TextField ,InputAdornment,IconButton} from '@mui/material';
 import Icon from 'components/icon';
 
-const Header = ({ handleExport, handleFilter, searchQuery, handleSearch, title, handleAdd, addTitle }) => {
+const Header = ({ handleExport, handleFilter, searchQuery, handleSearch, title, handleAdd, addTitle ,handleSearchKeyChange,search,setSearch}) => {
   return (
     <Grid
       container
@@ -70,7 +70,22 @@ const Header = ({ handleExport, handleFilter, searchQuery, handleSearch, title, 
               }
             }}
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => handleSearchKeyChange(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {search ? (
+                    <IconButton onClick={() => {handleSearch('');setSearch(false)}}>
+                      <Icon icon="material-symbols:close" />
+                    </IconButton>
+                  ) : (
+                    <IconButton onClick={() => handleSearch(searchQuery)}>
+                      <Icon icon="material-symbols:search" />
+                    </IconButton>
+                  )}
+                </InputAdornment>
+              )
+            }}
           />
         )}
       </Grid>

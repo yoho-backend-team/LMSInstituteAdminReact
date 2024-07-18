@@ -68,7 +68,7 @@ const StudyMaterialAddDrawer = (props) => {
     branch: selectedBranchId,
     course: ''
   };
-  console.log(branches,"branches")
+
   // ** Hooks
   const {
     reset,
@@ -91,7 +91,6 @@ const StudyMaterialAddDrawer = (props) => {
       institute : useInstitute().getInstituteId(),
       file : data.pdf_file
     }
-    console.log(data,"data",Study_data)
   
     const result = await addCourseStudyMaterial(Study_data);
 
@@ -117,7 +116,6 @@ const StudyMaterialAddDrawer = (props) => {
     const fileData = new FormData()
     fileData.append("file",fileData)
     // setValue('pdf_file', data);
-    console.log(data,"data",data.file,data.File)
     // const file = await client.file.upload(data)
     // setValue("file",file.data.file)
   };

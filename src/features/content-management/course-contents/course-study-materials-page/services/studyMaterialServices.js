@@ -7,8 +7,6 @@ const COURSE_STUDY_MATERIALS_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL
 export const getAllStudyMaterials = async (data) => {
   try {
     const response = await client.study_material.getAll(data)
-
-    console.log(response);
   
     return response;
    
@@ -43,8 +41,6 @@ export const searchCourseStudyMaterials = async (searchQuery) => {
 export const addCourseStudyMaterial = async (data) => {
   try {
     const response = await client.study_material.create(data)
-
-    console.log(response,"file");
    
     return { success: true, message: 'CourseStudyMaterial created successfully' };
    
@@ -69,8 +65,6 @@ export const deleteCourseStudyMaterial = async (data) => {
 export const updateCourseStudyMaterial = async (data) => {
   try {
     const response = await client.study_material.update(data)
-
-    console.log(response);
    
     return { success: true, message: 'CourseStudyMaterial updated successfully' }; 
   } catch (error) {
@@ -81,9 +75,7 @@ export const updateCourseStudyMaterial = async (data) => {
 
 export const updateCourseStudyMaterialStatus = async (data) => {
   try {
-    const response = await client.study_material.update_status(data)
-    console.log('studymaterialresponse:', response);
-   
+    const response = await client.study_material.update_status(data)   
     return { success: true, message: 'CourseStudyMaterial status updated successfully' };
   } catch (error) {
     console.error('Error in updateCourseStudyMaterial:', error);

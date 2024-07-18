@@ -73,7 +73,6 @@ const Login = () => {
 
   useEffect(()=>{
     const checkLoginState = () => {
-      console.log(checkAuthState())
       if(checkAuthState()){
         setOtp(true)
       }
@@ -212,7 +211,7 @@ const Login = () => {
                         const otp = values.join(" ").toString().replace(/\s+/g, '')
                         const otpToken =JSON.parse(localStorage.getItem("otp"))
                         await dispatch(VerifyOtp(otp,otpToken.email,otpToken.token))
-                        console.log(defaultValues,"defaultValues",values.join(" ").toString().replace(/\s+/g, ''))})}>
+                        })}>
                         <CleaveWrapper
                           sx={{
                             display: 'flex',

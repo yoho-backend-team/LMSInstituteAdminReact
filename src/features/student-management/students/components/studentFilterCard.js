@@ -14,6 +14,7 @@ import { selectBatches } from 'features/batch-management/batches/redux/batchSele
 import { getAllBatches } from 'features/batch-management/batches/redux/batchThunks';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from '../redux/studentThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const StudentFilter = (props) => {
   const { selectedBranchId } = props;
@@ -25,7 +26,7 @@ const StudentFilter = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const data = { is_active: e.target.value, branch_id: selectedBranchId };
     dispatch(getAllStudents(data));
   };
 
@@ -51,7 +52,7 @@ const StudentFilter = (props) => {
       })
     );
   }, [dispatch, selectedBranchId]);
-
+  
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
@@ -73,8 +74,9 @@ const StudentFilter = (props) => {
                   fullWidth
                   onChange={(e, newValue) => {
                     const data = {
-                      course_id: newValue.course_id,
-                      branch_id: selectedBranchId
+                      course: newValue._id,
+                      branch_id: selectedBranchId,
+                      institute : useInstitute().getInstituteId()
                     };
                     dispatch(getAllStudents(data));
                   }}
@@ -87,18 +89,17 @@ const StudentFilter = (props) => {
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   fullWidth
-                  options={batch}
+                  options={batch?.data}
                   filterSelectedOptions
                   onChange={(e, newValue) => {
-                    console.log(newValue);
                     const data = {
-                      batch_id: newValue.batch.batch_id,
+                      batch_id: newValue._id,
                       branch_id: selectedBranchId
                     };
                     dispatch(getAllStudents(data));
                   }}
                   id="autocomplete-multiple-outlined"
-                  getOptionLabel={(option) => option.batch.batch_name || ''}
+                  getOptionLabel={(option) => option.batch_name || ''}
                   renderInput={(params) => <TextField {...params} label="Filter By Batches" placeholder="Favorites" />}
                 />
               </Grid>
@@ -110,8 +111,8 @@ const StudentFilter = (props) => {
                   SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                 >
                   <MenuItem value="">Select Status</MenuItem>
-                  <MenuItem value="1">Active</MenuItem>
-                  <MenuItem value="0">Inactive</MenuItem>
+                  <MenuItem value="true">Active</MenuItem>
+                  <MenuItem value="false">Inactive</MenuItem>
                 </TextField>
               </Grid>
               <Grid item sm={3} xs={12}>

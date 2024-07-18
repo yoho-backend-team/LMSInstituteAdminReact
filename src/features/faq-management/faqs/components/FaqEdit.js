@@ -57,7 +57,6 @@ const FaqEdit = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(props.initialValues?.institute_faq_module);
 
   useEffect(() => {
     if (open) {
@@ -75,7 +74,6 @@ const FaqEdit = (props) => {
     } else {
       toast.error(result.message);
     }
-    console.log(data);
   };
 
   const handleClose = () => {

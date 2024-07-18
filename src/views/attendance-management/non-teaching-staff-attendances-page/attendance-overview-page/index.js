@@ -12,6 +12,7 @@ import {
   selectNonTeachingStaffAttendances
 } from 'features/attandence-management/non-teaching-staff-attandences/redux/nonTeachingStaffAttendanceSelectors';
 import { getAllNonTeachingStaffAttendances } from 'features/attandence-management/non-teaching-staff-attandences/redux/nonTeachingStaffAttendanceThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const NonTeachingStaffs = () => {
   const nonTeachingStaffs = useSelector(selectNonTeachingStaffAttendances);
@@ -23,7 +24,8 @@ const NonTeachingStaffs = () => {
   useEffect(() => {
     const data = {
       type: 'non_teaching',
-      branch_id: selectedBranchId,
+      branch: selectedBranchId,
+      institute : useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllNonTeachingStaffAttendances(data));
@@ -46,7 +48,7 @@ const NonTeachingStaffs = () => {
               count={nonTeachingStaffs?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllNonTeachingStaffAttendances({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllNonTeachingStaffAttendances({ branch: selectedBranchId, page: page,institute:useInstitute().getInstituteId() }));
               }}
             />
           </Grid>

@@ -4,25 +4,33 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
+import { role } from '_mock/role';
 import { getAllUsers } from 'features/user-management/users-page/redux/userThunks';
 import UserTableHeader from 'features/user-management/users-page/users-overview-page/components/UserTableHeader';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
-const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) => {
+const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,users,userRefetch}) => {
   const [role, setRole] = useState('');
-
+  const {show ,hide} = useSpinner()
+  
   const [filterstatusValue, setFilterStatusValue] = useState('');
-
+  
   const dispatch = useDispatch();
   const handleRoleChange = useCallback(
     async (e) => {
       try {
+        show()
         setRole(e.target.value);
-        const data = { role_id: e.target.value, branch_id: selectedBranchId };
+        const role = {role:e.target.value ? e.target.value :null,is_active:filterstatusValue?filterstatusValue:null }
+        const data = { ...role, branch_id: selectedBranchId,institute_id:useInstitute().getInstituteId() };
         dispatch(getAllUsers(data));
+        hide()
       } catch (error) {
+        hide()
         console.log(error);
       }
     },
@@ -30,9 +38,12 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) =>
   );
 
   const handleFilterByStatus = (e) => {
+    show()
     setFilterStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId };
+    const filteRole = {role:role?role:null ,is_active:e.target.value ? e.target?.value:null}
+    const data = { ...filteRole,branch_id: selectedBranchId ,institute_id:useInstitute().getInstituteId()};
     dispatch(getAllUsers(data));
+    hide()
   };
 
   return (
@@ -53,9 +64,9 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) =>
                 }}
               >
                 <MenuItem value="">Select Role</MenuItem>
-                {groups?.map((group, index) => (
-                  <MenuItem key={index} value={group?.id}>
-                    {group?.name}
+                {groups?.data?.map((group, index) => (
+                  <MenuItem key={index} value={group?._id}>
+                    {group?.identity}
                   </MenuItem>
                 ))}
               </TextField>
@@ -70,12 +81,12 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch }) =>
                 SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
               >
                 <MenuItem value="">Select Status</MenuItem>
-                <MenuItem value="1">Active</MenuItem>
-                <MenuItem value="0">Inactive</MenuItem>
+                <MenuItem value="true">Active</MenuItem>
+                <MenuItem value="false">Inactive</MenuItem>
               </TextField>
             </Grid>
           </Grid>
-          <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggle} selectedBranchId={selectedBranchId} />
+          <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggle} selectedBranchId={selectedBranchId} users={users?.data} userRefetch={userRefetch} />
         </CardContent>
       </Card>
     </>

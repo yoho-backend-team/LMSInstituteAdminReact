@@ -38,7 +38,6 @@ const TeacherFilter = (props) => {
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { is_active: e.target.value, branchid: selectedBranchId, instituteId: useInstitute().getInstituteId()  };
-    console.log(data,"ssssssssssssssssssss")
     dispatch(getAllTeachingStaffs(data));
   };
 
@@ -67,7 +66,6 @@ const TeacherFilter = (props) => {
                   branchid: selectedBranchId,
                   instituteId: useInstitute().getInstituteId() 
                 };
-                console.log(data,"couseid")
                 dispatch(getAllTeachingStaffs(data));
               }}
               options={courses}

@@ -12,7 +12,7 @@ export const getAllTechnicalSupports = async (selectedBranchId) => {
       },
       params: { branch_id: selectedBranchId }
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -101,7 +101,6 @@ export const updateTechnicalSupport = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'TechnicalSupport updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TechnicalSupport' };

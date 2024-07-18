@@ -35,11 +35,11 @@ const GroupViewPage = () => {
     try {
       setLoading(true);
       const result = await getAllPermissionsByRoleId({role:id});
-      console.log(result,"result")
+  
       if (result.success) {
         setPermissions(result.data);
       } else {
-        console.log(result.message);
+
       }
       setLoading(false);
     } catch (error) {
@@ -47,7 +47,7 @@ const GroupViewPage = () => {
       setLoading(false);
     }
   };
-  console.log(permissions,"permissions")
+
   // Memoized rendering of permissions to prevent unnecessary re-renders
   const renderPermissions = useMemo(() => {
     return permissions?.map((module, moduleIndex) => (

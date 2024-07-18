@@ -77,7 +77,8 @@ const BatchFilterCard = (props) => {
     const data = {
       branch_id: selectedBranchId
     };
-    if (batches.length > 0) {
+    console.log(batches,"batches")
+    if (batches?.length > 0) {
       setSuggestions(batches);
     }   
      getCourses(data);
@@ -92,7 +93,7 @@ const BatchFilterCard = (props) => {
 
   const handleSearch = useCallback(
     (e) => {
-      dispatch(getAllBatches({ batch_name: searchValue}));
+      dispatch(getAllBatches({ batch_name: searchValue?.batch_name,branch_id:selectedBranchId}));
     },
     [dispatch, selectedBranchId]
   );
@@ -159,16 +160,16 @@ const BatchFilterCard = (props) => {
                   renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
                 />
               </Grid>
-              <Grid xs={12} sm={4}></Grid>
+              <Grid item xs={12} sm={4}></Grid>
               <Grid item xs={12} sm={4}>
               <Autocomplete
                 fullWidth
                 value={searchValue}
-                onChange={(e,newValue)=>setSearchValue(newValue.batch_name)}
+                onChange={(e,newValue)=>setSearchValue(newValue)}
                 // onChange={handleSearch}
-                options={suggestions}
-                getOptionLabel={(option) => option?option?.batch_name:""}
-                defaultValue={''}
+                options={suggestions||[]}
+                getOptionLabel={(option) => option?.batch_name}
+                defaultValue={'search here'}
                 renderInput={(params) => (
                   <TextField
                     {...params}

@@ -56,7 +56,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
     learning_format: '',
     course_category: ''
   };
-  console.log(course,"course")
+
   const {
     handleSubmit,
     control,
@@ -84,12 +84,10 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [selectedImage, setSelectedImage] = useState('');
-  console.log(selectedImage);
 
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [template, setTemplate] = useState(image);
   const [selectedTemplate, setSelectedTemplate] = useState('');
-  console.log(selectedTemplate);
 
   const handleInputImageChange = async (file) => {
     const reader = new FileReader();
@@ -153,7 +151,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
         } else {
           toast.error(result.message);
         }
-        console.log(formData);
       } catch (error) {
         console.error(error);
       }
@@ -174,7 +171,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
     const data = {
       branch_id: branchIds
     };
-    console.log(data);
     const result = await getAllCourseCategories(data);
 
     if (result.data) {

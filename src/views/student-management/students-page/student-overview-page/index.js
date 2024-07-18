@@ -9,6 +9,7 @@ import { selectLoading, selectStudents } from 'features/student-management/stude
 import { getAllStudents } from 'features/student-management/students/redux/studentThunks';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getImageUrl } from 'utils/imageUtils';
 
 const Students = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,6 @@ const Students = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   useEffect(() => {
-    console.log(selectedBranchId)
     dispatch(getAllStudents({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId]);
 
@@ -32,7 +32,7 @@ const Students = () => {
       return address;
     }
   };
-  console.log(Students,"students")
+  
   return (
     <>
       <Grid>
@@ -54,7 +54,7 @@ const Students = () => {
                           <Box>
                             <Avatar
                               alt="image"
-                              src={`${item.logo}`}
+                              src={`${getImageUrl(item?.image)}`}
                               sx={{
                                 width: 68,
                                 height: 68,

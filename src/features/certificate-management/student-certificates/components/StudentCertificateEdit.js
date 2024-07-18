@@ -46,8 +46,6 @@ const defaultValues = {
 const StudentCertificateEdit = (props) => {
   // ** Props
   const { open, toggle, setStudentCertificateRefetch } = props;
-  console.log('StudentCertificateEdit - open:', props.open);
-  console.log('StudentCertificateEdit - toggle:', props.toggle);
   const savedPdfUrls = require('assets/pdf.pdf');
   const [selectedFile, setSelectedFile] = useState(null);
   const [savedPdfUrl, setSavedPdfUrl] = useState(savedPdfUrls);
@@ -65,7 +63,6 @@ const StudentCertificateEdit = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(defaultValues);
 
   useEffect(() => {
     if (open) {
@@ -84,8 +81,6 @@ const StudentCertificateEdit = (props) => {
       bodyFormData.append('certificateid', props.certificateid);
     }
 
-
-    console.log(bodyFormData);
 
    const result = await updateStudentCertificate(props.certificateid, bodyFormData);
 

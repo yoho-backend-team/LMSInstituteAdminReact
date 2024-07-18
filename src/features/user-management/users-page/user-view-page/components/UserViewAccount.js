@@ -15,6 +15,7 @@ import OptionsMenu from 'components/option-menu';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { getUserActivityLog } from '../../services/userServices';
+import toast from 'react-hot-toast';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -38,7 +39,7 @@ const UserViewAccount = ({ id }) => {
       if (result.success) {
         setActivityLog(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);

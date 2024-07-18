@@ -5,28 +5,22 @@ const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL
 
 export const getAllStudentCertificates = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/${data?.InstituteId}/${data?.branchid}?page=${data?.page}`, {
+    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/${data?.InstituteId}/${data?.branchid}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
+    });    
+  
       return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentCertificates. Status: ${response.status}`);
-    }
+   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentCertificates:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
+    throw new Error(`Failed to fetch StudentCertificates. Status: ${response.status}`);  }
 };
 
 export const searchStudentCertificates = async (searchQuery) => {
@@ -34,7 +28,7 @@ export const searchStudentCertificates = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -55,17 +49,12 @@ export const addStudentCertificate = async (data) => {
     const response = await axios.post(`${STUDENT_CERTIFICATE_API_ENDPOINT}/create`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
-    console.log(response);
-
-    if (response.data.status) {
+   
       return { success: true, message: 'StudentCertificate created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StudentCertificate' };
-    }
   } catch (error) {
     console.error('Error in addStudentCertificate:', error);
     throw error;
@@ -77,10 +66,9 @@ export const addStudentCertificate = async (data) => {
       const response = await axios.delete(`${STUDENT_CERTIFICATE_API_ENDPOINT}/delete/${certificateid}`, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Token ${localStorage.getItem('token')}`
         },
       });
-      console.log(response)
 
       if (response.data.status) {
         return { success: true, message: 'StudentCertificate deleted successfully' };
@@ -98,12 +86,11 @@ export const updateStudentCertificate = async (certificateid, data) => {
     const response = await axios.put(`${STUDENT_CERTIFICATE_API_ENDPOINT}/update/${certificateid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentCertificate updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentCertificate' };
@@ -122,11 +109,11 @@ export const updateStudentCertificateStatus = async (certificateid, data) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Token ${localStorage.getItem('token')}`
         }
       }
     );
-    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'StudentCertificate status updated successfully' };
     } else {

@@ -23,7 +23,7 @@ const Form = styled('form')(({ theme }) => ({
 const SendMsgForm = (props) => {
   const { selectedBatch, setChats ,socket} = props;
   const [msg, setMsg] = useState('');
-  console.log(selectedBatch);
+
   const getMessages = async () => {
     const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?._id });
     if (result) {
@@ -39,11 +39,13 @@ const SendMsgForm = (props) => {
 
   const handleSendMsg = async (e) => {
     e.preventDefault();
-    socket.emit("sendMessage",{message:msg,user:"admin"})
-    const data = {
-      inst_batch_community_id: selectedBatch?.batch_community?.id,
-      message: msg
-    };
+    socket.emit("sendMessage", { message: msg, user: "admin" }, (response) => {
+      if (response.status === "success") {
+        console.log("Message sent successfully");
+      } else {
+        console.log("Message sending failed");
+      }
+    });
 
     // const response = await sendMessage(data);
     // if (response) {

@@ -13,6 +13,7 @@ import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { updateUser } from 'features/user-management/users-page/services/userServices';
 import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
+import { useInstitute } from 'utils/get-institute-details';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -97,12 +98,11 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
 
   const getGroups = async () => {
     try {
-      const result = await getAllGroups();
+      const result = await getAllGroups({institute_id:useInstitute().getInstituteId()});
       if (result.success) {
-        console.log('User Data:', result.data);
         setGroups(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -136,10 +136,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   };
 
-  console.log(selectedImage);
 
   const onSubmit = async (data) => {
-    console.log(data);
     const InputData = new FormData();
     InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);

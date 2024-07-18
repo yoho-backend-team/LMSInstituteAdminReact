@@ -77,7 +77,8 @@ const FeesAddDrawer = (props) => {
     } else {
       result = await getAllActiveNonTeachingStaffs({ branch_id: selectedBranchId });
     }
-    setActiveStaffs(result.data.data);
+    console.log(result,"result")
+    setActiveStaffs(result.data);
   };
 
   const getActiveCoursesByBranch = async (data) => {
@@ -88,7 +89,6 @@ const FeesAddDrawer = (props) => {
     }
   };
 
-  console.log("active course",activeCourse);
 
   const {
     handleSubmit,
@@ -120,16 +120,8 @@ const FeesAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data,"data",activeBranches,activeBranches[0].branch_identity===data.branch,data.branch,activeBranches[0].branch_identity)
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
-    console.log("branch",branch)
-    // var bodyFormData = new FormData();
-    // bodyFormData.append('payment_proof', selectedImage);
-    // bodyFormData.append('branch_id', data.branch);
-    // bodyFormData.append('institute_staff_id', data.staff);
-    // bodyFormData.append('transaction_id', data.transaction_id);
-    // bodyFormData.append('salary_amount', data.salary_amount);
-    // bodyFormData.append('paid_date', convertDateFormat(data.payment_date));
+    
     const InputData = {
       staff: data.staff._id,
       branch_name:data.branch_id,
@@ -177,7 +169,7 @@ const FeesAddDrawer = (props) => {
       textAlign: 'center'
     }
   }));
-  console.log(activeStaffs,"actveStaffs")
+
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
@@ -190,7 +182,7 @@ const FeesAddDrawer = (props) => {
       }
     }
   };
-
+  console.log(activeStaffs,"activeStaffs")
   return (
     <DatePickerWrapper>
       <Drawer
@@ -246,11 +238,11 @@ const FeesAddDrawer = (props) => {
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
-                      options={activeBranches}
+                      options={activeBranches?activeBranches:[]}
                       getOptionLabel={(branch) => branch.branch_identity}
                       onChange={(event, newValue) => {
                         onChange(newValue?.branch_identity);
-                        getActiveCoursesByBranch(newValue?.branch_identity);
+                        getActiveCoursesByBranch({branch_id:newValue?.uuid});
                       }}
                       value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                       renderInput={(params) => (
@@ -298,8 +290,8 @@ const FeesAddDrawer = (props) => {
                     fullWidth
                     value={value}
                     onChange={(event, newValue) => onChange(newValue)}
-                    options={activeStaffs}
-                    getOptionLabel={(staff) => staff?.username}
+                    options={activeStaffs?activeStaffs:[]}
+                    getOptionLabel={(staff) => staff?.full_name}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
                     )}

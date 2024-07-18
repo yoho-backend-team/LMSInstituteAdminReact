@@ -1,30 +1,14 @@
 // Notificationservice.js
+import client from 'api/client';
 import axios from 'axios';
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management`;
 // const NOTIFICATION_AUTHBYUSER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/get-notification-by-auth`;
 export const getAllNotifications = async (data) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/read-all-notifications?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log('getAllNotifications:', response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch AllNotifications. Status: ${response.status}`);
-    }
+    const response = await client.notification.institute.get_institute_notification(data)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllNotifications:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
@@ -52,21 +36,12 @@ export const searchNotifications = async (searchQuery) => {
 
 export const addNotification = async (data) => {
   try {
-    const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.notification.institute.add_institute_notification(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Notification created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Notification' };
-    }
+    return { success: true, message: 'Notification created successfully' };
   } catch (error) {
     console.error('Error in addNotification:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
@@ -101,7 +76,6 @@ export const updateNotification = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Notification updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Notification' };
@@ -121,7 +95,6 @@ export const resendNotification = async (data) => {
       }
     });
 
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Notification Resend successfully' };
@@ -143,7 +116,7 @@ export const getAllNotificationsByAuth = async (data) => {
       },
       params: data
     });
-    console.log('getAllNotificationsByAuth:', response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response?.data?.data };
@@ -169,7 +142,7 @@ export const getLastNotifications = async (data) => {
       },
       params: data
     });
-    console.log('getLastNotifications:', response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return { success: true, data: response?.data?.data };

@@ -12,12 +12,13 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
 import UserEditDialog from './UserEditDialog';
+import { getImageUrl } from 'utils/imageUtils';
 
 const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
-    1: 'success',
+    true: 'success',
     pending: 'warning',
-    0: 'error'
+    false: 'error'
   };
 
   // ** States
@@ -32,26 +33,26 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
       <Grid item xs={12}>
         <Card>
           <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            {userData?.institution_users?.image ? (
+            {userData?.image ? (
               <CustomAvatar
-                src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`}
+                src={`${getImageUrl(userData?.image)}`}
                 variant="rounded"
-                alt={userData?.name}
+                alt={userData?.first_name+userData?.last_name}
                 sx={{ width: 100, height: 100, mb: 4 }}
               />
             ) : (
               <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
-                {userData?.name ? getInitials(userData?.name) : 'U'}
+                {userData?.first_name ? getInitials(userData?.first_name+userData?.last_name) : 'U'}
               </CustomAvatar>
             )}
             <Typography variant="h4" sx={{ mb: 2 }}>
-              {userData?.name}
+              {userData?.first_name+userData?.last_name}
             </Typography>
             <CustomChip
               rounded
               skin="light"
               size="small"
-              label={userData?.role_groups?.role?.name}
+              label={userData?.role?.identity}
               color={'warning'}
               sx={{ textTransform: 'capitalize' }}
             />
@@ -66,15 +67,15 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
             <Box sx={{ pt: 4 }}>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.name}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.username}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.email}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.email}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Designation:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.designation}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.designation}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Status:</Typography>
@@ -82,7 +83,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                   rounded
                   skin="light"
                   size="small"
-                  label={userData.is_active == '1' ? 'Active' : 'InActive'}
+                  label={userData.is_active? 'Active' : 'InActive'}
                   color={statusColors[userData.is_active]}
                   sx={{
                     textTransform: 'capitalize'
@@ -92,19 +93,18 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
 
               <Box sx={{ display: 'flex' }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{userData?.institution_users?.mobile}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{userData?.phone_number}</Typography>
               </Box>
             </Box>
             <Typography sx={{ mr: 2, mt: 2, fontWeight: 500, color: 'text.secondary' }}>Branches:</Typography>
             <Box sx={{ display: 'flex', mb: 3, mt: 2 }}>
               <Box gap={3}>
-                {userData?.branches?.map((item, index) => (
+                {/* {userData?.branches?.map((item, index) => ( */}
                   <CustomChip
-                    key={index}
                     rounded
                     skin="light"
                     size="small"
-                    label={item?.branch_name}
+                    label={userData?.branch?.branch_identity}
                     color={'primary'}
                     sx={{
                       textTransform: 'capitalize',
@@ -112,7 +112,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                       mr: 1
                     }}
                   />
-                ))}
+                {/* ))} */}
               </Box>
             </Box>
           </CardContent>

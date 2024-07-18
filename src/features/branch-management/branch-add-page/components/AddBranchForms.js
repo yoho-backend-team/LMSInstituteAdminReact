@@ -9,6 +9,8 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
+import { useSpinner } from 'context/spinnerContext';
+import { useEffect } from 'react';
 
 const AddBranchForms = () => {
   const navigate = useNavigate();
@@ -63,6 +65,7 @@ const AddBranchForms = () => {
     initialState: initialValues,
     resolver: yupResolver(branchSchema)
   });
+  const {show,hide} = useSpinner()
 
   const onSubmit = async (data) => {
     const inputData = {
@@ -79,19 +82,36 @@ const AddBranchForms = () => {
     };
 
     try {
+      show()
       const result = await addBranch(inputData);
 
       if (result.success) {
+        hide()
         toast.success(result.message);
         navigate(-1);
       } else {
+        hide()
         toast.error(result.message);
       }
     } catch (error) {
+      hide()
       console.log(error);
     }
   };
 
+  useEffect(()=>{
+  const lister =(event) => {
+   if(event.code === "Enter"){
+    console.log(event,"event")
+    handleSubmit(onSubmit)()
+   }
+  }
+  document.addEventListener("keydown",lister)
+  return () => {
+    document.removeEventListener("keydown",lister)
+  }
+  },[])
+  console.log(errors,"errors")
   return (
     <Card>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -107,8 +127,8 @@ const AddBranchForms = () => {
                     fullWidth
                     label="Branch Name"
                     placeholder="carterLeonard"
-                    error={Boolean(errors.branchName)}
-                    helperText={errors.branchName?.message}
+                    error={Boolean(errors.branch_identity)}
+                    helperText={errors.branch_identity?.message}
                   />
                 )}
               />
@@ -122,6 +142,8 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
+                    slot='false'
+                    onKeyDown={(e)=>e.key==="e"&&e.preventDefault()}
                     type="number"
                     label="Phone No."
                     error={Boolean(errors.phone)}
@@ -141,6 +163,7 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
+                    onKeyDown={(e)=>e.key==="e"&&e.preventDefault()}
                     type="number"
                     label="Alternate Phone No."
                     error={Boolean(errors.alternatePhone)}

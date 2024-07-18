@@ -8,12 +8,12 @@ import client from 'api/client';
 export const getAllCoursesByBranch = async (data) => {
   try {
     const response = await axios.get(`${HTTP_END_POINTS.course.get}${data.id}/courses`, {
+      params:data,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
-      },
+      }
     });
-    console.log('getAllCourses', response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -38,7 +38,7 @@ export const updateCourseStatus = async (data) => {
       }
     });
 
-    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'Course updated successfully' };
     } else {
@@ -51,14 +51,13 @@ export const updateCourseStatus = async (data) => {
 };
 export const getCourseDetails = async (data) => {
   try {
-    console.log(data,"data")
+
     const response = await axios.get(`${HTTP_END_POINTS.course.update}${data.category}/courses/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
-    console.log(response);
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -76,21 +75,19 @@ export const getCourseDetails = async (data) => {
 };
 export const getAllCourses = async (data) => {
   try {
-    console.log(process.env.REACT_APP_PUBLIC_API_URL,data,"data")
     const response = await client.course.getWithBranch(data)
-    console.log(response);
     // Check if the response status is successful
     return { data: response.data };
   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllActu=iveCourse:', error);
-
+    return{success:false,message:error?.response?.data?.message}
     // Throw the error again to propagate it to the calling function/component
     throw new Error(`Failed to fetch ActiveCourses. Status: ${error}`);
   }
 };
-export const addCourse = async (data) => {
+export const addCourse = async (data,file) => {
   try {
     // const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
     //   headers: {
@@ -99,8 +96,8 @@ export const addCourse = async (data) => {
     //   }
     // });
     const response = await client.course.create(data)
-    console.log(response);
-
+    const add_template = await client.course.add_template({course:response?.data?._id,file:file})
+   console.log(add_template,{course:response?.data?._id,file:file})
     if (response.status) {
       return { success: true, message: 'Course created successfully' };
     } else {
@@ -113,10 +110,7 @@ export const addCourse = async (data) => {
 };
 export const getStudentByCourse = async (data) => {
   try {
-    console.log(data,"data")
     const response = await client.users.getStudentsWithCourse(data)
-
-    console.log(response);
 
     if (response.status) {
       return response;
@@ -131,7 +125,6 @@ export const getStudentByCourse = async (data) => {
 export const deleteCourse = async (data) => {
   try {
     const response = await client.course.delete(data)
-    console.log(response);
     return { success: true, message: 'Course deleted successfully' }; 
   } catch (error) {
     return { success: false, message: 'Failed to delete Course' };
@@ -140,8 +133,6 @@ export const deleteCourse = async (data) => {
 export const updateCourse = async (data) => {
   try {
     const response = await client.course.update(data)
-
-    console.log(response);
    
     return { success: true, message: 'Course updated successfully' };
   } catch (error) {

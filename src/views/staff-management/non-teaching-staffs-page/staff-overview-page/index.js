@@ -40,7 +40,7 @@ const NonTeaching = () => {
 
   useEffect(() => {
     const data = {
-      branchid: selectedBranchId,
+      branch_id: selectedBranchId,
       instituteId: useInstitute().getInstituteId(),
       page: '1'
     };
@@ -83,7 +83,7 @@ const NonTeaching = () => {
       console.error('Error in status change:', error);
     }
   };
-
+  
   return (
     <>
       <TeacherFilter selectedBranchId={selectedBranchId} />
@@ -92,9 +92,9 @@ const NonTeaching = () => {
       ) : (
         <Grid>
           <Grid container spacing={2} mt={2}>
-            {nonTeachingStaffs?.data?.map((item, i) => {
-              console.log("Item:", item); // Debug log
-              return (
+            {nonTeachingStaffs?.map((item, i) => {
+
+        return (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
                   <Card sx={{ position: 'relative' }}>
                     <CardContent sx={{ pt: 3 }}>

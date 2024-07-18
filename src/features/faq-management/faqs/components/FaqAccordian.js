@@ -64,7 +64,6 @@ const FaqAccordian = ({ faqCategories ,faqs}) => {
   }, [faqCategories]);
 
   const handleChange = (event, newValue) => {
-    console.log(newValue);
     setActiveTab(newValue);
   };
 

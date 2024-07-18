@@ -389,7 +389,7 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<AllNotificationsPage />} permissionCode={'inst_perm_all_notification_view'} module={'All Notifications'} />}>
             <Route path="all-notifications" element={<AllNotificationsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_staff_notification_view'} module={'Student Notifications'} />}>
+          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} module={'Student Notifications'} />}>
             <Route path="staff-notifications" element={<StaffNotificationsPage />} />
           </Route>
           <Route element={<ProtectedRoute element={<StudentNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} module={'Student Notifications'} />}>

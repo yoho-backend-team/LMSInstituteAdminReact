@@ -49,7 +49,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.notification_id}
+            {row?.id}
           </Typography>
         );
       }
@@ -107,7 +107,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.notification_id} />
+      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
     }
   ];
 
@@ -118,7 +118,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={allNotifications?.data}
+        rows={allNotifications?allNotifications:[]}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

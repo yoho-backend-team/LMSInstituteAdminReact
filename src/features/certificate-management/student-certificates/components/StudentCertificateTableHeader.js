@@ -62,7 +62,6 @@ const StudentCertificateTableHeader = (props) => {
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { is_active: e.target.value, branchid: selectedBranchId ,InstituteId: useInstitute().getInstituteId(), page: '1'};
-    console.log(data,"statusssssssssss")
     dispatch(getAllStudentCertificates(data));
   };
 
@@ -90,7 +89,7 @@ const StudentCertificateTableHeader = (props) => {
                   <Grid item xs={12} sm={6}>
                     <Autocomplete
                       fullWidth
-                      options={batches}
+                      options={batches?.data}
                       filterSelectedOptions
                       onChange={(e, newValue) => {
                         const selectedBatchId = newValue?._id || '';
@@ -98,7 +97,6 @@ const StudentCertificateTableHeader = (props) => {
                           batch_id: selectedBatchId,
                           branchid: selectedBranchId ,InstituteId: useInstitute().getInstituteId(), page: '1'
                         };
-                        console.log(data,"baattttccchh")
                         dispatch(getAllStudentCertificates(data));
                       }}
                       id="autocomplete-multiple-outlined"
@@ -119,7 +117,6 @@ const StudentCertificateTableHeader = (props) => {
                           branch_id: selectedBranchId,
                           branchid: selectedBranchId ,InstituteId: useInstitute().getInstituteId(), page: '1'
                         };
-                        console.log(data,"coursessid")
                         dispatch(getAllStudentCertificates(data));
                       }}
                       id="autocomplete-multiple-outlined"

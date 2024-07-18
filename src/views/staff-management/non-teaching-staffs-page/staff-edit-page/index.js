@@ -23,7 +23,6 @@ const StepperLinearWithValidation = () => {
   const location = useLocation();
   const staffData = location.state.staff;
   const staffId = location.state.id;
-  // console.log('staffData:', staffData);
 
   const steps = [
     {
@@ -191,7 +190,6 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     try {
     const personalData = personalControl?._formValues;
-    console.log(staffData,staffData.userDetail._id)
     
     const non_teaching = {
       id : staffId,

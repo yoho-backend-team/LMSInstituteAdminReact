@@ -25,13 +25,13 @@ const Courses = () => {
     };
     dispatch(getAllCourses(data));
   }, [dispatch, selectedBranchId, courseRefetch]);
-  console.log(selectedBranchId,courses)
+
   return (
     <>
       <Grid container>
         <Grid item xs={12}>
           <CourseFilter selectedBranchId={selectedBranchId} />
-          <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId} />
+          <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId} courses={courses} />
         </Grid>
         {courseLoading ? (
           <CourseSkeleton />
@@ -39,7 +39,7 @@ const Courses = () => {
           <Grid item xs={12}>
             {/* Display courses */}
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-              {courses?.map((course, index) => (
+              {courses?.data?.map((course, index) => (
                 <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} />
               ))}
             </Grid>

@@ -66,7 +66,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.notification_id}
+            {row?.id}
           </Typography>
         );
       }
@@ -92,7 +92,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.staff?.staff_name}
+                {row?.staff?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
                 {row?.staff?.email}
@@ -125,7 +125,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row?.institute_notifications?.title}
+                {row?.title}
               </Typography>
               <Typography
                 noWrap
@@ -140,7 +140,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row?.institute_notifications?.body}
+                {row?.body}
               </Typography>
             </Box>
           </Box>
@@ -154,9 +154,11 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.notification_id} />
+      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
     }
   ];
+  
+  
 
   return (
     <Grid>
@@ -165,7 +167,7 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={staffNotifications?.data}
+        rows={staffNotifications?staffNotifications : []}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

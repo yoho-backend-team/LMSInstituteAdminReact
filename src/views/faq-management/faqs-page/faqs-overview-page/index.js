@@ -53,7 +53,7 @@ const FaqDataGrid = () => {
       page : 1,
       perPage :10
     };
-    console.log(data)
+
     dispatch(getAllFaqs(data));
   }, [dispatch, selectedBranchId, refetch]);
 
@@ -69,12 +69,10 @@ const FaqDataGrid = () => {
     setFaqCategories(result.data);
   };
 
-  console.log(deletingItemId);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
   const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
@@ -114,7 +112,6 @@ const FaqDataGrid = () => {
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
   };
 
   const columns = [
@@ -232,10 +229,9 @@ const FaqDataGrid = () => {
         setValue(val);
         const result = await searchUsers(val);
         if (result.success) {
-          console.log('Search results:', result.data);
           dispatch(setUsers(result.data));
         } else {
-          console.log(result.message);
+          toast.error(result.message);
         }
       } catch (error) {
         console.log(error);
@@ -247,7 +243,7 @@ const FaqDataGrid = () => {
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
   };
-  console.log(faqCategories,"faqCategories",faqs)
+
   return (
     <>
       <Grid container>

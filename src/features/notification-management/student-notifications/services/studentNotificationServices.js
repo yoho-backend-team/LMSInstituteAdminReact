@@ -1,30 +1,15 @@
 // studentNotificationservice.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification`;
 
 export const getAllStudentNotifications = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_NOTIFICATION_API_ENDPOINT}/${data?.InstituteId}/${data?.branchid}?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch StudentNotifications. Status: ${response.status}`);
-    }
+    const response = await client.notification.student.get_student_notification(data)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in getAllStudentNotifications:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };
@@ -52,23 +37,12 @@ export const searchStudentNotifications = async (searchQuery) => {
 
 export const addStudentNotification = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.notification.student.add_student_notification(data)
 
-    console.log(response);
-
-    if (response.data.status) {
-      return { success: true, message: 'StudentNotification created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StudentNotification' };
-    }
+    return { success: true, message: 'StudentNotification created successfully' };
   } catch (error) {
     console.error('Error in addStudentNotification:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message};
   }
 };
 
@@ -103,7 +77,6 @@ export const updateStudentNotification = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentNotification updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentNotification' };
@@ -122,8 +95,6 @@ export const resendStudentNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
-
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Notification Resend successfully' };

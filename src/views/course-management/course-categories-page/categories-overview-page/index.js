@@ -21,13 +21,12 @@ const Categories = () => {
       branch_id: selectedBranchId,
       page: '1'
     };
-    console.log(selectedBranchId,"select")
     dispatch(getAllCourseCategories(data));
   }, [dispatch, selectedBranchId, categoryRefetch]);
 
   // Memoize categories data to prevent unnecessary re-renders
   const memoizedCategories = useMemo(() => courseCategories || [], [courseCategories]);
-  console.log(memoizedCategories,courseCategories,"course overview")
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -39,7 +38,7 @@ const Categories = () => {
       ) : (
         <Grid item xs={12}>
           <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-            {memoizedCategories?.map((category, index) => (
+            {memoizedCategories?.data?.map((category, index) => (
               <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
             ))}
           </Grid>

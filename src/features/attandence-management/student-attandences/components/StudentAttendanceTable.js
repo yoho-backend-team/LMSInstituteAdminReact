@@ -7,9 +7,10 @@ import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
+import { getInitials } from 'utils/get-initials';
 
 const renderClient = (row) => {
   if (row?.attendance?.student?.image) {
@@ -39,6 +40,14 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
   };
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
+  const [students,setStudents] = useState([])
+
+  useEffect(()=>{
+      const filterStudents = () => {
+      setStudents(ClassData?.students)
+      }
+      filterStudents()
+  },)
 
   const handleStatusValue = (e, row) => {
     setStatusChangeDialogOpen(true);
@@ -46,10 +55,13 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
   };
 
   const handleStatusChangeApi = async () => {
+    const attedence = statusValue?.attedence === "present" ? "absent" : "present"
     const data = {
-      status: statusValue?.attendance?.title === 'present' ? 'absent' : 'present',
-      attendance_id: statusValue?.attendance?.attendance_id
+      attedence: attedence,
+      attedence_id: ClassData?.uuid,
+      student:statusValue?.student?._id
     };
+    
     const response = await updateStudentAttendanceStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -69,7 +81,7 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
         const { row } = params;
         return (
           <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            {row?.attendance?.student?.student_id}
+            {row?.student?.id}
           </Typography>
         );
       }
@@ -86,11 +98,11 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
             {renderClient(row)}
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row?.attendance?.student?.first_name}
-                {row?.attendance?.student?.last_name}
+                {row?.student?.full_name}
+                {/* {row?.student?.last_name} */}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.attendance?.student?.email}
+                {row?.student?.email}
               </Typography>
             </Box>
           </Box>
@@ -108,17 +120,17 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
           <TextField
             size="small"
             select
-            value={row?.attendance?.title}
+            value={row?.attedence}
             label="status"
             id="custom-select"
             sx={{
-              color: userStatusObj[row?.attendance?.title]
+              color: userStatusObj[row?.attedence]
             }}
             onChange={(e) => handleStatusValue(e, row)}
             SelectProps={{
               sx: {
-                borderColor: row?.attendance.title === 'present' ? 'success' : 'error',
-                color: userStatusObj[row?.attendance?.title]
+                borderColor: row?.attedence === 'present' ? 'success' : 'error',
+                color: userStatusObj[row?.attedence]
               }
             }}
           >
@@ -129,12 +141,13 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
       }
     }
   ];
+ 
 
   return (
     <>
       <Grid>
         <Card>
-          <DataGrid autoHeight rowHeight={80} rows={ClassData?.data.studentattendance || []} columns={columns} disableRowSelectionOnClick />
+          <DataGrid autoHeight rowHeight={80} rows={students||[]} columns={columns} disableRowSelectionOnClick />
         </Card>
         <StatusChangeDialog
           open={statusChangeDialogOpen}

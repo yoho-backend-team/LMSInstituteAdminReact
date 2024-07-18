@@ -85,7 +85,6 @@ const NotesHeader = (props) => {
                     <Autocomplete
                       fullWidth
                       onChange={(e, newValue) => {
-                        console.log('selectedBranchid:', selectedBranchId);
                         const data = {
                           course: newValue._id,
                           branch: selectedBranchId

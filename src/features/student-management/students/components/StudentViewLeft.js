@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 108,
@@ -20,9 +22,9 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 
 const UserViewLeft = ({ student }) => {
   const imageUrl = student?.image
-    ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.image}`
-    : 'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
-    console.log(student,"student")
+    ? `${getImageUrl(student?.image)}`
+    : imagePlaceholder
+
     return (
     <Card>
       <CardMedia

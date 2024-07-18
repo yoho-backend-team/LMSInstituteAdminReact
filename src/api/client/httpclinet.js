@@ -19,7 +19,6 @@ Axios.interceptors.request.use((config)=> {
 Axios.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.log(error,"error")
         if(error.response && error.response.status === 401 && error.response.statusText === "Unauthorized"){
             localStorage.removeItem('token');
             localStorage.removeItem('userData');
@@ -29,7 +28,6 @@ Axios.interceptors.response.use(
             localStorage.removeItem("institute")
             window.location.replace("/login")
         }
-        console.log(error,"error")
         return Promise.reject(error);
     }
 );
