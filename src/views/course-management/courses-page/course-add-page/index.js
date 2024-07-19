@@ -137,6 +137,9 @@ const AddCoursePage = () => {
     course_duration: '',
     course_name: '',
     course_price: '',
+    mrp:'',   
+    starrating:'',
+    ratingnumber:'',
     description: '',
     course_overview: '',
     learning_format: '',
@@ -198,6 +201,9 @@ const AddCoursePage = () => {
       course_duration: Number(''),
       course_name: '',
       course_price: Number(''),
+      mrp: Number(''),
+      starrating: Number(''),
+      ratingnumber: Number(''),
       description: '',
       course_overview: '',
       learning_format: '',
@@ -217,6 +223,9 @@ const AddCoursePage = () => {
       category : personalData.course_category.uuid,
       institute_id : useInstitute().getInstituteId(),
       price : personalData.course_price,
+      mrp: personalData.mrp,
+      ratingnumber: personalData.ratingnumber,
+      starrating: personalData.starrating,
       class_type : [personalData.learning_format],
       overview : personalData.course_overview
     }
@@ -296,6 +305,26 @@ const AddCoursePage = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
+                  name="mrp"
+                  control={courseControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      type="number"
+                      value={value}
+                      label="Actual Price"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(courseErrors['course_price'])}
+                      aria-describedby="stepper-linear-personal-course_price"
+                      helperText={courseErrors?.course_price?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
                   name="course_price"
                   control={courseControl}
                   rules={{ required: true }}
@@ -314,6 +343,51 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+              <Controller
+                  name="starrating"
+                  control={courseControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <Autocomplete
+                      fullWidth
+                      value={value}
+                      onChange={(event, newValue) => {
+                        onChange(newValue);
+                      }}
+                      options={[1,2,3,4,5]}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Star Rating"
+                          error={Boolean(courseErrors['course_price'])}
+                          helperText={courseErrors?.course_price?.message}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="ratingnumber"
+                  control={courseControl}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <CustomTextField
+                      fullWidth
+                      type="number"
+                      value={value}
+                      label="Total Review"
+                      onChange={onChange}
+                      placeholder="Carter"
+                      error={Boolean(courseErrors['course_price'])}
+                      aria-describedby="stepper-linear-personal-course_price"
+                      helperText={courseErrors?.course_price?.message}
+                    />
+                  )}
+                />
+              </Grid>              
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   multiple
@@ -436,6 +510,8 @@ const AddCoursePage = () => {
                     />
                   )}
                 />
+              </Grid>
+              <Grid item xs={12} sm={6}>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
