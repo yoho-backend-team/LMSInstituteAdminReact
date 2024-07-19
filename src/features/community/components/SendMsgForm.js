@@ -41,7 +41,7 @@ const SendMsgForm = (props) => {
 
   const handleSendMsg = async (e) => {
     e.preventDefault();
-    socket.emit("sendMessage", { senderId : user?._id, content: msg, groupId : selectedBatch?._id  }, (response) => {
+    socket.emit("sendMessage", { senderId : user?._id, content: msg, groupId : selectedBatch?._id, name : user?.full_name || user?.first_name  }, (response) => {
       if (response.status === "success") {
         console.log("Message sent successfully");
       } else {

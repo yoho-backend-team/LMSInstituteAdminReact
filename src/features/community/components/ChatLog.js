@@ -38,8 +38,8 @@ const ChatLog = (props) => {
         >
           <CustomAvatar src={message?.sender?.avatar} />
           <Box 
-            ml={message.user === "admin" ? 0 : 2} 
-            mr={message.user === "admin" ? 2 : 0}
+            ml={message.sender === user?._id ? 0 : 2} 
+            mr={message.sender === user?._id ? 2 : 0}
             p={1} 
             borderRadius={1} 
             bgcolor={message.sender === user?._id ? "#61C554" : "#E8ECEF"}
