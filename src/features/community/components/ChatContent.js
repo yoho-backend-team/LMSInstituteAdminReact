@@ -66,7 +66,7 @@ const ChatContent = (props) => {
     }
   };
   useEffect(()=>{
-    socket.on("message", (message, callback) => {
+    socket.on("newMessage", (message, callback) => {
       setMessages((messages) => [...messages, message]);
       if (callback) callback({ status: "success" });
       // if (permissionGranted) {
@@ -77,7 +77,7 @@ const ChatContent = (props) => {
       // }
     });
   },[])
-  
+   console.log(messages,"messages")
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;

@@ -5,6 +5,7 @@ import CustomTextField from 'components/mui/text-field';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { getAllBatchChats, sendMessage } from './../services/communityServices';
+import { getUserDetails } from 'utils/check-auth-state';
 
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -23,6 +24,7 @@ const Form = styled('form')(({ theme }) => ({
 const SendMsgForm = (props) => {
   const { selectedBatch, setChats ,socket} = props;
   const [msg, setMsg] = useState('');
+  const user = getUserDetails()
 
   const getMessages = async () => {
     const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?._id });
@@ -39,7 +41,7 @@ const SendMsgForm = (props) => {
 
   const handleSendMsg = async (e) => {
     e.preventDefault();
-    socket.emit("sendMessage", { message: msg, user: "admin" }, (response) => {
+    socket.emit("sendMessage", { senderId : user?._id, content: msg, groupId : selectedBatch?._id  }, (response) => {
       if (response.status === "success") {
         console.log("Message sent successfully");
       } else {

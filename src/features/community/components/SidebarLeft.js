@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 import { getAllBatchChats } from '../services/communityServices';
+import { getUserDetails } from 'utils/check-auth-state';
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -61,10 +62,12 @@ const SidebarLeft = (props) => {
     setSelectedBatch(community);
     const communityId = community?._id
     setCommunityDetails(community)
-    socket.emit("join",{group:communityId,user:"user"},(error)=>{
+    const user = getUserDetails()
+    console.log(community,communityId,user?._id)
+
+    socket.emit("joinGroup",{groupId:communityId,userId:user?._id},(error)=>{
       console.log(error,"socketError")
     })
-    // const message = socket.emit("new message",community)
 
     if (community && community._id) {
       try {
