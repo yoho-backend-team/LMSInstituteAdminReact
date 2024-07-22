@@ -147,7 +147,14 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         );
       }
     },
-
+    {
+      flex : 0.3,
+      minWidth : 150,
+      sortable : false,
+      field : "status",
+      headerName : "Status",
+      renderCell : ({row}) => <Typography>{row?.status}</Typography>
+    },
     {
       flex: 0.1,
       minWidth: 150,

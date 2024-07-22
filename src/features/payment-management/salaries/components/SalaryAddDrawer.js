@@ -77,7 +77,8 @@ const FeesAddDrawer = (props) => {
     } else {
       result = await getAllActiveNonTeachingStaffs({ branch_id: selectedBranchId });
     }
-    setActiveStaffs(result.data.data);
+    console.log(result,"result")
+    setActiveStaffs(result.data);
   };
 
   const getActiveCoursesByBranch = async (data) => {
@@ -181,7 +182,7 @@ const FeesAddDrawer = (props) => {
       }
     }
   };
-
+  console.log(activeStaffs,"activeStaffs")
   return (
     <DatePickerWrapper>
       <Drawer
@@ -241,7 +242,7 @@ const FeesAddDrawer = (props) => {
                       getOptionLabel={(branch) => branch.branch_identity}
                       onChange={(event, newValue) => {
                         onChange(newValue?.branch_identity);
-                        getActiveCoursesByBranch(newValue?.branch_identity);
+                        getActiveCoursesByBranch({branch_id:newValue?.uuid});
                       }}
                       value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                       renderInput={(params) => (
@@ -290,7 +291,7 @@ const FeesAddDrawer = (props) => {
                     value={value}
                     onChange={(event, newValue) => onChange(newValue)}
                     options={activeStaffs?activeStaffs:[]}
-                    getOptionLabel={(staff) => staff?.username}
+                    getOptionLabel={(staff) => staff?.full_name}
                     renderInput={(params) => (
                       <TextField {...params} label="Select Staff" error={Boolean(errors.staff)} helperText={errors.staff?.message} />
                     )}

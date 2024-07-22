@@ -130,7 +130,8 @@ const generateEndpoints = () => {
         ticket : {
             student_ticket : `/api/institutes/student/ticket/getall`,
             update : `/api/institutes/student/ticket/update/`,
-            staff_ticket : `/api/institutes/staff/ticket/getall`,
+            staff_ticket : `/api/institutes/staff/ticket/all`,
+            staff_ticket_with_id : `/api/institutes/staff/ticket/`,
             update_staff_ticket : `/api/institutes/staff/ticket/update/`
         },
         attedence : {
@@ -146,7 +147,7 @@ const generateEndpoints = () => {
         },
         notification : {
           student_notification : `/api/institutes/students/notifications`,
-          staff_notification : `/api/institutes/staff/notifications`,
+          staff_notification : `/api/institutes/staff/notifications/all`,
           institute_notification : `/api/institutes/branch/notifications`
         },
         subscription:{

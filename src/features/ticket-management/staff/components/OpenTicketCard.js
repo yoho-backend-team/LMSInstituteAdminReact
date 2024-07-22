@@ -4,8 +4,27 @@ import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router';
 
 const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
+  const priorityColors = {
+    Low: '#00FF00',      
+    Medium: '#FFFF00',   
+    High: '#FFA500',     
+    Urgent: '#FF0000'    
+  };
+
+  const navigate = useNavigate()
+  
+  const handleResolveClick = () => {
+    onClick();
+    handleSelectedTicket(ticket);
+    navigate(`/ticket-management/staff-ticket-view/${ticket.uuid}`);    
+  };
+  
+  
+  console.log(ticket,"ticket")
+
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card sx={{ minHeight: 240 }}>
@@ -39,34 +58,37 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <CustomChip
-                icon={<CrisisAlertIcon />}
-                rounded
-                size="small"
-                skin="light"
-                color={'error'}
-                label={`Priority:${ticket?.priority}`}
-              />
+            <CustomChip
+             icon={<CrisisAlertIcon />}
+             rounded
+             size="small"
+             skin="light" 
+             sx={{
+               color: priorityColors[ticket?.priority],
+               backgroundColor: priorityColors[ticket?.priority] + '33',
+               borderColor: priorityColors[ticket?.priority]
+             }}
+             label={`Priority: ${ticket?.priority}`}
+           />
+
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <IconButton size="small" sx={{ color: 'text.disabled' }}>
                 <Icon fontSize="1.25rem" icon="tabler:star" />
               </IconButton>
-              <OptionsMenu
-                iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-                options={[
-                  {
-                    text: 'Resolve',
-                    icon: <Icon icon="tabler:edit" />,
-                    menuItemProps: {
-                      onClick: () => {
-                        onClick();
-                        handleSelectedTicket(ticket);
+                <OptionsMenu
+                  iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
+                  options={[
+                    {
+                      text: 'Resolve',
+                      icon: <Icon icon="tabler:edit" />,
+                      menuItemProps: {
+                        onClick: handleResolveClick,
+                     
                       }
                     }
-                  }
-                ]}
-              />
+                  ]}
+                />
             </Box>
           </Box>
         </CardContent>

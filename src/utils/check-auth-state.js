@@ -14,3 +14,8 @@ export const getOtpDetails = () => {
     
     return JSON.parse(otp)
 }
+
+export const getUserDetails = () => {
+    const user = localStorage.getItem("userData")
+    return JSON.parse(user)
+}

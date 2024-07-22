@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CustomAvatar from 'components/mui/avatar';
+import { getUserDetails } from 'utils/check-auth-state';
 
 const ChatLog = (props) => {
   const { data, hidden, currentUser } = props; 
   const chatArea = useRef(null);
+  const user = getUserDetails()
 
   useEffect(() => {
     if (data && data?.length) {
@@ -28,19 +30,28 @@ const ChatLog = (props) => {
         <Box 
           key={index} 
           display="flex" 
-          flexDirection={message.user === "admin" ? "row-reverse" : "row"} 
+          flexDirection={message.sender === user?._id ? "row-reverse" : "row"} 
           alignItems="center" 
+          sx={{ pl: "20px"}}
           mb={1}
         >
           <CustomAvatar src={message?.sender?.avatar} />
           <Box 
-            ml={message.user === "admin" ? 0 : 2} 
-            mr={message.user === "admin" ? 2 : 0}
+            ml={message.sender === user?._id ? 0 : 2} 
+            mr={message.sender === user?._id ? 2 : 0}
             p={1} 
             borderRadius={1} 
-            bgcolor={message.user === "admin" ? "#bda8a6" : "whitesmoke"}
+            sx={{ padding : "15px 20px"}}
+            bgcolor={message.sender === user?._id ? "#61C554" : "#E8ECEF"}
+            color={message.sender === user?._id ? "white" : "black"}
             maxWidth="70%"
+           
           >
+            { message.sender !== user?._id &&
+              <Typography>
+               {message?.sender_name}
+              </Typography>
+            }
             <Typography>
               {message.message}
             </Typography>

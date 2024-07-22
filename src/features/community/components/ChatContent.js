@@ -66,18 +66,18 @@ const ChatContent = (props) => {
     }
   };
   useEffect(()=>{
-    socket.on("message",(message)=>{
-      setMessages((messages)=>[...messages,message])
-      console.log(Notification.permission)
-      if (permissionGranted) {
-        console.log(permissionGranted,"permissionGranted")
-        new Notification(communityDetails?.group, {
-          body: message.message,
-        });
-      }
-    })
+    socket.on("newMessage", (message, callback) => {
+      setMessages((messages) => [...messages, message]);
+      if (callback) callback({ status: "success" });
+      // if (permissionGranted) {
+      //   console.log(permissionGranted, "permissionGranted")
+      //   new Notification(communityDetails?.group, {
+      //     body: message.message,
+      //   });
+      // }
+    });
   },[])
-  
+   console.log(messages,"messages")
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;

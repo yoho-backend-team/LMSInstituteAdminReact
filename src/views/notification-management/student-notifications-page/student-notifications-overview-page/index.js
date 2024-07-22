@@ -34,6 +34,8 @@ const StudentNotification = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  
+  console.log(studentNotifications,"nptiiiiiiii")
 
   return (
     <>

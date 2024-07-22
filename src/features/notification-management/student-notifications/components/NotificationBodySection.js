@@ -12,7 +12,8 @@ import { resendStudentNotification } from '../services/studentNotificationServic
 
 const NotificationBodySection = ({ studentNotifications }) => {
   const renderClient = (row) => {
-    if (row?.avatar?.length) {
+    const student = row?.student?.[0];
+    if (student?.avatar?.length) {
       return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
     } else {
       return (
@@ -21,7 +22,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
           color={row?.avatarColor || 'primary'}
           sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
         >
-          {getInitials(row?.first_name || 'John Doe')}
+          {getInitials(student?.first_name || 'name')}
         </Avatar>
       );
     }

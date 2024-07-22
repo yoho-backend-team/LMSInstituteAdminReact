@@ -16,7 +16,24 @@ export const getAllStaffTickets = async (data) => {
     // Throw the error again to propagate it to the calling function/component
     throw new Error(`Failed to fetch StaffTickets. Status: ${error?.response?.data?.message}`);
   }
-};
+};  
+
+
+export const getStaffTicketWithId = async (data) => {
+  try {
+    const response = await client.ticket.staff_ticket_with_id(data)
+    // Check if the response status is successful
+    return response;
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in getAllStaffTickets:', error);
+    // Throw the error again to propagate it to the calling function/component
+    throw new Error(`Failed to fetch StaffTickets. Status: ${error?.response?.data?.message}`);
+  }
+};  
+
+
+
 
 export const updateStaffTicket = async (data) => {
   try {
