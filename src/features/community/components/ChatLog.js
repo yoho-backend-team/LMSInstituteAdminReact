@@ -27,7 +27,6 @@ const ChatLog = (props) => {
   const renderChats = () => {
     if (data) {
       return data?.map((message, index) => (
-        
         <Box 
           key={index} 
           display="flex" 
@@ -42,10 +41,17 @@ const ChatLog = (props) => {
             mr={message.sender === user?._id ? 2 : 0}
             p={1} 
             borderRadius={1} 
+            sx={{ padding : "15px 20px"}}
             bgcolor={message.sender === user?._id ? "#61C554" : "#E8ECEF"}
             color={message.sender === user?._id ? "white" : "black"}
             maxWidth="70%"
+           
           >
+            { message.sender !== user?._id &&
+              <Typography>
+               {message?.sender_name}
+              </Typography>
+            }
             <Typography>
               {message.message}
             </Typography>
