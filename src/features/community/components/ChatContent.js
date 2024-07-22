@@ -46,6 +46,19 @@ const ChatContent = (props) => {
     socket
   } = props;
   const [messages,setMessages] =useState([])
+  const [permissionGranted, setPermissionGranted] = useState(false);
+
+  useEffect(() => {
+    if (typeof Notification !== "undefined") {
+      console.log("notifications")
+      Notification.requestPermission().then(permission => {
+        console.log(permission,"permission")
+        if (permission === 'granted') {
+          setPermissionGranted(true);
+        }
+      });
+    }
+  }, []);
 
   const handleStartConversation = () => {
     if (!mdAbove) {
@@ -53,16 +66,22 @@ const ChatContent = (props) => {
     }
   };
   useEffect(()=>{
-    // const ioInit = io(process.env.REACT_APP_PUBLIC_API_URL)
     socket.on("message",(message)=>{
       setMessages((messages)=>[...messages,message])
+      console.log(Notification.permission)
+      if (permissionGranted) {
+        console.log(permissionGranted,"permissionGranted")
+        new Notification(communityDetails?.group, {
+          body: message.message,
+        });
+      }
     })
   },[])
-  console.log(chats,"chats",messages)
+  
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
-      console.log(selectedChat,chats)
+
       return (
         <Box
           sx={{

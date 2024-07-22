@@ -135,9 +135,8 @@ const StudenrCertificate = () => {
     const data = {
       is_active: statusValue?.is_active === true ? false : true
     };
-    console.log(data)
     const response = await updateStudentCertificateStatus(selectedRow.uuid, data);
-    console.log(response,"response")
+
     if (response.success) {
       toast.success(response.message);
       setStudentCertificateRefetch((state) => !state);
@@ -164,7 +163,6 @@ const StudenrCertificate = () => {
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
     setStudentCertificateRefetch();
-    console.log('Toggle drawer');
   };
 
   const dispatch = useDispatch();
@@ -199,7 +197,6 @@ const StudenrCertificate = () => {
   };
   
 
-  console.log(studentCertificates,"srudent",selectedRow)
 
   const RowOptions = ({ row }) => {
     return (
@@ -372,7 +369,7 @@ const StudenrCertificate = () => {
               <DataGrid
                 autoHeight
                 rowHeight={80}
-                rows={studentCertificates}
+                rows={studentCertificates?studentCertificates :[]}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination

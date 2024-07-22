@@ -23,7 +23,7 @@ const Form = styled('form')(({ theme }) => ({
 const SendMsgForm = (props) => {
   const { selectedBatch, setChats ,socket} = props;
   const [msg, setMsg] = useState('');
-  console.log(selectedBatch);
+
   const getMessages = async () => {
     const result = await getAllBatchChats({ inst_batch_community_id: selectedBatch?._id });
     if (result) {

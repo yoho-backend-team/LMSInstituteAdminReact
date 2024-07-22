@@ -25,6 +25,7 @@ import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
 import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
 import { imagePlaceholder } from 'utils/placeholders';
+import { useSpinner } from 'context/spinnerContext';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -85,6 +86,7 @@ const StepperLinearWithValidation = () => {
   const [activeCourse, setActiveCourse] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const Navigate = useNavigate();
+  const {show,hide} = useSpinner()
 
   useEffect(() => {
     const data = {
@@ -128,8 +130,6 @@ const StepperLinearWithValidation = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
-    console.log(result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -184,12 +184,13 @@ const StepperLinearWithValidation = () => {
   const [logoSrc, setLogoSrc] = useState('');
 
   const handleInputImageChange = async (file) => {
+      show()
       const { files } = file.target;
       const data = new FormData()
       data.append("file",files[0])
       const response = await client.file.upload(data)
-      console.log(response,"response")
       setLogo(response.data.file)
+      hide()
   };
 
   const handleInputImageReset = () => {
@@ -201,6 +202,8 @@ const StepperLinearWithValidation = () => {
 
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
+    show()
+    
     const student_data = {
       first_name : personalData.student_first_name,
       last_name : personalData.student_last_name,
@@ -212,32 +215,36 @@ const StepperLinearWithValidation = () => {
         pincode : personalData.pin_code,
         address1 : personalData.address_line_one,
         address2 : personalData.address_line_two,
-        phone_number : "+91"+personalData.student_phone_no
+        phone_number : "+91"+personalData.student_phone_no,
+        alternate_phone_number : personalData?.alt_phone
       },
       qualification : personalData.qualification,
       username : personalData.username,
       dob : convertDateFormat(personalData.date_of_birth),
       gender : personalData.gender,
       branch_id : personalData.branch,
-      course : personalData.course     
+      course : personalData.course,
+      image : logo     
     }
-    console.log(personalData);
 
     try {
       const result = await addStudent(student_data);
 
       if (result.success) {
+        hide()
         toast.success(result.message);
         Navigate(-1);
       } else {
+        hide()
         toast.error(result.message);
       }
     } catch (error) {
+      hide()
       console.log(error);
     }
     // }
   };
-  console.log(logo,"logo")
+
   return (
     <Card>
       <CardContent>
@@ -392,7 +399,7 @@ const StepperLinearWithValidation = () => {
                     value={activeBranches.find((branch) => branch.uuid === value) || null}
                     onChange={(event, newValue) => {
                       setValue('branch', newValue ? newValue.uuid : '');
-                      getActiveCoursesByBranch(newValue ? newValue.uuid : '');
+                      getActiveCoursesByBranch(newValue ? {branch_id : newValue.uuid} : '');
                     }}
                     renderInput={(params) => (
                       <TextField

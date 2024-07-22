@@ -32,7 +32,6 @@ const Notes = ({ notes }) => {
             icon: <Icon icon="tabler:eye" fontSize={20} />,
             menuItemProps: {
               onClick: () => {
-                console.log('Button Pressed');
                 setViewModalOpen(true);
                 handleRowClick(row);
               }

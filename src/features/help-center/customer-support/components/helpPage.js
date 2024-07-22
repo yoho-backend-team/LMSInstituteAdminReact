@@ -87,19 +87,16 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
   };
 
   const handleEdit = (itemId) => {
-    console.log('Edit clicked for item ID:', itemId);
     setEditModalOpen(true);
     setEditingItemId(itemId);
   };
 
   const handleAdd = (itemId) => {
-    console.log('Add clicked for item ID:', itemId);
     setAddModalOpen(true);
     setAddingItemId(itemId);
   };
 
   const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
     setDeleteDialogOpen(true);
     setDeletingItemId(itemId);
   };
@@ -108,7 +105,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
     const datainput = {
       id: deletingItemId
     };
-    console.log(datainput);
+
     let config = {
       method: 'delete',
       maxBodyLength: Infinity,
@@ -122,7 +119,6 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
     await axios
       .request(config)
       .then((response) => {
-        console.log('Create User : ', response.data.data);
         handleDeleteClose();
         SetLoad(true);
       })

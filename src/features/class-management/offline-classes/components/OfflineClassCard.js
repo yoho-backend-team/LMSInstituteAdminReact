@@ -17,11 +17,13 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
+import { useSpinner } from 'context/spinnerContext';
 
 const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const {show,hide} = useSpinner()
 
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
 
@@ -41,12 +43,15 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   }, []);
 
   const handleOfflineClassDelete = async () => {
-    const data = { class_id: selectedOfflineClassDeleteId };
+    show()
+    const data = { uuid: selectedOfflineClassDeleteId };
     const result = await deleteOfflineClass(data);
     if (result.success) {
+      hide()
       toast.success(result.message);
       setofflineClassRefetch((state) => !state);
     } else {
+      hide()
       toast.error(result.message);
     }
   };
@@ -81,12 +86,12 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
 
                 <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 1 }}>
                   <AvatarGroup className="pull-up" max={4}>
-                    {card?.batch_class?.batch_student?.map((student, studentIndex) => {
+                    {card?.batch?.student?.map((student, studentIndex) => {
                       return (
                         <Avatar
                           key={studentIndex}
                           src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${student?.student?.image}`}
-                          alt={student?.student?.first_name}
+                          alt={student?.full_name}
                         />
                       );
                     })}
@@ -94,7 +99,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                 </Grid>
 
                 <Grid item justifyContent="center" display="flex">
-                  <Typography sx={{ fontWeight: '500' }}>{card?.batch_class?.batch_student?.length ?? 0} Students on this class</Typography>
+                  <Typography sx={{ fontWeight: '500' }}>{card?.batch?.student?.length ?? 0} Students on this class</Typography>
                 </Grid>
                 <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
                   <Box>
@@ -102,7 +107,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                   </Box>
                   <Box sx={{ ml: 1 }}>
                     <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                      {card?.class_date} / {card?.start_time} to {card?.end_time}{' '}
+                      {card?.start_date} / {card?.start_time} to {card?.end_time}{' '}
                     </Typography>
                   </Box>
                 </Grid>
@@ -113,8 +118,8 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                       variant="contained"
                       size="medium"
                       component={Link}
-                      state={{ id: card?.class_id }}
-                      to={`offline-classes/${card?.class_id}`}
+                      state={{ id: card?.uuid }}
+                      to={`offline-classes/${card?.uuid}`}
                     >
                       View More
                     </Button>
@@ -130,7 +135,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                           menuItemProps: {
                             component: Link,
                             to: `offline-classes/view`,
-                            state: { id: card?.class_id }
+                            state: { id: card?.uuid }
                           }
                         },
                         {
@@ -146,7 +151,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                           text: 'Delete',
                           icon: <Icon icon="mdi:delete-outline" />,
                           menuItemProps: {
-                            onClick: () => handleDelete(card?.class_id)
+                            onClick: () => handleDelete(card?.uuid)
                           }
                         }
                       ]}

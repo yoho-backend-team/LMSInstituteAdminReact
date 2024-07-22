@@ -55,7 +55,6 @@ const FaqAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
 
     const inputData = {
       title: data.name,
@@ -72,7 +71,7 @@ const FaqAddDrawer = (props) => {
       toast.error(result.message);
     }
   };
-  console.log(faqCategories,"faqCategories")
+
   return (
     <DatePickerWrapper>
       <Drawer

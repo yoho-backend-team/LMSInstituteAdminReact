@@ -1,23 +1,15 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
 export const getAllNonTeachingStaffAttendances = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/getall`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
+    const response = await client?.attedence?.get_all_non_staff_attedence(data)
 
     // Check if the response status is successful
     return response;
-   
   } catch (error) {
 
     console.error('Error in getAllTeachingStaffAttendances:', error);
@@ -48,23 +40,10 @@ export const searchNonTeachingStaffAttendances = async (searchQuery) => {
 
 export const getNonTeachingStaffAttendanceById = async (data) => {
   try {
-    const response = await axios.get(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/${data.staff_id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    console.log(response);
+    const response = await client.attedence.get_non_staff_with_id(data)
 
     // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch NonTeachingStaffAttendances. Status: ${response.status}`);
-    }
+    return response;
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllNonTeachingStaffAttendances:', error);
@@ -76,17 +55,13 @@ export const getNonTeachingStaffAttendanceById = async (data) => {
 
 export const addNonTeachingStaffAttendance = async (data) => {
   try {
-    const response = await axios.post(`${NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.attedence.mark_non_staff_attedence(data) 
 
-    return { success: true, message: response?.data?.message};
-  } catch (error) { 
+
+    return { success: true, message: 'NonTeachingStaffAttendance created successfully' };
+  } catch (error) {
     console.error('Error in addNonTeachingStaffAttendance:', error);
-    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create TeachingStaffAttendance' };
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
@@ -121,7 +96,6 @@ export const updateNonTeachingStaffAttendance = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'NonTeachingStaffAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update NonTeachingStaffAttendance' };

@@ -7,7 +7,7 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 export const getAllBatchesByBranch = async (data) => {
   try {
     const response = await client.batch.getAll(data)
-    console.log(response,"response batches");
+
     // Check if the response status is successful
 
     return response;   
@@ -21,7 +21,6 @@ export const getAllBatchesByBranch = async (data) => {
 export const getAllBatches = async (data) => {
   try {
     const response = await client.batch.getAll(data)
-    console.log(response);
    
     return { success: true, data: response.data };
    
@@ -34,9 +33,7 @@ export const getAllBatches = async (data) => {
 };
 export const getBatchesByCourse = async (data) => {
   try {
-    console.log(data,"data")
     const response = await client.batch.getAll(data)
-    console.log(response);
     // Check if the response status is successful
     
       return { success: true, data: response.data };
@@ -51,7 +48,7 @@ export const getBatchesByCourse = async (data) => {
 export const getBatchDetails = async (data) => {
   try {
     const response = await client.batch.getWithId(data)
-    console.log(response);
+
     // Check if the response status is successful
     if (response.status) {
       return {
@@ -80,7 +77,7 @@ export const getAllActiveBatchesByCourse = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -114,64 +111,34 @@ export const addBatch = async (data) => {
 
 export const deleteBatch = async (data) => {
   try {
-    const response = await axios.delete(`${BATCH_API_ENDPOINT}/delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.batch.delete(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Batch deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete Batch' };
-    }
+    return { success: true, message: 'Batch deleted successfully' };
   } catch (error) {
     console.error('Error in deleteBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateBatch = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.batch.update(data)
 
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'Batch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update batch' };
-    }
+    return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
     console.error('Error in updateBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
 export const updateBatchStatus = async (data) => {
   try {
-    const response = await axios.post(`${BATCH_API_ENDPOINT}/status-change`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
-
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'Batch updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update batch' };
-    }
+    const response = await client.batch.update(data)
+ 
+    return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
     console.log(error)
     console.error('Error in updateBatch:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };

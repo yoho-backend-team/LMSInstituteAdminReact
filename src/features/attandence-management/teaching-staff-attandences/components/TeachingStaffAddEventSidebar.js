@@ -12,16 +12,12 @@ import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
-import { addTeachingStaffAttendance, getUserListWithRoleName } from '../services/teachingStaffAttendanceServices';
+import { addTeachingStaffAttendance } from '../services/teachingStaffAttendanceServices';
 import { useBranchId, useInstitute } from 'utils/get-institute-details';
-import { useSpinner } from 'context/spinnerContext';
-import CustomChip from "components/mui/chip"
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank"
-import CheckBoxIcon from "@mui/icons-material/CheckBox"
 
 const TeachingStaffAddEventSidebar = (props) => {
   const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
-
+ console.log(selected,"selected",staff)
   const defaultState = {
     staff_name: '',
     title: '',
@@ -82,7 +78,16 @@ const TeachingStaffAddEventSidebar = (props) => {
       user:ids
 
     };
-    const result = await addTeachingStaffAttendance(inputData);
+    const new_attedence = {
+      institute : useInstitute().getInstituteId(),
+      branch : staff?.branch,
+      date : convertDateFormat(selectedDate),
+      staff : staff?.staff,
+      status:data?.title
+    }
+    console.log(new_attedence,convertDateFormat(selectedDate),selectedDate)
+    
+    const result = await addTeachingStaffAttendance(new_attedence);
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);

@@ -15,7 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveNonTeachingStaffs ,getAllNonTeachingStaffs} from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
@@ -56,7 +56,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     start_time: null,
     end_time: null,
     instructors: [],
-    coordinators: []
+    coordinators: [],
+    video_url:''
   };
   const handleCopyLink = () => {
     const link = 'your Generated Link';
@@ -87,16 +88,17 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
       return '';
     }
   };
- console.log(liveClasses,"liveClass")
+
   useEffect(() => {
     if (liveClasses) {
       setValue('class_name', liveClasses.class_name || '');
-      setValue('class_id', liveClasses.id || '');
+      setValue('_id', liveClasses._id || '');
       setValue('classDate', new Date(liveClasses.start_date) || new Date());
       setValue('start_time', dayjs(liveClasses?.start_time) || null);
       setValue('end_time', dayjs(liveClasses?.end_time) || null);
       setValue('instructors', liveClasses.instructors || []);
       setValue('coordinators', liveClasses.coordinators || []);
+      setValue("video_url",liveClasses?.video_url || '')
       setSelectedCoordinates(liveClasses?.coordinators);
       setSelectedInstructors(liveClasses?.instructors);
     }
@@ -126,12 +128,12 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-    setActiveTeachingStaff(result.data.data);
+    setActiveTeachingStaff(result.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveNonTeachingStaffs(data);
-    setActiveNonTeachingStaff(result.data.data);
+    const result = await getAllNonTeachingStaffs(data);
+    setActiveNonTeachingStaff(result.data);
   };
 
   useEffect(() => {
@@ -149,36 +151,31 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
   }
 
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
-    var bodyFormData = new FormData();
-    filteredInstructorId?.forEach((id) => {
-      bodyFormData.append('instructor_staff_ids[]', id);
-    });
-    filteredCoordinatorId?.forEach((id) => {
-      bodyFormData.append('coordinator_staff_ids[]', id);
-    });
-    bodyFormData.append('class_name', data.class_name);
-    bodyFormData.append('class_id', liveClasses.class_id);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('course_id', data.course_id);
-    bodyFormData.append('batch_id', data.batch_id);
-    bodyFormData.append('class_date', convertDateFormat(data.classDate));
-    bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time);
-    bodyFormData.append('videoUrl', data.class_link);
+    
+    const filteredInstructorId = data?.instructors?.map((staff) => staff._id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff._id);
+    const new_class_data = {
+      class_name : data.class_name,
+      start_date : data?.classDate,
+      start_time : data?.start_time,
+      end_time : data?.end_time,
+      video_url : data?.video_url,
+      uuid : liveClasses?.uuid,
+      instructors : filteredInstructorId,
+      coordinators: filteredCoordinatorId
+    }
 
-    const result = await updateLiveClass(bodyFormData);
+    const result = await updateLiveClass(new_class_data);
 
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);
       handleClose();
     } else {
-      let errorMessage = '';
-      toast.error(errorMessage.trim());
+      toast.error(result?.message)
     }
   };
+
   return (
     <Dialog
       open={open}
@@ -228,7 +225,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 />
               </Grid>
 
-              {/* <Grid item xs={6}>
+              <Grid item xs={6}>
                 <Controller
                   name="classDate"
                   control={control}
@@ -245,7 +242,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   )}
                 />
                 {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message}</p>}
-              </Grid> */}
+              </Grid>
 
               <Grid container item xs={6} spacing={2}>
                 <Grid item md={6} sm={12}>
@@ -301,20 +298,20 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 </Grid>
               </Grid>
 
-              {/* <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={12}>
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
-                  getOptionLabel={(option) => option.staff_name}
-                  value={selectedInstructors}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedInstructors || []}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'instructors',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
@@ -340,15 +337,15 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option._id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -361,26 +358,26 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid> */}
+              </Grid>
 
-              {/* <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
-                  getOptionLabel={(option) => option.coordinate_name}
-                  value={selectedCoordinates}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeNonTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedCoordinates || []}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'coordinators',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
@@ -406,7 +403,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
@@ -414,7 +411,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       {value.map((option, index) => (
                         <CustomChip
                           key={option.staff_id}
-                          label={option.staff_name}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -427,16 +424,18 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid> */}
+              </Grid>
 
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  defaultValue={liveClasses?.class_link}
+                  defaultValue={liveClasses?.video_url}
+                  name='video'
+                  onChange={(e)=>setValue("video_url",e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">

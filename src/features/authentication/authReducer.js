@@ -6,7 +6,7 @@ const haveBranchId = () => {
     if (selectedBranchId) {
       return selectedBranchId;
     } else {
-      return branches[0]?.branch_id;
+      return branches[0]?.uuid;
     }
   } else {
     return null;
@@ -34,7 +34,7 @@ const authReducer = (state = initialState, action) => {
         userData: action.payload.userData,
         permissions: action.payload.permissions,
         branches: action.payload.branches,
-        selectedBranchId: action.payload.branches[0]?.branch_id,
+        selectedBranchId: action.payload.branches[0]?.uuid,
         institute:action.payload.institute,
         errorMessage: ''
       };
@@ -68,7 +68,7 @@ const authReducer = (state = initialState, action) => {
         userData: JSON.parse(localStorage.getItem('userData')) || null,
         permissions: JSON.parse(localStorage.getItem('userData')) || null,
         branches: JSON.parse(localStorage.getItem('branches')) || null,
-        selectedBranchId: JSON.parse(localStorage.getItem('branches'))[0]?.branchId || null,
+        selectedBranchId: JSON.parse(localStorage.getItem('branches'))[0]?.uuid || null,
         errorMessage: action.payload
       };
     case 'UPDATE_SELECTED_BRANCH':

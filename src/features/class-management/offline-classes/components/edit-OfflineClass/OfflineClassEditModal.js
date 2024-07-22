@@ -14,7 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
-import { getAllActiveNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import { getAllActiveNonTeachingStaffs,getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateOfflineClass } from '../../services/offlineClassServices';
+import { useSpinner } from 'context/spinnerContext';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -66,7 +67,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-
+  const {show,hide} = useSpinner()
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
 
@@ -82,15 +83,17 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
 
   useEffect(() => {
     if (offlineClasses) {
+      show()
+      setSelectedCoordinates(offlineClasses?.coordinators);
+      setSelectedInstructors(offlineClasses?.instructors);
       setValue('class_name', offlineClasses.class_name || '');
       setValue('class_id', offlineClasses.class_id || '');
-      setValue('classDate', new Date(offlineClasses.class_date) || new Date());
+      setValue('classDate', new Date(offlineClasses.start_date) || new Date());
       setValue('start_time', dayjs(offlineClasses.start_time) || null);
       setValue('end_time', dayjs(offlineClasses.end_time) || null);
       setValue('instructors', offlineClasses.instructors || []);
       setValue('coordinators', offlineClasses?.coordinators || []);
-      setSelectedCoordinates(offlineClasses?.coordinators);
-      setSelectedInstructors(offlineClasses?.instructors);
+      hide()
     }
   }, [offlineClasses, setValue]);
 
@@ -118,17 +121,19 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-    setActiveTeachingStaff(result.data.data);
+    setActiveTeachingStaff(result.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllActiveNonTeachingStaffs(data);
-    setActiveNonTeachingStaff(result.data.data);
+    const result = await getAllNonTeachingStaffs(data);
+    setActiveNonTeachingStaff(result.data);
   };
 
   useEffect(() => {
+    show()
     getActiveTeachingStaffs(selectedBranchId);
     getActiveNonTeachingStaffs(selectedBranchId);
+    hide()
   }, [selectedBranchId]);
 
   function convertDateFormat(input) {
@@ -141,35 +146,35 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
   }
 
   const onSubmit = async (data) => {
-    const filteredInstructorId = data?.instructors?.map((staff) => staff.staff_id);
-    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff.staff_id);
-    var bodyFormData = new FormData();
-    filteredInstructorId?.forEach((id) => {
-      bodyFormData.append('instructor_staff_ids[]', id);
-    });
-    filteredCoordinatorId?.forEach((id) => {
-      bodyFormData.append('coordinator_staff_ids[]', id);
-    });
-    bodyFormData.append('class_name', data.class_name);
-    bodyFormData.append('class_id', offlineClasses.class_id);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('course_id', data.course_id);
-    bodyFormData.append('batch_id', data.batch_id);
-    bodyFormData.append('class_date', convertDateFormat(data.classDate));
-    bodyFormData.append('start_time', data.start_time);
-    bodyFormData.append('end_time', data.end_time);
+    show()
+    const filteredInstructorId = data?.instructors?.map((staff) => staff._id);
+    const filteredCoordinatorId = data?.coordinators?.map((staff) => staff._id);
 
-    const result = await updateOfflineClass(bodyFormData);
+    const offline_class_data = {
+      class_name : data.class_name,
+      uuid : offlineClasses?.uuid,
+      start_date : data?.classDate,
+      start_time : data?.start_time,
+      end_time : data?.end_time,
+      coordinators : filteredCoordinatorId,
+      instructors : filteredInstructorId
+    }
+   
+    const result = await updateOfflineClass(offline_class_data);
 
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);
       handleClose();
+      hide()
     } else {
       let errorMessage = '';
-      toast.error(errorMessage.trim());
+      toast.error(result?.message);
+      hide()
     }
   };
+
+  
   return (
     <Dialog
       open={open}
@@ -297,15 +302,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeTeachingStaff]}
-                  getOptionLabel={(option) => option.staff_name}
-                  value={selectedInstructors}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedInstructors||[]}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedInstructors(activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedInstructors(activeTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'instructors',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedInstructors(newValue);
@@ -331,15 +336,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option.id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -352,9 +357,9 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  selectalltext="Select All"
+                  selectallprops={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
 
@@ -363,15 +368,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   disableCloseOnSelect
                   multiple
                   id="select-multiple-coordinates"
-                  options={[{ staff_id: 'selectAll', staff_name: 'Select All' }, ...activeNonTeachingStaff]}
-                  getOptionLabel={(option) => option.coordinate_name}
-                  value={selectedCoordinates}
+                  options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeNonTeachingStaff]}
+                  getOptionLabel={(option) => option.full_name}
+                  value={selectedCoordinates||[]}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.staff_id === 'selectAll')) {
-                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option.staff_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedCoordinates(activeNonTeachingStaff.filter((option) => option._id !== 'selectAll'));
                       setValue(
                         'coordinators',
-                        activeTeachingStaff.filter((option) => option.staff_id !== 'selectAll')
+                        activeTeachingStaff.filter((option) => option._id !== 'selectAll')
                       );
                     } else {
                       setSelectedCoordinates(newValue);
@@ -397,15 +402,15 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.staff_name}
+                      {option.full_name}
                     </li>
                   )}
                   renderTags={(value) => (
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.staff_id}
-                          label={option.staff_name}
+                          key={option.id}
+                          label={option.full_name}
                           onDelete={() => {
                             const updatedValue = [...value];
                             updatedValue.splice(index, 1);
@@ -418,9 +423,9 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.staff_id === value.staff_id}
-                  selectAllText="Select All"
-                  SelectAllProps={{ sx: { fontWeight: 'bold' } }}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
+                  selectalltext="Select All"
+                  selectallprops={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>

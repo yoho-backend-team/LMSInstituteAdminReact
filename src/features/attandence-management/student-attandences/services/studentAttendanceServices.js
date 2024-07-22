@@ -1,27 +1,22 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
 export const getAllStudentAttendances = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/getall`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    
+    const response = await client.attedence.get_all_student_attedence(data)
+    // Check if the response status is successful
+    console.log(response,"response")
       return response;
-   
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllStudentAttendances:', error);
 
-    throw new Error(`Failed to fetch getAllStudentAttendances. Status: ${error?.response?.data?.message}`);
-    }
+    // Throw the error again to propagate it to the calling function/component
+    throw new Error(`Failed to fetch StudentAttendances. Status: ${error?.response?.data?.message}`);
+  }
 };
 
 export const searchStudentAttendances = async (searchQuery) => {
@@ -96,7 +91,6 @@ export const updateStudentAttendance = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentAttendance' };
@@ -110,46 +104,29 @@ export const updateStudentAttendance = async (data) => {
 export const getClassDetails = async (data) => {
   try {
     console.log(data,"data")
-    const response = await axios.get(`${STUDENT_ATTENDANCES_API_END_POINT}/${data.class_id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.attedence.get_with_id(data)
+
     // Check if the response status is successful
-   
-      return {
-        success: true,
-        data: response?.data
-      };
-    
+    return {
+      success: true,
+      data: response?.data
+    };
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getOfflineClassDetails:', error);
 
-    throw new Error(`Failed to fetch getOfflineClassDetails. Status: ${error?.response?.data?.message}`);
+    // Throw the error again to propagate it to the calling function/component
+    throw new Error(`Failed to fetch batch. Status: ${error?.response?.data?.message}`);
   }
 };
 
 export const updateStudentAttendanceStatus = async (data) => {
   try {
-    const response = await axios.put(`${STUDENT_ATTENDANCES_API_END_POINT}/status-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('Notesresponse:', response);
-    if (response.data.status) {
-      console.log(response);
-      return { success: true, message: 'StudentAttendance status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update StudentAttendance status' };
-    }
+    const response = await client.attedence.mark_attedence(data)
+
+    return { success: true, message: 'StudentAttendance status updated successfully' };
   } catch (error) {
     console.error('Error in updateStudentAttendance:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };

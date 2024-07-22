@@ -26,7 +26,7 @@ const UserList = () => {
   const getGroups = async () => {
     show()
     const result = await getAllGroups({institute_id:useInstitute().getInstituteId()});
-    console.log(result,"result")
+    
     if (result) {
       setGroups(result);
     }
@@ -48,7 +48,7 @@ const UserList = () => {
     dispatch(getAllUsers({ branch_id: selectedBranchId, page: '1',institute_id:useInstitute().getInstituteId() }));
     hide()
   }, [dispatch, selectedBranchId, userRefetch]);
-  console.log(users,"users",groups)
+
   return (
     <>
       <Grid container spacing={3}>

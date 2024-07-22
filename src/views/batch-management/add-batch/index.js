@@ -24,6 +24,7 @@ const AddBatchPage = () => {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [selectedBranch,setSelectedBranch] = useState('')
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
@@ -64,7 +65,6 @@ const AddBatchPage = () => {
   });
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  console.log(selectedBranchId);
 
   useEffect(() => {
     const data = {
@@ -98,7 +98,6 @@ const AddBatchPage = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -124,24 +123,17 @@ const AddBatchPage = () => {
   const handleStudentsChange = (event) => {
     setValue('students', event.target.value);
     const filteredStudents = activeStudents.filter((student) => event.target.value.includes(student.uuid));
-    console.log('event', event.target.value);
-    console.log('filter', filteredStudents);
     setSelectedStudentIds(event.target.value);
     setSelectedStudents(filteredStudents);
   };
 
   const getStudentByCourseId = async (courseId) => {
-    console.log(defaultValues,"defaultValues")
-    const result = await getStudentByCourse({ branch_id:defaultValues.branch,course_id: courseId });
-    console.log(result.data);
+    const result = await getStudentByCourse({ branch_id:selectedBranch,course_id: courseId })
     setActiveStudents(result.data);
   };
 
-  console.log('Active Students :', activeStudents);
-  console.log('Selected Students :', selectedStudents);
 
   const onSubmit = async (data) => {
-    console.log(data);
     const instituteId = useInstitute().getInstituteId()
     const inputData = {
       batch_name: data.batchName,
@@ -177,7 +169,7 @@ const AddBatchPage = () => {
     setValue('endDate', date);
     setEndDate(date);
   };
-  console.log(activeStudents,selectedStudents,"selectedStudents");
+
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
       <Grid item xs={12}>
@@ -262,7 +254,8 @@ const AddBatchPage = () => {
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('branch', newValue ? newValue.uuid : '');
-                            getActiveCoursesByBranch(newValue ? newValue.branch_id : '');
+                            getActiveCoursesByBranch(newValue ? {branch_id : newValue.uuid} : '');
+                            setSelectedBranch(newValue?.uuid)
                           }}
                           options={activeBranches}
                           getOptionLabel={(option) => option.branch_identity || ''}
@@ -351,7 +344,7 @@ const AddBatchPage = () => {
               <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 6, marginBottom: 12 }}>
                 <Box>
                   <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                    Update
+                    Add
                   </Button>
                   <Button variant="tonal" color="error" onClick={() => navigate(-1)}>
                     Cancel

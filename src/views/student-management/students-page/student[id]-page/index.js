@@ -22,7 +22,7 @@ const UserView = () => {
       setStudent(result.data);
     }
   };
-  console.log(student);
+  
 
   return (
     <>

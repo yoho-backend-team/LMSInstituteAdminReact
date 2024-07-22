@@ -66,7 +66,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.notification_id}
+            {row?.id}
           </Typography>
         );
       }
@@ -79,7 +79,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
+            {/* {renderClient(row)} */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography
                 noWrap
@@ -90,10 +90,10 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   '&:hover': { color: 'primary.main' }
                 }}
               >
-                {row?.students?.first_name} {row?.students?.last_name}
+                {row?.student?.full_name}
               </Typography>
               <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.students?.email}
+                {row?.student?.email}
               </Typography>
             </Box>
           </Box>
@@ -123,7 +123,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row?.institute_notifications?.title}
+                {row?.title}
               </Typography>
               <Typography
                 noWrap
@@ -138,7 +138,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
                   textOverflow: 'ellipsis'
                 }}
               >
-                {row?.institute_notifications?.body}
+                {row?.body}
               </Typography>
             </Box>
           </Box>
@@ -151,9 +151,11 @@ const NotificationBodySection = ({ studentNotifications }) => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.notification_id} />
+      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
     }
   ];
+
+    
 
   return (
     <Grid>
@@ -162,7 +164,7 @@ const NotificationBodySection = ({ studentNotifications }) => {
         sx={{ p: 2 }}
         autoHeight
         rowHeight={62}
-        rows={studentNotifications?.data}
+        rows={studentNotifications?studentNotifications:[]}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

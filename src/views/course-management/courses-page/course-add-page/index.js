@@ -49,9 +49,6 @@ const AddCoursePage = () => {
   const [imgSrcTemplate, setImgSrcTemplate] = useState(imageTemplate);
   const [inputTemplateValue, setInputTemplateValue] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState('');
-  console.log(setCourseSyllabus);
-  console.log('selectedLogo', selectedLogo);
-  console.log('selectedTemplate', selectedTemplate);
 
   const handleInputLogoImageChange = async (file) => {
     const { files } = file.target;
@@ -64,17 +61,15 @@ const AddCoursePage = () => {
     }
   };
   
-  const handleInputTemplateImageChange = (file) => {
+  const handleInputTemplateImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrcTemplate(reader.result);
-      setSelectedTemplate(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputTemplateValue(reader.result);
-      }
-    }
+    const form_data = new FormData()
+    form_data.append("file",files[0])
+    const data = await client.file.upload(form_data)
+    toast.success(data?.message)
+    setSelectedTemplate(data?.data?.file)
+    setImgSrcTemplate(data?.data?.file)
   };
 
   const handleUpload = () => {
@@ -163,7 +158,6 @@ const AddCoursePage = () => {
       branch_id: branchIds
     };
     const result = await getAllCourseCategories(data);
-    console.log(result,"result")
     if (result.data) {
       setActiveCategories(result.data);
     }
@@ -171,7 +165,6 @@ const AddCoursePage = () => {
 
   const getAllBranches = async () => {
     const result = await getActiveBranches();
-    console.log(result.data,"result")
     if (result.data.data) {
       setBranches(result.data.data);
     }
@@ -215,14 +208,13 @@ const AddCoursePage = () => {
 
   const onSubmit = async () => {
     const personalData = courseControl?._formValues;
-    // console.log(courseName)
+
     const data = {
       course_name : personalData.course_name,
       description : personalData.description,
       image : selectedLogo,
       duration : personalData.course_duration,
       category : personalData.course_category.uuid,
-      branch_id : selectedBranchId,
       institute_id : useInstitute().getInstituteId(),
       price : personalData.course_price,
       class_type : [personalData.learning_format],
@@ -230,31 +222,20 @@ const AddCoursePage = () => {
     }
     setActiveStep(activeStep + 1);
     if (activeStep === steps.length - 1) {
-      const filteredBranchId = selectedBranches?.map((branch) => branch?.branch_id);
-      // console.log(selectedBranches);
+      const filteredBranchId = selectedBranches?.map((branch) => branch?.uuid);
+      
+      Promise.all(filteredBranchId?.map(async(branch)=>{
+        data.branch_id = branch
+        const result = await addCourse(data,selectedTemplate);
+        if (result.success) {
+          toast.success(result.message);
+        } else {
+          toast.error(result.message);
+        }
+      }))
+     
 
-      // let data = new FormData();
-      // filteredBranchId.forEach((id) => {
-      //   data.append(`branch_id[]`, id);
-      // });
-      // data.append('course_name', personalData?.course_name);
-      // data.append('description', personalData?.description);
-      // data.append('course_overview', personalData?.course_overview);
-      // data.append('course_duration', personalData?.course_duration);
-      // data.append('institute_category_id', personalData?.course_category.category_id);
-      // data.append('course_price', personalData?.course_price);
-      // data.append('learning_format', personalData?.learning_format);
-      // data.append('logo', selectedLogo);
-      // data.append('image', selectedTemplate);
-      // data.append('syllabus', courseSyllabus);
-      console.log(personalData);
-      const result = await addCourse(data);
-
-      if (result.success) {
-        toast.success(result.message);
-      } else {
-        toast.error(result.message);
-      }
+     
     }
   };
 
@@ -412,7 +393,6 @@ const AddCoursePage = () => {
                       fullWidth
                       value={value || null}
                       onChange={(event, newValue) => {
-                        console.log(event);
                         onChange(newValue);
                       }}
                       options={activeCategories ?? []}
@@ -520,7 +500,7 @@ const AddCoursePage = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Grid sx={{ justifyContent: 'center', display: 'flex', mb: 2 }}>
-                  <ImgStyled src={imgSrcTemplate} alt="Profile Pic" />
+                  <ImgStyled src={selectedTemplate?getImageUrl(selectedTemplate):imgSrcTemplate} alt="Profile Pic" />
                 </Grid>
                 <Grid sx={{ justifyContent: 'center', display: 'flex' }}>
                   <ButtonStyled component="label" variant="contained" htmlFor="template-settings-upload-image">
@@ -536,7 +516,7 @@ const AddCoursePage = () => {
                   </ButtonStyled>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 {courseSyllabus ? (
                   <>
                     <Grid>
@@ -571,7 +551,7 @@ const AddCoursePage = () => {
                     </Grid>
                   </Grid>
                 )}
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Button variant="tonal" color="secondary" onClick={() => navigate(-1)}>

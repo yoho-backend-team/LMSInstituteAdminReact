@@ -7,7 +7,6 @@ import client from 'api/client';
 export const getAllCourseCategoriesByInstitute = async (data) => {
   try {
     const response = await client.category.get(data)
-    console.log(response,"response")
     return response;
   } catch (error) {
     console.error('Error in get all ccourse categories:', error);
@@ -17,7 +16,6 @@ export const getAllCourseCategoriesByInstitute = async (data) => {
 export const addCourseCategory = async (data) => {
   try {
     const response = await client.category.create(data)
-    console.log(response);
 
     return { success: true, message: 'CourseCategory created successfully' }; 
   } catch (error) {

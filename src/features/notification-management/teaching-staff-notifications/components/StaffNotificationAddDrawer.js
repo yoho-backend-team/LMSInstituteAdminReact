@@ -16,7 +16,8 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { addStaffNotification } from '../services/staffNotificationServices';
+import { addStaffNotification, getAllStaffDetailsWithRoleName } from '../services/staffNotificationServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -60,16 +61,15 @@ const StaffNotificationAddDrawer = (props) => {
   const [selectedStaff, setSelectedStaff] = useState([]);
 
   useEffect(() => {
-    getActiveStaffsByBranch(selectedBranchId);
+    getActiveStaffsByBranch(selectedBranchId,"Teaching");
   }, [selectedBranchId]);
 
   const getActiveStaffsByBranch = async (selectedBranchId, type) => {
     const data = {
       type: type,
-      branch_id: selectedBranchId
     };
-    const result = await getAllActiveTeachingStaffs(data);
-    setActiveStaffs(result.data.data);
+    const result = await getAllStaffDetailsWithRoleName(data);
+    setActiveStaffs(result.data);
   };
 
   const {
@@ -94,16 +94,17 @@ const StaffNotificationAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
-    data?.staff?.forEach((staff) => {
-      bodyFormData.append('staff_ids[]', staff?.staff_id);
-    });
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('type', data.type);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
-
-    const result = await addStaffNotification(bodyFormData);
+    const staffIds = data?.staff?.filter((user)=>user?._id)
+   
+    const staff_notification = {
+      staff : staffIds,
+      title : data?.title,
+      body : data?.body,
+      branch : selectedBranchId,
+      institute : useInstitute().getInstituteId()
+    }
+   
+    const result = await addStaffNotification(staff_notification);
 
     if (result.success) {
       toast.success(result.message);
@@ -170,7 +171,7 @@ const StaffNotificationAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -185,7 +186,7 @@ const StaffNotificationAddDrawer = (props) => {
                 />
               </ButtonStyled>
             </div>
-          </Box>
+          </Box> */}
 
           <Grid item xs={12} sx={{ mb: 2 }}>
             <Controller
@@ -219,8 +220,8 @@ const StaffNotificationAddDrawer = (props) => {
               multiple
               disableCloseOnSelect
               id="select-multiple-chip"
-              options={activeStaffs}
-              getOptionLabel={(option) => option?.staff_name || ''}
+              options={activeStaffs?.data||[]}
+              getOptionLabel={(option) => option?.full_name || ''}
               value={selectedStaff}
               onChange={(e, newValue) => {
                 setSelectedStaff(newValue);
@@ -258,15 +259,15 @@ const StaffNotificationAddDrawer = (props) => {
                     style={{ marginRight: 8 }}
                     checked={selected}
                   />
-                  {option?.staff_name}
+                  {option?.full_name}
                 </li>
               )}
               renderTags={(value) => (
                 <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                   {value?.map((option, index) => (
                     <CustomChip
-                      key={option?.staff_id}
-                      label={option?.staff_name}
+                      key={option?._id}
+                      label={option?.full_name}
                       onDelete={() => {
                         const updatedValue = [...value];
                         updatedValue?.splice(index, 1);
@@ -279,7 +280,7 @@ const StaffNotificationAddDrawer = (props) => {
                   ))}
                 </div>
               )}
-              isOptionEqualToValue={(option, value) => option?.staff_id === value?.staff_id}
+              isOptionEqualToValue={(option, value) => option?._id === value?._id}
             />
           </Grid>
 

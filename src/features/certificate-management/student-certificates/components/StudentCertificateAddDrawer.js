@@ -54,7 +54,6 @@ const StudentCertificateAddDrawer = (props) => {
   const [activeBatches, setActiveBatches] = useState([]);
   const [students, setStudents] = useState([]);
   const [studymaterialPdf, setstudymaterialPdf] = useState('');
-  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -67,7 +66,6 @@ const StudentCertificateAddDrawer = (props) => {
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
 
-    console.log('active branches : ', result.data);
     setActiveBranches(result.data.data);
   };
 
@@ -140,10 +138,8 @@ const uploadFileToS3 = async (file) => {
     // const s3UploadResponse = await uploadFileToS3(studymaterialPdf);
     
     // Assuming s3UploadResponse contains the URL of the uploaded file
-    console.log(data,data.pdf_file)
     
     
-    console.log(data);
     var bodyFormData = new FormData();
     bodyFormData.append('file_upload', studymaterialPdf);
     bodyFormData.append('student', data.student);
@@ -152,7 +148,7 @@ const uploadFileToS3 = async (file) => {
     bodyFormData.append('branch_id', selectedBranchId);
 
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
-    console.log(branch)
+
     const InputData = {
       file_upload:data.pdf_file,
       student: data.student,
@@ -213,7 +209,7 @@ const uploadFileToS3 = async (file) => {
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-              <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} />
+              {/* <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} /> */}
             </Grid>
 
             <Grid item xs={12} sx={{ mb: 2 }}>
@@ -380,3 +376,5 @@ StudentCertificateAddDrawer.propTypes = {
 };
 
 export default StudentCertificateAddDrawer;
+
+

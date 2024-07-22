@@ -33,10 +33,10 @@ const ViewAttendance = () => {
   const skin = 'default';
   const direction = 'ltr';
   const mdAbove = useMediaQuery((theme) => theme.breakpoints.up('md'));
-
+ 
   useEffect(() => {
     const data = {
-      staff_id: staff?._id,
+      id: staff?.staff,
       title: ''
     };
     getStaffAttendance(data);
@@ -45,13 +45,13 @@ const ViewAttendance = () => {
   const getStaffAttendance = async (data) => {
     const result = await getTeachingStaffAttendanceById(data);
     if (result) {
-      setAttendances(result.data.data);
+      setAttendances(result.data);
     }
   };
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
-
+  console.log(attendances,"attedence")
   return (
     <CalendarWrapper
       className="app-calendar"
@@ -69,7 +69,7 @@ const ViewAttendance = () => {
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
         setAttendances={setAttendances}
-        staffId={staff?.staff_id}
+        staffId={staff?.staff}
         staff={staff}
       />
       <Box
@@ -100,7 +100,7 @@ const ViewAttendance = () => {
         handleSelectEvent={handleSelectEvent}
         addEventSidebarOpen={addEventSidebarOpen}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        staffId={staff?.staff_id}
+        staffId={staff?.staff}
         selected={selected}
         setRefetch={setRefetch}
         staff={staff}

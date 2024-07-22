@@ -12,7 +12,6 @@ export const getAllStaffSalaries = async (data) => {
       },
       params: data
     });
-    console.log(response.data);
     
     return response;
   } catch (error) {
@@ -85,7 +84,6 @@ export const updateTeachingStaffSalaryStatus = async (data) => {
       }
     });
 
-    console.log(response);
     if (response.data.status) {
       return { success: true, message: 'Course updated successfully' };
     } else {

@@ -31,7 +31,7 @@ const StepperLinearWithValidation = () => {
   const location = useLocation();
   const staffData = location.state.staff;
   const staffId = location.state.id;
-  console.log('staffData:', staffData);
+
 
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
@@ -52,19 +52,19 @@ const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
     full_name: '',
     email: '',
-    phone: '',
-    alt_phone: '',
+    phone_number: '',
+    alternate_number: '',
     state: '',
     city: '',
-    pin_code: '',
-    address_line_one: '',
-    address_line_two: '',
+    pincode: '',
+    address1: '',
+    address2: '',
     date_of_birth: '',
     gender: '',
     course: '',
     branch: '',
     designation: '',
-    education_qualification: '',
+    qualification: '',
     username: '',
     logo: ''
   };
@@ -82,19 +82,19 @@ const StepperLinearWithValidation = () => {
       .string()
       .required('Email is required')
       .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Invalid email format'),
-    phone: yup
+    phone_number: yup
       .string()
       .required('Phone number is required')
       .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits'),
-    alt_phone: yup
+    alternate_number: yup
       .string()
-      .required('Alternate phone number is required')
-      .matches(/^\d{10,}$/, 'Alternate phone number must be at least 10 digits'),
+      .required('Alternate phone_number number is required')
+      .matches(/^\d{10,}$/, 'Alternate phone_number number must be at least 10 digits'),
     designation: yup
       .string()
       .required('Designation is required')
       .matches(/^[a-zA-Z\s]+$/, 'Designation should only contain alphabets'),
-    education_qualification: yup
+    qualification: yup
       .string()
       .required('Educational Qualification is required')
       .matches(/^[a-zA-Z\s]+$/, 'Educational Qualification should only contain alphabets'),
@@ -108,13 +108,13 @@ const StepperLinearWithValidation = () => {
       .required('City is required')
       .matches(/^[a-zA-Z\s]+$/, 'City should only contain alphabets'),
 
-    pin_code: yup
+    pincode: yup
       .string()
       .required('Pin code is required')
       .matches(/^\d{6}$/, 'Pin code must be 6 digits'),
 
-    address_line_one: yup.string().required('Address line one is required'),
-    address_line_two: yup.string().required('Address line two is required'),
+    address1: yup.string().required('Address line one is required'),
+    address2: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
     username: yup
@@ -188,23 +188,24 @@ const StepperLinearWithValidation = () => {
       setValue('id', staffId);
       setValue('full_name', staffData?.data?.full_name);
       setValue('email', staffData?.data?.email);
-      setValue('phone', staffData?.data?.contact_info?.phone_number);
-      setValue('alt_phone', staffData?.data?.contact_info?.alternate_number);
-      setValue('designation', staffData?.data?.userDetail?.desigination);
+      setValue('phone_number', staffData?.data?.contact_info?.phone_number);
+      setValue('alternate_number', staffData?.data?.contact_info?.alternate_number);
+      setValue('designation', staffData?.data?.userDetail?.designation);
       setValue('branch_id', staffData?.data?.userDetail?.branch_id);
       setValue('image', logo);
       setValue('gender', staffData?.data?.gender);
-      setValue('address_line_one', staffData?.data?.contact_info?.address1);
-      setValue('address_line_two', staffData?.data?.contact_info?.address2);
+      setValue('address1', staffData?.data?.contact_info?.address1);
+      setValue('address2', staffData?.data?.contact_info?.address2);
       setValue('city', staffData?.data?.contact_info?.city);
       setValue('state', staffData?.data?.contact_info?.state);
-      setValue('pin_code', staffData?.data?.contact_info?.pincode);
+      setValue('pincode', staffData?.data?.contact_info?.pincode);
       setValue('date_of_birth', new Date(staffData?.data?.dob) || new Date()); // Set class date
       setValue('username', staffData?.data?.userDetail?.username);
-      setValue('education_qualification', staffData?.data?.qualification);
+      setValue('qualification', staffData?.data?.qualification);
       setSelectedCourses(staffData?.data?.userDetail?.course);
     }
   }, [staffData]);
+
 
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
@@ -224,67 +225,40 @@ const StepperLinearWithValidation = () => {
   };
 
 
-
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     const personalData = personalControl?._formValues;
-
-    // const filteredCourseId = selectedCourses?.map((course) => course.course_id);
-
+    const filteredCourseId = selectedCourses?.map((course) => course._id);
+  
     const teaching = {
       id : staffId,
+      course:filteredCourseId,
       email: personalData.email,
       full_name: personalData.full_name,
       username: personalData.username,
       dob: (personalData.date_of_birth),
       gender: personalData.gender,
       // userDetail:staffData[0].userDetail._id,
-      qualification: personalData.education_qualification,
+      qualification: personalData.qualification,
       contact_info: {
         state: personalData.state,
         city: personalData.city,
-        pincode: personalData.pin_code,
-        address1: personalData.address_line_one,
-        address2: personalData.address_line_two,
-        phone_number: personalData.phone
+        pincode: personalData.pincode,
+        address1: personalData.address1,
+        address2: personalData.address2,
+        phone_number: personalData.phone_number,
+        alternate_number: personalData.alternate_number
       },
       designation: personalData.designation,
+      userDetail : staffData?.data?.userDetail?._id
     };
 
-    // let data = new FormData();
-    // filteredCourseId?.forEach((id) => {
-    //   data.append(`course_ids[]`, id);
-    // });
-
-    // data.append('id', staffData?.id);
-    // data.append('full_name', personalData?.full_name);
-    // data.append('email', personalData?.email);
-    // data.append('phone_number', personalData?.phone);
-    // data.append('alternate_number', personalData?.alt_phone);
-    // data.append('designation', personalData?.designation);
-    // data.append('image', logo);
-    // data.append('gender', personalData?.gender);
-    // data.append('address_line_1', personalData?.address_line_one);
-    // data.append('address_line_2', personalData?.address_line_two
-    // );
-    // data.append('city', personalData?.city);
-    // data.append('state', personalData?.state);
-    // data.append('pin_code', personalData?.pin_code);
-    // data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    // data.append('username', personalData?.username);
-    // data.append('education_qualification', personalData?.education_qualification);
-    // const isUserNameTaken = await checkUserName(personalData?.username);
-
     const result = await updateTeachingStaff(teaching);
-    // if (!isUserNameTaken.success) {
-    //   setError('username', {
-    //     type: 'manual',
-    //     message: 'Username is already taken'
-    //   });
-    // } else if (isUserNameTaken.success) {
+    
       if (result.success) {
         toast.success(result.message);
         navigate(-1);
       } else {
+        
         toast.error(result.message);
       // }
     }
@@ -432,12 +406,12 @@ const StepperLinearWithValidation = () => {
                   multiple
                   disableCloseOnSelect
                   id="select-multiple-chip"
-                  options={[{ course_id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
+                  options={[{ _id: 'selectAll', course_name: 'Select All' }, ...activeCourse]}
                   getOptionLabel={(option) => option.course_name}
                   value={selectedCourses}
                   onChange={(e, newValue) => {
-                    if (newValue && newValue.some((option) => option.course_id === 'selectAll')) {
-                      setSelectedCourses(activeCourse.filter((option) => option.course_id !== 'selectAll'));
+                    if (newValue && newValue.some((option) => option._id === 'selectAll')) {
+                      setSelectedCourses(activeCourse.filter((option) => option._id !== 'selectAll'));
                     } else {
                       setSelectedCourses(newValue);
                       setValue('course', newValue);
@@ -472,7 +446,7 @@ const StepperLinearWithValidation = () => {
                     <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                       {value.map((option, index) => (
                         <CustomChip
-                          key={option.course_id}
+                          key={option._id}
                           label={option.course_name}
                           onDelete={() => {
                             const updatedValue = [...value];
@@ -486,7 +460,7 @@ const StepperLinearWithValidation = () => {
                       ))}
                     </div>
                   )}
-                  isOptionEqualToValue={(option, value) => option.course_id === value.course_id}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                 />
               )}
             />
@@ -500,7 +474,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.data?.userDetail?.desigination}
+                  defaultValue={staffData?.data?.userDetail?.designation}
                   label="designation"
                   onChange={onChange}
                   aria-describedby="stepper-linear-personal-designation-helper"
@@ -512,7 +486,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="education_qualification"
+              name="qualification"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -522,8 +496,8 @@ const StepperLinearWithValidation = () => {
                   label="Qualification"
                   onChange={onChange}
                   aria-describedby="stepper-linear-personal-qualification-helper"
-                  error={Boolean(personalErrors.education_qualification)}
-                  {...(personalErrors.education_qualification && { helperText: personalErrors.education_qualification.message })}
+                  error={Boolean(personalErrors.qualification)}
+                  {...(personalErrors.qualification && { helperText: personalErrors.qualification.message })}
                 />
               )}
             />
@@ -566,7 +540,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="pin_code"
+              name="pincode"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -577,16 +551,16 @@ const StepperLinearWithValidation = () => {
                   type="number"
                   onChange={onChange}
                   placeholder="Carter"
-                  aria-describedby="stepper-linear-personal-pin_code"
-                  error={Boolean(personalErrors.pin_code)}
-                  {...(personalErrors.pin_code && { helperText: personalErrors.pin_code.message })}
+                  aria-describedby="stepper-linear-personal-pincode"
+                  error={Boolean(personalErrors.pincode)}
+                  {...(personalErrors.pincode && { helperText: personalErrors.pincode.message })}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="address_line_one"
+              name="address1"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -596,16 +570,16 @@ const StepperLinearWithValidation = () => {
                   label="Address Line One"
                   onChange={onChange}
                   placeholder="Carter"
-                  aria-describedby="stepper-linear-personal-address_line_one"
-                  error={Boolean(personalErrors.address_line_one)}
-                  {...(personalErrors.address_line_one && { helperText: personalErrors.address_line_one.message })}
+                  aria-describedby="stepper-linear-personal-address1"
+                  error={Boolean(personalErrors.address1)}
+                  {...(personalErrors.address1 && { helperText: personalErrors.address1.message })}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="address_line_two"
+              name="address2"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -615,16 +589,16 @@ const StepperLinearWithValidation = () => {
                   label="Address Line Two"
                   onChange={onChange}
                   placeholder="Carter"
-                  aria-describedby="stepper-linear-personal-address_line_two"
-                  error={Boolean(personalErrors.address_line_two)}
-                  {...(personalErrors.address_line_two && { helperText: personalErrors.address_line_two.message })}
+                  aria-describedby="stepper-linear-personal-address2"
+                  error={Boolean(personalErrors.address2)}
+                  {...(personalErrors.address2 && { helperText: personalErrors.address2.message })}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="phone"
+              name="phone_number"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -635,9 +609,9 @@ const StepperLinearWithValidation = () => {
                   label="Phone Number"
                   onChange={onChange}
                   placeholder="Carter"
-                  aria-describedby="stepper-linear-personal-phone"
-                  error={Boolean(personalErrors.phone)}
-                  {...(personalErrors.phone && { helperText: personalErrors.phone.message })}
+                  aria-describedby="stepper-linear-personal-phone_number"
+                  error={Boolean(personalErrors.phone_number)}
+                  {...(personalErrors.phone_number && { helperText: personalErrors.phone_number.message })}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">+91</InputAdornment>
                   }}
@@ -647,7 +621,7 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="alt_phone"
+              name="alternate_number"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { onChange } }) => (
@@ -658,9 +632,9 @@ const StepperLinearWithValidation = () => {
                   label="Alt Phone Number"
                   onChange={onChange}
                   placeholder="Carter"
-                  aria-describedby="stepper-linear-personal-alt_phone"
-                  error={Boolean(personalErrors.alt_phone)}
-                  {...(personalErrors.alt_phone && { helperText: personalErrors.alt_phone.message })}
+                  aria-describedby="stepper-linear-personal-alternate_number"
+                  error={Boolean(personalErrors.alternate_number)}
+                  {...(personalErrors.alternate_number && { helperText: personalErrors.alternate_number.message })}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">+91</InputAdornment>
                   }}

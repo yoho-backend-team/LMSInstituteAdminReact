@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import FaqAddDrawer from './FaqAddDrawer';
 import FaqEdit from './FaqEdit';
 import FaqTableHeader from './FaqTableHeader';
+import toast from 'react-hot-toast';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -34,7 +35,6 @@ const FaqDataGrid = () => {
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
 
-  console.log(deletingItemId);
   const dispatch = useDispatch();
 
   const handleRowClick = (params) => {
@@ -47,14 +47,12 @@ const FaqDataGrid = () => {
   };
 
   const handleDelete = (itemId) => {
-    console.log('Delete clicked for item ID:', itemId);
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
   };
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
-    console.log('Toggle drawer');
   };
 
   const studentCertificatesdata = [
@@ -261,10 +259,9 @@ const FaqDataGrid = () => {
         setValue(val);
         const result = await searchUsers(val);
         if (result.success) {
-          console.log('Search results:', result.data);
           dispatch(setUsers(result.data));
         } else {
-          console.log(result.message);
+          toast.error(result?.message)
         }
       } catch (error) {
         console.log(error);

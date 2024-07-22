@@ -14,9 +14,12 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addNotification } from '../services/allNotificationServices';
+import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const AllNotificationAddDrawer = (props) => {
   const { open, toggle, setAllNotificationRefetch } = props;
+  const {show,hide} = useSpinner()
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -81,20 +84,24 @@ const AllNotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    bodyFormData.append('image', selectedImage);
-    bodyFormData.append('branch', data.branch);
-    bodyFormData.append('branch_id', selectedBranchId);
-    bodyFormData.append('title', data.title);
-    bodyFormData.append('body', data.body);
-
-    const result = await addNotification(bodyFormData);
+    show()
+    console.log(data,"data")
+    const new_notification = {
+      institute : useInstitute().getInstituteId(),
+      branch : data?.branch,
+      title : data?.title,
+      body : data?.body
+    }
+    
+    const result = await addNotification(new_notification);
 
     if (result.success) {
+      hide()
       toast.success(result.message);
       handleClose();
       setAllNotificationRefetch();
     } else {
+      hide()
       toast.error(result.message);
     }
   };
@@ -125,7 +132,7 @@ const AllNotificationAddDrawer = (props) => {
       }
     }
   };
-
+  console.log(activeBranches,"activeBranches")
   return (
     <Drawer
       open={open}
@@ -155,7 +162,7 @@ const AllNotificationAddDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
               <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -170,7 +177,7 @@ const AllNotificationAddDrawer = (props) => {
                 />
               </ButtonStyled>
             </div>
-          </Box>
+          </Box> */}
 
           <Grid item xs={12} sm={12}>
             <Controller
@@ -181,11 +188,11 @@ const AllNotificationAddDrawer = (props) => {
                 <Autocomplete
                   fullWidth
                   options={activeBranches}
-                  getOptionLabel={(branch) => branch.branch_name}
+                  getOptionLabel={(branch) => branch.branch_identity}
                   onChange={(event, newValue) => {
-                    onChange(newValue?.branch_id);
+                    onChange(newValue?._id);
                   }}
-                  value={activeBranches.find((branch) => branch.branch_id === value) || null}
+                  value={activeBranches.find((branch) => branch._id === value) || null}
                   renderInput={(params) => (
                     <TextField
                       {...params}

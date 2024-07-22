@@ -32,6 +32,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { login } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useSpinner } from 'context/spinnerContext';
 
 // import Google from 'assets/images/icons/social-google.svg';
 
@@ -43,6 +45,7 @@ const FirebaseLogin = ({ ...others }) => {
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
   const {handleotppage} = others
+  const {show,hide} = useSpinner()
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -67,16 +70,23 @@ const FirebaseLogin = ({ ...others }) => {
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
+          show()
           const response = await dispatch(await login(values.email, values.password));
-          console.log(response,"response")
-          if(response.otpVerify){
+          
+          if(response?.otpVerify){
+            hide()
             handleotppage()
+          }else{
+            hide()
+            toast.error(response?.message)
           }
           setStatus({ success: true });
           setSubmitting(false);
           }
         } catch (err) {
+          hide()
           console.error(err);
+          toast.error(err?.message)
           if (scriptedRef.current) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -142,7 +152,7 @@ const FirebaseLogin = ({ ...others }) => {
               label="Remember me"
             /> */}
 
-            <Typography
+            {/* <Typography
               component={Link}
               // onClick={others?.handleOtpPage}
               to="/forget-password"
@@ -151,7 +161,7 @@ const FirebaseLogin = ({ ...others }) => {
               sx={{ textDecoration: 'none', cursor: 'pointer' }}
             >
               Forgot Password?
-            </Typography>
+            </Typography> */}
           </Stack>
           {errors.submit && (
             <Box sx={{ mt: 3 }}>

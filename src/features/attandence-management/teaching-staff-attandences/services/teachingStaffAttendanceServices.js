@@ -6,37 +6,25 @@ const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC
 
 export const getAllTeachingStaffAttendances = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/getall`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
+    const response = await client.attedence.get_all_staff_attedence(data)
 
-    
-      return response;
-   
+    // Check if the response status is successful
+
+    return response;
   } catch (error) {
 
     console.error('Error in getAllTeachingStaffAttendances:', error);
 
-    throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${response.status}`);  }
+    // Throw the error again to propagate it to the calling function/component
+    throw new Error(`Failed to fetch TeachingStaffAttendances. Status: ${error?.response?.data?.message}`);
+  }
 };
 export const getTeachingStaffAttendanceById = async (data) => {
   try {
-    const response = await axios.get(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/${data.staff_id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.attedence.get_staff_attedence_with_id(data)
 
-    console.log(response);
-
-      return response;
+    // Check if the response status is successful
+    return response;
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllTeachingStaffAttendances:', error);
@@ -77,19 +65,12 @@ export const getUserListWithRoleName = async (data) => {
 
 export const addTeachingStaffAttendance = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/create`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
+    const response = await client.attedence.mark_staff_attedence(data)
 
-   
-    return { success: true, message: response?.data?.message};
+    return { success: true, message: 'TeachingStaffAttendance created successfully' };
   } catch (error) {
     console.error('Error in addTeachingStaffAttendance:', error);
-    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create TeachingStaffAttendance' };
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 
@@ -124,7 +105,6 @@ export const updateTeachingStaffAttendance = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'TeachingStaffAttendance updated successfully' };
     } else {
       return { success: false, message: 'Failed to update TeachingStaffAttendance' };

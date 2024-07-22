@@ -109,7 +109,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       setValue('branch', userData?.branche || []);
       setValue('role', userData?.role?.id || '');
       setSelectedBranch([userData?.branch]);
-      console.log(userData?.phone_number?.slice(3))
     }
   }, [userData, setValue]);
   const handleClose = () => {
@@ -136,7 +135,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       if (result.success) {
         setGroups(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -162,7 +161,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     const form_data = new FormData()
     form_data.append("file",files[0])
     const data = await client.file.upload(form_data)
-    console.log(data,"fileUploadResponse")
     toast.success(data.message)
     setSelectedImage(data?.data?.file)
     setImgSrc(data?.data?.file)
@@ -171,7 +169,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const onSubmit = async (data) => {
     show()
     const role = groups?.filter((i)=>i.id === data?.role)
-    console.log(role,"role")
+
     const new_form_data = {
       first_name : data?.first_name,
       last_name : data?.last_name,
@@ -183,7 +181,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       userId : userData?.uuid,
       image : selectedImage ? selectedImage : userData?.image
     }
-    console.log(data,new_form_data)
 
     const result = await updateUser(new_form_data);
 
@@ -198,7 +195,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   };
  
-  console.log(userData,"userData")
   return (
     <Dialog
       open={openEdit}
@@ -344,7 +340,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     placeholder="(397) 294-5153"
                     error={Boolean(errors.phone_number)}
                     {...(errors.phone_number && { helperText: errors.phone_number.message })}
-                    {...(console.log(value,"value"))}
                     InputProps={{
                       startAdornment: <InputAdornment position="start">+91</InputAdornment>
                     }}

@@ -100,7 +100,14 @@ const getUserList = async (name) => {
       staff_type: mapToRoleName[data.staff_type],
       user:ids
     };
-    const result = await addNonTeachingStaffAttendance(inputData);
+    const new_attedence = {
+      institute : useInstitute().getInstituteId(),
+      branch : staff.branch,
+      status:data?.title,
+      date : convertDateFormat(selectedDate),
+      staff : staff?.staff
+    }
+    const result = await addNonTeachingStaffAttendance(new_attedence);
     if (result.success) {
       setRefetch((state) => !state);
       toast.success(result.message);

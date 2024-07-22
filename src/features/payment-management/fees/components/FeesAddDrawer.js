@@ -20,6 +20,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addStudentFee } from '../services/studentFeeServices';
 import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -51,6 +52,7 @@ const FeesAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
 
   const [inputValue, setInputValue] = useState('');
+  const {show,hide} = useSpinner()
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [imgSrc, setImgSrc] = useState(image);
@@ -79,25 +81,37 @@ const FeesAddDrawer = (props) => {
   };
 
   const getActiveCoursesByBranch = async (data) => {
+    show()
     const result = await getAllCourses(data);
     if (result?.data) {
+      hide()
       setActiveCourse(result?.data);
+    }else{
+      hide()
     }
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
+    show()
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
     if (result?.success) {
+      hide()
       setActiveBatches(result?.data);
+    }else{
+      hide()
     }
   };
 
   const getStudentsByBatch = async (batchId) => {
+    show()
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudentsByBatch(data);
     if (result?.success) {
+      hide()
       setStudents(result?.data);
+    }else{
+      hide()
     }
   };
 
@@ -129,16 +143,9 @@ const FeesAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    // var bodyFormData = new FormData();
-    // bodyFormData.append('payment_proof', selectedImage);
-    // bodyFormData.append('branch_id', data.branch);
-    // bodyFormData.append('student_id', data.data.data[1].student);
-    // bodyFormData.append('transaction_id', data.transaction_id);
-    // bodyFormData.append('paid_amount', data.paidAmount);
-    // bodyFormData.append('payment_date', convertDateFormat(data.payment_date));
-    console.log(data,"data",activeBranches,activeBranches[0].branch_identity===data.branch,data.branch,activeBranches[0].branch_identity)
+    show()
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
-    console.log(branch)
+
     const InputData = {
       student: data.student,
       branch_name:data.branch_id,
@@ -154,12 +161,14 @@ const FeesAddDrawer = (props) => {
     };
 
     const result = await addStudentFee(InputData);
-console.log("data arrived by",InputData)
+    console.log(result,"result")
     if (result.success) {
+      hide()
       toast.success(result.message);
       handleClose();
       setRefetch((state) => !state);
     } else {
+      hide()
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
@@ -263,7 +272,7 @@ console.log("data arrived by",InputData)
                       getOptionLabel={(branch) => branch.branch_identity}
                       onChange={(event, newValue) => {
                         onChange(newValue?.branch_identity);
-                        getActiveCoursesByBranch(newValue?.branch_identity);
+                        getActiveCoursesByBranch({branch_id:newValue?.uuid});
                       }}
                       value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                       renderInput={(params) => (

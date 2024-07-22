@@ -14,14 +14,12 @@ export const login = (username, password) => async (dispatch) => {
     password: password
   };
   try {
-     console.log(LOGIN_API_ENDPOINT,"login api end point")
     const response = await axios.post(LOGIN_API_ENDPOINT, data, {
       headers: {
         'Content-Type': 'application/json'
       }
     });
    
-    console.log(response,response.data);
     if(response.data.data.otpVerify){
        localStorage.setItem("otp",JSON.stringify(response.data.data))
        toast.success(response.data.message)
@@ -36,7 +34,7 @@ export const login = (username, password) => async (dispatch) => {
       localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
       localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
       localStorage.setItem("institute",JSON.stringify(response.data.data.institute))
-      console.log(response,"response",response.data.data.institute)
+
       // Dispatch success action
       dispatch({
         type: 'LOGIN_SUCCESS',
@@ -51,7 +49,7 @@ export const login = (username, password) => async (dispatch) => {
       });
       // const fcmToken = await requestForToken();
       // const updateToken = await updateFcmToken({ fcm_token: fcmToken });
-      // console.log(updateToken);
+
       window.location.replace('/');
       toast.success('Login Successful');
       return { success: true, message: 'Login successfully' };
@@ -83,7 +81,7 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
     
   
     const response = await client.users.verifyOtp(data)
-    console.log(response,"response")
+
     if (response.status==="success") {
       
       localStorage.setItem('isAuthenticated', true);
@@ -107,7 +105,7 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
       });
       // const fcmToken = await requestForToken();
       // const updateToken = await updateFcmToken({ fcm_token: fcmToken });
-      // console.log(updateToken);
+
       window.location.replace('/');
       toast.success('Login Successful');
       return { success: true, message: 'Login successfully' };
@@ -142,7 +140,7 @@ export const logout = (data) => async (dispatch) => {
     //   }
     // );
     const response = await client.users.logout(data)
-    console.log(response);
+
     if (response.status) {
       // Remove token and user ID from localStorage
       localStorage.removeItem('token');

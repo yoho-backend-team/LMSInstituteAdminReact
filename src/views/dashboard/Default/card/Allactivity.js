@@ -2,6 +2,8 @@ import { Divider, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
+import client from 'api/client';
+import { useEffect,useState } from 'react';
 
 const data = [
   {
@@ -40,8 +42,21 @@ const data = [
   }
 ];
 
+
+
 const AllActivity = () => {
   const theme = useTheme();
+  const [Logs,setLogs] = useState([])
+
+  useEffect(()=>{
+    const getAllUserActivity = async () => {
+    const response = await client.activity.get()
+    console.log(response,"data")
+    setLogs(response?.data)
+    }
+    getAllUserActivity()
+   },[])
+
   return (
     <>
       <Typography variant="h4"sx={{ml:1,mb:2}}>
@@ -50,7 +65,7 @@ const AllActivity = () => {
       <Card sx={{ backgroundColor: theme.palette.dark.light, p: 3, height: 450, overflow: 'auto' }}>
         <Box>
           <Card sx={{ mt: 2, backgroundColor: theme.palette.primary.main, opacity: 0.8, boxShadow: 'none' }}>
-            {data.map((item, index) => {
+            {Logs.map((item, index) => {
               return (
                 <Box key={index}>
                   <Box
@@ -64,13 +79,13 @@ const AllActivity = () => {
                       pt: 2
                     }}
                   >
-                    <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
+                    {/* <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} /> */}
                     <Box sx={{ marginLeft: 2 }}>
                       <Typography variant="h5" sx={{ color: 'white' }}>
                         {item.title}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
-                        {item.subtitle}
+                      {item.user?.first_name}  {"|"}  {item?.action} {"|"} {item?.details}
                       </Typography>
                     </Box>
                   </Box>
@@ -81,8 +96,8 @@ const AllActivity = () => {
           </Card>
         </Box>
         <Box>
-          <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
-            {data.map((item, index) => {
+          {/* <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
+            {Logs.map((item, index) => {
               return (
                 <Box key={index}>
                   <Box
@@ -99,10 +114,10 @@ const AllActivity = () => {
                     <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
                     <Box sx={{ marginLeft: 2 }}>
                       <Typography variant="h5" sx={{ color: 'white' }}>
-                        {item.title}
+                        {item.action}
                       </Typography>
                       <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
-                        {item.subtitle}
+                        {item.deta}
                       </Typography>
                     </Box>
                   </Box>
@@ -110,7 +125,7 @@ const AllActivity = () => {
                 </Box>
               );
             })}
-          </Card>
+          </Card> */}
         </Box>
       </Card>
     </>

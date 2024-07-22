@@ -38,7 +38,7 @@ MultiFilePreview.propTypes = {
 
 export default function MultiFilePreview({ showPreview = false, files, onRemove, onRemoveAll }) {
   const hasFile = files.length > 0;
-  console.log(files);
+  
   return (
     <>
       <List disablePadding sx={{ ...(hasFile && { my: 3 }) }}>

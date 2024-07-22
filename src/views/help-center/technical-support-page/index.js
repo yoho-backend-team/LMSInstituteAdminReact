@@ -183,7 +183,6 @@ const TechnicalSupport = () => {
     await axios
       .request(config)
       .then((response) => {
-        console.log(response.data);
         setHelps(response.data.data);
         setActiveTab(response.data.data[0].module);
       })
@@ -192,7 +191,6 @@ const TechnicalSupport = () => {
       });
   };
 
-  console.log(helps);
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);

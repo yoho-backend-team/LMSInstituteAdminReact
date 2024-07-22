@@ -4,10 +4,10 @@ import axios from 'axios';
 
 const LIVE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/live-class`;
 
+
 export const getAllLiveClasses = async (data) => {
   try {
     const response = await client.online_class.getAll(data)
-    console.log('getAllLiveClasses:', response);
     // Check if the response status is successful
     return response;
   } catch (error) {
@@ -41,70 +41,38 @@ export const searchLiveClasses = async (searchQuery) => {
 
 export const addLiveClass = async (data) => {
   try {
-    const response = await axios.post(`${LIVE_CLASS_API_END_POINT}/create-live-class`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'LiveClass created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create LiveClass' };
-    }
+    const response = await client?.online_class.create(data)
+    return { success: true, message: 'LiveClass created successfully' };
   } catch (error) {
     console.error('Error in addLiveClass:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to create LiveClass' };
   }
 };
 
 export const deleteLiveClass = async (data) => {
   try {
-    const response = await axios.delete(`${LIVE_CLASS_API_END_POINT}/live-class-delete`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    console.log(response);
-    if (response.data.status) {
-      return { success: true, message: 'LiveClass deleted successfully' };
-    } else {
-      return { success: false, message: 'Failed to delete LiveClass' };
-    }
+    const response = await client?.online_class.delete(data)
+  
+    return { success: true, message: 'LiveClass deleted successfully' };
   } catch (error) {
     console.error('Error in deleteLiveClass:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message : 'Failed to delete LiveClass' };
   }
 };
 
 export const updateLiveClass = async (data) => {
   try {
-    const response = await axios.put(`${LIVE_CLASS_API_END_POINT}/update-live-class`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-    console.log('updateLiveClass:', response);
-    if (response.data.status) {
-      // console.log(response);
-      return { success: true, message: 'LiveClass updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update LiveClass' };
-    }
+    const response = await client.online_class.update(data)
+    return { success: true, message: 'LiveClass updated successfully' };
   } catch (error) {
     console.error('Error in updateLiveClass:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message ? error?.response?.data?.message :  'Failed to update LiveClass' };
   }
 };
 
 export const getLiveClassDetails = async (data) => {
   try {
     const response = await client.online_class.getWithId(data)
-    console.log(response);
    
     return {
       success: true,

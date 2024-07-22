@@ -34,6 +34,16 @@ const pages = {
           target: false,
           breadcrumbs: false,
           visible: hasPermission('inst_help_faqs_support_view','Help Faqs')
+        },
+        {
+          id: 'Add Help Category',
+          title: 'Help Add',
+          type: 'item',
+          url: '/help-center/help-Add',
+          icon: icons.IconHelp,
+          target: false,
+          breadcrumbs: false,
+          visible: hasPermission('inst_help_faqs_support_view','Help Faqs')
         }
       ]
     }

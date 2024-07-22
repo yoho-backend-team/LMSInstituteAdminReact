@@ -6,9 +6,7 @@ const COURSE_MODULE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api
 
 export const getAllCourseModules = async (data) => {
   try {
-    console.log(data,"data")
     const response = await client.course_module.getAll(data)
-    console.log(response);
 
     return response;
     
@@ -43,8 +41,6 @@ export const addCourseModule = async (data) => {
   try {
     const response = await client.course_module.create(data)
 
-    console.log(response);
-
     return { success: true, message: 'CourseModule created successfully' };
   } catch (error) {
     console.log(error,"error")
@@ -68,7 +64,6 @@ export const deleteCourseModule = async (data) => {
 export const updateCourseModule = async (data) => {
   try {
     const response = await client.course_module.update(data)
-    console.log('coursemodules-edit', response);  
     return { success: true, message: 'CourseModule updated successfully' };
   } catch (error) {
     return { success: false, message: 'Failed to update CourseModule' };
@@ -78,9 +73,7 @@ export const updateCourseModule = async (data) => {
 export const updateCourseModulesStatus = async (data) => {
   try {
     const response = await client.course_module.update_status(data)
-    console.log('Modulesresponse:', response);
     if (response.success) {
-      console.log(response);
       return { success: true, message: 'CourseModules status updated successfully' };
     } else {
       return { success: false, message: 'Failed to update CourseModules status' };

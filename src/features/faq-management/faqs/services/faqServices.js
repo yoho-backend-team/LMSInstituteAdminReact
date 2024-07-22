@@ -15,8 +15,6 @@ export const getActivesByBranch = async (data) => {
       params: data
     });
 
-    console.log(response);
-
     // Check if the response status is successful
     if (response.data.status) {
       return response;
@@ -39,12 +37,10 @@ export const getAllFaqs = async (data) => {
     const response = await axios.get(`${FAQ_API_END_POINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
-
-    console.log(response);
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -93,7 +89,6 @@ export const addFaq = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.success) {
       return { success: true, message: 'Faq created successfully' };
@@ -116,7 +111,6 @@ export const deleteFaq = async (data) => {
       params: data
     });
 
-    console.log(response);
 
     if (response.data.status) {
       return { success: true, message: 'Faq deleted successfully' };
@@ -138,10 +132,8 @@ export const updateFaq = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
-    console.log(response);
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Faq updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Faq' };

@@ -17,12 +17,13 @@ import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { gridSpacing } from 'store/constant';
 import AllActivity from 'views/dashboard/Default/card/Allactivity';
+import toast from 'react-hot-toast';
 
 const BranchViewPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const branchId = location.state.id;
-  console.log('branchId', branchId);
+
   const [branchData, setBranchData] = useState([]);
 
   useEffect(() => {
@@ -37,16 +38,15 @@ const BranchViewPage = () => {
     try {
       const result = await getBranchById(data);
       if (result.success) {
-        console.log(result.data);
         setBranchData(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  console.log('branchData:', branchData.StaffCount,branchData,"branchData");
+
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12} sm={8} spacing={gridSpacing}>

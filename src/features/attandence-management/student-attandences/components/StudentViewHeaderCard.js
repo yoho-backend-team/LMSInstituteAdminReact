@@ -11,10 +11,11 @@ import CustomChip from 'components/mui/chip';
 import PropTypes from 'prop-types';
 
 const userRoleObj = {
-  live: 'success',
+  online: 'success',
   offline: 'secondary'
 };
 const StudentViewHeaderCard = ({ ClassData }) => {
+  
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -27,7 +28,7 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                   Course
                 </Typography>
                 <Typography variant="h4" sx={{ mt: 1 }}>
-                  {ClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_name}
+                  {ClassData?.student_class?.course?.course_name}
                 </Typography>
               </Grid>
               <Grid item>
@@ -35,7 +36,7 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                   Batch
                 </Typography>
                 <Typography variant="h4" sx={{ mt: 1 }}>
-                  {ClassData?.data?.batch_class?.batch?.batch_id}
+                  {ClassData?.student_class?.batch?.id}
                 </Typography>
               </Grid>
               <Grid item>
@@ -43,7 +44,7 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                   Duration
                 </Typography>
                 <Typography variant="h4" sx={{ mt: 1 }}>
-                  {ClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_duration}
+                  {ClassData?.student_class?.course?.duration}
                 </Typography>
               </Grid>
               <Grid item>
@@ -51,7 +52,7 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                   Date
                 </Typography>
                 <Typography variant="h4" sx={{ mt: 1 }}>
-                  {ClassData?.data?.class_date}
+                  {ClassData?.student_class?.start_date}
                 </Typography>
               </Grid>
               <Grid item>
@@ -59,7 +60,7 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                   Sarted At
                 </Typography>
                 <Typography variant="h4" sx={{ mt: 1 }}>
-                  {ClassData?.data?.batch_class?.batch?.start_date}
+                  {ClassData?.student_class?.batch?.start_date}
                 </Typography>
               </Grid>
               <Grid item>
@@ -67,7 +68,7 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                   Ended At
                 </Typography>
                 <Typography variant="h4" sx={{ mt: 1 }}>
-                  {ClassData?.data?.batch_class?.batch?.end_date}
+                  {ClassData?.student_class?.batch?.end_date}
                 </Typography>
               </Grid>
             </Grid>
@@ -81,11 +82,11 @@ const StudentViewHeaderCard = ({ ClassData }) => {
 
                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                   <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                    {ClassData?.instructor?.class_staff.map((staff) => (
-                      <Tooltip key={staff.id} title={staff.staff.staff_name}>
+                    {ClassData?.student_class?.instructors.map((staff) => (
+                      <Tooltip key={staff.id} title={staff.full_name}>
                         <Avatar
-                          src={staff.staff.image_url} // Assuming the image URL is available in the staff object
-                          alt={staff.staff.staff_name}
+                          src={staff.image} // Assuming the image URL is available in the staff object
+                          alt={staff.full_name}
                           sx={{ width: 25, height: 25 }}
                         />
                       </Tooltip>
@@ -99,9 +100,9 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                   <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                    {ClassData?.coordinator?.class_staff.map((staff) => (
-                      <Tooltip key={staff.id} title={staff.staff.staff_name}>
-                        <Avatar src={staff.staff.image_url} alt={staff.staff.staff_name} sx={{ width: 25, height: 25 }} />
+                    {ClassData?.student_class?.coordinators?.map((staff) => (
+                      <Tooltip key={staff.id} title={staff.full_name}>
+                        <Avatar src={staff.image} alt={staff.full_name} sx={{ width: 25, height: 25 }} />
                       </Tooltip>
                     ))}
                   </AvatarGroup>
@@ -116,8 +117,8 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                     rounded
                     skin="light"
                     size="small"
-                    label={ClassData?.data?.type}
-                    color={userRoleObj[ClassData?.data?.type]}
+                    label={ClassData?.student_class?.course?.class_type[0]}
+                    color={userRoleObj[ClassData?.student_class?.course?.class_type[0]]}
                     sx={{ textTransform: 'capitalize' }}
                   />
                 </Box>

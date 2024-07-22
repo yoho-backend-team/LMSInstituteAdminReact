@@ -123,11 +123,10 @@ const SidebarAddUser = (props) => {
 
   const onSubmit = async (data) => {
     show()
-    console.log(data,"data",selectedImage,imgSrc)
   
     hide()
     const filteredBranches = branches?.filter((branch) => data?.branch?.includes(branch.branch_identity));
-    console.log(filteredBranches,"filterBranches")
+
     const new_user = {
       branch : filteredBranches?.[0]?._id,
       image : imgSrc,
@@ -180,7 +179,6 @@ const SidebarAddUser = (props) => {
     data.append("file",files[0])
     try {
       const fileUpload = await client.file.upload(data)
-      console.log(fileUpload,"upload")
       setImgSrc(fileUpload?.data?.file)  
       toast.success(fileUpload?.message)
     } catch (error) {

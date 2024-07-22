@@ -8,9 +8,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import { default as Avatar, default as CustomAvatar } from 'components/mui/avatar';
 import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { getInitials } from 'utils/get-initials';
+import { profilePlaceholder } from 'utils/placeholders';
 
 const renderClient = (row) => {
   if (row?.student?.image) {
@@ -40,8 +42,8 @@ const ViewOfflineClass = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredStudents = offlineClassData?.data?.batch_class?.batch?.institute_batch_student?.filter((student) =>
-    student?.student?.first_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = offlineClassData?.batch?.student?.filter((student) =>
+    student?.first_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSearchChange = (event) => {
@@ -50,7 +52,7 @@ const ViewOfflineClass = () => {
 
   useEffect(() => {
     const data = {
-      class_id: offlineClassId
+      id: offlineClassId
     };
     getOfflineClassData(data);
   }, [dispatch, offlineClassId]);
@@ -61,7 +63,7 @@ const ViewOfflineClass = () => {
       if (result.success) {
         setOfflineClassData(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -77,7 +79,7 @@ const ViewOfflineClass = () => {
       field: 'student_id',
       renderCell: ({ row }) => (
         <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {row?.student?.student_id}
+          {row?.id}
         </Typography>
       )
     },
@@ -86,7 +88,7 @@ const ViewOfflineClass = () => {
       field: 'full_name',
       headerName: 'Student Name',
       renderCell: (params) => {
-        const student = params?.row?.student;
+        const student = params?.row;
         const fullName = `${student.first_name} ${student.last_name}`;
         const email = student.email;
         return (
@@ -117,8 +119,8 @@ const ViewOfflineClass = () => {
       field: 'City',
       headerName: 'city',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const city = student.city;
+        const student = params?.row;
+        const city = student?.contact_info?.city;
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
@@ -133,8 +135,8 @@ const ViewOfflineClass = () => {
       field: 'address',
       headerName: 'Address',
       renderCell: (params) => {
-        const student = params?.row?.student;
-        const address = `${student.address_line_1} ${student.address_line_2}`;
+        const student = params?.row;
+        const address = `${student?.contact_info?.address1} ${student?.contact_info?.address2}`;
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
@@ -151,7 +153,7 @@ const ViewOfflineClass = () => {
       <Grid container>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title={offlineClassData?.data?.class_name} />
+            <CardHeader title={offlineClassData?.class_name} />
             <CardContent sx={{ mt: 0, pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item>
@@ -159,7 +161,7 @@ const ViewOfflineClass = () => {
                     Course
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_name}
+                    {offlineClassData?.batch?.course?.course_name}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -167,7 +169,7 @@ const ViewOfflineClass = () => {
                     Batch
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.batch_id}
+                    {offlineClassData?.batch?.id}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -175,7 +177,7 @@ const ViewOfflineClass = () => {
                     Duration
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.institute_course?.institute_course_branch?.course_duration}
+                    {offlineClassData?.batch?.course?.duration}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -183,7 +185,7 @@ const ViewOfflineClass = () => {
                     Date
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.class_date}
+                    {offlineClassData?.start_date}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -191,7 +193,7 @@ const ViewOfflineClass = () => {
                     Sarted At
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.start_date}
+                    {offlineClassData?.batch?.start_date}
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -199,7 +201,7 @@ const ViewOfflineClass = () => {
                     Ended At
                   </Typography>
                   <Typography variant="h4" sx={{ mt: 1 }}>
-                    {offlineClassData?.data?.batch_class?.batch?.end_date}
+                    {offlineClassData?.batch?.end_date}
                   </Typography>
                 </Grid>
               </Grid>
@@ -213,11 +215,11 @@ const ViewOfflineClass = () => {
 
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {offlineClassData?.instructor?.class_staff.map((staff) => (
-                        <Tooltip key={staff.id} title={staff.staff.staff_name}>
+                      {offlineClassData?.instructors?.map((staff) => (
+                        <Tooltip key={staff.id} title={staff.full_name}>
                           <Avatar
-                            src={staff.staff.image_url} // Assuming the image URL is available in the staff object
-                            alt={staff.staff.staff_name}
+                            src={staff.image?staff?.image:profilePlaceholder}
+                            alt={staff?.full_name}
                             sx={{ width: 25, height: 25 }}
                           />
                         </Tooltip>
@@ -231,9 +233,9 @@ const ViewOfflineClass = () => {
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
                     <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {offlineClassData?.coordinator?.class_staff.map((staff) => (
-                        <Tooltip key={staff.id} title={staff.staff.staff_name}>
-                          <Avatar src={staff.staff.image_url} alt={staff.staff.staff_name} sx={{ width: 25, height: 25 }} />
+                      {offlineClassData?.coordinators?.map((staff) => (
+                        <Tooltip key={staff.id} title={staff.full_name}>
+                          <Avatar src={staff?.image?staff?.image:profilePlaceholder} alt={staff.full_name} sx={{ width: 25, height: 25 }} />
                         </Tooltip>
                       ))}
                     </AvatarGroup>
@@ -244,10 +246,10 @@ const ViewOfflineClass = () => {
                     Class Type
                   </Typography>
                   <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h4">{offlineClassData?.data?.type}</Typography>
-                    <Typography variant="h5" sx={{ color: theme.palette.primary.main, ml: 1 }}>
+                    <Typography variant="h4">{"offline"}</Typography>
+                    {/* <Typography variant="h5" sx={{ color: theme.palette.primary.main, ml: 1 }}>
                       Visit Previous Class
-                    </Typography>
+                    </Typography> */}
                   </Box>
                 </Grid>
               </Grid>

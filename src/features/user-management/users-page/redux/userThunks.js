@@ -6,7 +6,6 @@ export const getAllUsers = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllUsers(data);
-    console.log(response,"response")
     dispatch(setUsers(response));
   } catch (error) {
     console.error(error);

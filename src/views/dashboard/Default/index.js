@@ -8,14 +8,22 @@ import CardStatsVertical from './card/CardStatsVertical';
 import RevenueReport from './card/RevenueReport';
 import CardSupportTracker from './card/CardSupportTracker';
 import DashboardSkeleton from 'components/cards/Skeleton/DashboardSkeleton';
+import client from 'api/client';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
+  const [Reports,setReports] = useState([])
+
   useEffect(() => {
+    const getReports = async () => {
+      const response = await client.reports.get()
+      setReports(response)
+      console.log(response,"response")
+    }
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
-
+    }, 1000);
+    getReports()
     return () => clearTimeout(timer);
   }, []);
 
@@ -30,7 +38,7 @@ const Dashboard = () => {
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    stats="₹56,000"
+                    stats={Reports?.totalBalance}
                     chipText="-12.2%"
                     chipColor="default"
                     avatarColor="error"
@@ -41,7 +49,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    stats="₹96,419"
+                    stats={Reports?.totalPaidAmount}
                     chipText="+25.2%"
                     avatarColor="info"
                     chipColor="default"
@@ -52,7 +60,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    stats="1,000"
+                    stats={Reports?.TeachingstaffCount}
                     chipText="-12.2%"
                     chipColor="default"
                     avatarColor="success"
@@ -63,7 +71,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    stats="24,000"
+                    stats={Reports?.studentCount}
                     chipText="+25.2%"
                     avatarColor="primary"
                     chipColor="default"
@@ -101,7 +109,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardData
-                    stats="2333"
+                    stats={Reports?.courseCount}
                     chipText="+25.2%"
                     avatarColor="info"
                     chipColor="default"
@@ -112,7 +120,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardData
-                    stats="4400"
+                    stats={Reports?.categoryCount}
                     chipText="-12.2%"
                     chipColor="default"
                     avatarColor="error"
@@ -121,7 +129,7 @@ const Dashboard = () => {
                     avatarIcon="ic:baseline-money"
                   />
                 </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
+                {/* <Grid item xs={6} sm={6} lg={3}>
                   <CardData
                     stats="4321"
                     chipText="+25.2%"
@@ -131,7 +139,7 @@ const Dashboard = () => {
                     subtitle="Last week"
                     avatarIcon="ph:student"
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
             </Grid>
 

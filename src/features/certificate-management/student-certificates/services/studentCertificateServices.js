@@ -11,9 +11,7 @@ export const getAllStudentCertificates = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
-    });
-    console.log(response);
-    
+    });    
   
       return response;
    
@@ -55,8 +53,6 @@ export const addStudentCertificate = async (data) => {
       }
     });
 
-    console.log(response);
-
    
       return { success: true, message: 'StudentCertificate created successfully' };
   } catch (error) {
@@ -73,7 +69,6 @@ export const addStudentCertificate = async (data) => {
           Authorization: `Token ${localStorage.getItem('token')}`
         },
       });
-      console.log(response)
 
       if (response.data.status) {
         return { success: true, message: 'StudentCertificate deleted successfully' };
@@ -96,7 +91,6 @@ export const updateStudentCertificate = async (certificateid, data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'StudentCertificate updated successfully' };
     } else {
       return { success: false, message: 'Failed to update StudentCertificate' };
@@ -119,7 +113,7 @@ export const updateStudentCertificateStatus = async (certificateid, data) => {
         }
       }
     );
-    console.log(response);
+
     if (response.data.status) {
       return { success: true, message: 'StudentCertificate status updated successfully' };
     } else {

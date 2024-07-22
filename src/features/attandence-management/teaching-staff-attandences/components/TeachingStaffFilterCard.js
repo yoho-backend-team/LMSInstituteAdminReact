@@ -11,6 +11,8 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useInstitute } from 'utils/get-institute-details';
+import { getAllTeachingStaffAttendances } from '../redux/teachingStaffAttendanceThunks';
 
 const TeachingStaffFilterCard = (props) => {
   const { selectedBranchId } = props;
@@ -37,14 +39,15 @@ const TeachingStaffFilterCard = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { status: e.target.value, branch_id: selectedBranchId, type: 'teaching' };
-    dispatch(getAllTeachingStaffs(data));
+    const data = { is_active: e.target.value, branch: selectedBranchId,institute:useInstitute().getInstituteId(), type: 'teaching' };
+    dispatch(getAllTeachingStaffAttendances(data));
   };
 
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'teaching' }));
+      e.preventDefault()
+      // dispatch(getAllTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'teaching' }));
       setSearchValue(searchInput);
     },
     [dispatch]

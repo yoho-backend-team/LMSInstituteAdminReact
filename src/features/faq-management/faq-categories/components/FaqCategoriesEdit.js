@@ -44,8 +44,6 @@
 
   const FaqCategoriesEdit = (props) => {
     const { open, toggle, setRefetch } = props;
-    console.log('StudyMaterialEdit - open:', props.open);
-    console.log('StudyMaterialEdit - toggle:', props.toggle);
 
     const {
       reset,
@@ -71,7 +69,7 @@
         description: data.description,
         uuid: String(props.initialValues.uuid)
       };
-      console.log(inputData)
+
       try {
         const result = await updateFaqCategory(inputData);
         

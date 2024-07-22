@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const TeachingStaffCard = ({ teachingStaffs }) => {
-  console.log(teachingStaffs,"teachingStaffs")
+  
   return (
     <>
       <Grid container spacing={2} mt={2}>
@@ -52,7 +52,7 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
                       <Button
                         component={Link}
                         state={{ staff: item }}
-                        to={`teaching-staff-attendances/${item._id}`}
+                        to={`teaching-staff-attendances/${item.staff}`}
                         variant="tonal"
                         sx={{ px: 4 }}
                       >

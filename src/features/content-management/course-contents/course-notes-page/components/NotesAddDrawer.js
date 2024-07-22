@@ -82,10 +82,8 @@ const CourseNotesAddDrawer = (props) => {
     resolver: yupResolver(schema)
   });
 
-  console.log(notesPdf);
 
   const onSubmit = async (data) => {
-    console.log(data);
     const note_data = {
       branch : data.branch.uuid,
       course : data.course._id,
@@ -95,7 +93,6 @@ const CourseNotesAddDrawer = (props) => {
       file : data.pdf_file
     }
     
-    // console.log(bodyFormData);
 
     const result = await addCourseNote(note_data);
 

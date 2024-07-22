@@ -12,9 +12,7 @@ export const getAllTickets = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
-    });
-    console.log('getAllTickets:', response);
-   
+    });   
    
       return response;
     
@@ -37,7 +35,6 @@ export const updateTicket = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Ticket updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Ticket' };
@@ -58,7 +55,6 @@ export const CreateTicket = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'Ticket created successfully' };
     } else {
       return { success: false, message: 'Failed to create Ticket' };

@@ -1,4 +1,5 @@
 // studentFeeService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STUDENT_FEE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/student-fee`;
@@ -12,7 +13,7 @@ export const getAllStudentFees = async (data) => {
       },
       params: data
     });
-    console.log(response);
+
     // Check if the response status is successful
       return response;
   } catch (error) {
@@ -31,7 +32,7 @@ export const getFeeByStudentId = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       },
     });
-    console.log(response);
+
     // Check if the response status is successful
       return response;
     
@@ -67,21 +68,12 @@ export const searchStudentFees = async (searchQuery) => {
 
 export const addStudentFee = async (data) => {
   try {
-    const response = await axios.post(`${STUDENT_FEE_API_ENDPOINT}/create`, data, {
-      headers: {
-        // 'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client?.payment?.student_fee?.create(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'StudentFee created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create StudentFee' };
-    }
+    return { success: true, message: 'StudentFee created successfully' };
   } catch (error) {
     console.error('Error in addStudentFee:', error);
-    throw error;
+    return { success: false, message: error?.response?.data?.message };
   }
 };
 

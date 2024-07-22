@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllOfflineClasses } from 'features/class-management/offline-classes/redux/offlineClassThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const OfflineClass = () => {
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
@@ -15,20 +16,25 @@ const OfflineClass = () => {
   const offlineClasses = useSelector(selectOfflineClasses);
   const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
+  const {show,hide} = useSpinner()
+
   useEffect(() => {
     const data = {
-      type: 'offline',
       branch: selectedBranchId,
       institute : useInstitute().getInstituteId(),
       page: '1'
     };
+    show()
     dispatch(getAllOfflineClasses(data));
+    hide()
   }, [dispatch, selectedBranchId, offlineClassRefetch]);
+
+  
   return (
     <>
       <Grid>
         <OfflineClassFilterCard selectedBranchId={selectedBranchId} />
-        <OfflineClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} />
+        <OfflineClassCardHeader offlineClasses={offlineClasses} selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} offlineClassRefetch={offlineClassRefetch} />
         {loading ? (
           <ClassSkeleton />
         ) : (
@@ -46,7 +52,7 @@ const OfflineClass = () => {
               count={offlineClasses?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllOfflineClasses({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllOfflineClasses({ branch: selectedBranchId,institute:useInstitute().getInstituteId(),page: page }));
               }}
             />
           </Grid>

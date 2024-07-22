@@ -78,7 +78,7 @@ const GroupAddPage = () => {
   // Function to handle form submission
   const onSubmit = useCallback(
     async (data) => {
-      console.log(data,"data",selectedCheckbox,SelectedPermissions)
+      
       show()
       try {
         const inputData = {
@@ -127,7 +127,7 @@ const GroupAddPage = () => {
 
   // Function to handle select all checkbox
   const handleSelectAllCheckbox = useCallback(() => {
-    console.log(isIndeterminateCheckbox)
+    
     if (isIndeterminateCheckbox) {
       setSelectedPermissions([])
       setSelectedCheckbox([]);

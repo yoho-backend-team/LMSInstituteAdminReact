@@ -46,7 +46,6 @@ const data = [
 const CardPopularCourse = () => {
   const handleSortChange = (event) => {
     const selectedSortOption = event.target.value;
-    console.log('Selected sort option:', selectedSortOption);
   };
   const limitedData = data.slice(0, 3);
   return (

@@ -52,10 +52,8 @@ const CourseViewPage = () => {
     }
   }, [courseId, selectedBranchId, refetch]);
 
-  console.log('course', course);
 
   const getCourseData = async (id) => {
-    console.log(id,course)
     const data = {
     id: id,
     category:"39cab3db-4c46-4685-aab8-99a4b4375d50"
@@ -73,7 +71,6 @@ const CourseViewPage = () => {
     setExpanded(isExpanded ? panel : false);
   };
   
-  console.log(expanded,course);
 
   const handleEditClose = () => {
     setEditModalOpen(false);

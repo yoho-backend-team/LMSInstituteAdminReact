@@ -71,8 +71,9 @@ const Batch = () => {
 
   const handleStatusChangeApi = async () => {
     const data = {
-      status: statusValue?.is_active === '1' ? '0' : '1',
-      id: statusValue?.id
+     is_active: !statusValue?.is_active,
+     uuid: statusValue?.uuid,
+     batch_name:statusValue?.batch_name
     };
     const response = await updateBatchStatus(data);
     if (response.success) {
@@ -81,7 +82,6 @@ const Batch = () => {
     } else {
       toast.error(response.message);
     }
-    console.log('getAllBatches', response);
   };
 
   const handleStatusValue = (event, batch) => {
@@ -102,7 +102,7 @@ const Batch = () => {
   }, []);
 
   const handleBatchDelete = async () => {
-    const data = { id: selectedBatchDeleteId };
+    const data = { uuid: selectedBatchDeleteId };
     const result = await deleteBatch(data);
     if (result.success) {
       toast.success(result.message);
@@ -112,9 +112,9 @@ const Batch = () => {
       toast.error(result.message);
     }
   };
-
+  
   const renderCards = () => {
-    return batches?.map((item, index) => (
+    return batches?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <CardStyle sx={{ position: 'relative' }}>
           <CardContent>
@@ -230,7 +230,7 @@ const Batch = () => {
                   select
                   width={100}
                   label="Status"
-                  SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item.batch) }}
+                  SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
                 >
                   <MenuItem value="true">Active</MenuItem>
                   <MenuItem value="false">Inactive</MenuItem>
@@ -242,12 +242,12 @@ const Batch = () => {
       </Grid>
     ));
   };
-  console.log(batches,"batches")
+
   return (
     <>
       <Grid container>
         <Grid item xs={12} sm={12}>
-          <BatchFilterCard selectedBranchId={selectedBranchId} batches={batches} setBatchRefetch={setBatchRefetch} />
+          <BatchFilterCard selectedBranchId={selectedBranchId} batches={batches?.data} setBatchRefetch={setBatchRefetch} />
         </Grid>
         <Grid item xs={12}>
           {batchLoading ? (

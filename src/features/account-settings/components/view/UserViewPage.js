@@ -32,11 +32,9 @@ const UserView = () => {
       setLoading(false);
       const result = await getUserProfileById(data);
       if (result.success) {
-        console.log('User:', result.data);
         setUserData(result.data);
         setLoading(false);
       } else {
-        console.log(result.message);
         setLoading(false);
       }
     } catch (error) {

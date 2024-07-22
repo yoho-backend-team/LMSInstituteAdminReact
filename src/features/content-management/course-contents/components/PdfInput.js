@@ -16,13 +16,11 @@ const CoursePdfInput = ({ setCourseNotePdf,setValue,files,setFiles }) => {
       'file/*': ['.pdf']
     },
     onDrop: (acceptedFiles) => {
-      console.log(acceptedFiles,"accepeted")
       acceptedFiles.map(async(file)=>{
         const fileData = new FormData()
         fileData.append("file",file)
         const uploadFile = await client.file.upload(fileData)
         toast.success(uploadFile.message)
-        console.log(uploadFile,"uploadFile")
         setValue("pdf_file",uploadFile.data.file)
       })
       setFiles(acceptedFiles.map((file) => Object.assign(file)));

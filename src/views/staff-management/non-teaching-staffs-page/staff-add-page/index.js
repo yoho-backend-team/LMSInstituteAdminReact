@@ -240,7 +240,8 @@ const StepperLinearWithValidation = () => {
         pincode: formData.pin_code,
         address1: formData.address_line_one,
         address2: formData.address_line_two,
-        phone_number: formData.phone
+        phone_number: formData.phone,
+        alternate_phone_number: formData.alt_phone
       },
       designation: formData.designation,
       role: formData.role
@@ -427,8 +428,8 @@ const StepperLinearWithValidation = () => {
                       aria-describedby="stepper-linear-personal-gender"
                       helperText={personalErrors?.gender?.message}
                     >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
+                      <MenuItem value="Male">Male</MenuItem>
+                      <MenuItem value="Female">Female</MenuItem>
                       <MenuItem value="other">Other</MenuItem>
                     </CustomTextField>
                   )}

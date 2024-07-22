@@ -64,7 +64,6 @@ const FaqCategoriesAddDrawer = (props) => {
       ...requestData 
     };
   
-    console.log(inputData);
     try {
       const result = await addFaqCategory(inputData);
     
@@ -141,6 +140,24 @@ const FaqCategoriesAddDrawer = (props) => {
                     value={value}
                     sx={{ mb: 2 }}
                     label="Description"
+                    onChange={onChange}
+                    error={Boolean(errors.description)}
+                    {...(errors.description && { helperText: errors.description.message })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="category"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    sx={{ mb: 2 }}
+                    label="Category"
                     onChange={onChange}
                     error={Boolean(errors.description)}
                     {...(errors.description && { helperText: errors.description.message })}

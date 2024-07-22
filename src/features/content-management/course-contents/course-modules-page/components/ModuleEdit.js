@@ -73,7 +73,6 @@ const ModuleEdit = (props) => {
     await axios
       .request(config)
       .then((response) => {
-        console.log('Groups : ', response.data);
         setGroups(response.data.data);
       })
       .catch((error) => {
@@ -81,7 +80,6 @@ const ModuleEdit = (props) => {
       });
   };
 
-  console.log(groups);
 
   // ** Hooks
   const {
@@ -105,10 +103,8 @@ const ModuleEdit = (props) => {
     }
   }, [modules, setValue]);
 
-  console.log('modules', modules);
 
   const onSubmit = async (data) => {
-    console.log(data,"data",modules)
 
     const updateData = {
       title : data.title,

@@ -72,6 +72,7 @@ const ViewCoursePage = Loadable(lazy(() => import('views/course-management/cours
 
 // Help Center
 const CustomerSupportPage = Loadable(lazy(() => import('views/help-center/customer-support-page')));
+const CustomerHelpAddPage = Loadable(lazy(() => import('views/help-center/helpAdd-page')));
 
 // Ticket Management
 const StaffTicketPage = Loadable(lazy(() => import('views/ticket-management/staff-tickets-page/staff-tickets-overview-page')));
@@ -389,7 +390,7 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<AllNotificationsPage />} permissionCode={'inst_perm_all_notification_view'} module={'All Notifications'} />}>
             <Route path="all-notifications" element={<AllNotificationsPage />} />
           </Route>
-          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_staff_notification_view'} module={'Student Notifications'} />}>
+          <Route element={<ProtectedRoute element={<StaffNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} module={'Student Notifications'} />}>
             <Route path="staff-notifications" element={<StaffNotificationsPage />} />
           </Route>
           <Route element={<ProtectedRoute element={<StudentNotificationsPage />} permissionCode={'inst_perm_student_notification_view'} module={'Student Notifications'} />}>
@@ -441,7 +442,14 @@ const ApplicationRoutes = () => {
           <Route element={<ProtectedRoute element={<CustomerSupportPage />} permissionCode={'inst_help_faqs_support_view'} module={"Help Faqs"} />}>
             <Route path="help-faqs" element={<CustomerSupportPage />} />
           </Route>
+          
         </Route>
+        <Route path="/help-center" element={<MainLayout />}>
+          <Route index element={<Navigate to="/help-center/help-Add" />} />
+          <Route element={<ProtectedRoute element={<CustomerHelpAddPage />} permissionCode={'inst_help_faqs_support_view'} module={"Help Faqs"} />}>
+            <Route path="help-Add" element={<CustomerHelpAddPage />} />
+          </Route>
+ </Route>
         {/* Community Management Routes */}
         <Route path="/community-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/community" />} />

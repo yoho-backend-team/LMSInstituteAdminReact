@@ -6,7 +6,7 @@ export const getAllStudentAttendances = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllStudentAttendances(data); // Implement this function in your services
-    dispatch(setStudentAttendances(response?.data));
+    dispatch(setStudentAttendances(response));
   } catch (error) {
     console.error(error);
   } finally {

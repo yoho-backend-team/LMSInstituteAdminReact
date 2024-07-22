@@ -100,10 +100,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     try {
       const result = await getAllGroups({institute_id:useInstitute().getInstituteId()});
       if (result.success) {
-        console.log('User Data:', result.data);
         setGroups(result.data);
       } else {
-        console.log(result.message);
+        toast.error(result.message);
       }
     } catch (error) {
       console.log(error);
@@ -137,10 +136,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   };
 
-  console.log(selectedImage);
 
   const onSubmit = async (data) => {
-    console.log(data);
     const InputData = new FormData();
     InputData.append('name', data.full_name);
     InputData.append('user_name', data.user_name);

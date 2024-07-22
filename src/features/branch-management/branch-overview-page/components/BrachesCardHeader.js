@@ -1,22 +1,34 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField ,InputAdornment,IconButton} from '@mui/material';
 import Icon from 'components/icon';
 import { getAllBranches } from 'features/branch-management/redux/branchThunks';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useSpinner } from 'context/spinnerContext';
+import { setBranches } from 'features/branch-management/redux/branchSlice';
+import toast from 'react-hot-toast';
 
-const TableHeader = () => {
+
+const TableHeader = (props) => {
+  const {branches,setRefetchBranch,refetchBranch} = props
   const [searchValue, setSearchValue] = useState('');
+  const [isSearch,setIsSearch] = useState(false)
   const dispatch = useDispatch();
+  const {show,hide} = useSpinner()
 
-  const handleSearch = useCallback(
-    (e) => {
-      const searchInput = e.target.value;
-      dispatch(getAllBranches({ search: searchInput }));
-      setSearchValue(searchInput);
-    },
-    [dispatch]
-  );
+  const handleSearch = async () => {
+      show()
+      const data = branches?.data?.filter((branch) => branch?.branch_identity?.toLowerCase().includes(searchValue?.toLowerCase()) )
+      if(data&&data?.length!==0){
+        dispatch(setBranches({last_page:"1",data:data,count:data?.length}))
+        setIsSearch(true)
+        hide()
+      }else{
+        dispatch(getAllBranches({perPage:"1000",branch_identity:searchValue}))
+        setIsSearch(true)
+        hide()
+      }
+    }
 
   return (
     <Box
@@ -36,7 +48,23 @@ const TableHeader = () => {
           width: 400
         }}
         placeholder="Search Branch"
-        onChange={handleSearch}
+        onChange={(e)=>setSearchValue(e.target.value)}
+        InputProps={{
+          endAdornment:(
+            <InputAdornment position={"end"} >
+              {
+              isSearch ?
+              <IconButton onClick={()=>{setRefetchBranch(!refetchBranch);setIsSearch(false);setSearchValue("")}} >
+                <Icon icon={"material-symbols:close"} />
+              </IconButton>
+              :
+              <IconButton onClick={()=>handleSearch()}>
+                <Icon icon={"material-symbols:search"}  />
+              </IconButton>
+              }
+            </InputAdornment>
+          )
+        }}
       />
       <Box
         component={Link}

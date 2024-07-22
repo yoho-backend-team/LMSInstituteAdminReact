@@ -101,7 +101,6 @@ export const updateNonTeachingStaffSalary = async (data) => {
     });
 
     if (response.data.status) {
-      console.log(response);
       return { success: true, message: 'NonTeachingStaffSalary updated successfully' };
     } else {
       return { success: false, message: 'Failed to update NonTeachingStaffSalary' };
