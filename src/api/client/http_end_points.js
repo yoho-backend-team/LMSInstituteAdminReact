@@ -130,6 +130,7 @@ const generateEndpoints = () => {
             student_ticket : `/api/institutes/student/ticket/getall`,
             update : `/api/institutes/student/ticket/update/`,
             staff_ticket : `/api/institutes/staff/ticket/all`,
+            staff_ticket_with_id : `/api/institutes/staff/ticket/`,
             update_staff_ticket : `/api/institutes/staff/ticket/update/`
         },
         attedence : {

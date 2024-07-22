@@ -16,6 +16,7 @@ import { getAllStaffOpenTickets } from 'features/ticket-management/staff/redux/o
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
+import TicketResolutionPage from '../TicketResolutionPage';
 
 const StaffTicketsPage = () => {
   // States
@@ -48,6 +49,7 @@ const StaffTicketsPage = () => {
 
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
+    setOpenResolveDrawer(true);
   };
 
   return (
@@ -104,8 +106,7 @@ const StaffTicketsPage = () => {
             </TabPanel>
           </TabContext>
         )}
-        <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} setRefetch={setRefetch} ticket={selectedTicket} />
-      </MainCard>
+      </MainCard>   
     </>
   );
 };
