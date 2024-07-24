@@ -146,7 +146,7 @@ const generateEndpoints = () => {
           get_non_staff_with_id : `/api/institutes/non-attedence/non_teaching_staff/`
         },
         notification : {
-          student_notification : `/api/institutes/students/notifications`,
+          student_notification : `/api/institutes/students/notifications/all`,
           staff_notification : `/api/institutes/staff/notifications/all`,
           institute_notification : `/api/institutes/branch/notifications`
         },

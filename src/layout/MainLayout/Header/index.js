@@ -118,7 +118,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
 
-      <FormControlLabel control={<MaterialUISwitch checked={isDarkMode} onChange={handleToggleDarkMode} />} />
+      {/* <FormControlLabel control={<MaterialUISwitch checked={isDarkMode} onChange={handleToggleDarkMode} />} /> */}
 
       {/* notification & profile */}
       <NotificationSection />

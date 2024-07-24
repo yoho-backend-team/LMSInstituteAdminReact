@@ -345,6 +345,10 @@ const NotificationAddDrawer = (props) => {
             />
           </Grid>
 
+          <Grid>
+            
+          </Grid>
+
           <Grid item xs={12} sm={12}>
             <Controller
               name="title"
@@ -357,7 +361,7 @@ const NotificationAddDrawer = (props) => {
                   label="Title"
                   value={value}
                   onChange={onChange}
-                  placeholder="Placeholder"
+                  placeholder="New Course Announcement"
                   error={Boolean(errors.title)}
                   helperText={errors.title ? errors.title.message : null}
                 />
@@ -377,7 +381,7 @@ const NotificationAddDrawer = (props) => {
                   label="Body"
                   value={value}
                   onChange={onChange}
-                  placeholder="Placeholder"
+                  placeholder="We are excited to announce a new course, JS, starting on start_date. This course will cover brief_course_description. Enroll now to secure your spot and gain valuable insights into course_topic."
                   error={Boolean(errors.description)}
                   helperText={errors.description ? errors.description.message : null}
                   multiline
