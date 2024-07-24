@@ -98,14 +98,15 @@ const HelpDataGrid = () => {
       toast.error(response.message);
     }
   };
-  const toggleAddUserDrawer = () => setHelpAddUserOpen(!addHelpUserOpen);
+  const toggleAddUserDrawer = () => 
+    setHelpAddUserOpen(!addHelpUserOpen);
 
   const handleHelpDelete = (itemId) => {
     setDeletingHelpItemId(itemId);
     setDeleteHelpDialogOpen(true);
   };
 
-  const toggleEditUserDrawer = () => {
+  const toggleHelpEditUserDrawer = () => {
     setEditHelpUserOpen(!editHelpUserOpen);
   };
 
@@ -113,10 +114,11 @@ const HelpDataGrid = () => {
     {
       flex: 0.5,
       headerName: 'Question No',
+      headerAlign: 'center',
       field: 'id',
       renderCell: ({ row }) => {
         return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
+          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' ,textAlign: 'center',  justifyContent: 'space-around',}}>
             {row?.id}
           </Typography>
         );
@@ -126,14 +128,46 @@ const HelpDataGrid = () => {
       flex: 2.2,
       field: 'category_name',
       headerName: 'Category Name',
+      headerAlign: 'center',
       renderCell: ({ row }) => {
         return (
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center',justifyContent: 'space-between',height: '100%'}}>
+              
               <Typography
                 noWrap
                 sx={{
-                  textAlign: 'justify',
+                  
+                  textAlign: 'center',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: 'text.secondary',
+                  '&:hover': { color: 'primary.main' },
+                  
+                }}
+              >
+                {row?.category}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      flex: 2.2,
+      field: 'Q&A',
+      headerName: 'Q&A',
+      headerAlign: 'center',
+      renderCell: ({ row }) => {
+        return (
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column',height:'100%',justifyContent: 'center',}}>
+              
+              <Typography
+                noWrap
+                sx={{
+                  textAlign: 'center',
                   fontSize: '15px',
                   fontWeight: 600,
                   textDecoration: 'none',
@@ -144,7 +178,7 @@ const HelpDataGrid = () => {
               >
                 {row?.question}
               </Typography>
-              <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
+              <Typography noWrap sx={{ textAlign: 'center', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
                 {row?.answer}
               </Typography>
             </Box>
@@ -169,7 +203,7 @@ const HelpDataGrid = () => {
                 icon: <Icon icon="tabler:edit" />,
                 menuItemProps: {
                   onClick: () => {
-                    toggleEditUserDrawer();
+                    toggleHelpEditUserDrawer();
                   }
                 }
               },
@@ -238,7 +272,7 @@ const HelpDataGrid = () => {
           </Grid>
         )}
         <HelpCenterAddDrawer open={addHelpUserOpen} toggle={toggleAddUserDrawer} setRefetch={setRefetch} />
-        <HelpCenterEdit open={editHelpUserOpen} toggle={toggleEditUserDrawer} initialValues={selectedRow} setRefetch={setRefetch} />
+        <HelpCenterEdit open={editHelpUserOpen} toggle={toggleHelpEditUserDrawer} initialValues={selectedRow} setRefetch={setRefetch} />
         <DeleteDialog
           open={isDeleteHelpDialogOpen}
           setOpen={setDeleteHelpDialogOpen}

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { updateFaqCategory, updateStatusHelpCenter } from '../service/helpCenter';
+import { updateHelpcenter } from '../service/helpCenter';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -29,17 +29,16 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }));
 
-const schema = yup.object().shape({
-  description: yup.string().required(),
-  category_name: yup
-    .string()
-    .min(3, (obj) => showErrors('category_name', obj.value.length, obj.min))
-    .required()
+const schema = yup.object({
+  question: yup.string().required('Question is required'),
+  answer: yup.string().required('Answer is required'),
+  category: yup.string().required('Category is required')
 });
 
 const defaultValues = {
-  description: '',
-  category_name: ''
+  question: '',
+  answer: '',
+  category:''
 };
 
 const HelpCenterEdit = (props) => {
@@ -54,9 +53,10 @@ const HelpCenterEdit = (props) => {
   } = useForm({
     defaultValues: props.initialValues || defaultValues,
     mode: 'onChange',
+    
     resolver: yupResolver(schema)
   });
-
+  console.log(props,"props")
   useEffect(() => {
     if (open) {
       reset(props.initialValues || defaultValues);
@@ -65,14 +65,15 @@ const HelpCenterEdit = (props) => {
 
   const onSubmit = async (data) => {
     const inputData = {
-      category_name: data.category_name,
-      description: data.description,
-      uuid: String(props.initialValues.uuid)
+      question: data.question,
+      answer: data.answer,
+      category: data.category,
+      id: props.initialValues.uuid
     };
 
     try {
-      const result = await updateStatusHelpCenter(inputData);
-      
+      const result = await updateHelpcenter(inputData);
+      console.log(result,"result")
       if (result.success) {
         toast.success(result.message);
         toggle();
@@ -85,6 +86,8 @@ const HelpCenterEdit = (props) => {
       toast.error('Failed to update FaqCategory');
     }
   };
+
+ 
   
   const handleClose = () => {
     setValue('contact', Number(''));
@@ -102,7 +105,7 @@ const HelpCenterEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Edit Faq Categories</Typography>
+        <Typography variant="h5">Edit Questions</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -120,42 +123,76 @@ const HelpCenterEdit = (props) => {
         </IconButton>
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            name="category_name"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Title"
-                onChange={onChange}
-                placeholder="John Doe"
-                error={Boolean(errors.category_name)}
-                {...(errors.category_name && { helperText: errors.category_name.message })}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="question"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    multiline
+                    rows={3}
+                    sx={{ mb: 2 }}
+                    label="Question"
+                    onChange={onChange}
+                    error={Boolean(errors.question)}
+                    {...(errors.question && { helperText: errors.question.message })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Controller
+                name="answer"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    multiline
+                    rows={3}
+                    sx={{ mb: 2 }}
+                    label="Answer"
+                    onChange={onChange}
+                    error={Boolean(errors.answer)}
+                    {...(errors.answer && { helperText: errors.answer.message })}
               />
             )}
           />
-
-          <Controller
-            name="description"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="description"
-                onChange={onChange}
-                placeholder="Business Development Executive"
-                error={Boolean(errors.description)}
-                {...(errors.description && { helperText: errors.description.message })}
-              />
-            )}
-          />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+  <Controller
+    name="category"
+    control={control}
+    rules={{ required: true }}
+    defaultValue="" 
+    render={({ field: { value, onChange } }) => (
+      <TextField
+        fullWidth
+        select  
+        value={value} 
+        sx={{ mb: 2 }}
+        label="Select Category"
+        onChange={onChange}
+        error={Boolean(errors.category)} 
+        helperText={errors.category ? errors.category.message : null} 
+      >
+        
+        <MenuItem value="Mail">Mail</MenuItem>
+        <MenuItem value="Profile">Profile</MenuItem>
+        <MenuItem value="Classes">Classes</MenuItem>
+        <MenuItem value="Password">Password</MenuItem>
+        <MenuItem value="Attendance">Attendance</MenuItem>
+        <MenuItem value="Payment">Payment</MenuItem>
+        <MenuItem value="Login&Sign Up">Login&Sign Up</MenuItem>
+      </TextField>
+    )}
+  />
+</Grid>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>

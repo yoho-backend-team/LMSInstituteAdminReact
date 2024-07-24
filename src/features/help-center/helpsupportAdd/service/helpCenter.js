@@ -92,7 +92,7 @@ export const updateStatusHelpCenter = async (data) => {
     const response = await axios.post(`${HELP_CENTER_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data
     });
@@ -110,18 +110,17 @@ export const updateStatusHelpCenter = async (data) => {
 
 export const updateHelpcenter = async (data) => {   
   try {
-    const { uuid } = data;
+    
 
-    const response = await axios.put(`${HELP_CENTER_API_END_POINT}/update/${uuid}`, data, {
+    const response = await axios.put(`${HELP_CENTER_API_END_POINT}/update/${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
-      } 
+      }
     });
-    
 
-    if (response.data.status) {
-      return { success: true, message: 'FaqCategory updated successfully' };
+    if (response.data.success) {
+      return { success: true, message: 'Help Center updated successfully' };
     } else {
       return { success: false, message: 'Failed to update Help Center' };
     }
@@ -130,6 +129,7 @@ export const updateHelpcenter = async (data) => {
     throw error;
   }
 };
+
 
 export const getAllHelpCenterDetails = async (data) => {
   try {

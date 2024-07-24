@@ -112,9 +112,9 @@ const HelpCenterAddDrawer = (props) => {
             <Icon icon="tabler:x" fontSize="1.125rem" />
           </IconButton>
         </Header>
-        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6)}}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={12} >
               <Controller
                 name="question"
                 control={control}
@@ -122,6 +122,8 @@ const HelpCenterAddDrawer = (props) => {
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
+                    multiline
+                    rows={3}
                     value={value}
                     sx={{ mb: 2 }}
                     label="Question"
@@ -141,6 +143,8 @@ const HelpCenterAddDrawer = (props) => {
                   <TextField
                     fullWidth
                     value={value}
+                    multiline
+                    rows={3}
                     sx={{ mb: 2 }}
                     label="Answer"
                     onChange={onChange}
