@@ -88,10 +88,11 @@ const NotificationAddDrawer = (props) => {
       .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
     description: yup
       .string()
-      .required('Body is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'description should not contain special characters'),
+      .required('Body is required'),
     course: yup.object().required('Course is required'),
-    batch: yup.object().required('Batch is required')
+    batch: yup.object().required('Batch is required'),
+    notification_type : yup.string().required("Type is required"),
+    link : yup.string().optional()
   });
 
   const defaultValues = {
@@ -99,7 +100,9 @@ const NotificationAddDrawer = (props) => {
     batch: null,
     students: [],
     title: '',
-    description: ''
+    description: '',
+    notification_type : '',
+    link : ''
   };
 
   const {
@@ -127,6 +130,7 @@ const NotificationAddDrawer = (props) => {
   const onSubmit = async (data) => {
     const bodyFormData = new FormData();
     console.log(data,"data")
+    
     const studentIds = data?.students?.map((user)=>user?._id)
     const notification = {
       institute : useInstitute().getInstituteId(),
@@ -134,8 +138,10 @@ const NotificationAddDrawer = (props) => {
       batch : data?.batch?._id,
       branch : selectedBranchId,
       title : data?.title,
-      body : data?.body,
-      student : studentIds
+      body : data?.description,
+      student : studentIds,
+      link : data?.link,
+      type : data?.notification_type
     }
     console.log(notification,"notification")
 
@@ -345,9 +351,53 @@ const NotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          <Grid>
-            
+          <Grid item xs={12} sm={12}>
+           <Controller
+             name="notification_type"
+             control={control}
+             rules={{ required: true }}
+             render={({ field: { onChange, onBlur, value } }) => (
+               <Autocomplete
+                 multiple={false}
+                 freeSolo // Allow custom input
+                 disableCloseOnSelect={false}
+                 id="select-multiple-chip"
+                 options={["Notification", "Classes", "Alerts", "Reminders"]} // Add default options here
+                 getOptionLabel={(option) => option}
+                 value={value || ''} // Ensure the value is handled correctly
+                 onChange={(event, newValue) => {
+                   onChange(newValue);
+                 }}
+                 renderInput={(params) => (
+                   <TextField
+                     {...params}
+                     sx={{ mb: 2 }}
+                     fullWidth
+                     label={"Notification type"}
+                     error={Boolean(errors.notification_type)}
+                     helperText={errors?.notification_type ? errors.notification_type.message : null}
+                     InputProps={{
+                       ...params.InputProps,
+                       style: { overflowY: "hidden", overflowX: "auto", maxHeight: 55 }
+                     }}
+                   />
+                 )}
+                 renderOption={(props, option, { selected }) => (
+                   <li {...props}>
+                     <Checkbox
+                       // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                       // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                       style={{ marginRight: 8 }}
+                       checked={selected}
+                     />
+                     {option}
+                   </li>
+                 )}
+               />
+             )}
+           />
           </Grid>
+
 
           <Grid item xs={12} sm={12}>
             <Controller
@@ -388,6 +438,25 @@ const NotificationAddDrawer = (props) => {
                   rows={4}
                 />
               )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={12} >
+            <Controller 
+             name='link'
+             control={control}
+             rules={{ required: true}}
+             render={({field:{value,onChange}}) => (
+              <TextField 
+              fullWidth
+              sx={{ mb: 2}}
+              label="Link"
+              value={value}
+              onChange={onChange}
+              error={Boolean(errors?.link)}
+              helperText={errors?.link ? errors?.link.message : null}
+              />
+             )}
             />
           </Grid>
 

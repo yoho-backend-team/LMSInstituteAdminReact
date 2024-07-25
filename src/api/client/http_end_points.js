@@ -147,6 +147,7 @@ const generateEndpoints = () => {
         },
         notification : {
           student_notification : `/api/institutes/students/notifications/all`,
+          student_notification_get : `/api/institutes/students/notifications`,
           staff_notification : `/api/institutes/staff/notifications/all`,
           institute_notification : `/api/institutes/branch/notifications`
         },
