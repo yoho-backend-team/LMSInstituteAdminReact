@@ -113,9 +113,9 @@ const HelpDataGrid = () => {
   const columns = [
     {
       flex: 0.5,
-      headerName: 'Question No',
-      headerAlign: 'center',
+      headerName: 'Q No',
       field: 'id',
+     
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' ,textAlign: 'center',  justifyContent: 'space-around',}}>
@@ -129,6 +129,7 @@ const HelpDataGrid = () => {
       field: 'category_name',
       headerName: 'Category Name',
       headerAlign: 'center',
+      align:"center",
       renderCell: ({ row }) => {
         return (
           <Box>
@@ -159,6 +160,7 @@ const HelpDataGrid = () => {
       field: 'Q&A',
       headerName: 'Q&A',
       headerAlign: 'center',
+      align:"center",
       renderCell: ({ row }) => {
         return (
           <Box>

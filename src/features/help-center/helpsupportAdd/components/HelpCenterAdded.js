@@ -125,11 +125,13 @@ const HelpCenterAddDrawer = (props) => {
                     multiline
                     rows={3}
                     value={value}
-                    sx={{ mb: 2 }}
+                    sx={{ 
+                      mb: 2,
+                    }}
                     label="Question"
                     onChange={onChange}
-                    error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
+                    error={Boolean(errors.question)}
+                    {...(errors.question && { helperText: errors.question.message })}
                   />
                 )}
               />
@@ -144,12 +146,15 @@ const HelpCenterAddDrawer = (props) => {
                     fullWidth
                     value={value}
                     multiline
+                    
                     rows={3}
-                    sx={{ mb: 2 }}
+                    sx={{ 
+                      mb: 2,
+                    }}
                     label="Answer"
                     onChange={onChange}
-                    error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
+                    error={Boolean(errors.answer)}
+                    {...(errors.answer && { helperText: errors.answer.message })}
                   />
                 )}
               />
@@ -163,9 +168,13 @@ const HelpCenterAddDrawer = (props) => {
     render={({ field: { value, onChange } }) => (
       <TextField
         fullWidth
-        select  // Use select for dropdown functionality
-        value={value} // Bind value to the value from Controller
-        sx={{ mb: 2 }}
+       
+        select 
+        value={value} 
+        sx={{ 
+          mb: 2,
+        
+        }}
         label="Select Category"
         onChange={onChange}
         error={Boolean(errors.category)} // Use category for error check
