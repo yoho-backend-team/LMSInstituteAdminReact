@@ -10,6 +10,7 @@ const icons = {
   IconCash,
   IconHelp
 };
+import AddIcon from '@mui/icons-material/Add';
 import { hasPermission } from 'hooks/hasPermissions';
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
@@ -37,10 +38,10 @@ const pages = {
         },
         {
           id: 'Add Help Category',
-          title: 'Help Add',
+          title: 'Add Question',
           type: 'item',
           url: '/help-center/help-Add',
-          icon: icons.IconHelp,
+          icon: AddIcon,
           target: false,
           breadcrumbs: false,
           visible: hasPermission('inst_help_faqs_support_view','Help Faqs')

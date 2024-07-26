@@ -35,7 +35,7 @@ const StudentNotification = () => {
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   
-  console.log(studentNotifications,"nptiiiiiiii")
+  console.log(studentNotifications?.data,"nptiiiiiiii")
 
   return (
     <>

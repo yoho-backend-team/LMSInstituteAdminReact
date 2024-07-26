@@ -142,7 +142,7 @@ class Client {
     }
     notification = {
       student:{
-        add_student_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.student_notification,data),
+        add_student_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.student_notification_get,data),
         get_student_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.student_notification,query),
       },
       staff : {

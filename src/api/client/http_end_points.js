@@ -25,7 +25,7 @@ const generateEndpoints = () => {
     // }
 
     const instituteId = institute? institute?.uuid  :""
-
+    console.log(branchId,"branchId")
     return {
         permission : {
             getAll : `/api/admin/institutes/permissions/all`,
@@ -148,6 +148,7 @@ const generateEndpoints = () => {
         },
         notification : {
           student_notification : `/api/institutes/students/notifications/all`,
+          student_notification_get : `/api/institutes/students/notifications`,
           staff_notification : `/api/institutes/staff/notifications/all`,
           institute_notification : `/api/institutes/branch/notifications`
         },
