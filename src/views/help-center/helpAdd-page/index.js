@@ -33,6 +33,11 @@ const HelpDataGrid = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const [loading, setLoading] = useState(true); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 10;
+
+  
 
   const dispatch = useDispatch();
   const HelpCenterData = useSelector(selectHelpCenter);
@@ -49,13 +54,14 @@ const HelpDataGrid = () => {
     };
    
     dispatch(getAllHelpCenterDetails(data));
-    
-
+    setLoading(false);
   }, [dispatch, selectedBranchId, refetch]);
 
 
 
-
+const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
@@ -112,34 +118,36 @@ const HelpDataGrid = () => {
 
   const columns = [
     {
-      flex: 0.5,
+      flex: 0.80,
       headerName: 'Q No',
       field: 'id',
+      headerAlign: 'left',
+      align:"left",
      
       renderCell: ({ row }) => {
         return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' ,textAlign: 'center',  justifyContent: 'space-around',}}>
+          <Typography noWrap sx={{fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize'}}>
             {row?.id}
           </Typography>
         );
       }
     },
     {
-      flex: 2.2,
+      flex: 1.1,
       field: 'category_name',
       headerName: 'Category Name',
-      headerAlign: 'center',
-      align:"center",
+      headerAlign: 'left',
+      align:"left",
       renderCell: ({ row }) => {
         return (
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center',justifyContent: 'space-between',height: '100%'}}>
+            <Box sx={{ display: 'flex', flexDirection: 'column',height:'100%'}}>
               
               <Typography
                 noWrap
                 sx={{
                   
-                  textAlign: 'center',
+                  
                   fontSize: '15px',
                   fontWeight: 600,
                   textDecoration: 'none',
@@ -156,20 +164,48 @@ const HelpDataGrid = () => {
       }
     },
     {
-      flex: 2.2,
-      field: 'Q&A',
-      headerName: 'Q&A',
-      headerAlign: 'center',
-      align:"center",
+      flex: 1.5,
+      field: 'videolink',
+      headerName: 'Video Link',
+      headerAlign: 'left',
+      align:"left",
       renderCell: ({ row }) => {
         return (
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column',height:'100%',justifyContent: 'center',}}>
+            <Box sx={{ display: 'flex', flexDirection: 'column',height:'100%'}}>
               
               <Typography
                 noWrap
                 sx={{
-                  textAlign: 'center',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: 'text.secondary',
+                  '&:hover': { color: 'primary.main' },
+                  
+                }}
+              >
+                {row?.videolink}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      flex: 2.2,
+      field: 'Q&A',
+      headerName: 'Q&A',
+      headerAlign: "left",
+      align:"left",
+      renderCell: ({ row }) => {
+        return (
+          <Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column',height:'100%'}}>
+              
+              <Typography
+                noWrap
+                sx={{
                   fontSize: '15px',
                   fontWeight: 600,
                   textDecoration: 'none',
@@ -180,7 +216,7 @@ const HelpDataGrid = () => {
               >
                 {row?.question}
               </Typography>
-              <Typography noWrap sx={{ textAlign: 'center', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
+              <Typography noWrap sx={{  color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
                 {row?.answer}
               </Typography>
             </Box>
@@ -263,6 +299,7 @@ const HelpDataGrid = () => {
                 autoHeight
                 key={"id"}
                 rowHeight={80}
+                sx={{ textAlign:"left"}}
                  rows={HelpCenterData?.data}
                 columns={columns}
                 disableRowSelectionOnClick
@@ -291,15 +328,18 @@ const HelpDataGrid = () => {
         />
       </Grid>
       <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-      {HelpCenterData?.last_page !== 1 && (
+      {HelpCenterData?.totalPages!== 1 && (
           <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination
-              count={HelpCenterData?.last_page}
+           <Pagination
+              count={HelpCenterData?.totalPages}
               color="primary"
-              onChange={async (e, page) => {
+              onChange={(e, page) => {
                 const data = {
-                  page: page
+                  branchid: selectedBranchId,
+                  instituteid: useInstitute().getInstituteId(),
+                  page: page 
                 };
+                console.log(data,page)
                 dispatch(getAllHelpCenterDetails(data));
               }}
             />

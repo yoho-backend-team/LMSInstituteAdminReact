@@ -11,6 +11,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { updateHelpcenter } from '../service/helpCenter';
+import { useSpinner } from 'context/spinnerContext';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -32,17 +33,20 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object({
   question: yup.string().required('Question is required'),
   answer: yup.string().required('Answer is required'),
-  category: yup.string().required('Category is required')
+  category: yup.string().required('Category is required'),
+  videolink: yup.string().required('Add Video Link')
 });
 
 const defaultValues = {
   question: '',
   answer: '',
-  category:''
+  category:'',
+  videolink:''
 };
 
 const HelpCenterEdit = (props) => {
   const { open, toggle, setRefetch } = props;
+  const { show,hide} = useSpinner()
 
   const {
     reset,
@@ -68,10 +72,12 @@ const HelpCenterEdit = (props) => {
       question: data.question,
       answer: data.answer,
       category: data.category,
+      videolink:data.videolink,
       id: props.initialValues.uuid
     };
 
     try {
+      show()
       const result = await updateHelpcenter(inputData);
       console.log(result,"result")
       if (result.success) {
@@ -83,8 +89,10 @@ const HelpCenterEdit = (props) => {
       }
     } catch (error) {
       console.error('Error in onSubmit:', error);
-      toast.error('Failed to update FaqCategory');
-    }
+      toast.error(result.message);
+    }finally{
+      hide()
+     }
   };
 
  
@@ -164,6 +172,29 @@ const HelpCenterEdit = (props) => {
             )}
           />
           </Grid>
+          <Grid item xs={12} sm={12}>
+              <Controller
+                name="videolink"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    multiline
+                    
+                    rows={2}
+                    sx={{ 
+                      mb: 2,
+                    }}
+                    label="Video Link"
+                    onChange={onChange}
+                    error={Boolean(errors.videolink)}
+                    {...(errors.videolink && { helperText: errors.videolink.message })}
+                  />
+                )}
+              />
+            </Grid>
           <Grid item xs={12} sm={12}>
   <Controller
     name="category"

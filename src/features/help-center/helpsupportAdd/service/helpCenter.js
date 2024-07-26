@@ -35,10 +35,10 @@ export const searchHelpCenter = async (searchQuery) => {
       params: { keyword: searchQuery } 
     });
     
-    if (response.data) {
-      return { success: true, data: response.data };
+    if (response.data.status) {
+      return { success: true, message: response.data.message }; 
     } else {
-      return { success: false, message: 'Failed to fetch search results' };
+      return { success: false, message: response.data.message }; 
     }
   } catch (error) {
     console.error('Error in Help Center:', error);
@@ -51,7 +51,8 @@ export const addHelpCenter = async (data) => {
       headers: {
         Accept: 'application/json',
         Authorization: `token ${localStorage.getItem('token')}`
-      }
+      },
+      params: data,
     });
 
     if (response.data.status) {

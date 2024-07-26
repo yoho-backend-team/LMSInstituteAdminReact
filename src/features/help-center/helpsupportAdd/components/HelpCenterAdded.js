@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addHelpCenter } from '../service/helpCenter';
-
+import { useSpinner } from 'context/spinnerContext';
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -22,17 +22,20 @@ const Header = styled(Box)(({ theme }) => ({
 const schema = yup.object().shape({
   question: yup.string().required('Question is required'),
   answer: yup.string().required('Answer is required'),
-  category: yup.string().required('Category required')
+  category: yup.string().required('Category required'),
+  videolink: yup.string().required('Add Video Link')
 });
 
 const defaultValues = {
   question: '',
   answer: '',
-  category:''
+  category:'',
+  videolink:''
 };
 
 const HelpCenterAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
+  const { show,hide} = useSpinner()
 
   const institute = JSON.parse(localStorage.getItem('institute'));
   const selectedBranchId = localStorage.getItem('selectedBranchId');
@@ -64,24 +67,23 @@ const HelpCenterAddDrawer = (props) => {
       question: data.question,
       answer: data.answer,
       category: data.category,
+      videolink:data.videolink,
       ...requestData 
     };
-  
-    try {
-      const result = await addHelpCenter(inputData);
-    
-      if (result.success) {
+
+        try {
+          show()
+        const result = await addHelpCenter(inputData);
+        console.log('Result from addHelpCenter:', result);
         toast.success(result.message); 
         setRefetch((state) => !state);
         toggle(); 
         reset();
-      } else {
-        toast.error(result.response.data.message); 
-      }
-    } catch (error) {
-      console.error('Error in creating FaqCategory:', error);
-      toast.error('Failed to create FaqCategory',error);
-    }
+      } catch (error) {
+        toast.error(result.response.data?.message);
+      }finally{
+        hide()
+       }
   };
   
   return (
@@ -160,6 +162,29 @@ const HelpCenterAddDrawer = (props) => {
               />
             </Grid>
             <Grid item xs={12} sm={12}>
+              <Controller
+                name="videolink"
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    multiline
+                    
+                    rows={2}
+                    sx={{ 
+                      mb: 2,
+                    }}
+                    label="Video Link"
+                    onChange={onChange}
+                    error={Boolean(errors.answer)}
+                    {...(errors.answer && { helperText: errors.answer.message })}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
   <Controller
     name="category"
     control={control}
@@ -187,7 +212,7 @@ const HelpCenterAddDrawer = (props) => {
         <MenuItem value="Password">Password</MenuItem>
         <MenuItem value="Attendance">Attendance</MenuItem>
         <MenuItem value="Payment">Payment</MenuItem>
-        <MenuItem value="Login&Sign Up">Login&Sign Up</MenuItem>
+        <MenuItem value="Login&Sign Up">Login&SignUp</MenuItem>
       </TextField>
     )}
   />
