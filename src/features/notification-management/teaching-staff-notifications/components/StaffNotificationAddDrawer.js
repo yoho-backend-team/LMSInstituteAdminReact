@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addStaffNotification, getAllStaffDetailsWithRoleName } from '../services/staffNotificationServices';
 import { useInstitute } from 'utils/get-institute-details';
+import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -27,7 +28,7 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  staff_type: yup.string().required('Type is required'),
+  branch: yup.string().required('Select Branch'),
   staff: yup.array().required('staff is required').min(1, 'Select at least one staff'),
   title: yup
     .string()
@@ -36,14 +37,18 @@ const schema = yup.object().shape({
   body: yup
     .string()
     .required('Body is required')
-    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters')
+    .matches(/^[a-zA-Z0-9\s]+$/, 'body should not contain special characters'),
+  link : yup.string().optional(),
+  notification_type : yup.string().required("type is required")
 });
 
 const defaultValues = {
-  staff_type: '',
+  branch: '',
   staff: [],
   title: '',
-  body: ''
+  body: '',
+  link : '',
+  notification_type : ''
 };
 
 const StaffNotificationAddDrawer = (props) => {
@@ -59,9 +64,16 @@ const StaffNotificationAddDrawer = (props) => {
   const [activeStaffs, setActiveStaffs] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [selectedStaff, setSelectedStaff] = useState([]);
+  const [activeBranches,setActiveBranches] = useState([])
 
+  const getAllBranches = async () => {
+    const response = await getActiveBranches()
+    setActiveBranches(response?.data?.data)
+  }
+  console.log(activeBranches,"activeBranches")
   useEffect(() => {
     getActiveStaffsByBranch(selectedBranchId,"Teaching");
+    getAllBranches()
   }, [selectedBranchId]);
 
   const getActiveStaffsByBranch = async (selectedBranchId, type) => {
@@ -190,24 +202,26 @@ const StaffNotificationAddDrawer = (props) => {
 
           <Grid item xs={12} sx={{ mb: 2 }}>
             <Controller
-              name="staff_type"
+              name="branch"
               control={control}
-              rules={{ required: 'Staff Type field is required' }}
+              rules={{ required: 'branch is required' }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
                   fullWidth
-                  value={value}
+                  value={value || ''}
                   onChange={(e, newValue) => {
-                    onChange(newValue);
+                    onChange(newValue.branch_identity);
+                    console.log(newValue,"newValue")
                     getActiveStaffsByBranch(selectedBranchId, newValue);
                   }}
-                  options={['Teaching', 'Non Teaching']}
+                  options={activeBranches}
+                  getOptionLabel={(options) => options?.branch_identity}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Select Staff Type"
-                      error={Boolean(errors.staff_type)}
-                      helperText={errors.staff_type?.message}
+                      label="Select Branch"
+                      error={Boolean(errors.branch)}
+                      helperText={errors.branch?.message}
                     />
                   )}
                 />
@@ -285,6 +299,53 @@ const StaffNotificationAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
+           <Controller
+             name="notification_type"
+             control={control}
+             rules={{ required: true }}
+             render={({ field: { onChange, onBlur, value } }) => (
+               <Autocomplete
+                 multiple={false}
+                 freeSolo 
+                 disableCloseOnSelect={false}
+                 id="select-multiple-chip"
+                 options={["Notification", "Classes", "Alerts", "Reminders"]} 
+                 getOptionLabel={(option) => option}
+                 value={value || ''} 
+                 onChange={(event, newValue) => {
+                   onChange(newValue);
+                 }}
+                 renderInput={(params) => (
+                   <TextField
+                     {...params}
+                     sx={{ mb: 2 }}
+                     fullWidth
+                     label={"Notification type"}
+                     error={Boolean(errors.notification_type)}
+                     helperText={errors?.notification_type ? errors.notification_type.message : null}
+                     InputProps={{
+                       ...params.InputProps,
+                       style: { overflowY: "hidden", overflowX: "auto", maxHeight: 55 }
+                     }}
+                   />
+                 )}
+                 renderOption={(props, option, { selected }) => (
+                   <li {...props}>
+                     <Checkbox
+                       // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                       // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                       style={{ marginRight: 8 }}
+                       checked={selected}
+                     />
+                     {option}
+                   </li>
+                 )}
+               />
+             )}
+           />
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
             <Controller
               name="title"
               control={control}
@@ -323,6 +384,25 @@ const StaffNotificationAddDrawer = (props) => {
                   rows={4}
                 />
               )}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={12} >
+            <Controller 
+             name='link'
+             control={control}
+             rules={{ required: true}}
+             render={({field:{value,onChange}}) => (
+              <TextField 
+              fullWidth
+              sx={{ mb: 2}}
+              label="Link"
+              value={value}
+              onChange={onChange}
+              error={Boolean(errors?.link)}
+              helperText={errors?.link ? errors?.link.message : null}
+              />
+             )}
             />
           </Grid>
 
