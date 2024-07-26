@@ -128,8 +128,9 @@ const generateEndpoints = () => {
             messages : `/api/institutes/community/messages/`
         },
         ticket : {
-            student_ticket : `/api/institutes/student/ticket/getall`,
-            update : `/api/institutes/student/ticket/update/`,
+            student_ticket : `/api/institutes/student-ticket/getall`,
+            update : `/api/institutes/student-ticket/update/`,
+            student_ticket_with_id : `/api/institutes/student-ticket`,
             staff_ticket : `/api/institutes/staff/ticket/all`,
             staff_ticket_with_id : `/api/institutes/staff/ticket/`,
             update_staff_ticket : `/api/institutes/staff/ticket/update/`

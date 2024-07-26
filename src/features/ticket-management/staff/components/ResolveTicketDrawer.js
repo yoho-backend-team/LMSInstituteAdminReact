@@ -157,7 +157,7 @@ import PdfViewer from "./PdfViewer";
               >
                 #{ticket?.id} {ticket?.query}
               </Typography>
-              <Typography
+              {/* <Typography
                 sx={{
                   color: "black",
                   fontSize: "12px",
@@ -167,7 +167,7 @@ import PdfViewer from "./PdfViewer";
               >
                 Show activates
               </Typography>
-             
+              */}
               <Box sx={{ display: 'flex', gap: "21px"}} >
                 <Typography
                   sx={{ fontSize: "14px", color: "#495057", fontWeight: 700 }}
@@ -529,10 +529,7 @@ import PdfViewer from "./PdfViewer";
                       <Typography onClick={()=>handleFileOpen} sx={{ color: "#5611B1", fontSize: "15px",fontWeight:600,cursor:"pointer"}} >
                         View
                       </Typography>
-                      {/* <Typography sx={{ color: "#5611B1", fontSize: "15px",fontWeight:600,cursor:"pointer"}} >
-                        View
-                      </Typography> */}
-                      </Box>
+                     </Box>
                     </Box>
                     <Box
                       sx={{
@@ -562,8 +559,7 @@ import PdfViewer from "./PdfViewer";
                           size="small"
                           sx={{
                             color: "white",
-                            // backgroundColor: statusColor[ticket?.status],
-                            backgroundColor: 'black',
+                            backgroundColor: statusColor[ticket?.status],
                             border: "1px solid #DEE2E6",
                             borderRadius: "8px",
                             fontSize: "16px",
@@ -571,8 +567,8 @@ import PdfViewer from "./PdfViewer";
                             lineHeight: "22px",
                             padding: "9px 24px",
                           }}
-                        >Status
-                          {/* {ticket?.status} */}
+                        >
+                         {ticket?.status}
                         </Button>
                       </Typography>
                     </Box>

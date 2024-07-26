@@ -8,7 +8,6 @@ import MainCard from 'components/cards/MainCard';
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 import ClosedTicketCard from 'features/ticket-management/student/components/ClosedTicketCard';
 import OpenTicketCard from 'features/ticket-management/student/components/OpenTicketCard';
-import TicketResolveDrawer from 'features/ticket-management/student/components/ResolveTicketDrawer';
 import { selectStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketSelectors';
 import { getAllStudentClosedTickets } from 'features/ticket-management/student/redux/closed-tickets/studentClosedTicketThunks';
 import { selectLoading, selectStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketSelectors';
@@ -102,7 +101,7 @@ const StudentTicketsPage = () => {
         </TabContext>
       )}
 
-      <TicketResolveDrawer open={openResolveDrawer} toggle={handleCloseDrawer} setRefetch={setRefetch} ticket={selectedTicket} />
+
     </MainCard>
   );
 };

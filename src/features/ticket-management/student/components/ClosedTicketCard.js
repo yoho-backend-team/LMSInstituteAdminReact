@@ -8,15 +8,13 @@ import PropTypes from 'prop-types';
 const ClosedTicketCard = ({ ticket }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
-      <Card>
+      <Card sx={{ minHeight: 260 }}>
         <CardContent>
           <Box sx={{}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5">
-                  {ticket?.user?.first_name} {ticket?.user?.last_name}
-                </Typography>
+                <Typography variant="h5">{ticket?.user?.full_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
                   {ticket?.user?.email}
                 </Typography>
