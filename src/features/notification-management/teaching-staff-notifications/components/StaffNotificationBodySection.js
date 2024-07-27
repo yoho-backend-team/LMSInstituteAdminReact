@@ -9,16 +9,19 @@ import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { getInitials } from 'utils/get-initials';
 import { resendStaffNotification } from '../services/staffNotificationServices';
+import { getImageUrl } from 'utils/imageUtils';
+import { profilePlaceholder } from 'utils/placeholders';
 
 const StaffNotificationBodySection = ({ staffNotifications }) => {
   const renderClient = (row) => {
     if (row?.avatar?.length) {
-      return <Avatar src={row?.avatar} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+      return <Avatar src={getImageUrl(row?.staff?.image)} sx={{ mr: 2.5, width: 38, height: 38 }} />;
     } else {
       return (
         <Avatar
           skin="light"
           color={row?.avatarColor || 'primary'}
+          src={ row?.staff?.image ?getImageUrl(row?.staff?.image) : profilePlaceholder}
           sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
         >
           {getInitials(row?.staff?.image || 'John Doe')}

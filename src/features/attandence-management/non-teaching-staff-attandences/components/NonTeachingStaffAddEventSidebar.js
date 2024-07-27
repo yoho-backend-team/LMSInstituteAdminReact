@@ -141,7 +141,6 @@ const getUserList = async (name) => {
     );
   };
 
-  console.log(userList,"userList")
 
   return (
     <Drawer

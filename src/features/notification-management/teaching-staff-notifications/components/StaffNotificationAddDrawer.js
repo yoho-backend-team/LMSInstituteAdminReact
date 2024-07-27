@@ -16,7 +16,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { addStaffNotification, getAllStaffDetailsWithRoleName } from '../services/staffNotificationServices';
+import { addStaffNotification, getAllStaffDetailsWithRoleName, getTeachingStaffsWithBranch } from '../services/staffNotificationServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 
@@ -80,7 +80,8 @@ const StaffNotificationAddDrawer = (props) => {
     const data = {
       type: type,
     };
-    const result = await getAllStaffDetailsWithRoleName(data);
+    // const result = await getAllStaffDetailsWithRoleName(data);
+    const result = await getTeachingStaffsWithBranch({branch:selectedBranchId})
     setActiveStaffs(result.data);
   };
 
@@ -107,12 +108,14 @@ const StaffNotificationAddDrawer = (props) => {
   const onSubmit = async (data) => {
     var bodyFormData = new FormData();
     const staffIds = data?.staff?.filter((user)=>user?._id)
-   
+    
     const staff_notification = {
       staff : staffIds,
       title : data?.title,
       body : data?.body,
       branch : selectedBranchId,
+      type : data?.notification_type,
+      link : data?.link,
       institute : useInstitute().getInstituteId()
     }
    
@@ -205,17 +208,18 @@ const StaffNotificationAddDrawer = (props) => {
               name="branch"
               control={control}
               rules={{ required: 'branch is required' }}
-              render={({ field: { value, onChange } }) => (
+              render={({ value }) => (
                 <Autocomplete
                   fullWidth
-                  value={value || ''}
+                  value={value}
                   onChange={(e, newValue) => {
-                    onChange(newValue.branch_identity);
                     console.log(newValue,"newValue")
-                    getActiveStaffsByBranch(selectedBranchId, newValue);
+                    setValue("branch",newValue.branch_identity)
+                    console.log()
+                    getActiveStaffsByBranch(newValue?.uuid, newValue);
                   }}
                   options={activeBranches}
-                  getOptionLabel={(options) => options?.branch_identity}
+                  getOptionLabel={(option) => option?.branch_identity || ''}
                   renderInput={(params) => (
                     <TextField
                       {...params}

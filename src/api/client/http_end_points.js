@@ -25,8 +25,11 @@ const generateEndpoints = () => {
     // }
 
     const instituteId = institute? institute?.uuid  :""
-    console.log(branchId,"branchId")
+    
     return {
+        admin  : {
+          me : `/api/institutes/auth/admin/me`
+        },
         permission : {
             getAll : `/api/admin/institutes/permissions/all`,
             update : `/api/admin/institutes/groups/permissions`
@@ -121,7 +124,8 @@ const generateEndpoints = () => {
             get : `/api/institutes/${instituteId}/Non-teaching-staff/`,
             getWithName : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
             getWithId : `/api/institutes/${instituteId}/staff/`,
-            getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`
+            getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`,
+            getWithBranch : `/api/institutes/${instituteId}/branches/`
         },
         community : {
             all : `/api/institutes/community/${instituteId}/branches/`,
@@ -150,6 +154,7 @@ const generateEndpoints = () => {
           student_notification : `/api/institutes/students/notifications/all`,
           student_notification_get : `/api/institutes/students/notifications`,
           staff_notification : `/api/institutes/staff/notifications/all`,
+          create_staff_notification : `/api/institutes/staff/notifications/`,
           institute_notification : `/api/institutes/branch/notifications`
         },
         subscription:{

@@ -23,6 +23,15 @@ export const getAllStaffDetailsWithRoleName = async (data) => {
   }
 }
 
+export const getTeachingStaffsWithBranch = async (data) => {
+  try {
+  const response = await client.TeachingStaff.getWithBranch(data)
+  return { success: false, message : response?.message, data:response}
+  } catch (error) {
+    return {success:false,message:error?.response?.data?.message}
+  }
+}
+
 export const addStaffNotification = async (data) => {
   try {
     const response = await client.notification.staff.add_staff_notification(data)
