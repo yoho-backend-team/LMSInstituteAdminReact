@@ -1,25 +1,26 @@
-import { Grid, TextField } from '@mui/material';
+import { Grid, TextField ,InputAdornment } from '@mui/material';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllHelpCenterDetails } from '../redux/HelpThunks';
+import { useInstitute } from 'utils/get-institute-details';
 
 const HlepCenterTableHeader = (props) => {
   const { toggle, selectedBranchId } = props;
 
-  // State for search value
+
   const [searchValue, setSearchValue] = useState('');
 
-  // Dispatch function
+  
   const dispatch = useDispatch();
 
-  // Callback function to handle search
+  
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllHelpCenterDetails({ search: searchInput, branch_id: selectedBranchId }));
+      dispatch(getAllHelpCenterDetails({ search: searchInput, branch_id: selectedBranchId, instituteid: useInstitute().getInstituteId(), }));
       setSearchValue(searchInput);
     },
     [dispatch]
@@ -36,8 +37,15 @@ const HlepCenterTableHeader = (props) => {
                 width: 400
               }}
               placeholder="Search Category"
-              onChange={(e) => handleSearch(e)}
-              readonly
+              onChange={handleSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Icon fontSize="1.125rem" icon="tabler:search" />
+                  </InputAdornment>
+                ),
+              }}
+              // readonly
             />
           </Grid>
 

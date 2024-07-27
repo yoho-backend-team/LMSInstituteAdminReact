@@ -164,7 +164,7 @@ const handlePageChange = (event, page) => {
       }
     },
     {
-      flex: 1.5,
+      flex: 2.0,
       field: 'videolink',
       headerName: 'Video Link',
       headerAlign: 'left',
