@@ -7,7 +7,7 @@ export const getAllHelpCenterDetails = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllHelpCenter(data);
-    console.log(response,"response")
+    
     dispatch(setHelpCenter(response?.data));
    
   } catch (error) {

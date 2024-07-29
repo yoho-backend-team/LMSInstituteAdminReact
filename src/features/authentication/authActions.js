@@ -63,7 +63,6 @@ export const login = (username, password) => async (dispatch) => {
     }
   } catch (error) {
     // Dispatch error action
-    console.log(error)
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error?.response?.data?.message
@@ -118,7 +117,6 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
       return { success: false, message: 'Failed to delete group' };
     }
   } catch (error) {
-    console.log(error)
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error.response.data.message

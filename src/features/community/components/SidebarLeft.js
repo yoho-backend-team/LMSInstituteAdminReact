@@ -63,10 +63,10 @@ const SidebarLeft = (props) => {
     const communityId = community?._id
     setCommunityDetails(community)
     const user = getUserDetails()
-    console.log(community,communityId,user?._id)
+    
 
     socket.emit("joinGroup",{groupId:communityId,userId:user?._id},(error)=>{
-      console.log(error,"socketError")
+
     })
 
     if (community && community._id) {

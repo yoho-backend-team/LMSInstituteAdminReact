@@ -74,7 +74,6 @@ const HelpCenterAddDrawer = (props) => {
         try {
           show()
         const result = await addHelpCenter(inputData);
-        console.log('Result from addHelpCenter:', result);
         toast.success(result.message); 
         setRefetch((state) => !state);
         toggle(); 

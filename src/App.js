@@ -19,9 +19,8 @@ const App = () => {
   const customization = useSelector((state) => state.customization);
   // onMessageListener()
   // .then((payload) => {
-  //   console.log(payload);
   // })
-  // .catch((err) => console.log('failed: ', err));
+  // .catch((err) => );
 
   // useEffect(()=>{
   //   requestForToken()

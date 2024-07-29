@@ -42,7 +42,7 @@ const CardStudentandTeacher = (props) => {
       }
     }
   }));
-  console.log(props,"props")
+
   return (
     <CardWrapper sx={{ p: 0 }}>
       <CardContent sx={{ p: 2, py: 5 }}>

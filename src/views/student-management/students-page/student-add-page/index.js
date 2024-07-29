@@ -203,7 +203,6 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
     show()
-    console.log(personalData,"personal")
     const student_data = {
       first_name : personalData.student_first_name,
       last_name : personalData.student_last_name,

@@ -56,7 +56,6 @@ import { getStudentTicketWithId } from "../services/studentTicketService";
         try {
           show()
           const res = await getStudentTicketWithId({id:ticketId});
-          console.log(res,"res")
           setTicket(res?.ticket);
         } catch (error) {
           console.error("Error fetching ticket:", error);
@@ -67,7 +66,6 @@ import { getStudentTicketWithId } from "../services/studentTicketService";
       fetchTicket();
     }, []);
 
-    console.log(ticket, "tixketwithid")
 
   return (  
     <>

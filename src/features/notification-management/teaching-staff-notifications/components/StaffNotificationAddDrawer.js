@@ -70,7 +70,7 @@ const StaffNotificationAddDrawer = (props) => {
     const response = await getActiveBranches()
     setActiveBranches(response?.data?.data)
   }
-  console.log(activeBranches,"activeBranches")
+  
   useEffect(() => {
     getActiveStaffsByBranch(selectedBranchId,"Teaching");
     getAllBranches()
@@ -213,9 +213,7 @@ const StaffNotificationAddDrawer = (props) => {
                   fullWidth
                   value={value}
                   onChange={(e, newValue) => {
-                    console.log(newValue,"newValue")
                     setValue("branch",newValue.branch_identity)
-                    console.log()
                     getActiveStaffsByBranch(newValue?.uuid, newValue);
                   }}
                   options={activeBranches}

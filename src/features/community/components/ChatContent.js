@@ -50,9 +50,8 @@ const ChatContent = (props) => {
 
   useEffect(() => {
     if (typeof Notification !== "undefined") {
-      console.log("notifications")
+
       Notification.requestPermission().then(permission => {
-        console.log(permission,"permission")
         if (permission === 'granted') {
           setPermissionGranted(true);
         }
@@ -70,14 +69,13 @@ const ChatContent = (props) => {
       setMessages((messages) => [...messages, message]);
       if (callback) callback({ status: "success" });
       // if (permissionGranted) {
-      //   console.log(permissionGranted, "permissionGranted")
       //   new Notification(communityDetails?.group, {
       //     body: message.message,
       //   });
       // }
     });
   },[])
-   console.log(messages,"messages")
+
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;

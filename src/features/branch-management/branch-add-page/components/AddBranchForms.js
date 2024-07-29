@@ -95,14 +95,12 @@ const AddBranchForms = () => {
       }
     } catch (error) {
       hide()
-      console.log(error);
     }
   };
 
   useEffect(()=>{
   const lister =(event) => {
    if(event.code === "Enter"){
-    console.log(event,"event")
     handleSubmit(onSubmit)()
    }
   }
@@ -111,7 +109,7 @@ const AddBranchForms = () => {
     document.removeEventListener("keydown",lister)
   }
   },[])
-  console.log(errors,"errors")
+
   return (
     <Card>
       <form onSubmit={handleSubmit(onSubmit)}>

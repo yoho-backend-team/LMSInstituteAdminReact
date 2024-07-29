@@ -198,7 +198,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       }
     } catch (error) {
       hide()
-      console.log(error);
     }
   };
   

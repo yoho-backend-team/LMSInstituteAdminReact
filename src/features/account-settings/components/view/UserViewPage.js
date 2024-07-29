@@ -31,7 +31,6 @@ const UserView = () => {
       };
       try {
         const result = await getUserProfileById();
-        console.log(result,"result")
         setUserData(result.data);
         setLoading(false);
       } catch (error) {
@@ -43,7 +42,7 @@ const UserView = () => {
       console.log(error);
     }
   };
-  console.log(userData,"user")
+  
   return (
     <>
       {loading ? (

@@ -17,7 +17,7 @@ import { useBranchId, useInstitute } from 'utils/get-institute-details';
 
 const TeachingStaffAddEventSidebar = (props) => {
   const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
- console.log(selected,"selected",staff)
+
   const defaultState = {
     staff_name: '',
     title: '',
@@ -85,7 +85,6 @@ const TeachingStaffAddEventSidebar = (props) => {
       staff : staff?.staff,
       status:data?.title
     }
-    console.log(new_attedence,convertDateFormat(selectedDate),selectedDate)
     
     const result = await addTeachingStaffAttendance(new_attedence);
     if (result.success) {
@@ -134,7 +133,7 @@ const TeachingStaffAddEventSidebar = (props) => {
       </Fragment>
     );
   };
-  console.log(userList,"userList")
+
   return (
     <Drawer
       anchor="right"
@@ -194,7 +193,6 @@ const TeachingStaffAddEventSidebar = (props) => {
                   label="Staff Type"
                   value={value}
                   onChange={(e)=>{
-                  console.log(e.target.value)
                   getUserList(e.target.value)
                   onChange(e.target.value)
                   }}

@@ -195,7 +195,6 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     } catch (error) {
       hide()
       toast.error(error)
-      console.log(error);
     }
   };
 
