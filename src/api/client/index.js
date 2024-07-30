@@ -92,6 +92,7 @@ class Client {
       studentRegister : (data,options) => HttpClient.post(HTTP_END_POINTS.users.studentRegister,data,options),
       studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+`${params.branch_id}/students`,params),
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
+      getnonstaffWithId : (params) => HttpClient.get(HTTP_END_POINTS.nonstaff.getWithId+params.nonstaff_id),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithcourse+`${data.course_id}/students`),
       getStudentsWithBatch : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithBatch+data.branch_id+"/batches/batch-students",data),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithCourse+`${data.branch_id}/${data.course_id}/students`),

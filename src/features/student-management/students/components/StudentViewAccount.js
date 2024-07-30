@@ -26,6 +26,8 @@ const UserViewAccount = ({ student }) => {
     setStudentDeleteModelOpen(true);
   }, []);
 
+ 
+
   // Handle branch deletion
   const handleStudentDelete = async () => {
     const data = { uuid: selectedStudentDeleteId };
@@ -36,6 +38,8 @@ const UserViewAccount = ({ student }) => {
       toast.error(result.message);
     }
   };
+
+  console.log(student,"student")
 
   if (student&&Object.keys(student).length!==0) {
     return (
