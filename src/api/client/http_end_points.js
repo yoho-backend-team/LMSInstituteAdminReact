@@ -125,7 +125,8 @@ const generateEndpoints = () => {
             getWithName : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
             getWithId : `/api/institutes/${instituteId}/staff/`,
             getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`,
-            getWithBranch : `/api/institutes/${instituteId}/branches/`
+            getWithBranch : `/api/institutes/${instituteId}/branches/`,
+            getWithid : `/api/institutes/${instituteId}/branches/${branchId}/staff/`,
         },
         nonstaff :{
             getWithId : `/api/institutes/${instituteId}/branches/${branchId}/nonstaff/`,

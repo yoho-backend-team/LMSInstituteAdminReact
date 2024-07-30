@@ -16,9 +16,9 @@ const UserView = () => {
     getStaffData(staffID);
   }, [staffID]);
 
-  const getStaffData = async (staffID) => {
+  const getStaffData = async (id) => {
     setLoading(true);
-    const data = { id: staffID };
+    const data = { staff_id: id };
     const result = await TeachingStaffById(data);
     if (result.success) {
       setStaff(result.data);

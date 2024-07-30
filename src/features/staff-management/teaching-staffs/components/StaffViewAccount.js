@@ -60,42 +60,42 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
               <Box sx={{ pt: 4 }}>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.userDetail?.username}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.full_name }</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.email}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.email}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.data?.userDetail?.designation}</Typography>
+                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{staff?.userDetail?.designation}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Gender:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.gender}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.gender}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>DOB:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.dob}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.dob}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.data?.contact_info?.phone_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.contact_info?.phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.data?.contact_info?.alternate_number}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.contact_info?.alternate_phone_number}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 3 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.qualification}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.qualification}</Typography>
                 </Box>
                 <Box>
                   <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                   <Typography sx={{ color: 'text.secondary' }}>
-                    {staff?.data?.contact_info?.address1}, {staff?.data?.contact_info?.address2}
+                    {staff?.contact_info?.address1}, {staff?.contact_info?.address2}
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{staff?.data?.contact_info?.city}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{staff?.contact_info?.city}</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -103,8 +103,8 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
               <Box
                 component={Link}
-                to={`teaching-staffs/${staff?.data?.uuid}/edit`}
-                state={{ staff: staff, id: staff?.data?.uuid }}
+                to={`teaching-staffs/${staff?.uuid}/edit`}
+                state={{ staff: staff, id: staff?.uuid }}
                 
               >
                 <Button variant="contained" sx={{ mr: 2, width: 100 }}>
@@ -112,7 +112,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                 </Button>
               </Box>
               <Box>
-                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.data?.uuid)}>
+                <Button color="error" variant="tonal" sx={{ mr: 2, width: 100 }} onClick={() => handleDelete(staff?.uuid)}>
                   Delete
                 </Button>
               </Box>
