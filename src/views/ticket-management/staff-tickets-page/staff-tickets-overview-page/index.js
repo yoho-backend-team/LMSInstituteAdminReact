@@ -58,6 +58,7 @@ const StaffTicketsPage = () => {
         {staffLoading ? (
           <TicketsCardsSkeleton />
         ) : (
+          <>
           <TabContext value={value}>
             <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
               <Tab value="open" label="Opened Tickets" />
@@ -73,17 +74,6 @@ const StaffTicketsPage = () => {
                     onClick={() => setOpenResolveDrawer(true)}
                   />
                 ))}
-                {studentOpenTickets?.last_page !== 1 && (
-                  <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                    <Pagination
-                      count={studentOpenTickets?.last_page}
-                      color="primary"
-                      onChange={(e, page) => {
-                        dispatch(getAllStaffOpenTickets({ branch_id: selectedBranchId, page: page }));
-                      }}
-                    />
-                  </Grid>
-                )}
               </Grid>
             </TabPanel>
             <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
@@ -91,7 +81,10 @@ const StaffTicketsPage = () => {
                 {studentClosedTickets?.data?.map((ticket, index) => (
                   <ClosedTicketCard key={index} ticket={ticket} />
                 ))}
-                {studentClosedTickets?.last_page !== 1 && (
+              </Grid>
+            </TabPanel>
+          </TabContext>
+          {studentClosedTickets?.last_page !== 1 && (
                   <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                     <Pagination
                       count={studentClosedTickets?.last_page}
@@ -102,10 +95,8 @@ const StaffTicketsPage = () => {
                     />
                   </Grid>
                 )}
-              </Grid>
-            </TabPanel>
-          </TabContext>
-        )}
+          </>
+        )}      
       </MainCard>   
     </>
   );

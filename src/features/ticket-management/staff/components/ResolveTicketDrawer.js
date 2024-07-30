@@ -17,7 +17,7 @@ import SendIcon from "@mui/icons-material/Send";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
-import { getStaffTicketWithId } from "../services/staffTicketService";
+import { getStaffTicketWithId, updateStaffTicket } from "../services/staffTicketService";
 import { useSpinner } from "context/spinnerContext";
 import { formatDate } from "utils/format";
 import { formatTime } from "utils/formatDate";
@@ -33,7 +33,7 @@ import PdfViewer from "./PdfViewer";
     const navigate = useNavigate();
 
     const statusColor = {
-      opened: "#008375",
+      opened: "#7367F0",
       closed: "#EBA13A",
     };
 
@@ -65,6 +65,22 @@ import PdfViewer from "./PdfViewer";
       };
       fetchTicket();
     }, []);
+    
+    const handleCloseTicket = async () => {
+      try {
+        show(); 
+        const uuid = ticketId; 
+        await updateStaffTicket({ id: uuid });
+        setTicket(prevTicket => ({ ...prevTicket, status: "closed" }));
+      } catch (error) {
+        console.error("Error closing ticket:", error);
+      } finally {
+        hide(); 
+      }
+    };
+    
+
+
 
 
   return (  
@@ -113,23 +129,23 @@ import PdfViewer from "./PdfViewer";
                 mb: 2,
               }}
             >
-              <Button
-                variant="contained"
-                sx={{
-                  backgroundColor: "#008375",
-                  color: "white",
-                  borderRadius: "8px",
-                  boxShadow: "0px 6px 34px -8px #0D6EFD",
-                  padding: "9px 24px",
-                  fontSize: "14px",
-                  ":hover": {
-                    backgroundColor: "#008375",
-                  },
-                  fontWeight: 500,
-                }}
-              >
-               Close Ticket
-              </Button>
+             {ticket.status === 'opened' && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    color: "white",
+                    borderRadius: "8px",
+                    boxShadow: "0px 3px 20px -8px #0D6EFD",
+                    padding: "9px 24px",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
+                  onClick={handleCloseTicket}
+                >
+                  Close Ticket
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
@@ -524,9 +540,12 @@ import PdfViewer from "./PdfViewer";
                       >
                         {ticket?.file?.split("/")[2]}
                       </Typography>
-                      <Typography onClick={()=>handleFileOpen} sx={{ color: "#5611B1", fontSize: "15px",fontWeight:600,cursor:"pointer"}} >
-                        View
-                      </Typography>
+                      <Typography 
+                      onClick={() => handleFileOpen(ticket?.file)} 
+                      sx={{ color: "#5611B1", fontSize: "15px", fontWeight: 600, cursor: "pointer" }}
+                    >
+                      View
+                    </Typography>
                      </Box>
                     </Box>
                     <Box
