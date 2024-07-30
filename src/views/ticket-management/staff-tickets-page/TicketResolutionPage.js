@@ -7,9 +7,8 @@ const TicketResolutionPage = ({ ticket }) => {
   const [openResolveDrawer, setOpenResolveDrawer] = useState(true); 
   const getParams = useSearchParams()
   const {id} = useParams();
-  console.log(getParams)
-  console.log(id,"iddddd")
-  console.log(ticket, "tickefs")
+
+  
   const handleCloseDrawer = () => {
     setOpenResolveDrawer(false);
   };

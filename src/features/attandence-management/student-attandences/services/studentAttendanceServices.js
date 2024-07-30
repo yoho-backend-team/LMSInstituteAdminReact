@@ -7,8 +7,7 @@ const STUDENT_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_UR
 export const getAllStudentAttendances = async (data) => {
   try {
     const response = await client.attedence.get_all_student_attedence(data)
-    // Check if the response status is successful
-    console.log(response,"response")
+    // Check if the response stat
       return response;
   } catch (error) {
     // Log the error for debugging purposes
@@ -103,7 +102,6 @@ export const updateStudentAttendance = async (data) => {
 
 export const getClassDetails = async (data) => {
   try {
-    console.log(data,"data")
     const response = await client.attedence.get_with_id(data)
 
     // Check if the response status is successful

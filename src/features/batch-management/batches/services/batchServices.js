@@ -137,7 +137,6 @@ export const updateBatchStatus = async (data) => {
  
     return { success: true, message: 'Batch updated successfully' };
   } catch (error) {
-    console.log(error)
     console.error('Error in updateBatch:', error);
     return { success: false, message: error?.response?.data?.message };
   }

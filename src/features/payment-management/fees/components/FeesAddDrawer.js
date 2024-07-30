@@ -161,7 +161,7 @@ const FeesAddDrawer = (props) => {
     };
 
     const result = await addStudentFee(InputData);
-    console.log(result,"result")
+    
     if (result.success) {
       hide()
       toast.success(result.message);

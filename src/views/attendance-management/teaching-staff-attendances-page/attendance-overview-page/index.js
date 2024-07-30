@@ -30,7 +30,7 @@ const TeachingStaff = () => {
     };
     dispatch(getAllTeachingStaffAttendances(data));
   }, [dispatch, selectedBranchId]);
-  console.log(teachingStaffs,"teachingStaffs")
+  
   return (
     <>
       <Grid>

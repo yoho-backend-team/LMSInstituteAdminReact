@@ -80,7 +80,8 @@ const StepperLinearWithValidation = () => {
     username: yup
       .string()
       .required('User Name is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters'),
+      // staffId:yup.string().required('Unique Id'),
   });
 
   const [activeCourse, setActiveCourse] = useState([]);
@@ -112,6 +113,7 @@ const StepperLinearWithValidation = () => {
     designation: '',
     education_qualification: '',
     username: '',
+    studentId:'',
     logo: ''
   };
 
@@ -203,7 +205,6 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
     show()
-    console.log(personalData,"personal")
     const student_data = {
       first_name : personalData.student_first_name,
       last_name : personalData.student_last_name,
@@ -224,7 +225,8 @@ const StepperLinearWithValidation = () => {
       gender : personalData.gender,
       branch_id : personalData.branch,
       course : personalData.course,
-      image : logo     
+      image : logo,
+      studentId: personalData.studentId
     }
 
     try {

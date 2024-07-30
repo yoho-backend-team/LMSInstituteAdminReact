@@ -77,7 +77,7 @@ const FeesAddDrawer = (props) => {
     } else {
       result = await getAllActiveNonTeachingStaffs({ branch_id: selectedBranchId });
     }
-    console.log(result,"result")
+
     setActiveStaffs(result.data);
   };
 
@@ -182,7 +182,7 @@ const FeesAddDrawer = (props) => {
       }
     }
   };
-  console.log(activeStaffs,"activeStaffs")
+  
   return (
     <DatePickerWrapper>
       <Drawer

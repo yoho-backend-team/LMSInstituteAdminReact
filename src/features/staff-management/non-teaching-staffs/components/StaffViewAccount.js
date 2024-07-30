@@ -14,6 +14,7 @@ import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 import { deleteNonTeachingStaff } from '../services/nonTeachingStaffServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSelector } from 'react-redux';
+import { map } from 'lodash';
 
 const UserViewAccount = ({ staff, staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
@@ -44,18 +45,24 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
     }
   };
 
+console.log(staff,"staff id detaisl")
+
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12}>
+      {/* {staff?.map((staffarray, index) => ( */}
+      <Grid item xs={12} >
         <Card>
           <CardContent sx={{ pb: 4 }}>
             <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
               Details
             </Typography>
             <Box sx={{ pt: 4 }}>
+              
+            
               <Box sx={{ display: 'flex', mb: 3 }}>
+               
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{staff?.userDetail?.username}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{staff?.full_name}</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -79,7 +86,7 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Number:</Typography>
-                <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.contact_info?.alternate_number}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>+91 {staff?.contact_info?.alternate_phone_number                }</Typography>
               </Box>
               <Box sx={{ display: 'flex', mb: 3 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Qualification:</Typography>
@@ -88,10 +95,11 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
               <Box>
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
-                  {staff?.[0]?.contact_info?.address1}, {staff?.contact_info?.address2}
+                  {staff?.contact_info?.address1}, {staff?.contact_info?.address2}
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{staff?.contact_info?.city}</Typography>
               </Box>
+              
             </Box>
           </CardContent>
 
@@ -122,6 +130,7 @@ const UserViewAccount = ({ staff, staffID, setRefetch }) => {
           <UserSubscriptionDialog open={subscriptionDialogOpen} setOpen={setSubscriptionDialogOpen} />
         </Card>
       </Grid>
+      {/* ))} */}
     </Grid>
   );
 };

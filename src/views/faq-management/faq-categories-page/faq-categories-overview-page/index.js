@@ -52,7 +52,6 @@ const CategoriesDataGrid = () => {
     dispatch(getAllFaqCategories(data));
   }, [dispatch, selectedBranchId, refetch]);
 
-  console.log(faqCategories,"faqCategories")
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);

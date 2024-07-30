@@ -77,7 +77,7 @@ const BatchFilterCard = (props) => {
     const data = {
       branch_id: selectedBranchId
     };
-    console.log(batches,"batches")
+
     if (batches?.length > 0) {
       setSuggestions(batches);
     }   

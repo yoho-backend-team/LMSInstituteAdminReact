@@ -56,7 +56,6 @@ import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/s
         try {
           show()
           const res = await getStudentTicketWithId({id:ticketId});
-          console.log(res,"res")
           setTicket(res?.ticket);
         } catch (error) {
           console.error("Error fetching ticket:", error);

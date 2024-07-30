@@ -29,19 +29,20 @@ const UserView = () => {
       const data = {
         id: id
       };
-      setLoading(false);
-      const result = await getUserProfileById(data);
-      if (result.success) {
+      try {
+        const result = await getUserProfileById();
         setUserData(result.data);
         setLoading(false);
-      } else {
+      } catch (error) {
+        setLoading(false); 
+      }finally{
         setLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   return (
     <>
       {loading ? (

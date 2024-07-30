@@ -141,7 +141,6 @@ const getUserList = async (name) => {
     );
   };
 
-  console.log(userList,"userList")
 
   return (
     <Drawer
@@ -202,7 +201,6 @@ const getUserList = async (name) => {
                   label="Staff Type"
                   value={value}
                   onChange={(e)=>{
-                  console.log(e.target.value)
                   getUserList(e.target.value)
                   onChange(e.target.value)
                   }}

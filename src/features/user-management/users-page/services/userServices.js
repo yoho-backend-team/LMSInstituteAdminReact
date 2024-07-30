@@ -137,21 +137,10 @@ export const deleteUsers = async (userId) => {
 };
 export const getUserProfileById = async (data) => {
   try {
-    const response = await axios.get(`${PROFILE_API_ENDPOINT}/get-by-auth-id`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.admin.me(data)
 
     // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response.data.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch users. Status: ${response.status}`);
-    }
+    return { success: true, data: response.data };
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllUsers:', error);

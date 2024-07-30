@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 import { updateUser } from 'features/user-management/users-page/services/userServices';
 import { getAllGroups } from 'features/user-management/groups-page/services/groupService';
 import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
+import { profilePlaceholder } from 'utils/placeholders';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -68,10 +70,10 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     if (userData) {
       setValue('full_name', userData.name || '');
       setValue('user_name', userData.username || '');
-      setValue('email', userData?.institution_users?.email || '');
-      setValue('contact', userData?.institution_users?.mobile || '');
-      setValue('designation', userData?.institution_users?.designation || '');
-      setValue('role', userData?.role_groups?.role?.id || '');
+      setValue('email', userData?.email || '');
+      setValue('contact', userData?.phone_number || '');
+      setValue('designation', userData?.designation || '');
+      setValue('role', userData?.role?.id || '');
     }
   }, [userData, setValue]);
   const handleClose = () => {
@@ -190,16 +192,12 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {!selectedImage && (
                   <ImgStyled
-                    src={
-                      userData?.institution_users?.image
-                        ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${userData?.institution_users?.image}`
-                        : imgSrc
-                    }
+                    src={userData?.image ? getImageUrl(userData?.image):profilePlaceholder}
                     alt="Profile Pic"
                   />
                 )}
 
-                {selectedImage && <ImgStyled src={imgSrc} alt="Profile Pic" />}
+                {selectedImage && <ImgStyled src={userData?.image ? getImageUrl(userData?.image):profilePlaceholder} alt="Profile Pic" />}
                 <div>
                   <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                     Upload New Image
