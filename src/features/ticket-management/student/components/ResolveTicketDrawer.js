@@ -21,7 +21,7 @@ import { useSpinner } from "context/spinnerContext";
 import { formatDate } from "utils/format";
 import { formatTime } from "utils/formatDate";
 import PdfViewer from "./PdfViewer";
-import { getStudentTicketWithId } from "../services/studentTicketService";
+import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/studentTicketService";
 
 
   function TicketResolveDrawer({ticketId}) {
@@ -33,15 +33,15 @@ import { getStudentTicketWithId } from "../services/studentTicketService";
     const navigate = useNavigate();
 
     const statusColor = {
-      opened: "#008375",
+      opened: "#7367F0",
       closed: "#EBA13A",
     };
 
     const handleFileOpen = (file) => {
-      setFile(file)
-      setFileView(true)
-    }
-
+      setFile(file);
+      setFileView(true);
+    };
+    
     const handleFileViewClose = () => {
       setFile(null)
       setFileView(false)
@@ -66,6 +66,21 @@ import { getStudentTicketWithId } from "../services/studentTicketService";
       };
       fetchTicket();
     }, []);
+
+
+    const handleCloseTicket = async () => {
+      try {
+        show();   
+        const uuid = ticketId; 
+        await updateStudentstatusTicket({ id: uuid});
+        setTicket(prevTicket => ({ ...prevTicket, status: "closed" }));
+      } catch (error) {
+        console.error("Error closing ticket:", error);
+      } finally {
+        hide(); 
+      }
+    };
+    
 
     console.log(ticket, "tixketwithid")
 
@@ -117,18 +132,16 @@ import { getStudentTicketWithId } from "../services/studentTicketService";
             >
               <Button
                 variant="contained"
-                sx={{
-                  backgroundColor: "#008375",
+                color="primary"
+                sx={{ 
                   color: "white",
                   borderRadius: "8px",
-                  boxShadow: "0px 6px 34px -8px #0D6EFD",
+                  boxShadow: "0px 3px 20px -8px #0D6EFD",
                   padding: "9px 24px",
                   fontSize: "14px",
-                  ":hover": {
-                    backgroundColor: "#008375",
-                  },
-                  fontWeight: 500,
+                  tWeight: 500,
                 }}
+                onClick={handleCloseTicket}
               >
                Close Ticket
               </Button>
@@ -526,9 +539,13 @@ import { getStudentTicketWithId } from "../services/studentTicketService";
                       >
                         {ticket?.file?.split("/")[2]}
                       </Typography>
-                      <Typography onClick={()=>handleFileOpen} sx={{ color: "#5611B1", fontSize: "15px",fontWeight:600,cursor:"pointer"}} >
-                        View
-                      </Typography>
+                     <Typography 
+                      onClick={() => handleFileOpen(ticket?.file)} 
+                      sx={{ color: "#5611B1", fontSize: "15px", fontWeight: 600, cursor: "pointer" }}
+                    >
+                      View
+                    </Typography>
+
                      </Box>
                     </Box>
                     <Box

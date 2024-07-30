@@ -128,16 +128,17 @@ const generateEndpoints = () => {
             messages : `/api/institutes/community/messages/`
         },
         ticket : {
-            student_ticket : `/api/institutes/student-ticket/getall`,
+            student_ticket : `/api/institutes/student-ticket/getalll`,
+            update_student_status_ticket : `/api/institutes/student-ticket/updatestatus/`,
             update : `/api/institutes/student-ticket/update/`,
-            student_ticket_with_id : `/api/institutes/student-ticket`,
+            student_ticket_with_id : `/api/institutes/student-ticket/`,
             staff_ticket : `/api/institutes/staff/ticket/all`,
             staff_ticket_with_id : `/api/institutes/staff/ticket/`,
-            update_staff_ticket : `/api/institutes/staff/ticket/update/`
+            update_staff_ticket : `/api/institutes/staff/ticket/updatestatus/`
         },
         attedence : {
           student_all : `/api/institutes/attedance/students`,
-          get_with_id : `/api/institutes/attedance/student/`,
+          get_with_id : `/api/institutes/attedance/student/`,   
           student_mark : `/api/institutes/attedance/student/mark-attedence`,
           staff_mark:`/api/institutes/attedance/staff/attedence`,
           non_staff_mark :`/api/institutes/non-attedence/non-teaching-staff/attedence`,

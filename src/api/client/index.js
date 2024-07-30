@@ -123,11 +123,12 @@ class Client {
     }
     ticket = {
       student_tickets : (data) => HttpClient.get(HTTP_END_POINTS.ticket.student_ticket,data),
+      update_student_status_ticket : (params) => HttpClient.update(HTTP_END_POINTS.ticket.update_student_status_ticket+params?.id),
       update_student_ticket : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update+data?.uuid,data),
       student_ticket_with_id : (params) => HttpClient.get(HTTP_END_POINTS.ticket.student_ticket_with_id+params?.id),
       staff_ticket : (data) => HttpClient.get(HTTP_END_POINTS.ticket.staff_ticket,data),
       staff_ticket_with_id : (params) => HttpClient.get(HTTP_END_POINTS.ticket.staff_ticket_with_id+params?.id),
-      staff_ticket_update : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update_staff_ticket+data.uuid,data)
+      staff_ticket_update : (params) => HttpClient.update(HTTP_END_POINTS.ticket.update_staff_ticket+params?.id)
     }
     attedence = {
       get_all_student_attedence : (data) => HttpClient.get(HTTP_END_POINTS.attedence.student_all,data),
