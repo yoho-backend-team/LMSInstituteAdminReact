@@ -63,6 +63,7 @@ const TeachingStaffCalendar = (props) => {
       },
       dateClick(info) {
         setSelected(info);
+        console.log(info,"infor")
         handleAddEventSidebarToggle();
       },
 

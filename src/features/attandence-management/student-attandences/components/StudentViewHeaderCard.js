@@ -117,8 +117,8 @@ const StudentViewHeaderCard = ({ ClassData }) => {
                     rounded
                     skin="light"
                     size="small"
-                    label={ClassData?.student_class?.course?.class_type[0]}
-                    color={userRoleObj[ClassData?.student_class?.course?.class_type[0]]}
+                    label={ClassData?.student_class?.course?.class_type?.[0]}
+                    color={userRoleObj[ClassData?.student_class?.course?.class_type?.[0]]}
                     sx={{ textTransform: 'capitalize' }}
                   />
                 </Box>
