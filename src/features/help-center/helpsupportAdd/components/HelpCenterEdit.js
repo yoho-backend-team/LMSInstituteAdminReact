@@ -60,7 +60,7 @@ const HelpCenterEdit = (props) => {
     
     resolver: yupResolver(schema)
   });
-  console.log(props,"props")
+
   useEffect(() => {
     if (open) {
       reset(props.initialValues || defaultValues);
@@ -79,7 +79,7 @@ const HelpCenterEdit = (props) => {
     try {
       show()
       const result = await updateHelpcenter(inputData);
-      console.log(result,"result")
+    
       if (result.success) {
         toast.success(result.message);
         toggle();

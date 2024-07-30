@@ -2,6 +2,9 @@ import HttpClient from "./httpclinet";
 import { HTTP_END_POINTS } from "api/client/http_end_points";
 
 class Client {
+    admin = {
+      me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data)
+    }
     permission = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),
       update : (data) => HttpClient.update(HTTP_END_POINTS.permission.update,data)
@@ -107,7 +110,8 @@ class Client {
       get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/non-teaching-staff")
     }
     TeachingStaff = {
-      get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff")
+      get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff"),
+      getWithBranch : (data) => HttpClient.get(HTTP_END_POINTS.staff.getWithBranch+data.branch+"/teaching-staff/")
     }
     staff = {
       get : (query) => HttpClient.get(HTTP_END_POINTS.staff.getWithName,query)
@@ -147,7 +151,7 @@ class Client {
         get_student_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.student_notification,query),
       },
       staff : {
-        add_staff_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.staff_notification,data),
+        add_staff_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.create_staff_notification,data),
         get_staff_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.staff_notification,query)
       },
       institute : {

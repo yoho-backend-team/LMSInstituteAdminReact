@@ -38,7 +38,7 @@ const StaffNotification = () => {
   const [addUserOpen, setAddUserOpen] = useState(false);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
- console.log(staffNotifications,"staffNotifications")
+ 
   return (
     <>
       <Grid container spacing={3}>

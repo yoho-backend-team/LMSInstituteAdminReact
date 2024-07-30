@@ -42,7 +42,7 @@ const Community = () => {
   const sidebarWidth = smAbove ? 360 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
   const [socket,setSocket] = useState(null)
-  console.log(communityDetails,"communityDetails")
+  
   const statusObj = {
     busy: 'error',
     away: 'warning',
@@ -129,7 +129,6 @@ const Community = () => {
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = async () => {
     const result = await getCommunityDetails({ chatId: selectedBatch._id });
-    console.log(result,"result")
     if (result) {
       setCommunityDetails(result?.data);
     }

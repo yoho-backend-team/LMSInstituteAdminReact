@@ -56,7 +56,6 @@ import PdfViewer from "./PdfViewer";
         try {
           show()
           const res = await getStaffTicketWithId({id:ticketId});
-          console.log(res,"res")
           setTicket(res?.ticket);
         } catch (error) {
           console.error("Error fetching ticket:", error);
@@ -67,7 +66,6 @@ import PdfViewer from "./PdfViewer";
       fetchTicket();
     }, []);
 
-    console.log(ticket, "tixketwithid")
 
   return (  
     <>

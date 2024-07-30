@@ -22,7 +22,7 @@ const LiveClassCard = ({student}) => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const dispatch = useDispatch();
- console.log(student,"student")
+ 
   useEffect(() => {
     const data = {
       type: 'live',
@@ -47,7 +47,7 @@ const LiveClassCard = ({student}) => {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     return hours + ':' + minutes + ' ' + meridiem;
   }
-  console.log(liveClasses)
+  
   return (
     <>
       <Grid container spacing={2}>

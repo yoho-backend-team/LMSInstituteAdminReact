@@ -22,8 +22,6 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
     navigate(`/ticket-management/staff-ticket-view/${ticket.uuid}`);    
   };
   
-  
-  console.log(ticket,"ticket")
 
   return (
     <Grid item xs={12} md={6} lg={4}>

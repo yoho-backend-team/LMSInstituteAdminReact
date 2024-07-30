@@ -256,7 +256,7 @@ const StepperLinearWithValidation = () => {
       username : personalData?.username,
       image : logo ? logo : studentData?.image
     }
-    console.log(new_user_data,"newUserData")
+    
     const result = await updateStudent(new_user_data);
 
     if (result.success) {

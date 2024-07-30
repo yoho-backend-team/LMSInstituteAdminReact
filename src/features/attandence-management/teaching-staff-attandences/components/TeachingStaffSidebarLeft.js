@@ -26,7 +26,6 @@ const TeachingStaffSidebarLeft = (props) => {
   } = props;
 
   const getStaffAttendance = async (data) => {
-    console.log(data,"attendance")
 
     const result = await getTeachingStaffAttendanceById(data);
     if (result) {
@@ -50,7 +49,7 @@ const TeachingStaffSidebarLeft = (props) => {
   const handleSidebarToggleSidebar = () => {
     handleAddEventSidebarToggle();
   };
-  console.log(staff,"staff")
+
   return (
     <Drawer
       open={leftSidebarOpen}

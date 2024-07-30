@@ -18,7 +18,6 @@ const Dashboard = () => {
     const getReports = async () => {
       const response = await client.reports.get()
       setReports(response)
-      console.log(response,"response")
     }
     const timer = setTimeout(() => {
       setLoading(false);

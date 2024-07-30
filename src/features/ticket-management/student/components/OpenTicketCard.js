@@ -24,8 +24,6 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
   };
   
   
-  console.log(ticket,"ticket")
-
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card sx={{ minHeight: 240 }}>

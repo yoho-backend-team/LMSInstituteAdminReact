@@ -129,7 +129,6 @@ const NotificationAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     const bodyFormData = new FormData();
-    console.log(data,"data")
     
     const studentIds = data?.students?.map((user)=>user?._id)
     const notification = {
@@ -143,10 +142,10 @@ const NotificationAddDrawer = (props) => {
       link : data?.link,
       type : data?.notification_type
     }
-    console.log(notification,"notification")
+    
 
     const result = await addStudentNotification(notification);
-    console.log(result,"result")
+    
     if (result.success) {
       toast.success(result.message);
       handleClose();

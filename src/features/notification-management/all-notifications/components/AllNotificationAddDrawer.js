@@ -85,7 +85,6 @@ const AllNotificationAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     show()
-    console.log(data,"data")
     const new_notification = {
       institute : useInstitute().getInstituteId(),
       branch : data?.branch,
@@ -132,7 +131,7 @@ const AllNotificationAddDrawer = (props) => {
       }
     }
   };
-  console.log(activeBranches,"activeBranches")
+  
   return (
     <Drawer
       open={open}

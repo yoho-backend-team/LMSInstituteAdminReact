@@ -73,7 +73,6 @@ const handlePageChange = (event, page) => {
     setStatusDialogOpen(true);
   };
 
-  console.log(HelpCenterData,"HelpCenterData")
 
   
 
@@ -96,7 +95,6 @@ const handlePageChange = (event, page) => {
       id: deletingHelpItemId
     };
     const response = await deleteHelpCenter(data);
-    console.log('Delete API response:', response);
     if (response.success) {
       toast.success(response.message);
       setRefetch((state) => !state);
@@ -339,7 +337,7 @@ const handlePageChange = (event, page) => {
                   instituteid: useInstitute().getInstituteId(),
                   page: page 
                 };
-                console.log(data,page)
+                (data,page)
                 dispatch(getAllHelpCenterDetails(data));
               }}
             />

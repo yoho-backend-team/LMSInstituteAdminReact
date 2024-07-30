@@ -43,7 +43,6 @@ export const addCourseModule = async (data) => {
 
     return { success: true, message: 'CourseModule created successfully' };
   } catch (error) {
-    console.log(error,"error")
     //return { success: false, message: error };
   }
 };

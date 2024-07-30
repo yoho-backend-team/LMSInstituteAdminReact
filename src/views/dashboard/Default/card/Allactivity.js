@@ -51,7 +51,6 @@ const AllActivity = () => {
   useEffect(()=>{
     const getAllUserActivity = async () => {
     const response = await client.activity.get()
-    console.log(response,"data")
     setLogs(response?.data)
     }
     getAllUserActivity()
