@@ -95,6 +95,7 @@ class Client {
       studentRegister : (data,options) => HttpClient.post(HTTP_END_POINTS.users.studentRegister,data,options),
       studentsAll : (params) => HttpClient.get(HTTP_END_POINTS.student.get+`${params.branch_id}/students`,params),
       getStudentWithId : (params) => HttpClient.get(HTTP_END_POINTS.student.getWithId+params.student_id),
+      getnonstaffWithId : (params) => HttpClient.get(HTTP_END_POINTS.nonstaff.getWithId+params.nonstaff_id),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithcourse+`${data.course_id}/students`),
       getStudentsWithBatch : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithBatch+data.branch_id+"/batches/batch-students",data),
       getStudentsWithCourse : (data) => HttpClient.get(HTTP_END_POINTS.student.getWithCourse+`${data.branch_id}/${data.course_id}/students`),
@@ -127,11 +128,12 @@ class Client {
     }
     ticket = {
       student_tickets : (data) => HttpClient.get(HTTP_END_POINTS.ticket.student_ticket,data),
+      update_student_status_ticket : (params) => HttpClient.update(HTTP_END_POINTS.ticket.update_student_status_ticket+params?.id),
       update_student_ticket : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update+data?.uuid,data),
       student_ticket_with_id : (params) => HttpClient.get(HTTP_END_POINTS.ticket.student_ticket_with_id+params?.id),
       staff_ticket : (data) => HttpClient.get(HTTP_END_POINTS.ticket.staff_ticket,data),
       staff_ticket_with_id : (params) => HttpClient.get(HTTP_END_POINTS.ticket.staff_ticket_with_id+params?.id),
-      staff_ticket_update : (data) => HttpClient.update(HTTP_END_POINTS.ticket.update_staff_ticket+data.uuid,data)
+      staff_ticket_update : (params) => HttpClient.update(HTTP_END_POINTS.ticket.update_staff_ticket+params?.id)
     }
     attedence = {
       get_all_student_attedence : (data) => HttpClient.get(HTTP_END_POINTS.attedence.student_all,data),

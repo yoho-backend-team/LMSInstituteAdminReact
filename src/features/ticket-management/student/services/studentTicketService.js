@@ -45,3 +45,13 @@ export const getStudentTicketWithId = async (data) => {
 };  
 
 
+export const updateStudentstatusTicket = async (data) => {
+  try {
+    const response = await client.ticket.update_student_status_ticket(data)
+
+    return { success: true, message: 'Student Ticket updated successfully' };
+  } catch (error) {
+    console.error('Error in updateStaffTicket:', error);
+    return { success: false, message: error?.response?.data?.message };
+  }
+};

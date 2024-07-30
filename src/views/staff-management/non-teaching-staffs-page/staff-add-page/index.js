@@ -75,10 +75,10 @@ const StepperLinearWithValidation = () => {
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
     branch: yup.string().required('Branch is required'),
-    username: yup
-      .string()
-      .required('Username is required')
-      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
+    // username: yup
+    //   .string()
+    //   .required('Username is required')
+    //   .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
   // ** States
@@ -102,8 +102,8 @@ const StepperLinearWithValidation = () => {
     branch: selectedBranchId,
     designation: '',
     education_qualification: '',
-    username: '',
-    logo: ''
+    logo: '',
+    staffId:''
   };
 
   const [activeBranches, setActiveBranches] = useState([]);
@@ -150,7 +150,8 @@ const StepperLinearWithValidation = () => {
       alt_phone: Number(''),
       description: '',
       joining_date: '',
-      designation: ''
+      designation: '',
+      staffId:"",
     });
   };
 
@@ -242,8 +243,10 @@ const StepperLinearWithValidation = () => {
         address2: formData.address_line_two,
         phone_number: formData.phone,
         alternate_phone_number: formData.alt_phone
+        
       },
       designation: formData.designation,
+      staffId:formData.staffId,
       role: formData.role
     };
     const personalData = personalControl?._formValues;
