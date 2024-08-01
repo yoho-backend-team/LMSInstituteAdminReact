@@ -118,7 +118,7 @@ export const deleteTeachingStaff = async (data) => {
 export const updateTeachingStaff = async (data) => {
   try {
     const response = await axios.put(
-      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff/update/${data.id}`,
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/teaching-staff/update/${data.id}`,
       data,
       {
         headers: {

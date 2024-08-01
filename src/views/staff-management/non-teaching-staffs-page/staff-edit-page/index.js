@@ -94,7 +94,7 @@ const StepperLinearWithValidation = () => {
     username: yup
       .string()
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
-      .required('Username is required')
+      // .required('Username is required')
   });
 
   const {
@@ -171,7 +171,7 @@ const StepperLinearWithValidation = () => {
       setValue('full_name', staffData.full_name);
       setValue('email', staffData.email);
       setValue('phone_number', staffData.contact_info?.phone_number);
-      setValue('alternate_number', staffData.contact_info?.alternate_number);
+      setValue('alternate_number', staffData.contact_info?.alternate_phone_number);
       setValue('designation', staffData.userDetail?.designation);
       setValue('image', logo);
       setValue('gender', staffData.gender);
@@ -207,7 +207,7 @@ const StepperLinearWithValidation = () => {
         address1: personalData.address1,
         address2: personalData.address2,
         phone_number: personalData.phone_number,
-        alternate_number: personalData.alternate_number
+        alternate_number: personalData.alternate_phone_number
 
       },
       designation: personalData.designation,
@@ -543,7 +543,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={ staffData.contact_info?.alternate_number}
+                  defaultValue={ staffData?.contact_info?.alternate_phone_number}
                   type="number"
                   label="Alt Phone Number"
                   onChange={onChange}
@@ -567,7 +567,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData.userDetail?.username}
+                  defaultValue={staffData?.full_name}
                   label="Username"
                   onChange={onChange}
                   placeholder="carterLeonard"

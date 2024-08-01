@@ -53,7 +53,7 @@ const StepperLinearWithValidation = () => {
     full_name: '',
     email: '',
     phone_number: '',
-    alternate_number: '',
+    alternate_phone_number: '',
     state: '',
     city: '',
     pincode: '',
@@ -86,7 +86,7 @@ const StepperLinearWithValidation = () => {
       .string()
       .required('Phone number is required')
       .matches(/^\d{10,}$/, 'Phone number must be at least 10 digits'),
-    alternate_number: yup
+      alternate_phone_number: yup
       .string()
       .required('Alternate phone_number number is required')
       .matches(/^\d{10,}$/, 'Alternate phone_number number must be at least 10 digits'),
@@ -119,7 +119,7 @@ const StepperLinearWithValidation = () => {
     gender: yup.string().required('Gender is required'),
     username: yup
       .string()
-      .required('Username is required')
+      // .required('Username is required')
       .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
@@ -189,7 +189,7 @@ const StepperLinearWithValidation = () => {
       setValue('full_name', staffData?.full_name);
       setValue('email', staffData?.email);
       setValue('phone_number', staffData?.contact_info?.phone_number);
-      setValue('alternate_number', staffData?.contact_info?.alternate_number);
+      setValue('alternate_phone_number', staffData?.contact_info?.alternate_phone_number);
       setValue('designation', staffData?.userDetail?.designation);
       setValue('branch_id', staffData?.userDetail?.branch_id);
       setValue('image', logo);
@@ -248,7 +248,7 @@ const StepperLinearWithValidation = () => {
         address1: personalData?.address1,
         address2: personalData?.address2,
         phone_number: personalData?.phone_number,
-        alternate_number: personalData?.alternate_number
+        alternate_phone_number: personalData?.alternate_phone_number
       },
       designation: personalData?.designation,
       userDetail : personalData?.userDetail?._id,
@@ -266,7 +266,7 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-  console.log(staffData,"staffData")
+  console.log(staffData,"staffData",personalErrors,"errors")
 
   const getStepContent = () => {
     return (
@@ -649,7 +649,7 @@ const StepperLinearWithValidation = () => {
 
           <Grid item xs={12} sm={6}>
             <Controller
-              name="full_name"
+              name="username"
               control={personalControl}
               rules={{ required: true }}
               render={({ field: { value } }) => (
@@ -657,26 +657,26 @@ const StepperLinearWithValidation = () => {
                   fullWidth
                   value={staffData?.full_name}
                   sx={{ mb: 4 }}
-                  label="FullName"
+                  label="Username"
                   onChange={async (e) => {
-                    setValue('full_name', e.target.value);
+                    setValue('username', e.target.value);
                     const result = await checkUserName(e.target.value);
 
                     if (result.success) {
-                      setError('full_name', {
+                      setError('username', {
                         type: 'manual',
                         message: ''
                       });
                     } else {
-                      setError('full_name', {
+                      setError('username', {
                         type: 'manual',
                         message: 'Username is already taken'
                       });
                     }
                   }}
                   placeholder="John Doe"
-                  error={Boolean(personalErrors.full_name)}
-                  {...(personalErrors.full_name && { helperText: personalErrors.full_name.message })}
+                  error={Boolean(personalErrors.username)}
+                  {...(personalErrors.username && { helperText: personalErrors.username.message })}
                 />
               )}
             />

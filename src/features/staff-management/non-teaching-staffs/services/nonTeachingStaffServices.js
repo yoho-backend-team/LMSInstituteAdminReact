@@ -86,7 +86,7 @@ export const searchNonTeachingStaffs = async (searchQuery) => {
 
 export const addNonTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`${NON_TEACHING_STAFF_API_END_POINT}/register`, data, {
+    const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/Non-teaching-staff/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`

@@ -55,7 +55,7 @@ const UserViewAccount = ({ student }) => {
                   <Box sx={{ pt: 4 }}>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>@{student.full_name}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>{student.full_name}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
@@ -95,12 +95,12 @@ const UserViewAccount = ({ student }) => {
                     </Box>
                     <Box sx={{ display: 'flex', mb: 3 }}>
                       <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Alt Contact:</Typography>
-                      <Typography sx={{ color: 'text.secondary' }}>+91 {student?.contact_info?.phone_number}</Typography>
+                      <Typography sx={{ color: 'text.secondary' }}>+91 {student?.contact_info?.alternate_phone_number}</Typography>
                     </Box>
                     <Box sx={{ mb: 3 }}>
                       <Typography sx={{ mr: 2, mb: 1, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 1 }}>
-                        {student.contact_info.addres1}, {student?.contact_info?.address2}
+                        {student.contact_info.address1}, {student?.contact_info?.address2}
                       </Typography>
                       <Typography sx={{ color: 'text.secondary', mb: 1 }}>
                         {student.city}-{student?.contact_info?.pincode}

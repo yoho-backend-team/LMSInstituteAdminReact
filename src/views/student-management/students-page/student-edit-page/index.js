@@ -152,6 +152,7 @@ const StepperLinearWithValidation = () => {
         gender,
         qualification,
         username,
+        full_name,
         contact_info
       } = studentData;
 
@@ -168,7 +169,7 @@ const StepperLinearWithValidation = () => {
       setValue('dob', new Date(dob) || '');
       setValue('gender', gender || '');
       setValue('education_qualification', qualification || '');
-      setValue('username', username || '');
+      setValue('username', full_name || '');
       setValue("course",studentData?.userDetail?.course?._id)
       setSelectedCourses([studentData?.userDetail?.course]);
     }
@@ -253,7 +254,7 @@ const StepperLinearWithValidation = () => {
         state : personalData?.state
       },
       uuid : studentData?.uuid,
-      username : personalData?.username,
+      username : personalData?.full_name,
       image : logo ? logo : studentData?.image
     }
     
