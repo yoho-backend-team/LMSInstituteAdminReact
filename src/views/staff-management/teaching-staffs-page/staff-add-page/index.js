@@ -47,6 +47,7 @@ const StepperLinearWithValidation = () => {
     designation: '',
     education_qualification: '',
     username: '',
+    staffId:'',
     logo: ''
   };
 
@@ -231,6 +232,7 @@ const StepperLinearWithValidation = () => {
       },
       designation: personalData.designation,
       role: personalData.role,
+      staffId:personalData.staffId,
       user_details: 'InstituteTeachingStaff'
     };
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);

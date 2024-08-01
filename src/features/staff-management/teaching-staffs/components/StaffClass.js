@@ -15,10 +15,13 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
 
 const LiveClassCard = () => {
   const liveClasses = useSelector(selectLiveClasses);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { getInstituteId } = useInstitute();
+  const institute = getInstituteId();
 
   const dispatch = useDispatch();
 
@@ -26,7 +29,8 @@ const LiveClassCard = () => {
   useEffect(() => {
     const data = {
       type: 'live',
-      branch_id: selectedBranchId
+      branch: selectedBranchId,
+      institute
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId]);
@@ -48,6 +52,8 @@ const LiveClassCard = () => {
 
     return hours + ':' + minutes + ' ' + meridiem;
   }
+
+  console.log(liveClasses,"liveClasses")
 
   return (
     <>

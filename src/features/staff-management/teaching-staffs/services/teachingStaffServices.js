@@ -118,7 +118,7 @@ export const deleteTeachingStaff = async (data) => {
 export const updateTeachingStaff = async (data) => {
   try {
     const response = await axios.put(
-      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/teaching-staff/update/${data.id}`,
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff/update/${data.id}`,
       data,
       {
         headers: {
@@ -138,28 +138,46 @@ export const updateTeachingStaff = async (data) => {
     throw error;
   }
 };
+// export const TeachingStaffById = async (data) => {
+//   try {
+//     const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/staff/`, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: `Token ${localStorage.getItem('token')}`
+//       },
+//       params: data
+//     });
+//     if (response.data) {
+//       return { success: true, data: response.data};
+//     } else {
+//       throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
+//     }
+//   } catch (error) {
+//     console.error('Error in teaching staffs:', error);
+
+//     // Throw the error again to propagate it to the calling function/component
+//     throw error;
+//   }
+// };
+
 export const TeachingStaffById = async (data) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/teaching-staff/`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-    if (response.data) {
-      return { success: true, data: response.data};
-    } else {
-      throw new Error(`Failed to fetch teaching staffs. Status: ${response.status}`);
-    }
-  } catch (error) {
-    console.error('Error in teaching staffs:', error);
+    const response = await client.users.getstaffWithId(data)
+ // Check if the response status is successful
+ if (response.status) {
+   return { success: true, data: response.data };
+ } else {
+   // If the response status is not successful, throw an error
+   throw new Error(`Failed to fetch a Nonstaff. Status: ${response.status}`);
+ }
+} catch (error) {
+ // Log the error for debugging purposes
+ console.error('Error in fetching  Nonstaff:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
-  }
+ // Throw the error again to propagate it to the calling function/component
+ throw error;
+}
 };
-
 
 export const staffChangePassword = async (data) => {
   try {
