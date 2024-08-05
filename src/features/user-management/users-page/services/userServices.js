@@ -20,6 +20,17 @@ export const getAllUsers = async (data) => {
     throw new Error(`Failed to fetch users. Status: ${error?.response.data?.message}`);
   }
 };
+
+export const getStaffActivityLogs = async (params) => {
+  try {
+  const response = await client.TeachingStaff.getActivtiy(params)
+  return response?.data
+  } catch (error) {
+   console.log(error)
+   throw new Error(error)
+  }
+}
+
 export const getUserActivityLog = async (data) => {
   try {
     const response = await client.student.activity(data)

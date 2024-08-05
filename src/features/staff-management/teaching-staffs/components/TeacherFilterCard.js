@@ -62,7 +62,7 @@ const TeacherFilter = (props) => {
               onChange={(e, newValue) => {
                 const courseId = newValue ? newValue._id : ''; 
                 const data = {
-                  course_id: courseId,
+                  course: courseId,
                   branchid: selectedBranchId,
                   instituteId: useInstitute().getInstituteId() 
                 };
@@ -81,7 +81,7 @@ const TeacherFilter = (props) => {
                   label="Search By Status"
                   SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                 >
-                  <MenuItem value="">Select Status</MenuItem>
+                  <MenuItem value={null}>Select Status</MenuItem>
                   <MenuItem value={true}>Active</MenuItem>
                   <MenuItem value={false}>Inactive</MenuItem>
                 </TextField>

@@ -20,10 +20,6 @@ const generateEndpoints = () => {
     const institute = getInstituteDetails();
     const branchId = getSelectedBranchId()
 
-    // if (!institute) {
-    //     return ; 
-    // }
-
     const instituteId = institute? institute?.uuid  :""
     
     return {
@@ -127,6 +123,9 @@ const generateEndpoints = () => {
             getWithcourse : `/api/institutes/${instituteId}/branches/${branchId}/courses/`,
             getWithBranch : `/api/institutes/${instituteId}/branches/`,
             getWithid : `/api/institutes/${instituteId}/branches/${branchId}/staff/`,
+            getActivtiy : "/api/institutes/user/activity/staff/",
+            getClasses : "/api/institutes/class/staff/",
+            update : `/api/institutes/${instituteId}/branches/${branchId}/teaching-staff/update/`
         },
         nonstaff :{
             getWithId : `/api/institutes/${instituteId}/branches/${branchId}/nonstaff/`,

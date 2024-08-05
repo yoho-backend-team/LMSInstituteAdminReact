@@ -18,7 +18,7 @@ export const getAllTeachingStaffs = async (data) => {
   params: {
         page: data.page,
         is_active: data.is_active,
-        course_id: data.course_id
+        course: data.course
       }, 
   });
 
@@ -75,7 +75,7 @@ export const searchTeachingStaffs = async (searchQuery) => {
 
 export const addTeachingStaff = async (data) => {
   try {
-    const response = await axios.post(`/api/institutes/auth/teaching-staff/register`, data, {
+    const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`
@@ -160,6 +160,15 @@ export const updateTeachingStaff = async (data) => {
 //   }
 // };
 
+export const getStaffClassesWithStaffId = async (data) => {
+  try {
+  const response = await client.TeachingStaff.getClasses(data)  
+  return response?.data
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 export const TeachingStaffById = async (data) => {
   try {
     const response = await client.users.getstaffWithId(data)
@@ -202,20 +211,11 @@ export const staffChangePassword = async (data) => {
 
 
 
-export const staffStatusChange = async (uuid,data) => {
+export const staffStatusChange = async (data) => {
   try {
-    const response = await axios.put(
-      `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/updatestatus/${uuid}`,
-      data,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${localStorage.getItem('token')}`
-        }
-      }
-    ); 
-
-    if (response.data.status) {
+    const response = await client.TeachingStaff.update_staff(data)
+    console.log(response,"response")
+    if (response.status === "success") {
       return { success: true, message: response.data.message };
     } else {
       return { success: false, message: response.data.message };

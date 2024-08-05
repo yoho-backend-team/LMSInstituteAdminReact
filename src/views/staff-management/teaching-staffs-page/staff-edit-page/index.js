@@ -25,21 +25,26 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import InputAdornment from '@mui/material/InputAdornment';
 import { checkUserName } from 'features/user-management/users-page/services/userServices';
+import { imagePlaceholder } from 'utils/placeholders';
+import { getImageUrl } from 'utils/imageUtils';
+import client from 'api/client';
+import { useSpinner } from 'context/spinnerContext';
 
 const StepperLinearWithValidation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const staffData = location.state.staff;
   const staffId = location.state.id;
+  
 
-
+  console.log(staffId,staffData)
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [logo, setLogo] = useState('');
   const [logoSrc, setLogoSrc] = useState(
     'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
-
+  const { show, hide } = useSpinner()
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const steps = [
@@ -65,7 +70,7 @@ const StepperLinearWithValidation = () => {
     branch: '',
     designation: '',
     qualification: '',
-    username: '',
+    // username: '',
     logo: '',
   };
 
@@ -117,10 +122,10 @@ const StepperLinearWithValidation = () => {
     address2: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
-    username: yup
-      .string()
-      // .required('Username is required')
-      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
+    // username: yup
+    //   .string()
+    //   // .required('Username is required')
+    //   .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
   useEffect(() => {
@@ -188,11 +193,11 @@ const StepperLinearWithValidation = () => {
       setValue('id', staffId);
       setValue('full_name', staffData?.full_name);
       setValue('email', staffData?.email);
-      setValue('phone_number', staffData?.contact_info?.phone_number);
-      setValue('alternate_phone_number', staffData?.contact_info?.alternate_phone_number);
+      setValue('phone_number', Number(staffData?.contact_info?.phone_number));
+      setValue('alternate_phone_number', Number(staffData?.contact_info?.alternate_phone_number));
       setValue('designation', staffData?.userDetail?.designation);
       setValue('branch_id', staffData?.userDetail?.branch_id);
-      setValue('image', logo);
+      setValue('image', staffData?.image);
       setValue('gender', staffData?.gender);
       setValue('address1', staffData?.contact_info?.address1);
       setValue('address2', staffData?.contact_info?.address2);
@@ -203,33 +208,36 @@ const StepperLinearWithValidation = () => {
       setValue('username', staffData?.full_name);
       setValue('qualification', staffData?.qualification);
       setSelectedCourses(staffData?.userDetail?.course);
+      setLogo(staffData?.image)
     }
   }, [staffData]);
 
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-  
-    if (files && files.length !== 0) {
-      reader.onload = () => setLogoSrc(reader.result);
-      reader.readAsDataURL(files[0]);
-      setLogo(files[0]);
+  const handleInputImageChange = async (file) => {
+    try {
+      const {files } = file.target
+      const form_data = new FormData()
+      form_data.append("file",files[0])
+     
+      const response = await client.file.upload(form_data)
+      setLogo(response?.data?.file)
+      setValue("image",response?.data?.file)  
+      toast.success("profile changed sucessfully")
+    } catch (error) {
+      toast.error(error?.message)
     }
   };
 
   const handleInputImageReset = () => {
-    setLogo('');
-    setLogoSrc(
-      'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
-    );
+    setLogo(staffData?.image)
   };
 
+  console.log(personalControl?._formValues,"values")
 
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
     const filteredCourseId = selectedCourses?.map((course) => course._id);
-    
+    const userDetail = staffData?.userDetail?._id
   
     const teaching = {
       id : staffId,
@@ -239,7 +247,7 @@ const StepperLinearWithValidation = () => {
       username: personalData?.full_name,
       dob: (personalData?.date_of_birth),
       gender: personalData?.gender,
-      // userDetail:staffData[0].userDetail._id,
+      userDetail: userDetail ,
       qualification: personalData?.qualification,
       contact_info: {
         state: personalData?.state,
@@ -251,9 +259,10 @@ const StepperLinearWithValidation = () => {
         alternate_phone_number: personalData?.alternate_phone_number
       },
       designation: personalData?.designation,
-      userDetail : personalData?.userDetail?._id,
+      image : logo
     };
-
+    console.log(teaching,staffData,staffData?.userDetail?._id,filteredCourseId,selectedCourses)
+    
     const result = await updateTeachingStaff(teaching);
     
       if (result.success) {
@@ -266,7 +275,7 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-  console.log(staffData,"staffData",personalErrors,"errors")
+  console.log(staffData,"staffData",defaultPersonalValues,"errors",staffData?.userDetail?._id)
 
   const getStepContent = () => {
     return (
@@ -281,14 +290,14 @@ const StepperLinearWithValidation = () => {
             <Typography sx={{ color: 'text.disabled', mb: 2 }}>Update Profile Picture</Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {!logo && (
+              {logo && (
                 <ImgStyled
-                  src={staffData?.image ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${staffData?.image}` : logoSrc}
-                  alt="Profile Pic"
+                  src={logo ? getImageUrl(logo) : imagePlaceholder }
+                  alt={ staffData?.full_name || "Profile Pic"}
                 />
               )}
 
-              {logo && <ImgStyled src={logoSrc} alt="Profile Pic" />}
+              {!logo && <ImgStyled src={imagePlaceholder} alt="Profile Pic" />}
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                   Update Profile Picture
@@ -300,9 +309,11 @@ const StepperLinearWithValidation = () => {
                     id="account-settings-upload-image"
                   />
                 </ButtonStyled>
-                <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
+                {
+                logo !== staffData?.image && <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                   Reset
                 </ResetButtonStyled>
+                }
                 <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
                   Allowed PNG or JPEG. Max size of 800K.
                 </Typography>
@@ -392,9 +403,9 @@ const StepperLinearWithValidation = () => {
                   error={Boolean(personalErrors.gender)}
                   {...(personalErrors.gender && { helperText: personalErrors.gender.message })}
                 >
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                  <MenuItem value="Other">Other</MenuItem>
                 </CustomTextField>
               )}
             />
@@ -609,7 +620,7 @@ const StepperLinearWithValidation = () => {
                 <CustomTextField
                   fullWidth
                   type="number"
-                  defaultValue={staffData?.contact_info?.phone_number}
+                  defaultValue={Number(staffData?.contact_info?.phone_number)}
                   label="Phone Number"
                   onChange={onChange}
                   placeholder="Carter"
@@ -631,7 +642,7 @@ const StepperLinearWithValidation = () => {
               render={({ field: { onChange } }) => (
                 <CustomTextField
                   fullWidth
-                  defaultValue={staffData?.contact_info?.alternate_phone_number}
+                  defaultValue={String(staffData?.contact_info?.alternate_phone_number)}
                   type="number"
                   label="Alt Phone Number"
                   onChange={onChange}
@@ -647,7 +658,7 @@ const StepperLinearWithValidation = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} sx={{ display : "none"}} >
             <Controller
               name="username"
               control={personalControl}

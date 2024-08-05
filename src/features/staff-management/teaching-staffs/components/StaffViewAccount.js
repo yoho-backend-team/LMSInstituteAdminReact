@@ -17,6 +17,7 @@ import { deleteTeachingStaff } from '../services/teachingStaffServices';
 import { default as UserSubscriptionDialog } from './UserSubscriptionDialog';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSelector } from 'react-redux';
+import { getImageUrl } from 'utils/imageUtils';
 
 const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
   const [staffDeleteModelOpen, setStaffDeleteModelOpen] = useState(false);
@@ -131,17 +132,13 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
 
         <Grid item xs={12} md={8}>
           <Grid container spacing={2}>
-            {staff?.teachingStaff?.staff_course?.map((course, index) => (
+            {staff?.userDetail?.course?.map((course, index) => (
               <Grid item key={index} xs={12} md={6}>
                 <Card sx={{ mb: 2 }}>
                   <CardContent sx={{ pb: 0 }}>
                     <CardMedia
                       sx={{ position: 'relative', height: '12.5625rem', borderRadius: '5px', objectFit: 'contain' }}
-                      image={
-                        course?.courses?.logo
-                          ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.courses?.logo}`
-                          : 'https://i.pinimg.com/736x/7a/4b/a3/7a4ba30875e0de9567889866eb66bc4c.jpg'
-                      }
+                      image={getImageUrl(course?.image)}
                     >
                       <CustomChip
                         sx={{
@@ -154,14 +151,14 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                             height: '2rem'
                           }
                         }}
-                        label={course?.courses?.learning_format}
+                        label={course?.class_type?.[0]}
                         rounded
                         color={
-                          course?.courses?.learning_format === 'online'
+                          course?.class_type?.[0] === 'online'
                             ? 'success'
-                            : course?.courses?.learning_format === 'offline'
+                            : course?.class_type?.[0] === 'offline'
                             ? 'primary'
-                            : course?.courses?.learning_format === 'hybrid'
+                            : course?.class_type?.[0] === 'hybrid'
                             ? 'secondary'
                             : 'warning'
                         }
@@ -174,7 +171,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                     <Box>
                       <CustomChip
                         skin="light"
-                        label={course?.courses?.course?.course_categories?.category_name}
+                        label={course?.category?.category_name}
                         rounded
                         color="secondary"
                         size="small"
@@ -183,9 +180,9 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                       />
                     </Box>
                     <Box sx={{ mr: 2, mt: 2, display: 'flex', flexDirection: 'column' }}>
-                      <Typography variant="h4">{course?.courses?.course_name}</Typography>
+                      <Typography variant="h4">{course?.course_name}</Typography>
                       <Typography variant="body2" sx={{ fontSize: '13px', pt: 0.7, fontWeight: '400', opacity: 0.9 }}>
-                        {course.courses?.course_overview}
+                        {course?.overview}
                       </Typography>
                     </Box>
                     <Box
@@ -206,13 +203,13 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                       >
                         <Icon icon="tabler:augmented-reality" fontSize={20} />
                         <Typography sx={{ color: 'text.secondary' }}>
-                          <span style={{ fontWeight: 'bold', fontSize: 18, marginRight: 2 }}> {course?.courses?.course_module_count}</span>
+                          <span style={{ fontWeight: 'bold', fontSize: 18, marginRight: 2 }}> {course?.coursemodules?.length}</span>
                           Modules
                         </Typography>
                       </Grid>
                       <Grid>
                         <Typography variant="h4" sx={{ color: 'text.secondary', mr: 1 }}>
-                          ₹ {course?.courses?.course_price}
+                          ₹ {course?.price}
                         </Typography>
                       </Grid>
                     </Box>
@@ -225,13 +222,13 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
                       <CustomChip
                         skin="light"
                         sx={{ px: 2, py: 2.3 }}
-                        label={course?.courses?.course?.is_active === 1 ? 'Active' : 'Inactive'}
+                        label={course?.is_active ? 'Active' : 'Inactive'}
                         rounded
-                        color={course?.courses?.course?.is_active === 1 ? 'success' : 'error'}
+                        color={course?.is_active ? 'success' : 'error'}
                         size="medium"
                       />
                     </Box>
-                    <Button component={Link} to="view " size="medium" variant="contained" color="primary">
+                    <Button component={Link} state={{ id : course?.uuid }} to="/course-management/courses/view " size="medium" variant="contained" color="primary">
                       View Details
                     </Button>
                   </CardActions>

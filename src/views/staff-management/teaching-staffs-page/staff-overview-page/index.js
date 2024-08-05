@@ -17,10 +17,13 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
+import { profilePlaceholder } from 'utils/placeholders';
 
 const Teaching = () => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
+  const [page,setPage] = useState(1)
   const teachingStaffs = useSelector(selectTeachingStaffs);
   const loading = useSelector(selectLoading);
   const [refetch, setRefetch] = useState({});
@@ -51,9 +54,11 @@ const Teaching = () => {
 
       const data = {
         is_active: !statusValue.is_active,
+        staff : statusValue?.uuid
       };
-
-      const response = await staffStatusChange(statusValue.uuid, data);
+      console.log(statusValue,"statusValue")
+      
+      const response = await staffStatusChange(data);
 
       if (response.success) {
         toast.success(response.message);
@@ -65,7 +70,7 @@ const Teaching = () => {
       console.error('Error in status change:', error);
     }
   };
-
+  console.log(teachingStaffs,"teachingStaffs")
   return (
     <>
       <Grid sx={{ p: 1 }}>
@@ -77,17 +82,17 @@ const Teaching = () => {
       ) : (
         <Grid>
           <Grid container mt={1}>
-            {teachingStaffs && teachingStaffs.map((item, i) => (
+            {teachingStaffs && teachingStaffs.data?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
                 <Card sx={{ position: 'relative', mb: 2 }}>
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Avatar
-                        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${item?.staff?.image}`}
+                        src={item?.image ? getImageUrl(item?.image) : profilePlaceholder}
                         sx={{ mb: 2, width: 70, height: 70 }}
                       />
                       <Typography variant="h4" sx={{ mb: 1 }}>
-                        {item.username}
+                        {item.fullname}
                       </Typography>
                       <Typography variant="h5" sx={{ mb: 4 }}>
                         {item?.email}
@@ -130,9 +135,16 @@ const Teaching = () => {
             <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
               <Pagination
                 count={teachingStaffs?.last_page}
+                page={page}
                 color="primary"
                 onChange={(e, page) => {
-                  dispatch(getAllTeachingStaffs({ branchid: selectedBranchId, page: page }));
+                  setPage(page)
+                  dispatch(getAllTeachingStaffs({ 
+                    branchid: selectedBranchId, 
+                    page: page,   
+                    branchid: selectedBranchId,
+                    instituteId: useInstitute().getInstituteId() 
+                  }));
                 }}
               />
             </Grid>

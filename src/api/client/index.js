@@ -112,7 +112,10 @@ class Client {
     }
     TeachingStaff = {
       get : (data) => HttpClient.get(HTTP_END_POINTS.student.get+data.branch_id+"/teaching-staff"),
-      getWithBranch : (data) => HttpClient.get(HTTP_END_POINTS.staff.getWithBranch+data.branch+"/teaching-staff/")
+      getWithBranch : (data) => HttpClient.get(HTTP_END_POINTS.staff.getWithBranch+data.branch+"/teaching-staff/"),
+      getActivtiy : (params) => HttpClient.get(HTTP_END_POINTS.staff.getActivtiy+params?.staff,params),
+      getClasses : (params) => HttpClient.get(HTTP_END_POINTS.staff.getClasses+params?.staff,params),
+      update_staff : (data) => HttpClient.update(HTTP_END_POINTS.staff.update+data?.staff,data)
     }
     staff = {
       get : (query) => HttpClient.get(HTTP_END_POINTS.staff.getWithName,query)
