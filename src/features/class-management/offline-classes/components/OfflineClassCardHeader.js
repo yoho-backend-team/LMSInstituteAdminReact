@@ -15,6 +15,7 @@ const OfflineClassCardHeader = (props) => {
   const [search,setSearch] = useState(false)
 
   const dispatch = useDispatch();
+  
   const handleSearch = (e) => {
       const searchInput = e.target.value;
       setSearchValue(searchInput);

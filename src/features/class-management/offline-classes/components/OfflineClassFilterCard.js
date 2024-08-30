@@ -57,7 +57,7 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
       dispatch(getAllOfflineClasses(data));
     }
   };
-
+  console.log(batches,"batches")
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
@@ -76,7 +76,7 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batches?.data}
+                    options={batches}
                     filterSelectedOptions
                     onChange={handleBatchChange}
                     value={selectedBatch}
