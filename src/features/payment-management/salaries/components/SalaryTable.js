@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
-import { useState } from 'react';
+import { useState,useRef } from 'react';
 import { getInitials } from 'utils/get-initials';
 import Pagination from '@mui/material/Pagination';
 import { TextField } from '@mui/material';
@@ -30,6 +30,8 @@ import SalaryCardHeader from './SalaryCardHeader';
 import SalaryEditDrawer from './SalaryEditDrawer';
 import SalaryViewDrawer from './SalaryViewDrawer';
 import jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js';
+import SalarySlip from '../SalarySlip';
 
 
 // ** Styled component for the link in the dataTable
@@ -65,16 +67,20 @@ const userStatusObj = {
 const SalaryTable = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedSalary, setSelectedSalary] = useState(null);
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  const invoiceRef = useRef();
 
   const dispatch = useDispatch();
   const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
+ 
   const TeachingStaffSalariesLoading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+ 
 
   useEffect(() => {
     dispatch(getAllStaffSalaries({ branch_id: selectedBranchId, page: '1' }));
@@ -91,6 +97,7 @@ const SalaryTable = () => {
   const [statusValue, setStatusValue] = useState('');
   const [staffValue, setStaffValue] = useState('');
 
+
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { status: e.target.value, branch_id: selectedBranchId };
@@ -105,6 +112,7 @@ const SalaryTable = () => {
 
   const handleRowClick = (rowData) => {
     setSelectedRows(rowData);
+    setSelectedSalary(rowData);
   };
 
   const handleDownload = (row) => {
@@ -115,6 +123,18 @@ const SalaryTable = () => {
     doc.text(`Salary Amount: $${row.salary_amount || 0}`, 10, 40);
     doc.text(`Payment Date: ${row.payment_date}`, 10, 50);
     doc.save(`Transaction_${row.transaction_id}.pdf`);
+  };
+
+  const handleDownloadPDF1 = () => {
+    const element = invoiceRef.current;
+    const opt = {
+      margin: 1,
+      filename: `Salary_Slip.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+    };
+    html2pdf().set(opt).from(element).save();
   };
 
   const handleDelete = useCallback((itemId) => {
@@ -252,7 +272,7 @@ const SalaryTable = () => {
                 text: 'Download',
                 icon: <Icon icon="tabler:download" fontSize={20} />,
                 menuItemProps: {
-                  onClick: () => handleDownload(row)
+                  onClick: () => handleDownloadPDF1(row)
                 }
               },
               {
@@ -268,6 +288,8 @@ const SalaryTable = () => {
       )
     }
   ];
+
+  console.log(TeachingStaffSalaries,"TeachingStaffSalaries")
 
   return (
     <DatePickerWrapper>
@@ -339,6 +361,9 @@ const SalaryTable = () => {
               </Grid>
             )}
           </Card>
+          <Box ref={invoiceRef} sx={{display:"none"}}>
+  <SalarySlip rows={TeachingStaffSalaries.data} />
+</Box>
         </Grid>
       </Grid>
       {/* Add Drawer */}
