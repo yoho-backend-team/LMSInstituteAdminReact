@@ -324,7 +324,7 @@ const FeesTable = () => {
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
             <CardHeader title="Fee" />
             <CardContent>
               <Grid container spacing={2}>

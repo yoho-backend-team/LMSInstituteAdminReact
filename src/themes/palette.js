@@ -56,7 +56,7 @@ const DefaultPalette = () => {
     // primary: primary,
     primary: {
       light: '#e3e1fc',
-      main: '#7367F0',
+      main: '#0CCE7F',
       dark: '#655BD3',
       800: '#2e2960',
       200: '#c7c2f9',

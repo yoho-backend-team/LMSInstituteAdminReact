@@ -9,6 +9,7 @@ import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import { selectLiveClasses, selectLoading } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
 import { useInstitute } from 'utils/get-institute-details';
+
 const LiveClass = () => {
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -24,6 +25,7 @@ const LiveClass = () => {
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId, refetch]);
+  console.log( liveClasses , "liveClasses")
   return (
     <>
       <Grid>
@@ -42,7 +44,7 @@ const LiveClass = () => {
               count={liveClasses?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllLiveClasses({ branch_id: selectedBranchId, page: page }));
+                dispatch(getAllLiveClasses({ branch: selectedBranchId, page: page, institute : useInstitute().getInstituteId() }));
               }}
             />
           </Grid>

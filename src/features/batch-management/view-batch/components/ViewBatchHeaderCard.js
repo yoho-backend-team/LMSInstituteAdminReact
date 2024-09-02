@@ -17,6 +17,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
     marginBottom: '16px',
     overflow: 'hidden',
     position: 'relative',
+    boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
     '&:after': {
       content: '""',
       position: 'absolute',

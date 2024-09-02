@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
+import LetterFillSpinner from 'components/spinner/letterSpinner';
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -39,10 +40,10 @@ const UserList = () => {
     setAddUserOpen((prev) => !prev);
   }, []);
 
-  // State for triggering user data refetch
+  
   const [userRefetch, setUserRefetch] = useState(false);
 
-  // Fetch users when selectedBranchId or userRefetch changes
+  
   useEffect(() => {
     show()
     dispatch(getAllUsers({ branch_id: selectedBranchId, page: '1',institute_id:useInstitute().getInstituteId() }));
@@ -51,7 +52,7 @@ const UserList = () => {
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} >
         {/* User Header Section */}
         <Grid item xs={12}>
           <UserHeaderSection users={users} groups={groups} />

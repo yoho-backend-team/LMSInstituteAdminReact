@@ -169,7 +169,7 @@ const AddBatchPage = () => {
     setValue('endDate', date);
     setEndDate(date);
   };
-
+  console.log(control._defaultValues.branch.length,control?._defaultValues,control?._formValues)
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
       <Grid item xs={12}>
@@ -278,6 +278,7 @@ const AddBatchPage = () => {
                       control={control}
                       render={({ value }) => (
                         <Autocomplete
+                          disabled={ control._defaultValues.branch.length === 0 }
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('course', newValue ? newValue.uuid : '');

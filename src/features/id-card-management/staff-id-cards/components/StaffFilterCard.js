@@ -35,7 +35,7 @@ const StaffFilterCard = (props) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
             <CardHeader title="ID card" />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>

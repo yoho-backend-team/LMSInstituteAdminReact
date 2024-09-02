@@ -91,7 +91,7 @@ const StudyMaterials = ({ materials }) => {
     <Box>
       <DataGrid
         autoHeight
-        rows={materials}
+        rows={materials || []}
         columns={columns}
         checkboxSelection
         pageSizeOptions={[7, 10, 25, 50]}

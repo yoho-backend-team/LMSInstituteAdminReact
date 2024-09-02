@@ -150,7 +150,7 @@ const StudentIdCard = () => {
                       }
                     }}
                   >
-                    <Card className="front" sx={{ width: '100%', minHeight: 435 }}>
+                    <Card className="front" sx={{ width: '100%', minHeight: 435, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                       <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                         {item.image ? (
                           <CustomAvatar

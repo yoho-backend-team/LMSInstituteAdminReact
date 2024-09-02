@@ -171,7 +171,7 @@ const GroupManagement = () => {
     return groups?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         {/* Card content here */}
-        <Card sx={{ minHeight: 175 }}>
+        <Card sx={{ minHeight: 175 , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}>
           <CardContent>
             <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 32 }}>
               <Typography sx={{ color: 'text.secondary' }}>{`Total ${item.users?.length} users`}</Typography>
@@ -253,7 +253,7 @@ const GroupManagement = () => {
       ) : (
         <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
           <Grid item xs={12} sm={6} lg={4}>
-            <Card sx={{ cursor: 'pointer' }}>
+            <Card sx={{ cursor: 'pointer', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
               <Grid container sx={{ height: '100%' }}>
                 <Grid item xs={5}>
                   <Box

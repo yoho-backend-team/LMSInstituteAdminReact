@@ -21,6 +21,7 @@ const TeachingStaffCalendar = (props) => {
   } = props;
 
   const calendarRef = useRef();
+  console.log(props,"props")
 
   useEffect(() => {
     if (calendarApi === null) {

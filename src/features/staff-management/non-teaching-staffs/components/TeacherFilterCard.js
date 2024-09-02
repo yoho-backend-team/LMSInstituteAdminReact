@@ -38,7 +38,7 @@ const TeacherFilter = (props) => {
   return (
     <Grid container spacing={2} px={1}>
       <Grid item xs={12}>
-        <Card>
+        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title=" Non Teaching Staff" />
 
           <CardContent>
@@ -68,7 +68,7 @@ const TeacherFilter = (props) => {
 
               <Grid item xs={12} sm={3}>
                 <Box component={Link} to={'non-teaching-staffs/add'} alignItems="center">
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem' }}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.5, borderRadius: '0.5rem', backgroundColor: "#0CCE7F" , ":hover" : { backgroundColor: "#0AA865"} }}>
                     Add New Staff
                   </Button>
                 </Box>

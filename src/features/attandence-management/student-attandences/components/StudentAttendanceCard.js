@@ -220,7 +220,7 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
     <Grid container spacing={2}>
       {studentAttendance?.map((card, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
-          <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1' }}>
+          <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
             <Grid container direction="column" spacing={1}>
               <Grid item sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex', mt: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

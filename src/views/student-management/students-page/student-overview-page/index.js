@@ -49,7 +49,7 @@ const Students = () => {
                 <Grid container spacing={2}>
                   {Students?.map((item, index) => (
                     <Grid key={index} item xs={12} sm={6} md={3}>
-                      <Card sx={{ backgroundColor: 'primary.dark', pb: 1 }}>
+                      <Card sx={{ backgroundColor: 'primary.dark', pb: 1, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                         <Card sx={{ textAlign: 'center', height: '100%', borderRadius: '0px 0px 15px 15px', boxShadow: 'none' }}>
                           <Box>
                             <Avatar

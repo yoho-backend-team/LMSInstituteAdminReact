@@ -96,7 +96,7 @@ const NonTeaching = () => {
 
         return (
                 <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1} mb={2}>
-                  <Card sx={{ position: 'relative' }}>
+                  <Card sx={{ position: 'relative', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                     <CardContent sx={{ pt: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                         <Avatar
@@ -149,6 +149,14 @@ const NonTeaching = () => {
               <Pagination
                 count={nonTeachingStaffs?.last_page}
                 color="primary"
+                sx={{
+                  "& .Mui-selected" : {
+                    backgroundColor : "#0CCE7F",
+                    ":hover" : {
+                       backgroundColor : "#0AA865"
+                    }
+                  }
+                }}
                 onChange={(e, page) => {
                   dispatch(getAllNonTeachingStaffs({ branchid: selectedBranchId, page: page }));
                 }}

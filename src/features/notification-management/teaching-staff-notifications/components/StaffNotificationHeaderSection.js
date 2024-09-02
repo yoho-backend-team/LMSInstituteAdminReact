@@ -7,10 +7,11 @@ const StaffNotificationHeaderSection = ({ staffNotifications }) => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12} md={4} sm={6}>
-          <StaffNotificationHeaderCard title={'Total Notification'} stats={staffNotifications?.NotificationCount} icon={'tabler:user'} />
+          <StaffNotificationHeaderCard sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} title={'Total Notification'} stats={staffNotifications?.NotificationCount} icon={'tabler:user'} />
         </Grid>
         <Grid item xs={12} md={4} sm={6}>
           <StaffNotificationHeaderCard
+            sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}
             title={'Seen Notification'}
             stats={staffNotifications?.readNotificationCount}
             avatarColor={'error'}
@@ -19,6 +20,7 @@ const StaffNotificationHeaderSection = ({ staffNotifications }) => {
         </Grid>
         <Grid item xs={12} md={4} sm={6}>
           <StaffNotificationHeaderCard
+            sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}
             title={'Unseen Notification'}
             stats={staffNotifications?.unReadNotificationCount}
             avatarColor={'success'}

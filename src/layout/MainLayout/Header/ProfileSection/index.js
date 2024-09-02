@@ -42,6 +42,8 @@ import { useDispatch } from 'react-redux';
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
 import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from 'utils/check-auth-state';
+import { getImageUrl } from 'utils/imageUtils';
+import { profilePlaceholder } from 'utils/placeholders';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
@@ -118,7 +120,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={ user?.image ? getImageUrl(user?.image):profilePlaceholder}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',

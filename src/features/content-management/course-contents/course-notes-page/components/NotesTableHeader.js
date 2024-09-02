@@ -62,7 +62,7 @@ const NotesHeader = (props) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Card>
+        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Notes" />
           <CardContent sx={{ pt: 0, pb: 0 }}>
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
@@ -102,7 +102,7 @@ const NotesHeader = (props) => {
                   </Grid>
 
                   <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
-                    <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+                    <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 }, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Notes
                     </Button>

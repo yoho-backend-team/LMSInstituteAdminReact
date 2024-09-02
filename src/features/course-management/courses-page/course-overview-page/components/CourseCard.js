@@ -128,7 +128,7 @@ const CourseCard = (props) => {
             </Grid>
             <Grid>
               <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>
-                ₹ {course?.price}
+                ₹ {course?.price ? course?.price : course?.current_price}
               </Typography>
             </Grid>
           </Box>
@@ -153,7 +153,7 @@ const CourseCard = (props) => {
             size="medium"
             variant="contained"
             color="primary"
-            sx={{ mt: 0.4, py: 0.8, width: 100 }}
+            sx={{ mt: 0.4, py: 0.8, width: 100, backgroundColor: "#0CCE7F", ":hover" : { backgroundColor: "#0AA865"} }}
           >
             View
           </Button>

@@ -40,7 +40,7 @@ const NonTeachingStaffFilterCard = (props) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
             <CardHeader title="Non-Teaching Staff Attendance" />
             <CardContent>
               <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>

@@ -40,7 +40,7 @@ const defaultColumns = [
     field: 'refundId',
     headerName: 'Refund ID',
     renderCell: ({ row }) => (
-      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
+      <Typography component={LinkStyled} to={`#` }>
         {`#${row?.studentfees?.transaction_id}`}
       </Typography>
     )
@@ -50,8 +50,8 @@ const defaultColumns = [
     field: 'studentId',
     headerName: 'Student ID',
     renderCell: ({ row }) => (
-      <Typography component={LinkStyled} to={`/apps/invoice/preview/${row.id}`}>
-        {`#${row?.studentfees?.studentfee_id}`}
+      <Typography component={LinkStyled} to={`#`}>
+        {`#${row?.student?.id}`}
       </Typography>
     )
   },
@@ -209,17 +209,18 @@ const RefundTable = () => {
       setBatches(result?.data);
     }
   };
-
+  
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ display: "none"}} >
             <CardHeader title="Filters" />
             <CardContent>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
+                    sx={{ display: "none"}}
                     fullWidth
                     options={batches?.data}
                     filterSelectedOptions

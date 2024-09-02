@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import PropTypes from 'prop-types';
 import { PDFViewer } from 'react-view-pdf';
+import { getImageUrl } from 'utils/imageUtils';
 
 const CourseNotesView = ({ open, handleViewClose, notes }) => {
   const savedPdfUrl = require('assets/pdf.pdf');
@@ -67,12 +68,12 @@ const CourseNotesView = ({ open, handleViewClose, notes }) => {
                   size="small"
                   skin="light"
                   color="primary"
-                  label={notes?.is_active === '1' ? 'Active' : 'Inactive'}
+                  label={notes?.is_active ? 'Active' : 'Inactive'}
                 />
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} sx={{ mb: 4, mt: 1.5 }}>
-              <PDFViewer url={savedPdfUrl} />
+              <PDFViewer url={getImageUrl(notes?.file)} />
             </Grid>
           </Grid>
         </DialogContent>

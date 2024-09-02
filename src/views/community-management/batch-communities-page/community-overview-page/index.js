@@ -13,6 +13,7 @@ import { getAllCommunities } from 'features/community/redux/communityThunks';
 import { selectCommunities } from 'features/community/redux/communitySelectors';
 import { getCommunityDetails } from 'features/community/services/communityServices';
 import { io } from 'socket.io-client';
+import { useSpinner } from 'context/spinnerContext';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -32,6 +33,7 @@ const Community = () => {
   const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { showSpinner,hideSpinner} = useSpinner()
 
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -80,16 +82,11 @@ const Community = () => {
       };
       
       const response = await dispatch(getAllCommunities(data));
-
-   
       if (response && response.data.data && response.data.data.length > 0) {
         const chatId = response.data.data[0]._id; 
         const updatedData = { ...data, chatId };
-     
       }
     };
-    
-
     fetchData();
   }, [dispatch, selectedBranchId, userData._id, institute._id]);
 

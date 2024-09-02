@@ -48,7 +48,7 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
 
   return (
     <>
-      <Card>
+      <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
         <CardHeader title="Admin Users" />
         <CardContent>
           <Grid container spacing={2}>

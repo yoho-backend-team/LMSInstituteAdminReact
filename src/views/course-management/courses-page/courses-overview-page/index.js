@@ -40,7 +40,7 @@ const Courses = () => {
             {/* Display courses */}
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
               {courses?.data?.map((course, index) => (
-                <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} />
+                <CourseCard key={index} course={course} setCourseRefetch={setCourseRefetch} sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} />
               ))}
             </Grid>
           </Grid>
@@ -54,7 +54,7 @@ const Courses = () => {
               color="primary"
               onChange={(e, page) => {
                 const data = {
-                  branch_id: selectedBranchId,
+                  id: selectedBranchId,
                   page: page
                 };
                 dispatch(getAllCourses(data));

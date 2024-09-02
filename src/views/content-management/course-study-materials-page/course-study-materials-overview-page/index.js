@@ -271,7 +271,7 @@ const StudyMaterials = () => {
     <>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <StudyMaterialHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+          <StudyMaterialHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} />
         </Grid>
         <Grid item xs={12}>
           <Card>

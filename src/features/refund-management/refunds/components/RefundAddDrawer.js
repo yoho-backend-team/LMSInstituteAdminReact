@@ -276,13 +276,13 @@ const RefundAddDrawer = (props) => {
                   <Autocomplete
                     {...field}
                     fullWidth
-                    options={activeStudentsFee}
-                    getOptionLabel={(studentFee) => `${studentFee.studentfee_id}`}
+                    options={activeStudentsFee?.fees}
+                    getOptionLabel={(studentFee) => `${studentFee.transaction_id}`}
                     onChange={(event, newValue) => {
                       setSelectedStudentFee(newValue);
-                      field.onChange(newValue.studentfee_id);
+                      field.onChange(newValue.transaction_id);
                     }}
-                    value={selectedStudentFee?.studentfee_id}
+                    value={selectedStudentFee?.transaction_id}
                     renderInput={(params) => (
                       <TextField
                         {...params}

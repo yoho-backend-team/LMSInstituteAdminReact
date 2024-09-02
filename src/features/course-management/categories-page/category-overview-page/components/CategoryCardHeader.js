@@ -58,7 +58,7 @@ const CategoryCardHeader = (props) => {
           onChange={(e) => handleSearch(e)}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button onClick={() => handleAdd()} variant="contained" color="primary" sx={{ backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865"} }} startIcon={<Icon icon="tabler:plus" />}>
             Add New Category
           </Button>
         </Box>

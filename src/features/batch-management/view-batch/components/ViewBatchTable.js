@@ -103,6 +103,9 @@ const ViewBatchTable = ({ students }) => {
           <Card sx={{ mt: 2 }}>
             <Box sx={{ overflowX: 'auto' }}>
               <DataGrid
+                sx={{
+                  boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"
+                }}
                 autoHeight
                 rowHeight={80}
                 rows={filteredStudents}

@@ -84,6 +84,9 @@ const MobileSearch = () =>
     <OutlineInputStyle
       id="input-search-header"
       select
+      sx={{
+          backgroundColor : "red"
+      }}
       value={value}
       onChange={(e) => setValue(e.target.value)}
       placeholder="Branch"

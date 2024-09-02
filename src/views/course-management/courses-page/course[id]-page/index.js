@@ -30,6 +30,7 @@ import ReactPlayer from 'react-player';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from 'utils/imageUtils';
 
 const CourseViewPage = () => {
   const [value, setValue] = useState('1');
@@ -123,12 +124,12 @@ const CourseViewPage = () => {
   // if (!course || !course.course_module) {
   //   return null;
   // }
-
+  console.log(course,"course")
   return (
     <Grid container xs={12} item spacing={2}>
       <Grid item xs={12} sm={12} md={12} lg={7.5}>
         <Card>
-          <ReactPlayer
+          {/* <ReactPlayer
             style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
             url={videoUrl}
             controls
@@ -136,8 +137,13 @@ const CourseViewPage = () => {
             loop
             width="100%"
             height={400}
+          /> */}
+          <img
+          alt={course?.course_name}
+          loading="lazy"
+          style={{ width: "100%", height: "400px", objectFit: "cover", backgroundColor: "black" }}
+          src={ getImageUrl( course?.thumbnail ? course?.image : course?.image)}
           />
-
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -164,7 +170,7 @@ const CourseViewPage = () => {
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'end', mt: 1 }}>
                   <Typography sx={{ ml: 1 }} variant="h3">
-                    ₹ {course?.price}
+                    ₹ {course?.price ? course?.price : course?.current_price}
                   </Typography>
                 </Box>
               </Box>
@@ -179,7 +185,7 @@ const CourseViewPage = () => {
         </Card>
       </Grid>
        <Grid item xs={12}  sm={12} lg={4.4}>
-        <Card sx={{ pb: 1, backgroundColor: 'secondary.light' }} className="CourseModules-Card">
+        <Card sx={{ pb: 1, backgroundColor: 'secondary.light', height: "100%" }} className="CourseModules-Card">
           <Button
             fullWidth
             onClick={() => handleEdit()}
@@ -213,13 +219,13 @@ const CourseViewPage = () => {
       <Grid item xs={12}>
         <Card>
           <TabContext value={value}>
-            {/* <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
+            <TabList variant="fullWidth" onChange={handleSwitch} aria-label="full width tabs example">
               <Tab value="1" label="Study Materials" />
               <Tab value="2" label="Notes" />
-            </TabList> */}
-            {/* <TabPanel value="1">
-              <StudyMaterials materials={course?.course_study_materials} />
-            </TabPanel> */}
+            </TabList> 
+            <TabPanel value="1">
+              <StudyMaterials materials={course?.studymaterials} />
+            </TabPanel> 
 
             <TabPanel value="2">
               <Notes notes={course?.notes} />

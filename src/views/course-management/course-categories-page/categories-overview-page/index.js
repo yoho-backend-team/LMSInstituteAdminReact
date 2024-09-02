@@ -51,6 +51,12 @@ const Categories = () => {
           <Pagination
             count={memoizedCategories?.last_page}
             color="primary"
+            sx={{
+              backgroundColor: '#0CCE7F',  
+              '&:hover': {
+                backgroundColor: '#0AA865',
+              },
+            }}
             onChange={async (e, page) => {
               const data = {
                 branch_id: selectedBranchId,

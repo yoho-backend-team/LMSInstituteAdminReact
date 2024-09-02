@@ -77,7 +77,7 @@ const NavCollapse = ({ menu, level }) => {
 
   const Icon = menu.icon;
   const menuIcon = menu.icon ? (
-    <Icon strokeWidth={1.5} size="1.3rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+    <Icon strokeWidth={2} size="1.3rem" style={{ marginTop: 'auto', marginBottom: 'auto' }} />
   ) : (
     <FiberManualRecordIcon
       sx={{
@@ -87,7 +87,7 @@ const NavCollapse = ({ menu, level }) => {
       fontSize={level > 0 ? 'inherit' : 'medium'}
     />
   );
-
+  
   return (
     <>
       <ListItemButton
@@ -95,17 +95,32 @@ const NavCollapse = ({ menu, level }) => {
           borderRadius: `${customization.borderRadius}px`,
           mb: 0.5,
           alignItems: 'flex-start',
-          backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
+          backgroundColor: selected === menu.id ? '#0CCE7F ' : 'inherit',
           py: level > 1 ? 1 : 1.25,
-          pl: `${level * 24}px  `
+          pl: `${level * 24}px  `,
+          color : "#3b4056",
+          ":hover": {
+            fontWeight : "bold",
+            color: "#0CCE7F",
+            '& .MuiListItemIcon-root': {
+              color: "#0CCE7F",
+            }
+          },
+         '&.Mui-selected': { 
+          backgroundColor: '#0CCE7F',
+          '&:hover': {
+            backgroundColor: '#0AA865', 
+          },
+        },
         }}
+        
         selected={selected === menu.id}
         onClick={handleClick}
       >
-        <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 }}>{menuIcon}</ListItemIcon>
+        <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 , width: "22px", height: "22px",strokeWidth:2}}>{menuIcon}</ListItemIcon>
         <ListItemText
           primary={
-            <Typography variant={selected === menu.id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto' }}>
+            <Typography variant={selected === menu.id ? 'h5' : 'body1'} color="inherit" sx={{ my: 'auto', fontWeight: "bold" }}>
               {menu.title}
             </Typography>
           }
@@ -117,11 +132,12 @@ const NavCollapse = ({ menu, level }) => {
             )
           }
         />
-        {open ? (
-          <IconChevronUp stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: -20 }} />
-        ) : (
-          <IconChevronDown stroke={1.5} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: -20 }} />
-        )}
+       {open ? (
+         <IconChevronUp strokeWidth={3} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: -20 }} />
+       ) : (
+         <IconChevronDown strokeWidth={3} size="1rem" style={{ marginTop: 'auto', marginBottom: 'auto', marginRight: -20 }} />
+       )}
+
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List
@@ -137,8 +153,7 @@ const NavCollapse = ({ menu, level }) => {
               height: '100%',
               width: '1px',
               opacity: 1,
-
-              background: theme.palette.primary.light
+              backgroundColor : "#0CCE7F"
             }
           }}
         >

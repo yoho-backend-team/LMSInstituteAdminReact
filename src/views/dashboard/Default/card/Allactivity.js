@@ -61,7 +61,7 @@ const AllActivity = () => {
       <Typography variant="h4"sx={{ml:1,mb:2}}>
         Recent Activities
       </Typography>
-      <Card sx={{ backgroundColor: theme.palette.dark.light, p: 3, height: 450, overflow: 'auto' }}>
+      <Card sx={{ backgroundColor: "white", p: 3, height: 450, overflow: 'auto', boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
         <Box>
           <Card sx={{ mt: 2, backgroundColor: theme.palette.primary.main, opacity: 0.8, boxShadow: 'none' }}>
             {Logs.map((item, index) => {
@@ -80,10 +80,10 @@ const AllActivity = () => {
                   >
                     {/* <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} /> */}
                     <Box sx={{ marginLeft: 2 }}>
-                      <Typography variant="h5" sx={{ color: 'white' }}>
+                      <Typography variant="h5" sx={{ color: "black" }}>
                         {item.title}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
+                      <Typography variant="body2" sx={{ color: "white", fontSize: '10px', mt: 0.5 }}>
                       {item.user?.first_name}  {"|"}  {item?.action} {"|"} {item?.details}
                       </Typography>
                     </Box>

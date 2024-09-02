@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, CircularProgress ,Backdrop} from '@mui/material';
+import LetterFillSpinner from './letterSpinner';
 
 const Spinner = ({ show }) => {
   if (!show) return null;
@@ -20,6 +21,7 @@ const Spinner = ({ show }) => {
       }}
     >
       <CircularProgress />
+      <LetterFillSpinner />
     </Box>
   );
 };

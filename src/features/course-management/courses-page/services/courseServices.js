@@ -76,7 +76,7 @@ export const getCourseDetails = async (data) => {
 export const getAllCourses = async (data) => {
   try {
     const response = await client.course.getWithBranch(data)
-    // Check if the response status is successful
+    console.log(response,"response")
     return { data: response.data };
   
   } catch (error) {
@@ -89,23 +89,13 @@ export const getAllCourses = async (data) => {
 };
 export const addCourse = async (data,file) => {
   try {
-    // const response = await axios.post(`${COURSE_END_POINT}/create`, data, {
-    //   headers: {
-    //     // 'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
-    //   }
-    // });
     const response = await client.course.create(data)
-    const add_template = await client.course.add_template({course:response?.data?._id,file:file})
-
-    if (response.status) {
-      return { success: true, message: 'Course created successfully' };
-    } else {
-      return { success: false, message: 'Failed to create Course' };
-    }
+    // const add_template = await client.course.add_template({course:response?.data?._id,file:file})
+    
   } catch (error) {
     console.error('Error in addCourse:', error);
-    throw error;
+    const data = error?.response?.data?.message ? error?.response?.data?.message : error?.message
+    throw new Error(data)
   }
 };
 export const getStudentByCourse = async (data) => {

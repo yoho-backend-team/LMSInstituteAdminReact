@@ -84,7 +84,7 @@ const Teaching = () => {
           <Grid container mt={1}>
             {teachingStaffs && teachingStaffs.data?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
-                <Card sx={{ position: 'relative', mb: 2 }}>
+                <Card sx={{ position: 'relative', mb: 2, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                   <CardContent sx={{ pt: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <Avatar

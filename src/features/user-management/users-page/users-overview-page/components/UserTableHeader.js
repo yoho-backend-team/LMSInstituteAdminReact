@@ -68,7 +68,10 @@ const TableHeader = (props) => {
         />
       </Grid>
       <Grid item sm={2} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-        <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
+        <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 },  backgroundColor: '#0CCE7F',  
+            '&:hover': {
+              backgroundColor: '#0AA865',
+            }, }}>
           <Icon fontSize="1.125rem" icon="tabler:plus" />
           Add Admin User
         </Button>

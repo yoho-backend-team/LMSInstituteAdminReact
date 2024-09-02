@@ -38,7 +38,7 @@ const LiveClassFilterCard = (props) => {
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     const data = {
-      branch: selectedBranchId,
+      branch_id: selectedBranchId,
       institute : useInstitute().getInstituteId()
     };
     getCourses(data);
@@ -46,6 +46,7 @@ const LiveClassFilterCard = (props) => {
 
   const getCourses = async (data) => {
     const result = await getAllCourses(data);
+    
     if (result?.data) {
       setCourses(result?.data);
     }
@@ -79,9 +80,10 @@ const LiveClassFilterCard = (props) => {
     if (start !== null && end !== null) {
       setDates(dates);
       const data = {
+        institute : useInstitute().getInstituteId(),
         start_date: convertDateFormat(start),
         end_date: convertDateFormat(end),
-        branch_id: selectedBranchId
+        branch: selectedBranchId
       };
       dispatch(getAllLiveClasses(data));
     }
@@ -113,12 +115,12 @@ const LiveClassFilterCard = (props) => {
       dispatch(getAllLiveClasses(data));
     }
   };
-
+  
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
             <CardHeader title="Filters" />
             <CardContent>
               <Grid container spacing={2}>
@@ -149,7 +151,7 @@ const LiveClassFilterCard = (props) => {
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
-                    options={batches?.data}
+                    options={batches}
                     filterSelectedOptions
                     onChange={handleBatchChange}
                     value={selectedBatch}

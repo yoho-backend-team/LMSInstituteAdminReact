@@ -69,7 +69,7 @@ const CategoryCard = (props) => {
 
   return (
     <Grid item xs={12} sm={6} lg={4}>
-      <Card sx={{ minHeight: 260 }}>
+      <Card sx={{ minHeight: 260, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           {/* Category Logo and Actions */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>

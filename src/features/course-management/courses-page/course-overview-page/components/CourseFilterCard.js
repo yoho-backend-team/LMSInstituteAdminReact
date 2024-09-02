@@ -38,7 +38,7 @@ const CourseFilter = ({ selectedBranchId }) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
             <CardHeader title="Institute Courses" />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>

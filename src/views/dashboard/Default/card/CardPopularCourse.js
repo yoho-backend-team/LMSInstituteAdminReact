@@ -76,6 +76,7 @@ const CardPopularCourse = () => {
               key={item.title}
               sx={{
                 display: 'flex',
+                boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
                 '& img': { mr: 2 },
                 alignItems: 'center',
                 mb: index !== limitedData.length - 1 ? 1.2 : undefined,

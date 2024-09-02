@@ -24,7 +24,7 @@ const NavItem = ({ item, level }) => {
 
   const Icon = item.icon;
   const itemIcon = item?.icon ? (
-    <Icon stroke={1.5} size="1.3rem" />
+    <Icon   size="1.3rem" sx={{ strokeWidth:2, ":hover": { color : "#0CCE7F"}}} />
   ) : (
     <FiberManualRecordIcon
       sx={{
@@ -66,44 +66,58 @@ const NavItem = ({ item, level }) => {
 
   return (
     <ListItemButton
-      {...listItemProps}
-      disabled={item.disabled}
-      sx={{
-        borderRadius: `${customization.borderRadius}px`,
-        mb: 0.5,
-        alignItems: 'flex-start',
-        backgroundColor: level > 1 ? 'inherit' : 'inherit',
-        py: level > 1 ? 1 : 1.25,
-        pl: `${level * 24}px`
-      }}
-      selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
-      onClick={() => itemHandler(item.id)}
-    >
-      <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
-      <ListItemText
-        primary={
-          <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color="inherit">
-            {item.title}
+    {...listItemProps}
+    disabled={item.disabled}
+    sx={{
+      borderRadius: `${customization.borderRadius}px`,
+      mb: 0.5,
+      alignItems: 'flex-start',
+      backgroundColor: level > 1 ? 'inherit' : '#0CCE7F',
+      py: level > 1 ? 1 : 1.25,
+      pl: `${level * 24}px`,
+      ":hover": {
+        color: "#0CCE7F",
+        '& .MuiListItemIcon-root': {
+          color: "#0CCE7F",
+        }
+      },
+      '&.Mui-selected': {
+        backgroundColor: '#0CCE7F',
+        '&:hover': {
+          backgroundColor: '#0AA865'
+        },
+      },
+    }}
+    selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
+    onClick={() => itemHandler(item.id)}
+  >
+    <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>
+      {itemIcon}
+    </ListItemIcon>
+    <ListItemText
+      primary={
+        <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} sx={{ fontWeight: "bold"}} color="inherit">
+          {item.title}
+        </Typography>
+      }
+      secondary={
+        item.caption && (
+          <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+            {item.caption}
           </Typography>
-        }
-        secondary={
-          item.caption && (
-            <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
-              {item.caption}
-            </Typography>
-          )
-        }
+        )
+      }
+    />
+    {item.chip && (
+      <Chip
+        color={item.chip.color}
+        variant={item.chip.variant}
+        size={item.chip.size}
+        label={item.chip.label}
+        avatar={item.chip.avatar && <Avatar>{item.chip.avatar}</Avatar>}
       />
-      {item.chip && (
-        <Chip
-          color={item.chip.color}
-          variant={item.chip.variant}
-          size={item.chip.size}
-          label={item.chip.label}
-          avatar={item.chip.avatar && <Avatar>{item.chip.avatar}</Avatar>}
-        />
-      )}
-    </ListItemButton>
+    )}
+  </ListItemButton>  
   );
 };
 

@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField as CustomTextField, Grid, styled } from '@mui/material';
+import { TextField as CustomTextField, Grid, styled, Typography } from '@mui/material';
+import { CameraAlt as CameraAltIcon, AddPhotoAlternate as AddPhotoAlternateIcon } from '@mui/icons-material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -90,6 +91,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
   const [selectedTemplate, setSelectedTemplate] = useState('');
 
   const handleInputImageChange = async (file) => {
+    console.log("called the file", file)
     const reader = new FileReader();
     const { files } = file.target;
     const data = new FormData()
@@ -112,19 +114,33 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
     }
   };
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  const ImgStyled = styled('img')({
+    width: '100%',
+    height: 'auto',
+    borderRadius: '8px',
+    border: '2px solid #ddd',
+    objectFit: 'cover',
+  });
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
+ const ButtonStyled = styled('button')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '10px 20px',
+  backgroundColor: '#007bff',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  fontSize: '16px',
+  transition: 'background-color 0.3s ease',
+  '&:hover': {
+    backgroundColor: '#0056b3',
+  },
+  '& svg': {
+    marginRight: '8px',
+  },
+  });
 
   // Handle form submission
   const onSubmit = useCallback(
@@ -177,7 +193,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
       setActiveCategories(result.data);
     }
   };
-
+  console.log(course,"course","image")
   return (
     <div>
       <Dialog
@@ -352,75 +368,59 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 />
               </Grid>
 
-              <Grid container item xs={12} sx={{ mt: 5 }} spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-                    {!selectedImage && (
-                      <ImgStyled
-                        src={
-                          course?.image
-                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/${course?.image}`
-                            : imagePlaceholder
-                        }
-                        alt="Profile Pic"
+              <Grid container spacing={2} sx={{ mt: 5 }}>
+
+              <Grid item xs={12} md={6}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h6" sx={{ mb: 2 , textAlign: "start"}}>Thumbnail Image</Typography>
+                  <ImgStyled
+                    src={ course?.thumbnail ? getImageUrl(course?.thumbnail) : imagePlaceholder}
+                    alt="Thumbnail"
+                  />
+                  <label htmlFor="thumbnail-upload">
+                    <ButtonStyled component="span">
+                      <CameraAltIcon />
+                      Update Thumbnail
+                      <input
+                        hidden
+                        type="file"
+                        id="thumbnail-upload"
+                        accept="image/png, image/jpeg"
+                        // value={inputValue}
+                        onChange={handleInputImageChange}
                       />
-                    )}
-
-                    {selectedImage && <ImgStyled src={ getImageUrl(imgSrc)} alt="Profile Pic" />}
-                    <div>
-                      <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                        update New logo
-                        <input
-                          hidden
-                          type="file"
-                          value={inputValue}
-                          accept="image/png, image/jpeg"
-                          onChange={handleInputImageChange}
-                          id="account-settings-upload-image"
-                        />
-                      </ButtonStyled>
-                    </div>
-                  </Box>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Box sx={{ mb: 2 }}>
-                    {!selectedTemplate && (
-                      <ImgStyled
-                        sx={{ width: '100%', height: 200 }}
-                        src={
-                          course?.institute_course_branch?.template
-                            ? `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${course?.institute_course_branch?.template}`
-                            : imgSrc
-                        }
-                        alt="Profile Pic"
+                    </ButtonStyled>
+                  </label>
+                </Box>
+              </Grid>
+        
+              <Grid item xs={12} md={6}>
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant="h6" sx={{ mb: 2, textAlign: "start" }}>Main Image</Typography>
+                  <ImgStyled
+                    src={ course?.image ? getImageUrl(course?.image) : imagePlaceholder }
+                    alt="Main"
+                    // sx={{ height: 200 }}
+                  />
+                  <label htmlFor="main-image-upload">
+                    <ButtonStyled component="label" htmlFor="main-image-upload"  >
+                      <AddPhotoAlternateIcon />
+                      Update Main Image
+                      <input
+                        hidden
+                        type="file"
+                        id="main-image-upload"
+                        accept="image/png, image/jpeg"
+                        // value={inputTemplateValue}
+                        onChange={handleInputTemplateChange}
                       />
-                    )}
-
-                    {selectedTemplate && <ImgStyled src={template} alt="Profile Pic" />}
-                    <div>
-                      <ButtonStyled
-                        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        component="label"
-                        variant="contained"
-                        htmlFor="account-settings-upload-image"
-                      >
-                        update New Template
-                        <input
-                          hidden
-                          type="file"
-                          value={inputTemplateValue}
-                          accept="image/png, image/jpeg"
-                          onChange={handleInputTemplateChange}
-                          id="account-settings-upload-image"
-                        />
-                      </ButtonStyled>
-                    </div>
-                  </Box>
-                </Grid>
+                    </ButtonStyled>
+                  </label>
+                </Box>
+              </Grid>
               </Grid>
 
-              <CourseValidate />
+              {/* <CourseValidate /> */}
             </Grid>
 
             <Grid style={{ display: 'flex', justifyContent: 'center', marginTop: '30px' }}>

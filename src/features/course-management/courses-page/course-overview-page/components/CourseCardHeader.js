@@ -73,7 +73,12 @@ const CourseCardHeader = ({ selectedBranchId,courses,setCourseRefetch }) => {
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
           <Button
-            sx={{ py: 1.5, borderRadius: '0.5rem' }}
+            sx={{ py: 1.5, borderRadius: '0.5rem', 
+              backgroundColor: '#0CCE7F',  
+              '&:hover': {
+                backgroundColor: '#0AA865',
+              },
+             }}
             variant="contained"
             component={Link}
             to="courses/add"

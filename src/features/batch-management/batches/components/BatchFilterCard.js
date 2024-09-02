@@ -111,7 +111,7 @@ const BatchFilterCard = (props) => {
   return (
     <DatePickerWrapper>
       <Grid item xs={12} sm={12}>
-        <Card>
+        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Batches" />
           <CardContent>
             <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -189,7 +189,7 @@ const BatchFilterCard = (props) => {
 
               <Grid item xs={12} sm={4}>
                 <Box component={Link} to={'batches/add'}>
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.7, borderRadius: 2 }}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.7, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
                     Add New Batch
                   </Button>
                 </Box>

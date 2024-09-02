@@ -56,7 +56,7 @@ const PaymentsCard = ({ isLoading, branchData }) => {
       {isLoading ? (
         <SkeletonEarningCard />
       ) : (
-        <CardWrapper border={false} content={false}>
+        <CardWrapper border={false} content={false} sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
           <Box sx={{ p: 2 }}>
             <Grid container direction="column">
               <Grid item>

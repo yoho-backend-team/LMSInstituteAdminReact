@@ -65,7 +65,7 @@ const StudentFilter = (props) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        <Card>
+        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Students" />
           <CardContent>
             <Grid container spacing={3}>
@@ -121,7 +121,7 @@ const StudentFilter = (props) => {
 
               <Grid item xs={12} sm={3}>
                 <Box component={Link} to={'students/add'}>
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2 }}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
                     Add New Student
                   </Button>
                 </Box>

@@ -1,5 +1,6 @@
 import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import AllActivity from './card/Allactivity';
 import CardData from './card/CardData';
 import CardPopularCourse from './card/CardPopularCourse';
@@ -13,6 +14,7 @@ import client from 'api/client';
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [Reports,setReports] = useState([])
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId)
 
   useEffect(() => {
     const getReports = async () => {
@@ -37,6 +39,7 @@ const Dashboard = () => {
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.totalBalance}
                     chipText="-12.2%"
                     chipColor="default"
@@ -48,6 +51,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.totalPaidAmount}
                     chipText="+25.2%"
                     avatarColor="info"
@@ -59,6 +63,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.TeachingstaffCount}
                     chipText="-12.2%"
                     chipColor="default"
@@ -70,6 +75,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.studentCount}
                     chipText="+25.2%"
                     avatarColor="primary"
@@ -95,8 +101,9 @@ const Dashboard = () => {
 
             <Grid item xs={12} sx={{ mt: 2 }}>
               <Grid container spacing={1}>
-                <Grid item xs={6} sm={6} lg={3}>
+                <Grid item xs={6} sm={6} lg={3} sx={{ display: "none"}} >
                   <CardData
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)", display: "none"}}
                     stats="8000"
                     chipText="-12.2%"
                     chipColor="default"
@@ -108,17 +115,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardData
-                    stats={Reports?.courseCount}
-                    chipText="+25.2%"
-                    avatarColor="info"
-                    chipColor="default"
-                    title="Courses"
-                    subtitle="Last week"
-                    avatarIcon="mingcute:wallet-fill"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardData
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.categoryCount}
                     chipText="-12.2%"
                     chipColor="default"
@@ -126,6 +123,18 @@ const Dashboard = () => {
                     title="Category"
                     subtitle="Last week"
                     avatarIcon="ic:baseline-money"
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} lg={3}>
+                  <CardData
+                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    stats={Reports?.courseCount}
+                    chipText="+25.2%"
+                    avatarColor="info"
+                    chipColor="default"
+                    title="Courses"
+                    subtitle="Last week"
+                    avatarIcon="mingcute:wallet-fill"
                   />
                 </Grid>
                 {/* <Grid item xs={6} sm={6} lg={3}>

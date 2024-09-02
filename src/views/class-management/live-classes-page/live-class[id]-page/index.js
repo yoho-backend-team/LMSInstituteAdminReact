@@ -1,4 +1,4 @@
-import { Box, CardContent, CardHeader, TextField, Typography } from '@mui/material';
+import { Box, CardContent, CardHeader, TextField, Typography, IconButton, List, ListItem, ListItemText, Divider } from '@mui/material';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -9,18 +9,21 @@ import { DataGrid } from '@mui/x-data-grid';
 import CustomAvatar from 'components/mui/avatar';
 import { getLiveClassDetails } from 'features/class-management/live-classes/services/liveClassServices';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { batch, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router';
 import { getInitials } from 'utils/get-initials';
 import { profilePlaceholder } from 'utils/placeholders';
 import { useSpinner } from 'context/spinnerContext';
 import toast from 'react-hot-toast';
+import SearchIcon from '@mui/icons-material/Search';
+import { getImageUrl } from 'utils/imageUtils';
 
 const renderClient = (row) => {
-  if (row?.student?.image) {
+  
+  if (row?.image) {
     return (
       <CustomAvatar
-        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.student?.image}`}
+        src={getImageUrl(row?.image)}
         sx={{ mr: 2.5, width: 38, height: 38 }}
       />
     );
@@ -30,11 +33,12 @@ const renderClient = (row) => {
         skin="light"
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+        {getInitials(row?.full_name)}
       </CustomAvatar>
     );
   }
 };
+
 
 const ViewLiveClass = () => {
   const dispatch = useDispatch();
@@ -44,6 +48,7 @@ const ViewLiveClass = () => {
   const {show,hide} = useSpinner()
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
 
   const filteredStudents = liveClassData?.batch?.student?.filter((student) =>
     student?.full_name?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -63,7 +68,7 @@ const ViewLiveClass = () => {
       show()
     }
     hide()
-  }, [dispatch, liveClassId,liveClassData]);
+  }, []);
 
 
   const getLiveClassData = async (data) => {
@@ -80,217 +85,265 @@ const ViewLiveClass = () => {
   };
 
   
-
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
-
+  
   const columns = [
     {
-      minWidth: 160,
       headerName: 'Student ID',
       field: 'student_id',
-      renderCell: ({ row }) => (
-        <Typography variant="body2" sx={{ color: 'text.primary' }}>
-          {row?.id}
-        </Typography>
-      )
+      minWidth: 140,
+      flex: 1,  
+      renderCell: ({ row }) => <Typography>{row?.id}</Typography>,
     },
     {
-      minWidth: 290,
-      field: 'full_name',
       headerName: 'Student Name',
+      field: 'full_name',
+      minWidth: 220,
+      flex: 2,  
       renderCell: (params) => {
         const student = params?.row;
-        const fullName = `${student?.full_name}`;
-        const email = student?.email;
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(params.row)}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                noWrap
-                sx={{
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {fullName}
-              </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {email}
+            <Box ml={1}>
+              <Typography noWrap>{student?.full_name}</Typography>
+              <Typography noWrap variant="body2" color="text.secondary">
+                {student?.email}
               </Typography>
             </Box>
           </Box>
         );
-      }
+      },
     },
     {
-      minWidth: 170,
+      headerName: 'City',
       field: 'City',
-      headerName: 'city',
-      renderCell: (params) => {
-        const student = params?.row;
-        const city = student?.contact_info?.city;
-        return (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {city}
-            </Typography>
-          </Box>
-        );
-      }
+      minWidth: 120,
+      flex: 1,
+      renderCell: ({ row }) => <Typography>{row?.contact_info?.city}</Typography>,
     },
     {
-      minWidth: 360,
-      field: 'address',
       headerName: 'Address',
-      renderCell: (params) => {
-        const student = params?.row;
-        const address = `${student?.contact_info?.address1} ${student?.contact_info?.address2}`;
-        return (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant="body2" sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {address}
-            </Typography>
-          </Box>
-        );
-      }
-    }
+      field: 'address',
+      minWidth: 300,
+      flex: 2,
+      renderCell: ({ row }) => (
+        <Typography noWrap>{`${row?.contact_info?.address1} ${row?.contact_info?.address2}`}</Typography>
+      ),
+    },
   ];
 
+function calculateTimeDifference(startTime, endTime) {
+  const start = new Date(`${startTime}`);
+  const end = new Date(`${endTime}`);
+
+  let difference = end - start;
+
+  if (difference < 0) {
+    difference += 24 * 60 * 60 * 1000;
+  }
+
+  const hours = Math.floor(difference / (1000 * 60 * 60));
+  const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+  let difference_timeBetween = '';
+  if (hours > 0) difference_timeBetween += `${hours} hour${hours > 1 ? 's' : ''} `;
+  if (minutes > 0) difference_timeBetween += `${minutes} minute${minutes > 1 ? 's' : ''} `;
+  if (seconds > 0) difference_timeBetween += `${seconds} second${seconds > 1 ? 's' : ''} `;
+
+  return difference_timeBetween.trim()
+}
+
   return (
-    <Box>
-      <Grid container>
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title={liveClassData?.class_name} />
-            <CardContent sx={{ mt: 0, pt: 0 }}>
-              <Grid container spacing={4}>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Course
-                  </Typography>
-                  <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.batch?.course?.course_name}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Batch
-                  </Typography>
-                  <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.batch?.id}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Duration
-                  </Typography>
-                  <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.batch?.course?.duration}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Date
-                  </Typography>
-                  <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.start_date}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Sarted At
-                  </Typography>
-                  <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.batch?.start_date}
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Ended At
-                  </Typography>
-                  <Typography variant="h4" sx={{ mt: 1 }}>
-                    {liveClassData?.batch?.end_date}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-            <CardContent sx={{ mt: 0, pt: 0 }}>
-              <Grid container spacing={4}>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Instructor
-                  </Typography>
-
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                    <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {liveClassData?.instructors?.map((staff) => (
-                        <Tooltip key={staff.id} title={staff.full_name}>
-                          <Avatar src={staff.image?staff?.image:profilePlaceholder} alt={staff.full_name} sx={{ width: 25, height: 25 }} />
-                        </Tooltip>
-                      ))}
-                    </AvatarGroup>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Coordinator
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                    <AvatarGroup className="pull-up" sx={{ display: 'flex', alignItems: 'center' }}>
-                      {liveClassData?.coordinators?.map((staff) => (
-                        <Tooltip key={staff.id} title={staff.full_name}>
-                          <Avatar src={staff?.image?staff?.image : profilePlaceholder} alt={staff.full_name} sx={{ width: 25, height: 25 }} />
-                        </Tooltip>
-                      ))}
-                    </AvatarGroup>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Class Type
-                  </Typography>
-                  <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Typography variant="h4">{liveClassData?.type}</Typography>
-                  </Box>
-                </Grid>
-
-                <Grid item>
-                  <Typography variant="h5" sx={{ color: 'grey.500' }}>
-                    Class Link
-                  </Typography>
-                  <Box sx={{ mt: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Typography variant="h4">{liveClassData?.video_url}</Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} display={'flex'} justifyContent={'flex-end'} marginTop={2}>
-          <TextField placeholder="Search Student" value={searchQuery} onChange={handleSearchChange} />
-        </Grid>
-
-        {liveClassData && (
-          <Grid item xs={12} mt={3}>
-            <DataGrid
-              autoHeight
-              rowHeight={80}
-              rows={filteredStudents}
-              columns={columns}
-              disableRowSelectionOnClick
-              pagination
-              pageSize={paginationModel.pageSize}
-              rowCount={filteredStudents?.length}
-              paginationMode="server"
-              onPageChange={(page) => setPaginationModel((prevModel) => ({ ...prevModel, page }))}
-            />
+    <Box sx={{ p: 3}} >
+      
+      <Card variant="outlined" sx={{ mb: 3, borderColor: '#ddd', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
+        <CardContent>
+        <Box sx={{ display: "flex", gap: "5px" }} >
+          <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold", color: "#ADB5BD" }} >
+            {"Class:"}
+          </Typography>
+          <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold' }}>
+            {liveClassData?.class_name}
+          </Typography>
+        </Box>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Course
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {liveClassData?.batch?.course?.course_name}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Batch
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {liveClassData?.batch?.batch_name}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Duration
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {calculateTimeDifference(liveClassData?.start_time,liveClassData?.end_time)}
+                  {/* {liveClassData?.batch?.course?.duration} */}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Date
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {new Date(liveClassData?.start_date).toLocaleDateString()}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Started At
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {new Date(liveClassData?.start_time).toLocaleTimeString()}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Ended At
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {new Date(liveClassData?.end_time).toLocaleTimeString()}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5', maxHeight: "92px" }}>
+                <Typography variant="subtitle1" color="text.secondary" sx={{ marginBottom: "8px" }} gutterBottom>
+                  Instructor
+                </Typography>
+                <AvatarGroup max={4}>
+                  {liveClassData?.instructors?.map((staff) => (
+                    <Tooltip key={staff.id} title={staff.full_name}>
+                      <Avatar src={getImageUrl(staff?.image)} alt={staff.full_name} sx={{ width: 32, height: 32 }} />
+                    </Tooltip>
+                  ))}
+                </AvatarGroup>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3} sx={{ display: "none" }} >
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Coordinator
+                </Typography>
+                <AvatarGroup max={4}>
+                  {liveClassData?.coordinators?.map((staff) => (
+                    <Tooltip key={staff.id} title={staff.full_name}>
+                      <Avatar src={staff?.image || profilePlaceholder} alt={staff.full_name} sx={{ width: 32, height: 32 }} />
+                    </Tooltip>
+                  ))}
+                </AvatarGroup>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3} sx={{ display: "none" }} >
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Class Type
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {liveClassData?.type}
+                </Typography>
+              </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <Card sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                  Class Link
+                </Typography>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {liveClassData?.video_url}
+                </Typography>
+              </Card>
+            </Grid>
           </Grid>
-        )}
-      </Grid>
+        </CardContent>
+      </Card>
+    
+
+        <Card variant="outlined">
+        <CardContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <TextField
+              variant="outlined"
+              placeholder="Search Student"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              InputProps={{
+                startAdornment: (
+                  <IconButton>
+                    <SearchIcon />
+                  </IconButton>
+                ),
+              }}
+              sx={{ width: '100%', maxWidth: 400 }}
+            />
+          </Box>
+          <DataGrid
+            autoHeight
+            rowHeight={60}
+            rows={filteredStudents || []}
+            columns={columns}
+            disableColumnMenu
+            pagination
+            pageSize={paginationModel.pageSize}
+            showCellVerticalBorder={false}
+            showColumnVerticalBorder={false}
+            rowCount={filteredStudents?.length}
+            onPageChange={(page) => setPaginationModel((prev) => ({ ...prev, page }))}
+            paginationModel={paginationModel}
+            rowsPerPageOptions={[10, 25, 50]}
+            disableColumnFilter={true}
+            disableColumnSorting
+            sx={{
+              border: 'none',
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: '#f0f0f0',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                borderBottom: 'none', // Removed border
+                borderRadius: '4px 4px 0 0',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              },
+              "& .MuiDataGrid-columnSeparator" : {
+                  display : "none"
+              },
+              '& .MuiDataGrid-cell': {
+                borderBottom: '1px solid #ddd',
+              },
+              '& .MuiDataGrid-footerContainer': {
+                borderTop: '1px solid #ddd',
+                padding: '8px 0',
+              },
+              '& .MuiPaginationItem-root': {
+                borderRadius: '4px',
+              },
+            }}
+          />
+        </CardContent>
+      </Card>
+
     </Box>
   );
 };

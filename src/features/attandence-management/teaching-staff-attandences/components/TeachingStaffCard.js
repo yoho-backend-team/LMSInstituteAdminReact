@@ -15,7 +15,7 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
       <Grid container spacing={2} mt={2}>
         {teachingStaffs?.map((item, i) => (
           <Grid key={i} item xs={12} sm={6} md={4}>
-            <Card sx={{ position: 'relative', p: 1.5 }}>
+            <Card sx={{ position: 'relative', p: 1.5, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
               <CardContent sx={{ pt: 2.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                   <Avatar src={item.img} sx={{ mb: 3, width: 100, height: 100 }} />
