@@ -5,6 +5,10 @@ export function useInstitute(){
         getInstituteId(){
             const institute = localStorage.getItem("institute")
             return JSON.parse(institute).uuid
+        },
+        getDetails(){
+           const institute = localStorage.getItem("institute")
+           return JSON.parse(institute)
         }
     }
 }

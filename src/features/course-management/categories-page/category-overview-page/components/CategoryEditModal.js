@@ -15,6 +15,7 @@ import { updateCourseCategory } from '../../services/courseCategoryServices';
 import client from 'api/client';
 import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder } from 'utils/placeholders';
+import { useSpinner } from 'context/spinnerContext';
 
 // CategoryEditModal component
 const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch }) => {
@@ -57,6 +58,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
   const [inputValue, setInputValue] = useState('');
   const [imgSrc, setImgSrc] = useState(category?.image);
   const [selectedImage, setSelectedImage] = useState('');
+  const { show, hide } = useSpinner()
 
   // Function to handle closing the dialog
   const handleClose = useCallback(() => {
@@ -67,6 +69,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
 
   // Function to handle image input change
   const handleInputImageChange = useCallback(async(file) => {
+    show()
     const reader = new FileReader();
     const { files } = file.target;
     const data = new FormData()
@@ -75,6 +78,7 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
     setSelectedImage(response?.data?.file)
     setImgSrc(response?.data.file)
     setValue("image",response?.data?.file)
+    hide()
   }, []);
 
   // Styled components
@@ -116,14 +120,8 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
             image : category?.image?category.image:data.image,
             id:category.uuid
       }
-      
-      // const inputData = new FormData();
-      // inputData.append('category_id', category?.category_id);
-      // inputData.append('logo', selectedImage);
-      // inputData.append('category_name', data?.category_name);
-      // inputData.append('id', category?.id);
-
       try {
+        show()
         const result = await updateCourseCategory(data1);
         if (result.success) {
           setCategoryRefetch((state) => !state);
@@ -133,6 +131,8 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
         }
       } catch (error) {
         console.log(error);
+      }finally{
+        hide()
       }
     },
     [category, selectedImage, setCategoryRefetch]

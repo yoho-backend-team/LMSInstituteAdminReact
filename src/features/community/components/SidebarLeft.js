@@ -17,8 +17,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { hexToRGBA } from 'utils/hex-to-rgba';
-import { getAllBatchChats } from '../services/communityServices';
+import { getAllBatchChats, getAllMessages } from '../services/communityServices';
 import { getUserDetails } from 'utils/check-auth-state';
+import { useSpinner } from 'context/spinnerContext';
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -49,14 +50,18 @@ const SidebarLeft = (props) => {
     setSelectedBatch,
     chats,
     socket,
-    setCommunityDetails
+    setCommunityDetails,
+    setMessages,
+    messages
   } = props;
 
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(null);
   const [getchatsState,setChatsState] = useState(false)
+  const { show, hide } = useSpinner()
   
   const handleChatClick = async (type, community) => {
+    show()
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
@@ -68,7 +73,8 @@ const SidebarLeft = (props) => {
     socket.emit("joinGroup",{groupId:communityId,userId:user?._id},(error)=>{
 
     })
-
+    const response = await getAllMessages({ community : community?._id})
+    setMessages(response)
     if (community && community._id) {
       try {
         const response = await getAllBatchChats({ chatId: community._id });
@@ -79,6 +85,8 @@ const SidebarLeft = (props) => {
         }
       } catch (error) {
         console.error('Error in handleChatClick:', error);
+      }finally{
+        hide()
       }
     } else {
       console.error('Error: Missing community ID');

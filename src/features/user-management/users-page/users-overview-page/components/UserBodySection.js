@@ -126,19 +126,6 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
 
   const columns = [
     {
-      flex: 0.1,
-      minWidth: 120,
-      headerName: 'Id',
-      field: 'employee_id',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
-          </Typography>
-        );
-      }
-    },
-    {
       flex: 0.25,
       minWidth: 280,
       field: 'fullName',
@@ -237,18 +224,42 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
   return (
     <Box>
       <Grid>
-        <Card>
-          <Divider sx={{ m: '0 !important' }} />
-
+        <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
           <DataGrid
-            sx={{ p: 2 }}
             autoHeight
             rowHeight={70}
+            sx={{
+              '& .MuiDataGrid-row' : {
+                border: "1px solid #e6e5e7",
+                borderLeft: "none",
+                borderRight: "none",
+              },
+              "& .MuiDataGrid-row" : {
+                border : "1px solid #e6e5e7",
+                borderLeft: "none",
+                borderRight: "none",
+                ":hover" : {
+                   backgroundColor : "#f5f5f7",
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+                  //  color: "white"
+                }
+              },
+              "& .MuiDataGrid-columnHeaders" : {
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+              }
+            }}
+            disableColumnFilter={true}
             rows={users?.data ? users?.data : []}
             columns={columns}
             disableRowSelectionOnClick
-            hideFooterPagination
-            hideFooter
+            hideFooterPagination={true}
+            hideFooter={true}
+            disableColumnMenu={true}
+            disableColumnSorting={true}
           />
 
           <StatusChangeDialog

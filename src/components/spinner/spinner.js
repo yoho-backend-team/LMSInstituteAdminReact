@@ -21,7 +21,6 @@ const Spinner = ({ show }) => {
       }}
     >
       <CircularProgress />
-      <LetterFillSpinner />
     </Box>
   );
 };

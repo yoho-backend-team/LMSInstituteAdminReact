@@ -72,7 +72,7 @@ const ModuleHeader = (props) => {
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
                     >
-                      <MenuItem value="">Select Status</MenuItem>
+                      <MenuItem value={null}>Select Status</MenuItem>
                       <MenuItem value="true">Active</MenuItem>
                       <MenuItem value="false">Inactive</MenuItem>
                     </TextField>
@@ -94,9 +94,9 @@ const ModuleHeader = (props) => {
                       renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                     />
                   </Grid>
-                  <Grid item sm={3} xs={12}>
+                  {/* <Grid item sm={3} xs={12}>
                     <TextField value={searchValue} fullWidth placeholder="Search Course" onChange={(e) => handleSearch(e)} />
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
                     <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 }, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>

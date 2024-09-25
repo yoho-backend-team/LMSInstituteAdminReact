@@ -3,7 +3,8 @@ import { HTTP_END_POINTS } from "api/client/http_end_points";
 
 class Client {
     admin = {
-      me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data)
+      me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data),
+      change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data)
     }
     permission = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),
@@ -128,7 +129,8 @@ class Client {
     }
     community ={
       getAll : (data) => HttpClient.get(HTTP_END_POINTS.community.all+data.branchid+'/all-community/'),
-      getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId)
+      getCommunityMessage : (data) => HttpClient.get(HTTP_END_POINTS.community.messages+data.chatId),
+      getMessages : (data) => HttpClient.get(HTTP_END_POINTS.community.get_all_messages + data.community)
     }
     ticket = {
       student_tickets : (data) => HttpClient.get(HTTP_END_POINTS.ticket.student_ticket,data),
@@ -172,7 +174,7 @@ class Client {
       get : (query) => HttpClient.get(HTTP_END_POINTS.activity.get,query)
     }
     reports = {
-      get : (query) => HttpClient.get(HTTP_END_POINTS.reports.get,query)
+      get : (query) => HttpClient.get(HTTP_END_POINTS.reports.get+query?.branch,query)
     }
   }
 export default new Client();

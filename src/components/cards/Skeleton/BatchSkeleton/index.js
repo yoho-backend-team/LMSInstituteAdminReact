@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 // import CardActions from '@mui/material/CardActions';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import CustomSkeleton from '..';
 
 const BatchSkeleton = () => {
   return (
@@ -12,66 +13,45 @@ const BatchSkeleton = () => {
       <Grid container spacing={2} sx={{ mt: 1 }}>
         {[...Array(6)].map((_, index) => (
           <Grid item xs={12} sm={6} lg={4} key={index}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Box sx={{ alignItems: 'center' }}>
-                    <Skeleton variant="text" width={150} />
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Skeleton variant="text" width={120} />
-                  </Box>
+            <Card
+              sx={{
+                width: 384,
+                height: 261,
+                padding: "24px",
+                borderRadius: 3,
+                boxShadow: 5,
+                position: 'relative',
+                overflow: 'visible',
+                background: '#fff',
+              }}
+            >
+              <Box sx={{ width: "336px", display: "flex", justifyContent: "space-between"}} >
+                 <Box sx={{ width: "127px", height: "19px"}} >
+                   <CustomSkeleton width={"100%"} height={"100%"} variant='text' />
+                 </Box>
+                 <Box sx={{ width: "22px", height: "22px", display: "flex",flexDirection: "column",gap:"5px"}} >
+                   <CustomSkeleton width={6} height={6}  variant="circular" />
+                   <CustomSkeleton width={6} height={6}  variant="circular" />
+                   <CustomSkeleton width={6} height={6}  variant="circular" />
+                 </Box>
+              </Box>
+              <Box sx={{ width: "336px",mt:"20px",height: "20px", }}>
+                <CustomSkeleton width={35} height={20} variant='text' />
+              </Box>
+              <Box sx={{ width: "336px", height: "24px", mt: "24px", display: "flex", justifyContent: "space-between"}} >
+                <Box sx={{ width: "112px", height: "24px"}}>
+                   <CustomSkeleton width={112} height={24} variant="rectangular" /> 
                 </Box>
-
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-                  {/* <Icon fontSize="1.25rem" icon="tabler:book" /> */}
-                  <Typography sx={{ ml: 1 }} variant="h5">
-                    <Skeleton width={200} />
-                  </Typography>
+                <Box sx={{ width: "112px", height: "24px"}} >
+                   <CustomSkeleton width={112} height={24} variant="rectangular" />
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                  {/* <Icon fontSize="1.25rem" icon="tabler:calendar-month" /> */}
-                  <Box sx={{ alignItems: 'center', mr: 3 }}>
-                    <Typography sx={{ color: 'text.secondary', ml: 1 }}>
-                      <Skeleton width={70} />
-                    </Typography>
-                  </Box>
-                  {/* <Icon fontSize="1.25rem" icon="tabler:calendar-month" /> */}
-                  <Box sx={{ alignItems: 'center' }}>
-                    <Typography sx={{ color: 'text.secondary', ml: 1 }}>
-                      <Skeleton width={70} />
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {/* <Icon fontSize="1.25rem" icon="tabler:users" /> */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
-                    <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                      <Skeleton width={70} />
-                    </Typography>
-                    {/* <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Students</Typography> */}
-                  </Box>
-                  {/* <Icon fontSize="1.25rem" icon="tabler:clock" /> */}
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography sx={{ my: 2, ml: 1 }} variant="h5">
-                      <Skeleton width={70} />
-                    </Typography>
-                    {/* <Typography sx={{ ml: 0.5, color: 'text.secondary' }}>Months</Typography> */}
-                  </Box>
-                </Box>
-
-                <Skeleton variant="determinate" width="100%" height={10} sx={{ mt: 2 }} />
-                <Box sx={{ gap: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Skeleton variant="rectangular" width={100} height={40} />
-                  </Box>
-                  <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-                    <Skeleton variant="rectangular" width={40} height={40} sx={{ marginRight: 1 }} />
-                    <Skeleton variant="rectangular" width={40} height={40} sx={{ marginRight: 1 }} />
-                    <Skeleton variant="rectangular" width={40} height={40} />
-                  </Box>
-                </Box>
-              </CardContent>
+              </Box>
+              <Box sx={{ width:"336px", mt: "24px"}}>
+                <CustomSkeleton width={336}  height={6} variant='text' borderRadius={"10px"} />
+              </Box>
+              <Box sx={{ width: "336px", height: "37px", mt: "24px" }}>
+                <CustomSkeleton width={142} height={37} />
+              </Box>
             </Card>
           </Grid>
         ))}

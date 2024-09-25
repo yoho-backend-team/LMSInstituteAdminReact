@@ -61,7 +61,7 @@ const AllActivity = () => {
       <Typography variant="h4"sx={{ml:1,mb:2}}>
         Recent Activities
       </Typography>
-      <Card sx={{ backgroundColor: "white", p: 3, height: 450, overflow: 'auto', boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+      <Card sx={{ backgroundColor: "white", p: 3, height: 450, overflow: 'auto', boxShadow: "none", border : "1px solid #E5E7EB", borderRadius: "8px" }}>
         <Box>
           <Card sx={{ mt: 2, backgroundColor: theme.palette.primary.main, opacity: 0.8, boxShadow: 'none' }}>
             {Logs.map((item, index) => {

@@ -49,7 +49,12 @@ const CourseCard = (props) => {
   const maxCharacters = 100;
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card sx={{ ...sx }}>
+      <Card sx={{ ...sx,
+       transition: "transform 0.3s ease",
+       ":hover" : {
+           transform: "translateY(-8px)",
+           boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"
+      } }}>
         <CardContent sx={{ pb: 0 }}>
           <CardMedia sx={{ position: 'relative', height: '10.5625rem', borderRadius: '5px', objectFit: 'cover' }} image={imageUrl}>
             <CustomChip

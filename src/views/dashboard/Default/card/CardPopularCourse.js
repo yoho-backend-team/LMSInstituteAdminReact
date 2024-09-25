@@ -3,6 +3,7 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { getImageUrl } from 'utils/imageUtils';
 
 const data = [
   {
@@ -43,7 +44,7 @@ const data = [
   }
 ];
 
-const CardPopularCourse = () => {
+const CardPopularCourse = ({courses}) => {
   const handleSortChange = (event) => {
     const selectedSortOption = event.target.value;
   };
@@ -54,7 +55,7 @@ const CardPopularCourse = () => {
         <Box component={'h2'} sx={{ fontSize: 16 }}>
           Popular Course
         </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ display: "none", justifyContent: 'center', alignItems: 'center' }}>
           <Typography sx={{ mr: 2, fontSize: 12 }}>Sort By:</Typography>
           <Select
             label="Sort By"
@@ -71,19 +72,22 @@ const CardPopularCourse = () => {
       </Box>
       <Box>
         <Box sx={{}}>
-          {limitedData.map((item, index) => (
+          {courses?.map((item, index) => (
             <Card
-              key={item.title}
+              key={item.course_name}
               sx={{
                 display: 'flex',
-                boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+                // boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+                border : "1px solid #E5E7EB",
+                borderRadius : "8px",
+                boxShadow : "none",
                 '& img': { mr: 2 },
                 alignItems: 'center',
-                mb: index !== limitedData.length - 1 ? 1.2 : undefined,
+                mb: index !== courses.length - 1 ? 1.2 : undefined,
                 padding: 2
               }}
             >
-              <img width={75} height={75} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.title} />
+              <img width={75} height={75} style={{ borderRadius: 20 }} src={getImageUrl(item?.image)} alt={item.course_name} />
 
               <Box
                 sx={{
@@ -98,13 +102,13 @@ const CardPopularCourse = () => {
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                   <Typography variant="p" sx={{ color: 'text.disabled', fontSize: 12, fontWeight: 'bold' }}>
-                    {item.title}
+                    {item.course_name}
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: '13px', mt: 1 }}>
-                    {item.subtitle}
+                  <Typography variant="h4" sx={{ fontWeight: 'bold', fontSize: '13px', mt: 1 ,maxHeight: "32px", overflow: "scroll"}}>
+                    {item.description}
                   </Typography>
                 </Box>
-                <Typography sx={{ color: 'text.secondary', fontSize: 12 }}>{item.amount}</Typography>
+                <Typography sx={{ color: 'text.secondary', fontSize: 12,  }}>{item?.coursemodules?.length || 0} Modules</Typography>
               </Box>
             </Card>
           ))}

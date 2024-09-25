@@ -16,6 +16,8 @@ import { getAllGroups } from 'features/user-management/groups-page/services/grou
 import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
 import { profilePlaceholder } from 'utils/placeholders';
+import { useSpinner } from 'context/spinnerContext';
+import client from 'api/client';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -93,11 +95,12 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   const [selectedImage, setSelectedImage] = useState('');
   const [imgSrc, setImgSrc] = useState(image);
   const [groups, setGroups] = useState([]);
+  const { show, hide } = useSpinner()
 
   useEffect(() => {
     getGroups();
   }, []);
-
+  console.log(userData,"userData")
   const getGroups = async () => {
     try {
       const result = await getAllGroups({institute_id:useInstitute().getInstituteId()});
@@ -125,7 +128,19 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
     }
   }));
 
-  const handleInputImageChange = (file) => {
+  const handleInputImageChange = async (file) => {
+    try {
+     show()
+     const { files } = file.target
+     const form_data = new FormData()
+     form_data.append("file",files)
+     const response = await client.file.upload(form_data)
+     
+    } catch (error) {
+      
+    }finally{
+      hide()
+    }
     const reader = new FileReader();
     const { files } = file.target;
     if (files && files.length !== 0) {

@@ -29,7 +29,7 @@ const tabData = [
   }
 ];
 
-const RevenueReport = () => {
+const RevenueReport = ({revenue}) => {
   const theme = useTheme();
   const colors = Array(9).fill(theme.palette.primary.main);
   const options = {
@@ -47,7 +47,7 @@ const RevenueReport = () => {
       }
     },
     legend: { show: false },
-    tooltip: { enabled: false },
+    tooltip: { enabled: true },
     dataLabels: {
       offsetY: -15,
       formatter: (val) => `${val}k`,
@@ -67,7 +67,7 @@ const RevenueReport = () => {
       }
     },
     grid: {
-      show: false,
+      show: true,
       padding: {
         top: 20,
         left: -5,
@@ -76,21 +76,25 @@ const RevenueReport = () => {
       }
     },
     xaxis: {
-      axisTicks: { show: false },
+      lines : { show: true },
+      axisTicks: { show: true },
       axisBorder: { color: theme.palette.divider },
       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
       labels: {
         style: {
-          colors: theme.palette.text.disabled,
+          // colors: theme.palette.text.disabled,
           fontFamily: theme.typography.fontFamily,
           fontSize: theme.typography.body2.fontSize
         }
       }
     },
     yaxis: {
+      lines : {
+        show : true
+      },
       labels: {
         offsetX: -15,
-        formatter: (val) => `$${val}k`,
+        formatter: (val) => `₹${val}k`,
         style: {
           colors: theme.palette.text.disabled,
           fontFamily: theme.typography.fontFamily,
@@ -103,7 +107,10 @@ const RevenueReport = () => {
         breakpoint: theme.breakpoints.values.sm,
         options: {
           plotOptions: {
-            bar: { columnWidth: '60%' }
+            bar: { 
+              columnWidth: '60%' ,
+              distributed: true
+            }
           },
           grid: {
             padding: { right: 20 }
@@ -118,21 +125,21 @@ const RevenueReport = () => {
       <Box component={'h2'} sx={{ fontSize: 16, mb: 2.5 }}>
         Revenue
       </Box>
-      <Card  sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+      <Card  sx={{ boxShadow : "none", border : "1px solid #E5E7EB", borderRadius: "8px"}} >
         <CardHeader
-          action={
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography sx={{ mr: 2, fontSize: 12 }}>Sort By:</Typography>
-              <CustomTextField select defaultValue={10} id="custom-select">
-                <MenuItem value={10}>Month</MenuItem>
-                <MenuItem value={20}>Year</MenuItem>
-              </CustomTextField>
-            </Box>
-          }
+          // action={
+          //   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          //     <Typography sx={{ mr: 2, fontSize: 12 }}>Sort By:</Typography>
+          //     <CustomTextField select defaultValue={10} id="custom-select">
+          //       <MenuItem value={10}>Month</MenuItem>
+          //       <MenuItem value={20}>Year</MenuItem>
+          //     </CustomTextField>
+          //   </Box>
+          // }
           sx={{ pb: 0 }}
         />
         <CardContent>
-          <ReactApexChart type="bar" options={options} series={tabData.find((tab) => tab.type === 'sales')?.series || []} />
+          <ReactApexChart type="bar" options={options} series={[{data:revenue}] || []} />
         </CardContent>
       </Card>
     </Box>

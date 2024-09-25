@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 import LetterFillSpinner from 'components/spinner/letterSpinner';
+import AllUserList from 'features/user-management/users-page/users-overview-page/components/UserList';
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -71,7 +72,7 @@ const UserList = () => {
         </Grid>
 
         {/* Display Skeleton or User Body Section based on loading state */}
-
+        {/* <AllUserList /> */}
         <Grid item xs={12}>
           <UserBodySection groups={groups} users={users} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
         </Grid>

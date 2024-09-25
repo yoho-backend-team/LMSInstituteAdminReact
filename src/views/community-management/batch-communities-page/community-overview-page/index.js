@@ -34,6 +34,7 @@ const Community = () => {
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { showSpinner,hideSpinner} = useSpinner()
+  const [messages,setMessages] =useState([])
 
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -182,6 +183,8 @@ const Community = () => {
             setCommunityDetails={setCommunityDetails}
             communityDetails={communityDetails}
             socket ={socket}
+            setMessages={setMessages}
+            messages={messages}
           />
           <ChatContent
             store={store}
@@ -200,6 +203,8 @@ const Community = () => {
             setChats={setChats}
             communityDetails={communityDetails}
             socket ={socket}
+            messages={messages}
+            setMessages={setMessages}
           />
         </Box>
       )}

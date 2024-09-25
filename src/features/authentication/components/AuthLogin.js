@@ -76,9 +76,6 @@ const FirebaseLogin = ({ ...others }) => {
           if(response?.otpVerify){
             hide()
             handleotppage()
-          }else{
-            hide()
-            toast.error(response?.message)
           }
           setStatus({ success: true });
           setSubmitting(false);
