@@ -29,14 +29,53 @@ const Header = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between'
 }));
 
+// Validation Schema for Payment History
+const paymentHistoryValidationSchema = yup.object().shape({
+  paid_amount: yup.number()
+    .required('Paid amount is required')
+    .typeError('Paid Amount is required'),
+  balance: yup.number()
+    .required('Balance is required')
+    .typeError('Balance is required'),
+  payment_date: yup.string()
+    .required('Payment date is required'),
+  transaction_id: yup.number()
+    .required('Transaction ID is required')
+    .typeError('Transaction ID must be greater than 0'),
+  payment_method: yup.string()
+    .oneOf(['offline', 'online'], 'Invalid payment method')
+    .default('offline'),
+    duepaymentdate: yup.string()
+    .nullable()
+    .typeError('Due Payment Date must be a valid date')
+});
+
+
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
-  branch: yup.string().required('Branch is required'),
   batch: yup.object().required('Batch is required'),
-  student: yup.string().required('Students is required'),
-  payment_date: yup.string().required('Payment Date is required'),
-  transaction_id: yup.number().required('Transaction Id is required').typeError('Transaction Id must be a number'),
-  paidAmount: yup.number().typeError('Paid Amount must be a number').required('Paid Amount is required')
+  branch: yup.string().required('Branch is required'),
+  student: yup.string().required('Student is required'),
+  paid_amount: yup.number()
+  .required('Paid amount is required')
+  .typeError('Paid Amount is required'),
+balance: yup.number()
+  .required('Balance is required')
+  .typeError('Balance is required'),
+payment_date: yup.string()
+  .required('Payment date is required'),
+transaction_id: yup.number()
+  .required('Transaction ID is required')
+  .typeError('Transaction ID must be greater than 0'),
+payment_method: yup.string()
+  .oneOf(['offline', 'online'], 'Invalid payment method')
+  .default('offline'),
+  duepaymentdate: yup.string()
+  .nullable()
+  .typeError('Due Payment Date must be a valid date'),
+  payment_history: yup.array()
+    .of(paymentHistoryValidationSchema)
+    .min(1, 'At least one payment history entry is required')
 });
 
 const defaultValues = {
@@ -44,7 +83,22 @@ const defaultValues = {
   course: '',
   batch: null,
   student: '',
-  payment_date: new Date()
+  paid_amount: 0,
+  balance: 0,
+  payment_date: new Date(),
+  transaction_id: 1,
+  payment_method: 'offline',
+  duepaymentdate: '',
+  payment_history: [
+    {
+      paid_amount: 0,
+      balance: 0,
+      payment_date: new Date(),
+      transaction_id: 1,
+      payment_method: 'offline',
+      duepaymentdate: '',
+    },
+  ]
 };
 
 const FeesAddDrawer = (props) => {
@@ -132,7 +186,7 @@ const FeesAddDrawer = (props) => {
     var year = originalDate.getFullYear();
     var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-    var formattedDateString = year + '-' + month + '-' + day;
+    var formattedDateString = month + '-' + day + '-' + year;
     return formattedDateString;
   }
 
@@ -141,7 +195,7 @@ const FeesAddDrawer = (props) => {
     toggle();
     reset();
   };
-
+  console.log(errors,"errors")
   const onSubmit = async (data) => {
     show()
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
@@ -152,12 +206,28 @@ const FeesAddDrawer = (props) => {
       branch_id : branch[0].uuid,
       institute_id: useInstitute().getInstituteId(),
       batch_name: data.batch._id,
-      paid_amount: data.paidAmount,
-      balance: data.balance,
+      // paid_amount: data.paidAmount,
+      // balance: data.balance,
       course_name: data.batch.course.uuid,
-      amount: data.amount,
-      transaction_id : data.transaction_id,
-      payment_date: new Date()
+      paid_amount: data.paid_amount,
+      balance: data.balance,
+      payment_date: new Date(),
+      transaction_id: data.transaction_id,
+      payment_method: data.payment_method,
+      duepaymentdate: data.duepaymentdate,
+      // amount: data.amount,
+      // transaction_id : data.transaction_id,
+      // payment_date: new Date(),
+      payment_history: [
+        {
+          paid_amount: data.paid_amount,
+        balance: data.balance,
+        payment_date: new Date(),
+        transaction_id: data.transaction_id,
+        payment_method: data.payment_method,
+        duepaymentdate: data.duepaymentdate
+      },
+      ]
     };
 
     const result = await addStudentFee(InputData);
@@ -367,6 +437,7 @@ const FeesAddDrawer = (props) => {
                   name="payment_date"
                   control={control}
                   rules={{ required: 'Payment Date field is required' }}
+                  defaultValue={new Date()}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
                       selected={value}
@@ -404,7 +475,7 @@ const FeesAddDrawer = (props) => {
 
               <Grid item xs={12} sm={12}>
                 <Controller
-                  name="paidAmount"
+                  name="paid_amount"
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -413,8 +484,8 @@ const FeesAddDrawer = (props) => {
                       fullWidth
                       label="Paid Amount"
                       type="number"
-                      error={Boolean(errors.paidAmount)}
-                      helperText={errors.paidAmount?.message}
+                      error={Boolean(errors.paid_amount)}
+                      helperText={errors.paid_amount?.message}
                     />
                   )}
                 />
@@ -436,6 +507,26 @@ const FeesAddDrawer = (props) => {
                     />
                   )}
                 />
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 2 }}>
+                <Controller
+                  name="duepaymentdate"
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <DatePicker
+                      selected={value}
+                      id="date-time-picker"
+                      timeFormat="HH:mm"
+                      className="full-width-datepicker"
+                      onChange={onChange}
+                      placeholderText="Click to select a date"
+                      customInput={<CustomInput label="duepaymentdate" />}
+                    />
+                  )}
+                />
+                {errors.payment_date && (
+                  <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.payment_date?.message}</p>
+                )}
               </Grid>
             </Grid>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>

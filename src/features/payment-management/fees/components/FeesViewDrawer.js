@@ -17,6 +17,10 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
     toggle();
   };
 
+  const history1 = selectedRowDetails?.payment_history?.[0] || [];
+
+
+
   return (
     <>
       <Drawer
@@ -70,11 +74,16 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
               <Typography variant="h4" sx={{ mt: 6, mb: 3, color: 'text.main' }}>
                 Student Deatails :
               </Typography>
-
+              
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+              
+                
+              
                 <Typography sx={{ width: 150 }}>Student Id : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.transaction_id}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{history1.transaction_id}</Typography>
+             
               </Box>
+            
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Student Name : </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.student?.full_name}</Typography>
@@ -85,12 +94,14 @@ const FeesViewDrawer = ({ open, toggle, selectedRowDetails }) => {
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Paid Amount : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.paid_amount}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{history1?.paid_amount}</Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Payment Date : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.payment_date}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{history1?.payment_date}</Typography>
+            
               </Box>
+               
             </Grid>
           )}
         </CardContent>

@@ -79,7 +79,6 @@ const userStatusObj = {
 };
 
 const FeesTable = () => {
-  // ** State
   const [dates, setDates] = useState([]);
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -186,6 +185,10 @@ const FeesTable = () => {
     setFeesViewUserOpen(!feesViewOpen);
   };
 
+  // const history = StudentFees?.payment_history || [];
+  // console.log(history,'history')
+  // console.log(StudentFees,"selectedRows")
+
   const defaultColumns = [
     {
       flex: 0.1,
@@ -203,7 +206,12 @@ const FeesTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.transaction_id}</Typography>
+      
+      renderCell: ({ row }) => {
+        // Assuming payment_history is an array and you want to show the first entry
+        const paymentHistory = row?.payment_history?.[0] || {};
+        return <Typography sx={{ color: 'text.secondary' }}>{paymentHistory.transaction_id || 'N/A'}</Typography>;
+      }
     },
     {
       flex: 1.25,
@@ -231,14 +239,22 @@ const FeesTable = () => {
       minWidth: 120,
       field: 'total',
       headerName: 'Amount Paid',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${row.paid_amount || 0}`}</Typography>
+      renderCell: ({ row }) => {
+        // Assuming payment_history is an array and you want to show the first entry
+        const paymentHistory = row?.payment_history?.[0] || {};
+        return <Typography sx={{ color: 'text.secondary', ml: 2 }}>{`$${paymentHistory.paid_amount || 0}`}</Typography>;
+      }
     },
     {
       flex: 1.25,
       minWidth: 150,
       field: 'issuedDate',
       headerName: 'Issued Date',
-      renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row.payment_date}</Typography>
+      renderCell: ({ row }) => {
+        // Assuming payment_history is an array and you want to show the first entry
+        const paymentHistory = row?.payment_history?.[0] || {};
+        return <Typography sx={{ color: 'text.secondary' }}>{paymentHistory.payment_date || 'N/A'}</Typography>;
+      }
     },
     {
       flex: 1.25,
@@ -319,6 +335,8 @@ const FeesTable = () => {
       )
     }
   ];
+
+  console.log(selectedRows,"selectedros")
 
   return (
     <DatePickerWrapper>
