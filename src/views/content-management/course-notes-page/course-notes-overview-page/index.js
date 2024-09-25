@@ -7,11 +7,13 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
+import NoteSkelton from 'components/cards/Skeleton/ContentSkeleton/NoteSkelton';
 import Icon from 'components/icon';
 import { default as NotesDeleteModal, default as StatusChangeDialog } from 'components/modal/DeleteModel';
 import OptionsMenu from 'components/option-menu';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import NotesAddDrawer from 'features/content-management/course-contents/course-notes-page/components/NotesAddDrawer';
+import NotesCard from 'features/content-management/course-contents/course-notes-page/components/NotesCard';
 import NotesEdit from 'features/content-management/course-contents/course-notes-page/components/NotesEdit';
 import NotesHeader from 'features/content-management/course-contents/course-notes-page/components/NotesTableHeader';
 import NotesView from 'features/content-management/course-contents/course-notes-page/components/NotesView';
@@ -35,15 +37,17 @@ const Notes = () => {
   const [refetch, setRefetch] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
+  const [page,setPage] = useState("1")
 
   const userStatusObj = {
     true: 'success',
     false: 'error'
   };
 
-  const handleStatusValue = (event, users) => {
+  const handleStatusValue = (event, note) => {
+    console.log(note,"users")
     setStatusChangeDialogOpen(true);
-    setStatusValue(users);
+    setStatusValue(note);
   };
 
   const handleStatusChangeApi = async () => {
@@ -52,6 +56,7 @@ const Notes = () => {
       is_active: !statusValue?.is_active,
       id: statusValue?.uuid
     };
+    console.log(data,statusValue,selectedRow)
     const response = await updateCourseNotesStatus(data);
 
     if (response.success) {
@@ -82,7 +87,7 @@ const Notes = () => {
       toast.error(result.message);
     }
   };
-  ////
+  
 
   const dispatch = useDispatch();
   const Notes = useSelector(selectCourseNotes);
@@ -113,158 +118,6 @@ const Notes = () => {
     setEditUserOpen(!editUserOpen);
   };
 
-  const RowOptions = ({ row }) => {
-    return (
-      <OptionsMenu
-        menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-        iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-        options={[
-          {
-            text: 'View',
-            icon: <Icon icon="tabler:eye" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                setViewModalOpen(true);
-                handleRowClick(row);
-              }
-            }
-          },
-          {
-            text: 'Edit',
-            icon: <Icon color="primary" icon="tabler:edit" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                toggleEditUserDrawer();
-                handleRowClick(row);
-              }
-            }
-          },
-          {
-            text: 'Delete',
-            icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
-            menuItemProps: {
-              onClick: () => {
-                handleDelete();
-                handleRowClick(row);
-              }
-            }
-          }
-        ]}
-      />
-    );
-  };
-
-  const columns = [
-    {
-      // flex: 0.4,
-      minWidth: 150,
-      headerName: 'Id',
-      field: 'employee_id',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 1,
-      minWidth: 320,
-      field: 'title',
-      headerName: 'Title',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', my: 1.5 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                sx={{
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.title}
-              </Typography>
-              <Typography
-                sx={{
-                  // textAlign: 'justify',
-                  color: 'text.secondary',
-                  fontSize: '0.75rem',
-                  mt: 1
-                }}
-              >
-                {row?.description}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-
-    {
-      // flex: 1.5,
-      minWidth: 220,
-      field: 'course',
-      headerName: 'course',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography
-              sx={{
-                color: 'text.secondary',
-                textTransform: 'capitalize'
-              }}
-            >
-              {row?.course?.course_name}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-
-    {
-      // flex: 0.4,
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <div>
-            <TextField
-              size="small"
-              select
-              value={row?.is_active}
-              label="status"
-              id="custom-select"
-              sx={{
-                color: userStatusObj[row?.is_active]
-              }}
-              onChange={(e) => handleStatusValue(e, row)}
-              SelectProps={{
-                sx: {
-                  borderColor: row.is_active? 'success' : 'error',
-                  color: userStatusObj[row?.is_active]
-                }
-              }}
-            >
-              <MenuItem value={"true"}>Active</MenuItem>
-              <MenuItem value={"false"}>Inactive</MenuItem>
-            </TextField>
-          </div>
-        );
-      }
-    },
-    {
-      // flex: 0.4,
-      minWidth: 180,
-      sortable: false,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions row={row} />
-    }
-  ];
 
   return (
     <>
@@ -274,36 +127,59 @@ const Notes = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Card>
+          <Grid>
             {NotesLoading ? (
-              <ContentSkeleton />
+              <NoteSkelton />
             ) : (
-              <DataGrid
-                sx={{ p: 2 }}
-                autoHeight
-                getRowHeight={() => 'auto'}
-                rows={Notes}
-                columns={columns}
-                disableRowSelectionOnClick
-                hideFooterPagination
-                hideFooter
-              />
+              <Grid container xs={12} spacing={2} >
+                {
+                  Notes?.data?.map((note,index) => (
+                     <Grid item xs={4}>
+                       <NotesCard
+                        page={page}
+                        index={index}
+                        initialStatus={note?.is_active}
+                        name={note?.title}
+                        note={note}
+                        courseName={note?.course?.course_name}
+                        handleRowClick={handleRowClick}
+                        handleStatusValue={handleStatusValue}
+                        handleDelete={handleDelete}
+                        setViewModalOpen={setViewModalOpen}
+                        toggleEditUserDrawer={toggleEditUserDrawer}
+                       />
+                     </Grid>
+                  ))
+                }
+              </Grid>
+              // <DataGrid
+              //   sx={{ p: 2 }}
+              //   autoHeight
+              //   getRowHeight={() => 'auto'}
+              //   rows={Notes}
+              //   columns={columns}
+              //   disableRowSelectionOnClick
+              //   hideFooterPagination
+              //   hideFooter
+              // />
             )}
 
-            {Notes?.last_page !== 1 && (
+            {!NotesLoading && Notes?.last_page !== 1 && (
               <CardContent>
                 <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
                   <Pagination
                     count={Notes?.last_page}
+                    page={page}
                     color="primary"
                     onChange={(e, page) => {
                       dispatch(getAllCourseNotes({ branch: selectedBranchId, page: page }));
+                      setPage(page)
                     }}
                   />
                 </Grid>
               </CardContent>
             )}
-          </Card>
+          </Grid>
         </Grid>
 
         <NotesAddDrawer setRefetch={setRefetch} open={addUserOpen} toggle={toggleAddUserDrawer} branches={activeBranches} />

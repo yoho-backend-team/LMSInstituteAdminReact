@@ -71,22 +71,11 @@ export const updateUserStatus = async (data) => {
 };
 export const userChangePassword = async (data) => {
   try {
-    const response = await axios.put(`${USER_API_ENDPOINT}/password-update`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.admin.change_password(data)
 
-    if (response.data.status) {
-      return { success: true, message: 'Password Changed Successfully' };
-    } else {
-      return { success: false, message: response.data.message };
-    }
+    return { success: true, message: 'Password Changed Successfully' };
   } catch (error) {
-    console.error('Error in addUser:', error);
-    throw error;
+    throw new Error(error?.response?.data?.message)
   }
 };
 export const updateUser = async (data) => {

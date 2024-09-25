@@ -97,9 +97,9 @@ const NotesHeader = (props) => {
                       renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                     />
                   </Grid>
-                  <Grid item sm={3} xs={12}>
+                  {/* <Grid item sm={3} xs={12}>
                     <TextField value={searchValue} fullWidth placeholder="Search Course" onChange={(e) => handleSearch(e)} />
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
                     <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 }, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>

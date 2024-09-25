@@ -171,41 +171,85 @@ const GroupManagement = () => {
     return groups?.data?.map((item, index) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         {/* Card content here */}
-        <Card sx={{ minHeight: 175 , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}>
+        <Card
+          sx={{
+            minHeight: 185,
+            boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+            borderRadius: "15px",
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+            '&:hover': {
+              boxShadow: "0 .45rem 1.25rem 0 rgba(38,43,67,.20)",
+              transform: 'scale(1.02)',
+            },
+          }}
+        >
           <CardContent>
-            <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 32 }}>
-              <Typography sx={{ color: 'text.secondary' }}>{`Total ${item.users?.length} users`}</Typography>
+            {/* Card Header */}
+            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 32 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {`Total ${item.users?.length} users`}
+              </Typography>
+              {/* Avatar Group with Tooltip */}
               <AvatarGroup
                 max={4}
                 className="pull-up"
                 sx={{
-                  '& .MuiAvatar-root': { width: 32, height: 32, fontSize: (theme) => theme.typography.body2.fontSize }
+                  '& .MuiAvatar-root': {
+                    width: 36,
+                    height: 36,
+                    fontSize: '14px',
+                    border: '2px solid #fff',
+                    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
+                    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.25)',
+                    },
+                  },
                 }}
               >
-              {item?.users?.map((user, index) => (
-                  <Tooltip key={index} title={user?.name}>
-                    <Avatar alt={item?.name} src={`${user?.image?getImageUrl(user?.image):imagePlaceholder}`} />
+                {item?.users?.map((user, index) => (
+                  <Tooltip
+                    key={index}
+                    title={<Typography variant="body2" color="inherit">{user?.first_name + user?.last_name}</Typography>}
+                    arrow
+                    placement="top"
+                  >
+                    <Avatar
+                      alt={user?.name}
+                      src={`${user?.image ? getImageUrl(user?.image) : imagePlaceholder}`}
+                    />
                   </Tooltip>
-              ))}
+                ))}
               </AvatarGroup>
             </Box>
+            {/* Card Body */}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography variant="h4" sx={{ mb: 1 }}>
+              <Typography variant="h5" sx={{ mb: 1, fontWeight: 600, color: 'text.primary' }}>
                 {item?.identity}
               </Typography>
             </Box>
+            {/* Footer with Select and Options */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
               <TextField
                 size="small"
                 select
-                width={100}
                 label="Status"
-                SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
+                SelectProps={{
+                  value: item?.is_active,
+                  onChange: (e) => handleStatusValue(e, item),
+                }}
+                sx={{
+                  width: 120,
+                  transition: 'color 0.3s ease, background-color 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(38,43,67,.05)',
+                  },
+                }}
               >
                 <MenuItem value="true">Active</MenuItem>
                 <MenuItem value="false">Inactive</MenuItem>
               </TextField>
-
               <OptionsMenu
                 menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
                 iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -215,8 +259,8 @@ const GroupManagement = () => {
                     menuItemProps: {
                       component: Link,
                       to: 'groups/view',
-                      state: { group: item }
-                    }
+                      state: { group: item },
+                    },
                   },
                   {
                     text: 'Delete',
@@ -224,17 +268,17 @@ const GroupManagement = () => {
                       onClick: () => {
                         setSelectedDeleteGroupId(item?.uuid);
                         setDeleteDialogOpen(true);
-                      }
-                    }
-                  }, 
+                      },
+                    },
+                  },
                   {
                     text: 'Edit',
                     menuItemProps: {
                       component: Link,
                       to: `groups/${item?.id}/edit`,
-                      state: { id: item?.id, name: item?.identity }
-                    }
-                  }
+                      state: { id: item?.id, name: item?.identity },
+                    },
+                  },
                 ]}
               />
             </Box>
@@ -243,7 +287,10 @@ const GroupManagement = () => {
       </Grid>
     ));
   }, [groups?.data, handleStatusValue]);
-
+  
+  
+  
+  
   return (
     <Grid>
       <Header title="Groups" search={search} setSearch={setSearch} handleSearch={handleSearch} handleSearchKeyChange={handleSearchKeyChange} searchQuery={searchQuery} />
@@ -253,33 +300,78 @@ const GroupManagement = () => {
       ) : (
         <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
           <Grid item xs={12} sm={6} lg={4}>
-            <Card sx={{ cursor: 'pointer', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
-              <Grid container sx={{ height: '100%' }}>
-                <Grid item xs={5}>
-                  <Box
-                    sx={{
-                      height: '100%',
-                      minHeight: 175,
-                      display: 'flex',
-                      alignItems: 'flex-end',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <img height={122} alt="add-role" src={AddRoleAvatar} />
-                  </Box>
-                </Grid>
-                <Grid item xs={7}>
-                  <CardContent sx={{ pl: 0, height: '100%' }}>
-                    <Box sx={{ textAlign: 'right' }}>
-                      <Button variant="contained" component={Link} to={'groups/add'} sx={{ mb: 3, whiteSpace: 'nowrap' }}>
-                        Add New Group
-                      </Button>
-                      <Typography sx={{ color: 'text.secondary' }}>Add group, if it doesnt exist.</Typography>
-                    </Box>
-                  </CardContent>
-                </Grid>
+          <Card
+            sx={{
+              cursor: 'pointer',
+              boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              minHeight: '185px',
+              '&:hover': {
+                boxShadow: "0 .45rem 1.25rem 0 rgba(38,43,67,.20)",
+                transform: 'scale(1.02)',
+              }
+            }}
+          >
+            <Grid container sx={{ height: '100%' }}>
+              {/* Image Section */}
+              <Grid item xs={5}>
+                <Box
+                  sx={{
+                    height: '100%',
+                    minHeight: 175,
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'center',
+                    transition: 'transform 0.3s ease',
+                    '&:hover img': {
+                      transform: 'scale(1.05)',
+                    }
+                  }}
+                >
+                  <img 
+                    height={122} 
+                    alt="add-role" 
+                    src={AddRoleAvatar}
+                    style={{ transition: 'transform 0.3s ease' }} 
+                  />
+                </Box>
               </Grid>
-            </Card>
+              
+              {/* Content Section */}
+              <Grid item xs={7}>
+                <CardContent sx={{ pl: 0, height: '100%' }}>
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Button
+                      variant="contained"
+                      component={Link}
+                      to={'groups/add'}
+                      sx={{ 
+                        mb: 3, 
+                        whiteSpace: 'nowrap',
+                        transition: 'background-color 0.3s ease',
+                        '&:hover': { backgroundColor: '#5A67D8' } // Customize hover color here
+                      }}
+                    >
+                      Add New Group
+                    </Button>
+                    
+                    {/* Typography */}
+                    <Typography
+                      sx={{
+                        color: 'text.secondary',
+                        fontWeight: 500,  // Slightly bold
+                        transition: 'color 0.3s ease',
+                        '&:hover': { color: 'text.primary' },  // Change color on hover
+                      }}
+                    >
+                      Add group, if it doesn't exist.
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Grid>
+            </Grid>
+          </Card>
+
           </Grid>
           {renderCards}
           {groups?.last_page !== 1 && (

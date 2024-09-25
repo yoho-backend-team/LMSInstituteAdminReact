@@ -14,10 +14,12 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { addCourseModule } from '../services/moduleServices';
+import { useSpinner } from 'context/spinnerContext';
 
 const CourseModuleAddDrawer = (props) => {
   const { open, toggle, branches,setRefetch } = props;
   const [activeCourse, setActiveCourse] = useState([]);
+  const { show, hide } = useSpinner()
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
@@ -87,16 +89,17 @@ const CourseModuleAddDrawer = (props) => {
       description: data.description,
       video: data.video_url
     };
-
-
     try {
+      show()
       const result = await addCourseModule(inputData);
         setRefetch((state) => !state);
         toast.success(result.message);
         reset();
         toggle();
     } catch (error) {
-      throw error
+      toast.error(error?.message)
+    }finally{
+      hide()
     }
   };
 

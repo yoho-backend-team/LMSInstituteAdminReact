@@ -16,7 +16,7 @@ import * as yup from 'yup';
 import CoursePdfInput from '../../components/PdfInput';
 import { addCourseStudyMaterial } from '../services/studyMaterialServices';
 import { useInstitute } from 'utils/get-institute-details';
-import client from 'api/client';
+import { useSpinner } from 'context/spinnerContext';
 
 const StudyMaterialAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
@@ -25,6 +25,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [files, setFiles] = useState([]);
+  const { show, hide } = useSpinner()
 
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
@@ -83,31 +84,28 @@ const StudyMaterialAddDrawer = (props) => {
   });
 
   const onSubmit = async (data) => {
-    const Study_data = {
-      title : data.title,
-      description : data.description,
-      branch : data.branch._id,
-      course : data.course._id,
-      institute : useInstitute().getInstituteId(),
-      file : data.pdf_file
-    }
-  
-    const result = await addCourseStudyMaterial(Study_data);
-
-    if (result.success) {
+    try {
+      show()
+      console.log(data,"data")
+      const Study_data = {
+        title : data.title,
+        description : data.description,
+        branch : data.branch.uuid,
+        course : data.course._id,
+        institute : useInstitute().getInstituteId(),
+        file : data.pdf_file
+      }
+    
+      const result = await addCourseStudyMaterial(Study_data);
       setRefetch((state) => !state);
       toast.success(result.message);
       setstudymaterialPdf("")
       reset();
       toggle();
-    } else {
-      let errorMessage = '';
-      Object.values(result.message).forEach((errors) => {
-        errors.forEach((error) => {
-          errorMessage += `${error}\n`;
-        });
-      });
-      toast.error(errorMessage.trim());
+    } catch (error) {
+      toast.error(error?.message);
+    }finally{
+      hide()
     }
   };
 

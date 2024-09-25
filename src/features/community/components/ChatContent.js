@@ -43,9 +43,9 @@ const ChatContent = (props) => {
     selectedBatch,
     setChats,
     communityDetails,
-    socket
+    socket,setMessages,messages
   } = props;
-  const [messages,setMessages] =useState([])
+  
   const [permissionGranted, setPermissionGranted] = useState(false);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ const ChatContent = (props) => {
       // }
     });
   },[])
-
+  console.log(messages,"messages")
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;

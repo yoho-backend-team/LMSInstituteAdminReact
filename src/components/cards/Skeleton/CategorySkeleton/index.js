@@ -1,259 +1,55 @@
-// material-ui
-import { Card, CardContent, Grid,  } from '@mui/material';
-import Skeleton from '@mui/material/Skeleton';
+import { Card, CardContent, Grid, Box  } from '@mui/material';
+import CustomSkeleton from '..';
 
-// ==============================|| SKELETON - EARNING CARD ||============================== //
 
 const CategorySkeleton = () => (
-  <>
-    {/* <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title={<Skeleton height={25} width={200} />} />
-          <CardContent sx={{ pt: 0 }}>
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={56} animation="wave" />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Skeleton variant="rectangular" height={56} animation="wave" />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid> */}
-    {/* <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid item xs={12}>
-        <Grid container justifyContent={'space-between'}>
-          <Grid item xs={12} sm={3}>
-            <Skeleton variant="rounded" height={50} width={410} animation="wave" />
+      
+        <Grid container spacing={2} sx={{ marginLeft: "10px", marginTop: "20px"}} >
+        {Array.from({ length: 10 }).map((_, i) => (
+          <Grid item xs={4} key={i}>
+            <Card
+              sx={{
+                width: "388px",
+                height: "300px",
+                borderRadius: "15px",
+                // boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+                position: 'relative',
+                overflow: 'visible',
+                background: '#fff',
+              }}
+            >
+              <Box
+                sx={{
+                  borderTopLeftRadius: '15px',
+                  borderTopRightRadius: '15px',
+                }}
+              >
+                <Box>
+                  <CustomSkeleton variant="rectangular" height={150} width={"100%"} />
+                </Box>
+              </Box>
+  
+              <CardContent sx={{ display: "flex", justifyContent: "space-between", flexDirection: "column",gap: "30px"}} >
+              <Box display="flex" alignItems="center" mb={1}>
+                  <CustomSkeleton variant="text" width={100} height={21} />
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
+                  <Box display="flex" alignItems="center" mb={1}>
+                    <CustomSkeleton variant="text" width={142} height={38} />
+                  </Box>
+  
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <CustomSkeleton width={4} height={4} borderRadius={2} />
+                    <CustomSkeleton width={4} height={4} borderRadius={2} />
+                    <CustomSkeleton width={4} height={4} borderRadius={2} />
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
           </Grid>
-          <Grid item display={'flex'} justifyContent={'flex-end'} xs={12} sm={3}>
-            <Skeleton variant="rounded" height={40} width={150} animation="wave" />
-          </Grid>
-        </Grid>
+        ))}
       </Grid>
-    </Grid> */}
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Card>
-          <CardContent>
-            <Grid container direction="column">
-              <Grid item>
-                <Grid container justifyContent="space-between">
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={44} height={44} />
-                  </Grid>
-                  <Grid item>
-                    <Skeleton variant="rectangular" width={34} height={34} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" sx={{ my: 2 }} height={40} />
-              </Grid>
-              <Grid item>
-                <Skeleton variant="rectangular" height={30} />
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
-  </>
+      
 );
 
 export default CategorySkeleton;

@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField, InputAdornment } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
@@ -23,16 +23,21 @@ const CategoryCardHeader = (props) => {
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      dispatch(getAllCourseCategories({ search: searchInput }));
       setSearchValue(searchInput);
     },
-    [dispatch]
+    []
   );
+
+  // Function to trigger search on icon click
+  const triggerSearch = useCallback(() => {
+    dispatch(getAllCourseCategories({ search: searchValue }));
+  }, [dispatch, searchValue]);
+
   const handleAddClose = () => {
     setAddModalOpen(false);
   };
 
-  const handleAdd = (itemId) => {
+  const handleAdd = () => {
     setAddModalOpen(true);
   };
 
@@ -40,25 +45,67 @@ const CategoryCardHeader = (props) => {
     <>
       <Box
         sx={{
-          pb: 1,
+          pb: 2,
           pt: 3,
+          px: 2,
           width: '100%',
           display: 'flex',
+          marginTop: "10px",
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          backgroundColor: 'white',
+          borderRadius: 2,
+          boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
         }}
       >
         <TextField
           value={searchValue}
-          sx={{
-            width: 400
-          }}
+          onChange={handleSearch}
           placeholder="Search Category"
-          onChange={(e) => handleSearch(e)}
+          variant="outlined"
+          size="small"
+          sx={{
+            width: 400,
+            backgroundColor: '#ffffff',
+            borderRadius: 1,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#e0e0e0',
+              },
+              '&:hover fieldset': {
+                borderColor: '#bdbdbd',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#0CCE7F',
+              },
+            },
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Icon
+                  icon="tabler:search"
+                  color="action"
+                  onClick={triggerSearch}
+                  sx={{ cursor: 'pointer' }}
+                />
+              </InputAdornment>
+            ),
+          }}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button onClick={() => handleAdd()} variant="contained" color="primary" sx={{ backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865"} }} startIcon={<Icon icon="tabler:plus" />}>
+          <Button
+            onClick={handleAdd}
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: "#0CCE7F",
+              ":hover": { backgroundColor: "#0AA865" },
+              ml: 2,
+            }}
+            startIcon={<Icon icon="tabler:plus" />}
+          >
             Add New Category
           </Button>
         </Box>

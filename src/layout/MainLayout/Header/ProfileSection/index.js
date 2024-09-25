@@ -39,7 +39,7 @@ import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import { IconLogout, IconSearch, IconSettings, IconUser, IconUserCircle } from '@tabler/icons';
 import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from 'utils/check-auth-state';
 import { getImageUrl } from 'utils/imageUtils';
@@ -264,9 +264,22 @@ const ProfileSection = () => {
                           }}
                         >
                           <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem" />
+                            <IconUserCircle stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                          <ListItemText primary={<Typography variant="body2">Profile</Typography>} />
+                        </ListItemButton>
+                        <ListItemButton
+                         sx={{ borderRadius: `${customization.borderRadius}px` }}
+                         selected={selectedIndex === 1}
+                          onClick={(event) => {
+                            handleListItemClick(event, 1, '#');
+                            navigate("/institute-management/settings")
+                          }}
+                        >
+                           <ListItemIcon>
+                           <IconSettings stroke={1.5} size="1.3rem" />
+                           </ListItemIcon>
+                           <ListItemText primary={<Typography variant='body2' >Settings</Typography>}></ListItemText>
                         </ListItemButton>
                         {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}

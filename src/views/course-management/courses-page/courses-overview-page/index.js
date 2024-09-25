@@ -47,7 +47,7 @@ const Courses = () => {
         )}
 
         {/* Pagination */}
-        {courses?.last_page !== 1 && (
+        {courses?.last_page !== 1 && !courseLoading && (
           <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination
               count={courses?.last_page}

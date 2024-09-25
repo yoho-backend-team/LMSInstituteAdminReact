@@ -33,7 +33,7 @@ const Categories = () => {
         <CategoryFilter selectedBranchId={selectedBranchId} />
         <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
       </Grid>
-      {categoriesLoading ? (
+      {categoriesLoading  ? (
         <CategorySkeleton />
       ) : (
         <Grid item xs={12}>

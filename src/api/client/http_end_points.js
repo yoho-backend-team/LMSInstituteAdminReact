@@ -24,7 +24,8 @@ const generateEndpoints = () => {
     
     return {
         admin  : {
-          me : `/api/institutes/auth/admin/me`
+          me : `/api/institutes/auth/admin/me`,
+          change_password : "/api/institutes/auth/admin/change-password"
         },
         permission : {
             getAll : `/api/admin/institutes/permissions/all`,
@@ -67,11 +68,11 @@ const generateEndpoints = () => {
         },
         study_material : {
             get : "api/institutes/study-material/",
-            update_status : "/api/institutes/study-material/update-status/"
+            update_status : "/api/institutes/study-material/"
         },
         notes : {
          index : '/api/institutes/course/note',
-         update_status : '/api/institutes/course/note/update-status/'
+         update_status : '/api/institutes/course/note/update/'
         },
         batch : {
             create : `/api/institutes/${instituteId}/branches/`,
@@ -132,7 +133,8 @@ const generateEndpoints = () => {
         },
         community : {
             all : `/api/institutes/community/${instituteId}/branches/`,
-            messages : `/api/institutes/community/messages/`
+            messages : `/api/institutes/community/messages/`,
+            get_all_messages : `/api/institutes/community/messages/all/`
         },
         ticket : {
             student_ticket : `/api/institutes/student-ticket/getalll`,
@@ -169,7 +171,7 @@ const generateEndpoints = () => {
             get : "/api/institutes/user/activity"
         },
         reports : {
-            get : `/api/institutes/${instituteId}/report/${branchId}`
+            get : `/api/institutes/${instituteId}/report/`
         }
     };
 };

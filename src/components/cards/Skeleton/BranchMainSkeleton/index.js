@@ -1,49 +1,37 @@
-import { Skeleton } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { Box, Grid, Typography, Card } from '@mui/material';
+import CustomWaveSkeleton from './customSkelton';
 
-const BranchMainSkeleton = () => {
+const BranchCardSkeleton = () => {
   return (
     <Grid container spacing={2} sx={{ mt: 0.5, ml: 0.5 }}>
       {[...Array(8)].map((_, index) => (
-        <Grid item xs={12} sm={6} lg={3} key={index}>
-          <Card sx={{ position: 'relative', minHeight: 300 }}>
-            <Box sx={{ position: 'absolute', top: 0, right: 2, p: 1, gap: 2 }}>
-              <Skeleton variant="circular" width={8} height={8} animation="wave" />
-              <Skeleton variant="circular" width={8} height={8} animation="wave" />
-              <Skeleton variant="circular" width={8} height={8} animation="wave" />
-            </Box>
-
-            <CardMedia
+        <Grid item xs={12} sm={6} md={3} key={index}>
+          <Card sx={{ minHeight: 300, boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)", p: 2, backgroundColor: "white" }}>
+            <Box
               sx={{
-                height: 70,
+                height: 100,
                 width: 100,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                mt: 6,
-                mx: 'auto'
+                mx: 'auto',
+                mb: 2
               }}
             >
-              <Skeleton variant="rectangular" width={65} height={65} animation="wave" />
-            </CardMedia>
+              <CustomWaveSkeleton variant="circular" width={100} height={100} />
+            </Box>
 
-            <CardContent>
-              <Typography variant="h3" sx={{ mt: 1 }}>
-                <Skeleton width="50%" animation="wave" />
-              </Typography>
-              <Typography variant="h5" sx={{ mt: 1 }}>
-                <Skeleton width="80%" animation="wave" />
-                <Skeleton width="80%" animation="wave" />
-              </Typography>
-              <Typography variant="h6">
-                <Skeleton width="60%" height={45} animation="wave" />
-              </Typography>
-            </CardContent>
+            <Typography variant="h4" sx={{ mb: 2 }}>
+              <CustomWaveSkeleton width="80%" height={28} />
+            </Typography>
+
+            <Typography variant="h6" sx={{ color: 'text.secondary', mb: 2 }}>
+              <CustomWaveSkeleton width="90%" height={20} />
+            </Typography>
+
+            <Box sx={{ mt: 1.75 }}>
+              <CustomWaveSkeleton variant="rectangular" width="50%" height={40} />
+            </Box>
           </Card>
         </Grid>
       ))}
@@ -51,4 +39,4 @@ const BranchMainSkeleton = () => {
   );
 };
 
-export default BranchMainSkeleton;
+export default BranchCardSkeleton;

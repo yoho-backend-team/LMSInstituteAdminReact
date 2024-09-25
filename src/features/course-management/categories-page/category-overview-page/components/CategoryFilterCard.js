@@ -47,7 +47,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
                   <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="">Select Status</MenuItem>
+                    <MenuItem value={null}>Select Status</MenuItem>
                     <MenuItem value="true">Active</MenuItem>
                     <MenuItem value="false">Inactive</MenuItem>
                   </TextField>

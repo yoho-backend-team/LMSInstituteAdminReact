@@ -132,6 +132,9 @@ const AllNotifications = Loadable(lazy(() => import('views/profile-management/no
 //Forget Password
 const ForgetPassword = Loadable(lazy(() => import('views/authentication/forget-password-page')));
 
+//Institute Settings 
+const InstituteManagement = Loadable(lazy(() => import("features/institute-management/compoents/index")))
+
 // ==============================|| AUTHENTICATION ROUTING ||============================== //
 const Protected = () => {
   // Access the isAuthenticated state from the Redux store
@@ -470,6 +473,11 @@ const ApplicationRoutes = () => {
           <Route index element={<Navigate to="/account-settings" />} />
           <Route path="account-settings" element={<AccountSettings />} />
           <Route path="notifications" element={<AllNotifications />} />
+        </Route>
+         {/* Institute Management */}
+         <Route path='/institute-management' element={<MainLayout />} >
+           <Route index element={<Navigate to={"/settings" }/>} />
+           <Route path='settings' element={<InstituteManagement />} />
         </Route>
         <Route element={<MinimalLayout />}>
           <Route path="/unauthorized" element={<Page401 />} />

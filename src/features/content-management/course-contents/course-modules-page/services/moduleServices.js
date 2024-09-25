@@ -72,13 +72,10 @@ export const updateCourseModule = async (data) => {
 export const updateCourseModulesStatus = async (data) => {
   try {
     const response = await client.course_module.update_status(data)
-    if (response.success) {
       return { success: true, message: 'CourseModules status updated successfully' };
-    } else {
-      return { success: false, message: 'Failed to update CourseModules status' };
-    }
   } catch (error) {
     console.error('Error in updateCourseModules:', error);
-    throw error;
+    const errorMessage = error?.response?.data?.message ? error?.response?.data?.message : error?.message
+    throw new Error(errorMessage)
   }
 };

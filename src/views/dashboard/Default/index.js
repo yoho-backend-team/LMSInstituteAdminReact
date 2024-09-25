@@ -10,23 +10,34 @@ import RevenueReport from './card/RevenueReport';
 import CardSupportTracker from './card/CardSupportTracker';
 import DashboardSkeleton from 'components/cards/Skeleton/DashboardSkeleton';
 import client from 'api/client';
+import { useSpinner } from 'context/spinnerContext';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [Reports,setReports] = useState([])
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId)
+  const { show, hide } = useSpinner()
 
   useEffect(() => {
-    const getReports = async () => {
-      const response = await client.reports.get()
-      setReports(response)
+    const getReports = async (props) => {
+      try {
+        show()
+        const response = await client.reports.get(props)
+        setReports(response) 
+      } catch (error) {
+        toast.error(error?.message)
+      }finally{
+        hide()
+      }
     }
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1000);
-    getReports()
+    const data = { branch : selectedBranchId }
+    getReports(data)
     return () => clearTimeout(timer);
-  }, []);
+  }, [selectedBranchId]);
 
   return (
     <Grid container spacing={1} className="match-height">
@@ -39,7 +50,7 @@ const Dashboard = () => {
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.totalBalance}
                     chipText="-12.2%"
                     chipColor="default"
@@ -51,7 +62,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.totalPaidAmount}
                     chipText="+25.2%"
                     avatarColor="info"
@@ -63,7 +74,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.TeachingstaffCount}
                     chipText="-12.2%"
                     chipColor="default"
@@ -75,7 +86,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardStatsVertical
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
                     stats={Reports?.studentCount}
                     chipText="+25.2%"
                     avatarColor="primary"
@@ -91,31 +102,31 @@ const Dashboard = () => {
             <Grid item xs={12} sx={{ mt: 2 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={7}>
-                  <RevenueReport />
+                  <RevenueReport revenue={Reports?.revenue} />
                 </Grid>
                 <Grid item xs={12} md={5}>
-                  <CardPopularCourse />
+                  <CardPopularCourse courses = {Reports?.popularCourses} />
                 </Grid>
               </Grid>
             </Grid>
 
             <Grid item xs={12} sx={{ mt: 2 }}>
               <Grid container spacing={1}>
-                <Grid item xs={6} sm={6} lg={3} sx={{ display: "none"}} >
+                <Grid item xs={6} sm={6} lg={3} >
                   <CardData
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)", display: "none"}}
-                    stats="8000"
+                    sx={{ boxShadow : "none"}}
+                    stats={Reports?.mainCategory}
                     chipText="-12.2%"
                     chipColor="default"
                     avatarColor="error"
-                    title="Learning Path"
+                    title="Main"
                     subtitle="Last week"
                     avatarIcon="healthicons:money-bag"
                   />
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardData
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    sx={{ boxShadow : "none"}}
                     stats={Reports?.categoryCount}
                     chipText="-12.2%"
                     chipColor="default"
@@ -127,7 +138,7 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6} sm={6} lg={3}>
                   <CardData
-                    sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
+                    sx={{ boxShadow : "none"}}
                     stats={Reports?.courseCount}
                     chipText="+25.2%"
                     avatarColor="info"

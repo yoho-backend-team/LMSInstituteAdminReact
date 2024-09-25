@@ -125,3 +125,13 @@ export const updateCommunity = async (data) => {
     throw error;
   }
 };
+
+export const getAllMessages = async (data) => {
+   try {
+      const response = await  client.community.getMessages(data)
+      return response?.data
+   } catch (error) {
+     const message = error?.response?.data?.message ? error?.response?.data?.message : error?.message
+     throw new Error(message)
+   }
+}

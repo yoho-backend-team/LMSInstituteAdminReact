@@ -9,6 +9,7 @@ const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institu
 // import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
 // import { requestForToken } from '../../firebase';
 export const login = (username, password) => async (dispatch) => {
+  
   let data = {
     email: username,
     password: password
@@ -26,7 +27,6 @@ export const login = (username, password) => async (dispatch) => {
        return {otpVerify:true}
     }
 
-    if (response.data.status==="success") {
       
       localStorage.setItem('isAuthenticated', true);
       localStorage.setItem('token', response.data.data.token);
@@ -53,20 +53,13 @@ export const login = (username, password) => async (dispatch) => {
       window.location.replace('/');
       toast.success('Login Successful');
       return { success: true, message: 'Login successfully' };
-    } else {
-      dispatch({
-        type: 'LOGIN_FAILURE',
-        payload: response.data.message
-      });
-      toast.error(response.data.message);
-      return { success: false, message: 'Failed to delete group' };
-    }
   } catch (error) {
     // Dispatch error action
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error?.response?.data?.message
     });
+    throw new Error(error?.response?.data?.message)
   }
 };
 
