@@ -6,6 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
+import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
 import TeacherFilter from 'features/staff-management/teaching-staffs/components/TeacherFilterCard';
@@ -73,20 +74,20 @@ const Teaching = () => {
   console.log(teachingStaffs,"teachingStaffs")
   return (
     <>
-      <Grid sx={{ p: 1 }}>
+      <Grid item xs={12} md={12} lg={12} mb={2}>
         <TeacherFilter selectedBranchId={selectedBranchId} />
       </Grid>
 
-      {loading ? (
+      {loading  ?  (
         <StaffManagement />
       ) : (
         <Grid>
           <Grid container mt={1}>
             {teachingStaffs && teachingStaffs.data?.map((item, i) => (
               <Grid key={i} item xs={12} sm={6} md={4} justifyContent="center" px={1}>
-                <Card sx={{ position: 'relative', mb: 2, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+                <Card sx={{ position: 'relative', mb: 2,boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                   <CardContent sx={{ pt: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Avatar
                         src={item?.image ? getImageUrl(item?.image) : profilePlaceholder}
                         sx={{ mb: 2, width: 70, height: 70 }}
@@ -130,7 +131,10 @@ const Teaching = () => {
                 </Card>
               </Grid>
             ))}
+             
           </Grid>
+        
+      
           {teachingStaffs?.last_page !== 1 && (
             <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
               <Pagination

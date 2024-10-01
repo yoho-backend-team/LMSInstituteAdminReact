@@ -29,13 +29,17 @@ const WaveSkeleton = styled(Box)(({ reverse }) => ({
 }));
 
 const CustomSkeleton = ({ variant = 'rectangular', width, height, reverse = false, ...props }) => {
+ 
+  const isCircular = variant === 'circular';
+  const isRectangular = variant === 'rectangular';
+
   return (
     <WaveSkeleton
       reverse={reverse}
       sx={{
         width,
-        height,
-        borderRadius: variant === 'circular' ? '50%' : '4px',
+        height: isCircular ? width : height, // For circular, match height to width
+        borderRadius: isCircular ? '50%' : '4px', // Circular if variant is circular
       }}
       {...props}
     />
@@ -43,3 +47,4 @@ const CustomSkeleton = ({ variant = 'rectangular', width, height, reverse = fals
 };
 
 export default CustomSkeleton;
+

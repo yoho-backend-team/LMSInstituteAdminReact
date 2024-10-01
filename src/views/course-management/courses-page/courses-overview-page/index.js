@@ -33,7 +33,7 @@ const Courses = () => {
           <CourseFilter selectedBranchId={selectedBranchId} />
           <CourseCardHeader setCourseRefetch={setCourseRefetch} selectedBranchId={selectedBranchId} courses={courses} />
         </Grid>
-        {courseLoading ? (
+        {courseLoading  ?  (
           <CourseSkeleton />
         ) : (
           <Grid item xs={12}>

@@ -37,7 +37,7 @@ const TeachingStaff = () => {
         <Grid>
           <TeachingStaffFilterCard selectedBranchId={selectedBranchId} />
         </Grid>
-        {teachingStaffLoading ? (
+        {teachingStaffLoading? (
           <TeachingStaffSkeleton />
         ) : (
           <Grid>

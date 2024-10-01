@@ -13,6 +13,7 @@ import {
 } from 'features/attandence-management/non-teaching-staff-attandences/redux/nonTeachingStaffAttendanceSelectors';
 import { getAllNonTeachingStaffAttendances } from 'features/attandence-management/non-teaching-staff-attandences/redux/nonTeachingStaffAttendanceThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import NonTeachingStaffSkeleton from 'components/cards/Skeleton/NonTeachingStaff';
 
 const NonTeachingStaffs = () => {
   const nonTeachingStaffs = useSelector(selectNonTeachingStaffAttendances);
@@ -36,7 +37,7 @@ const NonTeachingStaffs = () => {
       <Grid>
         <NonTeachingStaffFilterCard selectedBranchId={selectedBranchId} />
         {loading ? (
-          <TeachingStaffSkeleton />
+          <NonTeachingStaffSkeleton />
         ) : (
           <div>
             <NonTeachingStaffCard nonTeachingStaffs={nonTeachingStaffs?.data} />

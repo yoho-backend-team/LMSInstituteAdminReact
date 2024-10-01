@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
 import CustomSkeleton from '..';
 
-const TicketsCardsSkeleton = () => {
+const StudentTicketsCardsSkeleton = () => {
   return (
     <>
       <Grid container spacing={4}>
@@ -22,12 +22,14 @@ const TicketsCardsSkeleton = () => {
               <CardContent sx={{ pt: 2.5 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginTop: '16px' }}>
                     <Box sx={{ display: 'flex', gap: '1px' }}>
-                        <CustomSkeleton variant="circular" width={40} />
+                        <CustomSkeleton variant="circular" width={50} />
+                        <CustomSkeleton variant="text" width={60} height={20} />
+                        
                     </Box>
     
 </Box>
 <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginTop: '36px',gap:"2px" }}>
-    <CustomSkeleton variant="text" width={40} height={20} />
+    <CustomSkeleton variant="text" width={60} height={20} />
 </Box>
                 <Box sx={{display:"flex",justifyContent:"space-between"}}>
                 <Box sx={{ display: 'flex', textDecoration: 'none' }}>
@@ -51,4 +53,4 @@ const TicketsCardsSkeleton = () => {
   );
 };
 
-export default TicketsCardsSkeleton;
+export default StudentTicketsCardsSkeleton;

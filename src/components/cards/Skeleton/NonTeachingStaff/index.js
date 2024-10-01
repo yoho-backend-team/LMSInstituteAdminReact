@@ -5,7 +5,7 @@ import Skeleton from '@mui/material/Skeleton';
 import CustomSkeleton from '..';
 // ==============================|| SKELETON - EARNING CARD ||============================== //
 
-const TeachingStaffSkeleton = () => {
+const NonTeachingStaffSkeleton = () => {
   const skeletonData = Array.from({ length: 10 });
   return (
     <>
@@ -15,7 +15,7 @@ const TeachingStaffSkeleton = () => {
             <Card
             sx={{
               width: "490px",
-              height: "370px",
+              height: "340px",
               borderRadius: 3,
               boxShadow: 5,
               position: 'relative',
@@ -33,9 +33,6 @@ const TeachingStaffSkeleton = () => {
 </Box>
 <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '24px',gap:"2px" }}>
     <CustomSkeleton variant="text" width={80} height={20} />
-</Box>
-<Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '14px' }}>
-    <CustomSkeleton variant="text" width={120} height={20} />
 </Box>
 
 
@@ -59,4 +56,4 @@ const TeachingStaffSkeleton = () => {
   );
 };
 
-export default TeachingStaffSkeleton;
+export default NonTeachingStaffSkeleton;

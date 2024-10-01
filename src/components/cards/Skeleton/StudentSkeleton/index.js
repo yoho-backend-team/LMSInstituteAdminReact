@@ -1,52 +1,54 @@
-import { Box, Card, Grid, Skeleton, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, Skeleton, Typography } from '@mui/material';
+import CustomSkeleton from '..';
 
 const StudentSkeleton = () => {
   return (
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      {[...Array(6)].map((_, index) => (
-        <Grid key={index} item xs={12} sm={6} md={3}>
-          <Card sx={{ alignItems: 'center', height: '100%', px: 0.55, py: 1.5 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 1 }}>
-              <Box>
-                <Skeleton variant="circular" width={70} height={70} sx={{ mb: 1 }} />
-              </Box>
-              <Box>
-                <Typography variant="h4" sx={{ mt: 0.5 }}>
-                  <Skeleton width={100} />
-                </Typography>
-                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={130} />
-                </Typography>
-              </Box>
+    <>
+      <Grid container spacing={4}>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Grid key={i} item xs={12} sm={6} md={3} p={1} mt={3}>
+            <Card
+            sx={{
+              width: "350px",
+              height: "290px",
+              borderRadius: 3,
+              boxShadow: 5,
+              position: 'relative',
+              overflow: 'visible',
+              background: '#fff',
+            }}
+          >
+           
+              <CardContent sx={{ pt: 2.5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                <CustomSkeleton variant="circular" width={80} />
 
-              <Box>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    color: 'text.secondary',
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    textOverflow: 'ellipsis',
-                    mt: 2
-                  }}
-                >
-                  <Skeleton width={180} />
-                  <Skeleton width={150} />
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 1, mt: 1.75, mb: 0.75 }}>
-                <Skeleton variant="rounded" width={30} height={30} />
-                <Skeleton variant="rounded" width={30} height={30} />
-                <Skeleton variant="rounded" width={30} height={30} />
-                <Skeleton variant="rounded" width={30} height={30} />
-              </Box>
-            </Box>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
+                  
+
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' ,marginTop:'8px'}}>
+                <CustomSkeleton variant="text" width={100} height={30} />
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' ,marginTop:'12px'}}>
+                <CustomSkeleton variant="text" width={150} height={30} />
+                </Box>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' ,marginTop:'12px'}}>
+                <CustomSkeleton variant="text" width={250} height={20} />
+                </Box>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'center', textDecoration: 'none',marginTop:'16px' }}>
+                  <Box>
+                    <CustomSkeleton variant="text" width={150} height={30} />
+                  </Box>
+                </Box>
+              </CardContent>
+              </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 };
 

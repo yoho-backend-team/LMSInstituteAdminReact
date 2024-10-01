@@ -9,6 +9,7 @@ import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import { selectLiveClasses, selectLoading } from 'features/class-management/live-classes/redux/liveClassSelectors';
 import { getAllLiveClasses } from 'features/class-management/live-classes/redux/liveClassThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import LiveClassSkeleton from 'components/cards/Skeleton/LiveclassSkeleton';
 
 const LiveClass = () => {
   const [refetch, setRefetch] = useState(false);
@@ -31,8 +32,8 @@ const LiveClass = () => {
       <Grid>
         <LiveClassFilterCard selectedBranchId={selectedBranchId} />
         <LiveClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setRefetch} />
-        {loading ? (
-          <ClassSkeleton liveClasses={liveClasses?.data} />
+        {loading  ? (
+          <LiveClassSkeleton liveClasses={liveClasses?.data} />
         ) : (
           <Grid container spacing={1} className="match-height" sx={{ marginTop: 3 }}>
             <LiveClassCard refetch={refetch} setRefetch={setRefetch} liveClasses={liveClasses?.data} />

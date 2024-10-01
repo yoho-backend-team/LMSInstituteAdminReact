@@ -5,6 +5,7 @@ import { Grid } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
+import StudentTicketsCardsSkeleton from 'components/cards/Skeleton/StudentTicketSkeleton';
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 import ClosedTicketCard from 'features/ticket-management/student/components/ClosedTicketCard';
 import OpenTicketCard from 'features/ticket-management/student/components/OpenTicketCard';
@@ -49,8 +50,8 @@ const StudentTicketsPage = () => {
 
   return (
     <MainCard title="Student Tickets" sx={{ minHeight: '100vh' }}>
-      {studentLoading ? (
-        <TicketsCardsSkeleton />
+      {studentLoading? (
+        <StudentTicketsCardsSkeleton/>
       ) : (
         <TabContext value={value}>
           <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
