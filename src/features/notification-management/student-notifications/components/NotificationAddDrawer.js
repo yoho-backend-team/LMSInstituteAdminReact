@@ -128,31 +128,32 @@ const NotificationAddDrawer = (props) => {
   const instituteId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).institute_id : null;
 
   const onSubmit = async (data) => {
-    const bodyFormData = new FormData();
-    
-    const studentIds = data?.students?.map((user)=>user?._id)
-    const notification = {
-      institute : useInstitute().getInstituteId(),
-      course : data?.course?._id,
-      batch : data?.batch?._id,
-      branch : selectedBranchId,
-      title : data?.title,
-      body : data?.description,
-      student : studentIds,
-      link : data?.link,
-      type : data?.notification_type
-    }
-    
-
-    const result = await addStudentNotification(notification);
-    
-    if (result.success) {
+    try{
+      show()
+      const studentIds = data?.students?.map((user)=>user?._id)
+      const notification = {
+        institute : useInstitute().getInstituteId(),
+        course : data?.course?._id,
+        batch : data?.batch?._id,
+        branch : selectedBranchId,
+        title : data?.title,
+        body : data?.description,
+        student : studentIds,
+        link : data?.link,
+        type : data?.notification_type
+      }
+      
+      const result = await addStudentNotification(notification);
       toast.success(result.message);
       handleClose();
       setStudentNotificationRefetch((state) => !state);
-    } else {
-      toast.error(result.message);
+      hide()
+    }catch(error){
+      toast.error(error?.message)
+    }finally{
+     hide()
     }
+
   };
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,

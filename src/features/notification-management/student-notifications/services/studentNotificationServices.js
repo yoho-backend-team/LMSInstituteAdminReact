@@ -1,6 +1,7 @@
 // studentNotificationservice.js
 import client from 'api/client';
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
 
 const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification`;
 
@@ -41,8 +42,8 @@ export const addStudentNotification = async (data) => {
 
     return { success: true, message: 'StudentNotification created successfully' };
   } catch (error) {
-    console.error('Error in addStudentNotification:', error);
-    return { success: false, message: error?.response?.data?.message};
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 

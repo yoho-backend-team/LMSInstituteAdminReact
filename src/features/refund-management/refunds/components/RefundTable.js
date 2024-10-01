@@ -60,7 +60,7 @@ const defaultColumns = [
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
-      const { students } = row?.studentfees;
+      // const { students } = row?.studentfees;
       const studentName = `${row?.student.first_name} ${row?.student.last_name}`;
       const studentEmail = row?.student?.email;
 
@@ -252,7 +252,32 @@ const RefundTable = () => {
           ) : (
             <Card>
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{ 
+                  '& .MuiDataGrid-row' : {
+                    border: "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                  },
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  },
+                  "& .MuiDataGrid-footerContainer" : {
+                    border : "1px solid #e6e5e7"
+                }
+                 }}
                 autoHeight
                 getRowHeight={() => 'auto'}
                 rows={studentFeeRefunds?studentFeeRefunds:[]}
@@ -261,6 +286,8 @@ const RefundTable = () => {
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
                 onRowClick={(params) => handleRowClick(params.row)}
                 hideFooterPagination
+                disableColumnMenu={true}
+                disableColumnFilter={true}
               />
             </Card>
           )}

@@ -19,6 +19,7 @@ import * as yup from 'yup';
 import { addStaffNotification, getAllStaffDetailsWithRoleName, getTeachingStaffsWithBranch } from '../services/staffNotificationServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
+import { useSpinner } from 'context/spinnerContext';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -53,6 +54,7 @@ const defaultValues = {
 
 const StaffNotificationAddDrawer = (props) => {
   const { open, toggle, setStaffNotificationRefetch } = props;
+  const { show, hide } = useSpinner()
 
   const [inputValue, setInputValue] = useState('');
 
@@ -106,28 +108,31 @@ const StaffNotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    var bodyFormData = new FormData();
-    const staffIds = data?.staff?.filter((user)=>user?._id)
-    
-    const staff_notification = {
-      staff : staffIds,
-      title : data?.title,
-      body : data?.body,
-      branch : selectedBranchId,
-      type : data?.notification_type,
-      link : data?.link,
-      institute : useInstitute().getInstituteId()
-    }
-   
-    const result = await addStaffNotification(staff_notification);
-
-    if (result.success) {
+    try {
+      show()
+      const staffIds = data?.staff?.filter((user)=>user?._id)
+      
+      const staff_notification = {
+        staff : staffIds,
+        title : data?.title,
+        body : data?.body,
+        branch : selectedBranchId,
+        type : data?.notification_type,
+        link : data?.link,
+        institute : useInstitute().getInstituteId()
+      }
+     
+      const result = await addStaffNotification(staff_notification);
+  
       toast.success(result.message);
       handleClose();
       setStaffNotificationRefetch();
-    } else {
-      toast.error(result.message);
+    } catch (error) {
+      toast.error(error?.message)
+    }finally{
+      hide()
     }
+
   };
 
   const ImgStyled = styled('img')(({ theme }) => ({

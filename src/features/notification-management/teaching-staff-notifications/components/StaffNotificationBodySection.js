@@ -172,9 +172,30 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
 
   return (
     <Grid>
-      <Divider sx={{ m: '0 !important' }} />
       <DataGrid
-        sx={{ p: 2 }}
+        sx={{ 
+          '& .MuiDataGrid-row' : {
+                border: "1px solid #e6e5e7",
+                borderLeft: "none",
+                borderRight: "none",
+              },
+              "& .MuiDataGrid-row" : {
+                border : "1px solid #e6e5e7",
+                borderLeft: "none",
+                borderRight: "none",
+                ":hover" : {
+                   backgroundColor : "#f5f5f7",
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+                }
+              },
+              "& .MuiDataGrid-columnHeaders" : {
+                   border : "1px solid #e6e5e7",
+                   borderLeft: "none",
+                   borderRight: "none"
+              }
+         }}
         autoHeight
         rowHeight={62}
         rows={staffNotifications?staffNotifications : []}
@@ -182,6 +203,8 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
         disableRowSelectionOnClick
         hideFooterPagination
         hideFooter
+        disableColumnMenu={true}
+        disableColumnSorting={true}
       />
     </Grid>
   );

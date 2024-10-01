@@ -401,12 +401,34 @@ const FeesTable = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
             {StudentFeesLoading ? (
               <FeesTableSkeleton />
             ) : (
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{ 
+                  '& .MuiDataGrid-row' : {
+                    border: "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                  },
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  }
+                 }}
                 autoHeight
                 pagination
                 style={{overflowX:"scroll"}}
@@ -417,6 +439,9 @@ const FeesTable = () => {
                 disableRowSelectionOnClick
                 hideFooterPagination
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+                disableColumnMenu={true}
+                disableColumnFilter={true}
+                disableColumnSorting={true}
               />
             )}
             {StudentFees?.last_page !== 1 && (

@@ -40,7 +40,7 @@ const NotificationTableHeader = (props) => {
       <Grid container spacing={2} sx={{ alignItems: 'center' }}>
         <Grid item sm={5} xs={12}></Grid>
         <Grid item sm={4} xs={12}>
-          <TextField value={searchValue} fullWidth placeholder="Search" onChange={(e) => handleSearch(e)} />
+          <TextField value={searchValue} fullWidth placeholder="Search" sx={{ display: "none"}} onChange={(e) => handleSearch(e)} />
         </Grid>
         <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
           <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>

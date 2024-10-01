@@ -333,12 +333,34 @@ const SalaryTable = () => {
           <SalaryCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
         </Grid>
         <Grid item xs={12}>
-          <Card>
+          <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
             {TeachingStaffSalariesLoading ? (
               <PaymentSalarySkeleton />
             ) : (
               <DataGrid
-                sx={{ p: 2 }}
+                sx={{ 
+                  '& .MuiDataGrid-row' : {
+                    border: "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                  },
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  }
+                 }}
                 hideFooterPagination
                 autoHeight
                 rowHeight={62}
@@ -347,10 +369,13 @@ const SalaryTable = () => {
                 disableRowSelectionOnClick
                 hideFooter
                 onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+                disableColumnMenu={true}
+                disableColumnFilter={true}
               />
             )}
+            <CardContent>
             {TeachingStaffSalaries?.last_page !== 1 && (
-              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Pagination
                   count={TeachingStaffSalaries?.last_page}
                   color="primary"
@@ -360,6 +385,7 @@ const SalaryTable = () => {
                 />
               </Grid>
             )}
+            </CardContent>
           </Card>
           <Box ref={invoiceRef} sx={{display:"none"}}>
   <SalarySlip rows={TeachingStaffSalaries.data} />

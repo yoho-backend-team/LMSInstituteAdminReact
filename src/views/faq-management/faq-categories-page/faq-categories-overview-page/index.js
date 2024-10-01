@@ -227,17 +227,42 @@ const CategoriesDataGrid = () => {
           <ContentSkeleton />
         ) : (
           <Grid item xs={12}>
-            <Card>
+            <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
               <DataGrid
                 autoHeight
                 key={"id"}
-                rowHeight={80}
+                sx={{
+                  '& .MuiDataGrid-row' : {
+                    border: "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                  },
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  }
+                }}
+                rowHeight={60}
                  rows={faqCategories?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter
                 onRowClick={handleRowClick}
+                disableColumnFilter={true}
+                disableColumnMenu={true}
               />
             </Card>
           </Grid>

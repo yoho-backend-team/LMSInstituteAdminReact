@@ -63,7 +63,32 @@ const SubscriptionDataTable = ({ Subscription }) => {
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <DataGrid
-          sx={{ p: 2 }}
+          sx={{ 
+            '& .MuiDataGrid-row' : {
+              border: "1px solid #e6e5e7",
+              borderLeft: "none",
+              borderRight: "none",
+            },
+            "& .MuiDataGrid-row" : {
+              border : "1px solid #e6e5e7",
+              borderLeft: "none",
+              borderRight: "none",
+              ":hover" : {
+                 backgroundColor : "#f5f5f7",
+                 border : "1px solid #e6e5e7",
+                 borderLeft: "none",
+                 borderRight: "none"
+              }
+            },
+            "& .MuiDataGrid-columnHeaders" : {
+                 border : "1px solid #e6e5e7",
+                 borderLeft: "none",
+                 borderRight: "none"
+            },
+            "& .MuiDataGrid-footerContainer" : {
+              border : "none"
+            }
+           }}
           autoHeight
           rowHeight={62}
           rows={Subscription}
@@ -71,6 +96,8 @@ const SubscriptionDataTable = ({ Subscription }) => {
           disableRowSelectionOnClick
           hideFooterPagination
           onRowSelectionModelChange={(rows) => setSelectedRows(rows)}
+          disableColumnFilter={true}
+          disableColumnMenu={true}
         />
       </Grid>
     </Grid>

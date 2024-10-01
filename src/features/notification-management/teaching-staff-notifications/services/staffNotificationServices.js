@@ -1,6 +1,7 @@
 // StaffNotificationservice.js
 import client from 'api/client';
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
 
 const STAFF_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/staff-notifications`;
 
@@ -38,8 +39,8 @@ export const addStaffNotification = async (data) => {
 
     return { success: true, message: 'Staff Notification created successfully' };
   } catch (error) {
-    console.error('Error in addStaffNotification:', error);
-    return { success: false, message: error?.response?.data?.message };
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 

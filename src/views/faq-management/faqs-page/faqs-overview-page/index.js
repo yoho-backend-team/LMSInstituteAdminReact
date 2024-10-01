@@ -257,10 +257,33 @@ const FaqDataGrid = () => {
           <FaqSkeleton />
         ) : (
           <Grid item xs={12}>
-            <Card>
+            <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
               <DataGrid
+                sx={{
+                  '& .MuiDataGrid-row' : {
+                    border: "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                  },
+                  "& .MuiDataGrid-row" : {
+                    border : "1px solid #e6e5e7",
+                    borderLeft: "none",
+                    borderRight: "none",
+                    ":hover" : {
+                       backgroundColor : "#f5f5f7",
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                    }
+                  },
+                  "& .MuiDataGrid-columnHeaders" : {
+                       border : "1px solid #e6e5e7",
+                       borderLeft: "none",
+                       borderRight: "none"
+                  }
+                }}
                 autoHeight
-                rowHeight={80}
+                rowHeight={60}
                 rows={faqs?.data?faqs?.data:[]}
                 columns={columns}
                 getRowId={(row) => row._id} 
@@ -268,6 +291,8 @@ const FaqDataGrid = () => {
                 hideFooterPagination
                 hideFooter
                 onRowClick={handleRowClick}
+                disableColumnFilter={true}
+                disableColumnMenu={true}
               />
             </Card>
           </Grid>
