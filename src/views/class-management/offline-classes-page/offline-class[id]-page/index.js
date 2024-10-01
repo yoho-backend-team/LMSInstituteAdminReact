@@ -50,6 +50,7 @@ const ViewOfflineClass = () => {
     setSearchQuery(event.target.value);
   };
 
+ 
   useEffect(() => {
     const data = {
       id: offlineClassId
@@ -147,6 +148,7 @@ const ViewOfflineClass = () => {
       }
     }
   ];
+
 
   return (
     <Box>

@@ -32,30 +32,32 @@ const CourseSkeleton = () => (
               }}
             >
                 <CustomSkeleton variant='rectangular'  width={"100%"} height={169} borderRadius="5px" />
-              <Box sx={{ marginTop: "5px"}}>
-                 <CustomSkeleton variant="text" width={160} height={20} />
+              <Box sx={{ marginTop: "12px"}}>
+                 <CustomSkeleton variant="text" width={160} height={30}/>
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Box display="flex" alignItems="center" mb={1}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: "12px", }}>
+                <Box display="flex" alignItems="center" mb={1} >
                   <CustomSkeleton variant="text" width={100} height={38} />
                 </Box>
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <CustomSkeleton width={4} height={4} borderRadius={2} />
-                  <CustomSkeleton width={4} height={4} borderRadius={2} />
-                  <CustomSkeleton width={4} height={4} borderRadius={2} />
-                </Box>
               </Box>
 
-              <Box display="flex" alignItems="center" mb={1}>
-                <CustomSkeleton variant="text" width={100} height={21} />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+               <Box display="flex" alignItems="center" mb={2}>
+                <CustomSkeleton variant="text" width={100} height={31} />
+              </Box>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', mt:2 }}>
+                  <CustomSkeleton width={80} height={10} borderRadius={2} />
+                  <CustomSkeleton width={80} height={10} borderRadius={2} />
+                  <CustomSkeleton width={80} height={10} borderRadius={2} />
+                </Box>
               </Box>
             </Box>
 
             <CardContent>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <CustomSkeleton variant="text" height={21} width={67} />
-                <CustomSkeleton variant="text" height={38} width={114} />
+              <Box display="flex" alignItems="center" justifyContent="space-between" sx={{marginTop: "-24px"}}>
+                <CustomSkeleton variant="text" height={30} width={80} />
+                <CustomSkeleton variant="text" height={38} width={100} />
               </Box>
             </CardContent>
           </Card>

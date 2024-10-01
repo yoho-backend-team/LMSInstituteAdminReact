@@ -83,7 +83,7 @@ const AllActivity = () => {
                       <Typography variant="h5" sx={{ color: "black" }}>
                         {item.title}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: "white", fontSize: '10px', mt: 0.5 }}>
+                      <Typography variant="body2" sx={{ color: "#212121", fontSize: '10px', mt: 0.5 }}>
                       {item.user?.first_name}  {"|"}  {item?.action} {"|"} {item?.details}
                       </Typography>
                     </Box>

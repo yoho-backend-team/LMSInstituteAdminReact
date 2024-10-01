@@ -31,7 +31,7 @@ const CategorySkeleton = () => (
   
               <CardContent sx={{ display: "flex", justifyContent: "space-between", flexDirection: "column",gap: "30px"}} >
               <Box display="flex" alignItems="center" mb={1}>
-                  <CustomSkeleton variant="text" width={100} height={21} />
+                  <CustomSkeleton variant="text" width={125} height={28} />
               </Box>
               <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
                   <Box display="flex" alignItems="center" mb={1}>

@@ -26,6 +26,8 @@ import { deleteStudentFeeRefund } from '../services/studentFeeRefundServices';
 import RefundAddDrawer from './RefundAddDrawer';
 import RefundCardHeader from './RefundCardHeader';
 import RefundViewDrawer from './RefundViewDrawer';
+import { formatDate } from 'utils/format';
+import { formatTime } from 'utils/formatDate';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -33,6 +35,11 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: theme.typography.body1.fontSize,
   color: `${theme.palette.primary.main} !important`
 }));
+
+const formatDateToISO = (dateStr) => {
+  const [day, month, year] = dateStr.split('-');
+  return `${day}-${month}-${year}`;
+};
 
 const defaultColumns = [
   {
@@ -60,7 +67,7 @@ const defaultColumns = [
     field: 'studentInfo',
     headerName: 'Student Info',
     renderCell: ({ row }) => {
-      const { students } = row?.studentfees;
+      // const { students } = row?.studentfees;
       const studentName = `${row?.student.first_name} ${row?.student.last_name}`;
       const studentEmail = row?.student?.email;
 
@@ -86,7 +93,7 @@ const defaultColumns = [
     minWidth: 150,
     field: 'paymentDate',
     headerName: 'Payment Date',
-    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{row?.studentfees?.payment_date}</Typography>
+    renderCell: ({ row }) => <Typography sx={{ color: 'text.secondary' }}>{formatDate(row?.studentfees?.payment_date)} {formatTime(row?.studentfees?.payment_date)}</Typography>
   },
   {
     minWidth: 150,
