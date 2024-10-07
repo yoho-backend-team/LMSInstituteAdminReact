@@ -162,11 +162,6 @@ const NotificationBodySection = ({ studentNotifications }) => {
     <Grid>
       <DataGrid
         sx={{ 
-          '& .MuiDataGrid-row' : {
-                border: "1px solid #e6e5e7",
-                borderLeft: "none",
-                borderRight: "none",
-              },
               "& .MuiDataGrid-row" : {
                 border : "1px solid #e6e5e7",
                 borderLeft: "none",

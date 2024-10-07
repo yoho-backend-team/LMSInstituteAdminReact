@@ -58,7 +58,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllCourses({ branch_id: selectedBranchId });

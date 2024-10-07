@@ -104,7 +104,7 @@ const generateEndpoints = () => {
         },
         student : {
             get : `/api/institutes/${instituteId}/branches/`,
-            getWithId : `/api/institutes/student/${instituteId}/students/`,
+            getWithId : `/api/institutes/auth/student/${instituteId}/students/`,
             getWithBatch : `/api/institutes/${instituteId}/branches/`,
             getWithCourse: `/api/institutes/${instituteId}/branches/`,
             update : `/api/institutes/:instituteId/students/update/`,

@@ -27,6 +27,9 @@ import * as yup from 'yup';
 import { checkUserName } from 'features/user-management/users-page/services/userServices';
 import { useNavigate } from 'react-router-dom';
 import { useBranchId, useInstitute } from 'utils/get-institute-details';
+import client from 'api/client';
+import { useSpinner } from 'context/spinnerContext';
+import { getImageUrl } from 'utils/imageUtils';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -115,6 +118,7 @@ const StepperLinearWithValidation = () => {
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { show, hide} = useSpinner()
 
   useEffect(() => {
     const data = {
@@ -189,14 +193,20 @@ const StepperLinearWithValidation = () => {
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
   );
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
+  const handleInputImageChange = async (file) => {
+  try {
+    show()
     const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setLogoSrc(reader.result);
-      reader.readAsDataURL(files[0]);
-      setLogo(files[0]);
-    }
+    const form_data = new FormData()
+    form_data.append("file",files[0])
+    const response = await client.file.upload(form_data)
+    setLogo(response?.data?.file)
+  } catch (error) {
+    hide()
+    toast.error(error?.message)
+  }finally{
+    hide()
+  }
   };
 
   const handleInputImageReset = () => {
@@ -233,6 +243,7 @@ const StepperLinearWithValidation = () => {
       designation: personalData.designation,
       role: personalData.role,
       staffId:personalData.staffId,
+      image : logo,
       user_details: 'InstituteTeachingStaff'
     };
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
@@ -286,7 +297,7 @@ const StepperLinearWithValidation = () => {
         <Grid container spacing={5}>
           <Grid item xs={12} sm={12}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ImgStyled src={logoSrc} alt="Profile Pic" />
+              <ImgStyled src={ logo ? getImageUrl(logo) : logoSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                   Upload Profile picture

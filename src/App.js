@@ -12,6 +12,9 @@ import themes from 'themes';
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
 import DisableNumInputScroll from 'components/disableNumberscroll';
+import { useEffect } from 'react';
+import { regSw, subscribe } from 'helpers';
+import Cookies from 'js-cookie';
 // import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //
 
@@ -25,6 +28,29 @@ const App = () => {
   // useEffect(()=>{
   //   requestForToken()
   // },[])
+
+  const regiserSubscription = async (role,userId,user,branch,institute) => {
+    try {
+      const registeration = await regSw()
+      console.log(registeration,"registeration",institute)
+      if(registeration){
+        await subscribe(registeration,role,userId,user,institute,branch)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() =>{
+    const isAuthenticatedUser = localStorage.getItem("isAuthenticated")
+    const selectBranchId = localStorage.getItem("selectedBranchId")
+    const user = JSON.parse(localStorage.getItem("userData"))
+    const notifiAdd = Cookies.get("instituteNotificationSubscription")
+    if(isAuthenticatedUser && !notifiAdd){
+      console.log(user?.institute_id)
+       regiserSubscription(user?.role,user?._id,user,selectBranchId,user?.institute_id)
+    }
+  })
   
   return (
     <StyledEngineProvider injectFirst>

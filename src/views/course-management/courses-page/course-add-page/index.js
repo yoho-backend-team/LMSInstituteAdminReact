@@ -197,8 +197,8 @@ const AddCoursePage = () => {
 
   const getAllBranches = async () => {
     const result = await getActiveBranches();
-    if (result.data.data) {
-      setBranches(result.data.data);
+    if (result.data) {
+      setBranches(result.data);
     }
   };
 

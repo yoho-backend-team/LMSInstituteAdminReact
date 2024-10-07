@@ -122,6 +122,8 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
       } catch (error) {
         hide()
         toast.error(error.message);
+      }finally{
+        hide()
       }
     },
     [selectedImage, reset, handleAddClose, setCategoryRefetch]

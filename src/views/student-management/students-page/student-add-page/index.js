@@ -132,7 +132,7 @@ const StepperLinearWithValidation = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const {
@@ -201,7 +201,7 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-
+  console.log(activeBranches,"activeBranches")
   const onSubmit = async () => {
     const personalData = personalControl?._formValues;
     show()

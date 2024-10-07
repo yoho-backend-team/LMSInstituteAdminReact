@@ -70,7 +70,7 @@ const StaffNotificationAddDrawer = (props) => {
 
   const getAllBranches = async () => {
     const response = await getActiveBranches()
-    setActiveBranches(response?.data?.data)
+    setActiveBranches(response?.data)
   }
   
   useEffect(() => {
