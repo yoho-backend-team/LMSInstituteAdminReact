@@ -61,7 +61,6 @@ const SidebarLeft = (props) => {
   const { show, hide } = useSpinner()
   
   const handleChatClick = async (type, community) => {
-    show()
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
@@ -77,6 +76,7 @@ const SidebarLeft = (props) => {
     setMessages(response)
     if (community && community._id) {
       try {
+        show()
         const response = await getAllBatchChats({ chatId: community._id });
         
         if (response) {
@@ -84,6 +84,7 @@ const SidebarLeft = (props) => {
           setChats(response.data);
         }
       } catch (error) {
+        hide()
         console.error('Error in handleChatClick:', error);
       }finally{
         hide()
