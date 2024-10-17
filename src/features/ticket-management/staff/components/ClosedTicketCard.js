@@ -4,15 +4,21 @@ import Typography from '@mui/material/Typography';
 import CustomChip from 'components/mui/chip';
 import OptionsMenu from 'components/option-menu';
 import PropTypes from 'prop-types';
+import { getImageUrl } from 'utils/imageUtils';
+import { imagePlaceholder } from 'utils/placeholders';
 
 const ClosedTicketCard = ({ ticket }) => {
   return (
     <Grid item xs={12} md={6} lg={4}>
-      <Card sx={{ minHeight: 260 }}>
+      <Card sx={{ 
+        minHeight: 260,
+        boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+
+         }}>
         <CardContent>
           <Box sx={{}}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+              <Avatar src={ ticket?.user?.image ? getImageUrl(ticket?.user?.image) : imagePlaceholder} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
                 <Typography variant="h5">{ticket?.user?.full_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>

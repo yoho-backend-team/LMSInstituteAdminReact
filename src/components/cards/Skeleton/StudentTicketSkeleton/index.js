@@ -9,8 +9,8 @@ const StudentTicketsCardsSkeleton = () => {
           <Grid key={i} item xs={12} sm={6} md={4} p={1} mt={3}>
             <Card
             sx={{
-              width: "470px",
-              height: "250px",
+              width: "370px",
+              height: "240px",
               borderRadius: 3,
               boxShadow: 5,
               position: 'relative',
