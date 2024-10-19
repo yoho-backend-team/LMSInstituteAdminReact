@@ -13,21 +13,28 @@ const AuthCardWrapper = ({ children, ...other }) => (
     sx={{
       maxWidth: { xs: 400, lg: 475 },
       margin: { xs: 2.5, md: 3 },
-      boxShadow: 2,
+      borderRadius: '20px',
+      padding: '20px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+      transition: 'all 0.3s ease-in-out',
+      '&:hover': {
+        boxShadow: '0 10px 20px rgba(0, 0, 0, 0.15)',
+        transform: 'translateY(-4px)',
+      },
       '& > *': {
         flexGrow: 1,
-        flexBasis: '50%'
-      }
+        flexBasis: '50%',
+      },
     }}
     content={false}
     {...other}
   >
-    <Box sx={{ p: { xs: 2, sm: 3, xl: 5 } }}>{children}</Box>
+    <Box sx={{ p: { xs: 3, sm: 4, xl: 6 } }}>{children}</Box>
   </MainCard>
 );
 
 AuthCardWrapper.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default AuthCardWrapper;

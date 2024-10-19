@@ -15,171 +15,173 @@ import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
-  const [Reports,setReports] = useState([])
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId)
-  const { show, hide } = useSpinner()
+  const [Reports, setReports] = useState([]);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { show, hide } = useSpinner();
 
   useEffect(() => {
     const getReports = async (props) => {
       try {
-        show()
-        const response = await client.reports.get(props)
-        setReports(response) 
+        show();
+        const response = await client.reports.get(props);
+        setReports(response);
       } catch (error) {
-        toast.error(error?.message)
-      }finally{
-        hide()
+        toast.error(error?.message);
+      } finally {
+        hide();
       }
-    }
+    };
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1000);
-    const data = { branch : selectedBranchId }
-    getReports(data)
+    const data = { branch: selectedBranchId };
+    getReports(data);
     return () => clearTimeout(timer);
   }, [selectedBranchId]);
 
   return (
-    <Grid container spacing={1} className="match-height">
+    <Grid container spacing={2} className="match-height">
       {loading ? (
         <DashboardSkeleton />
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ pt: "22px", pl: "22px" }}>
+          {/* Top Stack Cards - Full Width */}
+          <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={2.4}>
+                <CardStatsVertical
+                  stats={Reports?.totalBalance}
+                  // bg={"#e0f7fa"}
+                  chipText="-12.2%"
+                  chipColor="default"
+                  iconBg="#00796b"
+                  avatarColor="#004d40"
+                  title="Total Earnings"
+                  subtitle="Last week"
+                  avatarIcon="healthicons:money-bag"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={2.4}>
+                <CardStatsVertical
+                  // bg={"#e3f2fd"}
+                  stats={Reports?.totalPaidAmount}
+                  chipText="+25.2%"
+                  iconBg="#1976d2"
+                  avatarColor="#0d47a1"
+                  chipColor="default"
+                  title="Payouts"
+                  subtitle="Last week"
+                  avatarIcon="material-symbols:paid-outline"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={2.4}>
+                <CardStatsVertical
+                  // bg={"#f1f8e9"}
+                  stats={Reports?.TeachingstaffCount}
+                  chipText="-12.2%"
+                  iconBg="#689f38"
+                  chipColor="default"
+                  avatarColor="#33691e"
+                  title="Instructor"
+                  subtitle="Last week"
+                  avatarIcon="mdi:teacher"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={2.4}>
+                <CardStatsVertical
+                  // bg={"#fff3e0"}
+                  stats={Reports?.studentCount}
+                  chipText="+25.2%"
+                  iconBg="#fb8c00"
+                  avatarColor="#e65100"
+                  chipColor="default"
+                  title="Students"
+                  subtitle="Last week"
+                  avatarIcon="ph:student"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={2.4} >
+                <CardStatsVertical
+                  bg={"#d81b60"}
+                  stats={Reports?.courseCount}
+                  chipText="+25.2%"
+                  avatarColor="#880e4f"
+                  chipColor="default"
+                  title="Courses"
+                  subtitle="Last week"
+                  avatarIcon="tabler:books"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          
+          {/* Card Data Section */}
+          {/* <Grid item xs={8.5}>
+            <Grid container spacing={1}>
+              <Grid item xs={12} sm={6} md={4}>
+                <CardData
+                  sx={{ boxShadow: 'none' }}
+                  stats={Reports?.mainCategory}
+                  chipText="-12.2%"
+                  chipColor="default"
+                  avatarColor="error"
+                  title="Main"
+                  subtitle="Last week"
+                  avatarIcon="healthicons:money-bag"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CardData
+                  sx={{ boxShadow: 'none' }}
+                  stats={Reports?.categoryCount}
+                  chipText="-12.2%"
+                  chipColor="default"
+                  avatarColor="error"
+                  title="Category"
+                  subtitle="Last week"
+                  avatarIcon="ic:baseline-money"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CardData
+                  sx={{ boxShadow: 'none' }}
+                  stats={Reports?.courseCount}
+                  chipText="+25.2%"
+                  avatarColor="info"
+                  chipColor="default"
+                  title="Courses"
+                  subtitle="Last week"
+                  avatarIcon="mingcute:wallet-fill"
+                />
+              </Grid>
+            </Grid>
+            
+          </Grid> */}
           <Grid item xs={12} md={8.5}>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardStatsVertical
-                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
-                    stats={Reports?.totalBalance}
-                    chipText="-12.2%"
-                    chipColor="default"
-                    avatarColor="error"
-                    title="Total Earnings"
-                    subtitle="Last week"
-                    avatarIcon="healthicons:money-bag"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardStatsVertical
-                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
-                    stats={Reports?.totalPaidAmount}
-                    chipText="+25.2%"
-                    avatarColor="info"
-                    chipColor="default"
-                    title="Payouts"
-                    subtitle="Last week"
-                    avatarIcon="mingcute:wallet-fill"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardStatsVertical
-                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
-                    stats={Reports?.TeachingstaffCount}
-                    chipText="-12.2%"
-                    chipColor="default"
-                    avatarColor="success"
-                    title="Instructor"
-                    subtitle="Last week"
-                    avatarIcon="ic:baseline-money"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardStatsVertical
-                    // sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}}
-                    stats={Reports?.studentCount}
-                    chipText="+25.2%"
-                    avatarColor="primary"
-                    chipColor="default"
-                    title="Students"
-                    subtitle="Last week"
-                    avatarIcon="ph:student"
-                  />
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={7}>
+                <RevenueReport revenue={Reports?.revenue} />
               </Grid>
-            </Grid>
-
-            <Grid item xs={12} sx={{ mt: 2 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={7}>
-                  <RevenueReport revenue={Reports?.revenue} />
-                </Grid>
-                <Grid item xs={12} md={5}>
-                  <CardPopularCourse courses = {Reports?.popularCourses} />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} sx={{ mt: 2 }}>
-              <Grid container spacing={1}>
-                <Grid item xs={6} sm={6} lg={3} >
-                  <CardData
-                    sx={{ boxShadow : "none"}}
-                    stats={Reports?.mainCategory}
-                    chipText="-12.2%"
-                    chipColor="default"
-                    avatarColor="error"
-                    title="Main"
-                    subtitle="Last week"
-                    avatarIcon="healthicons:money-bag"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardData
-                    sx={{ boxShadow : "none"}}
-                    stats={Reports?.categoryCount}
-                    chipText="-12.2%"
-                    chipColor="default"
-                    avatarColor="error"
-                    title="Category"
-                    subtitle="Last week"
-                    avatarIcon="ic:baseline-money"
-                  />
-                </Grid>
-                <Grid item xs={6} sm={6} lg={3}>
-                  <CardData
-                    sx={{ boxShadow : "none"}}
-                    stats={Reports?.courseCount}
-                    chipText="+25.2%"
-                    avatarColor="info"
-                    chipColor="default"
-                    title="Courses"
-                    subtitle="Last week"
-                    avatarIcon="mingcute:wallet-fill"
-                  />
-                </Grid>
-                {/* <Grid item xs={6} sm={6} lg={3}>
-                  <CardData
-                    stats="4321"
-                    chipText="+25.2%"
-                    avatarColor="info"
-                    chipColor="default"
-                    title="Sub Category"
-                    subtitle="Last week"
-                    avatarIcon="ph:student"
-                  />
-                </Grid> */}
-              </Grid>
-            </Grid>
-
-            <Grid item xs={12} sx={{ mt: 2 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <CardProjectStatus />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <CardSupportTracker />
-                </Grid>
+              <Grid item xs={12} md={5}>
+                <CardPopularCourse courses={Reports?.popularCourses} />
               </Grid>
             </Grid>
           </Grid>
 
+             {/* AllActivity Section */}
           <Grid item xs={12} md={3.5}>
-            <Grid container>
-              <Grid item xs={12}>
-                <AllActivity />
-              </Grid>
-            </Grid>
+            <AllActivity />
+          </Grid>
+
+          {/* Revenue and Popular Course */}
+          
+
+          {/* Project Status and Support Tracker */}
+          <Grid item xs={12} md={6}>
+            <CardProjectStatus />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CardSupportTracker />
           </Grid>
         </Grid>
       )}

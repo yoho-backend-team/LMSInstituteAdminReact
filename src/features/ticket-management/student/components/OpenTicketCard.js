@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder } from 'utils/placeholders';
 import { keyframes } from '@mui/material';
+import { formatDate, formatTime } from 'utils/formatDate';
 
 const fadeInUp = keyframes`
   from {
@@ -62,13 +63,9 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-              <Typography sx={{ fontSize: 12, color: 'primary.main' }}>{ticket?.ago}</Typography>
-            </Box>
-          </Box>
-          <Typography
+            <Box sx={{ display: 'flex', justifyContent: "space-between", mt: 1, py: 4 }}>
+            <Typography
             sx={{
-              my: 4,
               color: 'text.secondary',
               overflow: 'hidden',
               display: '-webkit-box',
@@ -81,6 +78,10 @@ const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
           >
             {ticket?.query}
           </Typography>
+              <Typography sx={{ fontSize: 14, color: 'primary.main' }}>{formatDate(ticket?.createdAt)} - {formatTime(ticket?.createdAt)}</Typography>
+            </Box>
+          </Box>
+          
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <CustomChip

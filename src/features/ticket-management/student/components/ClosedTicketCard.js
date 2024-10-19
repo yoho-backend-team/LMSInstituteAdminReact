@@ -45,7 +45,7 @@ const ClosedTicketCard = ({ ticket }) => {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: "space-between", mt: 0.75, py: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: "space-between", mt: 0.75, py: 2, alignItems: "center" }}>
               <Typography
             sx={{
               color: 'text.secondary',
@@ -60,7 +60,7 @@ const ClosedTicketCard = ({ ticket }) => {
           >
             {ticket?.query}
           </Typography>
-          <Typography sx={{ fontSize: 12, color: 'primary.main' }}>{formatDate(ticket?.createdAt)} - {formatTime(ticket?.createdAt)}</Typography>
+          <Typography sx={{ fontSize: 14, color: 'primary.main' }}>{formatDate(ticket?.createdAt)} - {formatTime(ticket?.createdAt)}</Typography>
             </Box>
           </Box>
          

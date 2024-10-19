@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, FormControl, Grid, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -11,6 +11,7 @@ import Icon from 'components/icon';
 import { useSelector } from 'react-redux';
 import { CreateTicket } from '../services/ticketService';
 import { useInstitute } from 'utils/get-institute-details';
+import { Formik } from 'formik';
 
 const CreateTicketDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
@@ -25,11 +26,17 @@ const CreateTicketDrawer = (props) => {
   }));
 
   const schema = yup.object().shape({
-    query: yup.string().required('Query is required')
+    query: yup.string().required('Query is required'),
+    description : yup.string().required('Description is required'),
+    priority: yup.string().required("Priority is required"),
+    file: yup.string().optional()
   });
 
   const defaultValues = {
-    query: ''
+    query: '',
+    description:'',
+    priority: '',
+    file: ''
   };
 
   const {
@@ -119,6 +126,11 @@ const CreateTicketDrawer = (props) => {
                 />
               )}
             />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <FormControl fullWidth error={ Formik}>
+
+            </FormControl>
           </Grid>
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>

@@ -8,6 +8,9 @@ import { lighten, useTheme } from '@mui/material/styles'
 // ** Hooks Imports
 import useBgColor from 'hooks/useBgColor'
 
+// Helper function to check if color is a hex code
+const isHexColor = (color) => /^#([0-9A-F]{3}){1,2}$/i.test(color)
+
 const Avatar = forwardRef((props, ref) => {
   // ** Props
   const { sx, src, skin, color } = props
@@ -38,14 +41,19 @@ const Avatar = forwardRef((props, ref) => {
     success: getAvatarStyles(skin, 'success'),
     error: getAvatarStyles(skin, 'error'),
     warning: getAvatarStyles(skin, 'warning'),
-    info: getAvatarStyles(skin, 'info')
+    info: getAvatarStyles(skin, 'info'),
+    custom: isHexColor(color) ? { backgroundColor: color, color: '#fff' } : {} // Handle custom hex colors
   }
 
-  return <MuiAvatar ref={ref} {...props} sx={!src && skin && color ? Object.assign(colors[color], sx) : sx} />
+  // Determine if the color is predefined (e.g., 'primary') or custom (hex code)
+  const selectedColor = isHexColor(color) ? 'custom' : color
+
+  return <MuiAvatar ref={ref} {...props} sx={!src && skin && color ? Object.assign(colors[selectedColor], sx) : sx} />
 })
+
 Avatar.defaultProps = {
   skin: 'filled',
-  color: 'primary'
+  color: 'primary' // Default to primary color
 }
 
 export default Avatar
