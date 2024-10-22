@@ -15,6 +15,7 @@ import { selectLoading, selectOpenTickets } from 'features/ticket-management/you
 import { getAllOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const YourTicketsPage = () => {
   // States
@@ -29,10 +30,10 @@ const YourTicketsPage = () => {
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, type: 'opened', page: '1' }));
+    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1', institute_id : useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
   useEffect(() => {
-    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, type: 'closed', page: '1' }));
+    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, status: 'closed', page: '1', institute_id : useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
 
   const handleChange = (event, newValue) => {
@@ -42,7 +43,7 @@ const YourTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
-
+  console.log(studentClosedTickets,studentOpenTickets)
   return (
     <MainCard>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -68,7 +69,7 @@ const YourTicketsPage = () => {
               </CustomTabList>
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentOpenTickets?.map((ticket, index) => (
+                  {studentOpenTickets?.data?.map((ticket, index) => (
                     <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
                   ))}
                   {studentOpenTickets?.last_page !== 1 && (
@@ -86,7 +87,7 @@ const YourTicketsPage = () => {
               </TabPanel>
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentClosedTickets?.map((ticket, index) => (
+                  {studentClosedTickets?.data?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
                   {studentClosedTickets?.last_page !== 1 && (

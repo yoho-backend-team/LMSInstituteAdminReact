@@ -80,6 +80,7 @@ const StaffTicketViewPage = Loadable(lazy(() => import('views/ticket-management/
 const StudentTicketViewPage = Loadable(lazy(() => import('views/ticket-management/student-tickets-page/TicketResolutionPage')));
 const StudentTicketPage = Loadable(lazy(() => import('views/ticket-management/student-tickets-page/student-tickets-overview-page')));
 const YourTicketPage = Loadable(lazy(() => import('views/ticket-management/your-tickets-page/your-tickets-overview-page')));
+const YourTicketViewPage = Loadable(lazy(() => import('views/ticket-management/your-tickets-page/ticket-[id]-view/index')))
 
 // Id Card Management
 const StaffIdCardsPage = Loadable(lazy(() => import('views/id-card-management/teaching-staff-id-cards-page/teaching-staff-id-cards-overview-page')));
@@ -445,6 +446,9 @@ const ApplicationRoutes = () => {
           </Route>    
           <Route element={<ProtectedRoute element={<YourTicketPage />} permissionCode={'inst_perm_student_ticket_view'} module={"Student Tickets"} />}  >
             <Route path="your-ticket" element={<YourTicketPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<YourTicketViewPage />} permissionCode={'inst_perm_student_ticket_view'} module={"Student Tickets"} />} >
+            <Route path='your-ticket-view/:id'  element={<YourTicketViewPage />} />
           </Route>
         </Route>
         {/* Help Center Routes */}

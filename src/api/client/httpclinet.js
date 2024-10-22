@@ -28,7 +28,7 @@ Axios.interceptors.response.use(
             localStorage.removeItem('isAuthenticated');
             localStorage.removeItem('branches');
             localStorage.removeItem("institute")
-            window.location.replace("/login")
+            window.location.replace("/#/login")
         }
         return Promise.reject(error);
     }
