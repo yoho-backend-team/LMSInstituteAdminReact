@@ -173,7 +173,6 @@ const StudentCertificateEdit = (props) => {
           <Controller
             name="certificate_name"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -191,7 +190,6 @@ const StudentCertificateEdit = (props) => {
           <Controller
             name="description"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth

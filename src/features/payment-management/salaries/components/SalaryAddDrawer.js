@@ -234,7 +234,6 @@ const FeesAddDrawer = (props) => {
                 <Controller
                   name="branch"
                   control={control}
-                  rules={{ required: 'Branch field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -257,7 +256,6 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="staff_type"
                 control={control}
-                rules={{ required: 'Staff Type field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
@@ -284,7 +282,6 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="staff"
                 control={control}
-                rules={{ required: 'Staff field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
@@ -304,7 +301,6 @@ const FeesAddDrawer = (props) => {
               <Controller
                 name="payment_date"
                 control={control}
-                rules={{ required: 'Payment Date field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <DatePicker
                     selected={value}

@@ -5,6 +5,7 @@ import CustomChip from 'components/mui/chip';
 import PropTypes from 'prop-types';
 
 const ClosedTicketCard = ({ ticket }) => {
+  console.log(ticket,"close")
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card>
@@ -13,9 +14,9 @@ const ClosedTicketCard = ({ ticket }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar src={ticket?.institute?.logo} sx={{ mr: 2.5, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5">{ticket?.institute_id?.institute_name}</Typography>
+                <Typography variant="h5">{ticket?.institute?.institute_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                  {ticket?.institute_id?.email}
+                  {ticket?.institute?.email}
                 </Typography>
               </Box>
             </Box>
@@ -36,7 +37,6 @@ const ClosedTicketCard = ({ ticket }) => {
           >
             {ticket?.query}
           </Typography>
-          <Typography sx={{ my: 2, color: 'text.secondary' }}>{ticket?.query}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <CustomChip
@@ -45,7 +45,7 @@ const ClosedTicketCard = ({ ticket }) => {
                 size="small"
                 skin="light"
                 color={'error'}
-                label={`Priority:${ticket?.is_active}`}
+                label={`Priority:   ${ticket?.priority}`}
               />
             </Box>
           </Box>

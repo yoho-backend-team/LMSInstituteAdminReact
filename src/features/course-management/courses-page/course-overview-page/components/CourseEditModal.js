@@ -227,7 +227,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="course_name"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { onChange, value } }) => (
                     <CustomTextField
                       fullWidth
@@ -248,7 +247,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="course_duration"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -267,7 +265,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="course_price"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -286,7 +283,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="course_category"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       select
@@ -311,7 +307,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="learning_format"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -331,7 +326,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="course_overview"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -351,7 +345,6 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId,setRe
                 <Controller
                   name="description"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth

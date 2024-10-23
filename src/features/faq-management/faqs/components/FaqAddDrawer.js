@@ -106,7 +106,6 @@ const FaqAddDrawer = (props) => {
               <Controller
                 name="name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -124,7 +123,6 @@ const FaqAddDrawer = (props) => {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -142,7 +140,6 @@ const FaqAddDrawer = (props) => {
               <Controller
                 name="category"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { onChange } }) => (
                   <Autocomplete
                     fullWidth

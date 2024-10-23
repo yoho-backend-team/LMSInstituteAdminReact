@@ -163,7 +163,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                       <Controller
                         name="batch_name"
                         control={control}
-                        rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
                           <CustomTextField
                             fullWidth
@@ -224,7 +223,6 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                       <Controller
                         name="students"
                         control={control}
-                        rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
                           <Autocomplete
                             multiple

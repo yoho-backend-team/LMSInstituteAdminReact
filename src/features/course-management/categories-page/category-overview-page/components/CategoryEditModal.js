@@ -194,7 +194,6 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                 <Controller
                   name="category_name"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth

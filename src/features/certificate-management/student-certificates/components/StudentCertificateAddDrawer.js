@@ -216,7 +216,6 @@ const uploadFileToS3 = async (file) => {
               <Controller
                 name="branch"
                 control={control}
-                rules={{ required: 'Branch field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                       fullWidth
@@ -240,7 +239,6 @@ const uploadFileToS3 = async (file) => {
               <Controller
                 name="course"
                 control={control}
-                rules={{ required: 'Course field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
@@ -263,7 +261,6 @@ const uploadFileToS3 = async (file) => {
               <Controller
                 name="batch"
                 control={control}
-                rules={{ required: 'Batch field is required' }}
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
@@ -294,7 +291,6 @@ const uploadFileToS3 = async (file) => {
               <Controller
                 name="student"
                 control={control}
-                rules={{ required: 'Student field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     select
@@ -319,7 +315,6 @@ const uploadFileToS3 = async (file) => {
               <Controller
                 name="certificate_name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -338,7 +333,6 @@ const uploadFileToS3 = async (file) => {
               <Controller
                 name="description"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth

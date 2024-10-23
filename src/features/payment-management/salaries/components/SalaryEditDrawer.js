@@ -195,7 +195,6 @@ const SalaryEditDrawer = (props) => {
             <Grid item xs={12} sm={12}>
               <Controller
                 name="transaction_id"
-                rules={{ required: true }}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField
@@ -215,7 +214,6 @@ const SalaryEditDrawer = (props) => {
             <Grid item xs={12} sm={12}>
               <Controller
                 name="salary_amount"
-                rules={{ required: true }}
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <TextField

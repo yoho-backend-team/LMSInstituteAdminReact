@@ -162,7 +162,6 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
               render={() => (
                 <Autocomplete
                   fullWidth
@@ -191,7 +190,6 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="course"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
                   value={value}
@@ -218,7 +216,6 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -237,7 +234,6 @@ const StudyMaterialAddDrawer = (props) => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth

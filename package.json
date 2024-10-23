@@ -21,6 +21,7 @@
     "@mui/icons-material": "^5.15.4",
     "@mui/lab": "5.0.0-alpha.128",
     "@mui/material": "^5.15.4",
+    "@mui/styles": "^6.1.2",
     "@mui/system": "5.12.1",
     "@mui/utils": "^5.8.6",
     "@mui/x-data-grid": "6.0.3",

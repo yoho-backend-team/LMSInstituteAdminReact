@@ -235,7 +235,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 <Controller
                   name="class_name"
                   control={control}
-                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
@@ -253,7 +252,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 <Controller
                   name="branch"
                   control={control}
-                  rules={{ required: 'Branch field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -275,7 +273,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 <Controller
                   name="course"
                   control={control}
-                  rules={{ required: 'Course field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -297,7 +294,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 <Controller
                   name="batch"
                   control={control}
-                  rules={{ required: 'Batch field is required' }}
                   render={({ field }) => (
                     <Autocomplete
                       {...field}
@@ -326,7 +322,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 <Controller
                   name="classDate"
                   control={control}
-                  rules={{ required: 'Class Date field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
                       selected={value}
@@ -346,7 +341,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   <Controller
                     name="start_time"
                     control={control}
-                    rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
@@ -372,7 +366,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   <Controller
                     name="end_time"
                     control={control}
-                    rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker

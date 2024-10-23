@@ -209,7 +209,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                 <Controller
                   name="class_name"
                   control={control}
-                  rules={{ required: 'Class Name field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       fullWidth
@@ -228,7 +227,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                 <Controller
                   name="classDate"
                   control={control}
-                  rules={{ required: 'Class Date field is required' }}
                   render={({ field: { value, onChange } }) => (
                     <DatePicker
                       selected={value}
@@ -248,7 +246,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   <Controller
                     name="start_time"
                     control={control}
-                    rules={{ required: 'Start time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
@@ -274,7 +271,6 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   <Controller
                     name="end_time"
                     control={control}
-                    rules={{ required: 'End time is required' }}
                     render={({ field: { value, onChange } }) => (
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker

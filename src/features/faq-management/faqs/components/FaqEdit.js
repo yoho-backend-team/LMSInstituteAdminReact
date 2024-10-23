@@ -114,7 +114,6 @@ const FaqEdit = (props) => {
           <Controller
             name="title"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -132,7 +131,6 @@ const FaqEdit = (props) => {
           <Controller
             name="description"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth

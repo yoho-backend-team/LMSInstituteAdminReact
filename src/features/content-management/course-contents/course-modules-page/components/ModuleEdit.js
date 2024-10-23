@@ -176,7 +176,6 @@ const ModuleEdit = (props) => {
           <Controller
             name="title"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -194,7 +193,6 @@ const ModuleEdit = (props) => {
           <Controller
             name="description"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -212,7 +210,6 @@ const ModuleEdit = (props) => {
           <Controller
             name="video_url"
             control={control}
-            rules={{ required: 'Video URL is required' }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth

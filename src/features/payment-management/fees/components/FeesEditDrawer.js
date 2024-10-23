@@ -235,7 +235,6 @@ const FeesEditDrawer = (props) => {
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="paid_amount"
-                  rules={{ required: true }}
                   control={control}
                   render={({ field: { onChange, value } }) => (
                     <TextField
@@ -256,7 +255,6 @@ const FeesEditDrawer = (props) => {
                 <Controller
                   name="payment_date"
                   control={control}
-                  rules={{ required: 'Payment Date field is required' }}
                   render={({ field: { onChange } }) => (
                     <DatePicker
                       selected={selectedDate}

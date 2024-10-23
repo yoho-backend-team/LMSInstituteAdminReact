@@ -315,7 +315,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="course_name"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -351,7 +350,6 @@ const AddCoursePage = () => {
               <Controller
                name="course_duration"
                control={courseControl}
-               rules={{ required: "Course duration is required" }}
                render={({ field: { value, onChange } }) => (
                  <DurationInput
                    value={value}
@@ -366,7 +364,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="course_duration"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -406,7 +403,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="mrp"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -443,7 +439,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="course_price"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -480,7 +475,6 @@ const AddCoursePage = () => {
               <Controller
                   name="starrating"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -505,7 +499,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="ratingnumber"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -557,7 +550,6 @@ const AddCoursePage = () => {
                     <Controller
                       name="branches.branch_identity"
                       control={courseControl}
-                      rules={{ required: true }}
                       render={({ field: { value, onChange } }) => (
                         <TextField
                           {...params}
@@ -628,7 +620,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="course_category"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -674,7 +665,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="learning_format"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -718,7 +708,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="course_overview"
                   control={courseControl}
-                  // rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth
@@ -756,7 +745,6 @@ const AddCoursePage = () => {
                 <Controller
                   name="description"
                   control={courseControl}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
                       fullWidth

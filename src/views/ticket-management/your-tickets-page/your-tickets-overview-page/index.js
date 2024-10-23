@@ -5,35 +5,42 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
+import AdminTicketsCardsSkeleton from 'components/cards/Skeleton/AdminTcketSkeleton';
 import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 import ClosedTicketCard from 'features/ticket-management/your-tickets/components/ClosedTicketCard';
 import CreateTicketDrawer from 'features/ticket-management/your-tickets/components/CreateTicketDrawer';
 import OpenTicketCard from 'features/ticket-management/your-tickets/components/OpenTicketCard';
 import { selectClosedTickets } from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSelectors';
+import { setClosedTickets } from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSlice';
 import { getAllClosedTickets } from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketThunks';
 import { selectLoading, selectOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSelectors';
+import { setOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSlice';
 import { getAllOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketThunks';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInstitute } from 'utils/get-institute-details';
 
 const YourTicketsPage = () => {
   // States
   const [value, setValue] = useState('open');
   const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const studentOpenTickets = useSelector(selectOpenTickets);
-  const studentClosedTickets = useSelector(selectClosedTickets);
+  const adminOpenTickets = useSelector(selectOpenTickets);
+  const adminClosedTickets = useSelector(selectClosedTickets);
   const studentLoading = useSelector(selectLoading);
+  const [openResolveDrawer, setOpenResolveDrawer] = useState(false);
   const [openCreateTicketDrawer, setOpenCreateTicketDrawer] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, type: 'opened', page: '1' }));
+    dispatch(getAllOpenTickets({institute_id:useInstitute().getInstituteId(), branch_id: selectedBranchId, type: 'opened', page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
   useEffect(() => {
-    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, type: 'closed', page: '1' }));
+    dispatch(getAllClosedTickets({institute_id:useInstitute().getInstituteId(), branch_id: selectedBranchId, type: 'closed', page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
+
+  
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -43,21 +50,22 @@ const YourTicketsPage = () => {
     setSelectedTicket(data);
   };
 
+  console.log(adminClosedTickets,"adminClosedTickets")
+  console.log(selectedTicket,"selectedTicket")
+
   return (
     <MainCard>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography variant="h3">Your Tickets</Typography>
         <Button
           variant="contained"
-          onClick={() => {
-            setOpenCreateTicketDrawer(true);
-          }}
+          onClick={() => setOpenCreateTicketDrawer(true)}
         >
           Create
         </Button>
       </Box>
-      {studentLoading ? (
-        <TicketsCardsSkeleton />
+      {studentLoading? (
+        <AdminTicketsCardsSkeleton />
       ) : (
         <Grid container spacing={2}>
           <Grid marginTop={5} item xs={12}>
@@ -66,15 +74,16 @@ const YourTicketsPage = () => {
                 <Tab value="open" label="Opened Tickets" />
                 <Tab value="close" label="Closed Tickets" />
               </CustomTabList>
+
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentOpenTickets?.map((ticket, index) => (
-                    <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
+                  {adminOpenTickets?.tickets?.map((ticket, index) => (
+                    <OpenTicketCard key={index} tickets={ticket} handleSelectedTicket={handleSelectedTicket} onClick={() => setOpenResolveDrawer(true)} />
                   ))}
-                  {studentOpenTickets?.last_page !== 1 && (
+                  {adminOpenTickets.length > 1 && (
                     <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                       <Pagination
-                        count={studentOpenTickets?.last_page}
+                        count={adminOpenTickets?.last_page}
                         color="primary"
                         onChange={(e, page) => {
                           dispatch(getAllOpenTickets({ branch_id: selectedBranchId, page: page }));
@@ -84,15 +93,16 @@ const YourTicketsPage = () => {
                   )}
                 </Grid>
               </TabPanel>
+
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentClosedTickets?.map((ticket, index) => (
+                  {adminClosedTickets?.tickets?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
-                  {studentClosedTickets?.last_page !== 1 && (
+                  {adminClosedTickets.length > 1 && (
                     <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                       <Pagination
-                        count={studentClosedTickets?.last_page}
+                        count={adminClosedTickets?.last_page}
                         color="primary"
                         onChange={(e, page) => {
                           dispatch(getAllClosedTickets({ branch_id: selectedBranchId, page: page }));
@@ -106,7 +116,6 @@ const YourTicketsPage = () => {
           </Grid>
         </Grid>
       )}
-
       <CreateTicketDrawer
         open={openCreateTicketDrawer}
         toggle={() => setOpenCreateTicketDrawer(false)}

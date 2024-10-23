@@ -255,7 +255,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="first_name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -273,7 +272,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="last_name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -291,7 +289,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="user_name"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -309,7 +306,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="email"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -328,7 +324,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="phone_number"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                  
                   <TextField
@@ -409,7 +404,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="designation"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -428,7 +422,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
               <Controller
                 name="role"
                 control={control}
-                rules={{ required: true }}
                 render={() => (
                   <TextField
                     select

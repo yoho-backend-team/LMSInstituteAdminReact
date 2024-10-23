@@ -14,7 +14,7 @@ const CourseSkeleton = () => (
         <Grid item xs={4} key={i}>
           <Card
             sx={{
-              width: "388px",
+              width: "480px",
               height: "430px",
               borderRadius: 3,
               boxShadow: 5,

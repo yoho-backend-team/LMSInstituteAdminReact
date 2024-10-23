@@ -90,7 +90,8 @@ const Teaching = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                       <Avatar
                         src={item?.image ? getImageUrl(item?.image) : profilePlaceholder}
-                        sx={{ mb: 2, width: 70, height: 70 }}
+                        sx={{ mb: 2, 
+                          width: 70, height: 70 }}
                       />
                       <Typography variant="h4" sx={{ mb: 1 }}>
                         {item.fullname}

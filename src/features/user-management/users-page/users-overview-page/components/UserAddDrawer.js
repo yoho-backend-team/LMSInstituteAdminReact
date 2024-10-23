@@ -242,7 +242,6 @@ const SidebarAddUser = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
                 <TextField
                   sx={{ mb: 4 }}
@@ -274,7 +273,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="fullName"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -291,7 +289,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="lastName"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -309,7 +306,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="email"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -327,7 +323,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="contact"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -348,7 +343,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="designation"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -365,7 +359,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="role"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 select
@@ -389,7 +382,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="userName"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value } }) => (
               <TextField
                 fullWidth
@@ -421,7 +413,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="password"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth
@@ -438,7 +429,6 @@ const SidebarAddUser = (props) => {
           <Controller
             name="confirm_password"
             control={control}
-            rules={{ required: true }}
             render={({ field: { value, onChange } }) => (
               <TextField
                 fullWidth

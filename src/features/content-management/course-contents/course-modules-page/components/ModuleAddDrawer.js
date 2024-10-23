@@ -142,7 +142,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: true }}
               render={() => (
                 <Autocomplete
                   fullWidth
@@ -169,7 +168,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="course"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <Autocomplete
                   value={value}
@@ -196,7 +194,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -215,7 +212,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -234,7 +230,6 @@ const CourseModuleAddDrawer = (props) => {
             <Controller
               name="video_url"
               control={control}
-              rules={{ required: 'Video URL is required' }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth

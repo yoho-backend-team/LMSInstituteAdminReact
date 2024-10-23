@@ -154,7 +154,6 @@ const TeachingStaffAddEventSidebar = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   select

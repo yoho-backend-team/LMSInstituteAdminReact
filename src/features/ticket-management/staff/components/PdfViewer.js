@@ -36,6 +36,7 @@ const PdfViewer = ({ open, handleViewClose, pdf }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent
+        
           sx={{
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(1)} !important`],
             pb: (theme) => `${theme.spacing(5)} !important`,

@@ -232,7 +232,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="course"
               control={control}
-              rules={{ required: 'Course field is required' }}
               render={({ field }) => (
                 <Autocomplete
                   {...field}
@@ -264,7 +263,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="batch"
               control={control}
-              rules={{ required: 'Batch field is required' }}
               render={({ field }) => (
                 <Autocomplete
                   {...field}
@@ -289,7 +287,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="students"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value } }) => (
                 <Autocomplete
                   multiple
@@ -355,7 +352,6 @@ const NotificationAddDrawer = (props) => {
            <Controller
              name="notification_type"
              control={control}
-             rules={{ required: true }}
              render={({ field: { onChange, onBlur, value } }) => (
                <Autocomplete
                  multiple={false}
@@ -403,7 +399,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -423,7 +418,6 @@ const NotificationAddDrawer = (props) => {
             <Controller
               name="description"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -445,7 +439,6 @@ const NotificationAddDrawer = (props) => {
             <Controller 
              name='link'
              control={control}
-             rules={{ required: true}}
              render={({field:{value,onChange}}) => (
               <TextField 
               fullWidth

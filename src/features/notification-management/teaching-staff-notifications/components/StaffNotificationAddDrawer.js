@@ -212,7 +212,6 @@ const StaffNotificationAddDrawer = (props) => {
             <Controller
               name="branch"
               control={control}
-              rules={{ required: 'branch is required' }}
               render={({ value }) => (
                 <Autocomplete
                   fullWidth
@@ -252,7 +251,6 @@ const StaffNotificationAddDrawer = (props) => {
                 <Controller
                   name="staff"
                   control={control}
-                  rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <TextField
                       {...params}
@@ -309,7 +307,6 @@ const StaffNotificationAddDrawer = (props) => {
            <Controller
              name="notification_type"
              control={control}
-             rules={{ required: true }}
              render={({ field: { onChange, onBlur, value } }) => (
                <Autocomplete
                  multiple={false}
@@ -356,7 +353,6 @@ const StaffNotificationAddDrawer = (props) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -376,7 +372,6 @@ const StaffNotificationAddDrawer = (props) => {
             <Controller
               name="body"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
@@ -398,7 +393,6 @@ const StaffNotificationAddDrawer = (props) => {
             <Controller 
              name='link'
              control={control}
-             rules={{ required: true}}
              render={({field:{value,onChange}}) => (
               <TextField 
               fullWidth

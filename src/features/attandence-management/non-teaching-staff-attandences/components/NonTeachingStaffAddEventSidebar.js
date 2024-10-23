@@ -192,7 +192,6 @@ const getUserList = async (name) => {
             <Controller
               name="staff_type"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   select
@@ -279,7 +278,6 @@ const getUserList = async (name) => {
             <Controller
               name="title"
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   select

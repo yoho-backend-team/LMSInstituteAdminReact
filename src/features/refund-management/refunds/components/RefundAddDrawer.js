@@ -189,7 +189,6 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="course"
                 control={control}
-                rules={{ required: 'Course field is required' }}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
                     fullWidth
@@ -212,7 +211,6 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="batch"
                 control={control}
-                rules={{ required: 'Batch field is required' }}
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
@@ -243,7 +241,6 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="student"
                 control={control}
-                rules={{ required: 'Student field is required' }}
                 render={({ field: { value } }) => (
                   <TextField
                     select
@@ -271,7 +268,6 @@ const RefundAddDrawer = (props) => {
               <Controller
                 name="studentfee"
                 control={control}
-                rules={{ required: 'Student Fee field is required' }}
                 render={({ field }) => (
                   <Autocomplete
                     {...field}

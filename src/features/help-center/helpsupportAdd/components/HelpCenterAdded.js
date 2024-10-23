@@ -119,7 +119,6 @@ const HelpCenterAddDrawer = (props) => {
               <Controller
                 name="question"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -141,7 +140,6 @@ const HelpCenterAddDrawer = (props) => {
               <Controller
                 name="answer"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -164,7 +162,6 @@ const HelpCenterAddDrawer = (props) => {
               <Controller
                 name="videolink"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -187,7 +184,6 @@ const HelpCenterAddDrawer = (props) => {
   <Controller
     name="category"
     control={control}
-    rules={{ required: true }}
     defaultValue="Default Category" // Set default value here
     render={({ field: { value, onChange } }) => (
       <TextField

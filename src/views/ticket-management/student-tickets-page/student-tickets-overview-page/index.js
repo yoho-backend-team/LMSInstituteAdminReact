@@ -83,7 +83,7 @@ const StudentTicketsPage = () => {
           </TabPanel>
           <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
             <Grid container spacing={2}>
-              {studentClosedTickets?.data?.map((ticket, index) => (
+              {studentClosedTickets?.map((ticket, index) => (
                 <ClosedTicketCard key={index} ticket={ticket} />
               ))}
               {studentClosedTickets?.last_page !== 1 && (

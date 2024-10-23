@@ -189,7 +189,6 @@ const AddBatchPage = () => {
                     <Controller
                       name="batchName"
                       control={control}
-                      rules={{ required: true }}
                       render={({ field: { value, onChange } }) => (
                         <CustomTextField
                           fullWidth

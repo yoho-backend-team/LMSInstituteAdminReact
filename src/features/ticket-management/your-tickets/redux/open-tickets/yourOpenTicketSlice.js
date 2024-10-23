@@ -12,7 +12,7 @@ const openTicketSlice = createSlice({
       state.data = action.payload;
     },
     setLoading: (state, action) => {
-      state.loading = action.payload;
+      state.loading = action.payload.ticket;
     }
   }
 });

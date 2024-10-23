@@ -136,7 +136,6 @@ const HelpCenterEdit = (props) => {
               <Controller
                 name="question"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -156,7 +155,6 @@ const HelpCenterEdit = (props) => {
               <Controller
                 name="answer"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -176,7 +174,6 @@ const HelpCenterEdit = (props) => {
               <Controller
                 name="videolink"
                 control={control}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
@@ -199,7 +196,6 @@ const HelpCenterEdit = (props) => {
   <Controller
     name="category"
     control={control}
-    rules={{ required: true }}
     defaultValue="" 
     render={({ field: { value, onChange } }) => (
       <TextField
