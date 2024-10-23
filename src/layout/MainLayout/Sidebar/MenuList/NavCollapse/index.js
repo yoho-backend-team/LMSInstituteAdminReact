@@ -92,7 +92,7 @@ const NavCollapse = ({ menu, level }) => {
           backgroundColor: isChildActive || selected === menu.id ? '#0CCE7F ' : 'inherit', // Persist background when child is active or item is selected
           py: level > 1 ? 1 : 1.25,
           pl: `${level * 24}px`,
-          color: "#3b4056",
+          color: isChildActive? "white" :"#3b4056",
           ":hover": {
             fontWeight: "bold",
             color: "#0CCE7F",

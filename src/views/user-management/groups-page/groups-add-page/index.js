@@ -101,6 +101,7 @@ const GroupAddPage = () => {
           dispatch(getAllGroups({ institute_id:useInstitute().getInstituteId(),branch_id: selectedBranchId }));
           navigate(-1);
           toast.success(result.message);
+          hide()
         } else {
           hide()
           toast.error(result.message);

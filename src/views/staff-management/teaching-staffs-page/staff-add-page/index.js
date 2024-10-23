@@ -133,7 +133,7 @@ const StepperLinearWithValidation = () => {
       setActiveCourse(result?.data);
     }
   };
-
+ console.log(useBranchId())
   const {
     setValue,
     setError,
@@ -219,7 +219,8 @@ const StepperLinearWithValidation = () => {
   const onSubmit = async () => {
     const personalData = personalControl._formValues;
     const courseUUIDs = selectedCourses.map(option => option.uuid);
-    
+    const branch_id = useBranchId()
+    console.log(branch_id,"branch_id")
     const teaching_staffdata = {
       email: personalData.email,
       full_name: personalData.full_name,
@@ -229,7 +230,7 @@ const StepperLinearWithValidation = () => {
       username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
-      branch_id : useBranchId(),
+      branch_id : branch_id,
       qualification:personalData.education_qualification,
       contact_info: {
         state: personalData.state,
