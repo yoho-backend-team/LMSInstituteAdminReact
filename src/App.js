@@ -46,6 +46,10 @@ const App = () => {
     const selectBranchId = localStorage.getItem("selectedBranchId")
     const user = JSON.parse(localStorage.getItem("userData"))
     const notifiAdd = Cookies.get("instituteNotificationSubscription")
+    const branches = JSON.parse(localStorage.getItem('branches'));
+    if(!selectBranchId){
+      localStorage.setItem("selectedBranchId",branches[0]?.uuid)
+    }
     if(isAuthenticatedUser && !notifiAdd){
       console.log(user?.institute_id)
        regiserSubscription(user?.role,user?._id,user,selectBranchId,user?.institute_id)
