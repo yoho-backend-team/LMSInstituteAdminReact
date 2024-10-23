@@ -49,7 +49,7 @@ const App = () => {
     const branches = JSON.parse(localStorage.getItem('branches'));
     console.log(!selectBranchId)
     if(!selectBranchId){
-      localStorage.setItem("selectedBranchId",branches[0]?.uuid)
+      localStorage.setItem("selectedBranchId",branches?.[0]?.uuid)
     }
     if(isAuthenticatedUser && !notifiAdd){
       console.log(user?.institute_id)
