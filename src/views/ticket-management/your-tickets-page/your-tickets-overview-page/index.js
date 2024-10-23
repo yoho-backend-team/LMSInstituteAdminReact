@@ -49,7 +49,7 @@ const YourTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
-  console.log(studentClosedTickets,studentOpenTickets)
+  
   return (
     <MainCard>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -74,7 +74,7 @@ const YourTicketsPage = () => {
 
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentOpenTickets?.data?.map((ticket, index) => (
+                    {adminClosedTickets?.data?.map((ticket, index) => (
                     <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
                   ))}
                   {adminOpenTickets.length > 1 && (
@@ -93,7 +93,7 @@ const YourTicketsPage = () => {
 
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {studentClosedTickets?.data?.map((ticket, index) => (
+                    {adminClosedTickets?.data?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
                   {adminClosedTickets.length > 1 && (

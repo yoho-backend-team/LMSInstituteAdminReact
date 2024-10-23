@@ -217,13 +217,13 @@ const CreateTicketDrawer = (props) => {
           </Box>
         </form>
       </Box>
-      <Snackbar
+      {/* <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      />
+      /> */}
     </Drawer>
   );
 };
