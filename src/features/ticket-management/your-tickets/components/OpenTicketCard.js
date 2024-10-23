@@ -19,8 +19,8 @@ const fadeInUp = keyframes`
   }
 `;
 
-const OpenTicketCard = ({ tickets }) => {
-  console.log(tickets,"ticket")
+const OpenTicketCard = ({ ticket }) => {
+  
   return (
     <Grid item xs={12} md={6} lg={4}>
       <Card sx={{ minHeight: 240,
@@ -57,7 +57,7 @@ const OpenTicketCard = ({ tickets }) => {
               fontWeight: 500
             }}
           >
-            {tickets?.query}
+            {ticket?.query}
           </Typography>
               <Typography sx={{ fontSize: 14, color: 'primary.main' }}>{formatDate(ticket?.date)} - {formatTime(ticket?.date)}</Typography>
             </Box>
@@ -71,7 +71,7 @@ const OpenTicketCard = ({ tickets }) => {
                 size="small"
                 skin="light"
                 color={'error'}
-                label={`Priority:  ${tickets?.priority}`}
+                label={`Priority:  ${ticket?.priority}`}
               />
             </Box>
             <Button variant="contained" component={ Link} state={{ id: ticket?.uuid }} href={`/ticket-management/your-ticket-view/${ticket?.uuid}`} to={`/ticket-management/your-ticket-view/${ticket?.uuid}`} >
@@ -85,6 +85,6 @@ const OpenTicketCard = ({ tickets }) => {
 };
 
 OpenTicketCard.propTypes = {
-  tickets: PropTypes.any
+  ticket: PropTypes.any
 };
 export default OpenTicketCard;
