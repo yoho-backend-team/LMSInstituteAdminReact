@@ -47,6 +47,7 @@ const App = () => {
     const user = JSON.parse(localStorage.getItem("userData"))
     const notifiAdd = Cookies.get("instituteNotificationSubscription")
     const branches = JSON.parse(localStorage.getItem('branches'));
+    console.log(!selectBranchId)
     if(!selectBranchId){
       localStorage.setItem("selectedBranchId",branches[0]?.uuid)
     }
