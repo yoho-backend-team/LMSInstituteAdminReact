@@ -104,7 +104,7 @@ const generateEndpoints = () => {
         },
         student : {
             get : `/api/institutes/${instituteId}/branches/`,
-            getWithId : `/api/institutes/student/${instituteId}/students/`,
+            getWithId : `/api/institutes/auth/student/${instituteId}/students/`,
             getWithBatch : `/api/institutes/${instituteId}/branches/`,
             getWithCourse: `/api/institutes/${instituteId}/branches/`,
             update : `/api/institutes/:instituteId/students/update/`,
@@ -143,7 +143,12 @@ const generateEndpoints = () => {
             student_ticket_with_id : `/api/institutes/student-ticket/`,
             staff_ticket : `/api/institutes/staff/ticket/all`,
             staff_ticket_with_id : `/api/institutes/staff/ticket/`,
-            update_staff_ticket : `/api/institutes/staff/ticket/updatestatus/`
+            update_staff_ticket : `/api/institutes/staff/ticket/updatestatus/`,
+            admin : {
+                create_ticket : `/api/institutes/admin/ticket`,
+                get_all : `/api/institutes/admin/ticket/all`,
+                get_with_id : `/api/institutes/admin/ticket/`
+            }
         },
         attedence : {
           student_all : `/api/institutes/attedance/students`,

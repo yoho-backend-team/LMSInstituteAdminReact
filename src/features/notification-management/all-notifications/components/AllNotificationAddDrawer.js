@@ -36,7 +36,7 @@ const AllNotificationAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const Header = styled(Box)(({ theme }) => ({

@@ -34,10 +34,10 @@ const YourTicketsPage = () => {
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllOpenTickets({institute_id:useInstitute().getInstituteId(), branch_id: selectedBranchId, type: 'opened', page: '1' }));
+    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1', institute_id : useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
   useEffect(() => {
-    dispatch(getAllClosedTickets({institute_id:useInstitute().getInstituteId(), branch_id: selectedBranchId, type: 'closed', page: '1' }));
+    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, status: 'closed', page: '1', institute_id : useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
 
   
@@ -49,10 +49,7 @@ const YourTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
-
-  console.log(adminClosedTickets,"adminClosedTickets")
-  console.log(selectedTicket,"selectedTicket")
-
+  console.log(studentClosedTickets,studentOpenTickets)
   return (
     <MainCard>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -77,8 +74,8 @@ const YourTicketsPage = () => {
 
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {adminOpenTickets?.tickets?.map((ticket, index) => (
-                    <OpenTicketCard key={index} tickets={ticket} handleSelectedTicket={handleSelectedTicket} onClick={() => setOpenResolveDrawer(true)} />
+                  {studentOpenTickets?.data?.map((ticket, index) => (
+                    <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
                   ))}
                   {adminOpenTickets.length > 1 && (
                     <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
@@ -96,7 +93,7 @@ const YourTicketsPage = () => {
 
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>
-                  {adminClosedTickets?.tickets?.map((ticket, index) => (
+                  {studentClosedTickets?.data?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
                   {adminClosedTickets.length > 1 && (

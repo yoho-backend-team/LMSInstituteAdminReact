@@ -1,6 +1,7 @@
 // groupService.js
 import client from 'api/client';
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
 
 const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/`;
 
@@ -24,29 +25,13 @@ export const getAllBranchesByInstitute = async (data) => {
   }
 };
 
-export const getActiveBranches = async () => {
+export const getActiveBranches = async (params) => {
   try {
-    const response = await axios.get(`${BRANCH_API_ENDPOINT}?is_active=true`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      }
-    });
-
-    // Check if the response status is successful
-
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Active Branches. Status: ${response.status}`);
-    }
+    const response = await client.branch.getAll(params)
+   return response
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getActiveBranches:', error);
-
-    // Throw the error again to propagate it to the calling function/component
-    throw error;
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 

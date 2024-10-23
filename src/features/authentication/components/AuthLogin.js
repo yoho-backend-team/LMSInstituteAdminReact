@@ -55,12 +55,12 @@ const FirebaseLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
+  console.log(theme.typography.customInput,"customINput")
   return (
     <Formik
       initialValues={{
-        email: 'chandran.yoho@gmail.com',
-        password: 'Wecandoit@2024', 
+        email: '',
+        password: '', 
         submit: null
       }}
       validationSchema={Yup.object().shape({
@@ -94,7 +94,9 @@ const FirebaseLogin = ({ ...others }) => {
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <form noValidate onSubmit={handleSubmit} {...others}>
-          <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
+          <FormControl variant="outlined" fullWidth error={Boolean(touched.email && errors.email)} 
+          sx={{ my: 1 }}
+          >
             <InputLabel htmlFor="outlined-adornment-email-login">Username</InputLabel>
             <OutlinedInput
               id="outlined-adornment-email-login"
@@ -112,7 +114,9 @@ const FirebaseLogin = ({ ...others }) => {
             )}
           </FormControl>
 
-          <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
+          <FormControl variant="outlined" fullWidth error={Boolean(touched.password && errors.password)} 
+          sx={{ my: 1 }}
+          >
             <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
             <OutlinedInput
               id="outlined-adornment-password-login"

@@ -51,7 +51,7 @@ const StaffTicketsPage = () => {
     setSelectedTicket(data);
     setOpenResolveDrawer(true);
   };
-
+  console.log(studentOpenTickets,studentClosedTickets)
   return (
     <>
       <MainCard title="Staff Tickets" sx={{ minHeight: '100vh' }}>
@@ -66,7 +66,7 @@ const StaffTicketsPage = () => {
             </CustomTabList>
             <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
               <Grid container spacing={2}>
-                {studentOpenTickets?.data?.map((ticket, index) => (
+                {studentOpenTickets?.data?.data?.map((ticket, index) => (
                   <OpenTicketCard
                     key={index}
                     ticket={ticket}
@@ -78,13 +78,13 @@ const StaffTicketsPage = () => {
             </TabPanel>
             <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
               <Grid container spacing={2}>
-                {studentClosedTickets?.data?.map((ticket, index) => (
+                {studentClosedTickets?.data?.data?.map((ticket, index) => (
                   <ClosedTicketCard key={index} ticket={ticket} />
                 ))}
               </Grid>
             </TabPanel>
           </TabContext>
-          {studentClosedTickets?.last_page !== 1 && (
+          {studentClosedTickets?.data?.last_page !== 1 && (
                   <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                     <Pagination
                       count={studentClosedTickets?.last_page}

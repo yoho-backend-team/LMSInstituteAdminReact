@@ -15,7 +15,7 @@ const BatchSkeleton = () => {
           <Grid item xs={12} sm={6} lg={4} key={index}>
             <Card
               sx={{
-                width: 450,
+                width: 388,
                 height: 261,
                 padding: "24px",
                 borderRadius: 3,
@@ -45,7 +45,7 @@ const BatchSkeleton = () => {
                 <Box sx={{ width: "112px", height: "24px",marginLeft:'24px'}}>
                    <CustomSkeleton width={112} height={24} variant="rectangular" /> 
                 </Box>
-                <Box sx={{ width: "112px", height: "24px",marginRight:'-16px'}} >
+                <Box sx={{ width: "112px", height: "24px"}} >
                    <CustomSkeleton width={112} height={24} variant="rectangular" />
                 </Box>
               </Box>
@@ -53,7 +53,7 @@ const BatchSkeleton = () => {
                 <Box sx={{ width: "112px", height: "24px",ml:'4px'}}>
                    <CustomSkeleton width={112} height={24} variant="rectangular" /> 
                 </Box>
-                <Box sx={{ width: "112px", height: "24px", marginRight:'-38px'}} >
+                <Box sx={{ width: "112px", height: "24px" }} >
                    <CustomSkeleton width={112} height={24} variant="rectangular" />
                 </Box>
               </Box>

@@ -18,8 +18,8 @@ const LiveClassSkeleton = () => {
           <Grid key={i} item xs={12} sm={6} md={4} p={1} mt={3}>
             <Card
             sx={{
-              width: "450px",
-              height: "340px",
+              width: "390px",
+              height: "300px",
               borderRadius: 3,
               boxShadow: 5,
               position: 'relative',
@@ -62,7 +62,7 @@ const LiveClassSkeleton = () => {
                 </Box>
                 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', textDecoration: 'none' }}>
-                  <Box sx={{marginTop:'30px'}}>
+                  <Box sx={{marginTop:'5px'}}>
                     <CustomSkeleton variant="text" width={100} height={40} />
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', mt:-1, marginTop:"42px" ,gap:'2px'}}>

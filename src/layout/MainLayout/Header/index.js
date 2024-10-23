@@ -20,6 +20,8 @@ import { styled } from '@mui/material/styles';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import { useInstitute } from 'utils/get-institute-details';
+import { getImageUrl } from 'utils/imageUtils';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -88,8 +90,14 @@ const Header = ({ handleLeftDrawerToggle }) => {
           }
         }}
       >
-        <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-          <LogoSection />
+        <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
+          {
+            useInstitute().getDetails().image ? 
+            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)} alt={useInstitute().getDetails().institute_name} width={80} height={40} />
+            :
+            <LogoSection />
+          }
+
         </Box>
         <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
           <Avatar

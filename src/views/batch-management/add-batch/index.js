@@ -98,7 +98,7 @@ const AddBatchPage = () => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-    setActiveBranches(result.data.data);
+    setActiveBranches(result.data);
   };
 
   const defaultValues = {

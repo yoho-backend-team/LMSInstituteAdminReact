@@ -125,7 +125,7 @@ const RevenueReport = ({revenue}) => {
       <Box component={'h2'} sx={{ fontSize: 16, mb: 2.5 }}>
         Revenue
       </Box>
-      <Card  sx={{ boxShadow : "none", border : "1px solid #E5E7EB", borderRadius: "8px"}} >
+      <Card  sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",  borderRadius: "8px"}} >
         <CardHeader
           // action={
           //   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

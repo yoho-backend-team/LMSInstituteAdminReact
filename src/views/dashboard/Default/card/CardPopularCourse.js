@@ -78,9 +78,9 @@ const CardPopularCourse = ({courses}) => {
               sx={{
                 display: 'flex',
                 // boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
-                border : "1px solid #E5E7EB",
+                boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+                // border : "1px solid #E5E7EB",
                 borderRadius : "8px",
-                boxShadow : "none",
                 '& img': { mr: 2 },
                 alignItems: 'center',
                 mb: index !== courses.length - 1 ? 1.2 : undefined,

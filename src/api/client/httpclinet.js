@@ -19,14 +19,16 @@ Axios.interceptors.request.use((config)=> {
 Axios.interceptors.response.use(
     (response) => response,
     (error) => {
-        if(error.response && error.response.status === 401 && error.response.statusText === "Unauthorized"){
+        console.log(error,error?.response.status === 401,error.response.data.status === "session_expired")
+        if(error.response && error.response.status === 401 && error.response.data.status === "session_expired"){
+            console.log("logout tryed")
             localStorage.removeItem('token');
             localStorage.removeItem('userData');
             localStorage.removeItem('permissions');
             localStorage.removeItem('isAuthenticated');
             localStorage.removeItem('branches');
             localStorage.removeItem("institute")
-            window.location.replace("/login")
+            window.location.replace("/#/login")
         }
         return Promise.reject(error);
     }

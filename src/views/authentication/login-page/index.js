@@ -23,6 +23,7 @@ import AuthIllustrationV1Wrapper from 'features/authentication/components/AuthIl
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import {checkAuthState,getOtpDetails} from 'utils/check-auth-state';
+import NewLogo from "../../../assets/images/logo/logo.png"
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -158,9 +159,10 @@ const Login = () => {
               <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
                 <AuthCardWrapper>
                   <Grid container spacing={2} alignItems="center" justifyContent="center">
-                    <Grid item sx={{ mb: 3 }}>
+                    <Grid item sx={{ mb: 2 }}>
                       <Link to="#">
-                        <Logo />
+                        {/* <Logo /> */}
+                        <img src={NewLogo} alt='KIAQ' width={184} height={64} />
                       </Link>
                     </Grid>
                     <Grid item xs={12}>

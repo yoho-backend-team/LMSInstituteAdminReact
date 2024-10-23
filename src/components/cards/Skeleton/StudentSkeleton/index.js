@@ -6,7 +6,7 @@ const StudentSkeleton = () => {
     <>
       <Grid container spacing={4}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <Grid key={i} item xs={12} sm={6} md={3} p={1} mt={3}>
+          <Grid key={i} item xs={12} sm={6} md={4} spacing={2} px={1}>
             <Card
             sx={{
               width: "350px",

@@ -78,7 +78,7 @@ const Teaching = () => {
         <TeacherFilter selectedBranchId={selectedBranchId} />
       </Grid>
 
-      {loading  ?  (
+      {loading?  (
         <StaffManagement />
       ) : (
         <Grid>

@@ -47,10 +47,10 @@ const StudentTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
-
+  console.log(studentOpenTickets,"ticket")
   return (
     <MainCard title="Student Tickets" sx={{ minHeight: '100vh' }}>
-      {studentLoading? (
+      {studentLoading ? (
         <StudentTicketsCardsSkeleton/>
       ) : (
         <TabContext value={value}>
@@ -60,7 +60,7 @@ const StudentTicketsPage = () => {
           </CustomTabList>
           <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
             <Grid container spacing={2}>
-              {studentOpenTickets?.data?.map((ticket, index) => (
+              {studentOpenTickets?.data?.data?.map((ticket, index) => (
                 <OpenTicketCard
                   key={index}
                   ticket={ticket}
@@ -68,10 +68,11 @@ const StudentTicketsPage = () => {
                   onClick={() => setOpenResolveDrawer(true)}
                 />
               ))}
-              {studentOpenTickets?.last_page !== 1 && (
+            </Grid>
+            {studentOpenTickets?.data?.last_page !== 1 && (
                 <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                   <Pagination
-                    count={studentOpenTickets?.last_page}
+                    count={studentOpenTickets?.data?.last_page}
                     color="primary"
                     onChange={(e, page) => {
                       dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, page: page }));
@@ -79,14 +80,15 @@ const StudentTicketsPage = () => {
                   />
                 </Grid>
               )}
-            </Grid>
           </TabPanel>
           <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
             <Grid container spacing={2}>
-              {studentClosedTickets?.map((ticket, index) => (
+              {studentClosedTickets?.data?.data?.map((ticket, index) => (
                 <ClosedTicketCard key={index} ticket={ticket} />
               ))}
-              {studentClosedTickets?.last_page !== 1 && (
+              
+            </Grid>
+            {studentClosedTickets?.data?.last_page !== 1 && (
                 <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                   <Pagination
                     count={studentClosedTickets?.last_page}
@@ -97,7 +99,6 @@ const StudentTicketsPage = () => {
                   />
                 </Grid>
               )}
-            </Grid>
           </TabPanel>
         </TabContext>
       )}

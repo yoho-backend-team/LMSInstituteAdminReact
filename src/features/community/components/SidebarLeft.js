@@ -61,7 +61,6 @@ const SidebarLeft = (props) => {
   const { show, hide } = useSpinner()
   
   const handleChatClick = async (type, community) => {
-    show()
     setChats(null);
     setActive(community);
     setSelectedBatch(community);
@@ -77,6 +76,7 @@ const SidebarLeft = (props) => {
     setMessages(response)
     if (community && community._id) {
       try {
+        show()
         const response = await getAllBatchChats({ chatId: community._id });
         
         if (response) {
@@ -84,6 +84,7 @@ const SidebarLeft = (props) => {
           setChats(response.data);
         }
       } catch (error) {
+        hide()
         console.error('Error in handleChatClick:', error);
       }finally{
         hide()
@@ -137,6 +138,8 @@ const SidebarLeft = (props) => {
                     width: '100%',
                     borderRadius: 1,
                     '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                    transition: 'background-color 0.3s ease',
+                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.05)' },
                     ...(activeCondition && {
                       background: (theme) =>
                         `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
@@ -213,7 +216,7 @@ const SidebarLeft = (props) => {
           display: 'block',
           position: mdAbove ? 'static' : 'absolute',
           '& .MuiDrawer-paper': {
-            boxShadow: 'none',
+            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.15)',
             width: sidebarWidth,
             position: mdAbove ? 'static' : 'absolute',
             borderTopLeftRadius: (theme) => theme.shape.borderRadius,

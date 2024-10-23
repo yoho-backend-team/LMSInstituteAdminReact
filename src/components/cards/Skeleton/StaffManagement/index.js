@@ -10,11 +10,11 @@ const StaffManagement = () => {
     <>
       <Grid container spacing={4}>
         {Array.from({ length: 6 }).map((_, i) => (
-          <Grid key={i} item xs={12} sm={6} md={4} p={1} mt={3}>
+          <Grid key={i} item xs={12} sm={6} md={4} px={1} spacing={2} >
             <Card
             sx={{
-              width: "380px",
-              height: "220px",
+              width: "382px",
+              height: "229px",
               borderRadius: 3,
               boxShadow: 5,
               position: 'relative',

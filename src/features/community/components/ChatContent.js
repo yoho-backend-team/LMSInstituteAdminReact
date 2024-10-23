@@ -86,7 +86,7 @@ const ChatContent = (props) => {
             width: 0,
             flexGrow: 1,
             height: '100%',
-            backgroundColor: 'action.hover'
+            backgroundColor: 'action.hover',
           }}
         >
           <Box
@@ -97,7 +97,8 @@ const ChatContent = (props) => {
               alignItems: 'center',
               justifyContent: 'space-between',
               backgroundColor: 'background.paper',
-              borderBottom: (theme) => `1px solid ${theme.palette.divider}`
+              borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+              boxShadow: '0px 4px 10px -4px rgba(0, 0, 0, 0.1)',
             }}
           >
             {mdAbove ? null : (

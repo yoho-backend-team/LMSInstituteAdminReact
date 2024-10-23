@@ -3,128 +3,81 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import client from 'api/client';
-import { useEffect,useState } from 'react';
-
-const data = [
-  {
-    title: 'New Course Upload',
-    trendNumber: 25.8,
-    subtitle: 'Alex,Update the course',
-    imgSrc:
-      'https://png.pngtree.com/png-vector/20200310/ourmid/pngtree-online-education-training-course-design-concept-vector-illustration-png-image_2158408.jpg'
-  },
-  {
-    title: 'Close a Course Path',
-    trend: 'negative',
-    trendNumber: 16.2,
-    subtitle: 'Marley,Update the course',
-    imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1FqgmFIGXwMW10-Wj1ZxY7hZFdXv-lSv0YQ&usqp=CAU'
-  },
-  {
-    title: 'New Course Upload',
-    subtitle: 'Tesla,Update the course',
-    trendNumber: 12.3,
-    imgSrc: 'https://png.pngtree.com/png-clipart/20200813/ourmid/pngtree-young-people-back-view-illustration-png-image_2324583.jpg'
-  },
-  {
-    title: 'Close a Course Path',
-    trend: 'negative',
-    trendNumber: 11.9,
-    subtitle: 'Apple,Update the course',
-    imgSrc: 'https://png.pngtree.com/png-clipart/20200813/ourmid/pngtree-young-people-greeting-illustration-png-image_2324595.jpg'
-  },
-  {
-    title: 'New Course Upload',
-    subtitle: 'React,Update the course',
-    trendNumber: 16.2,
-    imgSrc:
-      'https://png.pngtree.com/png-vector/20190611/ourlarge/pngtree-web-development-illustration-modern-can-be-used-for-landing-pages-web-png-image_1496200.jpg'
-  }
-];
-
-
+import { useEffect, useState } from 'react';
+import { imagePlaceholder } from 'utils/placeholders';
 
 const AllActivity = () => {
   const theme = useTheme();
-  const [Logs,setLogs] = useState([])
+  const [Logs, setLogs] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const getAllUserActivity = async () => {
-    const response = await client.activity.get()
-    setLogs(response?.data)
-    }
-    getAllUserActivity()
-   },[])
+      const response = await client.activity.get();
+      setLogs(response?.data);
+    };
+    getAllUserActivity();
+  }, []);
 
   return (
     <>
-      <Typography variant="h4"sx={{ml:1,mb:2}}>
+      <Typography variant="h4" sx={{ ml: 1, mb: 2 }}>
         Recent Activities
       </Typography>
-      <Card sx={{ backgroundColor: "white", p: 3, height: 450, overflow: 'auto', boxShadow: "none", border : "1px solid #E5E7EB", borderRadius: "8px" }}>
+      <Card
+        sx={{
+          backgroundColor: "white",
+          p: 3,
+          height: 450,
+          overflow: 'auto',
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          borderRadius: "12px"
+        }}
+      >
         <Box>
-          <Card sx={{ mt: 2, backgroundColor: theme.palette.primary.main, opacity: 0.8, boxShadow: 'none' }}>
-            {Logs.map((item, index) => {
-              return (
-                <Box key={index}>
+          {Logs.map((item, index) => {
+            return (
+              <Box key={index} sx={{ mb: 3 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    mb: 2,
+                    backgroundColor: theme.palette.grey[100],
+                    borderRadius: '8px',
+                    p: 2,
+                    transition: 'background-color 0.3s ease',
+                    '&:hover': {
+                      backgroundColor: theme.palette.grey[200],
+                    },
+                  }}
+                >
                   <Box
+                    component="img"
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      mb: index !== data.length - 1 ? 1 : undefined,
-                      pb: index === data.length - 1 ? 2 : undefined,
-                      pr: 2,
-                      pl: 2,
-                      pt: 2
+                      width: 50,
+                      height: 50,
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginRight: 2,
                     }}
-                  >
-                    {/* <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} /> */}
-                    <Box sx={{ marginLeft: 2 }}>
-                      <Typography variant="h5" sx={{ color: "black" }}>
-                        {item.title}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: "#212121", fontSize: '10px', mt: 0.5 }}>
-                      {item.user?.first_name}  {"|"}  {item?.action} {"|"} {item?.details}
-                      </Typography>
-                    </Box>
+                    src={item.imgSrc ?? imagePlaceholder}
+                    alt={item.title}
+                  />
+                  <Box>
+                    <Typography variant="h6" sx={{ color: theme.palette.primary.dark, mb: 0.5 }}>
+                      {item.title}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: theme.palette.text.secondary, fontSize: '0.9rem' }}>
+                      {item.user?.first_name} | {item?.action} | {item?.details}
+                    </Typography>
                   </Box>
-                  <Divider sx={{ mr: 2, ml: 2 }} />
                 </Box>
-              );
-            })}
-          </Card>
-        </Box>
-        <Box>
-          {/* <Card sx={{ mt: 4, backgroundColor: theme.palette.primary.main, opacity: 0.8 }}>
-            {Logs.map((item, index) => {
-              return (
-                <Box key={index}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      mb: index !== data.length - 1 ? 1 : undefined,
-                      pb: index === data.length - 1 ? 2 : undefined,
-                      pr: 2,
-                      pl: 2,
-                      pt: 2
-                    }}
-                  >
-                    <img width={40} height={40} style={{ borderRadius: 20 }} src={item.imgSrc} alt={item.subtitle} />
-                    <Box sx={{ marginLeft: 2 }}>
-                      <Typography variant="h5" sx={{ color: 'white' }}>
-                        {item.action}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'lightgray', fontSize: '10px', mt: 0.5 }}>
-                        {item.deta}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Divider sx={{ mr: 2, ml: 2 }} />
-                </Box>
-              );
-            })}
-          </Card> */}
+                {index !== Logs.length - 1 && (
+                  <Divider sx={{ borderColor: theme.palette.grey[300] }} />
+                )}
+              </Box>
+            );
+          })}
         </Box>
       </Card>
     </>

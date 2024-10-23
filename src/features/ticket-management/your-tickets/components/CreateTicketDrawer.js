@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Button, Grid, TextField, Typography,FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
+import { Button, FormControl, Grid, TextField, Typography, MenuItem, InputLabel, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -11,54 +11,14 @@ import * as yup from 'yup';
 import Icon from 'components/icon';
 import { useSelector } from 'react-redux';
 import { CreateTicket } from '../services/ticketService';
-import { getBranchObjectId, useInstitute } from 'utils/get-institute-details';
-import { useState } from 'react';
-import { makeStyles } from "@mui/styles";
-import { useNavigate } from 'react-router-dom';
+import { useInstitute } from 'utils/get-institute-details';
 import toast from 'react-hot-toast';
-
-
-
-
-const useStyles = makeStyles({
-  form: {
-    gap: "38px",
-  },
-  label: {
-    color: "#606060",
-    fontFamily: "Nunito Sans",
-    fontSize: "16px",
-    fontStyle: "normal",
-    fontWeight: "600",
-    lineHeight: "normal",
-  },
-  rootright: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    paddingRight: "20px",
-    height: "100%",
-  },
-  rightImage: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-  cancelButton: {
-    background: "#F8F9FA",
-    border: "1px solid #DEE2E6",
-  },
-  conformButton: {
-    background: "#5611B1",
-    boxShadow: "0px 6px 34px -8px #0D6EFD",
-  },
-});
+import { useSpinner } from 'context/spinnerContext';
 
 const CreateTicketDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const classes = useStyles();
+  const { show, hide } = useSpinner()
 
   const Header = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -71,12 +31,16 @@ const CreateTicketDrawer = (props) => {
 
   const schema = yup.object().shape({
     query: yup.string().required('Query is required'),
-    priority: yup.string().required("Priority is required"),
+    description: yup.string().required('Description is required'),
+    priority: yup.string().required('Priority is required'),
+    file: yup.mixed().optional(),
   });
 
   const defaultValues = {
     query: '',
-    priority: ''
+    description: '',
+    priority: '',
+    file: ''
   };
 
   const {
@@ -101,21 +65,28 @@ const CreateTicketDrawer = (props) => {
 
   const onSubmit = async (data) => {
     try {
+      show()
+      console.log(data,"data")
       const inputData = {
         query: data.query,
-        branch: selectedBranchId,
+        description: data.description,
         priority: data.priority,
-        institute: useInstitute().getInstituteMainId(),
+        branch : selectedBranchId,
+        file : data?.file ? data?.file : "null",
+        institute : useInstitute().getInstituteId(),
       };
 
-      const result = await CreateTicket(inputData);
-
+      await CreateTicket(inputData);
       handleClose();
-        toast.success("ticket created successfully");
-      } catch (error) {
-        toast.error(error?.message);
-      }
-    };
+      setRefetch((state) => !state);
+      toast.success("Ticket created successfully")
+    } catch (error) {
+      hide()
+      toast?.error(error?.message)
+    }finally{
+      hide()
+    }
+  };
 
   return (
     <Drawer
@@ -146,6 +117,7 @@ const CreateTicketDrawer = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Query Field */}
           <Grid item xs={12} sm={12}>
             <Controller
               name="query"
@@ -166,26 +138,71 @@ const CreateTicketDrawer = (props) => {
               )}
             />
           </Grid>
-          <Grid item xs={12}>
+
+          {/* Description Field */}
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  value={value}
+                  onChange={onChange}
+                  multiline
+                  rows={4}
+                  sx={{ mb: 2 }}
+                  label="Description"
+                  placeholder="Enter a detailed description"
+                  error={Boolean(errors.description)}
+                  helperText={errors.description?.message}
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Priority Field */}
+          <Grid item xs={12} sm={12}>
             <Controller
               name="priority"
               control={control}
-              render={({ field }) => (
-                <FormControl fullWidth required error={Boolean(errors.priority)}>
-                  <InputLabel className={classes.label} id="priority-label">Priority</InputLabel>
+              render={({ field: { value, onChange } }) => (
+                <FormControl fullWidth sx={{ mb: 2 }} error={Boolean(errors.priority)}>
+                  <InputLabel id="priority-label">Priority</InputLabel>
                   <Select
                     labelId="priority-label"
-                    {...field}
-                    defaultValue=""
+                    value={value}
+                    onChange={onChange}
+                    label="Priority"
                   >
-                    <MenuItem value="" disabled>Select priority</MenuItem>
-                    <MenuItem value="High">High</MenuItem>
-                    <MenuItem value="Medium">Medium</MenuItem>
                     <MenuItem value="Low">Low</MenuItem>
-                    <MenuItem value="Urgent">Urgent</MenuItem>
+                    <MenuItem value="Medium">Medium</MenuItem>
+                    <MenuItem value="High">High</MenuItem>
                   </Select>
-                  <FormHelperText>{errors.priority?.message || 'Choose your priority'}</FormHelperText>
+                  {errors.priority && (
+                    <Typography variant="caption" color="error">
+                      {errors.priority.message}
+                    </Typography>
+                  )}
                 </FormControl>
+              )}
+            />
+          </Grid>
+
+          {/* File Upload Field */}
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="file"
+              control={control}
+              render={({ field: { onChange } }) => (
+                <TextField
+                  fullWidth
+                  type="file"
+                  onChange={(e) => onChange(e.target.files[0])}
+                  sx={{ mb: 2 }}
+                  error={Boolean(errors.file)}
+                  helperText={errors.file?.message}
+                />
               )}
             />
           </Grid>
