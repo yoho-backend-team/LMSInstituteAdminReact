@@ -8,8 +8,9 @@ import PropTypes from 'prop-types';
 import { PDFViewer } from 'react-view-pdf';
 import { getImageUrl } from 'utils/imageUtils';
 
-const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
+const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
   const savedPdfUrl = `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`;
+  console.log(certificate,'certificate')
 
   return (
     <div>

@@ -25,7 +25,7 @@ export const getAllStaffSalaries = async (data) => {
 
 export const addTeachingStaffSalary = async (data) => {
   try {
-    const response = await axios.post(`${TEACHING_STAFF_SALARIES_API_END_POINT}/`, data, {
+    const response = await axios.post(`${TEACHING_STAFF_SALARIES_API_END_POINT}`, data, {
       headers: {
         // 'Content-Type': 'application/json',
         Authorization: `Token ${localStorage.getItem('token')}`

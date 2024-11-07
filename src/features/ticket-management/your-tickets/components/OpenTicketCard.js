@@ -28,7 +28,7 @@ const OpenTicketCard = ({ ticket }) => {
         transition: 'transform 0.3s ease, background-color 0.3s ease',
         '&:hover': {
             transform: 'scale(1.05)',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
             cursor: "pointer"
           },
           animation: `${fadeInUp} 0.5s ease`,
