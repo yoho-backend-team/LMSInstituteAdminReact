@@ -143,7 +143,8 @@ class Client {
       admin : {
         create_ticket : (data) => HttpClient.post(HTTP_END_POINTS.ticket.admin.create_ticket,data),
         get_all : (params) => HttpClient.get(HTTP_END_POINTS.ticket.admin.get_all,params),
-        get_with_id : (params) => HttpClient.get(HTTP_END_POINTS.ticket.admin.get_with_id + params?.id, params)
+        get_with_id : (params) => HttpClient.get(HTTP_END_POINTS.ticket.admin.get_with_id + params?.id, params),
+        update_ticket : (params,data) => HttpClient.update(HTTP_END_POINTS.ticket.admin.update+params?.id,data)
       }
     }
     attedence = {
@@ -154,7 +155,7 @@ class Client {
       mark_non_staff_attedence : (data) => HttpClient.post(HTTP_END_POINTS.attedence.non_staff_mark,data),
       get_all_staff_attedence : (params) => HttpClient.get(HTTP_END_POINTS.attedence.staff_all,params),
       get_all_non_staff_attedence : (params) => HttpClient.get(HTTP_END_POINTS.attedence.non_teaching_all,params),
-      get_staff_attedence_with_id : (params) => HttpClient.get(HTTP_END_POINTS.attedence.get_staff_attedence_with_id+params?.id),
+      get_staff_attedence_with_id : (params) => HttpClient.get(HTTP_END_POINTS.attedence.get_staff_attedence_with_id+params?.id,params),
       get_non_staff_with_id : (params) => HttpClient.get(HTTP_END_POINTS.attedence.get_non_staff_with_id+params?.id)
     }
     notification = {
@@ -169,6 +170,11 @@ class Client {
       institute : {
        add_institute_notification : (data) => HttpClient.post(HTTP_END_POINTS.notification.institute_notification,data),
        get_institute_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.institute_notification,query)
+      }
+    }
+    id_cards = {
+      student : {
+        get_all : (data) => HttpClient.get(HTTP_END_POINTS.id_cards.student.all,data)
       }
     }
     subscription = {

@@ -22,13 +22,17 @@ import { formatDate } from "utils/format";
 import { formatTime } from "utils/formatDate";
 import PdfViewer from "./PdfViewer";
 import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/studentTicketService";
+import { getUserDetails } from "utils/check-auth-state";
+import { useRef } from "react";
 
 
-  function TicketResolveDrawer({ticketId}) {
-    const [ticket,setTicket] = useState('');
+  function TicketResolveDrawer({ticketId,ticket,setTicket,socket}) {
+    const [message,setMessage] = useState('');
     const [fileView,setFileView] = useState(false)
     const [file,setFile] = useState(null)
     const { show, hide} = useSpinner()
+    const user = getUserDetails()
+    const endOfMessageRef = useRef(null)
 
     const navigate = useNavigate();
 
@@ -78,6 +82,136 @@ import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/s
       } finally {
         hide(); 
       }
+    };
+
+    useEffect(() => {
+      if(endOfMessageRef.current){
+       endOfMessageRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+     },[ticket])
+
+    const handleSendMessage = () => {
+      if (message.trim()) {
+        const newMessage = {
+          ticket_id: ticket?.uuid,
+          text: message,
+          senderType: "InstituteAdmin",
+          user : user?._id
+        };
+       console.log(newMessage)
+        socket.emit("sendStudentTicketMessage", newMessage)
+        setMessage("")
+      } else {
+        toast.error("Message cannot be empty");
+      }
+    };
+
+    const MessageBox = () => {
+      return (
+        <>
+          {ticket?.messages?.map((message, index) => {
+            const currentUser = user?._id === message?.sender;
+           
+            return (
+              <Box key={message?._id + index} sx={{ mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: currentUser ? 'row' : 'row',
+                    justifyContent: currentUser ? 'flex-end' : 'flex-start'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      maxWidth: '70%', // Limit the width of messages
+                      backgroundColor: currentUser ? '#E1FFC7' : '#DFC7FF',
+                      borderRadius: '8px',
+                      padding: '16px',
+                      boxShadow: currentUser ? '0px 0px 8px rgba(0, 200, 83, 0.5)' : '0px 0px 8px rgba(223, 199, 255, 0.5)',
+                      marginBottom: '10px',
+                      minWidth: "250px"
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        pb: '5px',
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: '14px',
+                          color: currentUser ? '#005700' : '#051732',
+                          fontWeight: 700,
+                          lineHeight: '24px',
+                        }}
+                      >
+                        {currentUser ? `${user?.first_name} ${user?.last_name}` : "Oliver Smith"}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: currentUser ? '#005700' : '#051732',
+                          fontSize: '10px',
+                          fontWeight: 400,
+                          lineHeight: '15px',
+                        }}
+                      >
+                        {formatDate(message?.createdAt)} {/* Using your existing date formatting function */}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      sx={{
+                        color: currentUser ? '#2A2A2A' : '#72767D',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        lineHeight: '15px',
+                      }}
+                    >
+                      {message?.content}
+                    </Typography>
+                  </Box>
+                </Box>
+                { currentUser && index + 1 === ticket?.messages.length && !ticket?.resolved && ticket?.status !== "closed" &&
+                <Box
+                 sx={{
+                   display: "flex",
+                   justifyContent: "flex-end",
+                   gap: "20px",
+                 }}
+                >
+                 <Button
+                   variant="outlined"
+                   onClick={() => handleCloseTicket()}
+                   sx={{
+                     border: "1.5px solid #FF0000",
+                     borderRadius: "7px",
+                     padding: "10px",
+                     color: "red",
+                     background: "white",
+                   }}
+                 >
+                   Solved
+                 </Button>
+                 <Button
+                   variant="contained"
+                   sx={{
+                     backgroundColor: "#0D6EFD",
+                     color: "white",
+                     borderRadius: "7px",
+                     padding: "10px",
+                   }}
+                 >
+                   No Related
+                 </Button>
+                </Box>
+                }
+              </Box>
+            );
+          })}
+          <div ref={endOfMessageRef} />
+        </>
+      );
     };
     
 
@@ -149,7 +283,7 @@ import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/s
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Card>
+          <Card sx={{ width: "100%"}} >
             <Box
               sx={{
                 p: 2,
@@ -203,181 +337,10 @@ import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/s
               <Grid container spacing={2}>
                 <Grid item xs={12} md={8}>
                   <Paper sx={{ p: 2, mb: 2 }}>
-                    <Box>
-                      <Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            pb: "15px",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "14px",
-                              fontWeight: 700,
-                              lineHeight: "24px",
-                            }}
-                          >
-                            Oliver Smith
-                          </Typography>
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "10px",
-                              fontWeight: 400,
-                              lineHeight: "15px",
-                            }}
-                          >
-                            Monday May, 2023 3:00 PM. 9 days ago
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography
-                            sx={{
-                              color: "#898989",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              lineHeight: "15px",
-                              pb: "40px",
-                            }}
-                          >
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            backgroundColor: "#DFC7FF",
-                            borderRadius: "8px",
-                            padding: "18px 13px 18px 30px",
-                            mb: "40px",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              pb: "15px",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                color: "#051732",
-                                fontSize: "14px",
-                                fontWeight: 700,
-                                lineHeight: "24px",
-                              }}
-                            >
-                              Oliver Smith
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "#051732",
-                                fontSize: "10px",
-                                fontWeight: 400,
-                                lineHeight: "15px",
-                              }}
-                            >
-                              Monday May, 2023 3:00 PM. 9 days ago
-                            </Typography>
-                          </Box>
-                          <Typography
-                            sx={{
-                              color: "#72767D",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              lineHeight: "15px",
-                            }}
-                          >
-                            Checked the log and found the customer paid the
-                            subscription for 1 year. order ID. #1234
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            pb: "15px",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "14px",
-                              fontWeight: 700,
-                              lineHeight: "24px",
-                            }}
-                          >
-                            Oliver Smith
-                          </Typography>
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "10px",
-                              fontWeight: 400,
-                              lineHeight: "15px",
-                            }}
-                          >
-                            Monday May, 2023 3:00 PM. 9 days ago
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography
-                            sx={{
-                              color: "#898989",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              lineHeight: "15px",
-                              pb: "40px",
-                            }}
-                          >
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            gap: "20px",
-                          }}
-                        >
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              border: "1.5px solid #FF0000",
-                              borderRadius: "7px",
-                              padding: "10px",
-                              color: "red",
-                              background: "white",
-                            }}
-                          >
-                            Solved
-                          </Button>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              backgroundColor: "#0D6EFD",
-                              color: "white",
-                              borderRadius: "7px",
-                              padding: "10px",
-                            }}
-                          >
-                            No Related
-                          </Button>
-                        </Box>
-                      </Box>
-                    </Box>
+                  <Box sx={{ height: "300px", overflowY: "scroll"}}>
+                      {MessageBox()}
+                  </Box>
+                    
                   <Box
                       sx={{
                         display: "flex",
@@ -402,6 +365,8 @@ import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/s
                       <TextField
                         variant="outlined"
                         fullWidth
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         sx={{
                           backgroundColor: "#E8E8E8",
                           px: "24px",
@@ -435,7 +400,7 @@ import { getStudentTicketWithId, updateStudentstatusTicket } from "../services/s
                           pl: "20px",
                         }}
                       >
-                        <IconButton>
+                        <IconButton onClick={handleSendMessage}>
                           <SendIcon sx={{ color: "black" }} />
                         </IconButton>
                       </Box>

@@ -59,3 +59,13 @@ export const getAdminTicketWithId = async (data) => {
     throw new Error(error_message)
   }
 }
+
+export const updateAdminTicket = async (params,data) => {
+    try {
+     const response = await client.ticket.admin.update_ticket(params,data) 
+     return response 
+    } catch (error) {
+      const error_message = await getErrorMessage(error)
+      throw new Error(error_message)
+    }
+}

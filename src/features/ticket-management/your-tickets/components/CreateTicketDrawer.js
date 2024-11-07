@@ -14,6 +14,8 @@ import { CreateTicket } from '../services/ticketService';
 import { useInstitute } from 'utils/get-institute-details';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+import { getErrorMessage } from 'utils/error-handler';
+import client from 'api/client';
 
 const CreateTicketDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
@@ -87,6 +89,23 @@ const CreateTicketDrawer = (props) => {
       hide()
     }
   };
+
+  const handleFileUpload = async (e) => {
+    try{
+      const { files } = e.target
+      const form_data = new FormData()
+      form_data.append("file", files[0])
+      const response = await client.file.upload(form_data)
+      console.log(response)
+      toast.success("file upload successfully")
+      setValue("file",response?.data?.file)
+    }catch(error){
+     const error_message = getErrorMessage(error)
+     toast.error(error_message)
+    }finally{
+      hide()
+    }
+  }
 
   return (
     <Drawer
@@ -198,7 +217,7 @@ const CreateTicketDrawer = (props) => {
                 <TextField
                   fullWidth
                   type="file"
-                  onChange={(e) => onChange(e.target.files[0])}
+                  onChange={(e) => handleFileUpload(e)}
                   sx={{ mb: 2 }}
                   error={Boolean(errors.file)}
                   helperText={errors.file?.message}

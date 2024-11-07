@@ -1,4 +1,4 @@
-  import { Box, Avatar as CustomAvatar, Grid, TextField } from '@mui/material';
+  import { Box, Button, CardMedia, Avatar as CustomAvatar, Grid, TextField } from '@mui/material';
   import Card from '@mui/material/Card';
   import CardContent from '@mui/material/CardContent';
   import MenuItem from '@mui/material/MenuItem';
@@ -16,6 +16,9 @@
   import { useDispatch, useSelector } from 'react-redux';
   import { getInitials } from 'utils/get-initials';
   import { useInstitute } from 'utils/get-institute-details';
+import generateStaffIDCardPDF from 'utils/id-generator';
+import { getImageUrl } from 'utils/imageUtils';
+import generateIDCardPDF from 'utils/pdfGenerator';
 
   const roleColors = {
     admin: 'error',
@@ -93,7 +96,7 @@
     };
 
 
-
+    console.log(StaffIdCards)
     return (
       <>
         <Grid>
@@ -114,7 +117,7 @@
               ) : (
                 <Grid>
                   <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
-                    {StaffIdCards?.map((item, index) => (
+                    {StaffIdCards?.data?.map((item, index) => (
                       <Grid
                         key={index}
                         item
@@ -154,97 +157,125 @@
                             }
                           }}
                         >
-                          <Card className="front" sx={{ width: '100%', minHeight: 435, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+                          <Card className="front" sx={{ width: '100%', minHeight: 410, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                             <CardContent sx={{ pt: 6.5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                              {item.image ? (
-                                <CustomAvatar
-                                  src={item.image}
-                                  alt={item.name}
-                                  variant="light"
-                                  sx={{ width: 100, height: 100, mb: 3, border: `4px solid ${roleColors.subscriber}` }}
-                                />
-                              ) : (
-                                <CustomAvatar
-                                  skin="light"
-                                  color={statusColors.active}
-                                  sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}
-                                >
-                                  {getInitials(item.name)}
-                                </CustomAvatar>
-                              )}
+                            {item.image ? (
+                               <CardMedia
+                                alt={item.name}
+                                image={ getImageUrl(item?.image)}
+                                sx={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1), 0px 2px 6px rgba(0, 0, 0, 0.06)"}}
+                                component="img"
+                                height="240"
+                               />
+                             ) : (
+                               <CustomAvatar skin="light" color={statusColors.active} sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}>
+                                 {getInitials(item.name)}
+                               </CustomAvatar>
+                             )}
                               <Typography variant="h4" sx={{ mb: 2 }}>
                                 {item.name}
                               </Typography>
                               <CustomChip rounded skin="light" size="small" label={`${item.email}`} color={statusColors.active} />
-                              <Box mt={3}>
+                              {/* <Box mt={3}>
                                 <img
                                   style={{ borderRadius: '10px' }}
                                   height={100}
                                   src={item.qr_code}
                                   alt="qrCode"
                                 />
-                              </Box>
+                              </Box> */}
                             </CardContent>
                           </Card>
-                          <Card className="back" sx={{ width: '100%', minHeight: 435 }}>
-                            <CardContent sx={{ pb: 2 }}>
-                              <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
-                                Details
-                              </Typography>
-                              <Box sx={{ pt: 2 }}>
-                                <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Username:</Typography>
-                                  <Typography sx={{ color: 'text.secondary' }}>
-                                    {item.name}
-                                  </Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Email:</Typography>
-                                  <Typography sx={{ color: 'text.secondary' }}>{item.email}</Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Role:</Typography>
-                                  <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{item.role.identity}</Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}> ID:</Typography>
-                                  <Typography sx={{ color: 'text.secondary' }}>{item.roll_no}</Typography>
-                                </Box>
-                                <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
-                                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Contact:</Typography>
-                                  <Typography sx={{ color: 'text.secondary' }}>{item.contact}</Typography>
-                                </Box>
+                          <Card className="back" sx={{ width: '100%', minHeight: 410 }}>
+                          <CardContent sx={{ pb: 2 }}>
+                        <Typography variant="h3" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+                          Details
+                        </Typography>
+                        <Box sx={{ pt: 2 }}>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Username:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>
+                              {item.name} 
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2 }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Email:</Typography>
+                            <Typography sx={{ color: 'text.secondary', overflow: "hidden", textOverflow: "ellipsis" }}>{item.email}</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Role:</Typography>
+                            <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{item.role.identity}</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}> ID:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.staff_id}</Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap' }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Contact:</Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{item.contact}</Typography>
+                          </Box>
 
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                                  <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>Address:</Typography>
-                                  <Typography
-                                    sx={{
-                                      color: 'text.secondary',
-                                      overflow: 'hidden',
-                                      display: '-webkit-box',
-                                      WebkitLineClamp: 2,
-                                      WebkitBoxOrient: 'vertical',
-                                      textOverflow: 'ellipsis'
-                                    }}
-                                  >
-                                    {item.address}
-                                  </Typography>
-                                </Box>
-                              </Box>
+                          <Box sx={{ display: 'flex', textOverflow: "ellipsis", overflow: "hidden", textWrap: "nowrap" }}>
+                            <Typography sx={{ mr: 2, fontWeight: 600, color: 'text.secondary', width: "70px" }}>Address:</Typography>
+                            <Box>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.address_line_one},
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.address_line_two},
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.city}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: 'text.secondary',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {item?.address?.state} - {item?.address?.pin_code}
+                            </Typography>
+                            </Box>
+                          </Box>
+                        </Box>
 
-                              <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-                                <TextField
-                                  size="small"
-                                  select
-                                  width={100}
-                                  label="Status"
-                                  SelectProps={{ value: item?.is_active, onChange: (e) => handleStatusValue(e, item) }}
-                                >
-                                  <MenuItem value="true">Active</MenuItem>
-                                  <MenuItem value="false">Inactive</MenuItem>
-                                </TextField>
-                              </Box>
-                            </CardContent>
+                        <Box sx={{ mt: 4, display: 'flex', justifyContent: "flex-end" }}>
+                          <Button variant="contained" onClick={() => generateStaffIDCardPDF(item)}>
+                            Download
+                          </Button>
+                        </Box>
+                      </CardContent>
                           </Card>
                         </Grid>
                       </Grid>

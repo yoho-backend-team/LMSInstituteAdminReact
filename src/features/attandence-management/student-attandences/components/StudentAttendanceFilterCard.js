@@ -41,7 +41,7 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
       setBatches(result?.data);
     }
   };
-
+  console.log(batches,"batches")
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
@@ -91,7 +91,7 @@ const StudentAttendanceFilterCard = ({ selectedBranchId }) => {
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
-                    options={batches?.data}
+                    options={batches || []}
                     filterSelectedOptions
                     onChange={handleBatchChange}
                     value={selectedBatch}

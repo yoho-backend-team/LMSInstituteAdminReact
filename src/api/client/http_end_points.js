@@ -117,6 +117,11 @@ const generateEndpoints = () => {
             create : "/api/institutes/payments/student-fee/create"
           }
         },
+        id_cards : {
+            student: {
+                all : "/api/institute/student/id_cards/all"
+            }
+        },
         staff : {
             get : `/api/institutes/${instituteId}/Non-teaching-staff/`,
             getWithName : `/api/institutes/${instituteId}/branches/${branchId}/staff`,
@@ -147,7 +152,8 @@ const generateEndpoints = () => {
             admin : {
                 create_ticket : `/api/institutes/admin/ticket`,
                 get_all : `/api/institutes/admin/ticket/all`,
-                get_with_id : `/api/institutes/admin/ticket/`
+                get_with_id : `/api/institutes/admin/ticket/`,
+                update : `/api/institutes/admin/ticket/update/`
             }
         },
         attedence : {

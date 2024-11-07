@@ -51,7 +51,7 @@ const ViewAttendance = () => {
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen);
-  
+  console.log(attendances,"attendances")
   return (
     <CalendarWrapper
       className="app-calendar"

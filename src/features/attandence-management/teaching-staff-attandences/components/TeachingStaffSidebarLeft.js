@@ -11,6 +11,9 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getTeachingStaffAttendanceById } from '../services/teachingStaffAttendanceServices';
+import { useSpinner } from 'context/spinnerContext';
+import toast from 'react-hot-toast';
+import { getErrorMessage } from 'utils/error-handler';
 
 const TeachingStaffSidebarLeft = (props) => {
   const {
@@ -33,17 +36,28 @@ const TeachingStaffSidebarLeft = (props) => {
     }
   };
   const [value, setValue] = React.useState('');
+  const { show, hide } = useSpinner()
 
   const handleChange = async (event) => {
-    setValue(event.target.value);
-    const data = {
-      staff_id: staffId,
-      title: event.target.value
-    };
-    const result = await getStaffAttendance(data);
-    if (result) {
-      setAttendances(result.data.data);
+    try{
+      show()
+      setValue(event.target.value);
+      const data = {
+        id: staffId,
+        status: event.target.value ? event.target.value : null
+      };
+      const result = await getTeachingStaffAttendanceById(data);
+     console.log(result) 
+      if (result) {
+        setAttendances(result.data);
+      }
+    }catch(error){
+     const error_message = getErrorMessage(error)
+     toast.error(error_message)
+    }finally{
+      hide()
     }
+    
   };
 
   const handleSidebarToggleSidebar = () => {

@@ -1,30 +1,14 @@
 // studentIdCardService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const STUDENT_ID_CARDS_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/studentidcard`;
 
 export const getAllStudentIdCards = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_ID_CARDS_API_ENDPOINT}/${data?.instituteid}/${data?.branchid}?page=${data?.page}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return response;
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Student Id Cards. Status: ${response.status}`);
-    }
+    const response = await client.id_cards.student.get_all(data)
+    return response;
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in getAllStudentIdCards:', error);
-
-    // Throw the error again to propagate it to the calling function/component
     throw error;
   }
 };

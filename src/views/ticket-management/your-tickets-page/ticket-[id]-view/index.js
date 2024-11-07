@@ -11,7 +11,6 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloseIcon from "@mui/icons-material/Close";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import SendIcon from "@mui/icons-material/Send";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -22,8 +21,12 @@ import { formatDate } from "utils/format";
 import { formatTime } from "utils/formatDate";
 import PdfViewer from "features/ticket-management/student/components/PdfViewer";
 import { updateStudentstatusTicket } from "features/ticket-management/student/services/studentTicketService";
-import { getAdminTicketWithId } from "features/ticket-management/your-tickets/services/ticketService";
+import { getAdminTicketWithId, updateAdminTicket } from "features/ticket-management/your-tickets/services/ticketService";
 import { useLocation } from "react-router";
+import socket from "utils/socket";
+import toast from "react-hot-toast";
+import { getUserDetails } from "utils/check-auth-state";
+import { useRef } from "react";
 
   const AdminTicketViewPage = () => {
     const location = useLocation()
@@ -32,12 +35,17 @@ import { useLocation } from "react-router";
     const [fileView,setFileView] = useState(false)
     const [file,setFile] = useState(null)
     const { show, hide} = useSpinner()
+    const [message,setMessage] = useState("")
+    const [messages, setMessages] = useState([])
+    const user = getUserDetails()
+    const endOfMessageRef = useRef(null)
 
     const navigate = useNavigate();
 
     const statusColor = {
       opened: "#7367F0",
       closed: "#EBA13A",
+      resolved : "#280587"
     };
 
     const handleFileOpen = (file) => {
@@ -59,7 +67,6 @@ import { useLocation } from "react-router";
         try {
           show()
           const res = await getAdminTicketWithId({id:ticketId});
-          console.log(res,"res")
           setTicket(res?.data);
         } catch (error) {
           console.error("Error fetching ticket:", error);
@@ -70,19 +77,172 @@ import { useLocation } from "react-router";
       fetchTicket();
     }, []);
 
+    useEffect(() => {
+      socket.connect()
+      socket.on("connect", () => {
+        socket.emit("joinTicket", ticketId);
+        console.log(`Joined ticket room: ${ticketId}`);
+      });
+  
+      socket.on("receiveMessage", (newMessage) => {
+        console.log(newMessage, "newMessage");
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setTicket((prev) => ({...prev,messages:[...prev.messages,newMessage]}))
+      });
+    
+      return () => {
+        socket.disconnect()
+      };
+    }, [ticketId]);
+
+    useEffect(() => {
+     if(endOfMessageRef.current){
+      endOfMessageRef.current.scrollIntoView({ behavior: 'smooth' })
+     }
+    },[ticket])
+
+    const handleSendMessage = () => {
+      if (message.trim()) {
+        const newMessage = {
+          ticket_id: ticketId,
+          text: message,
+          senderType: "InstituteAdmin",
+          timestamp: new Date(),
+          user : user?._id
+        };
+
+        socket.emit("sendTicketMessage", newMessage)
+        setMessages((prevMessages) => [...prevMessages, newMessage])
+        setMessage("")
+      } else {
+        toast.error("Message cannot be empty");
+      }
+    };
+    console.log(user,"user",ticketId)
 
     const handleCloseTicket = async () => {
       try {
         show();   
         const uuid = ticketId; 
-        await updateStudentstatusTicket({ id: uuid});
-        setTicket(prevTicket => ({ ...prevTicket, status: "closed" }));
+        await updateAdminTicket({ id: uuid},{ status: "closed", resolved: true});
+        setTicket(prevTicket => ({ ...prevTicket, status: "closed", resolved: true }));
       } catch (error) {
         console.error("Error closing ticket:", error);
       } finally {
         hide(); 
       }
     };
+
+
+    const MessageBox = () => {
+      return (
+        <>
+          {ticket?.messages?.map((message, index) => {
+            const currentUser = user?._id === message?.sender;
+           
+            return (
+              <Box key={message?._id + index} sx={{ mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: currentUser ? 'row' : 'row',
+                    justifyContent: currentUser ? 'flex-end' : 'flex-start'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      maxWidth: '70%', // Limit the width of messages
+                      backgroundColor: currentUser ? '#E1FFC7' : '#DFC7FF',
+                      borderRadius: '8px',
+                      padding: '16px',
+                      boxShadow: currentUser ? '0px 0px 8px rgba(0, 200, 83, 0.5)' : '0px 0px 8px rgba(223, 199, 255, 0.5)',
+                      marginBottom: '10px',
+                      minWidth: "250px"
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        pb: '5px',
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: '14px',
+                          color: currentUser ? '#005700' : '#051732',
+                          fontWeight: 700,
+                          lineHeight: '24px',
+                        }}
+                      >
+                        {currentUser ? `${user?.first_name} ${user?.last_name}` : "Oliver Smith"}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: currentUser ? '#005700' : '#051732',
+                          fontSize: '10px',
+                          fontWeight: 400,
+                          lineHeight: '15px',
+                        }}
+                      >
+                        {formatDate(message?.createdAt)} {/* Using your existing date formatting function */}
+                      </Typography>
+                    </Box>
+                    <Typography
+                      sx={{
+                        color: currentUser ? '#2A2A2A' : '#72767D',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        lineHeight: '15px',
+                      }}
+                    >
+                      {message?.content}
+                    </Typography>
+                  </Box>
+                </Box>
+                { currentUser && index + 1 === ticket?.messages.length && !ticket?.resolved && ticket?.status !== "closed" &&
+                <Box
+                 sx={{
+                   display: "flex",
+                   justifyContent: "flex-end",
+                   gap: "20px",
+                 }}
+                >
+                 <Button
+                   variant="outlined"
+                   onClick={() => handleCloseTicket()}
+                   sx={{
+                     border: "1.5px solid #FF0000",
+                     borderRadius: "7px",
+                     padding: "10px",
+                     color: "red",
+                     background: "white",
+                   }}
+                 >
+                   Solved
+                 </Button>
+                 <Button
+                   variant="contained"
+                   sx={{
+                     backgroundColor: "#0D6EFD",
+                     color: "white",
+                     borderRadius: "7px",
+                     padding: "10px",
+                   }}
+                 >
+                   No Related
+                 </Button>
+                </Box>
+                }
+              </Box>
+            );
+          })}
+          <div ref={endOfMessageRef} />
+        </>
+      );
+    };
+
+
     
 
     console.log(ticket, "tixketwithid")
@@ -144,16 +304,16 @@ import { useLocation } from "react-router";
                   fontSize: "14px",
                   tWeight: 500,
                 }}
-                onClick={handleCloseTicket}
+                onClick={handleback}
               >
-               Close Ticket
+               Close
               </Button>
             </Box>
           </Box>
         </Box>
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Card>
+          <Card sx={{ width: "100%"}}>
             <Box
               sx={{
                 p: 2,
@@ -173,17 +333,7 @@ import { useLocation } from "react-router";
               >
                 #{ticket?.id} {ticket?.query}
               </Typography>
-              {/* <Typography
-                sx={{
-                  color: "black",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  lineHeight: "24px",
-                }}
-              >
-                Show activates
-              </Typography>
-              */}
+              
               <Box sx={{ display: 'flex', gap: "21px"}} >
                 <Typography
                   sx={{ fontSize: "14px", color: "#495057", fontWeight: 700 }}
@@ -205,188 +355,16 @@ import { useLocation } from "react-router";
 
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={8} >
                   <Paper sx={{ p: 2, mb: 2 }}>
-                    <Box>
-                      <Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            pb: "15px",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "14px",
-                              fontWeight: 700,
-                              lineHeight: "24px",
-                            }}
-                          >
-                            Oliver Smith
-                          </Typography>
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "10px",
-                              fontWeight: 400,
-                              lineHeight: "15px",
-                            }}
-                          >
-                            Monday May, 2023 3:00 PM. 9 days ago
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography
-                            sx={{
-                              color: "#898989",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              lineHeight: "15px",
-                              pb: "40px",
-                            }}
-                          >
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            backgroundColor: "#DFC7FF",
-                            borderRadius: "8px",
-                            padding: "18px 13px 18px 30px",
-                            mb: "40px",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              pb: "15px",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                color: "#051732",
-                                fontSize: "14px",
-                                fontWeight: 700,
-                                lineHeight: "24px",
-                              }}
-                            >
-                              Oliver Smith
-                            </Typography>
-                            <Typography
-                              sx={{
-                                color: "#051732",
-                                fontSize: "10px",
-                                fontWeight: 400,
-                                lineHeight: "15px",
-                              }}
-                            >
-                              Monday May, 2023 3:00 PM. 9 days ago
-                            </Typography>
-                          </Box>
-                          <Typography
-                            sx={{
-                              color: "#72767D",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              lineHeight: "15px",
-                            }}
-                          >
-                            Checked the log and found the customer paid the
-                            subscription for 1 year. order ID. #1234
-                          </Typography>
-                        </Box>
-                      </Box>
+                    <Box sx={{ height: "300px", overflowY: "scroll"}}>
+                      {MessageBox()}
                     </Box>
-                    <Box>
-                      <Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            pb: "15px",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "14px",
-                              fontWeight: 700,
-                              lineHeight: "24px",
-                            }}
-                          >
-                            Oliver Smith
-                          </Typography>
-                          <Typography
-                            sx={{
-                              color: "black",
-                              fontSize: "10px",
-                              fontWeight: 400,
-                              lineHeight: "15px",
-                            }}
-                          >
-                            Monday May, 2023 3:00 PM. 9 days ago
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography
-                            sx={{
-                              color: "#898989",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                              lineHeight: "15px",
-                              pb: "40px",
-                            }}
-                          >
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                            Concerns have been raised regarding attendance
-                            inconsistencies, requiring attention for resolution.
-                          </Typography>
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            gap: "20px",
-                          }}
-                        >
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              border: "1.5px solid #FF0000",
-                              borderRadius: "7px",
-                              padding: "10px",
-                              color: "red",
-                              background: "white",
-                            }}
-                          >
-                            Solved
-                          </Button>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              backgroundColor: "#0D6EFD",
-                              color: "white",
-                              borderRadius: "7px",
-                              padding: "10px",
-                            }}
-                          >
-                            No Related
-                          </Button>
-                        </Box>
-                      </Box>
-                    </Box>
-                  <Box
+                    <Box
                       sx={{
-                        display: "flex",
+                        display: ticket?.resolved || ticket?.status === "closed" ? " none" : "flex",
                         alignItems: "end",
-                        paddingTop: "80px",
+                        paddingTop: "20px",
                       }}
                     >
                       <Box
@@ -406,6 +384,8 @@ import { useLocation } from "react-router";
                       <TextField
                         variant="outlined"
                         fullWidth
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
                         sx={{
                           backgroundColor: "#E8E8E8",
                           px: "24px",
@@ -423,7 +403,7 @@ import { useLocation } from "react-router";
                             },
                           },
                         }}
-                        placeholder="Say Something..."
+                        placeholder="Type a message..."
                         InputProps={{
                           endAdornment: (
                             <AttachFileIcon
@@ -439,11 +419,11 @@ import { useLocation } from "react-router";
                           pl: "20px",
                         }}
                       >
-                        <IconButton>
+                        <IconButton onClick={handleSendMessage} >
                           <SendIcon sx={{ color: "black" }} />
                         </IconButton>
                       </Box>
-                    </Box>
+                  </Box>
                   </Paper>
                 </Grid>
                 <Grid item xs={12} md={4}>

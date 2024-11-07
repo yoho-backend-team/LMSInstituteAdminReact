@@ -143,7 +143,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                    </Box>
                 </Grid>
                 <Grid item justifyContent="space-between" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
-                  <Tooltip title="tart date" >
+                  <Tooltip title="start date" >
                     <Box sx={{  display: 'flex', flexDirection: "row", gap: "3px" }}>
                       <IconCalendar />
                       <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>

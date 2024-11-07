@@ -45,22 +45,26 @@ const OpenTicketCard = ({ ticket }) => {
                 </Typography>
               </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: "space-between", my: 4 }}>
-            <Typography
-            sx={{
-              color: 'text.secondary',
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              textOverflow: 'ellipsis',
-              fontWeight: 500
-            }}
-          >
-            {ticket?.query}
-          </Typography>
+            <Box sx={{ display: 'flex', justifyContent: "end",  my: 2 }}>
               <Typography sx={{ fontSize: 14, color: 'primary.main' }}>{formatDate(ticket?.date)} - {formatTime(ticket?.date)}</Typography>
             </Box>
+            <Typography
+              sx={{
+                my: 2,
+                color: 'text.secondary',
+                overflow: 'hidden',
+                // display: '-webkit-box',
+                WebkitLineClamp: 2, 
+                wordWrap: "break-word",
+                whiteSpace: "nowrap",
+                WebkitBoxOrient: 'vertical',
+                textOverflow: 'ellipsis',
+                fontWeight: 500,
+              }}
+            >
+              {ticket?.query}
+            </Typography>
+
           </Box>
           
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

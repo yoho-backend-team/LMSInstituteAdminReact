@@ -1,6 +1,7 @@
 // groupService.js
 import client from 'api/client';
 import axios from 'axios';
+import { getErrorMessage } from 'utils/error-handler';
 
 const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
@@ -69,8 +70,8 @@ export const addTeachingStaffAttendance = async (data) => {
 
     return { success: true, message: 'TeachingStaffAttendance created successfully' };
   } catch (error) {
-    console.error('Error in addTeachingStaffAttendance:', error);
-    return { success: false, message: error?.response?.data?.message };
+    const error_message = getErrorMessage(error)
+    throw new Error(error_message)
   }
 };
 

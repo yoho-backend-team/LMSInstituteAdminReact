@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup } from '@mui/material';
+import { Avatar, AvatarGroup, Tooltip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -9,6 +9,8 @@ import CustomChip from 'components/mui/chip';
 import { Link } from 'react-router-dom';
 import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import { formatStudentsCount } from 'utils/format';
 
 const StudentAttendanceCard = ({ studentAttendance }) => {
   function convertTo12HourFormat(timestamp) {
@@ -215,15 +217,21 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
   ];
   
   
-
+  console.log(studentAttendance,"studentAttendance")
   return (
     <Grid container spacing={2}>
       {studentAttendance?.map((card, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
-          <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+          <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)", minHeight: "267px",
+             transition: 'transform 0.3s, box-shadow 0.3s',
+             '&:hover': {
+               transform: 'translateY(-10px)',
+               boxShadow: "0 0.5rem 1.5rem rgba(38,43,67,.2)"
+             }
+           }}>
             <Grid container direction="column" spacing={1}>
-              <Grid item sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex', mt: 1 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Grid item sx={{ alignItems: 'center', display: 'flex', mt: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "flex-start", width: "100%"}}>
                   <Typography
                     sx={{
                       mb: 0,
@@ -239,14 +247,15 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                     gutterBottom
                     textAlign="center"
                   >
-                    {card?.student_class?.class_name}
+                    {card?.student_class?.class_name} - class
                   </Typography>
+                  
                 </Box>
               </Grid>
 
-              <Grid item sx={{ justifyContent: 'center', display: 'flex', mb: 2, mt: 2 }}>
-                <AvatarGroup className="pull-up" max={4}>
-                  {card?.student_class?.batch?.student?.map((student) => {
+              <Grid item sx={{ justifyContent: "space-between", display: 'flex', mb: 2, mt: 2 }}>
+                <AvatarGroup className="pull-up" max={3}>
+                  {card?.student_class?.batch?.student.length !==0 ? card?.student_class?.batch?.student?.map((student) => {
                     return (
                       <Avatar
                         key={student.id}
@@ -254,27 +263,59 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
                         alt={`${student?.full_name}`}
                       />
                     );
-                  })}
+                  } )
+                :
+                <Avatar src={undefined} alt="User Avatar" >
+                  N/A
+                </Avatar>
+                }
                 </AvatarGroup>
-              </Grid>
-
-              <Grid item justifyContent="center" display="flex">
                 <Typography sx={{ fontWeight: '500' }}>
-                  {card?.student_class?.batch?.student?.length ?? 0} Students on this class
+                  { formatStudentsCount(card?.student_class?.batch?.student?.length)}
                 </Typography>
               </Grid>
-              <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
-                <Box>
-                  <IconCalendar />
-                </Box>
-                <Box sx={{ ml: 1 }}>
-                  <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                    {card?.student_class?.start_date} / {convertTo12HourFormat(card?.student_class?.start_time)} to {convertTo12HourFormat(card?.student_class?.end_time)}{' '}
-                  </Typography>
-                </Box>
-              </Grid>
+
+              {/* <Grid item justifyContent="center" display="flex">
+                <Typography sx={{ fontWeight: '500' }}>
+                  { formatStudentsCount(card?.student_class?.batch?.student?.length)}
+                </Typography>
+              </Grid> */}
+             
+              <Grid item justifyContent="space-between" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
+                  <Tooltip title="start date" >
+                    <Box sx={{  display: 'flex', flexDirection: "row", gap: "3px" }}>
+                      <IconCalendar />
+                      <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
+                      {new Date(card?.student_class?.start_date).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </Tooltip>
+
+                  <Typography sx={{ fontWeight: "bold"}} > - </Typography>
+
+                  <Tooltip title="Start time" >
+                    <Box sx={{ display: 'flex', gap: "3px", alignItems: "center"}} >
+                      <ScheduleIcon />
+                      <Typography variant="h6" sx={{ fontWeight: "bold"}} >
+                      {new Date(card?.student_class?.start_time).toLocaleTimeString()}
+                      </Typography>
+                    </Box>
+                  </Tooltip>
+
+                  <Typography sx={{ fontWeight: "bold"}} >to</Typography>
+
+                  <Tooltip title="End time" >
+                    <Box sx={{ display: "flex", gap: "3px", alignItems: "center"}} >
+                        <ScheduleIcon />
+                        <Typography variant="h6" sx={{ fontWeight: "bold"}} >
+                         {new Date(card?.student_class?.end_time).toLocaleTimeString()}
+                        </Typography>
+                    </Box>
+                  </Tooltip>
+
+                </Grid>
               <Grid container p={1} justifyContent="space-between">
-                <Box>
+                <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%"}}>
                   <Button
                     sx={{ px: 2 }}
                     variant="contained"

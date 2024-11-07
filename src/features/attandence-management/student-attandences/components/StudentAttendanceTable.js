@@ -11,12 +11,14 @@ import { useState,useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
 import { getInitials } from 'utils/get-initials';
+import { getImageUrl } from 'utils/imageUtils';
 
 const renderClient = (row) => {
-  if (row?.attendance?.student?.image) {
+  console.log(row,"row")
+  if (row?.student?.image) {
     return (
       <Avatar
-        src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.attendance?.student?.image}`}
+        src={getImageUrl(row?.student?.image)}
         sx={{ mr: 2.5, width: 38, height: 38 }}
       />
     );
@@ -27,7 +29,7 @@ const renderClient = (row) => {
         color={row?.avatarColor || 'primary'}
         sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
       >
-        {getInitials(row?.studentAttendance?.student?.full_name || '')}
+        {getInitials(row?.student?.full_name || '')}
       </Avatar>
     );
   }
@@ -147,7 +149,35 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
     <>
       <Grid>
         <Card>
-          <DataGrid autoHeight rowHeight={80} rows={students||[]} columns={columns} disableRowSelectionOnClick />
+          <DataGrid autoHeight rowHeight={80} 
+          rows={students||[]} 
+          columns={columns}
+          sx={{
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
+            "& .MuiDataGrid-row" : {
+              border : "1px solid #e6e5e7",
+              borderLeft: "none",
+              borderRight: "none",
+              ":hover" : {
+                 backgroundColor : "#f7f7ff",
+                 border : "1px solid #e6e5e7",
+                 borderLeft: "none",
+                 borderRight: "none"
+              }
+            },
+            "& .MuiDataGrid-columnHeaders" : {
+                 border : "1px solid #e6e5e7",
+                 borderLeft: "none",
+                 borderRight: "none"
+            }
+          }} 
+          disableRowSelectionOnClick
+          hideFooter
+          hideFooterPagination
+          disableColumnMenu={true}
+          disableColumnFilter={true}
+          disableColumnSorting={true} 
+          />
         </Card>
         <StatusChangeDialog
           open={statusChangeDialogOpen}

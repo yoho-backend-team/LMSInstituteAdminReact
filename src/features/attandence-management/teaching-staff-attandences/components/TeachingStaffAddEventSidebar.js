@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { addTeachingStaffAttendance } from '../services/teachingStaffAttendanceServices';
 import { useBranchId, useInstitute } from 'utils/get-institute-details';
+import { useSpinner } from 'context/spinnerContext';
 
 const TeachingStaffAddEventSidebar = (props) => {
   const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
@@ -27,6 +28,7 @@ const TeachingStaffAddEventSidebar = (props) => {
   // ** States
   const [values, setValues] = useState(defaultState);
   const [selectedDate, setSelectedDate] = useState(null);
+  const { show, hide } = useSpinner()
 
   useEffect(() => {
     if (selected) {
@@ -56,29 +58,26 @@ const TeachingStaffAddEventSidebar = (props) => {
     return formattedDateString;
   }
   const onSubmit = async (data) => {
-    const inputData = {
-      staff_id: staffId,
-      title: data.title,
-      date: convertDateFormat(selectedDate)
-    };
-    const new_attedence = {
-      institute : useInstitute().getInstituteId(),
-      branch : staff?.branch,
-      date : convertDateFormat(selectedDate),
-      staff : staff?.staff,
-      status:data?.title
-    }
-    console.log(new_attedence,convertDateFormat(selectedDate),selectedDate)
-    
-    const result = await addTeachingStaffAttendance(new_attedence);
-    if (result.success) {
+    try{
+      show()
+      const new_attedence = {
+        institute : useInstitute().getInstituteId(),
+        branch : staff?.branch,
+        date : convertDateFormat(selectedDate),
+        staff : staff?.staff,
+        status:data?.title
+      }
+      
+      const result = await addTeachingStaffAttendance(new_attedence);
       setRefetch((state) => !state);
       toast.success(result.message);
-    } else {
-      toast.error(result.message);
+      handleSidebarClose();
+    }catch(error){
+     toast.error(error.message)
+    }finally{
+      hide()
     }
 
-    handleSidebarClose();
   };
 
   const handleStartDate = (date) => {

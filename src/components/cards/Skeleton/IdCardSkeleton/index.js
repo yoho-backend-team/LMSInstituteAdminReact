@@ -10,13 +10,13 @@ import CustomSkeleton from '..';
 const IdCardSkeleton = () => {
   return (
     <>
-      <Grid container spacing={4}>
+      <Grid container spacing={3} sx={{ paddingRight: "20px", paddingLeft: "10px"}}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Grid key={i} item xs={12} sm={6} md={3} p={1} mt={2}>
             <Card
             sx={{
-              width: "350px",
-              height: "430px",
+              width: "287px",
+              height: "435px",
               borderRadius: 3,
               boxShadow: 5,
               position: 'relative',

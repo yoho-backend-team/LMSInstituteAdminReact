@@ -47,7 +47,7 @@ const ViewAttendance = () => {
       console.log(error);
     }
   };
-
+  console.log(ClassData,"classData")
   return (
     <>
       {loading ? (

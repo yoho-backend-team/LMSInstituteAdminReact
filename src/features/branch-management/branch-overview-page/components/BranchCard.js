@@ -54,7 +54,7 @@ const BranchCard = ({ branch, setRefetchBranch }) => {
     setStatusChangeDialogOpen(true);
     setStatusValue(branch);
   };
-
+  
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card sx={{ position: 'relative', minHeight: 300, boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)", transition: "transform 0.3s ease", ":hover": { transform: "scale(0.9)"} }}>

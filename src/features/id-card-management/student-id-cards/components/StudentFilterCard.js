@@ -23,13 +23,14 @@ const StudentFilterCard = (props) => {
 
   useEffect(() => {
     const data = {
-      branchid: selectedBranchId,
+      branch_id: selectedBranchId,
     };
     getBatches(data);
   }, [selectedBranchId]);
 
   const getBatches = async (data) => {
     const result = await getAllBatches(data);
+    console.log(result,"result")
     if (result?.success) {
       setBatches(result?.data);
     }
@@ -47,13 +48,13 @@ const StudentFilterCard = (props) => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
-            <CardHeader title="ID card" />
-            <CardContent sx={{ pt: 0 }}>
+            <CardHeader sx={{ fontSize: "24px" }} title="ID card" />
+            <CardContent sx={{ pt: 0, display: "none" }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
-                    options={batches?.data}
+                    options={batches || []}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       if (!newValue) {

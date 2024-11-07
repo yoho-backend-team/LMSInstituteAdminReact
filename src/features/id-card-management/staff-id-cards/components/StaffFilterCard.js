@@ -37,7 +37,7 @@ const StaffFilterCard = (props) => {
         <Grid item xs={12}>
           <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
             <CardHeader title="ID card" />
-            <CardContent sx={{ pt: 0 }}>
+            <CardContent sx={{ pt: 0, display: "none" }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>
                   <TextField
