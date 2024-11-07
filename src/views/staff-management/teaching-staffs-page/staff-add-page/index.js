@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { TextField as CustomTextField, TextField } from '@mui/material';
+import { TextField as CustomTextField, IconButton, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -30,6 +30,7 @@ import { useBranchId, useInstitute } from 'utils/get-institute-details';
 import client from 'api/client';
 import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'utils/imageUtils';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -116,6 +117,7 @@ const StepperLinearWithValidation = () => {
   const navigate = useNavigate();
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [showPassword,setShowPassword] = useState(false)
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { show, hide} = useSpinner()
@@ -348,12 +350,21 @@ const StepperLinearWithValidation = () => {
                       fullWidth
                       value={value}
                       label="Password"
-                      type="password"
+                      type={showPassword ? "text" :"password"}
                       onChange={onChange}
                       placeholder=""
                       error={Boolean(personalErrors['password'])}
                       aria-describedby="stepper-linear-personal-institute_name"
                       helperText={personalErrors?.password?.message}
+                      InputProps={{
+                        endAdornment:(
+                          <InputAdornment position="end" >
+                            <IconButton onClick={() => setShowPassword(!showPassword)} >
+                               {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
                     />
                   )}
                 />
@@ -715,8 +726,6 @@ const StepperLinearWithValidation = () => {
 
   return (
     <Card>
-      <Divider sx={{ m: '0 !important' }} />
-
       <CardContent>{renderContent()}</CardContent>
     </Card>
   );

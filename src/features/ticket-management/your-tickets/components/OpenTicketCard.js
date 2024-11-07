@@ -28,7 +28,7 @@ const OpenTicketCard = ({ ticket }) => {
         transition: 'transform 0.3s ease, background-color 0.3s ease',
         '&:hover': {
             transform: 'scale(1.05)',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
             cursor: "pointer"
           },
           animation: `${fadeInUp} 0.5s ease`,
@@ -57,7 +57,7 @@ const OpenTicketCard = ({ ticket }) => {
               fontWeight: 500
             }}
           >
-                {ticket?.query}
+            {ticket?.query}
           </Typography>
               <Typography sx={{ fontSize: 14, color: 'primary.main' }}>{formatDate(ticket?.date)} - {formatTime(ticket?.date)}</Typography>
             </Box>
@@ -85,6 +85,6 @@ const OpenTicketCard = ({ ticket }) => {
 };
 
 OpenTicketCard.propTypes = {
-  tickets: PropTypes.any
+  ticket: PropTypes.any
 };
 export default OpenTicketCard;

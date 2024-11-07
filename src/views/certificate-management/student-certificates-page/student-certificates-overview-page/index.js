@@ -355,6 +355,9 @@ const StudenrCertificate = () => {
     }
   ];
 
+  console.log(selectedRow,"selectedRow")
+  
+
   return (
     <>
       <Grid container spacing={2}>

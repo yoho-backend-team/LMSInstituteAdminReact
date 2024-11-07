@@ -305,7 +305,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="first_name"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -324,7 +323,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="last_name"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -343,7 +341,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="email"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -363,7 +360,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="dob"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                  
                   <DatePicker
@@ -388,7 +384,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="gender"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     select
@@ -412,7 +407,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="course"
                 control={personalControl}
-                rules={{ required: true }}
                 render={() => (
                   <Autocomplete
                     multiple
@@ -482,7 +476,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="education_qualification"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -500,7 +493,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="state"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -518,7 +510,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="city"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -536,7 +527,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="pincode"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -556,7 +546,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="address_line_1"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -575,7 +564,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="address_line_2"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -594,7 +582,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="phone_no"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -614,7 +601,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="alternate_number"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
@@ -635,7 +621,6 @@ const StepperLinearWithValidation = () => {
               <Controller
                 name="username"
                 control={personalControl}
-                rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
                   <CustomTextField
                     fullWidth
