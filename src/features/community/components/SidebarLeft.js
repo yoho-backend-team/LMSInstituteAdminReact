@@ -18,8 +18,9 @@ import { useEffect, useState } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 import { getAllBatchChats, getAllMessages } from '../services/communityServices';
-import { getUserDetails } from 'utils/check-auth-state';
 import { useSpinner } from 'context/spinnerContext';
+import { getUserDetails } from 'utils/check-auth-state';
+import { getImageUrl } from 'utils/imageUtils';
 
 const ScrollWrapper = ({ children, hidden }) => {
   if (hidden) {
@@ -59,7 +60,8 @@ const SidebarLeft = (props) => {
   const [active, setActive] = useState(null);
   const [getchatsState,setChatsState] = useState(false)
   const { show, hide } = useSpinner()
-  
+  const user = getUserDetails()
+  console.log(user,"user")
   const handleChatClick = async (type, community) => {
     setChats(null);
     setActive(community);
@@ -128,7 +130,7 @@ const SidebarLeft = (props) => {
             const activeCondition = active !== null && active._id === contact._id;
 
             return (
-              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
+              <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': {  } }}>
                 <ListItemButton
                   disableRipple
                   onClick={() => handleChatClick(hasActiveId(contact._id) ? 'chat' : 'contact', contact)}
@@ -137,6 +139,7 @@ const SidebarLeft = (props) => {
                     px: 3,
                     width: '100%',
                     borderRadius: 1,
+                    borderBottom: "1px solid #8696a026",
                     '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
                     transition: 'background-color 0.3s ease',
                     '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.05)' },
@@ -179,11 +182,11 @@ const SidebarLeft = (props) => {
                     sx={{
                       my: 0,
                       ml: 3,
-                      ...(activeCondition && { '& .MuiTypography-root': { color: 'common.white' } })
+                      ...(activeCondition && { '& .MuiTypography-root': { color: "white" } })
                     }}
-                    primary={<Typography variant="h5">{contact?.group}</Typography>}
+                    primary={<Typography sx={{ fontSize: "1.1em", fontWeight: 600,color: "white"}} variant="h4">{contact?.group}</Typography>}
                     secondary={
-                      <Typography noWrap sx={{ ...(!activeCondition && { color: 'text.secondary' }), fontSize: 10, mt: 0.5 }}>
+                      <Typography noWrap sx={{ ...(!activeCondition && { color: "white" }), fontSize: "0.9em", mt: 0.5, color: "#aaa" }}>
                         {contact?.batch?.course?.course_name}
                       </Typography>
                     }
@@ -216,8 +219,9 @@ const SidebarLeft = (props) => {
           display: 'block',
           position: mdAbove ? 'static' : 'absolute',
           '& .MuiDrawer-paper': {
-            boxShadow: '0 2px 12px rgba(0, 0, 0, 0.15)',
+            // boxShadow: '0 2px 12px rgba(0, 0, 0, 0.15)',
             width: sidebarWidth,
+            borderRight: "1px solid rgba(0, 0, 0, 0.2)",
             position: mdAbove ? 'static' : 'absolute',
             borderTopLeftRadius: (theme) => theme.shape.borderRadius,
             borderBottomLeftRadius: (theme) => theme.shape.borderRadius
@@ -231,21 +235,24 @@ const SidebarLeft = (props) => {
       >
         <Box
           sx={{
-            py: 2.5,
+            pt: "12px",
+            pb:"20px",
+            minHeight: "70px",
             px: 3,
             display: 'flex',
             alignItems: 'center',
+            backgroundColor: "#111B21",
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`
           }}
         >
-          {store && store.userProfile ? (
+          {user && user?.image  ? (
             <Badge
               overlap="circular"
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'right'
               }}
-              sx={{ mr: 3 }}
+              sx={{ mr: 3, display: "none" }}
               onClick={handleUserProfileLeftSidebarToggle}
               badgeContent={
                 <Box
@@ -262,8 +269,8 @@ const SidebarLeft = (props) => {
               }
             >
               <MuiAvatar
-                src={store.userProfile.avatar}
-                alt={store.userProfile.fullName}
+                src={getImageUrl(user?.image)}
+                alt={user?.full_name}
                 sx={{ width: '2.375rem', height: '2.375rem', cursor: 'pointer' }}
               />
             </Badge>
@@ -273,7 +280,7 @@ const SidebarLeft = (props) => {
             value={query}
             onChange={handleFilter}
             placeholder="Search for contact..."
-            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' } }}
+            sx={{ '& .MuiInputBase-root': { borderRadius: '30px !important' }, display: "none" }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ color: 'text.secondary' }}>
@@ -282,6 +289,9 @@ const SidebarLeft = (props) => {
               )
             }}
           />
+          <Typography variant="h4" sx={{  color: 'primary.main',textAlign: "start" }}>
+                Batches
+          </Typography>
           {!mdAbove ? (
             <IconButton sx={{ p: 1, ml: 1 }} onClick={handleLeftSidebarToggle}>
               <Icon icon="tabler:x" />
@@ -289,12 +299,9 @@ const SidebarLeft = (props) => {
           ) : null}
         </Box>
 
-        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden' }}>
+        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden', backgroundColor: "#111B21" }}>
           <ScrollWrapper hidden={hidden}>
             <Box>
-              <Typography variant="h5" sx={{ ml: 3, mb: 2, mt: 2, color: 'primary.main' }}>
-                Batches
-              </Typography>
               <List sx={{ p: 0 }}>{renderContacts()}</List>
             </Box>
           </ScrollWrapper>

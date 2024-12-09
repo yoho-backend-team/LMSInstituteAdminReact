@@ -174,9 +174,15 @@ const generateEndpoints = () => {
           create_staff_notification : `/api/institutes/staff/notifications/`,
           institute_notification : `/api/institutes/branch/notifications`
         },
+        institute_notification : {
+          get_all : `/api/notification/institute/`,
+          update: `/api/notification/institute/update/`,
+        },
         subscription:{
            all_plans : `/api/institutes/payments/subscription/all`,
-           institute_subscription : `/api/institutes/payments/subscription/`
+           institute_subscription : `/api/institutes/payments/subscription/`,
+           status_check : `/api/subscription/institute-subscription/status/`,
+           upgrade_request : `/api/subscription/institute/upgrade-subscription/`
         },
         activity : {
             get : "/api/institutes/user/activity"

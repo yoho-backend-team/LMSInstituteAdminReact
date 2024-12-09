@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography, Button, Box } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import CategorySkeleton from 'components/cards/Skeleton/CategorySkeleton';
 import CategoryCard from 'features/course-management/categories-page/category-overview-page/components/CategoryCard';
@@ -8,9 +8,13 @@ import { selectCourseCategories, selectLoading } from 'features/course-managemen
 import { getAllCourseCategories } from 'features/course-management/categories-page/redux/courseCategoryThunks';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { IconCategory } from '@tabler/icons';
+import { useNavigate } from 'react-router';
+import NoDataFoundComponent from 'components/empty/noDataFound';
 
 const Categories = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const categoriesLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const courseCategories = useSelector(selectCourseCategories);
@@ -26,6 +30,10 @@ const Categories = () => {
 
   // Memoize categories data to prevent unnecessary re-renders
   const memoizedCategories = useMemo(() => courseCategories || [], [courseCategories]);
+
+  const onAddClick = () => {
+     navigate("/course-management/courses/add")
+  }
 
   return (
     <Grid container>
@@ -44,9 +52,19 @@ const Categories = () => {
           </Grid>
         </Grid>
       )}
+      
+      {
+        memoizedCategories?.data?.length === 0 &&
+        <NoDataFoundComponent
+         title={"No Course Categories Found"}
+         onAdd={onAddClick}
+         description={"Start by adding a new course category to manage your courses effectively."}
+         buttonText={"Add Course Category"}
+        />
+      }
 
       {/* Pagination */}
-      {memoizedCategories?.last_page !== 1 && (
+      {memoizedCategories?.last_page !== 1 && memoizedCategories?.last_page !== 0 && (
         <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Pagination
             count={memoizedCategories?.last_page}

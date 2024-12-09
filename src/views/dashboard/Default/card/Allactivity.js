@@ -1,22 +1,72 @@
-import { Divider, useTheme } from '@mui/material';
+import { CircularProgress, Divider, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import client from 'api/client';
+import { useRef } from 'react';
+import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import { imagePlaceholder } from 'utils/placeholders';
 
 const AllActivity = () => {
   const theme = useTheme();
   const [Logs, setLogs] = useState([]);
+  const [page_details,setPageDetails] = useState(null)
+  const [page,setPage] = useState(1)
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const containerRef = useRef(null)
+  const observerRef = useRef(null)
+
+  const getAllUserActivity = useCallback(async (page) => {
+    const data = { page : page}
+    setLoading(true)
+    try {
+      const response = await client.activity.get(data);
+      setLogs((prevLogs) => [...prevLogs ,...response?.data]);
+      setPageDetails(response?.pagination) 
+      if(response?.pagination?.currentPage >= response?.pagination?.totalPages){
+         setHasMore(false)
+      }
+    } catch (error) {
+      console.log(error,"error")
+    }
+    setLoading(false)
+  },[])
+
+  const handleScroll = useCallback((entries) => {
+    const [ entry ] = entries
+    if(entry.isIntersecting && hasMore && !loading ){
+       setPage((prevPage) => prevPage + 1)
+    }
+  },[hasMore,loading])
 
   useEffect(() => {
-    const getAllUserActivity = async () => {
-      const response = await client.activity.get();
-      setLogs(response?.data);
-    };
-    getAllUserActivity();
-  }, []);
+    getAllUserActivity(1);
+  },[])
+
+  useEffect(() => {
+   if(page > 1) getAllUserActivity(page)
+  },[page,getAllUserActivity])
+
+  useEffect(() => {
+    const option = {
+      root : containerRef.current,
+      rootMargin: "0px",
+      threshold : 0.5
+    }
+
+    observerRef.current = new IntersectionObserver(handleScroll,option)
+    const sentinel = document.querySelector("#sentinel")
+
+    if(sentinel) observerRef.current.observe(sentinel)
+
+    return () => {
+      if(observerRef.current && sentinel ){
+        observerRef.current.unobserve(sentinel)
+      }
+    }
+  }, [handleScroll]);
 
   return (
     <>
@@ -24,6 +74,7 @@ const AllActivity = () => {
         Recent Activities
       </Typography>
       <Card
+        ref={containerRef}
         sx={{
           backgroundColor: "white",
           p: 3,
@@ -78,6 +129,9 @@ const AllActivity = () => {
               </Box>
             );
           })}
+          { loading && <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center"}}> <CircularProgress /> </Box>}
+          {!loading && hasMore && <div id="sentinel" style={{ height: "1px" }} />}
+          {!hasMore && <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center"}}> <Typography>No more activities</Typography> </Box>}
         </Box>
       </Card>
     </>

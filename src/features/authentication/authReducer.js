@@ -4,7 +4,11 @@ const selectedBranchId = localStorage.getItem('selectedBranchId');
 const haveBranchId = () => {
   if (branches) {
     if (selectedBranchId) {
-      return selectedBranchId;
+      try {
+        return JSON.parse(selectedBranchId); 
+      } catch (e) {
+        return selectedBranchId;
+      }
     } else {
       return branches[0]?.uuid;
     }
@@ -25,8 +29,10 @@ const initialState = {
 };
 
 const authReducer = (state = initialState, action) => {
+ console.log(state,action)
   switch (action.type) {
     case 'LOGIN_SUCCESS':
+      // d
       return {
         ...state,
         isAuthenticated: true,
@@ -34,7 +40,7 @@ const authReducer = (state = initialState, action) => {
         userData: action.payload.userData,
         permissions: action.payload.permissions,
         branches: action.payload.branches,
-        selectedBranchId: action.payload.branches[0]?.uuid,
+        selectedBranchId: action.payload?.branches[0]?.uuid,
         institute:action.payload.institute,
         errorMessage: ''
       };

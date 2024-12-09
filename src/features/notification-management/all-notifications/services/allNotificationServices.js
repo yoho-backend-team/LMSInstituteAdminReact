@@ -107,23 +107,10 @@ export const resendNotification = async (data) => {
   }
 };
 
-export const getAllNotificationsByAuth = async (data) => {
+export const getAllNotificationsByAuth = async (data,query) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/get-notification-by-auth`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
-
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response?.data?.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch AllNotifications. Status: ${response.status}`);
-    }
+    const response = await client.institute_notification.get_institute_notification(data,query)
+    return response?.data
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getAllNotifications:', error);
@@ -133,23 +120,11 @@ export const getAllNotificationsByAuth = async (data) => {
   }
 };
 
-export const getLastNotifications = async (data) => {
+export const getLastNotifications = async (data,query) => {
   try {
-    const response = await axios.get(`${NOTIFICATION_API_ENDPOINT}/get-last-notifications`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.institute_notification.get_institute_notification(data,query)
 
-    // Check if the response status is successful
-    if (response.data.status) {
-      return { success: true, data: response?.data?.data };
-    } else {
-      // If the response status is not successful, throw an error
-      throw new Error(`Failed to fetch Notifications. Status: ${response.status}`);
-    }
+    return response?.data
   } catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getNotifications:', error);

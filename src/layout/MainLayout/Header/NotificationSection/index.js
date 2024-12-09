@@ -28,9 +28,13 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 import NotificationList from './NotificationList';
+import socket from 'utils/socket';
+import { getLastNotifications } from 'features/notification-management/all-notifications/services/allNotificationServices';
+import { useInstitute } from 'utils/get-institute-details';
 
 // assets
 import { IconBell } from '@tabler/icons';
+import { useBranchId } from 'utils/get-institute-details';
 
 // notification status options
 const status = [
@@ -57,12 +61,27 @@ const status = [
 const NotificationSection = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
+  const branch_id = useBranchId()
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
-  /**
-   * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-   * */
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = { institute_id : useInstitute().getInstituteId() };
+        const query = { branch_id : JSON.parse(branch_id), status: "unread" }
+        const result = await getLastNotifications(data,query);
+        console.log(result,"result")
+        setNotifications(result.data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const anchorRef = useRef(null);
 
   const handleToggle = () => {
@@ -84,10 +103,24 @@ const NotificationSection = () => {
     prevOpen.current = open;
   }, [open]);
 
+  useEffect(() => {
+    socket.connect()
+    socket.emit("JoinInstituteNotification",{branchId : JSON.parse(branch_id)})
+    socket.on("triggerInstituteNotification",(notification) => {
+      console.log(notification,"notification")
+        setNotifications((prevNotification) => [...prevNotification,notification.notification])
+    })
+
+    return () => {
+      socket.disconnect()
+      socket.off("triggerInstituteNotification")
+    }
+  },[socket])
+
   const handleChange = (event) => {
     if (event?.target.value) setValue(event?.target.value);
   };
-
+  console.log(notifications,"notificationsection")
   return (
     <>
       <Box
@@ -100,6 +133,22 @@ const NotificationSection = () => {
         }}
       >
         <ButtonBase sx={{ borderRadius: '12px' }}>
+        {notifications?.length !==0  && (
+        <Box
+          sx={{
+            width: 10,
+            height: 10,
+            borderRadius: '50%',
+            backgroundColor: '#FF0000',
+            position: 'absolute',
+            zIndex: 1000,
+            top: 0,
+            right: 0,
+            animation: 'blink 1s infinite',
+            boxShadow: '0 0 6px rgba(255, 0, 0, 0.5)',
+          }}
+        />
+      )}
           <Avatar
             variant="rounded"
             sx={{
@@ -154,7 +203,7 @@ const NotificationSection = () => {
                             <Typography variant="subtitle1">All Notification</Typography>
                             <Chip
                               size="small"
-                              label="01"
+                              label={notifications?.length}
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.warning.dark
@@ -163,7 +212,7 @@ const NotificationSection = () => {
                           </Stack>
                         </Grid>
                         <Grid item>
-                          <Typography component={Link} to="#" variant="subtitle2" color="primary">
+                          <Typography component={Link} to="#" sx={{ display: "none"}} variant="subtitle2" color="primary">
                             Mark as all read
                           </Typography>
                         </Grid>
@@ -172,7 +221,7 @@ const NotificationSection = () => {
                     <Grid item xs={12}>
                       <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 205px)', overflowX: 'hidden' }}>
                         <Grid container direction="column" spacing={2}>
-                          <Grid item xs={12}>
+                          {/* <Grid item xs={12}>
                             <Box sx={{ px: 2, pt: 0.25 }}>
                               <TextField
                                 id="outlined-select-currency-native"
@@ -191,19 +240,19 @@ const NotificationSection = () => {
                                 ))}
                               </TextField>
                             </Box>
-                          </Grid>
+                          </Grid> */}
                           <Grid item xs={12} p={0}>
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
                         {/* Notification List */}
-                        <NotificationList />
+                        <NotificationList notifications={notifications} onClose={() => setOpen(false)} />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
                   <Divider />
                   <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
-                    <Button component={Link} to="/profile-management/notifications" size="small" disableElevation>
+                    <Button component={Link} onClick={(e) => handleClose(e)} to="/profile-management/notifications" size="small" disableElevation>
                       View All
                     </Button>
                   </CardActions>

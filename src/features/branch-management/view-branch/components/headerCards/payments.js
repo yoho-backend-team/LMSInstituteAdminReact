@@ -60,8 +60,8 @@ const PaymentsCard = ({ isLoading, branchData }) => {
           <Box sx={{ p: 2 }}>
             <Grid container direction="column">
               <Grid item>
-                <Grid container sx={{justifyContent:'center',display:'flex'}}>
-                  <Grid item >
+                <Grid container sx={{display:'flex'}}>
+                  <Grid item xs={6} sx={{ display: "flex", justifyContent: "center"}} >
                     <Avatar  
                       variant="rounded"
                       sx={{
@@ -71,7 +71,20 @@ const PaymentsCard = ({ isLoading, branchData }) => {
                         mt: 1
                       }}
                     >
-                      <Icon icon="tabler:users-group" color="white" />
+                      <Icon icon="tabler:coin-rupee" color="white" />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs={6} sx={{ display: "flex", justifyContent: 'center',zIndex:1000}}>
+                    <Avatar  
+                      variant="rounded"
+                      sx={{
+                        ...theme.typography.commonAvatar,
+                        ...theme.typography.largeAvatar,
+                        backgroundColor: theme.palette.primary[800],
+                        mt: 1
+                      }}
+                    >
+                      <Icon icon="tabler:credit-card-pay" color="white" />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -80,7 +93,7 @@ const PaymentsCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.profits}
+                      {branchData.profits ?? 0}
                     </Typography>
                   </Box>
 

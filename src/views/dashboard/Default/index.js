@@ -12,12 +12,51 @@ import DashboardSkeleton from 'components/cards/Skeleton/DashboardSkeleton';
 import client from 'api/client';
 import { useSpinner } from 'context/spinnerContext';
 import toast from 'react-hot-toast';
+import Tour from 'components/tour/Tour';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [Reports, setReports] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { show, hide } = useSpinner();
+
+  const steps = [
+    {
+      target: '.header',
+      content: 'This is the header section, where you can navigate to other pages.',
+      tooltipStyle: {
+        top: '50px',
+        left: '50px',
+        backgroundColor: '#ff8c00', // Custom tooltip color
+      },
+      highlightStyle: {
+        border: '2px solid #ff8c00',
+        position: 'absolute',
+        top: '50px',
+        left: '50px',
+        width: '100%',
+        height: '100px',
+        zIndex: 10,
+      },
+    },
+    {
+      target: '.features',
+      content: 'Explore our features here. This is where all the action happens!',
+      tooltipStyle: {
+        top: '200px',
+        left: '50px',
+        backgroundColor: '#0CCE7F', // Green tooltip
+      },
+      highlightStyle: {
+        border: '2px solid #0CCE7F',
+        position: 'absolute',
+        top: '200px',
+        left: '50px',
+        width: '80%',
+        height: '120px',
+        zIndex: 10,
+      },
+    },]
 
   useEffect(() => {
     const getReports = async (props) => {
@@ -45,6 +84,17 @@ const Dashboard = () => {
         <DashboardSkeleton />
       ) : (
         <Grid container spacing={2} sx={{ pt: "22px", pl: "22px" }}>
+      {/* <div>
+      <header className="header">
+        <h1>Welcome to Our Website</h1>
+      </header>
+      <section className="features">
+        <h2>Features</h2>
+        <p>Learn more about what we offer.</p>
+      </section>
+          
+      <Tour steps={steps} onTourComplete={() => alert('Tour Completed!')} />
+    </div> */}
           {/* Top Stack Cards - Full Width */}
           <Grid item xs={12}>
             <Grid container spacing={2}>

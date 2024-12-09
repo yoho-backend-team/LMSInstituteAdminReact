@@ -10,11 +10,12 @@ import { getUserDetails } from 'utils/check-auth-state';
 const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(0.6),
   boxShadow: theme.shadows[1],
+  backgroundColor: "#202C33",
+  padding: "15px",
+  gap: "20px",
   justifyContent: 'space-between',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper
 }));
 
 const Form = styled('form')(({ theme }) => ({
@@ -54,15 +55,18 @@ const SendMsgForm = (props) => {
   };
 
   return (
-    <Form onSubmit={handleSendMsg}>
+    <Form onSubmit={handleSendMsg} sx={{ backgroundColor: "#202C33"}}>
       <ChatFormWrapper>
-        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: "20px", backgroundColor: "#202C33" }}>
           <CustomTextField
             fullWidth
             value={msg}
             placeholder="Type your message here…"
             onChange={(e) => setMsg(e.target.value)}
             sx={{
+              borderRadius: "8px",
+              backgroundColor: "#2A3942",
+              color: "white",
               '& .Mui-focused': { boxShadow: 'none !important' },
               '& .MuiInputBase-input:not(textarea).MuiInputBase-inputSizeSmall': {
                 p: (theme) => theme.spacing(1.875, 2.5)

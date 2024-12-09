@@ -8,7 +8,7 @@ const CommunitySkeleton = () => {
   const skeletonStyles = {
     backgroundColor: theme.palette.grey[200], // Lighter grey for better visibility
     borderRadius: '4px',
-    animation: 'wave 1.5s infinite ease-in-out', // Wave animation
+    // animation: 'wave 1.5s infinite ease-in-out', // Wave animation
     margin: '8px 0' // Adding margin for spacing
   };
 
@@ -17,7 +17,7 @@ const CommunitySkeleton = () => {
       {/* Left Side Skeleton */}
       <Grid item xs={12} sm={4}>
         {Array.from({ length: 6 }, (_, index) => index + 1).map((cardIndex) => (
-          <Box key={cardIndex} sx={{ mb: 2, p: 2, borderRadius: '8px', backgroundColor: '#fafafa' }}>
+          <Box key={cardIndex} sx={{ mb: 2, p: 2, borderRadius: '8px', backgroundColor: "white" }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Skeleton variant="circular" width={45} height={45} sx={skeletonStyles} />
               <Box sx={{ ml: 1 }}>
@@ -31,7 +31,7 @@ const CommunitySkeleton = () => {
 
       {/* Chat Skeleton */}
       <Grid item xs={12} sm={8}>
-        <Box sx={{ mb: 2, height: '80vh', p: 2, borderRadius: '8px', backgroundColor: '#fafafa' }}>
+        <Box sx={{ mb: 2, height: '80vh', p: 2, borderRadius: '8px', backgroundColor: "white" }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Skeleton variant="circular" width={48} height={48} sx={skeletonStyles} />
             <Box sx={{ ml: 2 }}>

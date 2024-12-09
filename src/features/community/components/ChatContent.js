@@ -13,6 +13,7 @@ import SendMsgForm from './SendMsgForm';
 import UserProfileRight from './UserProfileRight';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { getImageUrl } from 'utils/imageUtils';
 
 const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -22,7 +23,7 @@ const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   flexDirection: 'column',
   justifyContent: 'center',
-  backgroundColor: theme.palette.action.hover
+  backgroundColor: "#202C33"
 }));
 
 const ChatContent = (props) => {
@@ -75,7 +76,7 @@ const ChatContent = (props) => {
       // }
     });
   },[])
-  console.log(messages,"messages")
+  console.log(messages,"messages",selectedBatch)
   const renderContent = () => {
     if (chats) {
       const selectedChat = chats;
@@ -86,7 +87,7 @@ const ChatContent = (props) => {
             width: 0,
             flexGrow: 1,
             height: '100%',
-            backgroundColor: 'action.hover',
+            backgroundColor: 'action.hover'
           }}
         >
           <Box
@@ -96,9 +97,9 @@ const ChatContent = (props) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: 'background.paper',
+              backgroundColor: '#202c33',
               borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-              boxShadow: '0px 4px 10px -4px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0px 4px 10px -4px rgba(0, 0, 0, 0.1)'
             }}
           >
             {mdAbove ? null : (
@@ -129,27 +130,27 @@ const ChatContent = (props) => {
                   />
                 }
               >
-                {selectedChat?.avatar ? (
-                  <MuiAvatar sx={{ width: 38, height: 38 }} src={selectedChat?.avatar} alt={selectedChat?.fullName} />
+                {selectedChat?.batch?.course?.image ? (
+                  <MuiAvatar sx={{ width: 38, height: 38 }} src={getImageUrl(selectedChat?.batch?.course?.image)} alt={selectedChat?.batch?.batch_name} />
                 ) : (
                   <CustomAvatar
                     skin="light"
                     color={selectedChat?.avatarColor}
                     sx={{ width: 38, height: 38, fontSize: (theme) => theme.typography.body1.fontSize }}
                   >
-                    {getInitials(selectedBatch?.chatName)}
+                    {getInitials(selectedBatch?.batch?.batch_name)}
                   </CustomAvatar>
                 )}
               </Badge>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant="h5">{selectedBatch?.chatName}</Typography>
-                <Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.5 }}>
-                  {selectedBatch?.batch?.batch?.course_name}
+                <Typography variant="h5" sx={{ color: "white"}}>{selectedBatch?.batch?.batch_name}</Typography>
+                <Typography sx={{ color: "white", fontSize: 10, mt: 0.5 }}>
+                  {selectedBatch?.batch?.course?.course_name}
                 </Typography>
               </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: "none", alignItems: 'center' }}>
               <OptionsMenu
                 menuProps={{ sx: { mt: 2 } }}
                 icon={<Icon icon="tabler:dots-vertical" />}
@@ -180,20 +181,21 @@ const ChatContent = (props) => {
             ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
           }}
         >
-          <MuiAvatar
-            sx={{
-              mb: 6,
-              pt: 8,
-              pb: 7,
-              px: 7.5,
-              width: 110,
-              height: 110,
-              boxShadow: 3,
-              backgroundColor: 'background.paper'
-            }}
-          >
-            <Icon icon="tabler:message" fontSize="3.125rem" />
-          </MuiAvatar>
+<MuiAvatar
+  sx={{
+    mb: 6,
+    width: 110,
+    height: 110,
+    boxShadow: 3,
+    backgroundColor: '#0CCE7F',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+>
+  <Icon icon="tabler:message" fontSize="3rem" />
+</MuiAvatar>
+
           <Box
             onClick={handleStartConversation}
             sx={{

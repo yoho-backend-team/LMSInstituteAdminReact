@@ -172,6 +172,10 @@ class Client {
        get_institute_notification : (query) => HttpClient.get(HTTP_END_POINTS.notification.institute_notification,query)
       }
     }
+    institute_notification = {
+      get_institute_notification : (data,query) => HttpClient.get(HTTP_END_POINTS.institute_notification.get_all+data.institute_id+"/all",query),
+      update_institute_notification : (data,body) => HttpClient.update(HTTP_END_POINTS.institute_notification.update+data.id,body)
+    }
     id_cards = {
       student : {
         get_all : (data) => HttpClient.get(HTTP_END_POINTS.id_cards.student.all,data)
@@ -179,7 +183,9 @@ class Client {
     }
     subscription = {
       get_all_plans : () => HttpClient.get(HTTP_END_POINTS.subscription.all_plans),
-      get_subscription : (params) => HttpClient.get(HTTP_END_POINTS.subscription.institute_subscription+params?.institute) 
+      get_subscription : (params) => HttpClient.get(HTTP_END_POINTS.subscription.institute_subscription+params?.institute),
+      get_subscription_status : (params) => HttpClient.get(HTTP_END_POINTS.subscription.status_check+params.institute) ,
+      upgrade_request : (params) => HttpClient.update(HTTP_END_POINTS.subscription.upgrade_request+params.institute+"/request")
     }
     activity = {
       get : (query) => HttpClient.get(HTTP_END_POINTS.activity.get,query)

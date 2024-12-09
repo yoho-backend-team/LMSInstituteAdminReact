@@ -7,6 +7,8 @@ import { getUserDetails } from 'utils/check-auth-state';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { formatTime } from 'utils/formatDate';
+import chatBg from "../../../assets/images/community/pattern.png"
+
 
 const ChatLog = (props) => {
   const { data, hidden, currentUser, socket } = props; 
@@ -31,65 +33,124 @@ const ChatLog = (props) => {
       socket.emit('messageRead', { messageId: msg._id, userId: user?._id });
     }
   };
+
+  const isSamePreviousUser = (index) => {
+    if(index === 0) return false;
+    console.log(index,data[index].sender.toString()===data[index -1 ].sender.toString())
+    return data[index].sender.toString() === data[index - 1].sender.toString()
+  }
   console.log(user,"user")
   const renderChats = () => {
     if (data) {
-      return data.map((message, index) => (
+       return  data.map((message, index) => {
+        const isCurrentUser = message.sender === user?._id
+        const isPreviousUser = isSamePreviousUser(index)
+        console.log(isPreviousUser)
+        return(
         <Box
           key={index}
           display="flex"
-          flexDirection={message.sender === user?._id ? 'row-reverse' : 'row'}
-          alignItems="center"
-          sx={{ pl: '20px', minWidth: "200px" }}
+          flexDirection={isCurrentUser ? 'row-reverse' : 'row'}
+          alignItems="flex-start"
+          sx={{ 
+            minWidth: "200px" ,
+            
+          }}
           mb={1}
         >
-          <CustomAvatar src={message?.sender?.avatar} />
+          {!isPreviousUser && <CustomAvatar src={message?.sender?.avatar} /> }
           <Box
-            ml={message.sender === user?._id ? 0 : 2}
-            mr={message.sender === user?._id ? 2 : 0}
+            ml={isCurrentUser ? 0 : isPreviousUser ? "55px" : 2}
+            mr={isCurrentUser && !isPreviousUser ? 2 : isPreviousUser ? "55px" : 0}
             p={1}
             borderRadius={1}
-            sx={{ padding: '15px 20px' }}
-            bgcolor={message.sender === user?._id ? '#61C554' : '#E8ECEF'}
-            color={message.sender === user?._id ? 'white' : 'black'}
+            sx={{ padding: '12px', fontSize: "0.9em", borderRadius: "10px", position: "relative", 
+              display: 'flex',
+              flexDirection: isCurrentUser ? "row" : "column",
+              gap: isCurrentUser && "5px",
+              "::before" : isCurrentUser && !isPreviousUser ? {
+                content: '""',
+                position: "absolute",
+                top: "0",
+                right: "-12px",
+                width: "20px",
+                height: "20px",
+                background: `linear-gradient(
+                 135deg,
+                 #dcf8c6 0%,
+                 #dcf8c6 50%,
+                 transparent 50%,
+                 transparent
+             )`
+              }
+              :!isPreviousUser &&{
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: "-12px",
+                width: "20px",
+                height: "20px",
+                background: `linear-gradient(
+                             225deg,
+                             #fff 0%,
+                             #fff 50%,
+                             transparent 50%,
+                             transparent
+                           )`
+              }
+             }}
+            bgcolor={isCurrentUser ? '#dcf8c8' : '#fff'}
+            color={ isCurrentUser ? 'black' : 'black'}
             maxWidth="70%"
           >
-            {message.sender !== user?._id && (
+            {!isPreviousUser &&(
               <Typography variant="caption">
-                {message?.sender_name}
+                {!isCurrentUser &&  message?.sender_name }
               </Typography>
             )}
-            <Typography>{message.message}</Typography>
-            <Box sx={{ display: 'flex', justifyContent:  message.sender === user?._id ? "end" : "start", mt: 1 }}>
-              {message.sender === user?._id && (
-                <Typography >
-                  {message?.status?.some(s => s.delivered) && !message?.status?.every(s => s.delivered) && (
-                    <DoneIcon sx={{ color: 'white', width: '17px', height: '17px' }} />
-                  )}
-                  {message?.status?.every(s => s.delivered) && !message?.status?.every(s => s.read) && (
-                    <DoneAllIcon sx={{ color: 'white', width: '17px', height: '17px' }} />
-                  )}
-                  {message?.status?.every(s => s.read) && (
-                    <DoneAllIcon sx={{ color: '#0D6EFD', width: '17px', height: '17px' }} />
-                  )}
-                </Typography>
-              )}
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: message.sender === user?._id ? "end" : "start"}}>
+            <Typography sx={{ fontSize: "0.925rem"}}>{message.message}</Typography>
+            <Box sx={{ display: "flex", justifyContent: isCurrentUser ? "end" : "start", alignItems: "flex-end"}}>
             <Typography variant="caption" sx={{ color: '#727272'}}>
                 {formatTime(message?.createdAt)}
               </Typography>
             </Box>
-          </Box>
+            <Box sx={{ display: 'flex', justifyContent:  message.sender === user?._id ? "end" : "start", mt: 1 }}>
+              {isCurrentUser && (
+                <Typography >
+                  {message?.status?.some(s => s.delivered) && !message?.status?.every(s => s.delivered) && (
+                    <DoneIcon sx={{  width: '17px', height: '17px' }} />
+                  )}
+                  {message?.status?.every(s => s.delivered) && !message?.status?.every(s => s.read) && (
+                    <DoneAllIcon sx={{ width: '17px', height: '17px' }} />
+                  )}
+                  {message?.status?.every(s => s.read) && (
+                    <DoneAllIcon sx={{  width: '17px', height: '17px' }} />
+                  )}
+                </Typography>
+              )}
+            </Box>
+                     </Box>
         </Box>
-      ));
+      )});
     } else {
       return <Typography>No messages found</Typography>;
     }
   };
 
   return (
-    <Box ref={chatArea} sx={{ height: 'calc(100% - 8.875rem)', overflowY: 'auto' }}>
+    <Box ref={chatArea} sx={{  
+      height: 'calc(100% - 8.875rem)',
+      overflowY: 'auto',
+      position: 'relative',
+      padding: "50px",
+      background: `linear-gradient(
+        rgba(229, 221, 213, 0.9), 
+        rgba(229, 221, 213, 0.9)
+      ), url(${chatBg})`,
+      backgroundPosition: "center bottom",
+      backgroundSize: "contain",
+      backgroundAttachment: "fixed",
+     }}>
       {renderChats()}
     </Box>
   );

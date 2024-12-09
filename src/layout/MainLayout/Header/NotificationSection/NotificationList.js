@@ -1,8 +1,9 @@
 import { Avatar, Box, Button, Chip, Divider, Grid, List, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import CustomChip from 'components/mui/chip';
-import { getLastNotifications } from 'features/notification-management/all-notifications/services/allNotificationServices';
-import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 const ListItemWrapper = styled('div')(({ theme }) => ({
   cursor: 'pointer',
@@ -12,36 +13,25 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
   }
 }));
 
-const NotificationList = () => {
+const NotificationList = ({notifications,onClose}) => {
   const theme = useTheme();
-  const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = { status: ' ' };
-        const result = await getLastNotifications(data);
-        if (result.success) {
-          setNotifications(result.data);
-        } else {
-          console.error('Failed to fetch notifications:', result.error);
-        }
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-    fetchData();
-  }, []);
+  const navigate = useNavigate()
+  
 
   const getStatusColor = (status) => {
     return status === 'unread' ? 'error' : 'success';
   };
 
+  const handleNavigate = () => {
+    onClose()
+    navigate("/profile-management/notifications?status=unread")
+  }
+
   return (
     <List sx={{ width: '100%', maxWidth: 330, py: 0, borderRadius: '10px' }}>
       {notifications.map((notification, index) => (
-        <ListItemWrapper key={index}>
-          <Box>
+        <ListItemWrapper key={index} onClick={handleNavigate} >
+          <Box >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Avatar>
                 <Avatar src={notification.image || ''} />

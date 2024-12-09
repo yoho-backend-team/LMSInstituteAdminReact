@@ -61,7 +61,20 @@ const StudentsCard = ({ isLoading, branchData }) => {
             <Grid container direction="column">
               <Grid item>
                 <Grid container sx={{justifyContent:'center',display:'flex'}}>
-                  <Grid item >
+                  <Grid item xs={6} sx={{ display: 'flex', justifyContent: "center"}} >
+                    <Avatar  
+                      variant="rounded"
+                      sx={{
+                        ...theme.typography.commonAvatar,
+                        ...theme.typography.largeAvatar,
+                        backgroundColor: theme.palette.primary[800],
+                        mt: 1
+                      }}
+                    >
+                      <Icon icon="tabler:users-group" color="white" />
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs={6} sx={{ display: 'flex', justifyContent: "center",zIndex:1000}} >
                     <Avatar  
                       variant="rounded"
                       sx={{

@@ -111,7 +111,7 @@ const SearchSection = () => {
   const branches = useSelector((state) => state.auth.branches);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
-
+  console.log(selectedBranchId,"selectedBranchId",branches,branches?.[0]?.uuid === selectedBranchId,typeof(selectedBranchId),typeof(branches?.[0]?.uuid),selectedBranchId )
   return (
     <>
       <Box sx={{ display: { xs: 'block', md: 'none' } }}>
@@ -157,7 +157,7 @@ const SearchSection = () => {
       <Box sx={{ display: { xs: 'none', md: 'block' } }}>
         <OutlineInputStyle
           id="input-search-header"
-          value={selectedBranchId}
+          value={selectedBranchId?.trim()}
           onChange={(e) => {
 
             dispatch(updateSelectedBranch(e.target.value));
@@ -170,7 +170,7 @@ const SearchSection = () => {
           label="Branch"
         >
           {branches?.map((branch, index) => (
-            <MenuItem value={branch?.uuid} key={index}>
+            <MenuItem value={branch?.uuid} key={index} selected={selectedBranchId === branch?.uuid}>
               {branch?.branch_identity}
             </MenuItem>
           ))}

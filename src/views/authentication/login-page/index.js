@@ -24,6 +24,17 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import {checkAuthState,getOtpDetails} from 'utils/check-auth-state';
 import NewLogo from "../../../assets/images/logo/logo.png"
+import LoginBg from "assets/images/auth/login-bg.jpg";
+import LoginBg2 from "assets/images/auth/login-bg.jpg"
+
+
+const LeftImageBox = styled(Box)({
+  backgroundImage: `url(${LoginBg})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  width: '100%',
+  height: '100vh',
+});
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -152,11 +163,20 @@ const Login = () => {
   };
   return (
     <AuthWrapper1>
-      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
+      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: "initial" }}>
         <Grid item xs={12}>
-          <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
+          <Grid container  sx={{ minHeight: 'calc(100vh - 68px)' }}>
+            <Grid item xs={6} sx={{
+              backgroundImage: `url(${LoginBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              width: '100%',
+              height: '100vh',
+            }} >
+               {/* <LeftImageBox /> */}
+            </Grid>
             {!otp && (
-              <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
+              <Grid item xs={6} sx={{ mb: 0, display: "flex",backgroundColor: `#BEE1F5`, alignItems: "center", justifyContent: "center", backgroundImage: `url(${LoginBg2})`, backgroundSize: "cover" }}>
                 <AuthCardWrapper>
                   <Grid container spacing={2} alignItems="center" justifyContent="center">
                     <Grid item sx={{ mb: 2 }}>
