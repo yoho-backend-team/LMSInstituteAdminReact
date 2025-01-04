@@ -138,6 +138,11 @@ const Login = () => {
     }
   };
 
+  const getDevOtp = () => {
+    const otpToken =JSON.parse(localStorage.getItem("otp"))
+    return otpToken?.otp
+  }
+
   const renderInputs = () => {
     return Object.keys(defaultValues).map((val, index) => (
       <Controller
@@ -218,7 +223,14 @@ const Login = () => {
                         <Typography variant="h3" sx={{ ml: 2.5, fontWeight: 700 }}>
                           OTP
                         </Typography>
+                       
                       </Box>
+                      <Box sx={{ display: "flex", alignItems:"center", justifyContent: "center"}}>
+                      <Typography variant="h3" sx={{ ml: 2.5, fontWeight: 700 }}>
+                          Your Otp is - {getDevOtp()}
+                        </Typography>
+                      </Box>
+                     
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="h4" sx={{ mb: 1.5 }}>
                           Two-Step Verification 💬
