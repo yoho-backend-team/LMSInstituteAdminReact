@@ -25,6 +25,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
     0: 'error'
   };
 
+  
   // ** States
   const [openEdit, setOpenEdit] = useState(false);
 
