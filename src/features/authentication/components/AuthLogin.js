@@ -153,16 +153,16 @@ const FirebaseLogin = ({ ...others }) => {
               label="Remember me"
             /> */}
 
-            {/* <Typography
+            <Typography
               component={Link}
-              // onClick={others?.handleOtpPage}
+              onClick={others?.handleOtpPage}
               to="/forget-password"
               variant="subtitle1"
               color="secondary"
               sx={{ textDecoration: 'none', cursor: 'pointer' }}
             >
               Forgot Password?
-            </Typography> */}
+            </Typography>
           </Stack>
           {errors.submit && (
             <Box sx={{ mt: 3 }}>
