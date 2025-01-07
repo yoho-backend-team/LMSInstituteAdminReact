@@ -16,6 +16,7 @@ import { useState, useEffect } from 'react';
 import { getUserActivityLog } from 'features/user-management/users-page/services/userServices';
 import Pagination from '@mui/material/Pagination';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
     display: 'none'
@@ -30,26 +31,48 @@ const UserViewAccount = ({ id }) => {
   }, [id]);
 
   const getUserLog = async (userId, page) => {
+    console.log('User ID:', userId, 'Page:', page);
+
     try {
-      const data = {
-        user_id: userId,
-        page: page
-      };
-      const result = await getUserActivityLog(data);
-      if (result.success) {
-        setActivityLog(result.data);
-      } else {
-        toast.error(result?.message)
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('Authentication token is missing!');
+        toast.error('Authentication token is missing!');
+        return;
+      }
+
+      console.log('Token:', token);
+
+      const response = await axios.get('https://lms-node-backend-v1.onrender.com/api/institutes/user/activity', {
+        params: { user_id: userId, page: page },
+        headers: { Authorization: `Bearer ${'Token ' + token}` }
+      });
+      console.log(response.data.data);
+
+      if (response.data.status === 'success') {
+        setActivityLog(response.data); // Update your state
+        toast.success(response.data?.message);
+        return;
       }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        console.error('Response Error:', error.response.data);
+        console.error('Status:', error.response.status);
+        toast.error(error.response.data?.message || 'Server responded with an error');
+      } else if (error.request) {
+        console.error('Request Error:', error.request);
+        toast.error('No response received from the server');
+      } else {
+        console.error('Error Message:', error.message);
+        toast.error('An error occurred: ' + error.message);
+      }
     }
   };
 
-  
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      <Grid item xs={12} lg={12}>
         <Card>
           <CardHeader
             title="User Activity Timeline"
@@ -60,7 +83,7 @@ const UserViewAccount = ({ id }) => {
               />
             }
           />
-          <CardContent>
+          <CardContent sx={{height:'24em', overflow:"scroll"}}>
             <Timeline>
               {activityLog?.data?.map((item, index) => (
                 <TimelineItem key={index}>
@@ -77,15 +100,26 @@ const UserViewAccount = ({ id }) => {
                         justifyContent: 'space-between'
                       }}
                     >
-                      <Typography variant="h6" sx={{ mr: 2 }}>
-                        {item.title}
+                      <Typography variant="h5" sx={{ mr: 2 }}>
+                        {item.action}
+                      </Typography>
+                      <Typography variant="" sx={{ mr: 2 }}>
+                        {item.model}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        {item?.ago}
+                        {new Date(item?.updatedAt).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                          hour12: true // Use false for 24-hour format
+                        })}
                       </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{ mb: 1 }}>
-                      {item.description}
+                    <Typography variant='body2'  sx={{ m: 1 }}>
+                      {item.details}
                     </Typography>
                   </TimelineContent>
                 </TimelineItem>

@@ -202,10 +202,20 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
               <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {!selectedImage && (
-                  <ImgStyled src={userData?.image ? getImageUrl(userData?.image) : profilePlaceholder} alt="Profile Pic" />
+                  <ImgStyled
+                    src={userData?.image ? getImageUrl(userData?.image) : profilePlaceholder}
+                    alt="Profile Pic"
+                    sx={{ position: 'relative' }} // Ensure ImgStyled has relative positioning
+                  />
                 )}
 
-                {selectedImage && <ImgStyled src={userData?.image ? getImageUrl(userData?.image) : profilePlaceholder} alt="Profile Pic" />}
+                {selectedImage && (
+                  <ImgStyled
+                    src={userData?.image ? getImageUrl(userData?.image) : profilePlaceholder}
+                    alt="Profile Pic"
+                    sx={{ position: 'relative' }} // Ensure ImgStyled has relative positioning
+                  />
+                )}
 
                 {/* Button placed in the bottom-right of the image */}
                 <ButtonStyled
@@ -215,11 +225,16 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   sx={{
                     position: 'absolute',
                     bottom: '8px',
-                    right: '240px',
+                    right: '250px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderRadius: 50
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    padding: 0,
+                    minWidth: '30px',
+                    minHeight: '30px'
                   }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20" fill="#fff">
@@ -236,30 +251,6 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   />
                 </ButtonStyled>
               </Box>
-
-              {/* <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {!selectedImage && (
-                  <ImgStyled
-                    src={userData?.image ? getImageUrl(userData?.image):profilePlaceholder}
-                    alt="Profile Pic"
-                  />
-                )}
-
-                {selectedImage && <ImgStyled src={userData?.image ? getImageUrl(userData?.image):profilePlaceholder} alt="Profile Pic" />}
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload New Image
-                    <input
-                      hidden
-                      type="file"
-                      value={inputValue}
-                      accept="image/png, image/jpeg"
-                      onChange={handleInputImageChange}
-                      id="account-settings-upload-image"
-                    />
-                  </ButtonStyled>
-                </div>
-              </Box> */}
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
