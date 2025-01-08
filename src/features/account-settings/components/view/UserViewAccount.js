@@ -101,13 +101,13 @@ const UserViewAccount = ({ id }) => {
                       }}
                     >
                       <Typography variant="h5" sx={{ mr: 2 }}>
-                        {item.action}
+                        {item.title}
                       </Typography>
                       <Typography variant="" sx={{ mr: 2 }}>
-                        {item.model}
+                        {item.action}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-                        {new Date(item?.updatedAt).toLocaleString('en-US', {
+                        {new Date(item?.timestamp).toLocaleString('en-US', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric',
@@ -119,7 +119,23 @@ const UserViewAccount = ({ id }) => {
                       </Typography>
                     </Box>
                     <Typography variant='body2'  sx={{ m: 1 }}>
+                      {item.model}
+                    </Typography>
+                    <Typography variant='body2'  sx={{ m: 1 }}>
                       {item.details}
+                    </Typography>
+                    <Typography variant='body2'  sx={{ m: 1 }}>
+                    Updated At:
+                    {new Date(item?.updatedAt).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                          hour12: true // Use false for 24-hour format
+                        })}
+                      
                     </Typography>
                   </TimelineContent>
                 </TimelineItem>

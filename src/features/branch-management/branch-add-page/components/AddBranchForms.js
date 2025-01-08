@@ -114,7 +114,7 @@ const AddBranchForms = () => {
     <Card>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent>
-          <Grid container spacing={4}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
               <Controller
                 name="branch_identity"
@@ -181,7 +181,7 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     multiline
-                    rows={3}
+                    rows={1}
                     fullWidth
                     label="Address"
                     placeholder="1456, Liberty Street"
