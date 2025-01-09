@@ -17,6 +17,7 @@ import { getUserActivityLog } from 'features/user-management/users-page/services
 import Pagination from '@mui/material/Pagination';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { Chip } from '@mui/material';
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
     display: 'none'
@@ -25,8 +26,12 @@ const Timeline = styled(MuiTimeline)({
 
 const UserViewAccount = ({ id }) => {
   const [activityLog, setActivityLog] = useState([]);
+  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+
 
   useEffect(() => {
+    setCurrentPage(1);
     getUserLog(id, '1');
   }, [id]);
 
@@ -44,14 +49,18 @@ const UserViewAccount = ({ id }) => {
 
       console.log('Token:', token);
 
-      const response = await axios.get('https://lms-node-backend-v1.onrender.com/api/institutes/user/activity', {
+      const response = await axios.get(`https://lms-node-backend-v1.onrender.com/api/institutes/user/activity`, {
         params: { user_id: userId, page: page },
         headers: { Authorization: `Bearer ${'Token ' + token}` }
       });
+      console.log(response.data.pagination.totalPages);
+      
       console.log(response.data.data);
 
       if (response.data.status === 'success') {
         setActivityLog(response.data); // Update your state
+        setTotalPages(response.data.pagination.totalPages); // Total pages from API response
+        setCurrentPage(page); // Update current page
         toast.success(response.data?.message);
         return;
       }
@@ -83,7 +92,7 @@ const UserViewAccount = ({ id }) => {
               />
             }
           />
-          <CardContent sx={{height:'24em', overflow:"scroll"}}>
+          <CardContent sx={{ height: '24em',  overflow: 'scroll' }}>
             <Timeline>
               {activityLog?.data?.map((item, index) => (
                 <TimelineItem key={index}>
@@ -100,11 +109,48 @@ const UserViewAccount = ({ id }) => {
                         justifyContent: 'space-between'
                       }}
                     >
-                      <Typography variant="h5" sx={{ mr: 2 }}>
-                        {item.title}
+                      <Chip  color='primary' label={item.title}/>                      
+                      
+                    </Box>
+                    <Box
+                      sx={{
+                        p: 3, // Padding
+                        border: '1px solid #e0e0e0', // Subtle border for structure
+                        borderRadius: 4, // Rounded corners for modern look
+                        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Soft shadow for depth
+                        backgroundColor: '#ffffff', // Clean white background
+                        maxWidth: '450px', // Restrict width for compactness
+                        margin: 'auto', // Center alignment
+                        mt: 3, // Margin-top for spacing
+                        '&:hover': {
+                          boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.15)' // Slight hover effect
+                        }
+                      }}
+                    >
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          mb: 2, // Margin-bottom
+                          color: '#3f51b5', // Primary color
+                          fontWeight: 'bold' // Bold text
+                        }}
+                      >
+                        {item.model}
                       </Typography>
-                      <Typography variant="" sx={{ mr: 2 }}>
+                      <Typography variant="body1" sx={{
+                          color: '#616161', // Neutral text color
+                          lineHeight: 1.6 // Better readability
+                        }}>
                         {item.action}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: '#616161', // Neutral text color
+                          lineHeight: 1.6 // Better readability
+                        }}
+                      >
+                        {item.details}
                       </Typography>
                       <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                         {new Date(item?.timestamp).toLocaleString('en-US', {
@@ -118,38 +164,21 @@ const UserViewAccount = ({ id }) => {
                         })}
                       </Typography>
                     </Box>
-                    <Typography variant='body2'  sx={{ m: 1 }}>
-                      {item.model}
-                    </Typography>
-                    <Typography variant='body2'  sx={{ m: 1 }}>
-                      {item.details}
-                    </Typography>
-                    <Typography variant='body2'  sx={{ m: 1 }}>
-                    Updated At:
-                    {new Date(item?.updatedAt).toLocaleString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                          hour12: true // Use false for 24-hour format
-                        })}
-                      
-                    </Typography>
                   </TimelineContent>
                 </TimelineItem>
               ))}
             </Timeline>
-            <Grid container justifyContent="flex-end" mt={2}>
+            <Grid container justifyContent="center" mt={2}>
               <div className="demo-space-y">
-                <Pagination
-                  count={activityLog?.last_page}
-                  color="primary"
-                  onChange={async (e, page) => {
-                    getUserLog(id, page);
-                  }}
-                />
+              <Pagination
+                count={totalPages} // Total pages from state
+                page={currentPage} // Current page from state
+                color="primary"
+                onChange={(e, page) => {
+                  setCurrentPage(page);
+                  getUserLog(id, page); // Fetch new page data
+                }}
+              />
               </div>
             </Grid>
           </CardContent>

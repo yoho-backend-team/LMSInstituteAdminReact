@@ -123,7 +123,7 @@ const AddBranchForms = () => {
                   <CustomTextField
                     {...field}
                     fullWidth
-                    label="Branch Name"
+                    label="Branch Name "
                     placeholder="carterLeonard"
                     error={Boolean(errors.branch_identity)}
                     helperText={errors.branch_identity?.message}
@@ -257,11 +257,38 @@ const AddBranchForms = () => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
-              <Button onClick={() => navigate(-1)}>Cancel</Button>
-              <Button type="submit" variant="contained">
-                Create Branch
-              </Button>
+            <Grid item xs={12} sm={12} >
+            <Button
+                  onClick={() => navigate(-1)}
+                  sx={{
+                    color: '#1976d2',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    padding: '6px 20px',
+                    mr:2,
+                    '&:hover': {
+                      backgroundColor: '#e3f2fd',
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                    color: 'white',
+                    fontWeight: 600,
+                    borderRadius: 20,
+                    padding: '6px 20px',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #21CBF3 30%, #2196F3 90%)',
+                    },
+                  }}
+                >
+                  Create Branch
+                </Button>
             </Grid>
           </Grid>
         </CardContent>

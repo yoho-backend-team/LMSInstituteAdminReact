@@ -119,7 +119,10 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                 </Typography>
                 <Chip
                   label={userData?.is_active ? 'Active' : 'Inactive'}
-                  color={statusColors[userData?.is_active] || 'default'}
+                  style={{
+                    backgroundColor: userData?.is_active ? 'green' : 'red',
+                    color: 'white' // Ensures text is visible
+                  }}
                   size="small"
                 />
               </Box>
