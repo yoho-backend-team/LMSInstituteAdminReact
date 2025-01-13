@@ -185,7 +185,7 @@ const generateEndpoints = () => {
            upgrade_request : `/api/subscription/institute/upgrade-subscription/`
         },
         activity : {
-            get : "/api/institutes/user/activity"
+            get : "/api/institutes/user/activity",
         },
         reports : {
             get : `/api/institutes/${instituteId}/report/`

@@ -61,9 +61,10 @@ const UserViewRight = ({ id }) => {
         scrollButtons="auto"
         onChange={handleChange}
         aria-label="forced scroll tabs example"
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}`}}
       >
-        <Tab value="account" label="Account" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
+        
+        <Tab  value="account" label="Account" icon={<Icon fontSize="1.125rem" icon="tabler:user-check" />} />
         <Tab value="security" label="Security" icon={<Icon fontSize="1.125rem" icon="tabler:lock" />} />
       </TabList>
       <Box sx={{ mt: 4 }}>
