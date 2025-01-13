@@ -92,8 +92,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
       >
         <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
           {
-            useInstitute().getDetails().image ? 
-            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)} alt={useInstitute().getDetails().institute_name} width={80} height={40} />
+            useInstitute()?.getDetails()?.image ? 
+            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute()?.getDetails()?.image)} alt={useInstitute().getDetails().institute_name} width={80} height={40} />
             :
             <LogoSection />
           }
@@ -122,7 +122,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       </Box>
 
       {/* header search */}
-      <SearchSection />
+      {/* <SearchSection /> */}
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
 

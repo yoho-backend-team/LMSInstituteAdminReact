@@ -4,11 +4,11 @@ export function useInstitute(){
     return{
         getInstituteId(){
             const institute = localStorage.getItem("institute")
-            return JSON.parse(institute).uuid
+            return JSON.parse(institute)?.uuid
         },
         getInstituteMainId(){
             const institute = localStorage.getItem("institute")
-            return JSON.parse(institute)._id
+            return JSON.parse(institute)?._id
         },
         getDetails(){
            const institute = localStorage.getItem("institute")
