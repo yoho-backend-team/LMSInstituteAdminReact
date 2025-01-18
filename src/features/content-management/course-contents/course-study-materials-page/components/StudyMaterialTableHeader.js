@@ -58,12 +58,13 @@ const StudyMaterialHeader = (props) => {
             <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
               <Grid item xs={12}>
                 <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <TextField
                       select
                       fullWidth
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                      sx={{'& .MuiOutlinedInput-root': {borderRadius: '50px', },}}
                     >
                       <MenuItem value={null}>Select Status</MenuItem>
                       <MenuItem value="true">Active</MenuItem>
@@ -71,9 +72,10 @@ const StudyMaterialHeader = (props) => {
                     </TextField>
                   </Grid>
 
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <Autocomplete
                       fullWidth
+                      sx={{'& .MuiOutlinedInput-root': {borderRadius: '30px' }}}
                       // value={value}
                       onChange={(e, newValue) => {
                         const data = {
@@ -92,8 +94,8 @@ const StudyMaterialHeader = (props) => {
                     <TextField value={searchValue} fullWidth placeholder="Search Course" onChange={(e) => handleSearch(e)} />
                   </Grid> */}
 
-                  <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', mt: 1 }}>
-                    <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 }, backgroundColor : "#0CCE7F", ":hover":{ backgroundColor: "#0AA865"} }}>
+                  <Grid item sm={4} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', }}>
+                    <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 },p:1.7, borderRadius:'50px', backgroundColor : "#0CCE7F", ":hover":{ backgroundColor: "#0AA865"} }}>
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Study Material
                     </Button>

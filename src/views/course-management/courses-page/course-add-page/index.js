@@ -311,7 +311,7 @@ const AddCoursePage = () => {
                   Add New Course
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="course_name"
                   control={courseControl}
@@ -346,7 +346,7 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} >
+              <Grid item xs={12} sm={4} >
               <Controller
                name="course_duration"
                control={courseControl}
@@ -360,13 +360,13 @@ const AddCoursePage = () => {
                )}
               />
               </Grid>
-              <Grid sx={{ display: "none"}} item xs={12} sm={6}>
+              <Grid sx={{ display: "none"}} item xs={12} sm={2}>
                 <Controller
                   name="course_duration"
                   control={courseControl}
                   render={({ field: { value, onChange } }) => (
                     <CustomTextField
-                      fullWidth
+                      // fullWidth
                       value={value}
                       label="Course Duration"
                       type="number"
@@ -399,7 +399,7 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="mrp"
                   control={courseControl}
@@ -435,7 +435,7 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="course_price"
                   control={courseControl}
@@ -463,7 +463,7 @@ const AddCoursePage = () => {
                       }}
                       label="Current Price"
                       onChange={onChange}
-                      placeholder="Enter the discounted or current price of the course (e.g., ₹150)"
+                      placeholder="Enter the current price of the course (e.g., ₹150)"
                       error={Boolean(courseErrors['course_price'])}
                       aria-describedby="stepper-linear-personal-course_price"
                       helperText={courseErrors?.course_price?.message}
@@ -471,7 +471,7 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
               <Controller
                   name="starrating"
                   control={courseControl}
@@ -495,7 +495,7 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="ratingnumber"
                   control={courseControl}
@@ -531,7 +531,7 @@ const AddCoursePage = () => {
                   )}
                 />
               </Grid>              
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Autocomplete
                   multiple
                   disableCloseOnSelect
@@ -616,7 +616,7 @@ const AddCoursePage = () => {
                   isOptionEqualToValue={(option, value) => option.id === value.id}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="course_category"
                   control={courseControl}
@@ -661,7 +661,7 @@ const AddCoursePage = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={4}>
                 <Controller
                   name="learning_format"
                   control={courseControl}
@@ -701,8 +701,6 @@ const AddCoursePage = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6}>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Controller
