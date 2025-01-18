@@ -40,6 +40,8 @@ const StudyMaterials = () => {
   const StudyMaterialsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
+  console.log('input    ---'+StudyMaterials);
+  
   useEffect(() => {
     dispatch(getAllCourseStudyMaterials({ branch: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);

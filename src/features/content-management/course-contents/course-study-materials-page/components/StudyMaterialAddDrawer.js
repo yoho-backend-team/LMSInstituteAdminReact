@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -134,7 +134,8 @@ const StudyMaterialAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
       <Header>
-        <Typography variant="h5">Add Study Material</Typography>
+        {/* <Typography variant="h5">Add Study Material</Typography> */}
+        <Chip color='info' label="Add Study Material"/>
         <IconButton
           size="small"
           onClick={handleClose}

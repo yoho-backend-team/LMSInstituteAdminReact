@@ -36,7 +36,7 @@ const UserViewAccount = ({ id }) => {
   }, [id]);
 
   const getUserLog = async (userId, page) => {
-    console.log('User ID:', userId, 'Page:', page);
+    // console.log('User ID:', userId, 'Page:', page);
 
     try {
       const token = localStorage.getItem('token');
@@ -46,21 +46,19 @@ const UserViewAccount = ({ id }) => {
         toast.error('Authentication token is missing!');
         return;
       }
-
-      console.log('Token:', token);
-
-      const response = await axios.get(`https://lms-node-backend-v1.onrender.com/api/institutes/user/activity`, {
+      const backendUrl = process.env.REACT_APP_PUBLIC_API_URL
+      const response = await axios.get(`${backendUrl}/api/institutes/user/activity`, {
         params: { user_id: userId, page: page },
         headers: { Authorization: `Bearer ${'Token ' + token}` }
       });
-      console.log(response.data.pagination.totalPages);
+      // console.log(response.data.pagination.totalPages);
       
-      console.log(response.data.data);
+      console.log(response.data);
 
       if (response.data.status === 'success') {
         setActivityLog(response.data); // Update your state
         setTotalPages(response.data.pagination.totalPages); // Total pages from API response
-        setCurrentPage(page); // Update current page
+        setCurrentPage(response.data.pagination.currentPage); // Update current page
         toast.success(response.data?.message);
         return;
       }
@@ -172,7 +170,7 @@ const UserViewAccount = ({ id }) => {
               <div className="demo-space-y">
               <Pagination
                 count={totalPages} // Total pages from state
-                page={currentPage} // Current page from state
+                page={currentPage?currentPage:1} // Current page from state
                 color="primary"
                 onChange={(e, page) => {
                   setCurrentPage(page);
