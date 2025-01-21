@@ -66,7 +66,8 @@ const CategoryCardHeader = (props) => {
           variant="outlined"
           size="small"
           sx={{
-            width: 400,
+            marginLeft:"10px",
+            width: 750,
             backgroundColor: '#ffffff',
             borderRadius: 1,
             '& .MuiOutlinedInput-root': {
@@ -94,7 +95,7 @@ const CategoryCardHeader = (props) => {
             ),
           }}
         />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
+        <Box sx={{ marginRight:"20px",display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button
             onClick={handleAdd}
             variant="contained"
