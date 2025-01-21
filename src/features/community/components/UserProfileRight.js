@@ -72,7 +72,8 @@ const UserProfileRight = (props) => {
               <ListItem key={index} disablePadding sx={{ '&:not(:last-child)': { mb: 1 } }}>
                 <ListItemButton
                   disableRipple
-                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id)}
+                  onClick={() => handleChatClick(hasActiveId(contact.id) ? 'chat' : 'contact', contact.id) }
+                 
                   sx={{
                     py: 2,
                     px: 3,
@@ -87,7 +88,8 @@ const UserProfileRight = (props) => {
                         )} 76.47%) !important`
                     })
                   }}
-                >
+                > 
+              
                   <ListItemAvatar sx={{ m: 0 }}>
                     {contact.staff?.image ? (
                       <MuiAvatar

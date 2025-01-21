@@ -236,7 +236,7 @@ const Login = () => {
                           Two-Step Verification 💬
                         </Typography>
                         <Typography sx={{ mb: 1.5, color: 'text.secondary' }}>
-                          We sent a verification code to your email. Enter the code from the emil in the field below.
+                          We sent a verification code to your email. Enter the code from the email in the field below.
                         </Typography>
                         <Typography variant="h6">{getOtpDetails().email}</Typography>
                       </Box>

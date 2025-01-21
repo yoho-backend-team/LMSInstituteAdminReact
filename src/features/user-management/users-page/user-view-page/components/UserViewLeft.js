@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { getInitials } from 'utils/get-initials';
 import UserEditDialog from './UserEditDialog';
 import { getImageUrl } from 'utils/imageUtils';
+import { position } from 'stylis';
 
 const UserViewLeft = ({ userData, id, setRefetch }) => {
   const statusColors = {
@@ -32,22 +33,24 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Card>
-          <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             {userData?.image ? (
               <CustomAvatar
                 src={`${getImageUrl(userData?.image)}`}
                 variant="rounded"
                 alt={userData?.first_name+userData?.last_name}
-                sx={{ width: 100, height: 100, mb: 4 }}
+                sx={{ width: 100, height: 100, mb: 4,ml:0 }}
               />
             ) : (
               <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
                 {userData?.first_name ? getInitials(userData?.first_name+userData?.last_name) : 'U'}
               </CustomAvatar>
             )}
-            <Typography variant="h4" sx={{ mb: 2 }}>
+            <Typography variant="h2" sx={{ mb: 2,px:3 }}>
               {userData?.first_name+userData?.last_name}
             </Typography>
+            </Box>
             <CustomChip
               rounded
               skin="light"
@@ -96,9 +99,9 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                 <Typography sx={{ color: 'text.secondary' }}>{userData?.phone_number}</Typography>
               </Box>
             </Box>
+             <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
             <Typography sx={{ mr: 2, mt: 2, fontWeight: 500, color: 'text.secondary' }}>Branches:</Typography>
-            <Box sx={{ display: 'flex', mb: 3, mt: 2 }}>
-              <Box gap={3}>
+           
                 {/* {userData?.branches?.map((item, index) => ( */}
                   <CustomChip
                     rounded
@@ -108,13 +111,12 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                     color={'primary'}
                     sx={{
                       textTransform: 'capitalize',
-                      mb: 1,
-                      mr: 1
+                      mt:2
                     }}
                   />
+             </Box>
                 {/* ))} */}
-              </Box>
-            </Box>
+             
           </CardContent>
 
           <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
