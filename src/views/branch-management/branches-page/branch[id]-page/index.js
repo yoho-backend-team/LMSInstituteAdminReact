@@ -1,4 +1,4 @@
-import { Grid, Typography, Box, Paper } from '@mui/material';
+import { Grid, Typography, Box, Paper, Button } from '@mui/material';
 import { getBranchById } from 'features/branch-management/services/branchServices';
 import Earningscard from 'features/branch-management/view-branch/components/Earningscard';
 import Coursescard from 'features/branch-management/view-branch/components/headerCards/Coursescard';
@@ -7,16 +7,17 @@ import PaymentsCard from 'features/branch-management/view-branch/components/head
 import CardHorizondalClasses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalClasses';
 import CardHorizondalCourses from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalCourses';
 import CardHorizondalUsers from 'features/branch-management/view-branch/components/horizondalCards/CardHorizondalUsers';
-import CardStudentAndTeachers from 'features/branch-management/view-branch/components/horizondalCards/CardStudentandTeacher';
 import SupportTicket from 'features/branch-management/view-branch/components/supportTickets';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { gridSpacing } from 'store/constant';
 import AllActivity from 'views/dashboard/Default/card/Allactivity';
 import toast from 'react-hot-toast';
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const BranchViewPage = () => {
   const location = useLocation();
+  const navigate = useNavigate(); 
   const branchId = location.state.id;
 
   const [branchData, setBranchData] = useState([]);
@@ -52,6 +53,25 @@ const BranchViewPage = () => {
       }}
     >
       <Grid container spacing={4}>
+        {/* Back Button */}
+        <Grid item xs={12}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)} 
+            sx={{
+              mb: 3,
+              textTransform: 'none',
+              fontWeight: 'bold',
+              borderRadius: 5,
+              paddingRight:"5px",
+            }}
+          >
+           
+          </Button>
+        </Grid>
+
         {/* Left Column: Main Content */}
         <Grid item xs={12} md={8}>
           {/* Page Header */}
@@ -72,12 +92,11 @@ const BranchViewPage = () => {
               backgroundColor: '#fff',
               borderRadius: 2,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
-                transform: 'scale(1.03)', 
-                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', 
+                transform: 'scale(1.03)',
+                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)',
               },
-              
             }}
           >
             <Typography
@@ -108,10 +127,10 @@ const BranchViewPage = () => {
               backgroundColor: '#fff',
               borderRadius: 2,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
-                transform: 'scale(1.03)', 
-                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', 
+                transform: 'scale(1.03)',
+                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)',
               },
             }}
           >
@@ -130,51 +149,56 @@ const BranchViewPage = () => {
 
           {/* Detailed Insights Section */}
           <Paper
-            elevation={3}
-            sx={{
-              padding: 4,
-              marginBottom: 4,
-              backgroundColor: '#fff',
-              borderRadius: 2,
-              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
-              '&:hover': {
-                transform: 'scale(1.03)', 
-                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', 
-              },
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: 'bold', marginBottom: 3, color: '#555' }}
-            >
-              Detailed Insights
-            </Typography>
-            <Grid container spacing={gridSpacing}>
-              <Grid item xs={12} sm={6}>
-                <CardHorizondalCourses branchData={branchData} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CardHorizondalClasses branchData={branchData} />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <CardHorizondalUsers branchData={branchData} />
-              </Grid>
-            </Grid>
-          </Paper>
+  elevation={3}
+  sx={{
+    padding: 4,
+    marginBottom: 4,
+    backgroundColor: 'white', 
+    borderRadius: 2,
+    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+    '&:hover': {
+      transform: 'scale(1.03)',
+      boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)',
+    },
+  }}
+>
+  <Typography
+    variant="h6"
+    sx={{ fontWeight: 'bold', marginBottom: 3, color: '#555' }}
+  >
+    Detailed Insights
+  </Typography>
+  <Grid
+    container
+    spacing={gridSpacing}
+    sx={{ fontWeight: 'bold', marginBottom: 3, color: '#555' }}
+  >
+    <Grid item xs={12} sm={6}>
+      <CardHorizondalCourses branchData={branchData} />
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <CardHorizondalClasses branchData={branchData} />
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <CardHorizondalUsers branchData={branchData} />
+    </Grid>
+  </Grid>
+</Paper>
+
 
           {/* Support Tickets Section */}
           <Paper
             elevation={3}
             sx={{
               padding: 4,
-              backgroundColor: '#fff',
+              backgroundColor: 'white',
               borderRadius: 2,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
-                transform: 'scale(1.03)', 
-                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', 
+                transform: 'scale(1.03)',
+                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)',
               },
             }}
           >
@@ -184,7 +208,7 @@ const BranchViewPage = () => {
             >
               Support Tickets
             </Typography>
-            <SupportTicket branchData={branchData} />
+            <SupportTicket sx branchData={branchData} />
           </Paper>
         </Grid>
 
@@ -200,10 +224,10 @@ const BranchViewPage = () => {
               borderRadius: 2,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
               height: '45%',
-              transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+              transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
-                transform: 'scale(1.03)', 
-                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)', 
+                transform: 'scale(1.03)',
+                boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)',
               },
             }}
           >
@@ -222,3 +246,4 @@ const BranchViewPage = () => {
 };
 
 export default BranchViewPage;
+
