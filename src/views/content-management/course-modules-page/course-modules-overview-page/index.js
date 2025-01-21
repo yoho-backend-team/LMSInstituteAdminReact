@@ -175,6 +175,7 @@ const Modules = () => {
           open={ModulesDeleteModalOpen}
           setOpen={setModulesDeleteModalOpen}
           description="Are you sure you want to delete this Modules?"
+          failureDescription="Delete request has been cancelled "
           title="Delete"
           handleSubmit={handleContentDelete}
         />

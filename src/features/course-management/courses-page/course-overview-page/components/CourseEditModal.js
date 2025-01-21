@@ -294,8 +294,11 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId, setR
           sx={{
             textAlign: 'center',
             fontWeight: 600,
+            pt:1,
             fontSize: '2rem',
-            color: 'primary.main'
+            color: 'white',
+            backgroundColor:"primary.main",
+            borderRadius:"20px",
           }}
         >
           Edit Course Information
@@ -440,7 +443,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId, setR
                       label="Course Overview"
                       placeholder="Provide a brief overview of the course"
                       multiline
-                      rows={4}
+                      rows={3}
                       fullWidth
                       size="small"
                       value={value}
@@ -460,7 +463,7 @@ const CourseEditModal = ({ open, handleEditClose, course, selectedBranchId, setR
                       label="Description"
                       placeholder="Provide a detailed description"
                       multiline
-                      rows={4}
+                      rows={3}
                       fullWidth
                       size="small"
                       value={value}

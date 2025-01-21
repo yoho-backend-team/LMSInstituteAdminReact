@@ -147,8 +147,10 @@ const CourseNotesAddDrawer = (props) => {
       ModalProps={{ keepMounted: true }}
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
-      <Header>
-        <Typography variant="h5">Add Notes</Typography>
+      <Header sx={{ paddingBottom: 0 }}>
+        <Typography variant="h2 " sx={{border:2,borderColor:"#0cce7b", fontSize: '1.4rem', fontWeight:"bold", borderRadius: 50, px: 2, py: 1 }}>
+        Add Notes
+        </Typography>
         <IconButton
           size="small"
           onClick={handleClose}
@@ -165,8 +167,15 @@ const CourseNotesAddDrawer = (props) => {
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6), mt: 0 ,pt:0 }}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{
+            borderRadius: '8px', // Optional: Rounded corners
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Shadow effect
+            padding: '16px', // Add spacing inside the form
+            margin: '16px auto', // Center the form and add spacing outside
+            maxWidth: '600px', // Optional: Limit the form's width
+            backgroundColor: '#fff' // Optional: Background color
+          }}>
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
             <CoursePdfInput setCourseNotePdf={handleSetPdf} files={files} setFiles={setFiles} setValue={setValue} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
@@ -237,7 +246,7 @@ const CourseNotesAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Title"
                   onChange={onChange}
-                  placeholder="John Doe"
+                  placeholder="Testing , developing ,etc"
                   error={Boolean(errors.title)}
                   helperText={errors.title?.message}
                 />
@@ -255,7 +264,7 @@ const CourseNotesAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="description"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="Description about the Notes"
                   error={Boolean(errors.description)}
                   {...(errors.description && { helperText: errors.description.message })}
                 />

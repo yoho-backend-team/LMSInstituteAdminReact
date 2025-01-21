@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography,Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -80,7 +80,6 @@ const ModuleEdit = (props) => {
       });
   };
 
-
   // ** Hooks
   const {
     reset,
@@ -103,16 +102,13 @@ const ModuleEdit = (props) => {
     }
   }, [modules, setValue]);
 
-
   const onSubmit = async (data) => {
-
     const updateData = {
-      title : data.title,
-      description : data.description,
-      video : data.video_url,
-      uuid : modules.uuid
-    }
-   
+      title: data.title,
+      description: data.description,
+      video: data.video_url,
+      uuid: modules.uuid
+    };
 
     const result = await updateCourseModule(updateData);
 
@@ -142,7 +138,8 @@ const ModuleEdit = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 400, sm: 480 } } }}
     >
       <Header sx={{ pb: 2 }}>
-        <Typography variant="h5">Edit Module</Typography>
+      <Chip   label="Edit Module " sx={{fontSize:'1.4rem', fontWeight:"bold" ,border:2,borderColor:"#0cce7b" ,}}/>
+
         <IconButton
           size="small"
           onClick={handleClose}
@@ -161,15 +158,27 @@ const ModuleEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(3, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box sx={{ mb: 4 }}>
+          <Box
+            sx={{
+              mb: 4,
+              position: 'relative',
+              width: '100%',
+              height: 200,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='m10.65 15.75l4.875-3.125q.35-.225.35-.625t-.35-.625L10.65 8.25q-.375-.25-.763-.038t-.387.663v6.25q0 .45.388.663t.762-.038M3.025 13q.425 0 .763.275t.462.7q.15.575.363 1.088t.487 1.012q.225.375.188.8t-.338.725q-.275.275-.675.25t-.625-.35q-.55-.775-.925-1.662T2.15 14q-.075-.4.188-.7t.687-.3M4.95 6.4q.3.3.325.725T5.1 7.9q-.275.5-.487 1.025t-.363 1.1q-.125.425-.462.7T3.025 11t-.687-.312t-.163-.713q.2-.95.575-1.837t.9-1.663q.225-.325.625-.337t.675.262m1.4 12.625q.3-.325.738-.35t.812.2q.5.275 1.013.5t1.062.375q.425.125.7.45t.275.75t-.312.675t-.713.175q-.95-.2-1.788-.575T6.5 20.35q-.35-.225-.387-.625t.237-.7M11 3.05q0 .425-.262.75t-.688.45q-.575.15-1.1.363t-1.025.512q-.375.225-.812.188t-.738-.338t-.262-.712t.387-.638q.8-.5 1.663-.862T9.974 2.2q.4-.075.713.175T11 3.05M20 12q0-2.825-1.737-4.988T13.825 4.2q-.375-.1-.6-.425T13 3.05t.275-.662t.625-.188q3.5.7 5.8 3.425T22 12t-2.3 6.375t-5.8 3.425q-.35.075-.625-.187T13 20.95t.225-.725t.6-.425q2.7-.65 4.438-2.812T20 12'/%3E%3C/svg%3E")`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              border:1,
+              borderRadius:'50px',
+            }}
+          >
             <ReactPlayer
-              style={{ objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
               url={videoUrl}
               controls
               autoPlay
               loop
               width="100%"
-              height={200}
+              height="100%"
+              style={{ position: 'absolute', top: 0, left: 0 }}
             />
           </Box>
 

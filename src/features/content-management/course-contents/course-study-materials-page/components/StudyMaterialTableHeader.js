@@ -1,7 +1,8 @@
-import { Grid, TextField } from '@mui/material';
+import { Grid, TextField, Typography, Box } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,6 +20,7 @@ const StudyMaterialHeader = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const [courses, setCourses] = useState([]);
+  const [showInputs, setShowInputs] = useState(false);
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId
@@ -35,36 +37,83 @@ const StudyMaterialHeader = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { is_active: e.target.value , branch: selectedBranchId };
+    const data = { is_active: e.target.value, branch: selectedBranchId };
     dispatch(getAllCourseStudyMaterials(data));
   };
 
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      e.preventDefault()
+      e.preventDefault();
       dispatch(getAllCourseStudyMaterials({ search: searchInput, branch_id: selectedBranchId }));
       setSearchValue(searchInput);
     },
     [dispatch]
   );
-
+  const toggleInputs = () => {
+    setShowInputs((prev) => !prev);
+  };
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-          <CardHeader title="Study materials" />
-          <CardContent sx={{ pt: 0, pb: 0 }}>
-            <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
+        <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 6,py:2 }}>
+          <Box sx={{display:"flex",alignItems:"center"}} >
+
+          <Button
+                onClick={toggleInputs}
+                sx={{
+                  py: 1,
+                  px: 2,
+                  borderRadius: '50px',
+                  mr: 2,
+                  backgroundColor: '#f3f4f6',
+                  fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                }}
+              >
+                
+                <FilterAltTwoToneIcon />
+              </Button>
+
+            <Typography variant="h2">Study materials</Typography>
+          </Box>
+            <Box>
+              <Button
+                onClick={toggle}
+                variant="contained"
+                sx={{
+                  '& svg': { mr: 2 },
+                  px: 2,
+                  py:1.7,
+                  borderRadius: '50px',
+                  backgroundColor: '#0CCE7F',
+                  ':hover': { backgroundColor: '#0AA865' },
+                  fontSize: { xs: '0.8rem', sm: '0.9rem' }
+                }}
+              >
+                <Icon fontSize="1.125rem" icon="tabler:plus" />
+                Add Study Material
+              </Button>
+            </Box>
+          </Box>
+          {showInputs && (
+            <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' ,boxShadow:3,mt:1 }}>
               <Grid item xs={12}>
-                <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       select
                       fullWidth
                       label="Status"
                       SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
-                      sx={{'& .MuiOutlinedInput-root': {borderRadius: '50px', },}}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '50px' // Rounded input container
+                        },
+                        '& fieldset': {
+                          borderRadius: 50 // Rounded fieldset for consistent appearance
+                        }
+                      }}
                     >
                       <MenuItem value={null}>Select Status</MenuItem>
                       <MenuItem value="true">Active</MenuItem>
@@ -75,7 +124,14 @@ const StudyMaterialHeader = (props) => {
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
                       fullWidth
-                      sx={{'& .MuiOutlinedInput-root': {borderRadius: '30px' }}}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '50px' // Rounded input container
+                        },
+                        '& fieldset': {
+                          borderRadius: 50 // Rounded fieldset for consistent appearance
+                        }
+                      }}
                       // value={value}
                       onChange={(e, newValue) => {
                         const data = {
@@ -90,20 +146,10 @@ const StudyMaterialHeader = (props) => {
                       renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                     />
                   </Grid>
-                  {/* <Grid item sm={3} xs={12}>
-                    <TextField value={searchValue} fullWidth placeholder="Search Course" onChange={(e) => handleSearch(e)} />
-                  </Grid> */}
-
-                  <Grid item sm={4} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end', }}>
-                    <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 },p:1.7, borderRadius:'50px', backgroundColor : "#0CCE7F", ":hover":{ backgroundColor: "#0AA865"} }}>
-                      <Icon fontSize="1.125rem" icon="tabler:plus" />
-                      Add Study Material
-                    </Button>
-                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </CardContent>
+          )}
         </Card>
       </Grid>
     </Grid>

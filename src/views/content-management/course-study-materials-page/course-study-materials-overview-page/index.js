@@ -40,7 +40,7 @@ const StudyMaterials = () => {
   const StudyMaterialsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log('input    ---'+StudyMaterials);
+  console.log( StudyMaterials);
   
   useEffect(() => {
     dispatch(getAllCourseStudyMaterials({ branch: selectedBranchId, page: '1' }));
@@ -173,7 +173,9 @@ const StudyMaterials = () => {
         <StudyMaterialDeletemodal
           open={StudyMaterialDeletemodalOpen}
           setOpen={setStudyMaterialDeletemodalOpen}
-          description="Are you sure you want to delete this StudyMaterials?"
+          description=" You want to Delete this StudyMaterial ?"
+          failureDescription="Delete request has been cancelled "
+          successDescription="StudyMaterial Deleted successfully"
           title="Delete"
           handleSubmit={handleContentDelete}
         />

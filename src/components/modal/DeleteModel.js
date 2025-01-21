@@ -17,8 +17,7 @@ import PropTypes from 'prop-types';
 const   DeleteDialog = (props) => {
   // ** Props
   const { open, setOpen, handleSubmit, description, title, successDescription, failureDescription } = props;
-  console.log(successDescription);
-  console.log(failureDescription);
+
 
 
   // ** States
@@ -56,7 +55,7 @@ const   DeleteDialog = (props) => {
             <Typography variant="h4" sx={{ mb: 3, color: 'text.secondary' }}>
               Are you sure?
             </Typography>
-            <Typography>{description}!</Typography>
+            <Typography>{description} !</Typography>
           </Box>
         </DialogContent>
         <DialogActions
@@ -74,7 +73,7 @@ const   DeleteDialog = (props) => {
               handleConfirmation('yes');
             }}
           >
-            Yes, {title}!
+            Yes, {title} !
           </Button>
           <Button variant="tonal" color="secondary" onClick={() => handleConfirmation('cancel')}>
             Cancel

@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import client from 'api/client';
-import Icon from 'components/icon';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -35,37 +35,31 @@ const CoursePdfInput = ({ setCourseNotePdf,setValue,files,setFiles }) => {
 
     return (
       <Box
-        sx={{
-          display: 'flex',
-          textAlign: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          border: 'dashed',
-          p: 2,
-          borderWidth: 0.5,
-          my: 3
-        }}
-      >
-        <Box
-          sx={{
-            mb: 5.75,
-            width: 48,
-            height: 48,
-            display: 'flex',
-            borderRadius: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: (theme) => theme.palette.primary.main,
-            color: '#fff'
-          }}
-        >
-          <Icon icon="tabler:upload" fontSize="1.75rem" />
-        </Box>
-        <Typography variant="h4" sx={{ mb: 2.5 }}>
-          Drop files here or click to upload.
-        </Typography>
-        <Typography sx={{ color: 'text.secondary' }}>(This is just a demo drop zone. Selected files are not actually uploaded.)</Typography>
-      </Box>
+      sx={{
+        display: 'flex',
+        textAlign: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        border: 'dashed',
+        p: 4,
+        borderWidth: 2,
+        borderRadius: 4,
+        my: 3,
+        background: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="50" cy="50" r="50" fill="%23E3F2FD" /><circle cx="150" cy="150" r="40" fill="%23BBDEFB" /></svg>') no-repeat center`,
+        backgroundSize: 'cover',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+      }}
+    >
+        <CloudUploadIcon style={{ fontSize: 80, color: '#1976d2' }} />
+      <Typography variant="h5" sx={{ mb: 2 ,color:"blue"}}>
+        Drop files here or click to upload.
+      </Typography>
+      {/* <Typography sx={{ color: 'text.secondary' }}>
+        (This is just a demo drop zone. Selected files are not actually uploaded.)
+      </Typography> */}
+    </Box>
+
     );
   };
 
