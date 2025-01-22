@@ -145,12 +145,12 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
         onClose={handleClose}
         aria-labelledby="user-view-edit"
         aria-describedby="user-view-edit-description"
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 600 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 500,borderRadius: 2  } }}
       >
         <DialogTitle
           id="user-view-edit"
           sx={{
-            textAlign: 'center',
+            ml:-7,mt:-3,
             fontSize: '1.5rem !important',
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
             pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(5)} !important`]
@@ -176,8 +176,15 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                 )}
 
                 {selectedImage && <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" />}
+              </Box>
                 <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" sx={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', 
+                  },py:0.8,ml:13,mb:3
+                }}>
                     Upload New Image
                     <input
                       hidden
@@ -186,10 +193,10 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                       accept="image/png, image/jpeg"
                       onChange={handleInputImageChange}
                       id="account-settings-upload-image"
+                      
                     />
                   </ButtonStyled>
                 </div>
-              </Box>
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="category_name"
@@ -209,11 +216,16 @@ const CategoryEditModal = ({ open, handleEditClose, category, setCategoryRefetch
                 />
               </Grid>
               <Grid style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                  Submit
-                </Button>
-                <Button variant="tonal" color="error" onClick={handleClose}>
+                <Button variant="contained" color="error" onClick={handleClose} sx={{ mr: 3, backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', } }}>
                   Cancel
+                </Button>
+                <Button type="submit" variant="contained" sx={{backgroundColor: 'black',
+                  color: 'white','&:hover': {
+                    backgroundColor: '#353636', }}} >
+                  Save Changes
                 </Button>
               </Grid>
             </Grid>
