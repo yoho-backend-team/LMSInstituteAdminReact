@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Alert, Button, Grid, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -55,6 +55,7 @@ const FaqAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
+    // Alert("FAQ Added successfully");
 
     const inputData = {
       title: data.name,

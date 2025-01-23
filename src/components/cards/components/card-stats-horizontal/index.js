@@ -10,6 +10,7 @@ import CustomAvatar from "../../../../@core/compoents/mui/avatar"
 const CardStatsHorizontal = props => {
   
   const { sx, icon, stats, title, avatarSize = 42, iconSize = '1.625rem', avatarColor = 'primary' } = props
+  console.log(title);
 
   return (
     <Card sx={{ ...sx }}>

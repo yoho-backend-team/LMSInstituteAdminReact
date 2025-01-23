@@ -45,30 +45,30 @@ const FaqDataGrid = () => {
   }, []);
 
   useEffect(() => {
-    const institute = JSON.parse(localStorage.getItem('institute'))
-  
+    const institute = JSON.parse(localStorage.getItem('institute'));
+
     const data = {
-      branchid: selectedBranchId,      
+      branchid: selectedBranchId,
       instituteId: institute._id,
-      page : 1,
-      perPage :10
+      page: 1,
+      perPage: 10
     };
 
     dispatch(getAllFaqs(data));
   }, [dispatch, selectedBranchId, refetch]);
 
   const getFaqCategories = async () => {
-    const institute = JSON.parse(localStorage.getItem('institute'))
+    const institute = JSON.parse(localStorage.getItem('institute'));
     const data = {
-      branchid: selectedBranchId,      
-      instituteid: institute.uuid,is_active:true,
-      page : 1,
-      perPage :10
+      branchid: selectedBranchId,
+      instituteid: institute.uuid,
+      is_active: true,
+      page: 1,
+      perPage: 10
     };
     const result = await getActiveFaqCategories(data);
     setFaqCategories(result.data);
   };
-
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -118,7 +118,9 @@ const FaqDataGrid = () => {
     {
       flex: 0.5,
       headerName: 'Id',
+      sortable: false,
       field: 'employee_id',
+      // disableColumnRightBorder,
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -131,6 +133,7 @@ const FaqDataGrid = () => {
       flex: 1.5,
       field: 'title',
       headerName: 'Faq Name',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box>
@@ -142,8 +145,7 @@ const FaqDataGrid = () => {
                   fontSize: '15px',
                   fontWeight: 600,
                   textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
+                  color: 'text.secondary'
                 }}
               >
                 {row?.title}
@@ -160,6 +162,7 @@ const FaqDataGrid = () => {
       flex: 1,
       field: 'Category',
       headerName: 'Category',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -174,6 +177,7 @@ const FaqDataGrid = () => {
       flex: 1,
       field: 'status',
       headerName: 'Status',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <div>
@@ -190,6 +194,7 @@ const FaqDataGrid = () => {
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
+      sortable: false,
       renderCell: ({ row }) => (
         <Box sx={{ gap: 1 }}>
           <OptionsMenu
@@ -197,7 +202,6 @@ const FaqDataGrid = () => {
             iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
             options={[
               {
-                // to: `/apps/invoice/edit/${row.id}`,
                 text: 'Edit',
                 icon: <Icon icon="tabler:edit" />,
                 menuItemProps: {
@@ -207,7 +211,6 @@ const FaqDataGrid = () => {
                 }
               },
               {
-                // to: `/apps/invoice/delete/${row.id}`,
                 text: 'Delete',
                 icon: <Icon icon="mdi:delete-outline" />,
                 menuItemProps: {
@@ -248,55 +251,68 @@ const FaqDataGrid = () => {
     <>
       <Grid container>
         <Grid item xs={12}>
-          <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} />
+          {/* <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} /> */}
         </Grid>
         <Grid item xs={12}>
-          <FaqTableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
+          <FaqTableHeader
+            value={value}
+            handleFilter={handleFilter}
+            faqCategories={faqCategories?.data}
+            toggle={toggleAddUserDrawer}
+            selectedBranchId={selectedBranchId}
+          />
         </Grid>
         {faqLoading ? (
-          <FaqSkeleton />
+          <Grid item xs={12}>
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+              <FaqSkeleton />
+            </Card>
+          </Grid>
         ) : (
           <Grid item xs={12}>
-            <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
               <DataGrid
                 sx={{
-                  '& .MuiDataGrid-row' : {
-                    border: "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   },
-                  "& .MuiDataGrid-row" : {
-                    border : "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
-                    ":hover" : {
-                       backgroundColor : "#f5f5f7",
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
                     }
                   },
-                  "& .MuiDataGrid-columnHeaders" : {
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
-                  }
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
+                  },
+                  '& .MuiDataGrid-columnHeader:hover': { backgroundColor: 'inherit' , borderRight: 'none' },
+                  
                 }}
                 autoHeight
                 rowHeight={60}
-                rows={faqs?.data?faqs?.data:[]}
+                rows={faqs?.data ? faqs?.data : []}
                 columns={columns}
-                getRowId={(row) => row._id} 
+                getRowId={(row) => row._id}
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter
                 onRowClick={handleRowClick}
-                disableColumnFilter={true}
-                disableColumnMenu={true}
+                disableColumnFilter
+                disableColumnMenu
               />
             </Card>
           </Grid>
         )}
+
         <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories?.data} setRefetch={setRefetch} />
         <FaqEdit
           open={editUserOpen}
@@ -321,7 +337,7 @@ const FaqDataGrid = () => {
         />
       </Grid>
       <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-      {faqs?.last_page !== 1 && (
+        {faqs?.last_page !== 1 && (
           <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination
               count={faqs?.last_page}
