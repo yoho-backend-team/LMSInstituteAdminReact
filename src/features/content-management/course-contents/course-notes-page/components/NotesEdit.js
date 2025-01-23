@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Typography,Chip } from '@mui/material';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
@@ -129,7 +130,7 @@ const NotesEdit = (props) => {
       <Grid container spacing={1}>
         <Grid item md={12} sm={12}>
           <Header>
-            <Typography variant="h5">Edit Study Material</Typography>
+          <Chip   label="Edit Notes " sx={{fontSize:'1.4rem', fontWeight:"bold" ,border:2,borderColor:"#0cce7b" ,}}/>
             <IconButton
               size="small"
               onClick={handleClose}
@@ -152,8 +153,9 @@ const NotesEdit = (props) => {
                 {!selectedFile && <PDFViewer url={getImageUrl(notes?.file)} setValue={setValue} />}
                 {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} setValue={setValue} />}
 
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
-                  Upload New File
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 ,borderRadius: '50px'}}>
+                <CloudUploadOutlinedIcon sx={{mr:1.5}}/>
+                Upload New File
                   <input
                     accept="application/pdf"
                     style={{ display: 'none' }}

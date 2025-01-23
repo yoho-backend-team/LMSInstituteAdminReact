@@ -120,6 +120,8 @@ const CourseModuleAddDrawer = (props) => {
     >
       <Header>
         <Typography variant="h5">Add Module</Typography>
+        {/* <Chip color='success'  label="Add Module " sx={{fontSize:'16px'}}/> */}
+
         <IconButton
           size="small"
           onClick={handleClose}
@@ -201,7 +203,7 @@ const CourseModuleAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Title"
                   onChange={onChange}
-                  placeholder="John Doe"
+                  placeholder="Hooks, animation, etc"
                   error={Boolean(errors.title)}
                   helperText={errors.title?.message}
                 />
@@ -215,11 +217,13 @@ const CourseModuleAddDrawer = (props) => {
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
+                  multiline
                   value={value}
                   sx={{ mb: 2 }}
-                  label="description"
+                  rows={3}
+                  label="Description"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="Description about Modules"
                   error={Boolean(errors.description)}
                   {...(errors.description && { helperText: errors.description.message })}
                 />

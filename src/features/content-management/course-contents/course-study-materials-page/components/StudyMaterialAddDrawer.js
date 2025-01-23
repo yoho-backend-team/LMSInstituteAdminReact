@@ -17,6 +17,7 @@ import CoursePdfInput from '../../components/PdfInput';
 import { addCourseStudyMaterial } from '../services/studyMaterialServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
+import { white } from 'precise-ui/dist/es6/colors';
 
 const StudyMaterialAddDrawer = (props) => {
   const { open, toggle, branches, setRefetch } = props;
@@ -25,7 +26,7 @@ const StudyMaterialAddDrawer = (props) => {
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [files, setFiles] = useState([]);
-  const { show, hide } = useSpinner()
+  const { show, hide } = useSpinner();
 
   const [activeCourse, setActiveCourse] = useState([]);
   useEffect(() => {
@@ -85,34 +86,34 @@ const StudyMaterialAddDrawer = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      show()
-      console.log(data,"data")
+      show();
+      console.log(data, 'data');
       const Study_data = {
-        title : data.title,
-        description : data.description,
-        branch : data.branch.uuid,
-        course : data.course._id,
-        institute : useInstitute().getInstituteId(),
-        file : data.pdf_file
-      }
-    
+        title: data.title,
+        description: data.description,
+        branch: data.branch.uuid,
+        course: data.course._id,
+        institute: useInstitute().getInstituteId(),
+        file: data.pdf_file
+      };
+
       const result = await addCourseStudyMaterial(Study_data);
       setRefetch((state) => !state);
       toast.success(result.message);
-      setstudymaterialPdf("")
+      setstudymaterialPdf('');
       reset();
       toggle();
     } catch (error) {
       toast.error(error?.message);
-    }finally{
-      hide()
+    } finally {
+      hide();
     }
   };
 
   const handleSetPdf = async (data) => {
     setstudymaterialPdf(data);
-    const fileData = new FormData()
-    fileData.append("file",fileData)
+    const fileData = new FormData();
+    fileData.append('file', fileData);
     // setValue('pdf_file', data);
     // const file = await client.file.upload(data)
     // setValue("file",file.data.file)
@@ -133,10 +134,12 @@ const StudyMaterialAddDrawer = (props) => {
       ModalProps={{ keepMounted: true }}
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
     >
-      <Header>
-        {/* <Typography variant="h5">Add Study Material</Typography> */}
-        <Chip color='info' label="Add Study Material"/>
-        <IconButton
+      <Header sx={{ paddingBottom: 0 }}>
+        {/* <Chip color='success'  label="Add Study Material " sx={{fontSize:'16px', pb:0,mb:0}}/> */}
+        <Typography variant="h2 " sx={{border:2,borderColor:"#0cce7b", fontSize: '1.4rem',fontWeight:"bold", borderRadius: 50, px: 2, py: 1 }}>
+          Add Study Material
+        </Typography>
+        <IconButton 
           size="small"
           onClick={handleClose}
           sx={{
@@ -152,10 +155,26 @@ const StudyMaterialAddDrawer = (props) => {
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`} />
+      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6), pt: 0, mt: 0 }}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{
+            borderRadius: '8px', // Optional: Rounded corners
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Shadow effect
+            padding: '16px', // Add spacing inside the form
+            margin: '16px auto', // Center the form and add spacing outside
+            maxWidth: '600px', // Optional: Limit the form's width
+            backgroundColor: '#fff' // Optional: Background color
+          }}
+        >
+          <Grid item xs={12} sm={12}>
+            <CoursePdfInput
+              setCourseNotePdf={handleSetPdf}
+              setValue={setValue}
+              files={files}
+              setFiles={setFiles}
+              className={`form-control ${errors.pdf_file ? 'is-invalid' : ''}`}
+            />
             {errors.pdf_file && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.pdf_file.message}</p>}
           </Grid>
 
@@ -165,7 +184,7 @@ const StudyMaterialAddDrawer = (props) => {
               control={control}
               render={() => (
                 <Autocomplete
-                  fullWidth
+                  // fullWidth
                   // value={value}
                   onChange={(event, newValue) => {
                     setValue('branch', newValue);
@@ -199,7 +218,7 @@ const StudyMaterialAddDrawer = (props) => {
                   }}
                   options={activeCourse || []}
                   getOptionLabel={(option) => option.course_name || ''}
-                  fullWidth
+                  // fullWidth
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -224,7 +243,7 @@ const StudyMaterialAddDrawer = (props) => {
                   sx={{ mb: 2 }}
                   label="Title"
                   onChange={onChange}
-                  placeholder="John Doe"
+                  placeholder="Testing , developing ,etc"
                   error={Boolean(errors.title)}
                   helperText={errors.title?.message}
                 />
@@ -240,9 +259,9 @@ const StudyMaterialAddDrawer = (props) => {
                   fullWidth
                   value={value}
                   sx={{ mb: 2 }}
-                  label="description"
+                  label="Description"
                   onChange={onChange}
-                  placeholder="Business Development Executive"
+                  placeholder="Description about the Study Material"
                   error={Boolean(errors.description)}
                   {...(errors.description && { helperText: errors.description.message })}
                 />
