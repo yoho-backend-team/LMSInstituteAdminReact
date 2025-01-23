@@ -6,7 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -23,7 +23,12 @@ const StudentFilter = (props) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const batch = useSelector(selectBatches);
-
+  
+  //toggle filter card
+  const [isCardOpen, setIsCardOpen] = useState(false);
+  const filterCardRef = useRef(null);
+ 
+  
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
     const data = { is_active: e.target.value, branch_id: selectedBranchId };
@@ -62,9 +67,96 @@ const StudentFilter = (props) => {
     [dispatch]
   );
 
+  //toggle handler
+  const handleToggleCard = (event) => {
+    event.stopPropagation(); // Prevent triggering the click outside handler
+    setIsCardOpen((prev) => !prev);
+  };
+
+    //   prevent scrolling when card is open
+    useEffect(() => {
+      if (isCardOpen) {
+        document.body.style.overflow = 'hidden';   
+        // document.body.style.background = 'rgba(0, 0, 0, 0.3)';  
+      } else {
+        document.body.style.overflow = 'auto';  
+        document.body.style.background = '';   
+        
+      }
+    }, [isCardOpen]);
+
+
+  // Close the filter card if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterCardRef.current && !filterCardRef.current.contains(event.target) &&  
+       event.target.getAttribute('data-ignore-outside-click') !== 'true') {
+        setIsCardOpen(false);
+      }
+    };
+
+    // Add event listener for clicks outside the filter card
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Clean up the event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
+        
+        <Box sx={{ mb: 2 , position: 'relative', zIndex: 1000}}>
+          <Button
+            variant="contained"
+            size="medium"
+              data-ignore-outside-click="true"
+            sx={{ width: '110px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
+            onClick={handleToggleCard}
+          >
+           {isCardOpen ? 'Hide' : 'Show Filter'}
+          </Button>
+        </Box>
+      </Grid>
+      {isCardOpen && (
+        <>
+         {/* Overlay for background blur */}
+    <Box
+    sx={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',  
+      backdropFilter: 'blur(4px)', 
+      zIndex: 998,  
+    }}
+  />
+         <Box
+         ref={filterCardRef}  
+         sx={{
+           position: 'fixed',  
+           top: '19%',  
+           left: '60%',
+           transform: 'translateX(-50%)',
+           zIndex: 999,  
+           width: '80%',    
+           backgroundColor: 'white',
+           boxShadow: 3,
+           borderRadius: 2,
+           p: 3,
+           mt: 3,
+           overflowY: 'auto',  
+           maxHeight: '80vh',
+            
+         }}
+       >
+      <Grid item xs={12}>
+
         <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Students" />
           <CardContent>
@@ -82,7 +174,8 @@ const StudentFilter = (props) => {
                   }}
                   options={courses}
                   getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Filter By Course" />}
+                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Filter By Course"
+                   />}
                 />
               </Grid>
 
@@ -130,6 +223,9 @@ const StudentFilter = (props) => {
           </CardContent>
         </Card>
       </Grid>
+      </Box>
+      </>
+      )}
     </Grid>
   );
 };
