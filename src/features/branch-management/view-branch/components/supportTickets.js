@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material';
 import MainCard from 'components/cards/MainCard';
 
-// ** Custom Components Imports
+
 import Icon from 'components/icon';
 import OptionsMenu from 'components/option-menu';
 import CustomAvatar from 'components/mui/avatar';
@@ -32,7 +32,7 @@ const data = [
   }
 ];
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  // backgroundColor: theme.palette.primary.info,
+
   color: '#fff',
   overflow: 'hidden',
   position: 'relative',
@@ -77,7 +77,7 @@ const SupportTicket = () => {
       />
       <CardContent>
         <Grid container>
-          <Grid item xs={12}>
+          <Grid item xs={12} >
             <Typography variant="h1">164</Typography>
             <Typography sx={{ mb: 4, color: 'text.secondary' }}>Total Tickets</Typography>
             {data.map((item, index) => (
@@ -85,7 +85,21 @@ const SupportTicket = () => {
                 <CustomAvatar skin="light" variant="rounded" color={item.avatarColor} sx={{ mr: 4, width: 34, height: 34 }}>
                   <Icon icon={item.avatarIcon} />
                 </CustomAvatar>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 1 }}>
+                <Box sx={{
+        backgroundColor: '#e3f2fd', 
+        borderRadius: 2,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        width:"250px",
+          height:"100px",
+          paddingLeft:"10px", 
+          paddingTop:"10px", 
+        '&:hover': {
+          backgroundColor: '#bbdefb', 
+          transform: 'scale(1.02)', 
+          boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)',
+          
+        }
+      }}>
                   <Typography variant="h6">{item.title}</Typography>
                   <Typography variant="body2" sx={{ color: 'text.disabled' }}>
                     {item.subtitle}

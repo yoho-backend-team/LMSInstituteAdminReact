@@ -78,6 +78,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
       >
         {drawer}
       </Drawer>
+    
     </Box>
   );
 };
