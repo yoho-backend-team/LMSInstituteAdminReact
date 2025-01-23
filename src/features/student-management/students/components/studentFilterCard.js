@@ -73,17 +73,17 @@ const StudentFilter = (props) => {
     setIsCardOpen((prev) => !prev);
   };
 
-    //   prevent scrolling when card is open
-    useEffect(() => {
-      if (isCardOpen) {
-        document.body.style.overflow = 'hidden';   
-        // document.body.style.background = 'rgba(0, 0, 0, 0.3)';  
-      } else {
-        document.body.style.overflow = 'auto';  
-        document.body.style.background = '';   
-        
-      }
-    }, [isCardOpen]);
+    // Prevent background scrolling when card is open
+  useEffect(() => {
+    if (isCardOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isCardOpen]);
 
 
   // Close the filter card if clicked outside
