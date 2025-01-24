@@ -36,13 +36,32 @@ const FaqDataGrid = () => {
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const dispatch = useDispatch();
 
+  const [currentPage, setCurrentPage] = useState(1); // Added state for pagination
+  const [rowsPerPage] = useState(10);
+  
+  const dispatch = useDispatch();
   const faqs = useSelector(selectFaqs);
   const faqLoading = useSelector(selectLoading);
+
   useEffect(() => {
     getFaqCategories();
   }, []);
+
+ useEffect(() => {
+    fetchFaqs(currentPage);
+  }, [currentPage]);
+
+  const fetchFaqs = (page) => {
+    const institute = JSON.parse(localStorage.getItem('institute'));
+    const data = {
+      branchid: institute?.branchid,
+      instituteId: institute?._id,
+      page,
+      perPage: rowsPerPage,
+    };
+    dispatch(getAllFaqs(data));
+  };
 
   useEffect(() => {
     const institute = JSON.parse(localStorage.getItem('institute'));
@@ -84,7 +103,7 @@ const FaqDataGrid = () => {
     const response = await deleteFaq(data);
     if (response.success) {
       toast.success(response.message);
-      setRefetch((state) => !state);
+      fetchFaqs(currentPage);
     } else {
       toast.error(response.message);
     }
@@ -104,10 +123,14 @@ const FaqDataGrid = () => {
     const response = await updateStatusFaq(data);
     if (response.success) {
       toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
+      fetchFaqs(currentPage);
+        } else {
       toast.error(response.message);
     }
+  };
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
   };
 
   const toggleEditUserDrawer = () => {
@@ -120,7 +143,6 @@ const FaqDataGrid = () => {
       headerName: 'Id',
       sortable: false,
       field: 'employee_id',
-      // disableColumnRightBorder,
       renderCell: ({ row }) => {
         return (
           <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -270,11 +292,11 @@ const FaqDataGrid = () => {
           </Grid>
         ) : (
           <Grid item xs={12}>
-            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+                  <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',  mt:1,}}>
               <DataGrid
                 sx={{
                   '& .MuiDataGrid-row': {
-                    border: '1px solid #e6e5e7',
+                    border: '1px solid#cfccd1',
                     borderLeft: 'none',
                     borderRight: 'none'
                   },
@@ -336,21 +358,12 @@ const FaqDataGrid = () => {
           handleSubmit={handleStatusChangeApi}
         />
       </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        {faqs?.last_page !== 1 && (
-          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination
-              count={faqs?.last_page}
-              color="primary"
-              onChange={async (e, page) => {
-                const data = {
-                  page: page
-                };
-                dispatch(getActiveFaqCategories(data));
-              }}
-            />
-          </Grid>
-        )}
+      <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination
+          count={faqs?.last_page || 1}
+          page={currentPage}
+          onChange={handlePageChange}
+        />
       </Grid>
     </>
   );

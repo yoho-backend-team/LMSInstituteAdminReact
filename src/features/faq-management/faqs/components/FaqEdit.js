@@ -1,14 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
+import { Button, TextField, Typography, Box, Drawer, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
 import * as yup from 'yup';
 import { updateFaq } from '../services/faqServices';
 
@@ -30,139 +26,154 @@ const Header = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  description: yup.string().required(),
-  title: yup
-    .string()
-    .min(3, (obj) => showErrors('Title', obj.value.length, obj.min))
-    .required()
+  title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
+  description: yup.string().required('Description is required')
 });
 
-const FaqEdit = (props) => {
-  const { open, toggle, setRefetch } = props;
+const defaultValues = {
+  title: '',
+  description: ''
+};
 
-  const defaultValues = {
-    description: '',
-    title: ''
-  };
+const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
+  console.log('editing values', initialValues);
+  const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const {
     reset,
     control,
-    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues: props.initialValues || defaultValues,
-    mode: 'onChange',
-    resolver: yupResolver(schema)
+    defaultValues: initialValues || defaultValues,
+    resolver: yupResolver(schema),
+    mode: 'onChange'
   });
 
-
   useEffect(() => {
-    if (open) {
-      reset(props.initialValues || defaultValues);
+    if (open && initialValues?.uuid) {
+      reset(initialValues);
     }
-  }, [open, reset, props.initialValues]);
+  }, [open, reset, initialValues]);
 
   const onSubmit = async (data) => {
-    const inputData = { title: data.title, description: data.description, uuid: props.initialValues.uuid };
-     const result = await updateFaq(inputData);
+    setSubmitting(true);
+    const inputData = {
+      title: data?.title,
+      description: data?.description,
+      uuid: initialValues?.uuid
+    };
+    console.log('input data', inputData);
+    console.log('Initial values passed to form:', initialValues);
+    console.log('Resetting form with values:', initialValues || defaultValues);
+    console.log('Submitted data:', inputData);
+
+    const result = await updateFaq(inputData);
+    setSubmitting(false);
+
     if (result.success) {
-      toast.success(result.message);
-      toggle();
+      setSuccessDialogOpen(true);
       setRefetch((state) => !state);
+      toggle();
+      reset();
     } else {
-      toast.error(result.message);
+      alert('Failed to edit FAQ. Please try again.');
     }
   };
 
   const handleClose = () => {
-    setValue('contact', Number(''));
     toggle();
     reset();
   };
 
+  const closeSuccessDialog = () => {
+    setSuccessDialogOpen(false);
+  };
+
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
-    >
-      <Header>
-        <Typography variant="h5">Edit Faq </Typography>
-        <IconButton
-          size="small"
-          onClick={handleClose}
-          sx={{
-            p: '0.438rem',
-            borderRadius: 1,
-            color: 'text.primary',
-            backgroundColor: 'action.selected',
-            '&:hover': {
-              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-            }
-          }}
-        >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
-        </IconButton>
-      </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            name="title"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="Title"
-                onChange={onChange}
-                placeholder="John Doe"
-                error={Boolean(errors.title)}
-                {...(errors.title && { helperText: errors.title.message })}
-              />
-            )}
-          />
+    <>
+      <Drawer
+        open={open}
+        anchor="right"
+        variant="temporary"
+        onClose={handleClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
+      >
+        <Header>
+          <Typography variant="h5">Edit FAQ</Typography>
+          <IconButton size="small" onClick={handleClose} sx={{ color: 'text.primary' }}>
+            <Icon icon="tabler:x" fontSize="1.125rem" />
+          </IconButton>
+        </Header>
+        <Box sx={{ p: 6 }}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Title"
+                  placeholder="Enter FAQ Title"
+                  fullWidth
+                  error={Boolean(errors.title)}
+                  helperText={errors.title?.message}
+                  sx={{ mb: 4 }}
+                />
+              )}
+            />
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Description"
+                  placeholder="Enter FAQ Description"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  error={Boolean(errors.description)}
+                  helperText={errors.description?.message}
+                  sx={{ mb: 4 }}
+                />
+              )}
+            />
+            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ mr: 2 }}>
+                {isSubmitting ? 'Submitting...' : 'Save Changes'}
+              </Button>
+              <Button variant="outlined" color="secondary" onClick={handleClose}>
+                Cancel
+              </Button>
+            </Box>
+          </form>
+        </Box>
+      </Drawer>
 
-          <Controller
-            name="description"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <TextField
-                fullWidth
-                value={value}
-                sx={{ mb: 4 }}
-                label="description"
-                onChange={onChange}
-                placeholder="Business Development Executive"
-                error={Boolean(errors.description)}
-                {...(errors.description && { helperText: errors.description.message })}
-              />
-            )}
-          />
-
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
-        </form>
-      </Box>
-    </Drawer>
+      {/* Success Dialog */}
+      <Dialog open={isSuccessDialogOpen} onClose={closeSuccessDialog}>
+        <DialogTitle>FAQ Edited</DialogTitle>
+        <DialogContent>
+          <Typography>The FAQ was successfully updated.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSuccessDialog} variant="contained">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
 FaqEdit.propTypes = {
-  open: PropTypes.any,
-  toggle: PropTypes.any,
-  setRefetch: PropTypes.any
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  initialValues: PropTypes.object.isRequired,
+  setRefetch: PropTypes.func.isRequired
 };
 
 export default FaqEdit;
