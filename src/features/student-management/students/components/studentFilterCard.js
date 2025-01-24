@@ -15,8 +15,9 @@ import { getAllBatches } from 'features/batch-management/batches/redux/batchThun
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from '../redux/studentThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import Sidebar from 'components/sidebar';
 
-const StudentFilter = (props) => {
+const StudentFilter = (props ) => {
   const { selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
 
@@ -103,6 +104,7 @@ const StudentFilter = (props) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  
 
   
   return (
@@ -126,7 +128,7 @@ const StudentFilter = (props) => {
          {/* Overlay for background blur */}
     <Box
     sx={{
-      position: 'fixed',
+      
       top: 0,
       left: 0,
       width: '100%',
@@ -141,7 +143,8 @@ const StudentFilter = (props) => {
          sx={{
            position: 'fixed',  
            top: '19%',  
-           left: '60%',
+           left:"60%",
+          //  left: isSidebarOpen ? 'calc(60% + 200px)' : '60%',
            transform: 'translateX(-50%)',
            zIndex: 999,  
            width: '80%',    
@@ -152,6 +155,7 @@ const StudentFilter = (props) => {
            mt: 3,
            overflowY: 'auto',  
            maxHeight: '80vh',
+           transition: 'left 0.3s ease',
             
          }}
        >
