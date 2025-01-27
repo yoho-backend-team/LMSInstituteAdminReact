@@ -128,7 +128,7 @@ const StudentFilter = (props ) => {
          {/* Overlay for background blur */}
     <Box
     sx={{
-      
+      position:'fixed',
       top: 0,
       left: 0,
       width: '100%',
@@ -164,7 +164,9 @@ const StudentFilter = (props ) => {
         <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Students" />
           <CardContent>
+
             <Grid container spacing={3}>
+              
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   fullWidth
@@ -200,6 +202,7 @@ const StudentFilter = (props ) => {
                   renderInput={(params) => <TextField {...params} label="Filter By Batches" placeholder="Favorites" />}
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   select
@@ -212,6 +215,7 @@ const StudentFilter = (props ) => {
                   <MenuItem value="false">Inactive</MenuItem>
                 </TextField>
               </Grid>
+              
               <Grid item sm={3} xs={12}>
                 <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} fullWidth />
               </Grid>
