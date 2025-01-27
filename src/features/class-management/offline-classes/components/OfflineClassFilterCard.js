@@ -60,19 +60,27 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
   console.log(batches,"batches")
   return (
     <DatePickerWrapper>
+
       <Grid container spacing={2}>
+
         <Grid item xs={12}>
+
           <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
+
             <CardHeader title="Filters" />
+
             <CardContent>
+
               <Grid container spacing={2}>
+
                 <Grid item xs={12} sm={6}>
-                  {/* <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
-                  </TextField> */}
+                  </TextField>
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
@@ -85,11 +93,17 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
+
               </Grid>
+
             </CardContent>
+
           </Card>
+
         </Grid>
+
       </Grid>
+      
     </DatePickerWrapper>
   );
 };

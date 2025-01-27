@@ -78,6 +78,12 @@ const Header = ({ handleLeftDrawerToggle }) => {
     dispatch(toggleDarkMode());
   };
 
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(prevState => !prevState);
+    handleLeftDrawerToggle(!isSidebarOpen); // Passing the updated state to the parent
+  };
+
   return (
     <>
       {/* logo & toggler button */}

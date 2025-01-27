@@ -21,6 +21,9 @@ import SearchIcon from "@mui/icons-material/Search"
 import { serialize } from 'stylis';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
+
+
+
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
   const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null;
@@ -31,7 +34,9 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
-const BatchFilterCard = (props) => {
+const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
+  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const { selectedBranchId ,batches} = props;
 
   const [startDateRange, setStartDateRange] = useState(null);
@@ -148,6 +153,12 @@ useEffect(() => {
     document.removeEventListener('mousedown', handleClickOutside);
   };
 }, []);
+  
+
+// useEffect(() => {
+//   // Update the sidebar state based on the passed down function
+//   handleLeftDrawerToggle(setIsSidebarOpen);
+// }, [handleLeftDrawerToggle]);
 
   return (
     <Grid>

@@ -12,7 +12,7 @@ const getInstituteDetails = () => {
 const getSelectedBranchId = () => {
     if(typeof(localStorage)!== "undefined"){
     const branch = localStorage.getItem("selectedBranchId")
-    return branch
+    return branch.replace(/^"|"$/g, '');
     }
 }
 
