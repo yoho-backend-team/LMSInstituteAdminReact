@@ -12,7 +12,7 @@ const getInstituteDetails = () => {
 const getSelectedBranchId = () => {
     if(typeof(localStorage)!== "undefined"){
     const branch = localStorage.getItem("selectedBranchId")
-    return branch
+    return branch.replace(/^"|"$/g, '');
     }
 }
 
@@ -21,6 +21,8 @@ const generateEndpoints = () => {
     const branchId = getSelectedBranchId()
 
     const instituteId = institute? institute?.uuid  :""
+
+    console.log(branchId,"branchId",instituteId)
     
     return {
         admin  : {
