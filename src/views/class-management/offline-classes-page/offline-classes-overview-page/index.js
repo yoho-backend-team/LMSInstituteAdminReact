@@ -46,6 +46,7 @@ const OfflineClass = () => {
             />
           </Grid>
         )}
+        
         {offlineClasses?.last_page !== 1 && (
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination
