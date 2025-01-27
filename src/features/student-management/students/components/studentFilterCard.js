@@ -16,6 +16,7 @@ import { getAllCourses } from 'features/course-management/courses-page/services/
 import { getAllStudents } from '../redux/studentThunks';
 import { useInstitute } from 'utils/get-institute-details';
 import Sidebar from 'components/sidebar';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const StudentFilter = (props ) => {
   const { selectedBranchId } = props;
@@ -116,10 +117,10 @@ const StudentFilter = (props ) => {
             variant="contained"
             size="medium"
               data-ignore-outside-click="true"
-            sx={{ width: '110px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
+            sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
             onClick={handleToggleCard}
           >
-           {isCardOpen ? 'Hide' : 'Show Filter'}
+          <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
           </Button>
         </Box>
       </Grid>

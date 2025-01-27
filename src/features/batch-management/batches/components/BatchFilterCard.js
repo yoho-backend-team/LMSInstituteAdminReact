@@ -19,6 +19,7 @@ import { getAllBatches } from '../redux/batchThunks';
 import PropTypes from 'prop-types';
 import SearchIcon from "@mui/icons-material/Search"
 import { serialize } from 'stylis';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -160,10 +161,10 @@ useEffect(() => {
             variant="contained"
             size="medium"
               data-ignore-outside-click="true"
-            sx={{ width: '110px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
+            sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
             onClick={handleToggleCard}
           >
-           {isCardOpen ? 'Hide' : 'Show Filter'}
+          <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
           </Button>
         </Box>
       </Grid>
