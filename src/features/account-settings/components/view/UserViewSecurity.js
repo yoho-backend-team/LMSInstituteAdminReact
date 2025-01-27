@@ -71,7 +71,7 @@ const UserViewSecurity = ({ id }) => {
   };
 
   return (
-    <Grid container spacing={3} justifyContent="center">
+    <Grid container spacing={3} justifyContent="center"sx={{height:'80vh'}} >
       <Grid item xs={12} md={8} lg={12}>
         <Card elevation={3}>
           <CardHeader title="Change Password" subheader="Update your account security settings" />
