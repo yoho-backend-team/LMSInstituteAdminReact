@@ -8,7 +8,6 @@ import {
   CardHeader,
   Checkbox,
   FormControlLabel,
-  Icon,
   Table,
   TableBody,
   TableCell,
@@ -26,6 +25,7 @@ import { editGroupYupSchema } from 'features/user-management/groups-page/utills'
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import Icon from 'components/icon';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInstitute } from 'utils/get-institute-details';
@@ -245,20 +245,43 @@ const GroupEditDialog = () => {
   const renderPermissions = useMemo(() => {
     return permissions?.map((module,index) =>
       // module?.screens?.map((screen, index) => (
-        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-          <TableCell
+        <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' }, '&:hover': {
+          backgroundColor: 'rgba(0, 0, 0, 0.04)',
+          transition: 'background-color 0.2s ease'
+        },
+        borderLeft: '4px solid transparent',
+        '&:hover': {
+          backgroundColor: 'ghostwhite'
+        } }}>
+         <TableCell
             sx={{
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              fontSize: (theme) => theme.typography.h6.fontSize
+              fontWeight: 500,
+              whiteSpace: 'nowrap', 
+              fontSize: '1.1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5, 
+              m:2 
             }}
           >
             {module?.identity}
           </TableCell>
+          <TableCell sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
           {module?.permission?.map((permission, index) => (
           <>
             {
-              <TableCell key={module?.id+module._id+index+module?.identity}>
+              <TableCell key={module?.id+module._id+index+module?.identity}
+              elevation={0}
+              sx={{
+                p: 1,
+                borderRadius: '8px',
+                backgroundColor: selectedCheckbox.includes(permission._id) 
+                  ? 'rgba(25, 118, 210, 0.08)'
+                  : ' ',
+                 
+                
+              }}
+              >
               <FormControlLabel
                 label={permission?.name}
                 sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
@@ -281,6 +304,7 @@ const GroupEditDialog = () => {
             }
             </>
           ))}
+           </TableCell>
         </TableRow>
       // ))
     );

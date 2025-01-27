@@ -110,7 +110,9 @@ const BatchFilterCard = (props) => {
 
   return (
     <DatePickerWrapper>
+
       <Grid item xs={12} sm={12}>
+        
         <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Batches" />
           <CardContent>
