@@ -31,7 +31,10 @@ export const getAllFaqCategories = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       },
       params: data 
+
     });
+    console.log("All categories data",response)
+
 
     // Check if the response status is successful
   
@@ -67,17 +70,18 @@ export const searchFaqCategories = async (searchQuery) => {
 };
 export const addFaqCategory = async (data) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}`, data, {
+    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}`, data ,  {
       headers: {
+        'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `token ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
-    if (response.data.status) {
-      return { success: true, message: response.data.message }; 
+    if (response.data?.status) {
+      return { success: true, message: 'Faq Category created successfully' }; 
     } else {
-      return { success: false, message: response.data.message }; 
+      return { success: false, message: 'Failed to create FaqCategory' }; 
     }
   } catch (error) {
     console.error('Error in addFaqCategory:', error);

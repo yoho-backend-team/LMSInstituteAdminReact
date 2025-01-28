@@ -8,6 +8,7 @@ import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import Divider from '@mui/material/Divider';
 
 // ** Icon Imports
 import Icon from 'components/icon';
@@ -34,84 +35,106 @@ const   DeleteDialog = (props) => {
 
   return (
     <>
-      <Dialog fullWidth open={open} onClose={handleClose} sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 512 } }}>
+      <Dialog
+        fullWidth
+        open={open}
+        onClose={handleClose}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 512, borderRadius: 4, boxShadow: 4 } }}
+      >
         <DialogContent
           sx={{
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
+            px: (theme) => [theme.spacing(6), theme.spacing(8)],
+            pt: (theme) => [theme.spacing(4), theme.spacing(6)],
+            textAlign: 'center'
           }}
         >
           <Box
             sx={{
               display: 'flex',
-              textAlign: 'center',
-              alignItems: 'center',
               flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center',
-              '& svg': { mb: 5, color: 'warning.main' }
+              '& svg': { mb: 4, color: 'warning.main' }
             }}
           >
-            <Icon icon="tabler:alert-circle" fontSize="5.5rem" />
-            <Typography variant="h4" sx={{ mb: 3, color: 'text.secondary' }}>
-              Are you sure?
+            <Icon icon="tabler:alert-triangle" fontSize="5.5rem" />
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+              Confirm Action
             </Typography>
-            <Typography>{description} !</Typography>
+            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+              {description}
+            </Typography>
           </Box>
         </DialogContent>
+        <Divider />
         <DialogActions
           sx={{
             justifyContent: 'center',
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
-            pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
+            py: (theme) => theme.spacing(4),
+            px: (theme) => theme.spacing(6)
           }}
         >
           <Button
             variant="contained"
-            sx={{ mr: 2 }}
+            color="error"
+            size="large"
+            sx={{ minWidth: 120, mr: 2 }}
             onClick={() => {
               handleSubmit();
               handleConfirmation('yes');
             }}
           >
-            Yes, {title} !
+            Yes, {title}
           </Button>
-          <Button variant="tonal" color="secondary" onClick={() => handleConfirmation('cancel')}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="large"
+            sx={{ minWidth: 120 }}
+            onClick={() => handleConfirmation('cancel')}
+          >
             Cancel
           </Button>
         </DialogActions>
       </Dialog>
+
       <Dialog
         fullWidth
         open={secondDialogOpen}
         onClose={handleSecondDialogClose}
-        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 512 } }}
+        sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 512, borderRadius: 4, boxShadow: 4 } }}
       >
         <DialogContent
           sx={{
-            px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
+            px: (theme) => [theme.spacing(6), theme.spacing(8)],
+            pt: (theme) => [theme.spacing(4), theme.spacing(6)],
+            textAlign: 'center'
           }}
         >
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
               flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
               '& svg': {
-                mb: 5,
+                mb: 4,
                 color: userInput === 'yes' ? 'success.main' : 'error.main'
               }
             }}
           >
             <Icon fontSize="5.5rem" icon={userInput === 'yes' ? 'tabler:circle-check' : 'tabler:circle-x'} />
-            <Typography variant="h4" sx={{ mb: 3 }}>
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
               {userInput === 'yes' ? 'Success!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? successDescription : `${failureDescription} :)`}</Typography>
+            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+              {userInput === 'yes' ? successDescription : failureDescription}
+            </Typography>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center', mb: 3 }}>
-          <Button variant="contained" color="success" onClick={handleSecondDialogClose}>
+        <Divider />
+        <DialogActions sx={{ justifyContent: 'center', py: (theme) => theme.spacing(3) }}>
+          <Button variant="contained" color="success" size="large" onClick={handleSecondDialogClose}>
             OK
           </Button>
         </DialogActions>
@@ -121,13 +144,13 @@ const   DeleteDialog = (props) => {
 };
 
 DeleteDialog.propTypes = {
-  open: PropTypes.any,
-  setOpen: PropTypes.any,
-  title: PropTypes.any,
-  handleSubmit: PropTypes.any,
-  description: PropTypes.any,
-  successDescription: PropTypes.any,
-  failureDescription: PropTypes.any
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  description: PropTypes.string.isRequired,
+  successDescription: PropTypes.string.isRequired,
+  failureDescription: PropTypes.string.isRequired
 };
 
 export default DeleteDialog;

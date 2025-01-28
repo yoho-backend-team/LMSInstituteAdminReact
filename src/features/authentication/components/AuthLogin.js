@@ -67,7 +67,7 @@ const FirebaseLogin = ({ ...others }) => {
         email: Yup.string('Must be a valid username').max(255).required('Username is required'),
         password: Yup.string().max(255).required('Password is required')
       })}
-      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+      onSubmit= { async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
           show()
