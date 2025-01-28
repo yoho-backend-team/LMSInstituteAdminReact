@@ -48,13 +48,8 @@ const UserView = () => {
       {loading ? (
         <StaffManagementView />
       ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={5} lg={4}>
-            <UserViewLeft id={userData?.id} userData={userData} setRefetch={setRefetch} />
-          </Grid>
-          <Grid item xs={12} md={7} lg={8}>
+        <Grid container  spacing={2} justifyContent='center'>
             <UserViewRight id={userData?.id} userData={userData} setRefetch={setRefetch} />
-          </Grid>
         </Grid>
       )}
     </>
