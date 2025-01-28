@@ -18,7 +18,7 @@ import { useSpinner } from 'context/spinnerContext';
 
 const TeachingStaffAddEventSidebar = (props) => {
   const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
- console.log(selected,"selected",staff)
+  console.log(selected, 'selected', staff);
   const defaultState = {
     staff_name: '',
     title: '',
@@ -28,7 +28,7 @@ const TeachingStaffAddEventSidebar = (props) => {
   // ** States
   const [values, setValues] = useState(defaultState);
   const [selectedDate, setSelectedDate] = useState(null);
-  const { show, hide } = useSpinner()
+  const { show, hide } = useSpinner();
 
   useEffect(() => {
     if (selected) {
@@ -58,26 +58,25 @@ const TeachingStaffAddEventSidebar = (props) => {
     return formattedDateString;
   }
   const onSubmit = async (data) => {
-    try{
-      show()
+    try {
+      show();
       const new_attedence = {
-        institute : useInstitute().getInstituteId(),
-        branch : staff?.branch,
-        date : convertDateFormat(selectedDate),
-        staff : staff?.staff,
-        status:data?.title
-      }
-      
+        institute: useInstitute().getInstituteId(),
+        branch: staff?.branch,
+        date: convertDateFormat(selectedDate),
+        staff: staff?.staff,
+        status: data?.title
+      };
+
       const result = await addTeachingStaffAttendance(new_attedence);
       setRefetch((state) => !state);
       toast.success(result.message);
       handleSidebarClose();
-    }catch(error){
-     toast.error(error.message)
-    }finally{
-      hide()
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      hide();
     }
-
   };
 
   const handleStartDate = (date) => {
@@ -93,12 +92,14 @@ const TeachingStaffAddEventSidebar = (props) => {
   const RenderSidebarFooter = () => {
     return (
       <Fragment>
-        <Button type="submit" variant="contained" sx={{ mr: 4 }}>
-          Add
-        </Button>
-        <Button variant="tonal" color="secondary">
-          Reset
-        </Button>
+        <Box sx={{display:'flex', flexDirection:"row",gap:"30%"}}>
+          <Button type="submit" sx={{ pl: 7, pr: 7 }} variant="contained">
+            Add
+          </Button>
+          <Button variant="tonal" color="secondary" sx={{ pl: 7, pr: 7 }}>
+            Reset
+          </Button>
+        </Box>
       </Fragment>
     );
   };
@@ -116,7 +117,8 @@ const TeachingStaffAddEventSidebar = (props) => {
         sx={{
           p: 6,
           display: 'flex',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}
       >
         <Typography variant="h5">Add Attendance</Typography>
@@ -141,10 +143,12 @@ const TeachingStaffAddEventSidebar = (props) => {
       <Box className="sidebar-body" sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <DatePickerWrapper>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', mb: 8 }}>
+              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} style={{ marginLeft: 20 }} />
               <Box>
-                <Typography variant="h5">{staff?.staff_name}</Typography>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                  {staff?.staff_name}
+                </Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
                   {staff?.email}
                 </Typography>
@@ -169,7 +173,7 @@ const TeachingStaffAddEventSidebar = (props) => {
                 </TextField>
               )}
             />
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: 10 }}>
               <DatePicker
                 // selectsStart
                 id="event-start-date"
@@ -189,6 +193,7 @@ const TeachingStaffAddEventSidebar = (props) => {
               <RenderSidebarFooter />
             </Box>
           </form>
+          <h1>Hello</h1>
         </DatePickerWrapper>
       </Box>
     </Drawer>

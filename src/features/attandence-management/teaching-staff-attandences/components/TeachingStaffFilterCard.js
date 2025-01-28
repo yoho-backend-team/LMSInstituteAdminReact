@@ -13,6 +13,10 @@ import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { useInstitute } from 'utils/get-institute-details';
 import { getAllTeachingStaffAttendances } from '../redux/teachingStaffAttendanceThunks';
+import FilterDesignCard from './FilterDesignCard';
+import { Button } from '@mui/material';
+import { IconX, IconSearch } from '@tabler/icons';
+import { borderRadius } from '@mui/system';
 
 const TeachingStaffFilterCard = (props) => {
   const { selectedBranchId } = props;
@@ -39,65 +43,90 @@ const TeachingStaffFilterCard = (props) => {
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
-    const data = { is_active: e.target.value, branch: selectedBranchId,institute:useInstitute().getInstituteId(), type: 'teaching' };
+    const data = { is_active: e.target.value, branch: selectedBranchId, institute: useInstitute().getInstituteId(), type: 'teaching' };
     dispatch(getAllTeachingStaffAttendances(data));
   };
 
   const handleSearch = useCallback(
     (e) => {
       const searchInput = e.target.value;
-      e.preventDefault()
+      e.preventDefault();
       // dispatch(getAllTeachingStaffs({ search: searchInput, branch_id: selectedBranchId, type: 'teaching' }));
       setSearchValue(searchInput);
     },
     [dispatch]
   );
 
+  const [show, setShow] = useState(true);
+  const [showDetails, setShowDetails] = useState(true);
+  function handleShow() {
+    setShowDetails(!showDetails);
+  }
+  function handleNavigate() {
+    setShow(!show);
+  }
   return (
-    <DatePickerWrapper>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} > 
-            <CardHeader title="Teaching Staff Attendance" />
-            <CardContent>
-              <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Grid item xs={12} sm={4}>
-                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
-                    <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="1">Active</MenuItem>
-                    <MenuItem value="0">Inactive</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <Autocomplete
-                    multiple
-                    fullWidth
-                    options={courses}
-                    filterSelectedOptions
-                    onChange={(e, newValue) => {
-                      const courseId = newValue.map((item) => item.course_id);
-                      const data = {
-                        course_id: courseId,
-                        branch_id: selectedBranchId,
-                        type: 'teaching_staff'
-                      };
-                      dispatch(getAllTeachingStaffs(data));
-                    }}
-                    id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.course_name || ''}
-                    renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
-                  />
-                </Grid>
+    <>
+      {show ? (
+        <FilterDesignCard show={show} setShow={setShow} go={handleNavigate} />
+      ) : (
+        <DatePickerWrapper>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+                <Button
+                  onClick={handleNavigate}
+                  style={{ backgroundColor: 'black', height: 10, position: 'absolute', right: 40, marginTop: 20 }}
+                >
+                  <IconX stroke={2} />
+                </Button>
+                <CardHeader title="Teaching Staff Attendance" />
+                <CardContent>
+                  <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        select
+                        fullWidth
+                        label="Status"
+                        SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                      >
+                        <MenuItem value="">Select Status</MenuItem>
+                        <MenuItem value="1">Active</MenuItem>
+                        <MenuItem value="0">Inactive</MenuItem>
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <Autocomplete
+                        multiple
+                        fullWidth
+                        options={courses}
+                        filterSelectedOptions
+                        onChange={(e, newValue) => {
+                          const courseId = newValue.map((item) => item.course_id);
+                          const data = {
+                            course_id: courseId,
+                            branch_id: selectedBranchId,
+                            type: 'teaching_staff'
+                          };
+                          dispatch(getAllTeachingStaffs(data));
+                        }}
+                        id="autocomplete-multiple-outlined"
+                        getOptionLabel={(option) => option.course_name || ''}
+                        renderInput={(params) => <TextField {...params} label=" Courses" placeholder="Favorites" />}
+                      />
+                    </Grid>
 
-                <Grid item xs={12} sm={4}>
-                  <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    </DatePickerWrapper>
+                    <Grid item xs={12} sm={4}>
+                      <TextField value={searchValue} fullWidth placeholder="Search Batch" onChange={(e) => handleSearch(e)} />
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </DatePickerWrapper>
+      )}
+    </>
   );
 };
 
