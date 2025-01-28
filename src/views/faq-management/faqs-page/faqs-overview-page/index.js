@@ -37,7 +37,7 @@ const FaqDataGrid = () => {
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  const [currentPage, setCurrentPage] = useState(1); // Added state for pagination
+  const [currentPage, setCurrentPage] = useState(1); 
   const [rowsPerPage] = useState(10);
   
   const dispatch = useDispatch();
@@ -102,7 +102,7 @@ const FaqDataGrid = () => {
     };
     const response = await deleteFaq(data);
     if (response.success) {
-      toast.success(response.message);
+      // toast.success(response.message);
       fetchFaqs(currentPage);
     } else {
       toast.error(response.message);

@@ -1,54 +1,61 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField, Typography, Box, Drawer, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, TextField, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
 import * as yup from 'yup';
 import { updateFaq } from '../services/faqServices';
-
-const showErrors = (field, valueLen, min) => {
-  if (valueLen === 0) {
-    return `${field} field is required`;
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`;
-  } else {
-    return '';
-  }
-};
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(6),
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  padding: theme.spacing(3),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const CloseButton = styled(IconButton)(({ theme }) => ({
+  transition: 'background-color 0.3s, color 0.3s',
+  '&:hover': {
+    backgroundColor: theme.palette.error.light,
+    color: theme.palette.error.contrastText,
+  },
+}));
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  boxShadow: theme.shadows[3],
 }));
 
 const schema = yup.object().shape({
   title: yup.string().min(3, 'Title must be at least 3 characters').required('Title is required'),
-  description: yup.string().required('Description is required')
+  description: yup.string().required('Description is required'),
 });
 
 const defaultValues = {
   title: '',
-  description: ''
+  description: '',
 };
 
 const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
-  console.log('editing values', initialValues);
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
 
   const {
     reset,
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     defaultValues: initialValues || defaultValues,
     resolver: yupResolver(schema),
-    mode: 'onChange'
+    mode: 'onChange',
   });
 
   useEffect(() => {
@@ -58,27 +65,25 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
   }, [open, reset, initialValues]);
 
   const onSubmit = async (data) => {
-    setSubmitting(true);
     const inputData = {
       title: data?.title,
       description: data?.description,
-      uuid: initialValues?.uuid
+      uuid: initialValues?.uuid,
     };
-    console.log('input data', inputData);
-    console.log('Initial values passed to form:', initialValues);
-    console.log('Resetting form with values:', initialValues || defaultValues);
-    console.log('Submitted data:', inputData);
 
-    const result = await updateFaq(inputData);
-    setSubmitting(false);
-
-    if (result.success) {
-      setSuccessDialogOpen(true);
-      setRefetch((state) => !state);
-      toggle();
-      reset();
-    } else {
-      alert('Failed to edit FAQ. Please try again.');
+    try {
+      const result = await updateFaq(inputData);
+      if (result.success) {
+        setSuccessDialogOpen(true);
+        setRefetch((state) => !state);
+        toggle();
+        reset();
+      } else {
+        alert('Failed to edit FAQ. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating FAQ:', error);
+      alert('An error occurred while updating the FAQ.');
     }
   };
 
@@ -99,57 +104,81 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
-        <Header>
-          <Typography variant="h5">Edit FAQ</Typography>
-          <IconButton size="small" onClick={handleClose} sx={{ color: 'text.primary' }}>
-            <Icon icon="tabler:x" fontSize="1.125rem" />
-          </IconButton>
-        </Header>
-        <Box sx={{ p: 6 }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Controller
-              name="title"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Title"
-                  placeholder="Enter FAQ Title"
-                  fullWidth
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
-                  sx={{ mb: 4 }}
-                />
-              )}
-            />
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Description"
-                  placeholder="Enter FAQ Description"
-                  fullWidth
-                  multiline
-                  rows={4}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description?.message}
-                  sx={{ mb: 4 }}
-                />
-              )}
-            />
-            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-              <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ mr: 2 }}>
-                {isSubmitting ? 'Submitting...' : 'Save Changes'}
-              </Button>
-              <Button variant="outlined" color="secondary" onClick={handleClose}>
-                Cancel
-              </Button>
-            </Box>
-          </form>
+        <Box sx={{ p: 2, mt: 2, m: 3 }}>
+          <Box
+            sx={{
+              boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+              background: 'rgb(232, 232, 238)',
+              borderTopLeftRadius: '8px',
+              borderTopRightRadius: '8px',
+              borderBottom: 'none',
+            }}
+          >
+            <Header>
+              <Typography variant="h5" fontWeight="bold">
+                Edit FAQ
+              </Typography>
+              <CloseButton size="small" onClick={handleClose}>
+                <Icon icon="tabler:x" fontSize="1.125rem" />
+              </CloseButton>
+            </Header>
+          </Box>
+          <FormContainer
+            sx={{
+              borderTopLeftRadius: '0',
+              borderTopRightRadius: '0',
+              boxShadow: '0 .505rem .875rem 0 rgba(38,43,67,.16)',
+            }}
+          >
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Controller
+                    name="title"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Title"
+                        placeholder="Enter FAQ Title"
+                        fullWidth
+                        error={Boolean(errors.title)}
+                        helperText={errors.title?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Description"
+                        placeholder="Enter FAQ Description"
+                        fullWidth
+                        multiline
+                        rows={4}
+                        error={Boolean(errors.description)}
+                        helperText={errors.description?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                <Button type="submit" variant="contained" sx={{ mr: 2 }}>
+                  Submit
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Box>
+            </form>
+          </FormContainer>
         </Box>
       </Drawer>
 
@@ -173,7 +202,7 @@ FaqEdit.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   initialValues: PropTypes.object.isRequired,
-  setRefetch: PropTypes.func.isRequired
+  setRefetch: PropTypes.func.isRequired,
 };
 
 export default FaqEdit;

@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Alert,
   Button,
   Grid,
   TextField,
@@ -93,7 +92,7 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
       toggle();
       reset();
     } else {
-      alert('Failed to add FAQ. Please try again.'); // Can be replaced with toast or Alert component
+      alert('Failed to add FAQ. Please try again.'); 
     }
   };
 
