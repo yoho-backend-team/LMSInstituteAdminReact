@@ -81,7 +81,9 @@ const AllActivity = () => {
           height: 450,
           overflow: 'auto',
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-          borderRadius: "12px"
+          borderRadius: "12px",
+         height:"47rem"
+          
         }}
       >
         <Box>
@@ -100,6 +102,7 @@ const AllActivity = () => {
                     '&:hover': {
                       backgroundColor: theme.palette.grey[200],
                     },
+                    
                   }}
                 >
                   <Box

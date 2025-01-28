@@ -14,9 +14,11 @@ import Icon from 'components/icon';
 
 import PropTypes from 'prop-types';
 
-const DeleteDialog = (props) => {
+const   DeleteDialog = (props) => {
   // ** Props
   const { open, setOpen, handleSubmit, description, title, successDescription, failureDescription } = props;
+
+
 
   // ** States
   const [userInput, setUserInput] = useState('yes');
@@ -53,7 +55,7 @@ const DeleteDialog = (props) => {
             <Typography variant="h4" sx={{ mb: 3, color: 'text.secondary' }}>
               Are you sure?
             </Typography>
-            <Typography>{description}!</Typography>
+            <Typography>{description} !</Typography>
           </Box>
         </DialogContent>
         <DialogActions
@@ -71,7 +73,7 @@ const DeleteDialog = (props) => {
               handleConfirmation('yes');
             }}
           >
-            Yes, {title}!
+            Yes, {title} !
           </Button>
           <Button variant="tonal" color="secondary" onClick={() => handleConfirmation('cancel')}>
             Cancel

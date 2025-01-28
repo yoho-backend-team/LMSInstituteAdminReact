@@ -23,11 +23,7 @@ import Transitions from 'components/extended/Transitions';
 import { updateSelectedBranch } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 // assets
-import {
-  // IconAdjustmentsHorizontal,
-  IconSearch
-  // IconX
-} from '@tabler/icons';
+
 import { shouldForwardProp } from '@mui/system';
 
 import { useSelector } from 'react-redux';
@@ -114,17 +110,16 @@ const SearchSection = () => {
   console.log(selectedBranchId,"selectedBranchId",branches,branches?.[0]?.uuid === selectedBranchId,typeof(selectedBranchId),typeof(branches?.[0]?.uuid),selectedBranchId )
   return (
     <>
-      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+      <Box sx={{ display: 'flex',justifyConetent:'flex-center',alignItems:'center',width:'100%' }}>
         <PopupState variant="popper" popupId="demo-popup-popper">
           {(popupState) => (
             <>
-              <Box sx={{ ml: 2 }}>
-                <ButtonBase sx={{ borderRadius: '12px' }}>
-                  <HeaderAvatarStyle variant="rounded" {...bindToggle(popupState)}>
-                    <IconSearch stroke={1.5} size="1.2rem" />
-                  </HeaderAvatarStyle>
-                </ButtonBase>
-              </Box>
+            <Box sx={{ ml: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
+  <ButtonBase sx={{ borderRadius: '12px' }}>
+    
+  </ButtonBase>
+</Box>
+
               <PopperStyle {...bindPopper(popupState)} transition>
                 {({ TransitionProps }) => (
                   <>

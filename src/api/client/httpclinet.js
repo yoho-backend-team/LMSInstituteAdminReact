@@ -19,8 +19,7 @@ Axios.interceptors.request.use((config)=> {
 Axios.interceptors.response.use(
     (response) => response,
     (error) => {
-        console.log(error,error?.response.status === 401,error.response.data.status === "session_expired")
-        if(error.response && error.response.status === 401 && error.response.data.status === "session_expired"){
+        if(error?.response && error?.response?.status === 401 && error?.response?.data?.status === "session_expired"){
             console.log("logout tryed")
             localStorage.removeItem('token');
             localStorage.removeItem('userData');

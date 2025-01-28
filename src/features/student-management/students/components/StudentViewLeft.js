@@ -11,88 +11,64 @@ import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder } from 'utils/placeholders';
 
 const ProfilePicture = styled('img')(({ theme }) => ({
-  width: 108,
-  height: 108,
-  borderRadius: theme.shape.borderRadius,
-  border: `4px solid ${theme.palette.common.white}`,
+  width: 120,
+  height: 120,
+  borderRadius: '50%',
+  border: `4px solid ${theme.palette.background.paper}`,
+  boxShadow: theme.shadows[4], // subtle shadow around the profile image
   [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4)
-  }
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 const UserViewLeft = ({ student }) => {
-  const imageUrl = student?.image
-    ? `${getImageUrl(student?.image)}`
-    : imagePlaceholder
+  const imageUrl = student?.image ? getImageUrl(student?.image) : imagePlaceholder;
 
-    return (
-    <Card>
+  return (
+    <Card sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper' }}>
       <CardMedia
         component="img"
         alt="profile-header"
         image="https://th.bing.com/th/id/R.2609fa18d5091dc020ae92e8ffde827d?rik=EFdtfi8dYkunsA&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f05%2fBeautiful-Gradient-Wallpaper.jpg&ehk=wHC%2bBEdWF6fKy71W%2byG8l40bZoD6JV35mjLfEsDFAdQ%3d&risl=&pid=ImgRaw&r=0"
         sx={{
-          height: { xs: 150, md: 250 }
+          height: { xs: 150, md: 250 },
+          objectFit: 'cover',
         }}
       />
-      <CardContent
-        sx={{
-          pt: 0,
-          mt: -8,
-          display: 'flex',
-          alignItems: 'flex-end',
-          flexWrap: { xs: 'wrap', md: 'nowrap' },
-          justifyContent: { xs: 'center', md: 'flex-start' }
-        }}
-      >
+      <CardContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <ProfilePicture src={imageUrl} alt="profile-picture" />
-        <Box
-          sx={{
-            width: '100%',
-            display: 'flex',
-            ml: { xs: 0, md: 6 },
-            alignItems: 'flex-end',
-            flexWrap: ['wrap', 'nowrap'],
-            justifyContent: ['center', 'space-between']
-          }}
-        >
-          <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: ['center', 'flex-start'],
-                alignItems: 'center'
-              }}
-            >
-              <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center' }}>
-                {student.first_name} {student.last_name}
-              </Typography>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:briefcase" />
-                <Typography sx={{ color: 'text.secondary' }}>ReactJs</Typography>
-              </Box>
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:map-pin" />
-                <Typography sx={{ color: 'text.secondary' }}>london</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1.5, color: 'text.secondary' } }}>
-                <Icon fontSize="1.25rem" icon="tabler:calendar" />
-                <Typography sx={{ color: 'text.secondary' }}>Joined 11/09/2023</Typography>
-              </Box>
-            </Box>
+        <Typography variant="h5" sx={{ mt: 2, fontWeight: '600', color: 'text.primary' }}>
+          {student.first_name} {student.last_name}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+          ReactJs Developer | London | Joined 11/09/2023
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
+            <Icon fontSize="1.25rem" icon="tabler:briefcase" />
+            <Typography variant="body2">ReactJs</Typography>
           </Box>
-          <Button color={student.is_active? 'success' : 'error'} variant="contained" sx={{ '& svg': { mr: 2 } }}>
-            <Icon icon="tabler:check" fontSize="1.125rem" />
-            {student.is_active? 'Active' : 'Inactive'}
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
+            <Icon fontSize="1.25rem" icon="tabler:map-pin" />
+            <Typography variant="body2">London</Typography>
+          </Box>
         </Box>
+        <Button
+          variant="contained"
+          color={student.is_active ? 'success' : 'error'}
+          sx={{ mt: 3, '& svg': { mr: 1 }, borderRadius: 2 }}
+        >
+          <Icon icon="tabler:check" fontSize="1.125rem" />
+          {student.is_active ? 'Active' : 'Inactive'}
+        </Button>
       </CardContent>
     </Card>
   );
 };
 
 UserViewLeft.propTypes = {
-  student: PropTypes.any
+  student: PropTypes.object.isRequired,
 };
+
 export default UserViewLeft;
+
