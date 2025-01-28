@@ -129,7 +129,8 @@ const NotificationSection = () => {
           mr: 3,
           [theme.breakpoints.down('md')]: {
             mr: 2
-          }
+          },
+          
         }}
       >
         <ButtonBase sx={{ borderRadius: '12px' }}>
@@ -251,7 +252,7 @@ const NotificationSection = () => {
                     </Grid>
                   </Grid>
                   <Divider />
-                  <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
+                  <CardActions sx={{ p: 1.25, justifyContent: 'start' }}>
                     <Button component={Link} onClick={(e) => handleClose(e)} to="/profile-management/notifications" size="small" disableElevation>
                       View All
                     </Button>

@@ -16,16 +16,14 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   borderRadius: '50%',
   border: `4px solid ${theme.palette.background.paper}`,
   boxShadow: theme.shadows[4], // subtle shadow around the profile image
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4),
-  },
+  marginBottom: theme.spacing(2), // consistent spacing
 }));
 
 const UserViewLeft = ({ student }) => {
   const imageUrl = student?.image ? getImageUrl(student?.image) : imagePlaceholder;
 
   return (
-    <Card sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper' }}>
+    <Card sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper', textAlign: 'center' }}>
       <CardMedia
         component="img"
         alt="profile-header"
@@ -35,22 +33,22 @@ const UserViewLeft = ({ student }) => {
           objectFit: 'cover',
         }}
       />
-      <CardContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+      <CardContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ProfilePicture src={imageUrl} alt="profile-picture" />
         <Typography variant="h5" sx={{ mt: 2, fontWeight: '600', color: 'text.primary' }}>
           {student.first_name} {student.last_name}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-          ReactJs Developer | London | Joined 11/09/2023
+          ReactJs Developer | London | Joined on 11/09/2023
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
             <Icon fontSize="1.25rem" icon="tabler:briefcase" />
-            <Typography variant="body2">ReactJs</Typography>
+            <Typography variant="body2" sx={{ ml: 1 }}>ReactJs</Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
             <Icon fontSize="1.25rem" icon="tabler:map-pin" />
-            <Typography variant="body2">London</Typography>
+            <Typography variant="body2" sx={{ ml: 1 }}>London</Typography>
           </Box>
         </Box>
         <Button
@@ -71,4 +69,3 @@ UserViewLeft.propTypes = {
 };
 
 export default UserViewLeft;
-

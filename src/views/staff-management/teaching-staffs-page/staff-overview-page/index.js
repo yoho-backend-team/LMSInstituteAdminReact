@@ -1,20 +1,17 @@
-import { TextField, Grid, MenuItem } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
+import { useState, useEffect } from 'react';
+import {TextField,Grid,MenuItem,Box,Button,Card, CardContent,Pagination, Typography,} from '@mui/material';
 import StaffManagement from 'components/cards/Skeleton/StaffManagement';
 import StatusChangeDialog from 'components/modal/DeleteModel';
 import Avatar from 'components/mui/avatar';
 import TeacherFilter from 'features/staff-management/teaching-staffs/components/TeacherFilterCard';
-import { selectLoading, selectTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
+import {
+  selectLoading,
+  selectTeachingStaffs,
+} from 'features/staff-management/teaching-staffs/redux/teachingStaffSelectors';
 import { getAllTeachingStaffs } from 'features/staff-management/teaching-staffs/redux/teachingStaffThunks';
 import { staffStatusChange } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
@@ -24,6 +21,7 @@ const Teaching = () => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
   const [page, setPage] = useState(1);
+  const [isFilterVisible, setFilterVisible] = useState(false);
   const teachingStaffs = useSelector(selectTeachingStaffs);
   const loading = useSelector(selectLoading);
   const [refetch, setRefetch] = useState({});
@@ -70,11 +68,42 @@ const Teaching = () => {
   };
 
   return (
-    <>
-      <Grid item xs={12} mb={2}>
-        <TeacherFilter selectedBranchId={selectedBranchId} />
-      </Grid>
+    <Box sx={{ position: 'relative',  }}>
+      {/* Toggle Filter Button */}
+      <Box   sx={{
+          position: 'absolute', 
+          top: '10px', 
+          left: '10px',
+          zIndex:20 
+           
+        }}>
+        <Button
+          variant="contained"
+          onClick={() => setFilterVisible((prev) => !prev)}
+        >
+          {isFilterVisible ? 'Hide Filter' : 'Show Filter'}
+        </Button>
+      </Box>
 
+      {/* Filter Overlay */}
+      {isFilterVisible && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 50,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(255, 255, 255, 0.9)',
+            zIndex: 10,
+            padding: 2,
+          }}
+        >
+          <TeacherFilter selectedBranchId={selectedBranchId} />
+        </Box>
+      )}
+
+      {/* Cards and Pagination */}
       {loading ? (
         <StaffManagement />
       ) : (
@@ -84,6 +113,7 @@ const Teaching = () => {
               <Grid key={i} item xs={12} sm={6} md={4}>
                 <Card
                   sx={{
+                    top:50,
                     position: 'relative',
                     boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
                     transition: 'transform 0.3s, box-shadow 0.3s',
@@ -183,7 +213,7 @@ const Teaching = () => {
         title="Status"
         handleSubmit={handleStatusChangeApi}
       />
-    </>
+    </Box>
   );
 };
 
