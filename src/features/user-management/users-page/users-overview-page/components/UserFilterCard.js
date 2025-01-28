@@ -118,4 +118,3 @@ UserFilterCard.propTypes = {
 };
 
 export default UserFilterCard;
-

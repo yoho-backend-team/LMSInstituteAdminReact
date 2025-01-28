@@ -85,7 +85,7 @@ const MainLayout = () => {
       <Sidebar drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
 
       {/* main content */}
-      <Main theme={theme} sx={{ marginRight: "0px", borderRadius : "0px", marginTop: "86px", backgroundColor: "#F3F4F6"}} open={leftDrawerOpened}>
+      <Main theme={theme} sx={{ marginLeft: leftDrawerOpened ? "0px" : "-200px !important",  paddingLeft:"50px",marginRight: "0px", borderRadius : "0px", marginTop: "86px", backgroundColor: "#F3F4F6"}} open={leftDrawerOpened}>
         {/* breadcrumb */}
         <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
         <Outlet />

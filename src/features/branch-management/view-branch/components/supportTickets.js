@@ -92,7 +92,8 @@ const SupportTicket = () => {
         width:"250px",
           height:"100px",
           paddingLeft:"10px", 
-          paddingTop:"10px", 
+          paddingTop:"10px",
+          color:"black", 
         '&:hover': {
           backgroundColor: '#bbdefb', 
           transform: 'scale(1.02)', 
