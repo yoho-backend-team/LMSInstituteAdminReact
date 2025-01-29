@@ -32,13 +32,13 @@ const OfflineClassCardHeader = (props) => {
      }
   }
 
-  // const [isAddModalOpen, setAddModalOpen] = useState(false);
-  // const handleAddClose = () => {
-  //   setAddModalOpen(false);
-  // };
-  // const handleAdd = () => {
-  //   setAddModalOpen(true);
-  // };
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const handleAddClose = () => {
+    setAddModalOpen(false);
+  };
+  const handleAdd = () => {
+    setAddModalOpen(true);
+  };
 
   return (
     <>
@@ -56,7 +56,7 @@ const OfflineClassCardHeader = (props) => {
         <TextField
           value={searchValue}
           sx={{
-            width:" 100%"
+            width: '80%'
           }}
           placeholder="Search Class"
           onChange={(e) => handleSearch(e)}
@@ -77,13 +77,13 @@ const OfflineClassCardHeader = (props) => {
             )
           }}
         />
-        {/* <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Offline Class
           </Button>
-        </Box> */}
+        </Box>
       </Box>
-      {/* <OfflineClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} /> */}
+      <OfflineClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
 };
