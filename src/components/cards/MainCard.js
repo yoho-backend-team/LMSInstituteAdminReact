@@ -2,100 +2,88 @@ import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, CardHeader, Typography, Box, Divider } from '@mui/material';
-
-// Custom Header Styles with New Background Color
-const headerSX = {
-  padding: '24px 24px',
-  backgroundColor: (theme) => '#0CCE7F', // Custom background color
-  '& .MuiCardHeader-action': { marginRight: 0 },
-};
+// import { green } from '@mui/material/colors';
 
 // ==============================|| MODERN MAIN CARD ||============================== //
 
 const MainCard = forwardRef(
   (
     {
-      border = true,
-      boxShadow,
+      // border = true,
+      // boxShadow,
       children,
       content = true,
       contentClass = '',
       contentSX = {},
       darkTitle,
       secondary,
-      shadow,
+      // shadow,
       sx = {},
       title,
-      ...others
     },
-    ref
   ) => {
     const theme = useTheme();
 
     return (
-      <Card
-        ref={ref}
-        {...others}
-        sx={{
-          border: border ? `1px solid ${theme.palette.divider}` : 'none',
-          borderRadius: '10px', // Rounded corners for a modern look
-          boxShadow: boxShadow ? shadow || '0px 4px 12px rgba(0, 0, 0, 0.1)' : 'none',
-          // transition: 'box-shadow 0.3s ease-in-out',
-          // ':hover': {
-          //   boxShadow: '0px 6px 18px rgba(0, 0, 0, 0.15)',
-          // },
-          ...sx,
-        }}
-      >
-        {/* Card Header */}
-        {title && (
+      <>
+        <Box
+        >
           <CardHeader
-            sx={headerSX}
+          sx={{height: '20px'}}
             title={
+              <>
               <Typography
-                variant="h5" // Increase the size for a bolder, more prominent font
-                component="div"
+                variant="h3"
                 sx={{
-                  fontWeight: 700, // Make the font bold
-                  color: theme.palette.common.white, // Make the title text white
-                  letterSpacing: '0.8px', // Add slight letter spacing for a clean look
-                  textTransform: 'uppercase', // Uppercase for emphasis
+                  fontWeight: 200,
+                  color: 'green',
+                  textAlign: 'start',
+                  mt: 0,
+                  padding: 0,
+                  height: '20px'
+                  // textTransform: 'uppercase'
                 }}
               >
-                {darkTitle ? (
-                  <Typography variant="h4" component="div">
-                    {title}
-                  </Typography>
-                ) : (
-                  title
-                )}
-              </Typography>
-            }
-            action={secondary && <Box>{secondary}</Box>}
-          />
-        )}
+                Welcome to 
 
-        {/* Subtle Divider */}
+              </Typography>
+              <Typography
+                variant="h3"
+                sx={{color: 'black', fontWeight: 200}}
+                > Customer Service</Typography>
+              </>
+            }
+          />
+          <Divider sx={{margin: '10px 0', color: 'grey' }} />
+          <CardContent>
+            <Typography variant="body1" sx={{ color: 'white', textAlign: 'center' }}>
+
+            </Typography>
+          </CardContent>
+
+          {/* Subtle Divider */}
         {title && (
           <Divider
             sx={{
-              backgroundColor: theme.palette.primary.light,
+              backgroundColor: 'red',
               height: 2, // Slim divider
               width: '90%',
-              margin: '8px auto', 
-              display: "none",// Creates space after title
+              margin: '8px auto',
+              display: 'none', // Creates space after title
+              title: 'hello'
             }}
           />
         )}
 
-        {/* Card Content */}
+          {/* Card Content */}
         {content && (
           <CardContent sx={{ padding: '16px 24px', ...contentSX }} className={contentClass}>
             {children}
           </CardContent>
         )}
         {!content && children}
-      </Card>
+        </Box>
+      </>
     );
   }
 );
@@ -111,7 +99,7 @@ MainCard.propTypes = {
   secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
   shadow: PropTypes.string,
   sx: PropTypes.object,
-  title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
+  title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object])
 };
 
 export default MainCard;
