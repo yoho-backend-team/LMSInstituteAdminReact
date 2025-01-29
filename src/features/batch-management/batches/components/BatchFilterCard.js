@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { forwardRef, useCallback, useState,useRef } from 'react';
-import { Box } from '@mui/material';
+import { Box,  } from '@mui/material';
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -49,11 +49,11 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
     const [isCardOpen, setIsCardOpen] = useState(false);
     const filterCardRef = useRef(null);
 
-  const handleFilterByStatus = (e) => {
-    setFilterStatusValue(e.target.value);
-    const data = { is_active: e.target.value, branch_id: selectedBranchId };
-    dispatch(getAllBatches(data));
-  };
+  // const handleFilterByStatus = (e) => {
+  //   setFilterStatusValue(e.target.value);
+  //   const data = { is_active: e.target.value, branch_id: selectedBranchId };
+  //   dispatch(getAllBatches(data));
+  // };
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -139,7 +139,11 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
 // Close the filter card if clicked outside
 useEffect(() => {
   const handleClickOutside = (event) => {
-    if (filterCardRef.current && !filterCardRef.current.contains(event.target) &&  
+    if (filterCardRef.current && !filterCardRef.current.contains(event.target) && 
+    !document.querySelector('.MuiAutocomplete-popper')?.contains(event.target) && // Ignore clicks inside Autocomplete dropdown
+    !document.querySelector('.MuiPopover-root')?.contains(event.target) && // Ignore clicks inside Menu dropdowns
+    !document.querySelector('.react-datepicker')?.contains(event.target)&&
+    !document.querySelector('.MuiMenu-paper')?.contains(event.target) &&
      event.target.getAttribute('data-ignore-outside-click') !== 'true') {
       setIsCardOpen(false);
     }
@@ -231,19 +235,25 @@ useEffect(() => {
 
             <Grid container spacing={3}>
 
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  select
-                  fullWidth
-                  label="Search By Status"
-                  defaultValue={''}
-                  SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
-                >
-                  <MenuItem value="">Select Status</MenuItem>
-                  <MenuItem value="true">Active</MenuItem>
-                  <MenuItem value="false">Inactive</MenuItem>
-                </TextField>
-              </Grid>
+             <Grid item xs={12} sm={6}> {/* changed textfield to Autocompletegrid for avoid auto exit in filtercard while clicking dropdown */}
+  <Autocomplete
+    fullWidth
+    value={filterstatusValue}
+    onChange={(e, newValue) => {
+      setFilterStatusValue(newValue);
+      const data = { is_active: newValue, branch_id: selectedBranchId };
+      dispatch(getAllBatches(data));
+    }}
+    options={["", "true", "false"]}   
+    getOptionLabel={(option) => {
+      if (option === "true") return "Active";
+      if (option === "false") return "Inactive";
+      return "Select Status";
+    }}
+    renderInput={(params) => <TextField {...params} label="Search By Status" />}
+  />
+</Grid>
+
 
               <Grid item xs={12} sm={6}>
                 <DatePicker
