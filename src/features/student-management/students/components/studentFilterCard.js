@@ -31,11 +31,11 @@ const StudentFilter = (props ) => {
   const filterCardRef = useRef(null);
  
   
-  const handleFilterByStatus = (e) => {
-    setStatusValue(e.target.value);
-    const data = { is_active: e.target.value, branch_id: selectedBranchId };
-    dispatch(getAllStudents(data));
-  };
+  // const handleFilterByStatus = (e) => {
+  //   setStatusValue(e.target.value);
+  //   const data = { is_active: e.target.value, branch_id: selectedBranchId };
+  //   dispatch(getAllStudents(data));
+  // };
 
   const [courses, setCourses] = useState([]);
   useEffect(() => {
@@ -92,6 +92,8 @@ const StudentFilter = (props ) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (filterCardRef.current && !filterCardRef.current.contains(event.target) &&  
+      event.target.closest('.MuiAutocomplete-popper') === null &&
+      event.target.closest('.MuiPaper-root') === null && 
        event.target.getAttribute('data-ignore-outside-click') !== 'true') {
         setIsCardOpen(false);
       }
@@ -204,7 +206,7 @@ const StudentFilter = (props ) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <TextField
                   select
                   fullWidth
@@ -215,7 +217,26 @@ const StudentFilter = (props ) => {
                   <MenuItem value="true">Active</MenuItem>
                   <MenuItem value="false">Inactive</MenuItem>
                 </TextField>
-              </Grid>
+              </Grid> */}
+
+<Grid item xs={12} sm={6}>
+  <Autocomplete
+    fullWidth
+    value={statusValue}
+    onChange={(e, newValue) => {
+      setStatusValue(newValue);
+      const data = { is_active: newValue, branch_id: selectedBranchId };
+      dispatch(getAllStudents(data));
+    }}
+    options={["", "true", "false"]}  
+    getOptionLabel={(option) => {
+      if (option === "true") return "Active";
+      if (option === "false") return "Inactive";
+      return "Select Status";
+    }}
+    renderInput={(params) => <TextField {...params} label="Filter By Status" />}
+  />
+</Grid>
               
               <Grid item sm={3} xs={12}>
                 <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} fullWidth />
