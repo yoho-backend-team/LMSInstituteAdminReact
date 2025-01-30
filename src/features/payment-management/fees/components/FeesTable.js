@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -35,7 +35,6 @@ import jsPDF from 'jspdf';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 
-
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
@@ -46,9 +45,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row) => {
   if (row?.students?.image) {
-    return (
-      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.paid_amount}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
-    );
+    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.paid_amount}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
   } else {
     return (
       <Avatar
@@ -87,7 +84,7 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner();
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -103,6 +100,10 @@ const FeesTable = () => {
   const StudentFeesLoading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+
+  console.log(StudentFees);
+  console.log(StudentFeesLoading);
+  console.log(selectedBranchId);
 
   useEffect(() => {
     dispatch(
@@ -128,7 +129,6 @@ const FeesTable = () => {
     doc.text(`Payment Date: ${row.payment_date}`, 10, 40);
     doc.save(`Transaction_${row.transaction_id}.pdf`);
   };
-  
 
   const handleOnChangeRange = (dates) => {
     const [start, end] = dates;
@@ -146,10 +146,11 @@ const FeesTable = () => {
   };
 
   const [batches, setBatches] = useState([]);
+
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId,
-      institute_id : useInstitute().getInstituteId()
+      institute_id: useInstitute().getInstituteId()
     };
     getBatches(data);
   }, [selectedBranchId]);
@@ -185,6 +186,17 @@ const FeesTable = () => {
     setFeesViewUserOpen(!feesViewOpen);
   };
 
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStudentFees({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+    },
+    [dispatch]
+  );
+
   // const history = StudentFees?.payment_history || [];
   // console.log(history,'history')
   // console.log(StudentFees,"selectedRows")
@@ -206,7 +218,7 @@ const FeesTable = () => {
       minWidth: 140,
       field: 'transactionId',
       headerName: 'Transaction ID',
-      
+
       renderCell: ({ row }) => {
         // Assuming payment_history is an array and you want to show the first entry
         const paymentHistory = row?.payment_history?.[0] || {};
@@ -335,21 +347,47 @@ const FeesTable = () => {
       )
     }
   ];
+  const [isFilterCardVisible, setIsFilterCardVisible] = useState(false);
 
-  console.log(selectedRows,"selectedros")
+  const toggleFilterCard = () => {
+    setIsFilterCardVisible(!isFilterCardVisible);
+  };
+  console.log(selectedRows, 'selectedros');
 
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-            <CardHeader title="Fee" />
+          {/* Card Header */}
+          <FeesCardHeader
+            selectedBranchId={selectedBranchId}
+            selectedRows={selectedRows}
+            toggles={toggleFilterCard}
+            toggle={toggleAddUserDrawer}
+            setRefetch={setRefetch}
+          />
+        </Grid>
+        {isFilterCardVisible && (
+        <Grid item xs={12}>
+          <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+            {/* <CardHeader title="Fee" /> */}
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    value={searchValue}
+                    sx={{
+                      width: 400
+                    }}
+                    placeholder="Search Fee"
+                    onChange={(e) => handleSearch(e)}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
                   <Autocomplete
                     fullWidth
-                    options={batches?.data}
+                    options={batches}
                     filterSelectedOptions
                     onChange={(e, newValue) => {
                       const selectedBatchId = newValue?.batch_id || '';
@@ -360,12 +398,12 @@ const FeesTable = () => {
                       dispatch(getAllStudentFees(data));
                     }}
                     id="autocomplete-multiple-outlined"
-                    getOptionLabel={(option) => option.batch_name || ''}
+                    getOptionLabel={(options) => options.batch_name || ''}
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <DatePicker
                     isClearable
                     selectsRange
@@ -390,48 +428,39 @@ const FeesTable = () => {
               </Grid>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid>)}
         <Grid item xs={12}>
-          {/* Card Header */}
-          <FeesCardHeader
-            selectedBranchId={selectedBranchId}
-            selectedRows={selectedRows}
-            toggle={toggleAddUserDrawer}
-            setRefetch={setRefetch}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+          <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
             {StudentFeesLoading ? (
               <FeesTableSkeleton />
             ) : (
               <DataGrid
-                sx={{ 
-                  '& .MuiDataGrid-row' : {
-                    border: "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
+                sx={{
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   },
-                  "& .MuiDataGrid-row" : {
-                    border : "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
-                    ":hover" : {
-                       backgroundColor : "#f5f5f7",
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
                     }
                   },
-                  "& .MuiDataGrid-columnHeaders" : {
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   }
-                 }}
+                }}
                 autoHeight
                 pagination
-                style={{overflowX:"scroll"}}
+                style={{ overflowX: 'scroll' }}
                 rowHeight={62}
                 rows={StudentFees?.data}
                 columns={columns}

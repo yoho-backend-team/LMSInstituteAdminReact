@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user`;
+const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin`;
 
 export const sendOtp = async (data) => {
     try {
@@ -9,7 +9,8 @@ export const sendOtp = async (data) => {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+            },
+             
         });
         // Check if the response status is successful
         if (response.data.status) {
@@ -20,7 +21,7 @@ export const sendOtp = async (data) => {
         }
     } catch (error) {
         // Log the error for debugging purposes
-        console.error('Error in send OTP:', error);
+        console.error('Error in send OTP:', error.response);
 
         // Throw the error again to propagate it to the calling function/component
         throw error;

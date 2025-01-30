@@ -15,9 +15,11 @@ import Icon from 'components/icon';
 
 import PropTypes from 'prop-types';
 
-const DeleteDialog = (props) => {
+const   DeleteDialog = (props) => {
   // ** Props
   const { open, setOpen, handleSubmit, description, title, successDescription, failureDescription } = props;
+
+
 
   // ** States
   const [userInput, setUserInput] = useState('yes');

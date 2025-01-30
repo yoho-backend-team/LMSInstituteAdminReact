@@ -93,7 +93,7 @@ const StudentsCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.students}
+                      {branchData.students ?? 0}
                     </Typography>
                   </Box>
 
@@ -112,7 +112,7 @@ const StudentsCard = ({ isLoading, branchData }) => {
                 <Grid item xs={6}>
                   <Box sx={{justifyContent:'center',display:'flex'}}>
                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 1, mt: 1, mb: 0.75, color: theme.palette.common.white }}>
-                      {branchData.instructors}
+                      {branchData.instructors ?? 0}
                     </Typography>
                   </Box>
 

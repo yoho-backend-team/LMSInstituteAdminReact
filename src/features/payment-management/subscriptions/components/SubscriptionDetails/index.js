@@ -1,3 +1,4 @@
+import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -12,8 +13,8 @@ import { imagePlaceholder } from 'utils/placeholders';
 // ** Styled Component for the wrapper of whole component
 const BoxWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
-  padding: theme.spacing(6),
-  paddingTop: theme.spacing(16),
+  padding: theme.spacing(2),
+  paddingTop: theme.spacing(10),
   borderRadius: theme.shape.borderRadius
 }));
 
@@ -27,13 +28,13 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 
 const SubscriptionDetails = (props) => {
   // ** Props
-  const { data ,plan} = props;
+  const { data, plan } = props;
 
   const renderFeatures = () => {
     if (!Array.isArray(data?.features)) {
       return null;
     }
-    
+
     return data.features.map((item, index) => (
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Box component="span" sx={{ display: 'inline-flex', color: 'text.secondary', mr: 2.5 }}>
@@ -45,12 +46,7 @@ const SubscriptionDetails = (props) => {
   };
 
   return (
-    <BoxWrapper
-      sx={{
-        border: (theme) =>
-          !data?.is_popular ? `1px solid ${theme.palette.divider}` : `1px solid ${hexToRGBA(theme.palette.primary.main, 0.5)}`
-      }}
-    >
+    <BoxWrapper>
       {data?.is_popular ? (
         <CustomChip
           rounded
@@ -70,26 +66,52 @@ const SubscriptionDetails = (props) => {
           }}
         />
       ) : null}
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
-        <img width={"200px"} height={"200px"} src={`${data?.image?getImageUrl(data?.image):imagePlaceholder}`} alt={`${data?.identity}-plan-img`} />
-      </Box>
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem' }}>{data?.identity}</Typography>
-        <Typography sx={{ color: 'text.secondary' }}>{data?.description}</Typography>
-        <Box sx={{ my: 7, position: 'relative' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Typography sx={{ mt: 2.5, mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>₹</Typography>
-            <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight: 1.4168 }}>
-              {data?.price}
-            </Typography>
-            <Typography sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>/{data?.duration?.unit}</Typography>
+      <Card
+        sx={{
+          width: '100%',
+          height: '50%',
+          transition: 'all 0.3s ease-in-out',
+          '&:focus-within': {
+            outline: '5px solid black',
+            boxShadow: 6,
+            transform: 'scale(1.05)'
+           
+          }
+        }}
+      >
+        <CardActionArea>
+          <Box sx={{ display: 'flex', justifyContent: 'center', padding: '16px' }}>
+            <CardMedia
+              component="img"
+              height="150"
+              image={`${data?.image ? getImageUrl(data?.image) : imagePlaceholder}`}
+              alt={`${data?.identity}-plan-img`}
+              sx={{ objectFit: 'contain', maxWidth: '150px' }}
+            />
           </Box>
+        </CardActionArea>
+        <Box sx={{ textAlign: 'center' }}>
+          <CardContent>
+            <Typography sx={{ mb: 1.5, fontWeight: 500, lineHeight: 1.385, fontSize: '1.625rem', textTransform: 'uppercase' }}>
+            {data?.identity.length>10?`${data.identity.substring(0, 5)}...`:data.identity}
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>{data?.description}</Typography>
+            <Box sx={{ my: 7, position: 'relative' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography sx={{ mt: 2.5, mr: 0.5, fontWeight: 500, color: 'primary.main', alignSelf: 'flex-start' }}>₹</Typography>
+                <Typography variant="h1" sx={{ color: 'primary.main', fontSize: '3rem', lineHeight: 1.4168 }}>
+                  {data?.price}
+                </Typography>
+                <Typography sx={{ mb: 1.5, alignSelf: 'flex-end', color: 'text.disabled' }}>/{data?.duration?.unit}</Typography>
+              </Box>
+            </Box>
+          </CardContent>
         </Box>
-      </Box>
-      <BoxFeature>{renderFeatures()}</BoxFeature>
-      <Button fullWidth color={data?.currentPlan ? 'success' : 'primary'} variant={data?.popularPlan ? 'contained' : 'tonal'}>
-        {data?._id === plan?.[0]?.subscriptionId?._id ? 'Your Current Plan' : 'Upgrade'}
-      </Button>
+        {/* <BoxFeature>{renderFeatures()}</BoxFeature> */}
+        <Button fullWidth color={data?.currentPlan ? 'success' : 'primary'} variant={data?.popularPlan ? 'contained' : 'tonal'}>
+          {data?._id === plan?.[0]?.subscriptionId?._id ? 'Your Current Plan' : 'Upgrade'}
+        </Button>
+      </Card>
     </BoxWrapper>
   );
 };

@@ -14,7 +14,6 @@ import { getImageUrl } from 'utils/imageUtils';
 const TeachingStaffCard = ({ teachingStaffs }) => {
   const [fade, setFade] = useState(false);
 
-  // Animation effect on load
   useEffect(() => {
     setFade(true);
   }, []);
@@ -34,7 +33,6 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
               transition: 'opacity 0.5s ease, transform 0.5s ease'
             }}
           >
-            {/* Background Image Section */}
             <Box
               sx={{
                 height: '120px',

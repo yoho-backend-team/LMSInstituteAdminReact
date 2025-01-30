@@ -47,7 +47,7 @@ const LiveClassCardHeader = (props) => {
         <TextField
           value={searchValue}
           sx={{
-            width: 400
+            width: "80%"
           }}
           placeholder="Search Class"
           onChange={(e) => handleSearch(e)}

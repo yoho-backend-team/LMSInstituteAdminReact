@@ -19,12 +19,13 @@ import { useNavigate } from 'react-router';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { useInstitute } from 'utils/get-institute-details';
 import * as yup from 'yup';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const AddBatchPage = () => {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [selectedBranch,setSelectedBranch] = useState('')
+  const [selectedBranch, setSelectedBranch] = useState('')
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
@@ -128,7 +129,7 @@ const AddBatchPage = () => {
   };
 
   const getStudentByCourseId = async (courseId) => {
-    const result = await getStudentByCourse({ branch_id:selectedBranch,course_id: courseId })
+    const result = await getStudentByCourse({ branch_id: selectedBranch, course_id: courseId })
     setActiveStudents(result.data);
   };
 
@@ -142,7 +143,7 @@ const AddBatchPage = () => {
       branch_id: data.branch,
       course: data.course,
       student: data.students,
-      institute_id : instituteId
+      institute_id: instituteId
     };
     const result = await addBatch(inputData);
 
@@ -169,22 +170,32 @@ const AddBatchPage = () => {
     setValue('endDate', date);
     setEndDate(date);
   };
-  console.log(control._defaultValues.branch.length,control?._defaultValues,control?._formValues)
+  console.log(control._defaultValues.branch.length, control?._defaultValues, control?._formValues)
+
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
-      <Grid item xs={12}>
-        <Typography variant="h3">Create a new batch</Typography>
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <Typography variant="h4">Details</Typography>
-        <Typography sx={{ color: 'text.secondary' }}>Name, start date, end date</Typography>
-      </Grid>
-      <Grid item xs={12} sm={9}>
+
+
+
+
+      <Grid item xs={12} sm={12}>
+
         <DatePickerWrapper>
+
           <Card>
+
+            <Grid item xs={12} sx={{ background: 'linear-gradient(to right, #6366F1, #8B5CF6)' }}>
+              <Typography variant="h1" sx={{ py: 4, px: 3, color: 'white' }} ><CalendarTodayIcon sx={{ mx: 1 }} />Create New Batch</Typography>
+            </Grid>
+
             <form onSubmit={handleSubmit(onSubmit)}>
+
               <CardContent>
+
                 <Grid container spacing={5}>
+
+
+
                   <Grid item xs={12} sm={12}>
                     <Controller
                       name="batchName"
@@ -203,6 +214,7 @@ const AddBatchPage = () => {
                       )}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <Controller
                       name="startDate"
@@ -223,6 +235,7 @@ const AddBatchPage = () => {
                       )}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={6}>
                     <Controller
                       name="endDate"
@@ -253,7 +266,7 @@ const AddBatchPage = () => {
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('branch', newValue ? newValue.uuid : '');
-                            getActiveCoursesByBranch(newValue ? {branch_id : newValue.uuid} : '');
+                            getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
                             setSelectedBranch(newValue?.uuid)
                           }}
                           options={activeBranches}
@@ -277,7 +290,7 @@ const AddBatchPage = () => {
                       control={control}
                       render={({ value }) => (
                         <Autocomplete
-                          disabled={ control._defaultValues.branch.length === 0 }
+                          disabled={control._defaultValues.branch.length === 0}
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('course', newValue ? newValue.uuid : '');
@@ -297,6 +310,7 @@ const AddBatchPage = () => {
                       )}
                     />
                   </Grid>
+
                   <Grid item xs={12} sm={12}>
                     <Controller
                       name="students"
@@ -339,18 +353,37 @@ const AddBatchPage = () => {
                       )}
                     />
                   </Grid>
+
                 </Grid>
               </CardContent>
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 6, marginBottom: 12 }}>
+
+              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6, marginBottom: 12, gap: 2 }}>
                 <Box>
-                  <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                    Add
-                  </Button>
-                  <Button variant="tonal" color="error" onClick={() => navigate(-1)}>
+
+                  <Button variant="tonal" color="secondary" onClick={() => navigate(-1)} sx={{
+                    backgroundColor: '#f5f5f5',
+                    color: 'black', mr: 2,
+                    '&:hover': {
+                      backgroundColor: '#e0e0e0',
+                    }
+                  }}>
                     Cancel
                   </Button>
+
+                  <Button type="submit" variant="contained" sx={{
+                    mr: 3, background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
+                    color: 'white',
+                    '&:hover': {
+                      background: 'linear-gradient(to right, #4F46E5, #6B21A8)',
+                      color: 'white',
+                    }
+                  }}>
+                    Create Batch
+                  </Button>
+
                 </Box>
               </Grid>
+
             </form>
           </Card>
         </DatePickerWrapper>

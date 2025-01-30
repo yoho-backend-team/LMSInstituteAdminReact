@@ -1,4 +1,3 @@
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -45,7 +44,18 @@ const renderStats = () => {
 
 const CardHorizondalCourses = () => {
   return (
-    <Card>
+    <Card
+      sx={{
+        backgroundColor: '#e3f2fd', // Set card background color (light blue)
+        borderRadius: 2,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Adjust shadow for effect
+        '&:hover': {
+          backgroundColor: '#bbdefb', // Change color slightly on hover
+          transform: 'scale(1.02)', // Add hover animation
+          boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.2)'
+        }
+      }}
+    >
       <CardHeader
         title="Courses"
         sx={{ '& .MuiCardHeader-action': { m: 0, alignSelf: 'center' } }}

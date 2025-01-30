@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
+
 // routing
 import Routes from 'routes';
 
@@ -20,6 +21,8 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+import usePushSubscription from 'usePushSubscription';
+
 // import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //
 
@@ -29,7 +32,20 @@ const App = () => {
   // const [open, setOpen] = useState(false);
   // const { show , hide  } = useSpinner()
 
-  
+  if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                  console.log('Service Worker registered with scope:', registration.scope);
+                      const user = JSON.parse(localStorage.getItem("userData"))
+                      const selectBranchId = localStorage.getItem("selectedBranchId")
+                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
+                })
+                .catch((error) => {
+                  console.error('Service Worker registration failed:', error);
+                });
+            }
+
+
   const handleUpgradeClick = async () => {
     try{
       show()

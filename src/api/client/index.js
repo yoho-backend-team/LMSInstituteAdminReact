@@ -2,9 +2,11 @@ import HttpClient from "./httpclinet";
 import { HTTP_END_POINTS } from "api/client/http_end_points";
 
 class Client {
+ 
     admin = {
       me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data),
-      change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data)
+      change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data),
+      forget_password:(data)=> HttpClient.post(HTTP_END_POINTS.admin.forget_password,data),
     }
     permission = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),

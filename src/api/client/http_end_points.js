@@ -12,7 +12,7 @@ const getInstituteDetails = () => {
 const getSelectedBranchId = () => {
     if(typeof(localStorage)!== "undefined"){
     const branch = localStorage.getItem("selectedBranchId")
-    return branch
+    return branch ? branch.replace(/^"|"$/g, '') : branch
     }
 }
 
@@ -21,11 +21,15 @@ const generateEndpoints = () => {
     const branchId = getSelectedBranchId()
 
     const instituteId = institute? institute?.uuid  :""
+
+    console.log(branchId,"branchId",instituteId)
     
     return {
         admin  : {
           me : `/api/institutes/auth/admin/me`,
-          change_password : "/api/institutes/auth/admin/change-password"
+          change_password : "/api/institutes/auth/admin/change-password",
+          forget_password: `/api/institutes/auth/admin/forget-password`,
+          
         },
         permission : {
             getAll : `/api/admin/institutes/permissions/all`,

@@ -15,12 +15,12 @@ async function subscribe(serviceWorker,role,userId,user,institute,branch){
    
     subscription = await serviceWorker.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array('BOBc9xb8qvLCEgI6xf7OoY7_q6CvrAVvhl1_nrG9WFMkV28Oyiwj_OrjMWYsM85b9oGs5QjI2WuHuST0caFgsTU')
+        applicationServerKey: urlBase64ToUint8Array('BJFWPqfGs7DoTQTkLe7MdCdCv6N0wGofV9WSd4HKQVHn8nR2X-pOg2cT1VIWG9QN-jyELRZDYWLuo6cRwPJixMg')
     });
 
     const endPoint = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification/institute/subscribe`
-    console.log(endPoint,process.env.REACT_APP_PUBLIC_API_URL)
-    await axios.post(endPoint,{subscription,userId:userId,role:role,user,institute_id:institute,branch_id:branch})
+    // console.log(endPoint,process.env.REACT_APP_PUBLIC_API_URL)
+    // await axios.post(endPoint,{subscription,userId:userId,role:role,user,institute_id:institute,branch_id:branch})
     const expiryDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
     Cookies.set("instituteNotificationSubscription",true,{ expires: expiryDate})
 }

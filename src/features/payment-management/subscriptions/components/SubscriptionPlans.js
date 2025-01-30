@@ -7,10 +7,11 @@ const SubscriptionPlans = (props) => {
   const { plan, Subscriptions ,data} = props;
   
   return (
-    <Grid container spacing={6}>
+    <Grid container>
       {Subscriptions?.map((item) => (
         <Grid item xs={12} md={4} key={item?.id}>
           <SubscriptionDetails plan={data} data={item} />
+         
         </Grid>
       ))}
     </Grid>

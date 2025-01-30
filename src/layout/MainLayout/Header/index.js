@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Box, ButtonBase } from '@mui/material';
+import { Avatar, Box, ButtonBase,Typography } from '@mui/material';
 
 // project imports
 import LogoSection from '../LogoSection';
@@ -78,6 +78,12 @@ const Header = ({ handleLeftDrawerToggle }) => {
     dispatch(toggleDarkMode());
   };
 
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(prevState => !prevState);
+    handleLeftDrawerToggle(!isSidebarOpen); // Passing the updated state to the parent
+  };
+
   return (
     <>
       {/* logo & toggler button */}
@@ -92,8 +98,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
       >
         <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
           {
-            useInstitute()?.getDetails()?.image ? 
-            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute()?.getDetails()?.image)} alt={useInstitute().getDetails().institute_name} width={80} height={40} />
+            useInstitute().getDetails().image ? 
+            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)} alt={useInstitute().getDetails().institute_name} width={80} height={40}  />
             :
             <LogoSection />
           }

@@ -22,43 +22,41 @@ import { useDispatch } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
 
-const userStatusObj = {
-  true: 'success',
-  false: 'error'
-};
-
 const renderClient = (row) => {
-  
   if (row?.image) {
     return (
       <CustomAvatar
-        src={`${getImageUrl(row?.image)}`}
-        sx={{ mr: 2.5, width: 38, height: 38 }}
+        src={getImageUrl(row?.image)}
+        sx={{ mr: 2.5, width: 50, height: 50, borderRadius: '12px' }}
       />
     );
   } else {
     return (
       <CustomAvatar
         skin="light"
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+        sx={{
+          mr: 2.5,
+          width: 50,
+          height: 50,
+          fontWeight: 500,
+          fontSize: (theme) => theme.typography.body1.fontSize
+        }}
       >
-        {getInitials(row?.name ? row?.name : 'Mohammed Thasthakir')}
+        {getInitials(row?.name || 'Mohammed Thasthakir')}
       </CustomAvatar>
     );
   }
 };
 
 const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
-  // const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
-
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState('');
 
   const [userDeleteModelOpen, setUserDeleteModelOpen] = useState(false);
-
   const [selectedUserDeleteId, setSelectedUserDeleteId] = useState(null);
 
   const dispatch = useDispatch();
+  const instituteId = useInstitute().getInstituteId();
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -79,13 +77,11 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
     setStatusValue(users);
   };
 
-  // Memoize the handleDelete function to prevent unnecessary re-renders
   const handleDelete = useCallback((itemId) => {
     setSelectedUserDeleteId(itemId);
     setUserDeleteModelOpen(true);
   }, []);
 
-  // Handle branch deletion
   const handleUserDelete = async () => {
     const result = await deleteUsers(selectedUserDeleteId);
     if (result.success) {
@@ -111,7 +107,6 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
               state: { id: id }
             }
           },
-
           {
             text: 'Delete',
             icon: <Icon color="error" icon="mdi:delete-outline" fontSize={20} />,
@@ -124,186 +119,123 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
     );
   };
 
-  const columns = [
-    {
-      flex: 0.25,
-      minWidth: 280,
-      field: 'fullName',
-      headerName: 'ADMIN USER',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                noWrap
-                sx={{
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.first_name+row?.last_name}
-              </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.email}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-    {
-      flex: 0.15,
-      minWidth: 190,
-      field: 'mobile',
-      headerName: 'Mobile',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ color: 'text.secondary' }}>
-            {row?.phone_number}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 0.15,
-      field: 'role',
-      minWidth: 170,
-      headerName: 'Role',
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row?.role?.identity}
-            </Typography>
-          </Box>
-        );
-      }
-    },
-    {
-      flex: 1.25,
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <TextField
-            size="small"
-            select
-            value={row?.is_active}
-            label="status"
-            id="custom-select"
-            sx={{
-              color: userStatusObj[row?.is_active]
-            }}
-            onChange={(e) => handleStatusValue(e, row)}
-            SelectProps={{
-              sx: {
-                borderColor: row.is_active? 'success' : 'error',
-                color: userStatusObj[row?.is_active]
-              }
-            }}
-          >
-            <MenuItem value={true}>Active</MenuItem>
-            <MenuItem value={false}>Inactive</MenuItem>
-          </TextField>
-        );
-      }
-    },
-    {
-      flex: 1.0,
-      minWidth: 150,
-      sortable: false,
-      field: 'actions',
-      headerName: 'Actions',
-      renderCell: ({ row }) => <RowOptions id={row?.uuid} />
-    }
-  ];
   return (
     <Box>
-      <Grid>
-        <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
-          <DataGrid
-            autoHeight
-            rowHeight={70}
-            sx={{
-              '& .MuiDataGrid-row' : {
-                border: "1px solid #e6e5e7",
-                borderLeft: "none",
-                borderRight: "none",
-              },
-              "& .MuiDataGrid-row" : {
-                border : "1px solid #e6e5e7",
-                borderLeft: "none",
-                borderRight: "none",
-                ":hover" : {
-                   backgroundColor : "#f5f5f7",
-                   border : "1px solid #e6e5e7",
-                   borderLeft: "none",
-                   borderRight: "none"
-                  //  color: "white"
-                }
-              },
-              "& .MuiDataGrid-columnHeaders" : {
-                   border : "1px solid #e6e5e7",
-                   borderLeft: "none",
-                   borderRight: "none"
-              }
-            }}
-            disableColumnFilter={true}
-            rows={users?.data ? users?.data : []}
-            columns={columns}
-            disableRowSelectionOnClick
-            hideFooterPagination={true}
-            hideFooter={true}
-            disableColumnMenu={true}
-            disableColumnSorting={true}
-          />
+      <Grid container spacing={3}>
+        {users?.data?.map((user) => (
+          <Grid item xs={12} sm={6} md={4} key={user?.uuid}>
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', borderRadius: 2 }}>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', padding: 3 }}>
+                {/* Avatar and User Info Section */}
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  {renderClient(user)}
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography
+                      noWrap
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: '1.1rem',
+                        color: 'text.primary',
+                        '&:hover': { color: 'primary.main' }
+                      }}
+                    >
+                      {`${user?.first_name} ${user?.last_name}`}
+                    </Typography>
+                    <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
+                      {user?.email}
+                    </Typography>
+                  </Box>
+                </Box>
 
-          <StatusChangeDialog
-            open={statusChangeDialogOpen}
-            setOpen={setStatusChangeDialogOpen}
-            description="Are you sure you want to Change Status"
-            title="Change Status"
-            handleSubmit={handleStatusChangeApi}
-          />
+                {/* Phone Section */}
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                    Phone
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                    {user?.phone_number || 'Not available'}
+                  </Typography>
+                </Box>
 
-          <UserDeleteModel
-            open={userDeleteModelOpen}
-            setOpen={setUserDeleteModelOpen}
-            description="Are you sure you want to delete this user?"
-            title="Delete"
-            handleSubmit={handleUserDelete}
-          />
-          {users?.last_page !== 1 && (
-            <CardContent>
-              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination
-                  count={users?.last_page}
-                  color="primary"
-                  onChange={(e, page) => {
-                    const data = {
-                      branch_id: selectedBranchId,
-                      institute_id : useInstitute().getInstituteId(),
-                      page: page
-                    };
-                    dispatch(getAllUsers(data));
-                  }}
-                />
-              </Grid>
-            </CardContent>
-          )}
-        </Card>
+                {/* Role Section */}
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                    Role
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                    {user?.role?.identity || 'No role assigned'}
+                  </Typography>
+                </Box>
+
+                {/* Status Section */}
+                <Box sx={{ mt: 2 }}>
+                  <TextField
+                    size="small"
+                    select
+                    value={user?.is_active}
+                    label="Status"
+                    onChange={(e) => handleStatusValue(e, user)}
+                    fullWidth
+                    sx={{ marginBottom: 1 }}
+                  >
+                    <MenuItem value={true}>Active</MenuItem>
+                    <MenuItem value={false}>Inactive</MenuItem>
+                  </TextField>
+                </Box>
+
+                {/* Divider */}
+                <Divider sx={{ my: 2 }} />
+
+                {/* Actions Section */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <RowOptions id={user?.uuid} />
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
+
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to change status?"
+        title="Change Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+      <UserDeleteModel
+        open={userDeleteModelOpen}
+        setOpen={setUserDeleteModelOpen}
+        description="Are you sure you want to delete this user?"
+        title="Delete"
+        handleSubmit={handleUserDelete}
+      />
+
+      {users?.last_page > 1 && (
+        <CardContent>
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={users?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                const data = {
+                  branch_id: selectedBranchId,
+                  institute_id: instituteId,
+                  page
+                };
+                dispatch(getAllUsers(data));
+              }}
+            />
+          </Grid>
+        </CardContent>
+      )}
     </Box>
   );
 };
 
 UserBodySection.propTypes = {
   setUserRefetch: PropTypes.func,
-  users: PropTypes.array.isRequired,
+  users: PropTypes.object.isRequired,
   selectedBranchId: PropTypes.string
 };
 

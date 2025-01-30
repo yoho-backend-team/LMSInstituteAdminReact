@@ -1,3 +1,4 @@
+import { Box, Paper } from '@mui/material';
 import bootstrap5Plugin from '@fullcalendar/bootstrap5';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -29,12 +30,14 @@ const TeachingStaffCalendar = (props) => {
   }, [calendarApi, setCalendarApi]);
 
   // Map attendance data to FullCalendar's event format
-  const events = attendances ? attendances.data?.map((item) => ({
-    title: `${item.status}`,  // You can customize the title as needed
-    date: item.date,  // FullCalendar expects a date string in ISO format
-    status: item.status,  // Optional: You could use this for custom styling
-    color: item.status === 'present' ? 'green' : 'red' // Example: Green for 'present', Red for 'absent'
-  })) : [];
+  const events = attendances
+    ? attendances.data?.map((item) => ({
+        title: `${item.status}`,
+        date: item.date,
+        status: item.status,
+        color: item.status === 'present' ? 'green' : 'red'
+      }))
+    : [];
 
   const calendarOptions = {
     events,
@@ -77,8 +80,14 @@ const TeachingStaffCalendar = (props) => {
     ref: calendarRef,
     direction
   };
-  console.log(calendarOptions)
-  return <FullCalendar {...calendarOptions} />;
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Paper elevation={3} sx={{ p: 2, borderRadius: '10px', overflow: 'hidden',padding:5}}>
+        <FullCalendar {...calendarOptions} style={{ height: '100%', width: '100%' }} />
+      </Paper>
+    </Box>
+  );
 };
 
 TeachingStaffCalendar.propTypes = {
@@ -87,7 +96,7 @@ TeachingStaffCalendar.propTypes = {
   calendarsColor: PropTypes.any,
   setCalendarApi: PropTypes.any,
   handleLeftSidebarToggle: PropTypes.any,
-  handleAddEventSidebarToggle: PropTypes.any,
+  handleAddEventSidebarToggle: PropTypes.any, 
   attendances: PropTypes.arrayOf(PropTypes.object),
   setSelected: PropTypes.func
 };

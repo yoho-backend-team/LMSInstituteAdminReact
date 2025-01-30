@@ -227,7 +227,8 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
              '&:hover': {
                transform: 'translateY(-10px)',
                boxShadow: "0 0.5rem 1.5rem rgba(38,43,67,.2)"
-             }
+             },
+             background:'linear-gradient(to right, #5f2c82, ##49a09d )'
            }}>
             <Grid container direction="column" spacing={1}>
               <Grid item sx={{ alignItems: 'center', display: 'flex', mt: 1 }}>

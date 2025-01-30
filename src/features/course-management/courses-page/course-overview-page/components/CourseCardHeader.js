@@ -40,17 +40,19 @@ const CourseCardHeader = ({ selectedBranchId,courses,setCourseRefetch }) => {
         sx={{
           pb: 1,
           pt: 3,
+          marginLeft:"10px",
           width: '100%',
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          backgroundColor:"white"
         }}
       >
         <TextField
           value={searchValue}
           sx={{
-            width: 400
+            width: 600
           }}
           placeholder="Search Courses"
           onChange={(e) => setSearchValue(e.target.value)}
@@ -74,9 +76,11 @@ const CourseCardHeader = ({ selectedBranchId,courses,setCourseRefetch }) => {
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
           <Button
             sx={{ py: 1.5, borderRadius: '0.5rem', 
-              backgroundColor: '#0CCE7F',  
+              backgroundColor: '#0CCE7F',
+              marginRight:"20px",  
               '&:hover': {
                 backgroundColor: '#0AA865',
+                
               },
              }}
             variant="contained"

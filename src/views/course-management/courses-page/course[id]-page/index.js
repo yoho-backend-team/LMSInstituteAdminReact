@@ -11,6 +11,7 @@ import {
   Box,
   Card,
   CardContent,
+  CardActions,
   Grid,
   IconButton,
   Typography
@@ -128,61 +129,62 @@ const CourseViewPage = () => {
   return (
     <Grid container xs={12} item spacing={2}>
       <Grid item xs={12} sm={12} md={12} lg={7.5}>
-        <Card>
-          {/* <ReactPlayer
-            style={{ aspectRatio: '12 / 6', objectFit: 'cover', width: '100%', backgroundColor: 'black' }}
-            url={videoUrl}
-            controls
-            autoPlay
-            loop
-            width="100%"
-            height={400}
-          /> */}
-          <img
-          alt={course?.course_name}
-          loading="lazy"
-          style={{ width: "100%", height: "400px", objectFit: "cover", backgroundColor: "black" }}
-          src={ getImageUrl( course?.thumbnail ? course?.image : course?.image)}
-          />
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <Box>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h3">{course?.course_name}</Typography>
-              </Box>
-              <Box sx={{ mt: 1 }}>
-                <Typography variant="h5" mb={1}>
-                  Description
-                </Typography>
-                <Typography sx={{ ml: 1 }}>{course?.description}</Typography>
-              </Box>
-              <Box>
-                <CustomChip label={course?.category?.category_name} color="secondary" skin="light" size="small" sx={{ mt: 1 }} />
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                  <Typography color="primary" variant="h5" alignItems="center" justifyContent="center" display="flex" gap={1}>
-                    <Icon icon="mdi:clock-outline" />
-                    <span style={{ marginTop: '4px' }}>Duration</span>
-                  </Typography>
-                  <Typography variant="h5" sx={{ ml: 1, mt: 0.5 }}>
-                    {course?.duration}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'end', mt: 1 }}>
-                  <Typography sx={{ ml: 1 }} variant="h3">
-                    ₹ {course?.price ? course?.price : course?.current_price}
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
+      <Card sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}>
+  <Box sx={{ position: 'relative', backgroundColor: 'black' }}>
+    {/* Video/Image Section */}
+    <img
+      alt={course?.course_name}
+      loading="lazy"
+      style={{ width: '100%', height: '300px', objectFit: 'cover' }}
+      src={getImageUrl(course?.thumbnail ? course?.thumbnail : course?.image)}
+    />
+  </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <IconButton onClick={() => handleDelete(course)} color="secondary">
-                <Icon icon="mdi:delete-outline" />
-              </IconButton>
-            </Box>
-          </CardContent>
-        </Card>
+  <CardContent sx={{ padding: 3, position: 'relative' }}>
+    <Typography variant="h4" fontWeight="bold" gutterBottom>
+      {course?.course_name}
+    </Typography>
+
+    <Typography variant="body1" color="text.secondary" gutterBottom>
+      {course?.description}
+    </Typography>
+
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1, mt: 2 }}>
+      <CustomChip label={course?.category?.category_name} color="secondary" skin="light" size="small" />
+    </Box>
+
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Icon icon="mdi:clock-outline" style={{ fontSize: '20px' }} />
+        <Typography variant="body1" color="text.secondary">
+          Duration:
+        </Typography>
+        <Typography variant="body1" fontWeight="medium">
+          {course?.duration}
+        </Typography>
+      </Box>
+
+      <Typography variant="h3" color="primary" fontWeight="bold">
+        ₹ {course?.price ? course?.price : course?.current_price}
+      </Typography>
+    </Box>
+
+    <IconButton
+      onClick={() => handleDelete(course)}
+      color="error"
+      sx={{ 
+        position: 'absolute', 
+        top: 16, 
+        right: 16, 
+        backgroundColor: 'rgba(255,0,0,0.1)', 
+        '&:hover': { backgroundColor: 'rgba(255,0,0,0.2)' } 
+      }}
+    >
+      <Icon icon="mdi:delete-outline" style={{ fontSize: '20px' }} />
+    </IconButton>
+  </CardContent>
+</Card>
+
       </Grid>
        <Grid item xs={12}  sm={12} lg={4.4}>
         <Card sx={{ pb: 1, backgroundColor: 'secondary.light', height: "100%" }} className="CourseModules-Card">
