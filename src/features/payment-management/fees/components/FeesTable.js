@@ -33,7 +33,7 @@ import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
 import jsPDF from 'jspdf';
 import { useInstitute } from 'utils/get-institute-details';
-import { useSpinner } from 'context/spinnerContext';
+// import { useSpinner } from 'context/spinnerContext';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -84,7 +84,7 @@ const FeesTable = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
-  const { show, hide } = useSpinner();
+  // const { show, hide } = useSpinner();
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -101,9 +101,6 @@ const FeesTable = () => {
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  console.log(StudentFees);
-  console.log(StudentFeesLoading);
-  console.log(selectedBranchId);
 
   useEffect(() => {
     dispatch(

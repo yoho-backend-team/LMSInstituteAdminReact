@@ -5,8 +5,7 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 
 const FeesCardHeader = (props) => {
-  const { toggle,toggles } = props;
-  
+  const { toggle, toggles } = props;
 
   return (
     <>
@@ -23,11 +22,12 @@ const FeesCardHeader = (props) => {
           p: 2
         }}
       >
-          <Button onClick={toggles} variant="contained" color="primary" startIcon={<Icon icon="line-md:filter-twotone"  />}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Button onClick={toggles} variant="contained" color="primary" startIcon={<Icon icon="line-md:filter-twotone" />}>
             Filter
           </Button>
-          <Typography variant='h3'>Fees</Typography>
-
+          <Typography variant="h2" ml={2}>Fees</Typography>
+        </Box>
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={toggle} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
