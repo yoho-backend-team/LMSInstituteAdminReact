@@ -157,7 +157,7 @@ const TeachingIdCard = () => {
                           }
                         }}
                       >
-                        <Card className="front" sx={{ width: '100%', minHeight: 410, maxWidth:270,boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+                        <Card className="front" sx={{ width: '100%', minHeight: 410,boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                             <Card
                           sx={{
                             width: '100%',
@@ -260,7 +260,7 @@ const TeachingIdCard = () => {
                           </Box>
                         </Card>
                           </Card>
-                        <Card className="back" sx={{ width: '100%', minHeight: 410 , maxWidth:270,position: 'relative',}}>
+                        <Card className="back" sx={{ width: '100%', minHeight: 410 ,position: 'relative',}}>
                            {/* Background Image with Opacity */}
                            <Box
                             sx={{
