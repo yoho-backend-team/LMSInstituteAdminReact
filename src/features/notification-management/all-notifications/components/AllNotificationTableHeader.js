@@ -45,7 +45,7 @@ const AllNotificationTableHeader = (props) => {
         <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
           <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
             <Icon fontSize="1.125rem" icon="tabler:plus" />
-            All Notification
+            Add Notification
           </Button>
         </Grid>
       </Grid>

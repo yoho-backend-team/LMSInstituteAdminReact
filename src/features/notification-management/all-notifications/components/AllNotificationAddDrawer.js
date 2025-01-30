@@ -142,7 +142,7 @@ const AllNotificationAddDrawer = (props) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
     >
       <Header>
-        <Typography variant="h5">All Notification</Typography>
+        <Typography variant="h5">Add Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}

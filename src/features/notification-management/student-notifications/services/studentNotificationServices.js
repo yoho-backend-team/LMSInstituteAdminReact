@@ -96,12 +96,8 @@ export const resendStudentNotification = async (data) => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
+    return response;
 
-    if (response.data.status) {
-      return { success: true, message: 'Notification Resend successfully' };
-    } else {
-      return { success: false, message: 'Failed to resend Notification' };
-    }
   } catch (error) {
     console.error('Error in resendNotification:', error);
     throw error;
