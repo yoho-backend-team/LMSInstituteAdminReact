@@ -204,7 +204,11 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800,
+        background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        borderRadius: 2,
+       } }}
     >
       <DialogTitle
         id="user-view-edit"
@@ -212,7 +216,11 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
           textAlign: 'center',
           fontSize: '1.5rem !important',
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
+          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`],
+          background: 'linear-gradient(to right, #6b46c1, #5a67d8)',
+          color: 'white',
+          fontWeight: 'bold',
+          padding: '1rem',
         }}
       >
         Add Live Class
@@ -241,6 +249,38 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       placeholder="John Doe"
                       error={Boolean(errors.class_name)}
                       {...(errors.class_name && { helperText: errors.class_name.message })}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                 />
@@ -260,7 +300,40 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       }}
                       value={activeBranches.find((branch) => branch._id === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} 
+                        sx={{
+                          backgroundColor: 'transparent',
+                          borderRadius: '8px',
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            backgroundColor: 'white',
+                            '& fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'rgba(96, 165, 250, 1)',
+                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                            },
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black',
+                            },
+                          },
+                          '& .MuiFormHelperText-root': {
+                            backgroundColor: 'transparent',
+                            color: 'red',
+  
+                            borderRadius: '4px',
+                            marginTop: '4px',
+                          },
+  
+                        }}
+                        />
                       )}
                     />
                   )}
@@ -281,7 +354,40 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       }}
                       value={activeCourse.find((course) => course._id === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message}
+                        sx={{
+                          backgroundColor: 'transparent',
+                          borderRadius: '8px',
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            backgroundColor: 'white',
+                            '& fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'rgba(96, 165, 250, 1)',
+                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                            },
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black',
+                            },
+                          },
+                          '& .MuiFormHelperText-root': {
+                            backgroundColor: 'transparent',
+                            color: 'red',
+  
+                            borderRadius: '4px',
+                            marginTop: '4px',
+                          },
+  
+                        }} />
+
                       )}
                     />
                   )}
@@ -305,10 +411,42 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          sx={{ mb: 2 }}
+                          
                           label="Batch"
                           error={Boolean(errors.batch)}
                           helperText={errors.batch?.message}
+                          sx={{mb:'2',
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+    
+                              borderRadius: '4px',
+                              marginTop: '4px',
+                            },
+    
+                          }}
                         />
                       )}
                     />
@@ -327,7 +465,30 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       className="full-width-datepicker"
                       onChange={onChange}
                       placeholderText="Click to select a date"
-                      customInput={<CustomInput label="ClassDate" />}
+                      customInput={<CustomInput label="ClassDate"
+                        sx={{
+                          backgroundColor: 'white',
+                          borderRadius: '8px',
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            '& fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'rgba(96, 165, 250, 1)',
+                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                            },
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black',
+                            },
+                          },
+                        }}  />}
                     />
                   )}
                 />
@@ -350,6 +511,29 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           value={value}
                           onChange={onChange}
                           label="Start Time"
+                          sx={{
+                            backgroundColor: 'white',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                          }} 
                         />
                       </LocalizationProvider>
                     )}
@@ -375,6 +559,29 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           value={value}
                           onChange={onChange}
                           label="End Time"
+                          sx={{
+                            backgroundColor: 'white',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                          }} 
                         />
                       </LocalizationProvider>
                     )}
@@ -413,7 +620,31 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                        
                       }}
+                      sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                      }} 
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -480,6 +711,38 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -529,20 +792,73 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       placeholder="Url"
                       error={Boolean(errors.videoUrl)}
                       {...(errors.videoUrl && { helperText: errors.videoUrl.message })}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Box>
-                  <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                    Submit
-                  </Button>
-                  <Button variant="tonal" color="error" onClick={handleClose}>
+
+              <Grid item xs={12}>
+
+                <Box  display="flex" justifyContent="space-between">
+
+
+                  <Button variant="tonal" color="error" onClick={handleClose} sx={{
+                    border: '2px solid #D8B4FE',
+                    color: '#9333EA',
+                    backgroundColor: 'transparent',
+                    '&:hover': {
+                      backgroundColor: '#FAF5FF',
+                    },
+                  }}>
                     Cancel
                   </Button>
+
+                  <Button type="submit" variant="contained" sx={{
+                      background: 'linear-gradient(to right, #9333EA, #4F46E5)',
+                      color: 'white',
+                      '&:hover': {
+                        background: 'linear-gradient(to right, #7E22CE, #4338CA)',
+                      },
+                    }} >
+                    Submit
+                  </Button>
+
                 </Box>
+
               </Grid>
+
             </Grid>
           </form>
         </DatePickerWrapper>
