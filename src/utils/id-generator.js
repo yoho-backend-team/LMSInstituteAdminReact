@@ -14,7 +14,7 @@ const generateStaffIDCardPDF = (userData) => {
     });
 
     const padding = 20;
-
+ 
 
     pdf.setFillColor(240, 240, 240);
     pdf.rect(0, 0, pageWidth, pageHeight, 'F');
