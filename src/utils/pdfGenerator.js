@@ -42,11 +42,11 @@ const generateIDCardPDF = (userData) => {
         currentY += 20;
     };
 
-    addDetailLine("Role", userData.role.identity);
     addDetailLine("ID No", userData.student_id || "N/A");
+    addDetailLine("Role", userData.role.identity);
     addDetailLine("E-mail", userData.email);
     addDetailLine("Phone", userData.contact);
-    addDetailLine("Address", `${userData.address.address_line_one}, ${userData.address.city}`);
+    addDetailLine("Address", `${userData.address.address_line_one}, ${userData.address.city}` || "N/A");
     addDetailLine("State", userData.address.state);
     addDetailLine("Pin Code", userData.address.pin_code.toString());
 
