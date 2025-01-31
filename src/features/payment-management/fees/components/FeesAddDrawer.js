@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -170,7 +170,7 @@ const FeesAddDrawer = (props) => {
     toggle();
     reset();
   };
-  console.log(errors, 'errors');
+  // console.log(errors, 'errors');
   const onSubmit = async (data) => {
     show();
     const branch = activeBranches.filter((i) => i.branch_identity === data.branch);
@@ -274,7 +274,9 @@ const FeesAddDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h4" sx={{ outline: 1.5, outlineColor: '#0cce7f', px: 2, py: 1, borderRadius: '50px' }}>
+            Add Fees
+          </Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -322,10 +324,9 @@ const FeesAddDrawer = (props) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?.branch_identity);
                         getActiveCoursesByBranch({ branch_id: newValue?.uuid });
-                        setIsBranchSelected(true);
-                        setIsCourseSelected(false);
-                        setIsBatchSelected(false);
-                        setIsStudentSelected(false);
+                        if (!isBranchSelected) {
+                          setIsBranchSelected(true);
+                        }
                       }}
                       value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                       renderInput={(params) => (
@@ -348,15 +349,30 @@ const FeesAddDrawer = (props) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?.course_name);
                         getActiveBatchesByCourse(newValue?.course_name);
-                        setIsCourseSelected(true);
-                        setIsBatchSelected(false);
-                        setIsStudentSelected(false);
+                        if (!isCourseSelected) {
+                          setIsCourseSelected(true);
+                        }
                       }}
                       value={activeCourse.find((course) => course.course_name === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                        <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                          <span>
+                            <TextField
+                              {...params}
+                              label="Select Course"
+                              error={Boolean(errors.course)}
+                              helperText={errors.course?.message}
+                              sx={{
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: isBranchSelected ? 'inherit' : '#EBEBE4'
+                                }
+                              }}
+                              disabled={!isBranchSelected}
+                            />
+                          </span>
+                        </Tooltip>
                       )}
-                      disabled={!isBranchSelected || isCourseSelected}
+                      disabled={!isBranchSelected}
                     />
                   )}
                 />
@@ -376,20 +392,31 @@ const FeesAddDrawer = (props) => {
                         field.onChange(newValue);
                         setValue('batch', newValue);
                         getStudentsByBatch(newValue?.uuid);
-                        setIsBatchSelected(true);
-                        setIsStudentSelected(false);
+                        if (!isBatchSelected) {
+                          setIsBatchSelected(true);
+                        }
                       }}
                       value={field.value}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          sx={{ mb: 2 }}
-                          label="Batch"
-                          error={Boolean(errors.batch)}
-                          helperText={errors.batch?.message}
-                        />
+                        <Tooltip title={isCourseSelected ? '' : 'Please select a Course'} arrow>
+                          <span>
+                            <TextField
+                              {...params}
+                              label="Batch"
+                              error={Boolean(errors.batch)}
+                              helperText={errors.batch?.message}
+                              sx={{
+                                mb: 2,
+
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: isCourseSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                                }
+                              }}
+                            />
+                          </span>
+                        </Tooltip>
                       )}
-                      disabled={!isCourseSelected || isBatchSelected}
+                      disabled={!isCourseSelected}
                     />
                   )}
                 />
@@ -400,22 +427,33 @@ const FeesAddDrawer = (props) => {
                   name="student"
                   control={control}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      select
-                      fullWidth
-                      label="Student"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.student)}
-                      helperText={errors.student?.message}
-                      disabled={!isBatchSelected || isStudentSelected}
-                    >
-                      {students.map((student) => (
-                        <MenuItem key={student?.student} value={student?._id}>
-                          {`${student?.first_name && student?.last_name ? student?.first_name + student?.last_name : student.full_name}`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a Batch'} arrow>
+                      <span>
+                        <TextField
+                          select
+                          fullWidth
+                          label="Student"
+                          value={value}
+                          onChange={onChange}
+                          error={Boolean(errors.student)}
+                          helperText={errors.student?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected || isStudentSelected}
+                        >
+                          {students.map((student) => (
+                            <MenuItem key={student?.student} value={student?._id}>
+                              {`${student.full_name}`}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -426,15 +464,26 @@ const FeesAddDrawer = (props) => {
                   control={control}
                   defaultValue={new Date()}
                   render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      selected={value}
-                      id="date-time-picker"
-                      timeFormat="HH:mm"
-                      className="full-width-datepicker"
-                      onChange={onChange}
-                      placeholderText="Click to select a date"
-                      customInput={<CustomInput label="Payment Date" />}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a student'} arrow>
+                      <span>
+                        <DatePicker
+                          selected={value}
+                          id="date-time-picker"
+                          timeFormat="HH:mm"
+                          className="full-width-datepicker"
+                          onChange={onChange}
+                          placeholderText="Click to select a date"
+                          customInput={<CustomInput label="Payment Date" />}
+                          sx={{
+                            mb: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
                 {errors.payment_date && (
@@ -447,15 +496,26 @@ const FeesAddDrawer = (props) => {
                   name="transaction_id"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Transaction Id"
-                      type="number"
-                      error={Boolean(errors.transaction_id)}
-                      helperText={errors.transaction_id?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a payment_date'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Transaction Id"
+                          type="number"
+                          error={Boolean(errors.transaction_id)}
+                          helperText={errors.transaction_id?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -465,15 +525,26 @@ const FeesAddDrawer = (props) => {
                   name="paid_amount"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Paid Amount"
-                      type="number"
-                      error={Boolean(errors.paid_amount)}
-                      helperText={errors.paid_amount?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a transaction_id'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Paid Amount"
+                          type="number"
+                          error={Boolean(errors.paid_amount)}
+                          helperText={errors.paid_amount?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -483,15 +554,26 @@ const FeesAddDrawer = (props) => {
                   name="balance"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Balance"
-                      type="number"
-                      error={Boolean(errors.balance)}
-                      helperText={errors.balance?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a paid_amount'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Balance"
+                          type="number"
+                          error={Boolean(errors.balance)}
+                          helperText={errors.balance?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -500,15 +582,26 @@ const FeesAddDrawer = (props) => {
                   name="duepaymentdate"
                   control={control}
                   render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      selected={value}
-                      id="date-time-picker"
-                      timeFormat="HH:mm"
-                      className="full-width-datepicker"
-                      onChange={onChange}
-                      placeholderText="Click to select a date"
-                      customInput={<CustomInput label="duepaymentdate" />}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a balance'} arrow>
+                      <span>
+                        <DatePicker
+                          selected={value}
+                          id="date-time-picker"
+                          timeFormat="HH:mm"
+                          className="full-width-datepicker"
+                          onChange={onChange}
+                          placeholderText="Click to select a date"
+                          customInput={<CustomInput label="Due Payment Date" />}
+                          sx={{
+                            mb: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
                 {errors.payment_date && (

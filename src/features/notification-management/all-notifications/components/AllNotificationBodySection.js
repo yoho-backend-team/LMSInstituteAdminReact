@@ -187,10 +187,10 @@ const AllNotificationBodySection = ({ allNotifications }) => {
             borderRadius: 2
           }}
         >
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h3" gutterBottom>
             {selectedNotification?.title}
           </Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body2" gutterBottom>
             {selectedNotification?.body}
           </Typography>
           <Button variant="contained" color="secondary" onClick={handleClose} sx={{ mt: 2 }}>

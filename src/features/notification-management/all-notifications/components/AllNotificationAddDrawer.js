@@ -19,7 +19,7 @@ import { useSpinner } from 'context/spinnerContext';
 
 const AllNotificationAddDrawer = (props) => {
   const { open, toggle, setAllNotificationRefetch } = props;
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner();
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -84,26 +84,46 @@ const AllNotificationAddDrawer = (props) => {
   };
 
   const onSubmit = async (data) => {
-    show()
+    show();
     const new_notification = {
-      institute : useInstitute().getInstituteId(),
-      branch : data?.branch,
-      title : data?.title,
-      body : data?.body
-    }
-    
+      institute: useInstitute().getInstituteId(),
+      branch: data?.branch,
+      title: data?.title,
+      body: data?.body
+    };
+
     const result = await addNotification(new_notification);
 
     if (result.success) {
-      hide()
+      hide();
       toast.success(result.message);
       handleClose();
       setAllNotificationRefetch();
     } else {
-      hide()
+      hide();
       toast.error(result.message);
     }
   };
+
+  const AnimatedTextField = styled(TextField)(({ theme }) => ({
+    transition: 'all 0.3s ease-in-out',
+    '&:hover': {
+      transform: 'scale(1.02)',
+      boxShadow: `0px 4px 10px rgba(0, 0, 0, 0.1)`
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.grey[400]
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.primary.main
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: theme.palette.primary.green,
+        boxShadow: `0px 0px 8px rgba(0, 255, 13, 0.2)`
+      }
+    }
+  }));
 
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
@@ -131,7 +151,7 @@ const AllNotificationAddDrawer = (props) => {
       }
     }
   };
-  
+
   return (
     <Drawer
       open={open}
@@ -139,124 +159,117 @@ const AllNotificationAddDrawer = (props) => {
       variant="temporary"
       onClose={handleClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 450 } } }}
     >
-      <Header>
-        <Typography variant="h5">Add Notification</Typography>
-        <IconButton
-          size="small"
-          onClick={handleClose}
-          sx={{
-            p: '0.438rem',
-            borderRadius: 1,
-            color: 'text.primary',
-            backgroundColor: 'action.selected',
-            '&:hover': {
-              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-            }
-          }}
-        >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
-        </IconButton>
-      </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-            <ImgStyled src={imgSrc} alt="Profile Pic" />
-            <div>
-              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                Upload
-                <input
-                  hidden
-                  type="file"
-                  value={inputValue}
-                  accept="image/png, image/jpeg"
-                  onChange={handleInputImageChange}
-                  id="account-settings-upload-image"
-                />
-              </ButtonStyled>
-            </div>
-          </Box> */}
+      <Box
+        sx={{
+          border: '1px solid #e0e0e0',
+          boxShadow: 3,
+          padding: 3,
+          margin: '80px auto',
+          borderRadius: '12px',
+          backgroundColor: 'background.paper',
+          width: { xs: '90%', sm: '80%', md: '60%' }
+        }}
+      >
+          <Header sx={{height: '5px' , borderBottom: '1px solid #ddd'}}>
+            <Typography variant="h3" fontWeight={600} color="primary">
+              Add Notification
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={handleClose}
+              sx={{
+                color: 'text.primary',
+                backgroundColor: 'action.selected',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.secondary.light
+                }
+              }}
+            >
+              <Icon icon="tabler:x" fontSize="1.125rem" />
+            </IconButton>
+          </Header>
 
-          <Grid item xs={12} sm={12}>
-            <Controller
-              name="branch"
-              control={control}
-              rules={{ required: 'Branch field is required' }}
-              render={({ field: { value, onChange } }) => (
-                <Autocomplete
-                  fullWidth
-                  options={activeBranches}
-                  getOptionLabel={(branch) => branch.branch_identity}
-                  onChange={(event, newValue) => {
-                    onChange(newValue?._id);
-                  }}
-                  value={activeBranches.find((branch) => branch._id === value) || null}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      sx={{ mb: 4 }}
-                      label="Select Branch"
-                      error={Boolean(errors.branch)}
-                      helperText={errors.branch?.message}
-                    />
-                  )}
-                />
-              )}
-            />
-          </Grid>
+        <Box>
+          <Box sx={{ mt: 2 }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Controller
+                    name="branch"
+                    control={control}
+                    rules={{ required: 'Branch field is required' }}
+                    render={({ field: { value, onChange } }) => (
+                      <Autocomplete
+                        fullWidth
+                        options={activeBranches}
+                        getOptionLabel={(branch) => branch.branch_identity}
+                        onChange={(event, newValue) => onChange(newValue?._id)}
+                        value={activeBranches.find((branch) => branch._id === value) || null}
+                        renderInput={(params) => (
+                          <AnimatedTextField
+                            {...params}
+                            label="Select Branch"
+                            error={Boolean(errors.branch)}
+                            helperText={errors.branch?.message}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                </Grid>
 
-          <Grid item xs={12} sm={12}>
-            <Controller
-              name="title"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  label="Title"
-                  value={value}
-                  onChange={onChange}
-                  placeholder="Placeholder"
-                  error={Boolean(errors.title)}
-                  helperText={errors.title ? errors.title.message : null}
-                />
-              )}
-            />
-          </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="title"
+                    control={control}
+                    rules={{ required: 'Title field is required' }}
+                    render={({ field: { value, onChange } }) => (
+                      <AnimatedTextField
+                        fullWidth
+                        label="Title"
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.title)}
+                        helperText={errors.title?.message}
+                      />
+                    )}
+                  />
+                </Grid>
 
-          <Grid item xs={12} sm={12}>
-            <Controller
-              name="body"
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  fullWidth
-                  sx={{ mb: 2 }}
-                  label="Body"
-                  value={value}
-                  onChange={onChange}
-                  placeholder="Placeholder"
-                  error={Boolean(errors.body)}
-                  helperText={errors.body ? errors.body.message : null}
-                  multiline
-                  rows={4}
-                />
-              )}
-            />
-          </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="body"
+                    control={control}
+                    rules={{ required: 'Body field is required' }}
+                    render={({ field: { value, onChange } }) => (
+                      <AnimatedTextField
+                        fullWidth
+                        label="Body"
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.body)}
+                        helperText={errors.body?.message}
+                        multiline
+                        rows={4}
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+                <Button variant="contained" type="submit">
+                  Submit
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Box>
+            </form>
           </Box>
-        </form>
+        </Box>
       </Box>
     </Drawer>
   );
