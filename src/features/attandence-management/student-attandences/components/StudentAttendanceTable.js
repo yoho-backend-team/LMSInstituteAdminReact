@@ -93,7 +93,7 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
       <CssBaseline />
       <Paper
         elevation={3}
-        sx={{ padding: 4, marginBottom: 3,marginTop:3, border: '1px solid #ccc',background: 'linear-gradient(to right, #c33764, #1d2671)'}}
+        sx={{ padding: 4, marginBottom: 3,marginTop:3, border: '1px solid #ccc',background: 'linear-gradient(to right, #a18cd1, #fbc2eb)'}}
       >
         <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', paddingBottom: 5,color:"white" }}>
           Attendance Report

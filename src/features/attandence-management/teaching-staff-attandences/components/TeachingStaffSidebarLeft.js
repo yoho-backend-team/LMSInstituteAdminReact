@@ -16,6 +16,7 @@ import toast from 'react-hot-toast';
 import { getErrorMessage } from 'utils/error-handler';
 import { IconCalendarEvent } from '@tabler/icons';
 import { grey } from '@mui/material/colors';
+import Ins from '../../../../assets/images/attendance/teacher.jpg'
 
 const TeachingStaffSidebarLeft = (props) => {
   const {
@@ -63,6 +64,7 @@ const TeachingStaffSidebarLeft = (props) => {
   const handleSidebarToggleSidebar = () => {
     handleAddEventSidebarToggle();
   };
+  console.log(staff)
 
   return (
     <Drawer
@@ -97,11 +99,11 @@ const TeachingStaffSidebarLeft = (props) => {
     >
       <Box sx={{ p: 3, width: '100%' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} />
+          <Avatar src={Ins} sx={{ mr: 2.5, height: 38, width: 38 }} />
           <Box>
-            <Typography variant="h5">{staff?.user?.full_name || 'No Name'}</Typography>
+            <Typography variant="h5">{staff?.staff_name || 'No Name'}</Typography>
             <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-              {staff?.user?.email || 'NO Email'}
+              {staff?.email || 'NO Email'}
             </Typography>
           </Box>
         </Box>
@@ -198,7 +200,7 @@ const TeachingStaffSidebarLeft = (props) => {
       </Box>
       <Divider sx={{ width: '100%', m: '0 !important', color: 'darkgrey' }} />
       <Box sx={{ mt: 2, padding: 1, width: '100%' }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+        {/* <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           Today's Events
         </Typography>
         <Box sx={{ boxShadow: '0 .25rem .8rem 0' }}>
@@ -210,6 +212,13 @@ const TeachingStaffSidebarLeft = (props) => {
             <IconCalendarEvent stroke={2} color="red" />
             <Typography variant="p">Webniar For AI Development</Typography>
           </Box>
+        </Box> */}
+        <Box sx={{ '&:hover':{
+          boxShadow: '0 .25rem .8rem 0',
+          borderRadius:5,
+          py:1
+        }}}>
+        <Typography sx={{textAlign:"center",my:1}}>No Events Available In this day.</Typography>
         </Box>
       </Box>
     </Drawer>

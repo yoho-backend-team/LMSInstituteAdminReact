@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import cardBg from "../../../../assets/images/attendance/attendence_bg.jpg"
 import { getImageUrl } from 'utils/imageUtils';
-
+import Ins from '../../../../assets/images/attendance/teacher.jpg'
 const TeachingStaffCard = ({ teachingStaffs }) => {
   const [fade, setFade] = useState(false);
 
@@ -49,7 +49,7 @@ const TeachingStaffCard = ({ teachingStaffs }) => {
               {/* Avatar with Overlay on Background */}
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Avatar
-                  src={ getImageUrl(item.img)}
+                  src={ getImageUrl(item.img)||Ins}
                   sx={{
                     width: 100,
                     height: 100,

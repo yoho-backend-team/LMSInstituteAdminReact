@@ -12,6 +12,7 @@ import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { formatStudentsCount } from 'utils/format';
 
+
 const StudentAttendanceCard = ({ studentAttendance }) => {
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string

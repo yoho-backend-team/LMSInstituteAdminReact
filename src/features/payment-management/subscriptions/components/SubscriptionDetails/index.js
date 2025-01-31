@@ -18,7 +18,6 @@ import { IconSquareX } from '@tabler/icons';
 import { useDispatch } from 'react-redux';
 import { setUpgrade } from '../../redux/slices';
 
-
 // ** Styled Component for the wrapper of whole component
 const BoxWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -36,13 +35,12 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 }));
 
 const SubscriptionDetails = (props) => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   // ** Props
   const { data, plan } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [isUpgrade, setIsUpgrade] = useState(false);
-  const [stored,setStored]=useState([])
-
+  const [cancel, setCancel] = useState(false);
 
   const renderFeatures = () => {
     if (!Array.isArray(data?.features)) {
@@ -68,14 +66,18 @@ const SubscriptionDetails = (props) => {
     if (userConfirmed) {
       setIsUpgrade(true);
       alert('Upgrade in progress...');
-      dispatch(setUpgrade(data))
-    } else {
-      alert('Upgrade cancelled');
+      dispatch(setUpgrade(data));
     }
   };
-  
+  const handleClose = () => {
+    const userCancel = window.confirm('Are you sure Want to cancel?');
+    if (userCancel) {
+      setCancel(true);
+      setIsUpgrade(false)
+      alert('cancel request has submitted.');
+    }
+  };
 
-  
   return (
     <BoxWrapper>
       {data?.is_popular ? (
@@ -157,14 +159,19 @@ const SubscriptionDetails = (props) => {
                 color: 'white',
                 '&:hover': {
                   backgroundColor: 'darkgrey'
-                },
-              
+                }
               }),
               ...(!isUpgrade && {
                 '&:disabled': {
                   backgroundColor: 'lightgrey',
                   color: 'white'
-                }
+                },
+                ...(cancel && {
+                  '&:disabled': {
+                    backgroundColor: 'lightgrey',
+                    color: 'white'
+                  }
+                })
               })
             }}
           >
@@ -256,15 +263,26 @@ const SubscriptionDetails = (props) => {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 15 }}>
                       <Box>
                         {data?._id === plan?.[0]?.subscriptionId?._id ? (
-                          <Button variant="contained" onClick={()=>alert('renewing is Under processing once completed you got the message')}>Renew</Button>
+                          <Button
+                            variant="contained"
+                            onClick={() => alert('renewing is Under processing once completed you got the message')}
+                          >
+                            Renew
+                          </Button>
                         ) : (
-                          <Button variant="contained" onClick={handleUpgrade}>Upgrade</Button>
+                          <Button variant="contained" onClick={handleUpgrade}>
+                            Upgrade
+                          </Button>
                         )}
                       </Box>
                       <Box>
-                        <Button onClick={() => alert('😔 YOu canceled the upgrade request')} variant="contained">
+                      {isUpgrade?
+                        <Button onClick={handleClose} variant="contained">
+                          Cancel
+                        </Button>:<Button onClick={handlePopup} variant="contained">
                           Cancel
                         </Button>
+                      }
                       </Box>
                     </Box>
                   </CardContent>
