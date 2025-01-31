@@ -95,6 +95,7 @@ const StudentNotificationsPage = Loadable(lazy(() => import('views/notification-
 const FeesPage = Loadable(lazy(() => import('views/payment-management/student-fees-page/student-fees-overview-page')));
 const SalariesPage = Loadable(lazy(() => import('views/payment-management/staff-salaries-page/staff-salaries-overview-page')));
 const SubscriptionsPage = Loadable(lazy(() => import('views/payment-management/subscriptions-page/subscriptions-overview-page')));
+const SubscriptionHistory=Loadable(lazy(()=>import('features/payment-management/subscriptions/components/SubscriptionHistory')))
 
 // Refund Management
 const RefundsPage = Loadable(lazy(() => import('views/refund-management/student-fee-refunds-page/student-fee-refunds-overview-page')));
@@ -373,6 +374,7 @@ const ApplicationRoutes = () => {
         {/* Payment Management Routes */}
         <Route path="/payment-management" element={<MainLayout />}>
           <Route index element={<Navigate to="/payment-management/fees" />} />
+          
           <Route element={<ProtectedRoute element={<FeesPage />} permissionCode={'inst_perm_student_fees_payment_management_view'} module={"Fees"} />}>
             <Route path="fees" element={<FeesPage />} />
           </Route>
@@ -381,6 +383,9 @@ const ApplicationRoutes = () => {
           </Route>
           <Route element={<ProtectedRoute element={<SubscriptionsPage />} permissionCode={'inst_perm_subscriptions_view'} module={'Subscriptions'} />}>
             <Route path="subscriptions" element={<SubscriptionsPage />} />
+          </Route>
+          <Route element={<ProtectedRoute element={<SubscriptionHistory />} permissionCode={'inst_perm_subscriptions_view'} module={'Subscriptions'} />}>
+            <Route path="subscriptions/history" element={<SubscriptionHistory />} />
           </Route>
         </Route>
         {/* Refund Management Routes */}
