@@ -160,7 +160,7 @@ const ChatContent = (props) => {
             </Box>
           </Box>
 
-          {messages ? <ChatLog hidden={hidden} data={messages} /> : null}
+          {messages ? <ChatLog hidden={hidden} data={messages} socket={socket} /> : null}
           <SendMsgForm store={store} socket={socket} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
           <UserProfileRight
             store={store}

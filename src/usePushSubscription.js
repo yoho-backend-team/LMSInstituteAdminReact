@@ -14,7 +14,7 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
             } else {
                 return await registration.pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array("BJFWPqfGs7DoTQTkLe7MdCdCv6N0wGofV9WSd4HKQVHn8nR2X-pOg2cT1VIWG9QN-jyELRZDYWLuo6cRwPJixMg") // VAPID public key
+                    applicationServerKey: urlBase64ToUint8Array(process.env.WebPushpublicKey) // VAPID public key
                 });
             }
         })
