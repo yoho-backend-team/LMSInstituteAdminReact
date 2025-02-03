@@ -36,15 +36,16 @@ const NotificationBodySection = ({ studentNotifications }) => {
       };
 
       const response = await resendStudentNotification(data);
+      console.log("sucess response", response)
 
-      if (response.success) {
-        toast.success(response.message);
+      if (response.data && response.data.message) {
+        toast.success(response.data.message);
       } else {
-        toast.error(response.message);
+        toast.error(response.message || 'Failed to resend notification');
       }
     } catch (error) {
       console.error('Error in handleSubmit:', error);
-      toast.error('Failed to resend notification');
+      toast.error('An error occurred while resending the notification');
     }
   };
 
