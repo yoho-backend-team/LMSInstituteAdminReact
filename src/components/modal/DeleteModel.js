@@ -1,7 +1,4 @@
-// ** React Imports
 import { useState } from 'react';
-
-// ** MUI Imports
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,24 +7,22 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Divider from '@mui/material/Divider';
 
-// ** Icon Imports
 import Icon from 'components/icon';
 
 import PropTypes from 'prop-types';
 
 const   DeleteDialog = (props) => {
-  // ** Props
   const { open, setOpen, handleSubmit, description, title, successDescription, failureDescription } = props;
 
-
-
-  // ** States
   const [userInput, setUserInput] = useState('yes');
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleSecondDialogClose = () => setSecondDialogOpen(false);
 
+
+  
   const handleConfirmation = (value) => {
+    console.log("hello");
     handleClose();
     setUserInput(value);
     setSecondDialogOpen(true);

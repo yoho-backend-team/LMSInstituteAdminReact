@@ -169,7 +169,7 @@ const AllNotificationAddDrawer = (props) => {
           margin: '80px auto',
           borderRadius: '12px',
           backgroundColor: 'background.paper',
-          width: { xs: '90%', sm: '80%', md: '60%' }
+          width: { xs: '90%', sm: '80%', md: '80%' }
         }}
       >
           <Header sx={{height: '5px' , borderBottom: '1px solid #ddd'}}>

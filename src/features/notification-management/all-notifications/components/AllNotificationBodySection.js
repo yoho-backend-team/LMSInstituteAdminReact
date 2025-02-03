@@ -16,9 +16,10 @@ const AllNotificationBodySection = ({ allNotifications }) => {
     try {
       const data = {
         id: id,
-        notification_id: id
+        notification_id: id,
       };
-
+       console.log("hello");
+       
       const response = await resendStudentNotification(data);
 
       console.log('sucess response', response);
@@ -131,7 +132,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
       headerName: 'Actions',
       sortable: false,
       renderCell: ({ row }) => {
-        console.log('Row data in renderCell:', row);
+        // console.log('Row data in renderCell:', row);
         return <RowOptions row={row} />;
       }
     }
