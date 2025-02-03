@@ -17,6 +17,8 @@ import { addNotification } from '../services/allNotificationServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 
+import { Modal } from "@mui/material";
+
 const AllNotificationAddDrawer = (props) => {
   const { open, toggle, setAllNotificationRefetch } = props;
   const {show,hide} = useSpinner()
@@ -133,20 +135,40 @@ const AllNotificationAddDrawer = (props) => {
   };
   
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+
+
+     <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    ModalProps={{ keepMounted: true }}
+    BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.5)" } }} 
+     
+  >
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "90%", sm: 500, md: 600 },
+        height: "auto",  
+        maxHeight: "80vh", 
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+        overflowY: "auto",
+        transition: "all 0.3s ease-in-out",
+      }}
     >
-      <Header>
-        <Typography variant="h5">All Notification</Typography>
+      <Header  sx={{mt:-7}}>
+        <Typography variant="h2"  sx={{ml:-4}}>All Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
           sx={{
+            mr:-7,
             p: '0.438rem',
             borderRadius: 1,
             color: 'text.primary',
@@ -248,17 +270,46 @@ const AllNotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'flex-end', mt: 4 }}>
+
+            <Button 
+            variant="tonal"
+            onClick={handleClose}
+           sx={{ 
+            mr: 3,
+            backgroundColor: 'white', 
+            color: 'black', 
+            border: '1px solid #D3D3D3',  
+            '&:hover': {
+              backgroundColor: '#f0f0f0',  
+              color: 'text.secondary',  
+            },
+            transition: 'all 0.3s ease',
+                }}>
               Cancel
             </Button>
+
+            <Button type="submit" variant="contained" 
+            sx={{
+              backgroundColor: '#1976d2', 
+              color: 'white',  
+              '&:hover': {
+                backgroundColor: '#1565c0',  
+              },
+              '&:active': {
+                backgroundColor: '#0d47a1',  
+              },
+              transition: 'all 0.3s ease',  
+            }}>
+              Add Notification
+            </Button>
+
           </Box>
         </form>
       </Box>
-    </Drawer>
+      </Box>
+      </Modal>
+     
   );
 };
 
