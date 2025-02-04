@@ -269,9 +269,13 @@ const StepperLinearWithValidation = () => {
 
   return (
     <Card>
+
       <CardContent>
+
         <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+
           <Grid container spacing={5}>
+
             <Grid item xs={12}>
               <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {steps[0].title}
@@ -280,6 +284,7 @@ const StepperLinearWithValidation = () => {
                 {steps[0].subtitle}
               </Typography>
             </Grid>
+            
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <ImgStyled src={logo?getImageUrl(logo):getImageUrl(studentData?.image)} alt="Profile Pic" />
