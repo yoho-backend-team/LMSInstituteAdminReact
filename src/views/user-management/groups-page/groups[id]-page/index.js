@@ -34,10 +34,35 @@ const GroupViewPage = () => {
   const getPermissions = async (id) => {
     try {
       setLoading(true);
-      const result = await getAllPermissionsByRoleId({role:id});
-  
+      const result = await getAllPermissionsByRoleId({ role: id });
+      console.log("the id is sent")
       if (result.success) {
-        setPermissions(result.data);
+        // setPermissions(result.data);
+        console.log(result.data)
+        const test = JSON.stringify(result.data);
+        const permissions = JSON.parse(test);
+
+        permissions.forEach(permission => {
+
+          const truevalue = ["$2a$12$H9pZ8mcflz2hZz6tXJpzZeJbWUPwE.AxcUBiHZtA5v57AgD8gXMOu", "$2a$12$/PDEzd8Zx/WJS.9O3xhoF.kBKGOBqExG4zs/gmeaRc4nb9wwNek0a"
+            , "$2a$12$JQZ.xBeYO7bpulGLzcEDV.vxZRBamUuTYfzBSlFJLvqwi2QOovw0e", "$2a$12$KFLsbzpwKzWHWl/iQOdFru4IwgW4CbvVKwLSn.xo8ugA7FjDHoJam", "$2a$12$wFY8T3TyGd7Tim1tYdne5eMpc6OI6MAgcEM5qK/Cwk0USWXaYkxam",
+            "$2a$12$otMNt92G3Ba99NV.CIYmwe.VJigfeu2M3gx4hFxp2i/yERw/4FW8q"];
+
+
+          const isPermissioncreatePresent = truevalue.includes(permission.create_permission.permission);
+          const isPermissionreadPresent = truevalue.includes(permission.read_permission.permission);
+          const isPermissionupdatePresent = truevalue.includes(permission.update_permission.permission);
+          const isPermissiondeletePresent = truevalue.includes(permission.delete_permission.permission);
+
+          permission.create_permission.permission = isPermissioncreatePresent
+          permission.read_permission.permission = isPermissionreadPresent
+          permission.update_permission.permission = isPermissionupdatePresent
+          permission.delete_permission.permission = isPermissiondeletePresent
+
+        });
+
+        setPermissions(permissions);
+
       } else {
 
       }
@@ -53,42 +78,19 @@ const GroupViewPage = () => {
     return permissions?.map((module, moduleIndex) => (
       <React.Fragment key={moduleIndex}>
         {/* {module?.screens?.map((screen, screenIndex) => ( */}
-          <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' },
-        '&:hover': {
-          backgroundColor: 'rgba(0, 0, 0, 0.04)',
-          transition: 'background-color 0.2s ease'
-        },
-        borderLeft: '4px solid transparent',
-        '&:hover': {
-          backgroundColor: 'rgba(25, 118, 210, 0.04)'
-        } }}>
+          <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
             <TableCell
-             sx={{
-              fontWeight: 500,
-              whiteSpace: 'nowrap', 
-              fontSize: '1.1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.5, 
-              m:2 
-            }}
+              sx={{
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                fontSize: (theme) => theme.typography.h6.fontSize
+              }}
             >
               {module?.identity}
             </TableCell>
-
-            <TableCell sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-
             {/* {module?.permissions?.map((permission, permissionIndex) => ( */}
              {
-              module?.create_permission?.permission &&<TableCell key={module._id}
-              elevation={0}
-              sx={{
-                p: 1,
-                borderRadius: '8px',
-                backgroundColor: 'rgba(25, 118, 210, 0.08)',
-                borderColor: 'primary.main'
-              }}
-              >
+              module?.create_permission?.permission &&<TableCell key={module._id}>
                 <FormControlLabel
                   label={"create"}
                   sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
@@ -97,13 +99,7 @@ const GroupViewPage = () => {
               </TableCell>
              }
              {
-              module?.read_permission?.permission &&<TableCell key={module._id}
-              sx={{
-                p: 1,
-                borderRadius: '8px',
-                backgroundColor: 'rgba(25, 118, 210, 0.08)',
-                borderColor: 'primary.main'
-              }}>
+              module?.read_permission?.permission &&<TableCell key={module._id}>
                 <FormControlLabel
                   label={"read"}
                   sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
@@ -112,13 +108,7 @@ const GroupViewPage = () => {
               </TableCell>
              }
              {
-              module?.create_permission?.permission &&<TableCell key={module._id}
-              sx={{
-                p: 1,
-                borderRadius: '8px',
-                backgroundColor: 'rgba(25, 118, 210, 0.08)',
-                borderColor: 'primary.main'
-              }}>
+              module?.create_permission?.permission &&<TableCell key={module._id}>
                 <FormControlLabel
                   label={"update"}
                   sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
@@ -127,13 +117,7 @@ const GroupViewPage = () => {
               </TableCell>
              }
              {
-              module?.delete_permission?.permission &&<TableCell key={module._id}
-              sx={{
-                p: 1,
-                borderRadius: '8px',
-                backgroundColor: 'rgba(25, 118, 210, 0.08)',
-                borderColor: 'primary.main'
-              }}>
+              module?.delete_permission?.permission &&<TableCell key={module._id}>
                 <FormControlLabel
                   label={"delete"}
                   sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
@@ -142,7 +126,6 @@ const GroupViewPage = () => {
               </TableCell>
              }
              {/* ))} */}
-             </TableCell>
           </TableRow>
         {/* ))} */}
       </React.Fragment>
