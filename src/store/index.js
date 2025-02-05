@@ -55,10 +55,13 @@ import SubscriptionReducer from 'features/payment-management/subscriptions/redux
 
 import communityReducer from 'features/community/redux/communitySlice';
 
+import locationReducer from 'features/cities/redux/locationSlice'
+
 // ==============================|| REDUX - MAIN STORE ||============================== //
 
 const store = configureStore({
   reducer: {
+    locations:locationReducer,
     customization: customizationReducer,
     chat: chats,
     groups: groupReducer,
