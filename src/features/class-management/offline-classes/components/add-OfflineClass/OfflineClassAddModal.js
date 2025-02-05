@@ -42,7 +42,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const { show, hide } = useSpinner()
-
+  
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -109,7 +109,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       .required('Class Name field is required'),
     branch: yup.string().required('Branch field is required'),
     course: yup.string().required('Course field is required'),
-    batch: yup.object().required('Batch is required'),
+    batch: yup.object().required('Batch field is required'),
+    instructor: yup.array().required('Instructor field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     start_time: yup.string().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required')
@@ -117,10 +118,10 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
 
   const defaultValues = {
     class_name: '',
-    branch: selectedBranchId,
+    branch: "",
     course: '',
-    batch: '',
-    classDate: new Date(),
+    batch: {},
+    classDate: null,
     start_time: null,
     end_time: null,
     instructor: [],
@@ -165,7 +166,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   }
 
   const onSubmit = async (data) => {
-    show()
+    // show()
     const filteredInstructorId = data.instructor?.map((staff) => staff._id);
     const filteredCoordinatorId = data.coordinator?.map((staff) => staff._id);
 
@@ -298,11 +299,13 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   )}
                 />
               </Grid>
+              
 
               <Grid item xs={12}>
                 <Controller
                   name="branch"
                   control={control}
+                  rules={{ required: 'Branch is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -354,7 +357,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sx={{ mb: 2 }}>
+              <Grid item xs={12} sx={{}}>
                 <Controller
                   name="course"
                   control={control}
@@ -418,7 +421,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       {...field}
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option?.batch_name}
+                      getOptionLabel={(option) => option?.batch_name || "" }
                       onChange={(event, newValue) => {
                         setValue('batch', newValue);
                       }}
@@ -426,9 +429,9 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          
+
                           label="Batch"
-                          error={Boolean(errors.batch)}
-                          helperText={errors.batch?.message}
                           sx={{
                             backgroundColor: 'transparent',
                             borderRadius: '8px',
@@ -661,6 +664,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      error={Boolean(errors.instructor)} helperText={errors.instructor?.message}
                       fullWidth
                       label="Instructors"
                       InputProps={{
@@ -709,7 +713,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.full_name}
+                      {option.full_name }
                     </li>
                   )}
                   renderTags={(value) => (

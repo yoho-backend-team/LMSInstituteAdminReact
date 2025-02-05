@@ -373,9 +373,7 @@ const FeesTable = () => {
                 <Grid item xs={12} sm={4}>
                   <TextField
                     value={searchValue}
-                    sx={{
-                      width: 400
-                    }}
+                    fullWidth
                     placeholder="Search Fee"
                     onChange={(e) => handleSearch(e)}
                   />
