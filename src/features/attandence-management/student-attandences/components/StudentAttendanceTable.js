@@ -1,33 +1,27 @@
-import { Grid, TextField } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import { DataGrid } from '@mui/x-data-grid';
-import StatusChangeDialog from 'components/modal/DeleteModel';
+import React from 'react';
+import { Box, Typography, Avatar, Card, MenuItem, TextField, CssBaseline, Tooltip, Grid, Paper } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { updateStudentAttendanceStatus } from '../services/studentAttendanceServices';
 import { getInitials } from 'utils/get-initials';
 import { getImageUrl } from 'utils/imageUtils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import StatusChangeDialog from 'components/modal/DeleteModel';
+
+const userStatusObj = {
+  present: 'success',
+  absent: 'error'
+};
 
 const renderClient = (row) => {
-  console.log(row,"row")
   if (row?.student?.image) {
-    return (
-      <Avatar
-        src={getImageUrl(row?.student?.image)}
-        sx={{ mr: 2.5, width: 38, height: 38 }}
-      />
-    );
+    return <Avatar src={getImageUrl(row?.student?.image)} sx={{ width: 56, height: 56 }} />;
   } else {
     return (
       <Avatar
         skin="light"
-        color={row?.avatarColor || 'primary'}
-        sx={{ mr: 2.5, width: 38, height: 38, fontWeight: 500, fontSize: (theme) => theme.typography.body1.fontSize }}
+        sx={{ width: 56, height: 56, fontWeight: 500, fontSize: (theme) => theme.typography.h5.fontSize, bgcolor: 'secondary.main' }}
       >
         {getInitials(row?.student?.full_name || '')}
       </Avatar>
@@ -35,21 +29,34 @@ const renderClient = (row) => {
   }
 };
 
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Roboto, Arial, sans-serif'
+  },
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#1976d2'
+    },
+    secondary: {
+      main: '#dc004e'
+    }
+  }
+});
+
 const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
-  const userStatusObj = {
-    present: 'success',
-    absent: 'error'
-  };
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-  const [students,setStudents] = useState([])
+  const [students, setStudents] = useState([]);
 
-  useEffect(()=>{
-      const filterStudents = () => {
-      setStudents(ClassData?.students)
-      }
-      filterStudents()
-  },)
+  useEffect(() => {
+    if (ClassData && ClassData.students) {
+      console.log('ClassData:', ClassData);
+      setStudents(ClassData.students);
+    } else {
+      console.warn('ClassData is null or does not contain students.');
+    }
+  }, [ClassData]);
 
   const handleStatusValue = (e, row) => {
     setStatusChangeDialogOpen(true);
@@ -57,13 +64,13 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
   };
 
   const handleStatusChangeApi = async () => {
-    const attedence = statusValue?.attedence === "present" ? "absent" : "present"
+    const attedence = statusValue?.attedence === 'present' ? 'absent' : 'present';
     const data = {
       attedence: attedence,
       attedence_id: ClassData?.uuid,
-      student:statusValue?.student?._id
+      student: statusValue?.student?._id
     };
-    
+
     const response = await updateStudentAttendanceStatus(data);
     if (response.success) {
       toast.success(response.message);
@@ -73,121 +80,99 @@ const StudentAttendanceTable = ({ ClassData, setRefetch }) => {
     }
   };
 
-  const columns = [
-    {
-      flex: 0.75,
-      minWidth: 120,
-      headerName: 'Student ID',
-      field: 'start_date',
-      renderCell: (params) => {
-        const { row } = params;
-        return (
-          <Typography variant="body2" sx={{ color: 'text.primary' }}>
-            {row?.student?.id}
-          </Typography>
-        );
-      }
-    },
-    {
-      flex: 0.75,
-      minWidth: 290,
-      field: 'full_name',
-      headerName: 'Student Name',
-      renderCell: (params) => {
-        const { row } = params;
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {row?.student?.full_name}
-                {/* {row?.student?.last_name} */}
-              </Typography>
-              <Typography noWrap variant="body2" sx={{ color: 'text.disabled' }}>
-                {row?.student?.email}
-              </Typography>
-            </Box>
-          </Box>
-        );
-      }
-    },
-
-    {
-      flex: 0.75,
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <TextField
-            size="small"
-            select
-            value={row?.attedence}
-            label="status"
-            id="custom-select"
-            sx={{
-              color: userStatusObj[row?.attedence]
-            }}
-            onChange={(e) => handleStatusValue(e, row)}
-            SelectProps={{
-              sx: {
-                borderColor: row?.attedence === 'present' ? 'success' : 'error',
-                color: userStatusObj[row?.attedence]
-              }
-            }}
-          >
-            <MenuItem value="present">Present</MenuItem>
-            <MenuItem value="absent">Absent</MenuItem>
-          </TextField>
-        );
-      }
-    }
-  ];
- 
+  if (!ClassData) {
+    return (
+      <Typography variant="h6" color="error" align="center">
+        No class data available.
+      </Typography>
+    );
+  }
 
   return (
-    <>
-      <Grid>
-        <Card>
-          <DataGrid autoHeight rowHeight={80} 
-          rows={students||[]} 
-          columns={columns}
-          sx={{
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
-            "& .MuiDataGrid-row" : {
-              border : "1px solid #e6e5e7",
-              borderLeft: "none",
-              borderRight: "none",
-              ":hover" : {
-                 backgroundColor : "#f7f7ff",
-                 border : "1px solid #e6e5e7",
-                 borderLeft: "none",
-                 borderRight: "none"
-              }
-            },
-            "& .MuiDataGrid-columnHeaders" : {
-                 border : "1px solid #e6e5e7",
-                 borderLeft: "none",
-                 borderRight: "none"
-            }
-          }} 
-          disableRowSelectionOnClick
-          hideFooter
-          hideFooterPagination
-          disableColumnMenu={true}
-          disableColumnFilter={true}
-          disableColumnSorting={true} 
-          />
-        </Card>
-        <StatusChangeDialog
-          open={statusChangeDialogOpen}
-          setOpen={setStatusChangeDialogOpen}
-          description="Are you sure you want to Change Status"
-          title="Change Status"
-          handleSubmit={handleStatusChangeApi}
-        />
-      </Grid>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Paper
+        elevation={3}
+        sx={{ padding: 4, marginBottom: 3,marginTop:3, border: '1px solid #ccc',background: 'linear-gradient(to right, #a18cd1, #fbc2eb)'}}
+      >
+        <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 'bold', paddingBottom: 5,color:"white" }}>
+          Attendance Report
+        </Typography>
+        <Grid container spacing={3}>
+          {students.map((row) => (
+            <Grid item xs={12} sm={6} md={4} key={row?.student?.id}>
+              <Card
+                sx={{
+                  padding: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  borderTopLeftRadius:25,
+                  borderBottomRightRadius:25,
+                  alignItems: 'center',
+                  height: '100%',
+                  transition: '0.3s',
+                  '&:hover': {
+                    boxShadow: 6,
+                    transform: 'translateY(-5px)'
+                  },
+                  borderTop: 1,
+                  borderColor: 'yellow'
+                }}
+              >
+                <Box sx={{ flex: '1 0 auto' }}>{renderClient(row)}</Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+                  <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 500, paddingBottom: 1 }}>
+                    {row?.student?.full_name || 'None'}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.disabled', paddingBottom: 1 }}>
+                    Email: {row?.student?.email || 'None'}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.primary', paddingBottom: 1 }}>
+                    ID: {row?.student?.id || 'None'}
+                  </Typography>
+                  <Tooltip title="Change status">
+                    <TextField
+                      size="small"
+                      select
+                      value={row?.attedence}
+                      label="Status"
+                      id="custom-select"
+                      sx={{
+                        color: userStatusObj[row?.attedence],
+                        mt: 2,
+                        '& .MuiSelect-select': {
+                          backgroundColor: row?.attedence === 'present' ? '#d4edda' : '#f8d7da',
+                          borderColor: row?.attedence === 'present' ? '#28a745' : '#dc3545',
+                          color: row?.attedence === 'present' ? '#155724' : '#721c24'
+                        }
+                      }}
+                      onChange={(e) => handleStatusValue(e, row)}
+                      SelectProps={{
+                        sx: {
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: row?.attedence === 'present' ? '#28a745' : '#dc3545'
+                          }
+                        }
+                      }}
+                    >
+                      <MenuItem value="present">Present</MenuItem>
+                      <MenuItem value="absent">Absent</MenuItem>
+                    </TextField>
+                  </Tooltip>
+                </Box>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+      <StatusChangeDialog
+        open={statusChangeDialogOpen}
+        setOpen={setStatusChangeDialogOpen}
+        description="Are you sure you want to change the status?"
+        title="Change Status"
+        handleSubmit={handleStatusChangeApi}
+      />
+    </ThemeProvider>
   );
 };
 

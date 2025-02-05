@@ -6,13 +6,15 @@ import CategoryCardHeader from 'features/course-management/categories-page/categ
 import CategoryFilter from 'features/course-management/categories-page/category-overview-page/components/CategoryFilterCard';
 import { selectCourseCategories, selectLoading } from 'features/course-management/categories-page/redux/courseCategorySelectors';
 import { getAllCourseCategories } from 'features/course-management/categories-page/redux/courseCategoryThunks';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import NoDataFoundComponent from 'components/empty/noDataFound';
 import FilterListIcon from '@mui/icons-material/FilterList';
-
+import Icon from 'components/icon';
+import CategoryAddModal from 'features/course-management/categories-page/category-overview-page/components/CategoryAddModal';
 const Categories = () => {
+  const [isAddModalOpen, setAddModalOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const categoriesLoading = useSelector(selectLoading);
@@ -20,6 +22,15 @@ const Categories = () => {
   const courseCategories = useSelector(selectCourseCategories);
   const [categoryRefetch, setCategoryRefetch] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const filterRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const handleAddClose = () => {
+    setAddModalOpen(false);
+  };
+
+  const handleAdd = () => {
+    setAddModalOpen(true);
+  };
 
   useEffect(() => {
     const data = {
@@ -39,52 +50,84 @@ const Categories = () => {
     setShowFilters((prev) => !prev);
   };
 
+
+  
+
+ 
+
+
+ 
+
+  
   return (
     <Box sx={{ position: 'relative' }}>
-      <Grid container>
-        <Grid item xs={12} sx={{ mb: 2 }}>
-          <Button
+      <div ref={wrapperRef}>
+        <Grid container>
+          <Grid item xs={12} sx={{ display:"flex" ,alignItems:"center",justifyContent:"space-between"}}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleFilters}
+              sx={{
+               
+                display: 'flex',
+                alignItems: 'center',
+                 mt: 2 
+              }}
+              startIcon={<FilterListIcon />}
+            >
+              {showFilters ? 'Hide Filters' : 'Show Filters'}
+            </Button>
+            <Button
+            onClick={handleAdd}
             variant="contained"
             color="primary"
-            onClick={toggleFilters}
             sx={{
-              mb: 2,
-              display: 'flex',
-              alignItems: 'center',
+              backgroundColor: "#0CCE7F",
+              ":hover": { backgroundColor: "#0AA865" },
+              ml: 2,
             }}
-            startIcon={<FilterListIcon />}
+            startIcon={<Icon icon="tabler:plus" />}
           >
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
+            Add New Category
           </Button>
-        </Grid>
-      </Grid>
+          </Grid>
+          
+       
+      
+      <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose}  />
 
-      {/* Overlay for Filters */}
-      {showFilters && (
+        </Grid>
+
+        {/* Overlay for Filters */}
+        {showFilters && (
         <Box
-          sx={{
-            position: 'absolute',
-            top: 80, 
-            left: 0,
-            right: 0,
-            zIndex: 10,
-            backgroundColor: 'rgba(255, 255, 255, 0.9)', 
-            padding: 2,
-            boxShadow: 3,
-          }}
-        >
-          <CategoryFilter selectedBranchId={selectedBranchId} />
-          <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
-        </Box>
-      )}
+        ref={filterRef}
+        
+        sx={{
+          position: 'relative',
+          left: 0,
+          right: 0,
+          top:15,
+          backgroundColor: 'white', 
+          padding: 2,
+         
+        }}
+      >
+        <CategoryFilter selectedBranchId={selectedBranchId} />
+        <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
+      </Box>
+      
+        )}
+      </div>
 
       {/* Main Content */}
-      <Grid container sx={{ opacity: showFilters ? 0.5 : 1 }}>
+      <Grid container >
         {categoriesLoading ? (
           <CategorySkeleton />
         ) : (
           <Grid item xs={12}>
-            <Grid container spacing={2} className="match-height" sx={{ marginTop: 0 }}>
+            <Grid container spacing={2} className="match-height" sx={{ marginTop: 2 }}>
               {memoizedCategories?.data?.map((category, index) => (
                 <CategoryCard
                   key={index}
@@ -134,4 +177,3 @@ const Categories = () => {
 };
 
 export default Categories;
-

@@ -142,11 +142,12 @@ const StaffNotificationBodySection = ({ staffNotifications }) => {
       };
 
       const response = await resendStaffNotification(data);
+      console.log('sucess response', response);
 
-      if (response.success) {
-        toast.success(response.message);
+      if (response.data) {
+        toast.success(response.data);
       } else {
-        toast.error(response.message);
+        toast.error('Failed to resend notification'); 
       }
     } catch (error) {
       console.error('Error in handleSubmit:', error);

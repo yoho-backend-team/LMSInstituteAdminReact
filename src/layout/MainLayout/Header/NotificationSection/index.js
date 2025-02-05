@@ -35,6 +35,7 @@ import { useInstitute } from 'utils/get-institute-details';
 // assets
 import { IconBell } from '@tabler/icons';
 import { useBranchId } from 'utils/get-institute-details';
+import { width } from '@mui/system';
 
 // notification status options
 const status = [
@@ -129,7 +130,8 @@ const NotificationSection = () => {
           mr: 3,
           [theme.breakpoints.down('md')]: {
             mr: 2
-          }
+          },
+          
         }}
       >
         <ButtonBase sx={{ borderRadius: '12px' }}>
@@ -194,19 +196,20 @@ const NotificationSection = () => {
           <Transitions position={matchesXs ? 'top' : 'top-right'} in={open} {...TransitionProps}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
+                <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]} sx={{height:"300px",width:"300px"}}>
                   <Grid container direction="column" spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} >
                       <Grid container alignItems="center" justifyContent="space-between" sx={{ pt: 2, px: 2 }}>
                         <Grid item>
-                          <Stack direction="row" spacing={2}>
+                          <Stack direction="row" spacing={15}>
                             <Typography variant="subtitle1">All Notification</Typography>
                             <Chip
                               size="small"
                               label={notifications?.length}
                               sx={{
                                 color: theme.palette.background.default,
-                                bgcolor: theme.palette.warning.dark
+                                bgcolor: theme.palette.warning.dark,
+                               
                               }}
                             />
                           </Stack>
@@ -251,7 +254,11 @@ const NotificationSection = () => {
                     </Grid>
                   </Grid>
                   <Divider />
-                  <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
+                  <Typography variant="body1" color="textSecondary" align="center" sx={{padding :"50px",paddingTop:"90px",paddingBottom:"80px"}}>
+            No new notifications
+          </Typography>
+          <Divider  />
+                  <CardActions sx={{ justifyContent: 'center',paddingTop:"20px",paddingLeft:"5px" }}>
                     <Button component={Link} onClick={(e) => handleClose(e)} to="/profile-management/notifications" size="small" disableElevation>
                       View All
                     </Button>

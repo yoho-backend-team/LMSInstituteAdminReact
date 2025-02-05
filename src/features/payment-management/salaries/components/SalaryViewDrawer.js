@@ -17,7 +17,20 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
   const handleClose = () => {
     toggle();
   };
-
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // Display in 12-hour format
+    }).format(date);
+  };
+  
   return (
     <>
       <Drawer
@@ -29,7 +42,7 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Salary Details</Typography>
+          <Typography variant="h4"  sx={{outline:1.5,outlineColor:'#0cce7f',px:2, py:1, borderRadius:"50px"  }}>Salary Details</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -47,7 +60,8 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
           </IconButton>
         </Header>
 
-        <CardContent>
+        <Box sx={{ display: 'flex',justifyContent:'center' }}>
+        <CardContent sx={{ maxWidth: 400, p: 2, boxShadow: 3, borderRadius: 3 }}>
           {selectedRowDetails && (
             <Grid item xs={12} sm={12}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -57,9 +71,9 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
                     sx={{ mr: 2.5, height: 38, width: 38 }}
                   />
                   <Box>
-                    <Typography variant="h4"> Refund Id</Typography>
+                    <Typography variant="h4">{selectedRowDetails?.staff?.username}</Typography>
                     <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
-                      {selectedRowDetails.transaction_id}
+                      {selectedRowDetails?.staff?.staffId}
                     </Typography>
                   </Box>
                 </Box>
@@ -68,10 +82,14 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
                 </Box>
               </Box>
 
-              <Typography variant="h4" sx={{ mt: 6, mb: 3, color: 'text.main' }}>
+              <Typography variant="h4" sx={{ mt: 3, mb: 3, color: 'text.main' }}>
                 Staff Deatails :
               </Typography>
 
+              <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                <Typography sx={{ width: 150 }}>Transaction Id : </Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails.transaction_id}</Typography>
+              </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Staff Id : </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.staff?.roll_no}</Typography>
@@ -90,11 +108,12 @@ const SalaryViewDrawer = ({ open, toggle, selectedRowDetails }) => {
               </Box>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                 <Typography sx={{ width: 150 }}>Paid Date : </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>{selectedRowDetails?.payment_date}</Typography>
+                <Typography sx={{ color: 'text.secondary' }}>{formatDate(selectedRowDetails?.payment_date)}</Typography>
               </Box>
             </Grid>
           )}
         </CardContent>
+        </Box>
       </Drawer>
     </>
   );

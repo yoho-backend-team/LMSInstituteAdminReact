@@ -5,14 +5,18 @@ import axios from 'axios';
 const STUDENT_FEE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/student-fee`;
 
 export const getAllStudentFees = async (data) => {
+  console.log(data);
+  const token = localStorage.getItem('token');
   try {
     const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${'Token ' + token}`
       },
       params: data
+
     });
+console.log(response);
 
     // Check if the response status is successful
       return response;

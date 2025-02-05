@@ -9,6 +9,7 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder } from 'utils/placeholders';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 120,
@@ -16,16 +17,14 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   borderRadius: '50%',
   border: `4px solid ${theme.palette.background.paper}`,
   boxShadow: theme.shadows[4], // subtle shadow around the profile image
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4),
-  },
+  marginBottom: theme.spacing(2), // consistent spacing
 }));
 
 const UserViewLeft = ({ student }) => {
   const imageUrl = student?.image ? getImageUrl(student?.image) : imagePlaceholder;
 
   return (
-    <Card sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper' }}>
+    <Card sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden', bgcolor: 'background.paper', textAlign: 'center' }}>
       <CardMedia
         component="img"
         alt="profile-header"
@@ -35,30 +34,44 @@ const UserViewLeft = ({ student }) => {
           objectFit: 'cover',
         }}
       />
-      <CardContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <ProfilePicture src={imageUrl} alt="profile-picture" />
+      <CardContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <ProfilePicture src={imageUrl} alt="profile-picture" sx={{mt:-10}}/>
         <Typography variant="h5" sx={{ mt: 2, fontWeight: '600', color: 'text.primary' }}>
           {student.first_name} {student.last_name}
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-          ReactJs Developer | London | Joined 11/09/2023
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", color: "text.secondary", mb: 2 }}>
+      <CalendarTodayIcon fontSize="small" sx={{ mr: 1 }} />
+      <Typography variant="body2">Joined on 11/09/2023</Typography>
+    </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
-            <Icon fontSize="1.25rem" icon="tabler:briefcase" />
-            <Typography variant="body2">ReactJs</Typography>
-          </Box>
+        <Box sx={{ display: "flex", alignItems: "center", color: "text.secondary" }}>
+      <Box
+        sx={{
+          width: 12,
+          height: 12,
+          backgroundColor: "blue",
+          borderRadius: "4px",
+          mr: 1,
+        }}
+      />
+      <Typography variant="body2">ReactJs</Typography>
+    </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
             <Icon fontSize="1.25rem" icon="tabler:map-pin" />
-            <Typography variant="body2">London</Typography>
+            <Typography variant="body2" sx={{ ml: 1 }}>London</Typography>
           </Box>
         </Box>
         <Button
           variant="contained"
           color={student.is_active ? 'success' : 'error'}
-          sx={{ mt: 3, '& svg': { mr: 1 }, borderRadius: 2 }}
+          sx={{ mt: 3, '& svg': { mr: 1 }, borderRadius: 2,  backgroundColor: student.is_active? "green" : "gray",
+          color: "white",
+          borderRadius: "20px",
+          padding: "4px 10px",
+          fontSize: "14px",
+          fontWeight: "500", }}
         >
-          <Icon icon="tabler:check" fontSize="1.125rem" />
+          <Icon icon="tabler:check" fontSize="1.125rem"  />
           {student.is_active ? 'Active' : 'Inactive'}
         </Button>
       </CardContent>
@@ -71,4 +84,3 @@ UserViewLeft.propTypes = {
 };
 
 export default UserViewLeft;
-

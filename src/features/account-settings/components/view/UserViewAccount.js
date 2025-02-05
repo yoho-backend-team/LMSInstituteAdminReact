@@ -17,7 +17,12 @@ import { getUserActivityLog } from 'features/user-management/users-page/services
 import Pagination from '@mui/material/Pagination';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import { Chip } from '@mui/material';
+import { Chip, Skeleton } from '@mui/material';
+import UserViewLeft from './UserViewLeft';
+import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
+import Animations from './Animations';
+import StaffManagementViewsample from './Animations';
+
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
     display: 'none'
@@ -28,6 +33,7 @@ const UserViewAccount = ({ id }) => {
   const [activityLog, setActivityLog] = useState([]);
   const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
   const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -37,6 +43,7 @@ const UserViewAccount = ({ id }) => {
 
   const getUserLog = async (userId, page) => {
     // console.log('User ID:', userId, 'Page:', page);
+    
 
     try {
       const token = localStorage.getItem('token');
@@ -56,13 +63,16 @@ const UserViewAccount = ({ id }) => {
       console.log(response.data);
 
       if (response.data.status === 'success') {
+        setLoading(false);
         setActivityLog(response.data); // Update your state
         setTotalPages(response.data.pagination.totalPages); // Total pages from API response
         setCurrentPage(response.data.pagination.currentPage); // Update current page
         toast.success(response.data?.message);
+        
         return;
       }
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         console.error('Response Error:', error.response.data);
         console.error('Status:', error.response.status);
@@ -79,18 +89,20 @@ const UserViewAccount = ({ id }) => {
 
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} lg={12}>
-        <Card>
+      <Grid item xs={12} sm={12} lg={12}>
+        <Card  sx={{width:'full'}}>
           <CardHeader
             title="User Activity Timeline"
-            action={
-              <OptionsMenu
-                options={['Share timeline', 'Suggest edits', 'Report bug']}
-                iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-              />
-            }
+            // action={
+            //   <OptionsMenu
+            //     options={['Share timeline', 'Suggest edits', 'Report bug']}
+            //     iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
+            //   />
+            // }
           />
-          <CardContent sx={{ height: '24em',  overflow: 'scroll' }}>
+           {loading ? (
+      <StaffManagementViewsample />) :(
+          <CardContent sx={{ height: '63vh',  overflow: 'scroll' }}>
             <Timeline>
               {activityLog?.data?.map((item, index) => (
                 <TimelineItem key={index}>
@@ -98,7 +110,7 @@ const UserViewAccount = ({ id }) => {
                     <TimelineDot color="warning" />
                     <TimelineConnector />
                   </TimelineSeparator>
-                  <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important` }}>
+                  <TimelineContent sx={{ mb: (theme) => `${theme.spacing(3)} !important`,px:2 }}>
                     <Box
                       sx={{
                         display: 'flex',
@@ -107,8 +119,8 @@ const UserViewAccount = ({ id }) => {
                         justifyContent: 'space-between'
                       }}
                     >
-                      <Chip  color='primary' label={item.title}/>                      
-                      
+                      <Chip  color='primary' label={item.title}/>
+                       
                     </Box>
                     <Box
                       sx={{
@@ -125,6 +137,8 @@ const UserViewAccount = ({ id }) => {
                         }
                       }}
                     >
+                      <Box sx={{display:"flex", justifyContent:"space-between"}}>
+
                       <Typography
                         variant="h5"
                         sx={{
@@ -135,6 +149,18 @@ const UserViewAccount = ({ id }) => {
                       >
                         {item.model}
                       </Typography>
+                      <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                        {new Date(item?.timestamp).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                          hour12: true // Use false for 24-hour format
+                        })}
+                      </Typography>
+                      </Box>
                       <Typography variant="body1" sx={{
                           color: '#616161', // Neutral text color
                           lineHeight: 1.6 // Better readability
@@ -150,7 +176,7 @@ const UserViewAccount = ({ id }) => {
                       >
                         {item.details}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                      {/* <Typography variant="caption" sx={{ color: 'text.disabled' }}>
                         {new Date(item?.timestamp).toLocaleString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -160,7 +186,7 @@ const UserViewAccount = ({ id }) => {
                           second: '2-digit',
                           hour12: true // Use false for 24-hour format
                         })}
-                      </Typography>
+                      </Typography> */}
                     </Box>
                   </TimelineContent>
                 </TimelineItem>
@@ -179,7 +205,7 @@ const UserViewAccount = ({ id }) => {
               />
               </div>
             </Grid>
-          </CardContent>
+          </CardContent>)}
         </Card>
       </Grid>
     </Grid>

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import { resendStudentNotification } from 'features/notification-management/student-notifications/services/studentNotificationServices';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { motion } from "framer-motion"
 
@@ -90,24 +91,28 @@ const AllNotificationCard = ({ notification, onResend }) => {
 
 
 const AllNotificationBodySection = ({ allNotifications }) => {
+  const [selectedNotification, setSelectedNotification] = useState(null);
+
   const handleSubmit = async (id) => {
     try {
       const data = {
         id: id,
-        notification_id: id
+        notification_id: id,
       };
-
+       console.log("hello");
+       
       const response = await resendStudentNotification(data);
 
-      if (response.success) {
-        toast.success(response.message);
+      console.log('sucess response', response);
+
+      if (response.data && response.data.message) {
+        toast.success(response.data.message);
       } else {
-        toast.error(response.message);
+        toast.error(response.message || 'Failed to resend notification');
       }
     } catch (error) {
       console.error('Error in handleSubmit:', error);
-
-      toast.error('Failed to resend notification');
+      toast.error('An error occurred while resending the notification');
     }
   };
 
@@ -220,7 +225,7 @@ const AllNotificationBodySection = ({ allNotifications }) => {
         }}
         autoHeight
         rowHeight={62}
-        rows={allNotifications?allNotifications:[]}
+        rows={ allNotifications ? allNotifications : []}
         columns={columns}
         disableRowSelectionOnClick
         hideFooterPagination

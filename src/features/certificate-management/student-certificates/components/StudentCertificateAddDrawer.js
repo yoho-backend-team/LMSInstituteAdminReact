@@ -22,11 +22,19 @@ import { addStudentCertificate } from '../services/studentCertificateServices';
 import { useInstitute } from 'utils/get-institute-details';
 import client from 'api/client';
 
+// Custom styled header
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(6),
-  justifyContent: 'space-between'
+  padding: theme.spacing(2),
+  justifyContent: 'space-between',
+  alignItems:"center",
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+  width:'90%',
+  marginLeft:23,
+  marginTop:"5%",
+  backgroundColor:"linear-gradient(to right,#fbfbfb,#ebedee)"
 }));
 
 const schema = yup.object().shape({
@@ -65,13 +73,11 @@ const StudentCertificateAddDrawer = (props) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
-
     setActiveBranches(result.data);
   };
 
   const getActiveCoursesByBranch = async (selectedBranchId) => {
     const result = await getAllCourses({ branch_id: selectedBranchId });
-
     if (result?.data) {
       setActiveCourse(result?.data);
     }
@@ -117,29 +123,24 @@ const StudentCertificateAddDrawer = (props) => {
   };
 
   // Function to upload file to S3
-const uploadFileToS3 = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
+  const uploadFileToS3 = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
 
-  try {
-    const response = await client.file.upload()
-
-    if (response.status === 200) {
-      return response.data; // Assume the response data contains the uploaded file URL or relevant data
-    } else {
-      throw new Error('File upload failed');
+    try {
+      const response = await client.file.upload();
+      if (response.status === 200) {
+        return response.data; // Assume the response data contains the uploaded file URL or relevant data
+      } else {
+        throw new Error('File upload failed');
+      }
+    } catch (error) {
+      console.error('Error uploading file to S3:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error uploading file to S3:', error);
-    throw error;
-  }
-};
+  };
+
   const onSubmit = async (data) => {
-    // const s3UploadResponse = await uploadFileToS3(studymaterialPdf);
-    
-    // Assuming s3UploadResponse contains the URL of the uploaded file
-    
-    
     var bodyFormData = new FormData();
     bodyFormData.append('file_upload', studymaterialPdf);
     bodyFormData.append('student', data.student);
@@ -147,13 +148,12 @@ const uploadFileToS3 = async (file) => {
     bodyFormData.append('description', data.description);
     bodyFormData.append('branch_id', selectedBranchId);
 
-    const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
-
+    const branch = activeBranches.filter(i=>i.branch_identity===data.branch);
     const InputData = {
-      file_upload:data.pdf_file,
+      file_upload: data.pdf_file,
       student: data.student,
-      branch_name:data.branch_id,
-      branch_id : branch[0].uuid,
+      branch_name: data.branch_id,
+      branch_id: branch[0].uuid,
       institute_id: useInstitute().getInstituteId(),
       batch_id: data.batch._id,
       description: data.description,
@@ -186,10 +186,10 @@ const uploadFileToS3 = async (file) => {
         variant="temporary"
         onClose={handleClose}
         ModalProps={{ keepMounted: true }}
-        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
-      >
+        sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } }}}
+      > 
         <Header>
-          <Typography variant="h5">Add Certificate</Typography>
+          <Typography variant="h4" sx={{fontWeight: 'bold'}}>ADD CERTIFICATE</Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -203,39 +203,42 @@ const uploadFileToS3 = async (file) => {
               }
             }}
           >
-            <Icon icon="tabler:x" fontSize="1.125rem" />
+            <Icon icon="tabler:x" fontSize='20' />
           </IconButton>
         </Header>
-        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+        <Box sx={{ p: 3,mt:2}}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-              {/* <CoursePdfInput setCourseNotePdf={handleSetPdf} setValue={setValue} files={files} setFiles={setFiles} /> */}
-            </Grid>
-
-            <Grid item xs={12} sx={{ mb: 2 }}>
+            {/* Branch Field */}
+            <Grid item xs={12} sx={{ mb: 4 }}>
               <Controller
                 name="branch"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Autocomplete
-                      fullWidth
-                      options={activeBranches}
-                      getOptionLabel={(branch) => branch.branch_identity}
-                      onChange={(event, newValue) => {
-                        onChange(newValue?.branch_identity);
-                        getActiveCoursesByBranch(newValue?.uuid);
-                      }}
-                      value={activeBranches.find((branch) => branch.branch_identity === value) || null}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
+                    fullWidth
+                    options={activeBranches}
+                    getOptionLabel={(branch) => branch.branch_identity}
+                    onChange={(event, newValue) => {
+                      onChange(newValue?.branch_identity);
+                      getActiveCoursesByBranch(newValue?.uuid);
+                    }}
+                    value={activeBranches.find((branch) => branch.branch_identity === value) || null}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        label="Select Branch" 
+                        error={Boolean(errors.branch)} 
+                        helperText={errors.branch?.message}
+                        sx={{ borderRadius: 1, borderColor: errors.branch ? 'red' : 'default'}}
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
 
-
-            <Grid item xs={12} sx={{ mb: 2 }}>
+            {/* Course Field */}
+            <Grid item xs={12} sx={{ mb: 4 }}>
               <Controller
                 name="course"
                 control={control}
@@ -250,14 +253,21 @@ const uploadFileToS3 = async (file) => {
                     }}
                     value={activeCourse.find((course) => course._id === value) || null}
                     renderInput={(params) => (
-                      <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                      <TextField
+                        {...params}
+                        label="Select Course"
+                        error={Boolean(errors.course)}
+                        helperText={errors.course?.message}
+                        sx={{ borderRadius: 1 }}
+                      />
                     )}
                   />
                 )}
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            {/* Batch Field */}
+            <Grid item xs={12} sx={{ mb: 4 }}>
               <Controller
                 name="batch"
                 control={control}
@@ -270,16 +280,16 @@ const uploadFileToS3 = async (file) => {
                     onChange={(event, newValue) => {
                       field.onChange(newValue);
                       setValue('batch', newValue);
-                      getStudentsByBatch(newValue?.uuid);
+                      getStudentsByBatch(newValue?.uuid); 
                     }}
                     value={field.value}
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        sx={{ mb: 2 }}
                         label="Batch"
                         error={Boolean(errors.batch)}
                         helperText={errors.batch?.message}
+                        sx={{ borderRadius: 1 }}
                       />
                     )}
                   />
@@ -287,7 +297,8 @@ const uploadFileToS3 = async (file) => {
               />
             </Grid>
 
-            <Grid item xs={12} sx={{ mb: 2 }}>
+            {/* Student Field */}
+            <Grid item xs={12} sx={{ mb: 4 }}>
               <Controller
                 name="student"
                 control={control}
@@ -300,18 +311,20 @@ const uploadFileToS3 = async (file) => {
                     onChange={onChange}
                     error={Boolean(errors.student)}
                     helperText={errors.student?.message}
+                    sx={{ borderRadius: 1 }}
                   >
                     {students.map((student) => (
-                     <MenuItem key={student?.student} value={student?._id}>
-                     {`${student?.first_name&&student?.last_name?student?.first_name+student?.last_name:student.full_name}`}
-                   </MenuItem>
+                      <MenuItem key={student?.student} value={student?._id}>
+                        {`${student?.first_name&&student?.last_name?student?.first_name+student?.last_name:student.full_name}`}
+                      </MenuItem>
                     ))}
                   </TextField>
                 )}
               />
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            {/* Certificate Name */}
+            <Grid item xs={12} sm={12} sx={{mb: 4 }}>
               <Controller
                 name="certificate_name"
                 control={control}
@@ -319,16 +332,18 @@ const uploadFileToS3 = async (file) => {
                   <TextField
                     fullWidth
                     value={value}
-                    sx={{ mb: 2 }}
                     label="Certificate Name"
                     onChange={onChange}
                     placeholder="John Doe"
                     error={Boolean(errors.certificate_name)}
                     {...(errors.certificate_name && { helperText: errors.certificate_name.message })}
+                    sx={{ borderRadius: 1,}}
                   />
                 )}
               />
             </Grid>
+
+            {/* Description */}
             <Grid item xs={12} sm={12}>
               <Controller
                 name="description"
@@ -337,22 +352,23 @@ const uploadFileToS3 = async (file) => {
                   <TextField
                     fullWidth
                     value={value}
-                    sx={{ mb: 2 }}
-                    label="description"
+                    label="Description"
                     onChange={onChange}
                     placeholder="Business Development Executive"
                     error={Boolean(errors.description)}
                     {...(errors.description && { helperText: errors.description.message })}
+                    sx={{ borderRadius: 1,mb: 2}}
                   />
                 )}
               />
             </Grid>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
+            {/* Submit and Cancel Buttons */}
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4,justifyContent:'space-between'}}>
+              <Button type="submit" variant="contained" sx={{ mr: 3, borderRadius: 2,width:'30%',py:1}}>
                 Submit
               </Button>
-              <Button variant="tonal" color="secondary" onClick={handleClose}>
+              <Button variant="tonal" color="secondary" onClick={handleClose} sx={{ borderRadius: 2,width:'30%',py:1}}>
                 Cancel
               </Button>
             </Box>
@@ -370,5 +386,3 @@ StudentCertificateAddDrawer.propTypes = {
 };
 
 export default StudentCertificateAddDrawer;
-
-

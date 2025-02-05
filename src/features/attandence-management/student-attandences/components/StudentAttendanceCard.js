@@ -12,6 +12,7 @@ import { imagePlaceholder, profilePlaceholder } from 'utils/placeholders';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { formatStudentsCount } from 'utils/format';
 
+
 const StudentAttendanceCard = ({ studentAttendance }) => {
   function convertTo12HourFormat(timestamp) {
     // Create a new Date object from the timestamp string
@@ -227,7 +228,8 @@ const StudentAttendanceCard = ({ studentAttendance }) => {
              '&:hover': {
                transform: 'translateY(-10px)',
                boxShadow: "0 0.5rem 1.5rem rgba(38,43,67,.2)"
-             }
+             },
+             background:'linear-gradient(to right, #5f2c82, ##49a09d )'
            }}>
             <Grid container direction="column" spacing={1}>
               <Grid item sx={{ alignItems: 'center', display: 'flex', mt: 1 }}>

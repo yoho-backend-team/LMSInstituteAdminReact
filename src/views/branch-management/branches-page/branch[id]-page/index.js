@@ -53,24 +53,8 @@ const BranchViewPage = () => {
       }}
     >
       <Grid container spacing={4}>
-        {/* Back Button */}
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<ArrowBackIcon />}
-            onClick={() => navigate(-1)} 
-            sx={{
-              mb: 3,
-              textTransform: 'none',
-              fontWeight: 'bold',
-              borderRadius: 5,
-              paddingRight:"5px",
-            }}
-          >
-           
-          </Button>
-        </Grid>
+      
+        
 
         {/* Left Column: Main Content */}
         <Grid item xs={12} md={8}>
@@ -80,6 +64,26 @@ const BranchViewPage = () => {
             gutterBottom
             sx={{ fontWeight: 'bold', mb: 4, color: '#333' }}
           >
+               {/* Back Button */}
+               <Button
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(-1)}
+                sx={{
+    
+    textTransform: 'none',
+    fontWeight: 'bold',
+    borderRadius: 5,
+    paddingRight: "5px",
+    paddingBottom: "-30px",
+    marginRight:"10px"
+     
+   
+  }}
+>
+  
+</Button>
             Branch Overview
           </Typography>
 
@@ -223,7 +227,7 @@ const BranchViewPage = () => {
               backgroundColor: '#fff',
               borderRadius: 2,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              height: '45%',
+              height: '28%',
               transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
                 transform: 'scale(1.03)',
