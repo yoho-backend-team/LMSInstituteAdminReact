@@ -18,7 +18,6 @@ import { getInitials } from 'utils/get-initials';
 import { useInstitute } from 'utils/get-institute-details';
 import generateStaffIDCardPDF from 'utils/id-generator';
 import { getImageUrl } from 'utils/imageUtils';
-import generateIDCardPDF from 'utils/pdfGenerator';
 
 const roleColors = {
   admin: 'error',

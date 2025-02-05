@@ -39,6 +39,8 @@ const FaqDataGrid = () => {
 
   const [currentPage, setCurrentPage] = useState(1); 
   const [rowsPerPage] = useState(10);
+
+  
   
   const dispatch = useDispatch();
   const faqs = useSelector(selectFaqs);
@@ -101,9 +103,11 @@ const FaqDataGrid = () => {
       id: deletingItemId
     };
     const response = await deleteFaq(data);
+    console.log('delete response data : ',response);
     if (response.success) {
       // toast.success(response.message);
       fetchFaqs(currentPage);
+      setRefetch((state) => !state);
     } else {
       toast.error(response.message);
     }

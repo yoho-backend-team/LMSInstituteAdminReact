@@ -182,43 +182,35 @@ const AllNotificationAddDrawer = (props) => {
         transition: "all 0.3s ease-in-out",
       }}
     >
-      <Header  sx={{mt:-7}}>
-        <Typography variant="h2"  sx={{ml:-4}}>All Notification</Typography>
-        <IconButton
-          size="small"
-          onClick={handleClose}
-          sx={{
-            mr:-7,
-            p: '0.438rem',
-            borderRadius: 1,
-            color: 'text.primary',
-            backgroundColor: 'action.selected',
-            '&:hover': {
-              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-            }
-          }}
-        >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
-        </IconButton>
-      </Header>
-      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-            <ImgStyled src={imgSrc} alt="Profile Pic" />
-            <div>
-              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                Upload
-                <input
-                  hidden
-                  type="file"
-                  value={inputValue}
-                  accept="image/png, image/jpeg"
-                  onChange={handleInputImageChange}
-                  id="account-settings-upload-image"
-                />
-              </ButtonStyled>
-            </div>
-          </Box> */}
+      <Box
+        sx={{
+          border: '1px solid #e0e0e0',
+          boxShadow: 3,
+          padding: 3,
+          margin: '80px auto',
+          borderRadius: '12px',
+          backgroundColor: 'background.paper',
+          width: { xs: '90%', sm: '80%', md: '80%' }
+        }}
+      >
+          <Header sx={{height: '5px' , borderBottom: '1px solid #ddd'}}>
+            <Typography variant="h3" fontWeight={600} color="primary">
+              Add Notification
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={handleClose}
+              sx={{
+                color: 'text.primary',
+                backgroundColor: 'action.selected',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.secondary.light
+                }
+              }}
+            >
+              <Icon icon="tabler:x" fontSize="1.125rem" />
+            </IconButton>
+          </Header>
 
         <Box>
           <Box sx={{ mt: 2 }}>
