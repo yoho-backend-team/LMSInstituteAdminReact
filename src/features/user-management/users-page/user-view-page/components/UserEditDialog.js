@@ -27,6 +27,9 @@ import { useInstitute } from 'utils/get-institute-details';
 import client from 'api/client';
 import { hide } from '@popperjs/core';
 import { useSpinner } from 'context/spinnerContext';
+import {IconButton} from "@mui/material"
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { white } from 'precise-ui/dist/es6/colors';
 
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
@@ -204,6 +207,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
       sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 750 } }}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
+
         <DialogTitle
           id="user-view-edit"
           sx={{
@@ -215,6 +219,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
         >
           Edit User Information
         </DialogTitle>
+
         <DialogContent
           sx={{
             pb: (theme) => `${theme.spacing(3)} !important`,
@@ -224,6 +229,30 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
           <Grid container spacing={3}>
             <Grid item xs={12} sm={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              
+              <IconButton
+            sx={{
+              
+              position: "absolute",
+              top: 195,
+              right: 330,
+              backgroundColor:  "ghostwhite",
+              
+            }}
+            aria-label="upload picture"
+            component="label"
+          >
+          <input
+                      hidden
+                      type="file"
+                      value={inputValue}
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputImageChange}
+                      id="account-settings-upload-image"
+                    />
+            <CameraAltIcon  sx={{ fontSize: '20px' }}/>
+          </IconButton>
+
                 {!selectedImage && (
                   <ImgStyled
                     src={
@@ -232,13 +261,29 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                         : profilePlaceholder
                     }
                     alt="Profile Pic"
+                    sx={{
+                      borderRadius: '50%',
+                      width: '100px',  
+                      height: '100px', 
+                      objectFit: 'cover', 
+                    }}
                   />
                 )}
 
                 {selectedImage && <ImgStyled src={getImageUrl(imgSrc)} alt="Profile Pic" />}
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload New Image
+                </Box>
+                <div  style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center', 
+  
+  }}>
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" sx={{ mt: 2, backgroundColor: 'white', 
+    color: 'black',           
+    '&:hover': {
+      backgroundColor: 'white', 
+      color: 'black',} }} >
+                    Upload New Image 
                     <input
                       hidden
                       type="file"
@@ -249,8 +294,9 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     />
                   </ButtonStyled>
                 </div>
-              </Box>
+              
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="first_name"
@@ -268,6 +314,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="last_name"
@@ -285,6 +332,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="user_name"
@@ -302,6 +350,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="email"
@@ -320,6 +369,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="phone_number"
@@ -443,21 +493,36 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
             </Grid>
           </Grid>
         </DialogContent>
+
         <DialogActions
           sx={{
-            justifyContent: 'center',
+            
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
             pb: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(5)} !important`]
           }}
         >
-          <Button type="submit" variant="contained" sx={{ mr: 2 }}>
-            Submit
-          </Button>
-          <Button variant="tonal" color="secondary" onClick={handleClose}>
+          <Button variant="tonal" color="secondary" onClick={handleClose}
+           sx={{
+            backgroundColor: '#f5f5f5', 
+            color:'black',
+            '&:hover': {
+              backgroundColor: '#e0e0e0',}}}>
             Cancel
           </Button>
+
+          <Button type="submit" variant="contained" sx={{ mr: 2,backgroundColor: 'black', 
+    color: 'white',           
+    '&:hover': {
+      backgroundColor: 'black', 
+      color: 'white',} }}>
+            Save Changes
+          </Button>
+          
+
         </DialogActions>
+
       </form>
+      
     </Dialog>
   );
 };

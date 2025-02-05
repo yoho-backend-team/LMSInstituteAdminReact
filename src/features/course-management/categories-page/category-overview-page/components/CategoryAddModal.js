@@ -128,19 +128,18 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
     },
     [selectedImage, reset, handleAddClose, setCategoryRefetch]
   );
-  
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 600, borderRadius: 2 } }}
+      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 500, borderRadius: 2 } }}
     >
       <DialogTitle
         id="user-view-edit"
         sx={{
-          textAlign: 'center',
+          ml:-7,mt:-3,
           fontSize: '1.5rem !important',
           fontWeight: 'bold',
           px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(10)} !important`],
@@ -149,6 +148,9 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
       >
         Add Category
       </DialogTitle>
+        <Typography variant="caption" color="textSecondary" sx={{mx:4,ml:3,color:'grey',fontSize: '0.9rem !important',}}>
+        Create a new course category with an image. The image should be PNG or JPEG format.
+              </Typography>
       <DialogContent
         sx={{
           pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
@@ -169,18 +171,26 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
                   </Box>
                 </>
               ) : (
-                <Button variant="contained" component="label" >
+                <Button variant="contained" component="label" sx={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', 
+                  },px:5,py:0.8
+                }} >
                   Upload Image
                   <input
                     hidden
                     type="file"
                     accept="image/png, image/jpeg"
                     onChange={handleInputImageChange}
+                    
                   />
                 </Button>
               )}
-              <Typography variant="caption" color="textSecondary">
-                PNG or JPEG. Required resolution: 388x300 pixels (within range: 300x300 - 388x300).
+              <Typography variant="caption" color="grey" sx={{m:2}}>
+              Recommended: 388x300 pixels <br />
+              Accepted formats: PNG, JPEG
               </Typography>
               { errors.image &&
               <Typography  sx={{ color: "#EA5455", fontSize: "0.75rem",fontWeight: 400}}>
@@ -207,11 +217,18 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
             </Grid>
           </Grid>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 2 }}>
-              Submit
-            </Button>
-            <Button variant="outlined" color="error" onClick={handleClose}>
+            <Button variant="contained"  onClick={handleClose} sx={{ mr: 2,
+                  backgroundColor: 'white',
+                  color: 'black',
+                  '&:hover': {
+                    backgroundColor: 'grey.300', 
+                  } }}>
               Cancel
+            </Button>
+            <Button type="submit" variant="contained" sx={{backgroundColor: 'black',
+                  color: 'white','&:hover': {
+                    backgroundColor: '#353636', }}}>
+              Create category
             </Button>
           </Box>
         </form>

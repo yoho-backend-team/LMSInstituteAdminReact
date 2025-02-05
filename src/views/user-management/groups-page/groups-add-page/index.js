@@ -212,18 +212,41 @@ const GroupAddPage = () => {
   // Render permissions table rows
   const renderPermissions = useMemo(() => {
     return permissions.map((module) =>
-      <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
+      <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' }, '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        transition: 'background-color 0.2s ease'
+      },
+      borderLeft: '4px solid transparent',
+      '&:hover': {
+        backgroundColor: 'ghostwhite'
+      } }}>
           <TableCell
             sx={{
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              fontSize: (theme) => theme.typography.h6.fontSize
+              fontWeight: 500,
+              whiteSpace: 'nowrap', 
+              fontSize: '1.1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5, 
+              m:2 
             }}
           >
             {module?.identity}
           </TableCell>
+          <TableCell sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
           {module?.permission?.map((permission, index) => (
-            <TableCell key={index}>
+            <TableCell key={index} 
+            elevation={0}
+            sx={{
+              p: 1,
+              borderRadius: '8px',
+              backgroundColor: selectedCheckbox.includes(permission._id) 
+                ? 'rgba(25, 118, 210, 0.08)'
+                : ' ',
+               
+              
+            }}
+            >
               <FormControlLabel
                 label={permission.name}
                 sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
@@ -244,6 +267,7 @@ const GroupAddPage = () => {
               />
             </TableCell>
           ))}
+           </TableCell>
         </TableRow>
     );
   }, [permissions, selectedCheckbox, togglePermission]);
@@ -270,7 +294,7 @@ const GroupAddPage = () => {
                 px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(5)} !important`]
               }}
             >
-              <Grid sx={{ my: 4, gap: 2 }} container>
+              <Grid sx={{ m: 4,justifyContent: 'center', gap: 2 }} container>
                 <Grid item xs={12} sm={5.9}>
                   <Controller
                     name="groupName"

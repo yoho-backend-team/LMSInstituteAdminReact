@@ -3,12 +3,8 @@ import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconHelp } from
 
 // constant
 const icons = {
-  IconKey,
-  IconShieldLock,
-  IconUser,
-  IconUsers,
-  IconCash,
-  IconHelp
+ 
+
 };
 import AddIcon from '@mui/icons-material/Add';
 import { hasPermission } from 'hooks/hasPermissions';

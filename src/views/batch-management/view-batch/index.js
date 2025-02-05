@@ -64,7 +64,7 @@ const ViewBatch = () => {
       {loading ? (
         <BatchViewSkeleton />
       ) : (
-        <Grid container spacing={3} sx={{ p: 1 }}>
+        <Grid container spacing={3} sx={{ p: 1,background: 'linear-gradient(to bottom right, #EBF4FF, #FFFFFF, #FAF5FF)', minHeight: '100vh' }}>
           <Grid item xs={12} sm={12}>
             <HeaderCard batchData={batchData} theme={theme} />
           </Grid>
