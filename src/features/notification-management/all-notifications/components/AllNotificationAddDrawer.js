@@ -318,6 +318,7 @@ const AllNotificationAddDrawer = (props) => {
         </Box>
       </Box>
       </Box>
+      </Box>
       </Modal>
      
   );
