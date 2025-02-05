@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const Axios = axios.create({
     baseURL : process.env.REACT_APP_PUBLIC_API_URL,
     timeout : 5000000,
@@ -21,12 +22,12 @@ Axios.interceptors.response.use(
     (error) => {
         if(error?.response && error?.response?.status === 401 && error?.response?.data?.status === "session_expired"){
             console.log("logout tryed")
-            localStorage.removeItem('token');
-            localStorage.removeItem('userData');
-            localStorage.removeItem('permissions');
-            localStorage.removeItem('isAuthenticated');
-            localStorage.removeItem('branches');
-            localStorage.removeItem("institute")
+            removeSecureItem('token');
+            removeSecureItem('userData');
+            removeSecureItem('permissions');
+            removeSecureItem('isAuthenticated');
+            removeSecureItem('branches');
+            removeSecureItem("institute")
             window.location.replace("/#/login")
         }
         return Promise.reject(error);

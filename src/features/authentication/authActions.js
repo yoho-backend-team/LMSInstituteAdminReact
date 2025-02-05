@@ -3,6 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import client from 'api/client';
 import { HTTP_END_POINTS } from 'api/client/http_end_points';
+// import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
 
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
@@ -22,7 +23,7 @@ export const login = (username, password) => async (dispatch) => {
     });
    
     if(response.data.data.otpVerify){
-       localStorage.setItem("otp",JSON.stringify(response.data.data))
+       setOtp("otp",JSON.stringify(response.data.data))
        toast.success(response.data.message)
        return {otpVerify:true}
     }
@@ -35,9 +36,7 @@ export const login = (username, password) => async (dispatch) => {
       localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
       localStorage.setItem("institute",JSON.stringify(response.data.data.institute))
       localStorage.setItem('selectedBranchId', JSON.stringify(response.data.data.branches[0]?.uuid))
-     console.log(response,response.data.data.branches[0]?.uuid)
-     
-      // Dispatch success action
+    
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {

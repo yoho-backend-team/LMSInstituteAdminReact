@@ -15,6 +15,7 @@ const FilterDesignCard = ({  go }) => {
     background:"linear-gradient(to right,#536976,#292E49)"
   };
 
+  
   return (
     <Box>
       <Box>
