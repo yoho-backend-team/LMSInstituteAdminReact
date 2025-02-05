@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import CustomChip from 'components/mui/chip';
+import { formatDate } from 'utils/format';
 
 const CardStyle = styled(Card)(({ theme }) => ({
   border: '2px dotted',
@@ -197,9 +198,9 @@ const Batch = () => {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, justifyContent: 'space-around' }}>
-              <CustomChip label={item?.start_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
+              <CustomChip label={formatDate(item?.start_date)} size="small" color="secondary" variant="tonal" skin="dark" rounded />
               <div className="connect" />
-              <CustomChip label={item?.end_date} size="small" color="secondary" variant="tonal" skin="dark" rounded />
+              <CustomChip label={formatDate(item?.end_date)} size="small" color="secondary" variant="tonal" skin="dark" rounded />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
