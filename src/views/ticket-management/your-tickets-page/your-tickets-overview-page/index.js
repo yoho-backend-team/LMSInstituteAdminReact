@@ -1,27 +1,21 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Box, Button, Grid, Pagination, Tab, Typography, useTheme } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
-import CustomTabList from '@mui/lab/TabList';
+import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Box, Button, Grid, Typography } from '@mui/material';
-import Pagination from '@mui/material/Pagination';
-import Tab from '@mui/material/Tab';
 import MainCard from 'components/cards/MainCard';
 import AdminTicketsCardsSkeleton from 'components/cards/Skeleton/AdminTcketSkeleton';
-import TicketsCardsSkeleton from 'components/cards/Skeleton/TicketsCardsSkeleton';
 import ClosedTicketCard from 'features/ticket-management/your-tickets/components/ClosedTicketCard';
 import CreateTicketDrawer from 'features/ticket-management/your-tickets/components/CreateTicketDrawer';
 import OpenTicketCard from 'features/ticket-management/your-tickets/components/OpenTicketCard';
 import { selectClosedTickets } from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSelectors';
-import { setClosedTickets } from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketSlice';
 import { getAllClosedTickets } from 'features/ticket-management/your-tickets/redux/closed-tickets/yourClosedTicketThunks';
 import { selectLoading, selectOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSelectors';
-import { setOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSlice';
 import { getAllOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketThunks';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 
 const YourTicketsPage = () => {
-  // States
   const [value, setValue] = useState('open');
   const dispatch = useDispatch();
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -33,14 +27,15 @@ const YourTicketsPage = () => {
   const [selectedTicket, setSelectedTicket] = useState({});
   const [refetch, setRefetch] = useState(false);
 
+  const theme = useTheme();
+
   useEffect(() => {
-    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1', institute_id : useInstitute().getInstituteId() }));
-  }, [selectedBranchId, dispatch, refetch]);
-  useEffect(() => {
-    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, status: 'closed', page: '1', institute_id : useInstitute().getInstituteId() }));
+    dispatch(getAllOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1', institute_id: useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
 
-  
+  useEffect(() => {
+    dispatch(getAllClosedTickets({ branch_id: selectedBranchId, status: 'closed', page: '1', institute_id: useInstitute().getInstituteId() }));
+  }, [selectedBranchId, dispatch, refetch]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -49,6 +44,7 @@ const YourTicketsPage = () => {
   const handleSelectedTicket = (data) => {
     setSelectedTicket(data);
   };
+
   return (
     <MainCard>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -60,16 +56,46 @@ const YourTicketsPage = () => {
           Create
         </Button>
       </Box>
-      {studentLoading? (
+      {studentLoading ? (
         <AdminTicketsCardsSkeleton />
       ) : (
         <Grid container spacing={2}>
           <Grid marginTop={5} item xs={12}>
             <TabContext value={value}>
-              <CustomTabList pill="true" onChange={handleChange} aria-label="customized tabs example">
-                <Tab value="open" label="Opened Tickets" />
-                <Tab value="close" label="Closed Tickets" />
-              </CustomTabList>
+              <TabList
+                onChange={handleChange}
+                aria-label="customized tabs example"
+                sx={{
+                  '& .MuiTabs-indicator': {
+                    backgroundColor: theme.palette.primary.main,
+                    height: 4,
+                  },
+                  '& .MuiTab-root': {
+                    textTransform: 'none',
+                    minWidth: 100,
+                    fontWeight: theme.typography.fontWeightRegular,
+                    marginRight: theme.spacing(1),
+                    color: theme.palette.text.secondary,
+                    transition: 'all 0.3s ease',
+                    overflow: 'visible',
+                    '&.Mui-selected': {
+                      color: theme.palette.primary.main,
+                      fontWeight: theme.typography.fontWeightMedium,
+                    },
+                    '&:hover': {
+                      transform: 'translateY(2px)',
+                    },
+                    borderRadius: '8px',
+                    padding: '12px 16px',
+                    background: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
+                    boxShadow: `0 4px 15px rgba(0, 0, 0, 0.1)`,
+                  },
+                  mb: 2
+                }}
+              >
+                <Tab value="open" label={<Typography variant="h6">Opened Tickets</Typography>} />
+                <Tab value="close" label={<Typography variant="h6">Closed Tickets</Typography>} />
+              </TabList>
 
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
                 <Grid container spacing={2}>

@@ -1,3 +1,5 @@
+
+
 // authReducer.js
 const branches = JSON.parse(localStorage.getItem('branches'));
 const selectedBranchId = localStorage.getItem('selectedBranchId');
@@ -29,7 +31,7 @@ const initialState = {
 };
 
 const authReducer = (state = initialState, action) => {
- console.log(state,action)
+//  console.log(state,action)
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       // d

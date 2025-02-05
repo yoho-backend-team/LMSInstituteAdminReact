@@ -70,7 +70,7 @@ const AllActivity = () => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ ml: 1, mb: 2 }}>
+      <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left',mt:2 }}>
         Recent Activities
       </Typography>
       <Card
@@ -78,11 +78,13 @@ const AllActivity = () => {
         sx={{
           backgroundColor: "white",
           p: 3,
-          height: 450,
+          height: "455px",
           overflow: 'auto',
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           borderRadius: "12px",
-         height:"47rem"
+          backgroundColor: '#f0f9ff',
+          
+       
           
         }}
       >
@@ -95,12 +97,15 @@ const AllActivity = () => {
                     display: 'flex',
                     alignItems: 'center',
                     mb: 2,
-                    backgroundColor: theme.palette.grey[100],
-                    borderRadius: '8px',
-                    p: 2,
-                    transition: 'background-color 0.3s ease',
+                    backgroundColor: '#f0f9ff',
+                   padding:"20px",
+                   border:"1px solid #d1e8ff",
+                   
                     '&:hover': {
-                      backgroundColor: theme.palette.grey[200],
+                      boxShadow: '0 6px 18px rgba(0, 0, 0, 0.15)',
+                      backgroundColor: '#d1e8ff',
+                      
+                      
                     },
                     
                   }}

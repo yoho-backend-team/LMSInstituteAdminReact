@@ -48,7 +48,7 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
 
   return (
     <>
-    <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",width: '160vh' }}>
+    <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",width: '1100px',  }}>
       
   <CardHeader title="Admin Users" />
   <CardContent>
@@ -56,7 +56,7 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
     <Grid container spacing={2} >
       
       {/* First Row: Select Role */}
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <TextField
           select
           fullWidth
@@ -75,7 +75,7 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
       </Grid>
 
       {/* Second Row: Select Status */}
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <TextField
           select
           fullWidth

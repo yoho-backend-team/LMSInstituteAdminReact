@@ -44,7 +44,7 @@ const FormContainer = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  name: yup.string().required('Category Name is required'),
+  name: yup.string().required('Title Name is required'),
   description: yup.string().required('Description is required')
 });
 
@@ -180,7 +180,7 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                 <Controller
                     name="name"
                     control={control}
@@ -196,7 +196,7 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
                       />
                     )}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
               <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
                 <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ mr: 2 }}>

@@ -1,11 +1,11 @@
 import { TextField ,IconButton,InputAdornment} from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+
 import { getAllCourses } from '../../redux/courseThunks';
 import { useSpinner } from 'context/spinnerContext';
 import { setCourses } from '../../redux/courseSlice';
@@ -46,7 +46,8 @@ const CourseCardHeader = ({ selectedBranchId,courses,setCourseRefetch }) => {
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          backgroundColor:"white"
+          backgroundColor:"white",
+          
         }}
       >
         <TextField
@@ -73,25 +74,7 @@ const CourseCardHeader = ({ selectedBranchId,courses,setCourseRefetch }) => {
             )
           }}
         />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 }, textDecoration: 'none' }}>
-          <Button
-            sx={{ py: 1.5, borderRadius: '0.5rem', 
-              backgroundColor: '#0CCE7F',
-              marginRight:"20px",  
-              '&:hover': {
-                backgroundColor: '#0AA865',
-                
-              },
-             }}
-            variant="contained"
-            component={Link}
-            to="courses/add"
-            color="primary"
-            startIcon={<Icon icon="tabler:plus" />}
-          >
-            Add New Course
-          </Button>
-        </Box>
+       
       </Box>
     </>
   );

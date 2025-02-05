@@ -17,6 +17,9 @@ import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
 import { profilePlaceholder } from 'utils/placeholders';
 
+import FilterListIcon from '@mui/icons-material/FilterList';
+
+
 const Teaching = () => {
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
@@ -70,32 +73,55 @@ const Teaching = () => {
   return (
     <Box sx={{ position: 'relative',  }}>
       {/* Toggle Filter Button */}
-      <Box   sx={{
-          position: 'absolute', 
-          top: '10px', 
-          left: '10px',
-          zIndex:20 
-           
-        }}>
-        <Button
-          variant="contained"
-          onClick={() => setFilterVisible((prev) => !prev)}
-        >
-          {isFilterVisible ? 'Hide Filter' : 'Show Filter'}
-        </Button>
-      </Box>
+      <Box 
+  sx={{
+    position: 'relative',
+    left: '10px',
+    display: "flex",
+    justifyContent: "space-between",
+    width: '100%', 
+   
+  }}
+>
+  
+
+
+  <Button
+    variant="contained"
+    onClick={() => setFilterVisible((prev) => !prev)}
+    startIcon={<FilterListIcon />}
+  >
+    {isFilterVisible ? 'Hide Filter' : 'Show Filter'}
+  </Button>
+
+  <Box component={Link} to={'teaching-staffs/add'} sx={{ p: 0, m: 0 }}>
+    <Button
+      variant="contained"
+      size="medium"
+      fullWidth
+      sx={{
+        py: 1.5,
+        borderRadius: '0.5rem',
+        backgroundColor: "#0CCE7F",
+        ":hover": { backgroundColor: "#0AA865" }
+      }}
+    >
+      Add New Staff
+    </Button>
+  </Box>
+</Box>
+
 
       {/* Filter Overlay */}
       {isFilterVisible && (
         <Box
           sx={{
-            position: 'absolute',
-            top: 50,
+            position: 'relative',
+           
             left: 0,
             width: '100%',
             height: '100%',
-            background: 'rgba(255, 255, 255, 0.9)',
-            zIndex: 10,
+           
             padding: 2,
           }}
         >
@@ -113,14 +139,12 @@ const Teaching = () => {
               <Grid key={i} item xs={12} sm={6} md={4}>
                 <Card
                   sx={{
-                    top:50,
+                   top:10,
                     position: 'relative',
-                    boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+                    boxShadow: 'none',
                     transition: 'transform 0.3s, box-shadow 0.3s',
-                    '&:hover': {
-                      transform: 'scale(1.03)',
-                      boxShadow: '0 .5rem 1.5rem 0 rgba(38,43,67,.3)',
-                    },
+                  
+                   
                   }}
                 >
                   <CardContent
@@ -129,6 +153,7 @@ const Teaching = () => {
                       flexDirection: 'column',
                       alignItems: 'center',
                       pt: 3,
+                      mt:5
                     }}
                   >
                     <Avatar

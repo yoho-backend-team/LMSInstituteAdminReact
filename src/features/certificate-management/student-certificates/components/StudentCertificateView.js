@@ -48,6 +48,7 @@ const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
               <Typography variant="h5" sx={{ color: 'text.secondary', fontSize: 12 }}>
                 {certificate?.student?.email}
               </Typography>
+              <Typography>JHe,fflmmd</Typography>
             </Box>
           </Box>
 
@@ -65,6 +66,7 @@ const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
           <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
             <PDFViewer url={getImageUrl(certificate?.file_upload)} />
           </Grid>
+          
         </DialogContent>
       </Dialog>
     </div>

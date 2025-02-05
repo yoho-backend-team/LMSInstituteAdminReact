@@ -23,95 +23,94 @@ const fadeInUp = keyframes`
 
 const OpenTicketCard = ({ ticket, onClick, handleSelectedTicket }) => {
   const priorityColors = {
-    Low: '#00FF00',      
-    Medium: '#FFFF00',   
-    High: '#FFA500',     
-    Urgent: '#FF0000'    
+    Low: '#00FF00',
+    Medium: '#FFFF00',
+    High: '#FFA500',
+    Urgent: '#FF0000'
   };
 
   const navigate = useNavigate()
-  
+
   const handleResolveClick = () => {
     onClick();
     handleSelectedTicket(ticket);
-    navigate(`/ticket-management/staff-ticket-view/${ticket.uuid}`);    
+    navigate(`/ticket-management/staff-ticket-view/${ticket.uuid}`);
   };
-  
 
   return (
     <Grid item xs={12} md={6} lg={4}>
-      <Card sx={{ 
-        minHeight: 240 ,
+      <Card sx={{
+        minHeight: 240,
         boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
         transition: 'transform 0.3s ease, background-color 0.3s ease',
         '&:hover': {
-            transform: 'scale(1.05)',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)', 
-            cursor: "pointer"
-          },
-          animation: `${fadeInUp} 0.5s ease`,
-        }}>
+          transform: 'scale(1.05)',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          cursor: "pointer"
+        },
+        animation: `${fadeInUp} 0.5s ease`,
+      }}>
         <CardContent>
-          <Box sx={{}}>
+          <Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar src={ ticket?.user?.image ? getImageUrl(ticket?.user?.image): imagePlaceholder} sx={{ mr: 1.75, height: 38, width: 38 }} />
+              <Avatar src={ticket?.user?.image ? getImageUrl(ticket?.user?.image) : imagePlaceholder} sx={{ mr: 1.75, height: 38, width: 38 }} />
               <Box>
-                <Typography variant="h5" sx={{ fontSize: "18px", fontWeight: 600}}>{ticket?.user?.full_name}</Typography>
+                <Typography variant="h5" sx={{ fontSize: "18px", fontWeight: 600 }}>{ticket?.user?.full_name}</Typography>
                 <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 15, fontWeight: 500 }}>
                   {ticket?.user?.email}
                 </Typography>
               </Box>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: "space-between", mt: 1, py: 4, alignItems: "center" }}>
-            <Typography
-            sx={{
-              color: 'text.secondary',
-              overflow: 'hidden',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              textOverflow: 'ellipsis',
-              fontWeight: 500
-            }}
-          >
-            {ticket?.query}
-          </Typography>
-              <Typography sx={{ fontSize: 14, color: 'primary.main' }}>{formatDate(ticket?.createdAt)} - {formatTime(ticket?.createdAt)}</Typography>
+              <Typography
+                sx={{
+                  color: 'text.secondary',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
+                  fontWeight: 500
+                }}
+              >
+                {ticket?.query}
+              </Typography>
+              <Typography sx={{ fontSize: 14, color: 'primary.main' ,ml:2 }}>
+                {formatDate(ticket?.createdAt)} - {formatTime(ticket?.createdAt)}
+              </Typography>
             </Box>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <CustomChip
-             icon={<CrisisAlertIcon />}
-             rounded
-             size="small"
-             skin="light" 
-             sx={{
-               color: priorityColors[ticket?.priority],
-               backgroundColor: priorityColors[ticket?.priority] + '33',
-               borderColor: priorityColors[ticket?.priority]
-             }}
-             label={`Priority: ${ticket?.priority}`}
-           />
-
+              <CustomChip
+                icon={<CrisisAlertIcon />}
+                rounded
+                size="small"
+                skin="light"
+                sx={{
+                  color: priorityColors[ticket?.priority],
+                  backgroundColor: priorityColors[ticket?.priority] + '33',
+                  borderColor: priorityColors[ticket?.priority]
+                }}
+                label={`Priority: ${ticket?.priority}`}
+              />
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <IconButton size="small" sx={{ color: 'text.disabled' }}>
                 <Icon fontSize="1.25rem" icon="tabler:star" />
               </IconButton>
-                <OptionsMenu
-                  iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
-                  options={[
-                    {
-                      text: 'Resolve',
-                      icon: <Icon icon="tabler:edit" />,
-                      menuItemProps: {
-                        onClick: handleResolveClick,
-                     
-                      }
+              <OptionsMenu
+                iconButtonProps={{ size: 'small', sx: { color: 'text.disabled' } }}
+                options={[
+                  {
+                    text: 'Resolve',
+                    icon: <Icon icon="tabler:edit" />,
+                    menuItemProps: {
+                      onClick: handleResolveClick,
                     }
-                  ]}
-                />
+                  }
+                ]}
+              />
             </Box>
           </Box>
         </CardContent>
@@ -125,4 +124,5 @@ OpenTicketCard.propTypes = {
   onClick: PropTypes.any,
   handleSelectedTicket: PropTypes.any
 };
+
 export default OpenTicketCard;

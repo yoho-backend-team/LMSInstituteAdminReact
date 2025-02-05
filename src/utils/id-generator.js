@@ -2,13 +2,18 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { getImageUrl } from './imageUtils';
 import { imagePlaceholder } from './placeholders';
+import backgroundImage from '../assets/images/Idcard-pdf/pdf-background.jpg';
 
-const generateStaffIDCardPDF = (userData) => {
-    const pageWidth = 325;
-    const pageHeight = 204;
+const generateStaffIDCardPDF = async (userData) => {
+    const pageWidth = 260;
+    const pageHeight = 380;
+    const padding = 40;
+    const imageSize = 90;
+    const headerHeight = 50;
+    console.log(userData);
 
     const pdf = new jsPDF({
-        orientation: 'landscape',
+        orientation: 'portrait',
         unit: 'pt',
         format: [pageWidth, pageHeight]
     });
