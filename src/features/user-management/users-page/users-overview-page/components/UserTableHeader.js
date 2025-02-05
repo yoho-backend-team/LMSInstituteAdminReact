@@ -1,9 +1,8 @@
-import { Grid, TextField, InputAdornment, IconButton, Button } from '@mui/material';
+import { Grid, TextField, InputAdornment, IconButton } from '@mui/material';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getAllUsers } from '../../redux/userThunks';
 import { setUsers } from '../../redux/userSlices';
 
 const TableHeader = (props) => {
@@ -37,7 +36,7 @@ const TableHeader = (props) => {
   );
 
   return (
-    <Grid container spacing={2} alignItems="center" sx={{ mt: 2 ,width:"120rem"}}>
+    <Grid container spacing={2} alignItems="center" sx={{ mt: 2, width: "120rem" }}>
       {/* Search Field */}
       <Grid item xs={12} md={8} lg={4}>
         <TextField
@@ -68,43 +67,7 @@ const TableHeader = (props) => {
           }}
         />
       </Grid>
-  {/* Add Admin User Button */}
-  <Grid
-  item
-  xs={12}
-  md={4}
-  lg={3}
-  sx={{
-    display: 'flex',
-    justifyContent: 'flex-end', 
-    alignItems: 'center',
-  }}
->
-  <Button
-    onClick={toggle}
-    variant="contained"
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#0CCE7F',
-      '&:hover': {
-        backgroundColor: '#0AA865',
-      },
-      width: 'fit-content',
-      padding: '8px 16px',
-    }}
-  >
-    <Icon fontSize="1rem" icon="tabler:plus" />
-    <span style={{ marginLeft: '8px' }}>Add User</span>
-  </Button>
-</Grid>
-
-    
     </Grid>
-    
-
-    
   );
 };
 
@@ -117,3 +80,4 @@ TableHeader.propTypes = {
 };
 
 export default TableHeader;
+

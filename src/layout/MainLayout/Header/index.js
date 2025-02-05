@@ -125,7 +125,10 @@ const Header = ({ handleLeftDrawerToggle }) => {
             color: theme.palette.secondary.light,
           },
         }}
-        onClick={handleLeftDrawerToggle}
+        onClick={(e)=>{
+          e.preventDefault()
+          e.stopPropagation()
+          handleLeftDrawerToggle()}}
         color="inherit"
       >
         <IconMenu2 stroke={1.5} size="1.3rem" />

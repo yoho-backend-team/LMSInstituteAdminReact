@@ -40,13 +40,8 @@ const CategoryFilter = ({ selectedBranchId }) => {
   return (
     <DatePickerWrapper>
       <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
-              borderRadius: 2,
-            }}
-          >
+        <Grid item xs={12} >
+        <Card sx={{ boxShadow: 'none', border: 'none' }}>
             <CardHeader
               title={
                 <Typography
@@ -58,7 +53,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
                 </Typography>
               }
             />
-            <CardContent sx={{ pt: 0 }}>
+            <CardContent sx={{ pt: 0,backgroundColor:"white" }}>
               <Grid container spacing={3}>
                 {/* Status Filter */}
                 <Grid item xs={12} sm={4}>
@@ -69,9 +64,9 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     value={statusValue}
                     onChange={handleFilterByStatus}
                     sx={{
-                      '.MuiOutlinedInput-root': {
-                        backgroundColor: 'background.paper',
-                      },
+                       
+                        backgroundColor: 'white',
+                      
                     }}
                   >
                     <MenuItem value={null}>All Statuses</MenuItem>
@@ -98,9 +93,9 @@ const CategoryFilter = ({ selectedBranchId }) => {
                         {...params}
                         label="Filter by Course"
                         sx={{
-                          '.MuiOutlinedInput-root': {
-                            backgroundColor: 'background.paper',
-                          },
+                          
+                            backgroundColor: 'white',
+                          
                         }}
                       />
                     )}

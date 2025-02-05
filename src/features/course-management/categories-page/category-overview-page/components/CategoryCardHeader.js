@@ -1,12 +1,12 @@
 import { TextField, InputAdornment } from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+
 import Icon from 'components/icon';
-import PropTypes from 'prop-types';
+
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
-import CategoryAddModal from './CategoryAddModal';
+
 
 const CategoryCardHeader = (props) => {
   // ** Props
@@ -50,13 +50,14 @@ const CategoryCardHeader = (props) => {
           px: 2,
           width: '100%',
           display: 'flex',
-          marginTop: "10px",
+         
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
           backgroundColor: 'white',
           borderRadius: 2,
-          boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+          
+          padding:"30px"
         }}
       >
         <TextField
@@ -95,29 +96,13 @@ const CategoryCardHeader = (props) => {
             ),
           }}
         />
-        <Box sx={{ marginRight:"20px",display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "#0CCE7F",
-              ":hover": { backgroundColor: "#0AA865" },
-              ml: 2,
-            }}
-            startIcon={<Icon icon="tabler:plus" />}
-          >
-            Add New Category
-          </Button>
-        </Box>
+   
       </Box>
-      <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose} setCategoryRefetch={setCategoryRefetch} />
+      
     </>
   );
 };
 
-CategoryCardHeader.propTypes = {
-  setCategoryRefetch: PropTypes.any
-};
+
 
 export default CategoryCardHeader;

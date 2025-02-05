@@ -8,20 +8,22 @@ import UserBodySection from 'features/user-management/users-page/users-overview-
 import UserFilterCard from 'features/user-management/users-page/users-overview-page/components/UserFilterCard';
 import UserHeaderSection from 'features/user-management/users-page/users-overview-page/components/UserHeaderSection';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useCallback, useEffect, useState } from 'react';
+import Icon from 'components/icon';
+
+import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
-import LetterFillSpinner from 'components/spinner/letterSpinner';
+import { useEffect } from 'react';
 
 const UserList = () => {
   const dispatch = useDispatch();
+
   const users = useSelector(selectUsers);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [groups, setGroups] = useState([]);
   const { show, hide } = useSpinner();
 
-  // Fetch groups when selectedBranchId changes
   useEffect(() => {
     getGroups();
   }, [dispatch, selectedBranchId]);
@@ -35,15 +37,12 @@ const UserList = () => {
     hide();
   };
 
-  // State for controlling the visibility of the Add User Drawer
   const [addUserOpen, setAddUserOpen] = useState(false);
   const toggleAddUserDrawer = useCallback(() => {
     setAddUserOpen((prev) => !prev);
   }, []);
 
-  // State for controlling the visibility of the UserFilterCard grid
   const [isGridVisible, setGridVisible] = useState(false);
-
   const [userRefetch, setUserRefetch] = useState(false);
 
   useEffect(() => {
@@ -58,75 +57,95 @@ const UserList = () => {
     hide();
   }, [dispatch, selectedBranchId, userRefetch]);
 
+  useEffect(() => {
+    if (isGridVisible) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isGridVisible]);
+
   return (
-    <>
-  <Grid container spacing={3} sx={{ position: 'relative' }}>
-  {/* User Header Section */}
-  <Grid item xs={12}>
-    <UserHeaderSection users={users} groups={groups} />
-  </Grid>
+    <Grid container spacing={3} sx={{ position: 'relative' }}>
+      <Grid item xs={12}>
+        <UserHeaderSection users={users} groups={groups} />
+      </Grid>
 
-  {/* Toggle Button for User Filter Card */}
-  <Grid item xs={12} sx={{ zIndex: 20 }}>
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={() => setGridVisible(!isGridVisible)}
-      sx={{ marginBottom: '16px' }}
-      startIcon={<FilterListIcon />}
-    >
-      {isGridVisible ? 'Hide' : 'Filter '}
-    </Button>
-  </Grid>
+      <Grid item xs={12} sx={{ zIndex: 20 , display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',}}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setGridVisible(!isGridVisible)}
+          sx={{ marginBottom: '16px' }}
+          startIcon={<FilterListIcon />}
+        >
+          {isGridVisible ? 'Hide Filter' : 'Show Filter '}
+        </Button>
+        <Button
+          onClick={toggleAddUserDrawer}  
+          variant="contained"
+          sx={{
+           
+            backgroundColor: '#0CCE7F',
+            '&:hover': {
+              backgroundColor: '#0AA865',
+            },
+            width: 'fit-content',
+            mb:"10px"
+           
+          }}
+        >
+          <Icon fontSize="1rem" icon="tabler:plus" />
+          <span style={{ marginLeft: '8px' }}>Add User</span>
+        </Button>
+      </Grid>
 
-  {/* Conditionally render User Filter Card as an overlay */}
-  {isGridVisible && (
-    <Grid
-      item
-      xs={12}
-      sx={{
-        position: 'absolute',
-        top: 180,
-        left: 0,
-        right: 0,
-        zIndex: 10,  // Ensure it's above other content
-        backgroundColor: 'rgba(255, 255, 255, 0.9)', // Optional, adds a slight background for visibility
-        padding: '16px',
-        boxSizing: 'border-box', // Ensure padding is considered inside the overlay
-      }}
-    >
-      <UserFilterCard
-        users={users}
-        groups={groups}
-        setUserRefetch={setUserRefetch}
-        selectedBranchId={selectedBranchId}
-        userRefetch={userRefetch}
+      {isGridVisible && (
+       <Grid
+       item
+       xs={12}
+       md={12}
+       sx={{
+         position: 'relative',
+        
+         left: 0,
+         maxWidth: '250px', // Reduce width
+         backgroundColor: 'rgba(255, 255, 255, 0.9)',
+         padding: '20px', // Reduce padding
+         boxSizing: 'border-box',
+         mb: 2, // Reduce margin-bottom
+       }}
+     >
+     
+          <UserFilterCard
+            users={users}
+            groups={groups}
+            setUserRefetch={setUserRefetch}
+            selectedBranchId={selectedBranchId}
+            userRefetch={userRefetch}
+            toggle={toggleAddUserDrawer}
+          />
+        </Grid>
+      )}
+
+     
+        <UserBodySection
+          groups={groups}
+          users={users}
+          setUserRefetch={setUserRefetch}
+          selectedBranchId={selectedBranchId}
+        />
+    
+
+      <UserAddDrawer
+        open={addUserOpen}
         toggle={toggleAddUserDrawer}
+        groups={groups}
+        branch_id={selectedBranchId}
       />
     </Grid>
-  )}
-
-  {/* Display Skeleton or User Body Section based on loading state */}
-  <Grid item xs={12}>
-    <UserBodySection
-      groups={groups}
-      users={users}
-      setUserRefetch={setUserRefetch}
-      selectedBranchId={selectedBranchId}
-    />
-  </Grid>
-
-  {/* Add User Drawer */}
-  <UserAddDrawer
-    open={addUserOpen}
-    toggle={toggleAddUserDrawer}
-    groups={groups}
-    branch_id={selectedBranchId}
-  />
-</Grid>
-
-
-    </>
   );
 };
 
