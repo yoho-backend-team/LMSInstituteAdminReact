@@ -17,6 +17,8 @@ import { addNotification } from '../services/allNotificationServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 
+import { Modal } from "@mui/material";
+
 const AllNotificationAddDrawer = (props) => {
   const { open, toggle, setAllNotificationRefetch } = props;
   const { show, hide } = useSpinner();
@@ -153,43 +155,70 @@ const AllNotificationAddDrawer = (props) => {
   };
 
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 450 } } }}
+
+
+     <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    ModalProps={{ keepMounted: true }}
+    BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.5)" } }} 
+     
+  >
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "90%", sm: 500, md: 600 },
+        height: "auto",  
+        maxHeight: "80vh", 
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+        overflowY: "auto",
+        transition: "all 0.3s ease-in-out",
+      }}
     >
-      <Box
-        sx={{
-          border: '1px solid #e0e0e0',
-          boxShadow: 3,
-          padding: 3,
-          margin: '80px auto',
-          borderRadius: '12px',
-          backgroundColor: 'background.paper',
-          width: { xs: '90%', sm: '80%', md: '60%' }
-        }}
-      >
-          <Header sx={{height: '5px' , borderBottom: '1px solid #ddd'}}>
-            <Typography variant="h3" fontWeight={600} color="primary">
-              Add Notification
-            </Typography>
-            <IconButton
-              size="small"
-              onClick={handleClose}
-              sx={{
-                color: 'text.primary',
-                backgroundColor: 'action.selected',
-                '&:hover': {
-                  backgroundColor: (theme) => theme.palette.secondary.light
-                }
-              }}
-            >
-              <Icon icon="tabler:x" fontSize="1.125rem" />
-            </IconButton>
-          </Header>
+      <Header  sx={{mt:-7}}>
+        <Typography variant="h2"  sx={{ml:-4}}>All Notification</Typography>
+        <IconButton
+          size="small"
+          onClick={handleClose}
+          sx={{
+            mr:-7,
+            p: '0.438rem',
+            borderRadius: 1,
+            color: 'text.primary',
+            backgroundColor: 'action.selected',
+            '&:hover': {
+              backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
+            }
+          }}
+        >
+          <Icon icon="tabler:x" fontSize="1.125rem" />
+        </IconButton>
+      </Header>
+      <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+        {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+            <ImgStyled src={imgSrc} alt="Profile Pic" />
+            <div>
+              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+                Upload
+                <input
+                  hidden
+                  type="file"
+                  value={inputValue}
+                  accept="image/png, image/jpeg"
+                  onChange={handleInputImageChange}
+                  id="account-settings-upload-image"
+                />
+              </ButtonStyled>
+            </div>
+          </Box> */}
 
         <Box>
           <Box sx={{ mt: 2 }}>
@@ -258,20 +287,47 @@ const AllNotificationAddDrawer = (props) => {
                   />
                 </Grid>
               </Grid>
-
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-                <Button variant="contained" type="submit">
-                  Submit
-                </Button>
-                <Button variant="outlined" color="secondary" onClick={handleClose}>
-                  Cancel
-                </Button>
-              </Box>
             </form>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'flex-end', mt: 4 }}>
+
+            <Button 
+            variant="tonal"
+            onClick={handleClose}
+           sx={{ 
+            mr: 3,
+            backgroundColor: 'white', 
+            color: 'black', 
+            border: '1px solid #D3D3D3',  
+            '&:hover': {
+              backgroundColor: '#f0f0f0',  
+              color: 'text.secondary',  
+            },
+            transition: 'all 0.3s ease',
+                }}>
+              Cancel
+            </Button>
+
+            <Button type="submit" variant="contained" 
+            sx={{
+              backgroundColor: '#1976d2', 
+              color: 'white',  
+              '&:hover': {
+                backgroundColor: '#1565c0',  
+              },
+              '&:active': {
+                backgroundColor: '#0d47a1',  
+              },
+              transition: 'all 0.3s ease',  
+            }}>
+              Add Notification
+            </Button>
+
           </Box>
         </Box>
       </Box>
-    </Drawer>
+      </Box>
+      </Modal>
+     
   );
 };
 

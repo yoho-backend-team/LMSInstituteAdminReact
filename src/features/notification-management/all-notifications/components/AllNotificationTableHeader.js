@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllNotifications } from '../redux/allNotificationThunks';
+import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
 
 const AllNotificationTableHeader = (props) => {
   const { toggle } = props;
@@ -56,11 +57,14 @@ const AllNotificationTableHeader = (props) => {
             />
           )}
         </Grid>
+        <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+          <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 },
+         backgroundColor: '#1976D2' ,  
+         '&:hover': {
+          backgroundColor: (theme) => theme.palette.primary.dark,  }, }}>
 
-        <Grid item sm={3} xs={12} sx={{ display: 'flex', justifyContent: 'flex-end',alignContent: 'end' ,}}>
-          <Button onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
-            <Icon fontSize="1.125rem" icon="tabler:plus" />
-            Add Notification
+            {/* <Icon fontSize="1.125rem" icon="tabler:plus" /> */}
+            <NotificationAddIcon/> All Notification
           </Button>
         </Grid>
       </Grid>
