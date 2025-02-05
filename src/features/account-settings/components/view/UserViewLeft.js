@@ -35,17 +35,17 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
 
   return (
     <Box
-      sx={{
-        boxShadow: 2,
-        pt: 0,
-        borderRadius: 3,
-        width: {xs: 'full',sm:'50vw'},
-        height: '80vh',
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        p: 5
-      }}
+      // sx={{
+      //   boxShadow: 2,
+      //   pt: 0,
+      //   borderRadius: 3,
+      //   width: {xs: 'full',sm:'50vw'},
+      //   height: '80vh',
+      //   display: 'flex',
+      //   justifyContent: 'center',
+      //   backgroundColor: 'white',
+      //   p: 5
+      // }}
     >
       <Card
         sx={{

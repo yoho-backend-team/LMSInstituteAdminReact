@@ -76,7 +76,7 @@ export const getCourseDetails = async (data) => {
 export const getAllCourses = async (data) => {
   try {
     const response = await client.course.getWithBranch(data)
-    console.log(response,"response")
+    // console.log(response,"response")
     return { data: response.data };
   
   } catch (error) {
