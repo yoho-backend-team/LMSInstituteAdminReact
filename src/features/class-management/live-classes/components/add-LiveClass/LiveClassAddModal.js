@@ -46,6 +46,9 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
   const {show,hide} = useSpinner()
+
+  console.log(activeNonTeachingStaff);
+  
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -105,19 +108,20 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       .required('Course field is required'),
     branch: yup.string().required('Branch field is required'),
     course: yup.string().required('Course is required'),
-    batch: yup.object().required('Batch is required'),
+    batch: yup.object().nullable().required('Batch is required'),
     class_date: yup.date().nullable().required('Class Date field is required'),
     start_time: yup.string().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required'),
-    videoUrl: yup.string().required('VideoUrl field is required')
+    videoUrl: yup.string().required('VideoUrl field is required'),
+    instructor: yup.array().min(1, 'At least one item must be selected').required('instructor field is required')
   });
 
   const defaultValues = {
     class_name: '',
-    branch: selectedBranchId,
+    branch: '',
     course: '',
-    batch: '',
-    class_date: new Date(),
+    batch: {},
+    class_date: null,
     start_time: null,
     end_time: null,
     instructor: [],
@@ -293,7 +297,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     <Autocomplete
                       fullWidth
                       options={activeBranches}
-                      getOptionLabel={(option) => option.branch_identity}
+                      getOptionLabel={(option) => option.branch_identity || ''}
                       onChange={(event, newValue) => {
                         onChange(newValue?._id);
                         getActiveCoursesByBranch(newValue?.branch_id);
@@ -395,64 +399,62 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <Controller
-                  name="batch"
-                  control={control}
-                  render={({ field }) => (
-                    <Autocomplete
-                      {...field}
-                      fullWidth
-                      options={activeBatches}
-                      getOptionLabel={(option) => option?.batch_name}
-                      onChange={(event, newValue) => {
-                        setValue('batch', newValue);
-                      }}
-                      value={field.value}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          
-                          label="Batch"
-                          error={Boolean(errors.batch)}
-                          helperText={errors.batch?.message}
-                          sx={{mb:'2',
-                            backgroundColor: 'transparent',
-                            borderRadius: '8px',
-                            '& .MuiOutlinedInput-root': {
-                              borderRadius: '8px',
-                              backgroundColor: 'white',
-                              '& fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
-                              },
-                              '&:hover fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
-                              },
-                              '&.Mui-focused fieldset': {
-                                borderColor: 'rgba(96, 165, 250, 1)',
-                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                              },
-                            },
-                            '& .MuiInputLabel-root': {
-                              color: 'black',
-                              '&.Mui-focused': {
-                                color: 'black',
-                              },
-                            },
-                            '& .MuiFormHelperText-root': {
-                              backgroundColor: 'transparent',
-                              color: 'red',
-    
-                              borderRadius: '4px',
-                              marginTop: '4px',
-                            },
-    
-                          }}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              </Grid>
+  <Controller
+    name="batch"
+    control={control}
+    render={({ field }) => (
+      <Autocomplete
+        {...field}
+        fullWidth
+        options={activeBatches}
+        getOptionLabel={(option) => option?.batch_name || ''}
+        onChange={(event, newValue) => {
+          setValue('batch', newValue);
+        }}
+        value={field.value}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Batch"
+            error={Boolean(errors.batch)}
+            helperText={errors.batch?.message}
+            sx={{
+              mb: '2',
+              backgroundColor: 'transparent',
+              borderRadius: '8px',
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                backgroundColor: 'white',
+                '& fieldset': {
+                  borderColor: 'rgba(156, 163, 175, 1)',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'rgba(156, 163, 175, 1)',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'rgba(96, 165, 250, 1)',
+                  boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                },
+              },
+              '& .MuiInputLabel-root': {
+                color: 'black',
+                '&.Mui-focused': {
+                  color: 'black',
+                },
+              },
+              '& .MuiFormHelperText-root': {
+                backgroundColor: 'transparent',
+                color: 'red',
+                borderRadius: '4px',
+                marginTop: '4px',
+              },
+            }}
+          />
+        )}
+      />
+    )}
+  />
+</Grid>
 
               <Grid item xs={6}>
                 <Controller
@@ -615,6 +617,8 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      error={Boolean(errors.instructor)}
+            helperText={errors.instructor?.message}
                       fullWidth
                       label="Instructors"
                       InputProps={{

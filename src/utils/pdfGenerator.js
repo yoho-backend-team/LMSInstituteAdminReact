@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { getImageUrl } from './imageUtils';
+import { profilePlaceholder } from './placeholders';
 
 const generateIDCardPDF = (userData) => {
     const pageWidth = 300;
@@ -23,7 +24,7 @@ const generateIDCardPDF = (userData) => {
 
     pdf.setFillColor(255);
 
-    const imageUrl = userData.image ? getImageUrl(userData.image) : 'placeholder_image_url.jpg';
+    const imageUrl = userData.image ? getImageUrl(userData.image) : profilePlaceholder;
     pdf.addImage(imageUrl, 'JPEG', (pageWidth - imageWidth) / 2, 110, imageWidth, imageHeight);
 
     let currentY = 230;
