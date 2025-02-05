@@ -96,35 +96,51 @@ const Header = ({ handleLeftDrawerToggle }) => {
           }
         }}
       >
-        <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
-          {
-            useInstitute().getDetails().image ? 
-            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)} alt={useInstitute().getDetails().institute_name} width={80} height={40}  />
-            :
-            <LogoSection />
-          }
-
-        </Box>
-        <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
-          <Avatar
-            variant="rounded"
-            sx={{
-              ...theme.typography.commonAvatar,
-              ...theme.typography.mediumAvatar,
-              transition: 'all .2s ease-in-out',
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
-              '&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
-              }
-            }}
-            onClick={handleLeftDrawerToggle}
-            color="inherit"
-          >
-            <IconMenu2 stroke={1.5} size="1.3rem" />
-          </Avatar>
-        </ButtonBase>
+       <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
+    {useInstitute().getDetails().image ? (
+      <img
+        src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)}
+        alt={useInstitute().getDetails().institute_name}
+        width={40}
+        height={40}
+        style={{
+          objectFit: 'cover', // Ensures the image fills the square dimensions
+          borderRadius: '8px',
+          marginLeft:'-35px' // Optional: Adds rounded corners for a neat look
+        }}
+      />
+    ) : (
+      <LogoSection />
+    )}  
+     <Typography variant="h2" sx={{ fontWeight: 800 }} marginLeft="10px" alignItems="center" justifyContent="center" marginTop="5px">
+    LMS
+  </Typography>
+  </Box>
+  <Box sx={{ position: 'relative', left: '180px' }}> {/* Moves the Avatar 100px to the right */}
+    <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+      <Avatar
+        variant="rounded"
+        sx={{
+          ...theme.typography.commonAvatar,
+          ...theme.typography.mediumAvatar,
+          transition: 'all .2s ease-in-out',
+          background: theme.palette.secondary.light,
+          color: theme.palette.secondary.dark,
+          '&:hover': {
+            background: theme.palette.secondary.dark,
+            color: theme.palette.secondary.light,
+          },
+        }}
+        onClick={(e)=>{
+          e.preventDefault()
+          e.stopPropagation()
+          handleLeftDrawerToggle()}}
+        color="inherit"
+      >
+        <IconMenu2 stroke={1.5} size="1.3rem" />
+      </Avatar>
+    </ButtonBase>
+  </Box>
       </Box>
 
       {/* header search */}
