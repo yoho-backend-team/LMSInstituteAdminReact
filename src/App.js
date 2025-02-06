@@ -14,6 +14,7 @@ import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } f
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
 import usePushSubscription from 'usePushSubscription';
+import { setSelectedBranchId } from 'utils/localStroageService';
 
 // import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //
