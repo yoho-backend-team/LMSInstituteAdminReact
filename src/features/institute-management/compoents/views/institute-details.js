@@ -54,6 +54,11 @@ const InstituteDetails = ({ institute }) => {
 
         <Typography variant="h6" gutterBottom>General Information</Typography>
         <Grid container spacing={3}>
+        <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Avatar src={formData.logo} alt="Institute Logo" sx={{ width: 100, height: 100 }} />
+            {isEditing && <Button variant="contained" component="label">Upload</Button>}
+          </Grid>
+
           <Grid item xs={12} sm={6}>
             <TextField
               label="Institute Name"
@@ -63,11 +68,6 @@ const InstituteDetails = ({ institute }) => {
               fullWidth
               disabled={!isEditing}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography>Logo:</Typography>
-            <Avatar src={formData.logo} alt="Institute Logo" sx={{ width: 150, height: 150 }} />
-            {isEditing && <Button variant="contained" component="label">Upload</Button>}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -89,7 +89,7 @@ const InstituteDetails = ({ institute }) => {
               disabled={!isEditing}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
               label="Description"
               name="description"
@@ -100,6 +100,7 @@ const InstituteDetails = ({ institute }) => {
               disabled={!isEditing}
             />
           </Grid>
+
         </Grid>
 
         <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
