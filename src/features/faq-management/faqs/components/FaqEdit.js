@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { updateFaq } from '../services/faqServices';
+import toast from 'react-hot-toast';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -65,27 +66,40 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
   }, [open, reset, initialValues]);
 
   const onSubmit = async (data) => {
+    console.log("Initial Values UUID:", initialValues?.uuid);
+    
+    if (!initialValues?.uuid) {
+      toast.error("UUID is missing! Cannot update FAQ.");
+      return;
+    }
+  
     const inputData = {
       title: data?.title,
       description: data?.description,
       uuid: initialValues?.uuid,
     };
-
+  
     try {
       const result = await updateFaq(inputData);
+
+      // console.log("after api uuid :",result.updatedFaq?.uuid);
+  
       if (result.success) {
         setSuccessDialogOpen(true);
         setRefetch((state) => !state);
         toggle();
         reset();
+        // toast.success(result.message);
       } else {
-        alert('Failed to edit FAQ. Please try again.');
+        toast.error("Failed to edit FAQ. Please try again.");
       }
     } catch (error) {
-      console.error('Error updating FAQ:', error);
-      alert('An error occurred while updating the FAQ.');
+      console.error("Error updating FAQ:", error);
+      toast.error("An error occurred while updating the FAQ.");
     }
   };
+  
+  
 
   const handleClose = () => {
     toggle();

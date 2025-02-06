@@ -54,9 +54,18 @@ const generateEndpoints = () => {
             getAll : `/api/institutes/${instituteId}/branches/`,
             create : `/api/institutes/${instituteId}/branches/`
         },
+        faq : {
+            create: `/api/institutes/faq`,  
+            getAll: `/api/institutes/faq/all`,  
+            delete: `/api/institutes/faq/delete/:uuid`,
+            update: `/api/institutes/faq/update/:uuid`
+
+        },
         category: {
             getAll: `/api/institutes/${instituteId}/categories/`,
-            create: `/api/institutes/${instituteId}/categories`
+            create: `/api/institutes/faq/category`,
+            update: `/api/institutes/faq/category/update/:uuid`,
+            delete: `/api/institutes/faq/category/delete/:uuid`
         },
         course: {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,

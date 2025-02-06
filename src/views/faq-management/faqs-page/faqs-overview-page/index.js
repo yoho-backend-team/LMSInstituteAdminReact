@@ -50,9 +50,7 @@ const FaqDataGrid = () => {
     getFaqCategories();
   }, []);
 
- useEffect(() => {
-    fetchFaqs(currentPage);
-  }, [currentPage]);
+   
 
   const fetchFaqs = (page) => {
     const institute = JSON.parse(localStorage.getItem('institute'));
@@ -104,6 +102,10 @@ const FaqDataGrid = () => {
     };
     const response = await deleteFaq(data);
     console.log('delete response data : ',response);
+
+    if (faqs?.data.length === 1 && currentPage > 1) {
+      setCurrentPage(currentPage - 1); 
+    }
     if (response.success) {
       // toast.success(response.message);
       fetchFaqs(currentPage);
@@ -113,11 +115,7 @@ const FaqDataGrid = () => {
     }
   };
 
-  const handleStatusChange = (e, row) => {
-    setSelectedFaq(row);
-    setSelectedFaqStatus(e.target.value);
-    setStatusDialogOpen(true);
-  };
+  
 
   const handleStatusChangeApi = async () => {
     const data = {
@@ -131,6 +129,19 @@ const FaqDataGrid = () => {
         } else {
       toast.error(response.message);
     }
+  };
+
+  useEffect(() => {
+    if (faqs?.data.length === 0 && currentPage > 1) {
+      setCurrentPage(currentPage - 1); 
+    }
+    fetchFaqs(currentPage); 
+  }, [currentPage, refetch]);
+
+  const handleStatusChange = (e, row) => {
+    setSelectedFaq(row);
+    setSelectedFaqStatus(e.target.value);
+    setStatusDialogOpen(true);
   };
 
   const handlePageChange = (event, page) => {

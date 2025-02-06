@@ -1,4 +1,5 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 
 const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/general/faq/category`;
@@ -68,17 +69,12 @@ export const searchFaqCategories = async (searchQuery) => {
     throw error;
   }
 };
-export const addFaqCategory = async (data) => {
+export const addFaqCategory = async (inputData) => {
   try {
-    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}`, data ,  {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.category.create(inputData);
+    console.log("add data:", response);
 
-    if (response.data?.status) {
+    if (response?.status) {
       return { success: true, message: 'Faq Category created successfully' }; 
     } else {
       return { success: false, message: 'Failed to create FaqCategory' }; 
