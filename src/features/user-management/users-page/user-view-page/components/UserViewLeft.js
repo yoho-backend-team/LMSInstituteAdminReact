@@ -33,13 +33,14 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
 
   return (
     <Grid container spacing={3}>
+
       <Grid item xs={12}>
-        <Card sx={{
-    width: '160%'
-  }}>
-          <CardContent sx={{ pt: 8, display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+
+        <Card fullwidth sx={{ width: '310%',mb:4}} >
+
+          <Box sx={{ pt: 8, display: 'flex',justifyContent: 'center', alignItems: 'center' }}>
             
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'center'}}>
             {userData?.image ? (
               <CustomAvatar
                 src={`${getImageUrl(userData?.image)}`}
@@ -51,18 +52,22 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                   height: '100px', 
                   objectFit: 'cover', 
                 }}
-              />
-            ) : (
-              <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
+                />
+              ) : (
+                <CustomAvatar skin="light" variant="rounded" sx={{ width: 100, height: 100, mb: 4, fontSize: '3rem' }}>
                 {userData?.first_name ? getInitials(userData?.first_name+userData?.last_name) : 'U'}
               </CustomAvatar>
             )}
+              </Box>
+            </Box>
 
-            <Box>
+            <Box sx={{ display: 'flex',justifyContent: 'center', alignItems: 'center' }}>
             <Typography variant="h2" sx={{ px:4,mb:3,fontSize: '2rem',}}>
               {userData?.first_name+userData?.last_name}
             </Typography>
-            <Box sx={{ display: 'flex', mb: 3,px:4}}>
+              </Box>
+
+            <Box sx={{ display: 'flex', mb: 3,px:4,justifyContent: 'center', alignItems: 'center' }}>
                 <CustomChip
                   // rounded
                   skin="light"
@@ -70,7 +75,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                   label={userData.is_active? 'Active' : 'InActive'}
                   color={statusColors[userData.is_active]}
                   sx={{
-                  
+                    mr:2,
                     textTransform: 'capitalize',
                     borderColor: 'darkgreen',  
                     '&.MuiChip-root': {
@@ -79,8 +84,6 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
               
                   }}
                 />
-              </Box>
-            </Box>
 
 
             <CustomChip
@@ -89,7 +92,7 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
               size="small"
               label={userData?.role?.identity}
               color={'warning'}
-              sx={{ textTransform: 'capitalize',backgroundColor: '#e0e0e0', color: '#000', mb:8.5,ml:-2, borderRadius: '16px',fontSize: '0.75rem',  // Smaller font size
+              sx={{ textTransform: 'capitalize',backgroundColor: '#e0e0e0', color: '#000', borderRadius: '16px',fontSize: '0.75rem', 
                }}
               />
             
@@ -97,15 +100,28 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
 
               
 
-          </CardContent>
+          </Card>
+          
 
-          <Divider sx={{ my: '0 !important', mx: 6, }} />
+
+<Card fullwidth sx={{ width: '310%',mb:4}}>
+
 
           <CardContent sx={{ pb: 1 }}>
-
+    <Box sx={{display:'flex',justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase',fontSize: '1.2rem',fontWeight: 700 ,mt:2}}>
-              Details
+              Profile Details
             </Typography>
+
+            <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button variant="contained" sx={{ mr: 2, width: '100%',backgroundColor:'black','&:hover': {
+        backgroundColor: 'black'} }} onClick={handleEditClickOpen}>
+             <EditIcon sx={{mr:1}}/> Edit Details
+            </Button>
+          </CardActions>
+                <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
+
+    </Box>
 
             <Box sx={{ pt: 4 }}>
 
@@ -149,17 +165,12 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
                 <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',fontSize: '1rem'  }}>Designation :</Typography>
                 <Typography sx={{ color: 'text.secondary' ,fontSize: '1rem',ml:-1 }}>{userData?.designation}</Typography>
               </Box>
+
+         
              
           </CardContent>
-
-          <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button variant="contained" sx={{ mr: 2, width: '100%',backgroundColor:'black','&:hover': {
-        backgroundColor: 'black'} }} onClick={handleEditClickOpen}>
-             <EditIcon sx={{mr:1}}/> Edit Details
-            </Button>
-          </CardActions>
-        </Card>
-        <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
+          </Card>
+        
       </Grid>
     </Grid>
   );

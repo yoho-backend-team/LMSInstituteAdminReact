@@ -1,4 +1,4 @@
-import { Avatar, TextField } from '@mui/material';
+import { Avatar, Paper, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
@@ -18,7 +18,6 @@ import { useSpinner } from 'context/spinnerContext';
 
 const TeachingStaffAddEventSidebar = (props) => {
   const { drawerWidth, addEventSidebarOpen, handleAddEventSidebarToggle, staffId, selected, setRefetch, staff } = props;
-  console.log(selected, 'selected', staff);
   const defaultState = {
     staff_name: '',
     title: '',
@@ -45,18 +44,13 @@ const TeachingStaffAddEventSidebar = (props) => {
   };
 
   function convertDateFormat(input) {
-    // Create a new Date object from the original date string
     var originalDate = new Date(input);
-    // Extract the year, month, and day components
     var year = originalDate.getFullYear();
-    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2); // Months are 0-based
+    var month = ('0' + (originalDate.getMonth() + 1)).slice(-2);
     var day = ('0' + originalDate.getDate()).slice(-2);
-
-    // Form the yyyy-mm-dd date string
-    var formattedDateString = year + '-' + month + '-' + day;
-
-    return formattedDateString;
+    return year + '-' + month + '-' + day;
   }
+
   const onSubmit = async (data) => {
     try {
       show();
@@ -85,18 +79,14 @@ const TeachingStaffAddEventSidebar = (props) => {
     }
   };
 
-  const PickersComponent = forwardRef(({ ...props }, ref) => {
-    return <TextField inputRef={ref} fullWidth {...props} label={props.label || ''} sx={{ width: '100%' }} error={props.error} />;
-  });
-
   const RenderSidebarFooter = () => {
     return (
       <Fragment>
-        <Box sx={{display:'flex', flexDirection:"row",gap:"30%"}}>
-          <Button type="submit" sx={{ pl: 7, pr: 7 }} variant="contained">
+        <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+          <Button type="submit" sx={{ pl: 7, pr: 7 }} variant="contained" color="primary">
             Add
           </Button>
-          <Button variant="tonal" color="secondary" sx={{ pl: 7, pr: 7 }}>
+          <Button variant="outlined" color="secondary" sx={{ pl: 7, pr: 7 }}>
             Reset
           </Button>
         </Box>
@@ -110,19 +100,17 @@ const TeachingStaffAddEventSidebar = (props) => {
       open={addEventSidebarOpen}
       onClose={handleSidebarClose}
       ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: ['100%', drawerWidth] } }}
+      sx={{ '& .MuiDrawer-paper': { width: ['100%', drawerWidth], backgroundColor: 'aliceblue' } }}
     >
       <Box
         className="sidebar-header"
         sx={{
-          p: 6,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          p: 2,
+          backgroundColor: 'lightblue'
         }}
       >
-        <Typography variant="h5">Add Attendance</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Paper sx={{ width: '100%', display: 'flex', justifyContent: 'center',gap:"50%", alignItems: 'center',py:1}}>
+          <Typography variant="h4">Add Attendance</Typography>
           <IconButton
             size="small"
             onClick={handleSidebarClose}
@@ -138,18 +126,16 @@ const TeachingStaffAddEventSidebar = (props) => {
           >
             <Icon icon="tabler:x" fontSize="1.25rem" />
           </IconButton>
-        </Box>
+        </Paper>
       </Box>
-      <Box className="sidebar-body" sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
+      <Box className="sidebar-body" sx={{ p: (theme) => theme.spacing(3, 6, 6) }}>
         <DatePickerWrapper>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', alignItems: 'center', mb: 8 }}>
-              <Avatar src={''} sx={{ mr: 2.5, height: 38, width: 38 }} style={{ marginLeft: 20 }} />
-              <Box>
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {staff?.staff_name}
-                </Typography>
-                <Typography variant="body4" sx={{ color: 'text.secondary', fontSize: 12 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', mb: 8 }}>
+              <Avatar src={''} sx={{ height: 50, width: 50, mb: 2 }} />
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h5">{staff?.staff_name}</Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   {staff?.email}
                 </Typography>
               </Box>
@@ -158,29 +144,21 @@ const TeachingStaffAddEventSidebar = (props) => {
               name="title"
               control={control}
               render={({ field: { value, onChange } }) => (
-                <TextField
-                  select
-                  fullWidth
-                  sx={{ mb: 4 }}
-                  label="Attendance"
-                  SelectProps={{
-                    value: value,
-                    onChange: onChange
-                  }}
-                >
+                <TextField select fullWidth sx={{ mb: 4 }} label="Attendance" value={value} onChange={onChange}>
                   <MenuItem value="present">Present</MenuItem>
                   <MenuItem value="absent">Absent</MenuItem>
                 </TextField>
               )}
             />
-            <Box sx={{ mb: 10 }}>
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                Attendance Date
+              </Typography>
               <DatePicker
-                // selectsStart
+                inline
                 id="event-start-date"
                 selected={selectedDate}
-                // startDate={values.attendance_date}
                 dateFormat={'yyyy-MM-dd'}
-                customInput={<PickersComponent label="Attendance Date" registername="attendance_date" />}
                 onChange={(date) => {
                   setSelectedDate(date);
                   setValue('attendance_date', date);
@@ -188,12 +166,10 @@ const TeachingStaffAddEventSidebar = (props) => {
                 onSelect={handleStartDate}
               />
             </Box>
-
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ textAlign: 'center' }}>
               <RenderSidebarFooter />
             </Box>
           </form>
-          <h1>Hello</h1>
         </DatePickerWrapper>
       </Box>
     </Drawer>

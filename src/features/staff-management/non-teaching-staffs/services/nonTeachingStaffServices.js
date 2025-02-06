@@ -6,16 +6,21 @@ import { useBranchId } from 'utils/get-institute-details';
 
 const NON_TEACHING_STAFF_API_END_POINT_get = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes`;
 
-const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/Non-teaching-staff`;
+const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/`;
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/`, {
+    const BranchId=data.branch_id
+    const instituteUUID = JSON.parse(localStorage.getItem("institute") || "{}")?.uuid;
+    const token = localStorage.getItem('token');
+    // const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}branches/${useBranchId()}/non-teaching-staff/`, {
+    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${instituteUUID}/branches/${BranchId}/non-teaching-staff/`, {
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        
+        Authorization: `Bearer ${'Token ' + token}`
+       
       },
-      params: data
+      
     });
 
     // Check if the response status is successful

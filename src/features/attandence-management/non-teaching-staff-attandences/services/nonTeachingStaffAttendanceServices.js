@@ -2,6 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 
+
 const NON_TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
 export const getAllNonTeachingStaffAttendances = async (data) => {

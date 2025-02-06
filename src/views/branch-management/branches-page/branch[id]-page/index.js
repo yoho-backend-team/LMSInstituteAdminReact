@@ -227,7 +227,7 @@ const BranchViewPage = () => {
               backgroundColor: '#fff',
               borderRadius: 2,
               boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-              height: '45%',
+              height: '28%',
               transition: 'transform 0.3s ease, box-shadow 0.3s ease',
               '&:hover': {
                 transform: 'scale(1.03)',

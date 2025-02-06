@@ -227,6 +227,7 @@ const UserProfileRight = (props) => {
         zIndex: 9,
         height: '100%',
         width: sidebarWidth,
+        backgroundColor: "#3A4042",
         borderTopRightRadius: (theme) => theme.shape.borderRadius,
         borderBottomRightRadius: (theme) => theme.shape.borderRadius,
         '& + .MuiBackdrop-root': {
@@ -282,9 +283,9 @@ const UserProfileRight = (props) => {
                       {getInitials(communityDetails?.batch?.batch_name)}
                     </CustomAvatar>
                   )}
-                </Badge>
+                </Badge>  
               </Box>
-              <Typography variant="h4" sx={{ textAlign: 'center' }}>
+              <Typography variant="h4" sx={{ textAlign: 'center' ,color: 'common.white'}}>
                 {communityDetails?.batch?.batch_name}
               </Typography>
               <Typography sx={{ textAlign: 'center', color: 'text.secondary', mt: 0.5 }}>
@@ -297,38 +298,38 @@ const UserProfileRight = (props) => {
             <ScrollWrapper>
               <Box sx={{ p: 3 }}>
                 <FormGroup sx={{ mb: 6.5 }}>
-                  <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
+                  <Typography variant="body2" sx={{ mb: 3.5,color: 'primary.main', textTransform: 'uppercase', lineHeight: 'normal' }}>
                     About
                   </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{store.selectedChat.contact.about}</Typography>
+                  <Typography sx={{color: 'common.white' }}>{store.selectedChat.contact.about}</Typography>
                 </FormGroup>
 
                 <Box sx={{ mb: 6 }}>
-                  <Typography variant="body2" sx={{ mb: 3.5, color: 'text.disabled', textTransform: 'uppercase', lineHeight: 'normal' }}>
+                  <Typography variant="body2" sx={{ mb: 3.5, color: 'primary.main', textTransform: 'uppercase', lineHeight: 'normal' }}>
                     Personal Information
                   </Typography>
                   <List dense sx={{ p: 0 }}>
                     <ListItem sx={{ px: 2 }}>
-                      <ListItemIcon sx={{ mr: 2 }}>
+                      <ListItemIcon sx={{ mr: 2,color: 'common.white' }}>
                         <Icon icon="tabler:mail" fontSize="1.5rem" />
                       </ListItemIcon>
                       <ListItemText
-                        sx={{ textTransform: 'lowercase' }}
+                        sx={{ textTransform: 'lowercase',color: 'common.white' }}
                         primaryTypographyProps={{ variant: 'body1' }}
                         primary={`${store.selectedChat.contact.fullName.replace(/\s/g, '_')}@email.com`}
                       />
                     </ListItem>
-                    <ListItem sx={{ px: 2 }}>
-                      <ListItemIcon sx={{ mr: 2 }}>
+                    <ListItem sx={{ px: 2 ,}}>
+                      <ListItemIcon sx={{ mr: 2,color: 'common.white'  }}>
                         <Icon icon="tabler:phone-call" fontSize="1.5rem" />
                       </ListItemIcon>
-                      <ListItemText primaryTypographyProps={{ variant: 'body1' }} primary="+1(123) 456 - 7890" />
+                      <ListItemText sx={{color: 'common.white' }} primaryTypographyProps={{ variant: 'body1' }} primary="+1(123) 456 - 7890" />
                     </ListItem>
                     <ListItem sx={{ px: 2 }}>
-                      <ListItemIcon sx={{ mr: 2 }}>
+                      <ListItemIcon sx={{ mr: 2,color: 'common.white'  }}>
                         <Icon icon="tabler:clock" fontSize="1.5rem" />
                       </ListItemIcon>
-                      <ListItemText primaryTypographyProps={{ variant: 'body1' }} primary="Mon - Fri 10AM - 8PM" />
+                      <ListItemText sx={{color: 'common.white' }} primaryTypographyProps={{ variant: 'body1' }} primary="Mon - Fri 10AM - 8PM" />
                     </ListItem>
                   </List>
                 </Box>
@@ -338,11 +339,11 @@ const UserProfileRight = (props) => {
                     <Typography variant="h5" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
                       Staff
                     </Typography>
-                    <List sx={{ mb: 5, p: 0 }}>{renderStaff()}</List>
+                    <List sx={{ mb: 5, p: 0,color:'common.white' }}>{renderStaff()}</List>
                     <Typography variant="h4" sx={{ ml: 3, mb: 3.5, color: 'primary.main' }}>
                       Students
                     </Typography>
-                    <List sx={{ p: 0 }}>{renderContacts()}</List>
+                    <List sx={{ p: 0,color:'common.white' }}>{renderContacts()}</List>
                   </Box>
                 </Box>
               </Box>
