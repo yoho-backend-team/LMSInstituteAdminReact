@@ -3,10 +3,19 @@ import { Container, Typography, Grid, TextField, Avatar, Box, Paper, Divider, Ic
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import client from 'api/client';
+import { getImageUrl } from 'utils/imageUtils';
+import { styled } from '@mui/material/styles';
+import { useSpinner } from 'context/spinnerContext';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
 
 const InstituteDetails = ({ institute }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(institute);
+  console.log(formData,"formdata");
+  
   console.log(institute, 'institute');
   useEffect(() => {
     setFormData(institute);
@@ -14,7 +23,7 @@ const InstituteDetails = ({ institute }) => {
 
   const handleEdit = () => setIsEditing(true);
   const handleSave = () => {
-    // Implement save logic here
+    handleSubmit()
     setIsEditing(false);
   };
   const handleCancel = () => {
@@ -29,16 +38,74 @@ const InstituteDetails = ({ institute }) => {
     });
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, logo: imageUrl });
+
+  const [logo, setLogo] = useState('');
+  console.log(logo);
+  
+  const [logoSrc, setLogoSrc] = useState(
+    'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+  );
+
+const { show, hide} = useSpinner()
+
+  const handleInputImageChange = async (file) => {
+    try {
+      show()
+      const { files } = file.target;
+      const form_data = new FormData()
+      form_data.append("file",files[0])
+      const response = await client.file.upload(form_data)
+      setLogo(response?.data?.file)
+      setFormData({ ...formData, logo: response?.data?.file });
+
+    } catch (error) {
+      hide()
+      toast.error(error?.message)
+    }finally{
+      hide()
     }
-  };
+    };
+  
+    const handleInputImageReset = () => {
+      setLogo('');
+      setLogoSrc(
+        'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
+      );
+    };
+
+
+    const handleSubmit = async (e,data) => {
+      // e.preventDefault()
+      const instituteId = JSON.parse(localStorage.getItem("institute")).uuid;
+     
+      try {
+        const response = await axios.put(
+          `${process.env.REACT_APP_PUBLIC_API_URL}/api/lms/platform/update/:${instituteId}`,
+          data,
+          {
+            headers: {
+              Authorization: `Token ${localStorage.getItem('token')}`
+            }
+          }
+        );
+    
+    
+        if (response.data.status) {
+          toast.error('done')
+          return
+        } 
+      } catch (error) {
+        toast.error(error.message)
+        console.error('Error in update Instute:', error);
+        throw error;
+      }
+    };
+  
+    
 
   return (
     <Container>
+      <form onSubmit={handleSubmit}>
       <Paper elevation={3} sx={{ padding: 3, marginBottom: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
           <Typography variant="h4">Institute Details</Typography>
@@ -75,12 +142,19 @@ const InstituteDetails = ({ institute }) => {
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Avatar src={formData.logo} alt="Institute Logo" sx={{ width: 100, height: 100 }} />
+
+            <Avatar src={ logo ? getImageUrl(logo) : logoSrc} alt="Institute Logo" sx={{ width: 100, height: 100 }} />
             {isEditing && (
-              <Button variant="contained" component="label">
+             <Box>
+               <Button variant="contained" component="label">
                 Upload
-                <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
+                <input type="file" accept="image/*" hidden onChange={handleInputImageChange} />
               </Button>
+              <Button  component="label" color="error" variant="tonal"   onClick={handleInputImageReset}>
+                Reset
+              </Button>
+             </Box>
+              
             )}
           </Grid>
 
@@ -260,6 +334,7 @@ const InstituteDetails = ({ institute }) => {
           ))}
         </Box>
       </Paper>
+      </form>
     </Container>
   );
 };

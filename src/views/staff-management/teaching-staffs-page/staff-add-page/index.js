@@ -203,6 +203,7 @@ const StepperLinearWithValidation = () => {
     form_data.append("file",files[0])
     const response = await client.file.upload(form_data)
     setLogo(response?.data?.file)
+    
   } catch (error) {
     hide()
     toast.error(error?.message)

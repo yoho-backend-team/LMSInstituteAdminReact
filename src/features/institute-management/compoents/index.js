@@ -28,18 +28,7 @@ const MainSettingsPage = () => {
             <Typography variant="h3" color="textPrimary">
               Profile
             </Typography>
-            <Chip ></Chip>
-            <Box
-              sx={{
-                color:'white',
-                bgcolor: instituteinfo.is_active ? 'green' : 'red',
-                borderRadius: '20%',
-                p:1,
-                display: 'inline-block'
-              }}>
-
-              Active
-              </Box>
+            <Chip label={instituteinfo.is_active ? "Active":'Inactive'}  color={instituteinfo.is_active ? 'primary':'error'}></Chip>
             
           </Box>
           <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
@@ -47,7 +36,7 @@ const MainSettingsPage = () => {
             <Typography variant="h4" fontWeight="bold">
               {instituteinfo.slug}
             </Typography>
-            <Typography variant="body1" color="primary">
+            <Typography variant="body1" >
               {instituteinfo.contact_info.address.city} , {instituteinfo.contact_info.address.state}
             </Typography>
           </Box >

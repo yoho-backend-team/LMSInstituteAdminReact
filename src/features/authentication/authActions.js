@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import client from 'api/client';
 import { HTTP_END_POINTS } from 'api/client/http_end_points';
 // import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
-
+import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
 // import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
@@ -23,7 +23,8 @@ export const login = (username, password) => async (dispatch) => {
     });
    
     if(response.data.data.otpVerify){
-       setOtp("otp",JSON.stringify(response.data.data))
+      localStorage.setItem("otp",JSON.stringify(response.data.data))
+      //  setOtp("otp",JSON.stringify(response.data.data))
        toast.success(response.data.message)
        return {otpVerify:true}
     }
@@ -56,6 +57,7 @@ export const login = (username, password) => async (dispatch) => {
       return { success: true, message: 'Login successfully' };
   } catch (error) {
     // Dispatch error action
+    console.log(error,"error")
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error?.response?.data?.message

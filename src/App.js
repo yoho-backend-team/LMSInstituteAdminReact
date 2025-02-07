@@ -14,6 +14,7 @@ import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } f
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
 import usePushSubscription from 'usePushSubscription';
+import { setSelectedBranchId } from 'utils/localStroageService';
 
 // import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //
@@ -85,7 +86,8 @@ const App = () => {
     const notifiAdd = Cookies.get("instituteNotificationSubscription");
     const branches = localStorage.getItem('branches');
     if (!selectBranchId) {
-        localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
+        // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
+        setSelectedBranchId(branches?.[0]?.uuid);
     }
     if (isAuthenticatedUser && !notifiAdd) {
       registerSubscription(user?.role, user?._id, user, JSON.parse(selectBranchId), user?.institute_id);
