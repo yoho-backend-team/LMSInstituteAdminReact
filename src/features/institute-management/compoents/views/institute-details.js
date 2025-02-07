@@ -7,7 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 const InstituteDetails = ({ institute }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(institute);
-  console.log(institute,"institute")
+  console.log(institute, 'institute');
   useEffect(() => {
     setFormData(institute);
   }, [institute]);
@@ -25,8 +25,16 @@ const InstituteDetails = ({ institute }) => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setFormData({ ...formData, logo: imageUrl });
+    }
   };
 
   return (
@@ -35,8 +43,18 @@ const InstituteDetails = ({ institute }) => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
           <Typography variant="h4">Institute Details</Typography>
           {!isEditing ? (
-            <IconButton onClick={handleEdit} color="primary">
-              <EditIcon />
+            <IconButton
+              onClick={handleEdit}
+              color="primary "
+              sx={{
+                '&:hover': {
+                  backgroundColor: '#f5f5f5', // Changes color on hover
+                  transform: 'scale(1.05)' // Slight zoom effect
+                },
+                borderRadius: 20
+              }}
+            >
+              <EditIcon /> Edit
             </IconButton>
           ) : (
             <Box>
@@ -52,11 +70,18 @@ const InstituteDetails = ({ institute }) => {
 
         <Divider sx={{ marginBottom: 3 }} />
 
-        <Typography variant="h6" gutterBottom>General Information</Typography>
+        <Typography variant="h6" gutterBottom>
+          General Information
+        </Typography>
         <Grid container spacing={3}>
-        <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Avatar src={formData.logo} alt="Institute Logo" sx={{ width: 100, height: 100 }} />
-            {isEditing && <Button variant="contained" component="label">Upload</Button>}
+            {isEditing && (
+              <Button variant="contained" component="label">
+                Upload
+                <input type="file" accept="image/*" hidden onChange={handleImageUpload} />
+              </Button>
+            )}
           </Grid>
 
           <Grid item xs={12} sm={6}>
@@ -70,24 +95,10 @@ const InstituteDetails = ({ institute }) => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              fullWidth
-              disabled={!isEditing}
-            />
+            <TextField label="Email" name="email" value={formData.email} onChange={handleChange} fullWidth disabled={!isEditing} />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Website"
-              name="website"
-              value={formData.website}
-              onChange={handleChange}
-              fullWidth
-              disabled={!isEditing}
-            />
+            <TextField label="Website" name="website" value={formData.website} onChange={handleChange} fullWidth disabled={!isEditing} />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -100,12 +111,13 @@ const InstituteDetails = ({ institute }) => {
               disabled={!isEditing}
             />
           </Grid>
-
         </Grid>
 
         <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
-        <Typography variant="h6" gutterBottom>Contact Information</Typography>
+        <Typography variant="h6" gutterBottom>
+          Contact Information
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -131,7 +143,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="Address 1"
               name="contact_info.address.address1"
-              value={formData?.contact_info?.address?.address1 || ""}
+              value={formData?.contact_info?.address?.address1 || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -141,7 +153,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="Address 2"
               name="contact_info.address.address2"
-              value={formData?.contact_info?.address?.address2 || ""}
+              value={formData?.contact_info?.address?.address2 || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -151,7 +163,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="City"
               name="contact_info.address.city"
-              value={formData?.contact_info?.address?.city || ""}
+              value={formData?.contact_info?.address?.city || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -161,7 +173,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="State"
               name="contact_info.address.state"
-              value={formData?.contact_info?.address?.state || ""}
+              value={formData?.contact_info?.address?.state || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -171,7 +183,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="Pincode"
               name="contact_info.address.pincode"
-              value={formData?.contact_info?.address?.pincode || ""}
+              value={formData?.contact_info?.address?.pincode || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -181,13 +193,15 @@ const InstituteDetails = ({ institute }) => {
 
         <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
-        <Typography variant="h6" gutterBottom>Social Media</Typography>
+        <Typography variant="h6" gutterBottom>
+          Social Media
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
             <TextField
               label="Twitter"
               name="social_media.twitter_id"
-              value={formData?.social_media?.twitter_id || ""}
+              value={formData?.social_media?.twitter_id || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -197,7 +211,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="Facebook"
               name="social_media.facebook_id"
-              value={formData?.social_media?.facebook_id || ""}
+              value={formData?.social_media?.facebook_id || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -207,7 +221,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="Instagram"
               name="social_media.instagram_id"
-              value={formData?.social_media?.instagram_id || ""}
+              value={formData?.social_media?.instagram_id || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -217,7 +231,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="LinkedIn"
               name="social_media.linkedin_id"
-              value={formData?.social_media?.linkedin_id || ""}
+              value={formData?.social_media?.linkedin_id || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -227,7 +241,7 @@ const InstituteDetails = ({ institute }) => {
             <TextField
               label="Pinterest"
               name="social_media.pinterest_id"
-              value={formData?.social_media?.pinterest_id || ""}
+              value={formData?.social_media?.pinterest_id || ''}
               onChange={handleChange}
               fullWidth
               disabled={!isEditing}
@@ -237,7 +251,9 @@ const InstituteDetails = ({ institute }) => {
 
         <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
 
-        <Typography variant="h6" gutterBottom>Gallery Images</Typography>
+        <Typography variant="h6" gutterBottom>
+          Gallery Images
+        </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
           {formData.gallery_images.map((image, index) => (
             <Avatar key={index} src={image} alt={`Gallery Image ${index + 1}`} sx={{ width: 100, height: 100, margin: 1 }} />
