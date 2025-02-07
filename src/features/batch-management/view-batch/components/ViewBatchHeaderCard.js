@@ -17,7 +17,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
     marginBottom: '16px',
     overflow: 'hidden',
     position: 'relative',
-    boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+    boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
     '&:after': {
       content: '""',
       position: 'absolute',
@@ -43,12 +43,12 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                     variant="h1"
                     sx={{
                       color: `${theme.palette.mode === 'light' ? theme.palette.dark.main : theme.palette.light}`,
-                      fontSize: '1.875rem',  
-    fontWeight: 'bold',  
-    background: 'linear-gradient(to right, #2563eb, #7c3aed)',  
-    WebkitBackgroundClip: 'text',  
-    WebkitTextFillColor: 'transparent' ,
-    display: 'inline-block', // 
+                      fontSize: '1.875rem',
+                      fontWeight: 'bold',
+                      background: 'linear-gradient(to right, #2563eb, #7c3aed)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      display: 'inline-block', // 
                     }}
                   >
                     {batchData.batch_name}
@@ -63,7 +63,7 @@ const EcommerceStatistics = ({ batchData, theme }) => {
 
                   <Grid item xs={12} sm={7} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
 
-                    <Typography variant="h3" sx={{color:'#4b5563'}}>Course Name :</Typography>
+                    <Typography variant="h3" sx={{ color: '#4b5563' }}>Course Name :</Typography>
                     <Typography
                       variant="h3"
                       sx={{ color: `${theme.palette.mode === 'light' ? '#4b5563' : theme.palette.light}`, ml: 1 }}
@@ -71,28 +71,26 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                       {batchData?.course?.course_name}
                     </Typography>
 
-               
-                    <Typography sx={{ml:2}}>
-                      <CustomChip label={batchData.id}  color="primary"   
-                       sx={{
-                        background: 'linear-gradient(to right, #3b82f6, #7c3aed)',  
-                        color: 'white', 
-                        
-                        py: 2, 
-                        borderRadius: '9999px', 
-                        fontWeight: 500,  
-                      
-                        textAlign: 'center',  
-                      }}></CustomChip>
+
+                    <Typography sx={{ ml: 2 }}>
+                      <CustomChip label={batchData.id} color="primary"
+                        sx={{
+                          background: 'linear-gradient(to right, #3b82f6, #7c3aed)',
+                          color: 'white',
+                          py: 2,
+                          borderRadius: '9999px',
+                          fontWeight: 500,
+                          textAlign: 'center',
+                        }}></CustomChip>
                     </Typography>
-                  
+
 
                   </Grid>
 
 
 
                   <Grid item xs={12} sm={2} sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <Typography variant="h3" sx={{color:'#4b5563'}}>Duration:</Typography>
+                    <Typography variant="h3" sx={{ color: '#4b5563' }}>Duration:</Typography>
                     <Typography
                       variant="h3"
                       sx={{ ml: 1, color: `${theme.palette.mode === 'light' ? '#4b5563' : theme.palette.light}` }}
@@ -100,17 +98,21 @@ const EcommerceStatistics = ({ batchData, theme }) => {
                       {batchData?.course?.duration}
                     </Typography>
 
-                    <Typography variant="h3" sx={{ ml: 0.5,color:'#4b5563' }}>days</Typography>
+                    <Typography variant="h3" sx={{ ml: 0.5, color: '#4b5563' }}>days</Typography>
                   </Grid>
 
 
                   <Grid item xs={12} sm={3} sx={{ mt: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-                      <CustomChip label={batchData.start_date} size="large" color="secondary" variant="tonal" skin="dark" rounded  sx={{  background: 'linear-gradient(to right, #3b82f6, #7c3aed)',  
-                        color: 'white'}} />
+                      <CustomChip label={batchData.start_date} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{
+                        background: 'linear-gradient(to right, #3b82f6, #7c3aed)',
+                        color: 'white'
+                      }} />
                       <div className="connect" />
-                      <CustomChip label={batchData.end_date} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{background: 'linear-gradient(to right, #3b82f6, #7c3aed)',  
-                        color: 'white'}}/>
+                      <CustomChip label={batchData.end_date} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{
+                        background: 'linear-gradient(to right, #3b82f6, #7c3aed)',
+                        color: 'white'
+                      }} />
                     </Box>
                   </Grid>
 
