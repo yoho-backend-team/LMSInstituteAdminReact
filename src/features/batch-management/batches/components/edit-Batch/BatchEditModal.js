@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField as CustomTextField, Grid } from '@mui/material';
+import { Button, TextField as CustomTextField, Grid,Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -161,10 +161,12 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
             textAlign: 'center',
             fontSize: '1.5rem !important',
             px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`]
-          }}
+            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
+          background: 'linear-gradient(to right, #6366F1, #8B5CF6)' }}
         >
-          Edit Batch
+         
+              <Typography variant="h1" sx={{ py: 3, color: 'white' }} >Create New Batch</Typography>
+            
         </DialogTitle>
         <DialogContent
           sx={{
@@ -272,16 +274,36 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                     </Grid>
                   </Grid>
                 </CardContent>
-                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                  <Box>
-                    <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                      Update
-                    </Button>
-                    <Button variant="tonal" color="error" onClick={handleClose}>
+
+                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6, marginBottom: 12, gap: 2 }}>                  <Box>
+
+
+                    <Button variant="tonal" color="secondary" onClick={handleClose} sx={{
+                    backgroundColor: '#f5f5f5',
+                    color: 'black', mr: 2,
+                    '&:hover': {
+                      backgroundColor: '#e0e0e0',
+                    }
+                  }}>
                       Cancel
                     </Button>
+
+
+                    <Button type="submit" variant="contained" sx={{
+                    mr: 3, background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
+                    color: 'white',
+                    '&:hover': {
+                      background: 'linear-gradient(to right, #4F46E5, #6B21A8)',
+                      color: 'white',
+                    }
+                  }}>
+                      Update
+                    </Button>
+                    
                   </Box>
                 </Grid>
+
+
               </form>
             </DatePickerWrapper>
           </Grid>
