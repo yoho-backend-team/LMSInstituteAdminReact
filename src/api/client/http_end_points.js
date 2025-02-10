@@ -24,7 +24,7 @@ const generateEndpoints = () => {
 
     const instituteId = institute? institute?.uuid  :""
 
-    console.log(branchId,"branchId",instituteId)
+    // console.log(branchId,"branchId",instituteId)
     
     return {
         admin  : {
@@ -54,7 +54,7 @@ const generateEndpoints = () => {
         },
         branch : {
             getAll : `/api/institutes/${instituteId}/branches/`,
-            create : `/api/institutes/${instituteId}/branches/`
+            create : `/api/institutes/${instituteId}/branches/`,
         },
         faq : {
             create: `/api/institutes/faq`,  
@@ -64,7 +64,7 @@ const generateEndpoints = () => {
 
         },
         category: {
-            getAll: `/api/institutes/${instituteId}/categories/`,
+            getAll: `/api/institutes/faq/category`,
             create: `/api/institutes/faq/category`,
             update: `/api/institutes/faq/category/update/:uuid`,
             delete: `/api/institutes/faq/category/delete/:uuid`

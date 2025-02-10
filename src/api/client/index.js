@@ -38,16 +38,16 @@ class Client {
     }
     faq = {
       create : (data) => HttpClient.post(HTTP_END_POINTS.faq.create,data),
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,params),
+      getAll : (data,params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,params,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq.delete+data.id),
       update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq.update.replace(':uuid', uuid), data)
     }
 
     category = {
-      get    : (params) => HttpClient.get(HTTP_END_POINTS.category.getAll,params),
+      getAll : (data) => HttpClient.get(HTTP_END_POINTS.category.getAll,data),
       create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
-      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
-      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)
+      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.update+`/${data.id}`,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.delete+`/${data.uuid}`)
     }
     course_module ={
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.course_module.get,params),

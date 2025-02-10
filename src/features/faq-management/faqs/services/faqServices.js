@@ -6,7 +6,7 @@ const API = axios.create({
 });
 
 export default API;
-import { HTTP_END_POINTS } from 'api/client/http_end_points';
+// import { HTTP_END_POINTS } from 'api/client/http_end_points';
 import client from 'api/client';
 
 
@@ -44,25 +44,17 @@ export const getActivesByBranch = async (data) => {
 
 export const getAllFaqs = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_API_END_POINT}/all`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.faq.getAll(data);
+    console.log("getall data response",response);
+    
 
-    // Check if the response status is successful
-    if (response.data.status) {
+    if (response?.status) {
       return response;
     } else {
-      // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch Faqs. Status: ${response.status}`);
     }
   } catch (error) {
-    // Log the error for debugging purposes
     console.error('Error in get all Faqs:', error);
-
     // Throw the error again to propagate it to the calling function/component
     throw error;
   }
@@ -90,32 +82,12 @@ export const searchFaqs = async (searchQuery) => {
   }
 };
 
-// export const addFaq = async (data) => {
-//   try {
-//     const response = await axios.post(`${FAQ_API_END_POINT}/`, data, {
-//       headers: {
-//         // 'Content-Type': 'multipart/form-data',
-//         Accept: 'application/json',
-//         Authorization: `Token ${localStorage.getItem('token')}`
-//       }
-//     });
-
-//     if (response.data.success) {
-//       return { success: true, message: 'Faq created successfully' };
-//     } else {
-//       return { success: false, message: 'Failed to create Faq' };
-//     }
-//   } catch (error) {
-//     console.error('Error in addFaq:', error);
-//     throw error;
-//   }
-// };
 
 export const createFaq = async (faqData) => {
   try {
     
       const response = await client.faq.create(faqData)
-      console.log("create client response",response);
+      console.log("create client response::",response.uuid);
       
       
       if (!response?.success) {

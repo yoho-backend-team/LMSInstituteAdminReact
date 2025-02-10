@@ -23,29 +23,21 @@ export const getActiveFaqCategories = async (data) => {
   }
 };
 
-
 export const getAllFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
-      },
-      params: data 
-
-    });
-    console.log("All categories data",response)
-
-
-    // Check if the response status is successful
-  
-    return response;
+    console.log("API response data: ",data);
+    
+    const response = await client.category.getAll(data);
+    console.log('All categories data:', response);
+    if (response?.status) {
+      return response;
+    } else {
+      throw new Error(`Failed to fetch Faqcategory. Status: ${response.status}`);
+    }
   } catch (error) {
-    // Log the error for debugging purposes
-    console.error('Error in get all Faq categories:', error);
+    console.error('Error in get all Faqcategory:', error);
 
-    // Throw the error again to propagate it to the calling function/component
-    throw new Error(`Failed to fetch Faq categories. Status: ${error?.response.data.status}`);
+    throw error;
   }
 };
 
@@ -56,9 +48,9 @@ export const searchFaqCategories = async (searchQuery) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
       },
-      params: { keyword: searchQuery } 
+      params: { keyword: searchQuery }
     });
-    
+
     if (response.data) {
       return { success: true, data: response.data };
     } else {
@@ -69,18 +61,30 @@ export const searchFaqCategories = async (searchQuery) => {
     throw error;
   }
 };
+
 export const addFaqCategory = async (inputData) => {
   try {
-    const response = await client.category.create(inputData);
-    console.log("add data:", response);
+    console.log("inputData", inputData);
 
-    if (response?.status) {
-      return { success: true, message: 'Faq Category created successfully' }; 
+    const { instituteId } = inputData;
+
+    console.log("instituteId :", instituteId);
+
+    const requestData = {
+      ...inputData,  
+      instituteId,   
+    };
+
+    const response = await client.category.create(requestData); 
+    console.log('API Response:', response);
+
+    if (response?.status === 200 || response?.status === 201) {
+      return { success: true, message: 'Faq Category created successfully' };
     } else {
-      return { success: false, message: 'Failed to create FaqCategory' }; 
+      return { success: false, message: response?.data?.message || 'Failed to create FaqCategory' };
     }
   } catch (error) {
-    console.error('Error in addFaqCategory:', error);
+    console.error('Error in addFaqCategory:', error.response?.data || error);
     throw error;
   }
 };
@@ -88,13 +92,7 @@ export const addFaqCategory = async (inputData) => {
 
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await axios.delete(`${FAQ_CATEGORY_API_END_POINT}/delete/${data.id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      params: data
-    });
+    const response = await client.category.delete(data);
 
     if (response.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
@@ -127,7 +125,7 @@ export const updateStatusFaqCategory = async (data) => {
   }
 };
 
-export const updateFaqCategory = async (data) => {   
+export const updateFaqCategory = async (data) => {
   try {
     const { uuid } = data;
 
@@ -135,9 +133,8 @@ export const updateFaqCategory = async (data) => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`
-      } 
+      }
     });
-    
 
     if (response.data.status) {
       return { success: true, message: 'FaqCategory updated successfully' };

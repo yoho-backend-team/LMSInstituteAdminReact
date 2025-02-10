@@ -26,7 +26,7 @@ const App = () => {
   if ('serviceWorker' in navigator) {
               navigator.serviceWorker.register('/service-worker.js')
                 .then((registration) => {
-                  console.log('Service Worker registered with scope:', registration.scope);
+                  // console.log('Service Worker registered with scope:', registration.scope);
                       const user = JSON.parse(localStorage.getItem("userData"))
                       const selectBranchId = localStorage.getItem("selectedBranchId")
                       usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
@@ -75,7 +75,7 @@ const App = () => {
         await subscribe(registration, role, userId, user, institute, branch);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -100,7 +100,7 @@ const App = () => {
         setShowOverlay(true);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

@@ -93,7 +93,8 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
       title: data.name,
       description: data.description,
       category_id: data.category._id,
-      accessby: data.accessby
+      accessby: data.accessby,
+      uuid: data.uuid
       // vidlink: data.vidlink,
       // pagelink: data.pagelink
     };
@@ -106,7 +107,7 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
         setRefetch((state) => !state);
         toggle();
         reset();
-        toast.success('FAQ added successfully!');
+        // toast.success('FAQ added successfully!');
       } else {
         toast.error('Failed to add FAQ. Please try again.');
       }
