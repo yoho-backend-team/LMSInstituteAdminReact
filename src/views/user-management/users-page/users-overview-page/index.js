@@ -57,13 +57,7 @@ const UserList = () => {
     hide();
   }, [dispatch, selectedBranchId, userRefetch]);
 
-  useEffect(() => {
-    if (isGridVisible) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-  }, [isGridVisible]);
+ 
 
   return (
     <Grid container spacing={3} sx={{ position: 'relative' }}>
@@ -111,11 +105,11 @@ const UserList = () => {
          position: 'relative',
         
          left: 0,
-         maxWidth: '250px', // Reduce width
+         maxWidth: '250px', 
          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-         padding: '20px', // Reduce padding
+         padding: '20px', 
          boxSizing: 'border-box',
-         mb: 2, // Reduce margin-bottom
+         mb: 2, 
        }}
      >
      
