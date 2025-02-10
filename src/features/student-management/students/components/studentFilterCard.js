@@ -71,50 +71,22 @@ const StudentFilter = (props ) => {
 
   //toggle handler
   const handleToggleCard = (event) => {
-    event.stopPropagation(); // Prevent triggering the click outside handler
+    
     setIsCardOpen((prev) => !prev);
   };
 
-    // Prevent background scrolling when card is open
-  useEffect(() => {
-    if (isCardOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isCardOpen]);
 
 
-  // Close the filter card if clicked outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (filterCardRef.current && !filterCardRef.current.contains(event.target) &&  
-      event.target.closest('.MuiAutocomplete-popper') === null &&
-      event.target.closest('.MuiPaper-root') === null && 
-       event.target.getAttribute('data-ignore-outside-click') !== 'true') {
-        setIsCardOpen(false);
-      }
-    };
 
-    // Add event listener for clicks outside the filter card
-    document.addEventListener('mousedown', handleClickOutside);
-
-    // Clean up the event listener
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  
   
 
   
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
-        
-        <Box sx={{ mb: 2 , position: 'relative', zIndex: 1000}}>
+
+        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
           <Button
             variant="contained"
             size="medium"
@@ -124,33 +96,28 @@ const StudentFilter = (props ) => {
           >
           <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
           </Button>
+        
+                <Box component={Link} to={'students/add'}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
+                    Add New Student
+                  </Button>
+                </Box>
         </Box>
+             
       </Grid>
       {isCardOpen && (
         <>
-         {/* Overlay for background blur */}
-    <Box
-    sx={{
-      position:'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',  
-      backdropFilter: 'blur(4px)', 
-      zIndex: 998,  
-    }}
-  />
+
          <Box
          ref={filterCardRef}  
          sx={{
-           position: 'fixed',  
+           position: 'relative',  
            top: '19%',  
-           left:"60%",
-          //  left: isSidebarOpen ? 'calc(60% + 200px)' : '60%',
+           left:"50%",
+          
            transform: 'translateX(-50%)',
            zIndex: 999,  
-           width: '80%',    
+           width: '100%',    
            backgroundColor: 'white',
            boxShadow: 3,
            borderRadius: 2,
@@ -242,13 +209,7 @@ const StudentFilter = (props ) => {
                 <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} fullWidth />
               </Grid>
 
-              <Grid item xs={12} sm={3}>
-                <Box component={Link} to={'students/add'}>
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
-                    Add New Student
-                  </Button>
-                </Box>
-              </Grid>
+            
             </Grid>
           </CardContent>
         </Card>

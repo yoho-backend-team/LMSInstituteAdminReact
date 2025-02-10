@@ -126,45 +126,11 @@ const LiveClassFilterCard = (props) => {
 
    //toggle handler
    const handleToggleCard = (event) => {
-     event.stopPropagation(); // Prevent triggering the outside click handler
      setIsCardOpen((prev) => !prev);
    };
 
-  // Prevent background scrolling when card is open
-  useEffect(() => {
-   if (isCardOpen) {
-     document.body.style.overflow = 'hidden';
-   } else {
-     document.body.style.overflow = 'auto';
-   }
-   return () => {
-     document.body.style.overflow = 'auto';
-   };
- }, [isCardOpen]);
  
- 
- // Close the filter card if clicked outside
-useEffect(() => {
- const handleClickOutside = (event) => {
-   if (filterCardRef.current && !filterCardRef.current.contains(event.target) && 
-   !document.querySelector('.MuiAutocomplete-popper')?.contains(event.target) && // Ignore clicks inside Autocomplete dropdown
-   !document.querySelector('.MuiPopover-root')?.contains(event.target) && // Ignore clicks inside Menu dropdowns
-   !document.querySelector('.react-datepicker')?.contains(event.target)&&
-   !document.querySelector('.MuiMenu-paper')?.contains(event.target) &&
-    event.target.getAttribute('data-ignore-outside-click') !== 'true') {
-     setIsCardOpen(false);
-   }
- };
 
- 
-   // Add event listener for clicks outside the filter card
-   document.addEventListener('mousedown', handleClickOutside);
- 
-   // Clean up the event listener
-   return () => {
-     document.removeEventListener('mousedown', handleClickOutside);
-   };
- }, []);
 
   return (
 
@@ -179,41 +145,35 @@ useEffect(() => {
               data-ignore-outside-click="true"
             sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
               onClick={(event) => {
-    event.stopPropagation();  // Prevent outside click handler from closing the card
+     
     handleToggleCard(event);
   }}
           >
           <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
           </Button>
+
+
+
+
         </Box>
+
+
+
       </Grid>
 
       {isCardOpen && (
 <>
-{/* Overlay for background blur */}
-      <Box
-    sx={{
-      position:'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',  
-      backdropFilter: 'blur(4px)', 
-      zIndex: 998,  
-    }}
-  />
   
   <Box
          ref={filterCardRef}  
          sx={{
-           position: 'fixed',  
+           position: 'relative',  
            top: '19%',  
-           left:"60%",
-          //  left: isSidebarOpen ? 'calc(60% + 200px)' : '60%',
+           left:"50%",
+           
            transform: 'translateX(-50%)',
            zIndex: 999,  
-           width: '80%',    
+           width: '100%',    
            backgroundColor: 'white',
            boxShadow: 3,
            borderRadius: 2,

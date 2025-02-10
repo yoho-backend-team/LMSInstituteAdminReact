@@ -16,6 +16,7 @@ import * as yup from 'yup';
 import { updateBatch } from '../../services/batchServices';
 import { getChangedFields } from 'utils/getChanges';
 
+
 const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
 });
@@ -99,11 +100,27 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       uuid : selectedBatch?.uuid,
       student:studentIds,
     };
-    const changeFields = getChangedFields(selectedBatch,inputData)
-    if(!changeFields.is_changed){
-      toast.error("No changes detected. Please make some changes before updating.")
-      return;
-    }
+
+    // Manually compare fields
+  const hasChanges = [
+    selectedBatch?.batch_name !== inputData?.batch_name,
+    selectedBatch?.start_date !== inputData?.start_date,
+    selectedBatch?.end_date !== inputData?.end_date,
+    JSON.stringify(selectedBatch?.students) !== JSON.stringify(inputData?.students),
+  ].some(Boolean);
+
+  if (!hasChanges) {
+    toast.error('No changes detected. Please make some changes before updating.');
+    return;
+  }
+
+
+    // const changeFields = getChangedFields(selectedBatch,inputData)
+    // if(!changeFields.is_changed){
+    //   toast.error("No changes detected. Please make some changes before updating.")
+    //   return;
+    // }
+
     const result = await updateBatch(inputData);
 
     if (result.success) {
@@ -118,13 +135,15 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   };
 
   const handleStartDateChange = (date) => {
-    setValue('startDate', date);
-    setStartDate(date);
+    const formattedDate = new Date(date).toLocaleDateString();  
+    setValue('start_date', formattedDate); 
+    setStartDate(new Date(date)); 
   };
-
+  
   const handleEndDateChange = (date) => {
-    setValue('endDate', date);
-    setEndDate(date);
+    const formattedDate = new Date(date).toLocaleDateString();  
+    setValue('end_date', formattedDate);  
+    setEndDate(new Date(date));  
   };
 
   return (
@@ -133,7 +152,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
         open={open}
         onClose={handleClose}
         aria-labelledby="user-view-edit"
-        aria-describedby="user-view-edit-description"
+        aria-describedby="user-view-edit-description" 
         sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
@@ -188,6 +207,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             value={value}
                             showYearDropdown
                             showMonthDropdown
+                             dateFormat="MM/dd/yyyy"
                             placeholderText="MM-DD-YYYY"
                             customInput={
                               <CustomInput label="Start Date" error={Boolean(errors.start_date)} helperText={errors.start_date?.message} />
@@ -208,6 +228,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             value={value}
                             showYearDropdown
                             showMonthDropdown
+                             dateFormat="MM/dd/yyyy"
                             placeholderText="MM-DD-YYYY"
                             customInput={
                               <CustomInput label="End Date" error={Boolean(errors.end_date)} helperText={errors.end_date?.message} />
