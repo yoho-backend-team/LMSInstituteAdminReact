@@ -24,7 +24,7 @@ const App = () => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/service-worker.js')
+              navigator.serviceWorker.register('/sw.js')
                 .then((registration) => {
                   console.log('Service Worker registered with scope:', registration.scope);
                       const user = JSON.parse(localStorage.getItem("userData"))
