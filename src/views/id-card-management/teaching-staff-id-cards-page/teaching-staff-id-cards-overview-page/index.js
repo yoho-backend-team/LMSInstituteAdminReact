@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import { useInstitute } from 'utils/get-institute-details';
 import generateStaffIDCardPDF from 'utils/id-generator';
+import generateIDCardPDF from 'utils/pdfGenerator';
 import { getImageUrl } from 'utils/imageUtils';
 
 const roleColors = {

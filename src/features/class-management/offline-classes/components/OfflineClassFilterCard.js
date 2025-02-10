@@ -61,7 +61,7 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
       dispatch(getAllOfflineClasses(data));
     }
   };
-  console.log(batches,"batches")
+  // console.log(batches,"batches")
 
   
      //toggle filter card

@@ -72,7 +72,7 @@ const FirebaseLogin = ({ ...others }) => {
           if (scriptedRef.current) {
           show()
           const response = await dispatch(await login(values.email, values.password));
-          console.log(response.otpVerify,"otp")
+          
           if(response?.otpVerify){
             hide()
             handleotppage()

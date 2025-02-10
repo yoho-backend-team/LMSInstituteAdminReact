@@ -86,7 +86,8 @@ const App = () => {
     const notifiAdd = Cookies.get("instituteNotificationSubscription");
     const branches = localStorage.getItem('branches');
     if (!selectBranchId) {
-      setSelectedBranchId(branches?.[0]?.uuid);
+        // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
+        setSelectedBranchId(branches?.[0]?.uuid);
     }
     if (isAuthenticatedUser && !notifiAdd) {
       registerSubscription(user?.role, user?._id, user, JSON.parse(selectBranchId), user?.institute_id);

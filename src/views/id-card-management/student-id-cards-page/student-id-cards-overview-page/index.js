@@ -117,7 +117,8 @@ const StudentIdCard = () => {
                   key={index}
                   item
                   xs={12}
-                  sm={3}
+                  sm={6}
+                  lg={4}
                   sx={{
                     position: 'relative',
                     width: '100%',
@@ -152,7 +153,7 @@ const StudentIdCard = () => {
                       }
                     }}
                   >
-                    <Card className="front" sx={{ width: '100%', minHeight: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
+                    <Card className="front" sx={{ width: 300, height: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
                               backgroundRepeat: 'no-repeat', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
@@ -197,7 +198,7 @@ const StudentIdCard = () => {
                                 {item.contact}
                               </Typography>
                             </Box>
-                            <Box sx={{ marginTop: 3, textAlign: 'center' }}>
+                            <Box sx={{  textAlign: 'center' }}>
                               <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
                                 <path
                                   fill="currentColor"
@@ -224,7 +225,7 @@ const StudentIdCard = () => {
 
                       </CardContent>
                     </Card>
-                    <Card className="back" sx={{ width: '100%', minHeight: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
+                    <Card className="back" sx={{ width: 300, height: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
                               backgroundRepeat: 'no-repeat', }}>

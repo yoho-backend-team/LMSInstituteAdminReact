@@ -220,7 +220,7 @@ const Dashboard = () => {
 
              {/* AllActivity Section */}
           <Grid item xs={12} md={3.5}>
-            {/* <AllActivity /> */}
+            <AllActivity />
           </Grid>
 
           {/* Revenue and Popular Course */}
