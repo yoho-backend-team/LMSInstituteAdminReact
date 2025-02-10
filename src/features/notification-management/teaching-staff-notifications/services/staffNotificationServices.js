@@ -2,6 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
 const STAFF_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management/staff-notifications`;
 
@@ -17,19 +18,19 @@ export const getAllStaffNotifications = async (data) => {
 
 export const getAllStaffDetailsWithRoleName = async (data) => {
   try {
-  const response = await client.staff.get(data) 
-  return {success:false,messag:response?.message,data:response} 
+    const response = await client.staff.get(data) 
+    return { success: false, message: response?.message, data: response } 
   } catch (error) {
-    return {success:false,message:error?.message}
+    return { success: false, message: error?.message }
   }
 }
 
 export const getTeachingStaffsWithBranch = async (data) => {
   try {
-  const response = await client.TeachingStaff.getWithBranch(data)
-  return { success: false, message : response?.message, data:response}
+    const response = await client.TeachingStaff.getWithBranch(data)
+    return { success: false, message: response?.message, data: response }
   } catch (error) {
-    return {success:false,message:error?.response?.data?.message}
+    return { success: false, message: error?.response?.data?.message }
   }
 }
 
@@ -49,7 +50,7 @@ export const deleteStaffNotification = async (StaffNotificationId) => {
     const response = await axios.delete(`${STAFF_NOTIFICATION_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: StaffNotificationId }
     });
@@ -70,7 +71,7 @@ export const updateStaffNotification = async (data) => {
     const response = await axios.put(`${STAFF_NOTIFICATION_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -90,12 +91,12 @@ export const resendStaffNotification = async (data) => {
     const response = await axios.post(`${STAFF_NOTIFICATION_API_ENDPOINT}/staff-notification-resend`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
     if (response.data.status) {
-      return { success: true, message: 'StafftNotification Resend successfully' };
+      return { success: true, message: 'StaffNotification Resend successfully' };
     } else {
       return { success: false, message: 'Failed to resend StaffNotification' };
     }

@@ -1,6 +1,7 @@
 // courseModuleService.js
 import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const COURSE_MODULE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/content-management/course-modules`;
 
@@ -21,7 +22,7 @@ export const searchCourseModules = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -43,7 +44,8 @@ export const addCourseModule = async (data) => {
 
     return { success: true, message: 'CourseModule created successfully' };
   } catch (error) {
-    //return { success: false, message: error };
+    console.error('Error in addCourseModule:', error);
+    return { success: false, message: 'Failed to create CourseModule' };
   }
 };
 
@@ -65,6 +67,7 @@ export const updateCourseModule = async (data) => {
     const response = await client.course_module.update(data)
     return { success: true, message: 'CourseModule updated successfully' };
   } catch (error) {
+    console.error('Error in updateCourseModule:', error);
     return { success: false, message: 'Failed to update CourseModule' };
   }
 };

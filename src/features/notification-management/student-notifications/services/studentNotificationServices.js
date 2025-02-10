@@ -2,6 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
 const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification`;
 
@@ -20,7 +21,7 @@ export const searchStudentNotifications = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -52,7 +53,7 @@ export const deleteStudentNotification = async (StudentNotificationId) => {
     const response = await axios.delete(`${STUDENT_NOTIFICATION_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: StudentNotificationId }
     });
@@ -73,7 +74,7 @@ export const updateStudentNotification = async (data) => {
     const response = await axios.put(`${STUDENT_NOTIFICATION_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -93,7 +94,7 @@ export const resendStudentNotification = async (data) => {
     const response = await axios.post(`${STUDENT_NOTIFICATION_API_ENDPOINT}/student-notification-resend`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 

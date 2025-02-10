@@ -44,8 +44,8 @@ const FirebaseLogin = ({ ...others }) => {
   const scriptedRef = useScriptRef();
   const [checked, setChecked] = useState(true);
   const dispatch = useDispatch();
-  const {handleotppage} = others
-  const {show,hide} = useSpinner()
+  const { handleotppage } = others;
+  const { show, hide } = useSpinner();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -55,12 +55,12 @@ const FirebaseLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  console.log(theme.typography.customInput,"customINput")
+  console.log(theme.typography.customInput, 'customINput');
   return (
     <Formik
       initialValues={{
         email: 'chandran.yoho@gmail.com',
-        password: 'Wecandoit@2024', 
+        password: 'Wecandoit@2024',
         submit: null
       }}
       validationSchema={Yup.object().shape({
@@ -70,20 +70,21 @@ const FirebaseLogin = ({ ...others }) => {
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
           if (scriptedRef.current) {
-          show()
-          const response = await dispatch(await login(values.email, values.password));
-          
-          if(response?.otpVerify){
-            hide()
-            handleotppage()
-          }
-          setStatus({ success: true });
-          setSubmitting(false);
+            show();
+            const response = await dispatch(login(values.email, values.password));
+
+            if (response?.otpVerify) {
+              hide();
+              handleotppage();
+            } else {
+              setStatus({ success: true });
+              setSubmitting(false);
+            }
           }
         } catch (err) {
-          hide()
+          hide();
           console.error(err);
-          toast.error(err?.message)
+          toast.error(err?.message);
           if (scriptedRef.current) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -94,9 +95,7 @@ const FirebaseLogin = ({ ...others }) => {
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <form noValidate onSubmit={handleSubmit} {...others}>
-          <FormControl variant="outlined" fullWidth error={Boolean(touched.email && errors.email)} 
-          sx={{ my: 1 }}
-          >
+          <FormControl variant="outlined" fullWidth error={Boolean(touched.email && errors.email)} sx={{ my: 1 }}>
             <InputLabel htmlFor="outlined-adornment-email-login">Username</InputLabel>
             <OutlinedInput
               id="outlined-adornment-email-login"
@@ -114,9 +113,7 @@ const FirebaseLogin = ({ ...others }) => {
             )}
           </FormControl>
 
-          <FormControl variant="outlined" fullWidth error={Boolean(touched.password && errors.password)} 
-          sx={{ my: 1 }}
-          >
+          <FormControl variant="outlined" fullWidth error={Boolean(touched.password && errors.password)} sx={{ my: 1 }}>
             <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
             <OutlinedInput
               id="outlined-adornment-password-login"

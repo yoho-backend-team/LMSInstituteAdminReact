@@ -14,6 +14,7 @@ import { selectCommunities } from 'features/community/redux/communitySelectors';
 import { getCommunityDetails } from 'features/community/services/communityServices';
 import { io } from 'socket.io-client';
 import { useSpinner } from 'context/spinnerContext';
+import secureLocalStorage from 'react-secure-storage';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -33,8 +34,8 @@ const Community = () => {
   const [communityDetails, setCommunityDetails] = useState(null);
   const communities = useSelector(selectCommunities);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const { showSpinner,hideSpinner} = useSpinner()
-  const [messages,setMessages] =useState([])
+  const { showSpinner, hideSpinner } = useSpinner();
+  const [messages, setMessages] = useState([]);
 
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -44,8 +45,8 @@ const Community = () => {
   const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
   const sidebarWidth = smAbove ? 360 : 300;
   const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
-  const [socket,setSocket] = useState(null)
-  
+  const [socket, setSocket] = useState(null);
+
   const statusObj = {
     busy: 'error',
     away: 'warning',
@@ -53,26 +54,13 @@ const Community = () => {
     offline: 'secondary'
   };
 
-  useEffect(()=>{
-    const socket = io(process.env.REACT_APP_PUBLIC_API_URL)
-    setSocket(socket)
-  },[])
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("userData"))
-  //   const institute = JSON.parse(localStorage.getItem('institute'))
-  //   const data = {
-  //     branchid: selectedBranchId,
-  //     userId:user._id,
-  //     instituteId: institute._id
-  //   };    
-  //   dispatch(getAllCommunities(data));
-  // }, [dispatch, selectedBranchId]);
-  // useEffect(() => {
-  //   dispatch(fetchUserProfile());
-  // }, [dispatch]);
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_PUBLIC_API_URL);
+    setSocket(socket);
+  }, []);
 
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const institute = JSON.parse(localStorage.getItem('institute'));
+  const userData = JSON.parse(secureLocalStorage.getItem("userData"));
+  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,10 +69,10 @@ const Community = () => {
         userId: userData._id,
         instituteId: institute._id
       };
-      
+
       const response = await dispatch(getAllCommunities(data));
       if (response && response.data.data && response.data.data.length > 0) {
-        const chatId = response.data.data[0]._id; 
+        const chatId = response.data.data[0]._id;
         const updatedData = { ...data, chatId };
       }
     };
@@ -98,30 +86,26 @@ const Community = () => {
         userId: userData._id,
         instituteId: institute._id
       };
-      
+
       const response = await dispatch(getAllCommunities(data));
-  
+
       if (response && response.data.data && response.data.data.length > 0) {
-        const chatId = response.data.data[0]._id; // Set chatId from response
+        const chatId = response.data.data[0]._id;
         const updatedData = { ...data, chatId };
-  
-        // Call getAllBatchChats with updatedData
+
         const messages = await getAllBatchChats(updatedData);
         if (messages) {
           setChats(messages.data);
         }
       }
     };
-    
-    fetchData();
-  }, [dispatch, selectedBranchId,chats]);
-  
 
+    fetchData();
+  }, [dispatch, selectedBranchId, chats]);
 
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
-
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
@@ -182,7 +166,7 @@ const Community = () => {
             setSelectedBatch={setSelectedBatch}
             setCommunityDetails={setCommunityDetails}
             communityDetails={communityDetails}
-            socket ={socket}
+            socket={socket}
             setMessages={setMessages}
             messages={messages}
           />
@@ -202,7 +186,7 @@ const Community = () => {
             selectedBatch={selectedBatch}
             setChats={setChats}
             communityDetails={communityDetails}
-            socket ={socket}
+            socket={socket}
             messages={messages}
             setMessages={setMessages}
           />

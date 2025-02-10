@@ -31,6 +31,7 @@ import client from 'api/client';
 import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'utils/imageUtils';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import secureLocalStorage from 'react-secure-storage';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -172,8 +173,8 @@ const StepperLinearWithValidation = () => {
     }
   }));
   const getInstituteDetails = () => {
-    if(typeof(localStorage) !== "undefined"){
-    const institute = localStorage.getItem("institute")
+    if(typeof(secureLocalStorage) !== "undefined"){
+    const institute = secureLocalStorage.getItem("institute")
     return JSON.parse(institute)
     }else{
      return undefined

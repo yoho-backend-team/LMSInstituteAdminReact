@@ -13,6 +13,8 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+import secureLocalStorage from 'react-secure-storage';
+import { setSelectedBranchId } from 'utils/localStroageService';
 
 
 const App = () => {
@@ -23,7 +25,7 @@ const App = () => {
     try {
       show();
       const getInstituteDetails = () => {
-        const institute_details = localStorage.getItem('institute');
+        const institute_details = secureLocalStorage.getItem('institute');
         if (institute_details) {
           try {
             const parsed_data = JSON.parse(institute_details);
@@ -33,7 +35,6 @@ const App = () => {
           }
         }
       };
-
       const response = await UpgradSubscriptionPlanWithId({ institute: getInstituteDetails() });
       setShowOverlay(false);
       setSecureItem("requestPassed", true);
@@ -62,11 +63,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    const isAuthenticatedUser = localStorage.getItem("isAuthenticated");
-    const selectBranchId = localStorage.getItem("selectedBranchId");
-    const user =localStorage.getItem("userData");
+    const isAuthenticatedUser = secureLocalStorage.getItem("isAuthenticated");
+    const selectBranchId = secureLocalStorage.getItem("selectedBranchId");
+    const user =secureLocalStorage.getItem("userData");
     const notifiAdd = Cookies.get("instituteNotificationSubscription");
-    const branches = localStorage.getItem('branches');
+    const branches = secureLocalStorage.getItem('branches');
     if (!selectBranchId) {
       setSelectedBranchId(branches?.[0]?.uuid);
     }
@@ -87,11 +88,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    const isAuthenticatedUser = localStorage.getItem("isAuthenticated");
-    const requestState = localStorage.getItem("requestPassed");
+    const isAuthenticatedUser = secureLocalStorage.getItem("isAuthenticated");
+    const requestState = secureLocalStorage.getItem("requestPassed");
 
     const getInstituteDetails = () => {
-      const institute_details =localStorage.getItem('institute');
+      const institute_details =secureLocalStorage.getItem('institute');
       if (institute_details) {
         return institute_details;
       }

@@ -18,6 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
 import * as yup from 'yup';
 
 const StepperLinearWithValidation = () => {
@@ -210,8 +211,8 @@ const StepperLinearWithValidation = () => {
   
 
   const getInstituteDetails = () => {
-    if(typeof(localStorage) !== "undefined"){
-    const institute = localStorage.getItem("institute")
+    if(typeof(secureLocalStorage) !== "undefined"){
+    const institute = secureLocalStorage.getItem("institute")
     return JSON.parse(institute)
     }else{
      return undefined
@@ -228,7 +229,7 @@ const StepperLinearWithValidation = () => {
       full_name: formData.full_name,
       password: formData.password,
       institute_id: useInstitute().getInstituteId(),
-      branch_id: localStorage.getItem("selectedBranchId"),
+      branch_id: secureLocalStorage.getItem("selectedBranchId"),
       username: formData.username,
       dob: convertDateFormat(formData.date_of_birth),
       gender: formData.gender,

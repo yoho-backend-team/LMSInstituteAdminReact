@@ -1,5 +1,6 @@
 // groupService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const HELP_CENTER_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/helpcenter`;
 
@@ -8,7 +9,7 @@ export const getActiveHelpCenter = async (data) => {
     const response = await axios.get(`${HELP_CENTER_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -22,15 +23,12 @@ export const getActiveHelpCenter = async (data) => {
   }
 };
 
-
-
-
 export const searchHelpCenter = async (searchQuery) => {
   try {
     const response = await axios.get(`${HELP_CENTER_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { keyword: searchQuery } 
     });
@@ -45,12 +43,13 @@ export const searchHelpCenter = async (searchQuery) => {
     throw error;
   }
 };
+
 export const addHelpCenter = async (data) => {
   try {
     const response = await axios.post(`${HELP_CENTER_API_END_POINT}`, data, {
       headers: {
         Accept: 'application/json',
-        Authorization: `token ${localStorage.getItem('token')}`
+        Authorization: `token ${secureLocalStorage.getItem('token')}`
       },
       params: data,
     });
@@ -66,14 +65,12 @@ export const addHelpCenter = async (data) => {
   }
 };
 
-
 export const deleteHelpCenter = async (data) => {
- 
   try {
-    const response = await axios.delete(`${HELP_CENTER_API_END_POINT}/delete/${data.id}`,{
+    const response = await axios.delete(`${HELP_CENTER_API_END_POINT}/delete/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -88,12 +85,13 @@ export const deleteHelpCenter = async (data) => {
     throw error;
   }
 };
+
 export const updateStatusHelpCenter = async (data) => {
   try {
     const response = await axios.post(`${HELP_CENTER_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -111,12 +109,10 @@ export const updateStatusHelpCenter = async (data) => {
 
 export const updateHelpcenter = async (data) => {   
   try {
-    
-
     const response = await axios.put(`${HELP_CENTER_API_END_POINT}/update/${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -131,25 +127,19 @@ export const updateHelpcenter = async (data) => {
   }
 };
 
-
 export const getAllHelpCenterDetails = async (data) => {
   try {
     const response = await axios.get(`${HELP_CENTER_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params:  data,
+      params: data,
     });
 
-   
-  
     return response;
   } catch (error) {
-    
     console.error('Error in get all Help Center:', error);
-
-    
     throw new Error(`Failed to fetch all Help Center. Status: ${error?.response.data.status}`);
   }
 };

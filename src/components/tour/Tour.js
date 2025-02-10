@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Tour.css'; // Import custom CSS for your styling
+import secureLocalStorage from 'react-secure-storage';
 
 const Tour = ({ steps, onTourComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -7,7 +8,7 @@ const Tour = ({ steps, onTourComplete }) => {
 
   // Show the tour only for first-time visitors
   useEffect(() => {
-    if (!localStorage.getItem('tourCompleted')) {
+    if (!secureLocalStorage.getItem('tourCompleted')) {
       setTourStarted(true); // Start the tour if it's the first visit
     }
   }, []);
@@ -17,7 +18,7 @@ const Tour = ({ steps, onTourComplete }) => {
       setCurrentStep(currentStep + 1);
     } else {
       setTourStarted(false); // End tour
-      localStorage.setItem('tourCompleted', 'true');
+      secureLocalStorage.setItem('tourCompleted', 'true');
       if (onTourComplete) onTourComplete(); // Optional callback
     }
   };

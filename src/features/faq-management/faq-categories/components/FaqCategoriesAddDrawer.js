@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addFaqCategory } from '../services/faqCategoryServices';
+import secureLocalStorage from 'react-secure-storage';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -32,14 +33,13 @@ const defaultValues = {
 const FaqCategoriesAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
 
-  const institute = JSON.parse(localStorage.getItem('institute'));
-  const selectedBranchId = localStorage.getItem('selectedBranchId');
+  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+  const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
 
   const requestData = {
     branchid: selectedBranchId,
     institute_id: institute ? institute._id : ''
   }; 
-
 
   const {
     handleSubmit,
@@ -77,7 +77,7 @@ const FaqCategoriesAddDrawer = (props) => {
       }
     } catch (error) {
       console.error('Error in creating FaqCategory:', error);
-      toast.error('Failed to create FaqCategory',error);
+      toast.error('Failed to create FaqCategory', error);
     }
   };
   

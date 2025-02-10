@@ -9,7 +9,6 @@ import {
   ButtonBase,
   Card,
   Grid,
-  //  InputAdornment,
   TextField,
   Popper,
   MenuItem
@@ -24,13 +23,12 @@ import { updateSelectedBranch } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
 // assets
 import {
-  // IconAdjustmentsHorizontal,
   IconSearch
-  // IconX
 } from '@tabler/icons';
 import { shouldForwardProp } from '@mui/system';
 
 import { useSelector } from 'react-redux';
+import secureLocalStorage from 'react-secure-storage';
 
 // styles
 const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
@@ -46,7 +44,6 @@ const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
 const OutlineInputStyle = styled(TextField)(({ theme }) => ({
   minWidth: 434,
   marginLeft: 16,
-  // paddingLeft: 16,
   paddingRight: 16,
   '& input': {
     background: 'transparent !important',
@@ -75,11 +72,7 @@ const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => (
 
 // ==============================|| SEARCH INPUT - MOBILE||============================== //
 
-const MobileSearch = () =>
-// { value, setValue, popupState }
-{
-  // const theme = useTheme();
-
+const MobileSearch = () => {
   return (
     <OutlineInputStyle
       id="input-search-header"
@@ -107,7 +100,6 @@ MobileSearch.propTypes = {
 const SearchSection = () => {
   const theme = useTheme();
   const [value, setValue] = useState('Keelkattalai');
-  // Inside your component
   const branches = useSelector((state) => state.auth.branches);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -159,9 +151,8 @@ const SearchSection = () => {
           id="input-search-header"
           value={selectedBranchId?.trim()}
           onChange={(e) => {
-
             dispatch(updateSelectedBranch(e.target.value));
-            localStorage.setItem('selectedBranchId', e.target.value)
+            secureLocalStorage.setItem('selectedBranchId', e.target.value);
           }}
           placeholder="Search"
           aria-describedby="search-helper-text"
