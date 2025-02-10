@@ -97,9 +97,9 @@ const Header = ({ handleLeftDrawerToggle }) => {
         }}
       >
        <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
-    {useInstitute().getDetails().image ? (
+    {useInstitute()?.getDetails()?.image ? (
       <img
-        src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)}
+        src={getImageUrl(useInstitute().getDetails()?.logo ?? useInstitute().getDetails()?.image)}
         alt={useInstitute().getDetails().institute_name}
         width={40}
         height={40}
