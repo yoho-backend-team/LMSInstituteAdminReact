@@ -48,47 +48,64 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
 
   return (
     <>
-      <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-        <CardHeader title="Admin Users" />
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item sm={6} xs={12}>
-              <TextField
-                select
-                fullWidth
-                defaultValue="Select Role"
-                SelectProps={{
-                  value: role,
-                  displayEmpty: true,
-                  onChange: (e) => handleRoleChange(e)
-                }}
-              >
-                <MenuItem value="">Select Role</MenuItem>
-                {groups?.data?.map((group, index) => (
-                  <MenuItem key={index} value={group?._id}>
-                    {group?.identity}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+    <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",width: '1100px',  }}>
+      
+  <CardHeader title="Admin Users" />
+  <CardContent>
+    
+    <Grid container spacing={2} >
+      
+      {/* First Row: Select Role */}
+      <Grid item xs={2}>
+        <TextField
+          select
+          fullWidth
+          label="Status"
+          defaultValue=""
+          SelectProps={{
+            value: filterstatusValue,
+            
+            onChange: (e) => handleRoleChange(e),
+          }}
+        >
+          <MenuItem value="">Select Status</MenuItem>
+          <MenuItem value="true">Active</MenuItem>
+          <MenuItem value="false">Inactive</MenuItem>
+        </TextField>
+      </Grid>
 
-            <Grid item sm={6} xs={12}>
-              <TextField
-                select
-                fullWidth
-                label="Status"
-                defaultValue={''}
-                SelectProps={{ value: filterstatusValue, onChange: (e) => handleFilterByStatus(e) }}
-              >
-                <MenuItem value="">Select Status</MenuItem>
-                <MenuItem value="true">Active</MenuItem>
-                <MenuItem value="false">Inactive</MenuItem>
-              </TextField>
-            </Grid>
-          </Grid>
-          <UserTableHeader setUserRefetch={setUserRefetch} toggle={toggle} selectedBranchId={selectedBranchId} users={users?.data} userRefetch={userRefetch} />
-        </CardContent>
-      </Card>
+      {/* Second Row: Select Status */}
+      <Grid item xs={2}>
+        <TextField
+          select
+          fullWidth
+          label="Status"
+          defaultValue=""
+          SelectProps={{
+            value: filterstatusValue,
+            
+            onChange: (e) => handleFilterByStatus(e),
+          }}
+        >
+          <MenuItem value="">Select Status</MenuItem>
+          <MenuItem value="true">Active</MenuItem>
+          <MenuItem value="false">Inactive</MenuItem>
+        </TextField>
+      </Grid>
+      
+    </Grid>
+
+    {/* Other Content: User Table Header */}
+    <UserTableHeader
+      setUserRefetch={setUserRefetch}
+      toggle={toggle}
+      selectedBranchId={selectedBranchId}
+      users={users?.data}
+      userRefetch={userRefetch}
+    />
+  </CardContent>
+</Card>
+
     </>
   );
 };

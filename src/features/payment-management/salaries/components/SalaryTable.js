@@ -7,10 +7,10 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
-import { useState,useRef } from 'react';
+import { useState, useRef } from 'react';
 import { getInitials } from 'utils/get-initials';
 import Pagination from '@mui/material/Pagination';
-import { TextField } from '@mui/material';
+import { CircularProgress, TextField } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import PaymentSalarySkeleton from 'components/cards/Skeleton/PaymentSalarySkeleton';
@@ -32,7 +32,7 @@ import SalaryViewDrawer from './SalaryViewDrawer';
 import jsPDF from 'jspdf';
 import html2pdf from 'html2pdf.js';
 import SalarySlip from '../SalarySlip';
-
+import PaymentSkeleton from 'components/cards/Skeleton/PaymentSkeleton';
 
 // ** Styled component for the link in the dataTable
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -44,7 +44,9 @@ const LinkStyled = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row) => {
   if (row?.staff?.image) {
-    return <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.data?.username}`} sx={{ mr: 2.5, width: 38, height: 38 }} />;
+    return (
+      <Avatar src={`${process.env.REACT_APP_PUBLIC_API_URL}/storage/${row?.data?.username}`} sx={{ mr: 2.5, width: 38, height: 38 }} />
+    );
   } else {
     return (
       <Avatar
@@ -62,7 +64,7 @@ const userStatusObj = {
   paid: 'success',
   pending: 'warning',
   refund: 'secondary'
-};
+}; 
 
 const SalaryTable = () => {
   // ** State
@@ -76,11 +78,10 @@ const SalaryTable = () => {
 
   const dispatch = useDispatch();
   const TeachingStaffSalaries = useSelector(selectTeachingStaffSalaries);
- 
+
   const TeachingStaffSalariesLoading = useSelector(selectLoading);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
- 
 
   useEffect(() => {
     dispatch(getAllStaffSalaries({ branch_id: selectedBranchId, page: '1' }));
@@ -96,7 +97,6 @@ const SalaryTable = () => {
 
   const [statusValue, setStatusValue] = useState('');
   const [staffValue, setStaffValue] = useState('');
-
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -127,12 +127,13 @@ const SalaryTable = () => {
 
   const handleDownloadPDF1 = () => {
     const element = invoiceRef.current;
+    
     const opt = {
       margin: 1,
       filename: `Salary_Slip.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(element).save();
   };
@@ -225,7 +226,7 @@ const SalaryTable = () => {
             skin="light"
             size="small"
             label={isActive ? 'Active' : 'Inactive'}
-          color={isActive ? 'success' : 'error'}
+            color={isActive ? 'success' : 'error'}
             sx={{ textTransform: 'capitalize' }}
           />
         );
@@ -272,7 +273,7 @@ const SalaryTable = () => {
                 text: 'Download',
                 icon: <Icon icon="tabler:download" fontSize={20} />,
                 menuItemProps: {
-                  onClick: () => handleDownloadPDF1(row)
+                  onClick: () => handleDownload(row)
                 }
               },
               {
@@ -289,82 +290,123 @@ const SalaryTable = () => {
     }
   ];
 
-  console.log(TeachingStaffSalaries,"TeachingStaffSalaries")
+  // State for search value
+  const [searchValue, setSearchValue] = useState('');
+
+  // Dispatch function
+
+  // Callback function to handle search
+  const handleSearch = useCallback(
+    (e) => {
+      const searchInput = e.target.value;
+      dispatch(getAllStaffSalaries({ search: searchInput, branch_id: selectedBranchId }));
+      setSearchValue(searchInput);
+      // Dispatch action to fetch branches with search input
+    },
+    [dispatch]
+  );
+  const [isFilterCardVisible, setIsFilterCardVisible] = useState(false);
+
+  const toggleFilterCard = () => {
+    setIsFilterCardVisible(!isFilterCardVisible);
+  };
+  console.log(selectedRows, 'selectedros');
+  console.log(TeachingStaffSalaries, 'TeachingStaffSalaries');
 
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
-            <CardHeader title="Salary" />
-            <CardContent>
-              <Grid container spacing={6}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Status"
-                    defaultValue={''}
-                    SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
-                  >
-                    <MenuItem value="">Select Status</MenuItem>
-                    <MenuItem value="pending">Pending</MenuItem>
-                    <MenuItem value="paid">Paid</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Staff Type"
-                    defaultValue={''}
-                    SelectProps={{ value: staffValue, onChange: (e) => handleFilterByStaffType(e) }}
-                  >
-                    <MenuItem value="">Select Option</MenuItem>
-                    <MenuItem value="teaching">Teaching</MenuItem>
-                    <MenuItem value="non-teaching">Non Teaching</MenuItem>
-                  </TextField>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
+          <SalaryCardHeader
+            selectedBranchId={selectedBranchId}
+            selectedRows={selectedRows}
+            toggles={toggleFilterCard}
+            toggle={toggleAddUserDrawer}
+          />
         </Grid>
+        {isFilterCardVisible && (
+          <Grid item xs={12}>
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+              {/* <CardHeader title="Salary" /> */}
+              <CardContent>
+                <Grid container spacing={6}>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      value={searchValue}
+                      sx={{
+                        width: 400
+                      }}
+                      placeholder="Search Salary"
+                      onChange={(e) => handleSearch(e)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Status"
+                      defaultValue={''}
+                      SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                    >
+                      <MenuItem value="">Select Status</MenuItem>
+                      <MenuItem value="pending">Pending</MenuItem>
+                      <MenuItem value="paid">Paid</MenuItem>
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Staff Type"
+                      defaultValue={''}
+                      SelectProps={{ value: staffValue, onChange: (e) => handleFilterByStaffType(e) }}
+                    >
+                      <MenuItem value="">Select Option</MenuItem>
+                      <MenuItem value="teaching">Teaching</MenuItem>
+                      <MenuItem value="non-teaching">Non Teaching</MenuItem>
+                    </TextField>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
         <Grid item xs={12}>
-          <SalaryCardHeader selectedBranchId={selectedBranchId} selectedRows={selectedRows} toggle={toggleAddUserDrawer} />
-        </Grid>
-        <Grid item xs={12}>
-          <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+          <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
             {TeachingStaffSalariesLoading ? (
-              <PaymentSalarySkeleton />
+                           
+              <PaymentSkeleton />
+             
             ) : (
               <DataGrid
-                sx={{ 
-                  '& .MuiDataGrid-row' : {
-                    border: "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
+                sx={{
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   },
-                  "& .MuiDataGrid-row" : {
-                    border : "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
-                    ":hover" : {
-                       backgroundColor : "#f5f5f7",
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
                     }
                   },
-                  "& .MuiDataGrid-columnHeaders" : {
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   }
-                 }}
+                }}
                 hideFooterPagination
                 autoHeight
                 rowHeight={62}
-                rows={TeachingStaffSalaries?TeachingStaffSalaries?.data:[]}
+                rows={TeachingStaffSalaries ? TeachingStaffSalaries?.data : []}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooter
@@ -374,22 +416,22 @@ const SalaryTable = () => {
               />
             )}
             <CardContent>
-            {TeachingStaffSalaries?.last_page !== 1 && (
-              <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination
-                  count={TeachingStaffSalaries?.last_page}
-                  color="primary"
-                  onChange={(e, page) => {
-                    dispatch(getAllStaffSalaries({ branch_id: selectedBranchId, page: page }));
-                  }}
-                />
-              </Grid>
-            )}
+              {TeachingStaffSalaries?.last_page !== 1 && (
+                <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Pagination
+                    count={TeachingStaffSalaries?.last_page}
+                    color="primary"
+                    onChange={(e, page) => {
+                      dispatch(getAllStaffSalaries({ branch_id: selectedBranchId, page: page }));
+                    }}
+                  />
+                </Grid>
+              )}
             </CardContent>
           </Card>
-          <Box ref={invoiceRef} sx={{display:"none"}}>
-  <SalarySlip rows={TeachingStaffSalaries.data} />
-</Box>
+          <Box ref={invoiceRef} sx={{ display: 'none' }}>
+            <SalarySlip rows={TeachingStaffSalaries.data} />
+          </Box>
         </Grid>
       </Grid>
       {/* Add Drawer */}

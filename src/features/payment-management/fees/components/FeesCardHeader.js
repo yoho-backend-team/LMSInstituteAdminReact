@@ -1,25 +1,11 @@
-import { TextField } from '@mui/material';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { getAllStudentFees } from '../redux/studentFeeThunks';
 
 const FeesCardHeader = (props) => {
-  const { toggle, selectedBranchId } = props;
-  const [searchValue, setSearchValue] = useState('');
-  const dispatch = useDispatch();
-
-  const handleSearch = useCallback(
-    (e) => {
-      const searchInput = e.target.value;
-      dispatch(getAllStudentFees({ search: searchInput, branch_id: selectedBranchId }));
-      setSearchValue(searchInput);
-    },
-    [dispatch]
-  );
+  const { toggle, toggles } = props;
 
   return (
     <>
@@ -36,17 +22,15 @@ const FeesCardHeader = (props) => {
           p: 2
         }}
       >
-        <TextField
-          value={searchValue}
-          sx={{
-            width: 400
-          }}
-          placeholder="Search Fee"
-          onChange={(e) => handleSearch(e)}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Button onClick={toggles} variant="contained" sx={{fontSize:20}} color="primary" startIcon={<Icon icon="line-md:filter-twotone" />}>
+            Filter
+          </Button>
+          <Typography variant="h2" ml={2}>Fees</Typography>
+        </Box>
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button onClick={toggle} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button onClick={toggle} variant="contained" sx={{fontSize:20}} color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Fee
           </Button>
         </Box>

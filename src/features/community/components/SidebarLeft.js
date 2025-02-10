@@ -140,15 +140,11 @@ const SidebarLeft = (props) => {
                     width: '100%',
                     borderRadius: 1,
                     borderBottom: "1px solid #8696a026",
-                    '&.MuiListItemButton-root:hover': { backgroundColor: 'action.hover' },
+                    '&.MuiListItemButton-root:hover': { backgroundColor: 'rgba(255, 255, 255, 0.08)' },
                     transition: 'background-color 0.3s ease',
-                    '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.05)' },
+                    '&:hover': { backgroundColor: 'rgba(64, 37, 218, 0.05)' },
                     ...(activeCondition && {
-                      background: (theme) =>
-                        `linear-gradient(72.47deg, ${theme.palette.primary.main} 22.16%, ${hexToRGBA(
-                          theme.palette.primary.main,
-                          0.7
-                        )} 76.47%) !important`
+                      background:"#3A4042"
                     })
                   }}
                 >
@@ -241,7 +237,7 @@ const SidebarLeft = (props) => {
             px: 3,
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: "#111B21",
+            backgroundColor: "#2A2F32",                                                                                                
             borderBottom: (theme) => `1px solid ${theme.palette.divider}`
           }}
         >
@@ -289,7 +285,7 @@ const SidebarLeft = (props) => {
               )
             }}
           />
-          <Typography variant="h4" sx={{  color: 'primary.main',textAlign: "start" }}>
+          <Typography variant="h4" sx={{  color: 'white',textAlign: "start" }}>
                 Batches
           </Typography>
           {!mdAbove ? (
@@ -299,7 +295,7 @@ const SidebarLeft = (props) => {
           ) : null}
         </Box>
 
-        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden', backgroundColor: "#111B21" }}>
+        <Box sx={{ height: `calc(100% - 4.0625rem)`, overflow: ' hidden', backgroundColor: "#2A2F32" }}>
           <ScrollWrapper hidden={hidden}>
             <Box>
               <List sx={{ p: 0 }}>{renderContacts()}</List>

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllStaffNotifications } from '../redux/staffNotificationThunks';
+import NotificationAddIcon from '@mui/icons-material/NotificationAdd';
 
 const StaffNotificationTableHeader = (props) => {
   const { toggle } = props;
@@ -42,9 +43,12 @@ const StaffNotificationTableHeader = (props) => {
           <TextField value={searchValue} sx={{ display: "none"}} fullWidth placeholder="Search Sudent" onChange={(e) => handleSearch(e)} />
         </Grid>
         <Grid item sm={3} xs={12} sx={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-          <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 } }}>
-            <Icon fontSize="1.125rem" icon="tabler:plus" />
-            Staff Notification
+          <Button fullWidth onClick={toggle} variant="contained" sx={{ '& svg': { mr: 2 },
+         backgroundColor: '#1976D2' ,  
+         '&:hover': {
+          backgroundColor: (theme) => theme.palette.primary.dark,  } }}>
+            {/* <Icon fontSize="1.125rem" icon="tabler:plus" /> */}
+            <NotificationAddIcon/> Staff Notification
           </Button>
         </Grid>
       </Grid>

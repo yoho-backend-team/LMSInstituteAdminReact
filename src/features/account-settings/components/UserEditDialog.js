@@ -70,24 +70,18 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
   // Set form values when selectedBranch changes
   useEffect(() => {
     if (userData) {
-      setValue('full_name', userData.name || '');
-      setValue('user_name', userData.username || '');
+      setValue('full_name', userData.first_name || '');
+      setValue('user_name', userData.last_name || '');
       setValue('email', userData?.email || '');
       setValue('contact', userData?.phone_number || '');
-      setValue('designation', userData?.designation || '');
-      setValue('role', userData?.role?.id || '');
+      setValue('designation', userData?.role?.identity || '');
+      setValue('role', userData?.role?.identity || '');
     }
   }, [userData, setValue]);
   const handleClose = () => {
-    setValue('full_name', '');
-    setValue('user_name', '');
-    setValue('email', '');
-    setValue('contact', Number(''));
-    setValue('designation', '');
-    setValue('role', Number(''));
-    handleEditClose();
-    reset();
-    setSelectedImage(null);
+      handleEditClose();
+    
+    
   };
 
   const image = require('assets/images/avatar/1.png');
@@ -278,7 +272,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={value}
+                    value={value}
                     label="User Name"
                     onChange={onChange}
                     placeholder="John Doe"
@@ -298,7 +292,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                     fullWidth
                     type="email"
                     label="Email"
-                    defaultValue={value}
+                    value={value}
                     onChange={onChange}
                     error={Boolean(errors.email)}
                     placeholder="johndoe@email.com"
@@ -315,8 +309,8 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    type="number"
-                    defaultValue={value}
+                    
+                    value={value}
                     label="Contact"
                     onChange={onChange}
                     placeholder="(397) 294-5153"
@@ -335,7 +329,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                 render={({ field: { value, onChange } }) => (
                   <TextField
                     fullWidth
-                    defaultValue={value}
+                    value={value}
                     label="Designation"
                     onChange={onChange}
                     placeholder="Business Development Executive"
@@ -355,7 +349,7 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
                   <TextField
                     select
                     fullWidth
-                    defaultValue={userData?.role_groups?.role?.id}
+                    defaultValue={userData?.role?.id}
                     onChange={(e) => {
                       setValue('role', e.target.value);
                     }}

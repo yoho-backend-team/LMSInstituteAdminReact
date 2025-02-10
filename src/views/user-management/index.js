@@ -1,7 +1,7 @@
 // Groups pages Import
 import GroupAddPage from './groups-page/groups-add-page';
 import GroupEditPage from './groups-page/groups-edit-page';
-import GroupsOverviewPage from './groups-page/groups-overview-page';
+import GroupsOverviewPage from './groups-page/groups[id]-page/groups-overview-page';
 import GroupViewPage from './groups-page/groups[id]-page';
 
 // Admin Users Page Import

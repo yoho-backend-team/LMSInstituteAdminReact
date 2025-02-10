@@ -71,7 +71,7 @@ const GroupManagement = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const AddRoleAvatar = require('assets/images/avatar/add-role.png');
 
-  console.log('group datasssssssssssssssssssss:' + JSON.stringify(groups, null, 2));
+  // console.log('group datasssssssssssssssssssss:' + JSON.stringify(groups, null, 2));
 
   // Fetch groups when selectedBranchId changes
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -31,51 +31,26 @@ const Header = styled(Box)(({ theme }) => ({
 
 // Validation Schema for Payment History
 const paymentHistoryValidationSchema = yup.object().shape({
-  paid_amount: yup.number()
-    .required('Paid amount is required')
-    .typeError('Paid Amount is required'),
-  balance: yup.number()
-    .required('Balance is required')
-    .typeError('Balance is required'),
-  payment_date: yup.string()
-    .required('Payment date is required'),
-  transaction_id: yup.number()
-    .required('Transaction ID is required')
-    .typeError('Transaction ID must be greater than 0'),
-  payment_method: yup.string()
-    .oneOf(['offline', 'online'], 'Invalid payment method')
-    .default('offline'),
-    duepaymentdate: yup.string()
-    .nullable()
-    .typeError('Due Payment Date must be a valid date')
+  paid_amount: yup.number().required('Paid amount is required').typeError('Paid Amount is required'),
+  balance: yup.number().required('Balance is required').typeError('Balance is required'),
+  payment_date: yup.string().required('Payment date is required'),
+  transaction_id: yup.number().required('Transaction ID is required').typeError('Transaction ID must be greater than 0'),
+  payment_method: yup.string().oneOf(['offline', 'online'], 'Invalid payment method').default('offline'),
+  duepaymentdate: yup.string().nullable().typeError('Due Payment Date must be a valid date')
 });
-
 
 const schema = yup.object().shape({
   course: yup.string().required('Course is required'),
   batch: yup.object().required('Batch is required'),
   branch: yup.string().required('Branch is required'),
   student: yup.string().required('Student is required'),
-  paid_amount: yup.number()
-  .required('Paid amount is required')
-  .typeError('Paid Amount is required'),
-balance: yup.number()
-  .required('Balance is required')
-  .typeError('Balance is required'),
-payment_date: yup.string()
-  .required('Payment date is required'),
-transaction_id: yup.number()
-  .required('Transaction ID is required')
-  .typeError('Transaction ID must be greater than 0'),
-payment_method: yup.string()
-  .oneOf(['offline', 'online'], 'Invalid payment method')
-  .default('offline'),
-  duepaymentdate: yup.string()
-  .nullable()
-  .typeError('Due Payment Date must be a valid date'),
-  payment_history: yup.array()
-    .of(paymentHistoryValidationSchema)
-    .min(1, 'At least one payment history entry is required')
+  paid_amount: yup.number().required('Paid amount is required').typeError('Paid Amount is required'),
+  balance: yup.number().required('Balance is required').typeError('Balance is required'),
+  payment_date: yup.string().required('Payment date is required'),
+  transaction_id: yup.number().required('Transaction ID is required').typeError('Transaction ID must be greater than 0'),
+  payment_method: yup.string().oneOf(['offline', 'online'], 'Invalid payment method').default('offline'),
+  duepaymentdate: yup.string().nullable().typeError('Due Payment Date must be a valid date'),
+  payment_history: yup.array().of(paymentHistoryValidationSchema).min(1, 'At least one payment history entry is required')
 });
 
 const defaultValues = {
@@ -96,8 +71,8 @@ const defaultValues = {
       payment_date: new Date(),
       transaction_id: 1,
       payment_method: 'offline',
-      duepaymentdate: '',
-    },
+      duepaymentdate: ''
+    }
   ]
 };
 
@@ -106,7 +81,7 @@ const FeesAddDrawer = (props) => {
   const { open, toggle, setRefetch } = props;
 
   const [inputValue, setInputValue] = useState('');
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner();
   const image =
     'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg';
   const [imgSrc, setImgSrc] = useState(image);
@@ -135,37 +110,37 @@ const FeesAddDrawer = (props) => {
   };
 
   const getActiveCoursesByBranch = async (data) => {
-    show()
+    show();
     const result = await getAllCourses(data);
     if (result?.data) {
-      hide()
+      hide();
       setActiveCourse(result?.data);
-    }else{
-      hide()
+    } else {
+      hide();
     }
   };
 
   const getActiveBatchesByCourse = async (courseId) => {
-    show()
+    show();
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
     if (result?.success) {
-      hide()
+      hide();
       setActiveBatches(result?.data);
-    }else{
-      hide()
+    } else {
+      hide();
     }
   };
 
   const getStudentsByBatch = async (batchId) => {
-    show()
+    show();
     const data = { batch_id: batchId, branch_id: selectedBranchId };
     const result = await getAllStudentsByBatch(data);
     if (result?.success) {
-      hide()
+      hide();
       setStudents(result?.data);
-    }else{
-      hide()
+    } else {
+      hide();
     }
   };
 
@@ -195,15 +170,15 @@ const FeesAddDrawer = (props) => {
     toggle();
     reset();
   };
-  console.log(errors,"errors")
+  // console.log(errors, 'errors');
   const onSubmit = async (data) => {
-    show()
-    const branch = activeBranches.filter(i=>i.branch_identity===data.branch)
+    show();
+    const branch = activeBranches.filter((i) => i.branch_identity === data.branch);
 
     const InputData = {
       student: data.student,
-      branch_name:data.branch_id,
-      branch_id : branch[0].uuid,
+      branch_name: data.branch_id,
+      branch_id: branch[0].uuid,
       institute_id: useInstitute().getInstituteId(),
       batch_name: data.batch._id,
       // paid_amount: data.paidAmount,
@@ -221,24 +196,24 @@ const FeesAddDrawer = (props) => {
       payment_history: [
         {
           paid_amount: data.paid_amount,
-        balance: data.balance,
-        payment_date: new Date(),
-        transaction_id: data.transaction_id,
-        payment_method: data.payment_method,
-        duepaymentdate: data.duepaymentdate
-      },
+          balance: data.balance,
+          payment_date: new Date(),
+          transaction_id: data.transaction_id,
+          payment_method: data.payment_method,
+          duepaymentdate: data.duepaymentdate
+        }
       ]
     };
 
     const result = await addStudentFee(InputData);
-    
+
     if (result.success) {
-      hide()
+      hide();
       toast.success(result.message);
       handleClose();
       setRefetch((state) => !state);
     } else {
-      hide()
+      hide();
       let errorMessage = '';
       Object.values(result.message).forEach((errors) => {
         errors.forEach((error) => {
@@ -256,32 +231,37 @@ const FeesAddDrawer = (props) => {
     return <TextField {...props} fullWidth inputRef={ref} label={label || ''} {...(readOnly && { inputProps: { readOnly: true } })} />;
   });
 
-  const ImgStyled = styled('img')(({ theme }) => ({
-    width: 100,
-    height: 100,
-    marginRight: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius
-  }));
+  // const ImgStyled = styled('img')(({ theme }) => ({
+  //   width: 100,
+  //   height: 100,
+  //   marginRight: theme.spacing(2),
+  //   borderRadius: theme.shape.borderRadius
+  // }));
 
-  const ButtonStyled = styled(Button)(({ theme }) => ({
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      textAlign: 'center'
-    }
-  }));
+  // const ButtonStyled = styled(Button)(({ theme }) => ({
+  //   [theme.breakpoints.down('sm')]: {
+  //     width: '100%',
+  //     textAlign: 'center'
+  //   }
+  // }));
 
-  const handleInputImageChange = (file) => {
-    const reader = new FileReader();
-    const { files } = file.target;
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result);
-      setSelectedImage(files[0]);
-      reader.readAsDataURL(files[0]);
-      if (reader.result !== null) {
-        setInputValue(reader.result);
-      }
-    }
-  };
+  // const handleInputImageChange = (file) => {
+  //   const reader = new FileReader();
+  //   const { files } = file.target;
+  //   if (files && files.length !== 0) {
+  //     reader.onload = () => setImgSrc(reader.result);
+  //     setSelectedImage(files[0]);
+  //     reader.readAsDataURL(files[0]);
+  //     if (reader.result !== null) {
+  //       setInputValue(reader.result);
+  //     }
+  //   }
+  // };
+
+  const [isBranchSelected, setIsBranchSelected] = useState(false);
+  const [isCourseSelected, setIsCourseSelected] = useState(false);
+  const [isBatchSelected, setIsBatchSelected] = useState(false);
+  const [isStudentSelected, setIsStudentSelected] = useState(false);
 
   return (
     <DatePickerWrapper>
@@ -294,7 +274,9 @@ const FeesAddDrawer = (props) => {
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
         <Header>
-          <Typography variant="h5">Add Fees</Typography>
+          <Typography variant="h4" sx={{ outline: 1.5, outlineColor: '#0cce7f', px: 2, py: 1, borderRadius: '50px' }}>
+            Add Fees
+          </Typography>
           <IconButton
             size="small"
             onClick={handleClose}
@@ -313,7 +295,7 @@ const FeesAddDrawer = (props) => {
         </Header>
         <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 4 }}>
               <ImgStyled src={imgSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
@@ -328,7 +310,7 @@ const FeesAddDrawer = (props) => {
                   />
                 </ButtonStyled>
               </div>
-            </Box>
+            </Box> */}
             <Grid container>
               <Grid item xs={12} sx={{ mb: 2 }}>
                 <Controller
@@ -341,7 +323,10 @@ const FeesAddDrawer = (props) => {
                       getOptionLabel={(branch) => branch.branch_identity}
                       onChange={(event, newValue) => {
                         onChange(newValue?.branch_identity);
-                        getActiveCoursesByBranch({branch_id:newValue?.uuid});
+                        getActiveCoursesByBranch({ branch_id: newValue?.uuid });
+                        if (!isBranchSelected) {
+                          setIsBranchSelected(true);
+                        }
                       }}
                       value={activeBranches.find((branch) => branch.branch_identity === value) || null}
                       renderInput={(params) => (
@@ -364,11 +349,30 @@ const FeesAddDrawer = (props) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?.course_name);
                         getActiveBatchesByCourse(newValue?.course_name);
+                        if (!isCourseSelected) {
+                          setIsCourseSelected(true);
+                        }
                       }}
                       value={activeCourse.find((course) => course.course_name === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                        <Tooltip title={isBranchSelected ? '' : 'Please select a branch first'} arrow>
+                          <span>
+                            <TextField
+                              {...params}
+                              label="Select Course"
+                              error={Boolean(errors.course)}
+                              helperText={errors.course?.message}
+                              sx={{
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: isBranchSelected ? 'inherit' : '#EBEBE4'
+                                }
+                              }}
+                              disabled={!isBranchSelected}
+                            />
+                          </span>
+                        </Tooltip>
                       )}
+                      disabled={!isBranchSelected}
                     />
                   )}
                 />
@@ -388,17 +392,31 @@ const FeesAddDrawer = (props) => {
                         field.onChange(newValue);
                         setValue('batch', newValue);
                         getStudentsByBatch(newValue?.uuid);
+                        if (!isBatchSelected) {
+                          setIsBatchSelected(true);
+                        }
                       }}
                       value={field.value}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          sx={{ mb: 2 }}
-                          label="Batch"
-                          error={Boolean(errors.batch)}
-                          helperText={errors.batch?.message}
-                        />
+                        <Tooltip title={isCourseSelected ? '' : 'Please select a Course'} arrow>
+                          <span>
+                            <TextField
+                              {...params}
+                              label="Batch"
+                              error={Boolean(errors.batch)}
+                              helperText={errors.batch?.message}
+                              sx={{
+                                mb: 2,
+
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                  borderColor: isCourseSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                                }
+                              }}
+                            />
+                          </span>
+                        </Tooltip>
                       )}
+                      disabled={!isCourseSelected}
                     />
                   )}
                 />
@@ -409,21 +427,33 @@ const FeesAddDrawer = (props) => {
                   name="student"
                   control={control}
                   render={({ field: { value, onChange } }) => (
-                    <TextField
-                      select
-                      fullWidth
-                      label="Student"
-                      value={value}
-                      onChange={onChange}
-                      error={Boolean(errors.student)}
-                      helperText={errors.student?.message}
-                    >
-                      {students.map((student) => (
-                        <MenuItem key={student?.student} value={student?._id}>
-                          {`${student?.first_name&&student?.last_name?student?.first_name+student?.last_name:student.full_name}`}
-                      </MenuItem>
-                      ))}
-                    </TextField>
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a Batch'} arrow>
+                      <span>
+                        <TextField
+                          select
+                          fullWidth
+                          label="Student"
+                          value={value}
+                          onChange={onChange}
+                          error={Boolean(errors.student)}
+                          helperText={errors.student?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected || isStudentSelected}
+                        >
+                          {students.map((student) => (
+                            <MenuItem key={student?.student} value={student?._id}>
+                              {`${student.full_name}`}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -434,15 +464,26 @@ const FeesAddDrawer = (props) => {
                   control={control}
                   defaultValue={new Date()}
                   render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      selected={value}
-                      id="date-time-picker"
-                      timeFormat="HH:mm"
-                      className="full-width-datepicker"
-                      onChange={onChange}
-                      placeholderText="Click to select a date"
-                      customInput={<CustomInput label="Payment Date" />}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a student'} arrow>
+                      <span>
+                        <DatePicker
+                          selected={value}
+                          id="date-time-picker"
+                          timeFormat="HH:mm"
+                          className="full-width-datepicker"
+                          onChange={onChange}
+                          placeholderText="Click to select a date"
+                          customInput={<CustomInput label="Payment Date" />}
+                          sx={{
+                            mb: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
                 {errors.payment_date && (
@@ -455,15 +496,26 @@ const FeesAddDrawer = (props) => {
                   name="transaction_id"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Transaction Id"
-                      type="number"
-                      error={Boolean(errors.transaction_id)}
-                      helperText={errors.transaction_id?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a payment_date'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Transaction Id"
+                          type="number"
+                          error={Boolean(errors.transaction_id)}
+                          helperText={errors.transaction_id?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -473,15 +525,26 @@ const FeesAddDrawer = (props) => {
                   name="paid_amount"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Paid Amount"
-                      type="number"
-                      error={Boolean(errors.paid_amount)}
-                      helperText={errors.paid_amount?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a transaction_id'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Paid Amount"
+                          type="number"
+                          error={Boolean(errors.paid_amount)}
+                          helperText={errors.paid_amount?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -491,15 +554,26 @@ const FeesAddDrawer = (props) => {
                   name="balance"
                   control={control}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      sx={{ mb: 2 }}
-                      fullWidth
-                      label="Balance"
-                      type="number"
-                      error={Boolean(errors.balance)}
-                      helperText={errors.balance?.message}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a paid_amount'} arrow>
+                      <span>
+                        <TextField
+                          {...field}
+                          fullWidth
+                          label="Balance"
+                          type="number"
+                          error={Boolean(errors.balance)}
+                          helperText={errors.balance?.message}
+                          sx={{
+                            mb: 2,
+
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
               </Grid>
@@ -508,15 +582,26 @@ const FeesAddDrawer = (props) => {
                   name="duepaymentdate"
                   control={control}
                   render={({ field: { value, onChange } }) => (
-                    <DatePicker
-                      selected={value}
-                      id="date-time-picker"
-                      timeFormat="HH:mm"
-                      className="full-width-datepicker"
-                      onChange={onChange}
-                      placeholderText="Click to select a date"
-                      customInput={<CustomInput label="duepaymentdate" />}
-                    />
+                    <Tooltip title={isBatchSelected ? '' : 'Please select a balance'} arrow>
+                      <span>
+                        <DatePicker
+                          selected={value}
+                          id="date-time-picker"
+                          timeFormat="HH:mm"
+                          className="full-width-datepicker"
+                          onChange={onChange}
+                          placeholderText="Click to select a date"
+                          customInput={<CustomInput label="Due Payment Date" />}
+                          sx={{
+                            mb: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isBatchSelected ? 'inherit' : '#EBEBE4' // Blue border color
+                            }
+                          }}
+                          disabled={!isBatchSelected}
+                        />
+                      </span>
+                    </Tooltip>
                   )}
                 />
                 {errors.payment_date && (
