@@ -12,7 +12,7 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 
 const   DeleteDialog = (props) => {
-  const { open, setOpen, handleSubmit, description, title, successDescription, failureDescription } = props;
+  const { open, setOpen, handleSubmit, description, title , successDescription, failureDescription} = props;
 
   const [userInput, setUserInput] = useState('yes');
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
@@ -123,7 +123,7 @@ const   DeleteDialog = (props) => {
               {userInput === 'yes' ? 'Success!' : 'Cancelled'}
             </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-              {userInput === 'yes' ? successDescription : failureDescription}
+              {userInput === 'yes' ? successDescription : failureDescription }
             </Typography>
           </Box>
         </DialogContent>

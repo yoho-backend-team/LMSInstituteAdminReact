@@ -74,7 +74,7 @@ const NotificationSection = () => {
         const data = { institute_id : useInstitute().getInstituteId() };
         const query = { branch_id : JSON.parse(branch_id), status: "unread" }
         const result = await getLastNotifications(data,query);
-        console.log(result,"result")
+        // console.log(result,"result")
         setNotifications(result.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -121,7 +121,7 @@ const NotificationSection = () => {
   const handleChange = (event) => {
     if (event?.target.value) setValue(event?.target.value);
   };
-  console.log(notifications,"notificationsection")
+  // console.log(notifications,"notificationsection")
   return (
     <>
       <Box

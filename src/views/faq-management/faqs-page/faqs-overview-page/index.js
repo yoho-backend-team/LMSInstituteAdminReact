@@ -25,6 +25,8 @@ const FaqDataGrid = () => {
   const [editUserOpen, setEditUserOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [successDescription, setSuccessDescription] = useState('');
+  const [failureDescription, setFailureDescription] = useState('');
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [faqCategories, setFaqCategories] = useState([]);
@@ -33,82 +35,14 @@ const FaqDataGrid = () => {
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  const [currentPage, setCurrentPage] = useState(1); 
+  const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
 
-  
-  
   const dispatch = useDispatch();
   const faqs = useSelector(selectFaqs);
   const faqLoading = useSelector(selectLoading);
 
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
 
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
-
-const Community = () => {
-  const [userStatus, setUserStatus] = useState('online');
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
-  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
-  const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
-  const [chats, setChats] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState(null);
-  const [communityDetails, setCommunityDetails] = useState(null);
-  const communities = useSelector(selectCommunities);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const { showSpinner, hideSpinner } = useSpinner();
-  const [messages, setMessages] = useState([]);
-
-  const theme = useTheme();
-  const dispatch = useDispatch();
-  const hidden = useMediaQuery(theme.breakpoints.down('lg'));
-  const store = useSelector((state) => state.chat);
-  const skin = 'default';
-  const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
-  const sidebarWidth = smAbove ? 360 : 300;
-  const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
-  const [socket, setSocket] = useState(null);
-
-  const statusObj = {
-    busy: 'error',
-    away: 'warning',
-    online: 'success',
-    offline: 'secondary'
-  };
-
-  useEffect(() => {
-    const socket = io(process.env.REACT_APP_PUBLIC_API_URL);
-    setSocket(socket);
-  }, []);
-
-<<<<<<< HEAD
-  const userData = JSON.parse(secureLocalStorage.getItem("userData"));
-  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = {
-        branchid: selectedBranchId,
-        userId: userData._id,
-        instituteId: institute._id
-      };
-
-      const response = await dispatch(getAllCommunities(data));
-      if (response && response.data.data && response.data.data.length > 0) {
-        const chatId = response.data.data[0]._id;
-        const updatedData = { ...data, chatId };
-      }
-    };
-    fetchData();
-  }, [dispatch, selectedBranchId, userData._id, institute._id]);
-=======
- useEffect(() => {
-    fetchFaqs(currentPage);
-  }, [currentPage]);
 
   const fetchFaqs = (page) => {
     const institute = JSON.parse(localStorage.getItem('institute'));
@@ -116,7 +50,7 @@ const Community = () => {
       branchid: institute?.branchid,
       instituteId: institute?._id,
       page,
-      perPage: rowsPerPage,
+      perPage: rowsPerPage
     };
     dispatch(getAllFaqs(data));
   };
@@ -130,22 +64,26 @@ const Community = () => {
       page: 1,
       perPage: 10
     };
+    console.log('data:', data);
 
     dispatch(getAllFaqs(data));
   }, [dispatch, selectedBranchId, refetch]);
 
-  const getFaqCategories = async () => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
-    const data = {
-      branchid: selectedBranchId,
-      instituteid: institute.uuid,
-      is_active: true,
-      page: 1,
-      perPage: 10
+  useEffect(() => {
+    const getFaqCategories = async () => {
+      const institute = JSON.parse(localStorage.getItem('institute'));
+      const data = {
+        branchid: selectedBranchId,
+        instituteid: institute.uuid,
+        is_active: true,
+        page: 1,
+        perPage: 10
+      };
+      const result = await getActiveFaqCategories(data);
+      setFaqCategories(result.data);
     };
-    const result = await getActiveFaqCategories(data);
-    setFaqCategories(result.data);
-  };
+    getFaqCategories();
+  }, [selectedBranchId]);
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -155,26 +93,33 @@ const Community = () => {
   };
 
   const handleDeleteApi = async () => {
-    const data = {
-      id: deletingItemId
-    };
-    const response = await deleteFaq(data);
-    console.log('delete response data : ',response);
+    try {
+      const data = {
+        id: deletingItemId
+      };
+      const response = await deleteFaq(data);
+      console.log('delete response data : ', response);
 
-    if (faqs?.data.length === 1 && currentPage > 1) {
-      setCurrentPage(currentPage - 1); 
-    }
-    if (response.success) {
-      // toast.success(response.message);
-      fetchFaqs(currentPage);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
+      // if (faqs?.data?.length === 1 && currentPage > 1) {
+      //   setCurrentPage(currentPage - 1);
+      // }
+      if (response.success) {
+        setSuccessDescription('Item deleted successfully!');
+        setFailureDescription('');
+        // toast.success(response.message);
+        // fetchFaqs(currentPage);
+        setRefetch((state) => !state);
+      } else {
+        setFailureDescription('Failed to delete the item. Please try again.');
+        setSuccessDescription('');
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setFailureDescription('An error occurred while deleting the item.');
+      setSuccessDescription('');
     }
   };
-
-  
-
+  // console.log(faqs,"faqs")
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedFaqStatus,
@@ -184,16 +129,19 @@ const Community = () => {
     if (response.success) {
       toast.success(response.message);
       fetchFaqs(currentPage);
-        } else {
+    } else {
       toast.error(response.message);
     }
   };
 
   useEffect(() => {
-    if (faqs?.data.length === 0 && currentPage > 1) {
+    if (faqs?.data?.length === 0 && currentPage > 1) {
       setCurrentPage(currentPage - 1); 
-    }
+  } else {
     fetchFaqs(currentPage); 
+    console.log("last page",faqs);
+    
+  }
   }, [currentPage, refetch]);
 
   const handleStatusChange = (e, row) => {
@@ -204,7 +152,9 @@ const Community = () => {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
+    // fetchFaqs(page);  
   };
+  
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -458,7 +408,7 @@ const Community = () => {
           </Grid>
         ) : (
           <Grid item xs={12}>
-                  <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',  mt:1,}}>
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', mt: 1 }}>
               <DataGrid
                 sx={{
                   '& .MuiDataGrid-row': {
@@ -482,14 +432,13 @@ const Community = () => {
                     borderLeft: 'none',
                     borderRight: 'none'
                   },
-                  '& .MuiDataGrid-columnHeader:hover': { backgroundColor: 'inherit' , borderRight: 'none' },
-                  
+                  '& .MuiDataGrid-columnHeader:hover': { backgroundColor: 'inherit', borderRight: 'none' }
                 }}
                 autoHeight
                 rowHeight={60}
-                rows={faqs?.data ? faqs?.data : []}
+                rows={faqs?.data || []}
                 columns={columns}
-                getRowId={(row) => row._id}
+                getRowId={(row) => row._id || row.id}
                 disableRowSelectionOnClick
                 hideFooterPagination
                 hideFooter
@@ -501,21 +450,25 @@ const Community = () => {
           </Grid>
         )}
 
-        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories?.data} setRefetch={setRefetch} />
+        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories?.data || []} setRefetch={setRefetch} />
         <FaqEdit
           open={editUserOpen}
           toggle={toggleEditUserDrawer}
-          initialValues={selectedRow}
+          initialValues={selectedRow || {}}
           faqCategories={faqCategories?.data}
           setRefetch={setRefetch}
         />
+
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setDeleteDialogOpen}
           description="Are you sure you want to delete this item?"
           title="Delete"
           handleSubmit={handleDeleteApi}
+          successDescription={successDescription}
+          failureDescription={failureDescription}
         />
+
         <StatusDialog
           open={statusOpen}
           setOpen={setStatusDialogOpen}
@@ -525,11 +478,7 @@ const Community = () => {
         />
       </Grid>
       <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination
-          count={faqs?.last_page || 1}
-          page={currentPage}
-          onChange={handlePageChange}
-        />
+        <Pagination count={faqs?.last_page || 1} page={currentPage} onChange={handlePageChange} />
       </Grid>
 >>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     </>
@@ -541,4 +490,3 @@ Community.contentHeightFixed = true;
 export default Community;
 =======
 export default FaqDataGrid;
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
