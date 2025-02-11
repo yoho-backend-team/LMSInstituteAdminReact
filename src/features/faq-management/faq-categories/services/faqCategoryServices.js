@@ -1,6 +1,7 @@
 // groupService.js
 import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/general/faq/category`;
 
@@ -9,7 +10,7 @@ export const getActiveFaqCategories = async (data) => {
     const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -23,13 +24,12 @@ export const getActiveFaqCategories = async (data) => {
   }
 };
 
-
 export const getAllFaqCategories = async (data) => {
   try {
     const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data 
 
@@ -54,7 +54,7 @@ export const searchFaqCategories = async (searchQuery) => {
     const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { keyword: searchQuery } 
     });
@@ -69,10 +69,20 @@ export const searchFaqCategories = async (searchQuery) => {
     throw error;
   }
 };
-export const addFaqCategory = async (inputData) => {
+
+export const addFaqCategory = async (data) => {
   try {
-    const response = await client.category.create(inputData);
-    console.log("add data:", response);
+    const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}`, data ,  {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+<<<<<<< HEAD
+        Authorization: `token ${secureLocalStorage.getItem('token')}`
+=======
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
+      }
+    });
 
     if (response?.status) {
       return { success: true, message: 'Faq Category created successfully' }; 
@@ -85,13 +95,12 @@ export const addFaqCategory = async (inputData) => {
   }
 };
 
-
 export const deleteFaqCategory = async (data) => {
   try {
     const response = await axios.delete(`${FAQ_CATEGORY_API_END_POINT}/delete/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -106,12 +115,13 @@ export const deleteFaqCategory = async (data) => {
     throw error;
   }
 };
+
 export const updateStatusFaqCategory = async (data) => {
   try {
     const response = await axios.post(`${FAQ_CATEGORY_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -134,7 +144,7 @@ export const updateFaqCategory = async (data) => {
     const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       } 
     });
     

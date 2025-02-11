@@ -19,6 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import * as yup from 'yup';
 import { addFaqCategory } from '../services/faqCategoryServices';
+import secureLocalStorage from 'react-secure-storage';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -54,9 +55,22 @@ const defaultValues = {
   description: '',
 };
 
+<<<<<<< HEAD
+const FaqCategoriesAddDrawer = (props) => {
+  const { open, toggle, setRefetch } = props;
+
+  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+  const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
+
+  const requestData = {
+    branchid: selectedBranchId,
+    institute_id: institute ? institute._id : ''
+  }; 
+=======
 const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
   const {
     reset,
@@ -104,7 +118,11 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
     } catch (error) {
       setSubmitting(false);
       console.error('Error in creating FaqCategory:', error);
+<<<<<<< HEAD
+      toast.error('Failed to create FaqCategory', error);
+=======
       alert('An error occurred while adding the category. Please try again.');
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     }
   };
 

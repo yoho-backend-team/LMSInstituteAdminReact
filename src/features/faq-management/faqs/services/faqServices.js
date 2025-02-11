@@ -1,5 +1,6 @@
 // groupService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const API = axios.create({
   baseURL: process.env.REACT_APP_PUBLIC_API_URL || 'http://localhost:3001',
@@ -20,7 +21,7 @@ export const getActivesByBranch = async (data) => {
     const response = await axios.get(`${FaqS_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -47,7 +48,7 @@ export const getAllFaqs = async (data) => {
     const response = await axios.get(`${FAQ_API_END_POINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -74,7 +75,7 @@ export const searchFaqs = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -90,15 +91,15 @@ export const searchFaqs = async (searchQuery) => {
   }
 };
 
-// export const addFaq = async (data) => {
-//   try {
-//     const response = await axios.post(`${FAQ_API_END_POINT}/`, data, {
-//       headers: {
-//         // 'Content-Type': 'multipart/form-data',
-//         Accept: 'application/json',
-//         Authorization: `Token ${localStorage.getItem('token')}`
-//       }
-//     });
+export const addFaq = async (data) => {
+  try {
+    const response = await axios.post(`${FAQ_API_END_POINT}/`, data, {
+      headers: {
+        // 'Content-Type': 'multipart/form-data',
+        Accept: 'application/json',
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+      }
+    });
 
 //     if (response.data.success) {
 //       return { success: true, message: 'Faq created successfully' };
@@ -135,7 +136,7 @@ export const deleteFaq = async (data) => {
     const response = await axios.delete(`${FAQ_API_END_POINT}/delete/${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -154,9 +155,13 @@ export const deleteFaq = async (data) => {
 
 export const updateFaq = async (inputData) => {
   try {
-    console.log("uuid :" ,inputData.uuid);
-    
-    const { uuid } = inputData;
+    const {uuid} = data
+    const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+      }
+    });
 
 
     if (!uuid) {
@@ -166,7 +171,7 @@ export const updateFaq = async (inputData) => {
 
     console.log("Sending data:", uuid);
 
-    const response = await client.faq.update(uuid, inputData);
+    const response1 = await client.faq.update(uuid, inputData);
 
     console.log("API Response:", response);
 
@@ -198,7 +203,7 @@ export const updateStatusFaq = async (data) => {
     const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 

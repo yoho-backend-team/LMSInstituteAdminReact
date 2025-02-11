@@ -1,5 +1,6 @@
 // CustomerSupportService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const CUSTOMER_SUPPORT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/help-center/support`;
 
@@ -8,10 +9,9 @@ export const getAllFaqCategorywithFaq = async () => {
     const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/show-all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
-
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -25,7 +25,7 @@ export const getAllFaqCategorywithFaq = async () => {
     console.error('Error in get all Faq categories:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    // throw error;
+    throw error;
   }
 };
 
@@ -34,7 +34,7 @@ export const getAllCustomerSupports = async (selectedBranchId) => {
     const response = await axios.get(`${CUSTOMER_SUPPORT_API_ENDPOINT}/read-all-student-notifications`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { branch_id: selectedBranchId }
     });
@@ -60,7 +60,7 @@ export const searchCustomerSupports = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -81,7 +81,7 @@ export const addCustomerSupport = async (data) => {
     const response = await axios.post(`${CUSTOMER_SUPPORT_API_ENDPOINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -101,7 +101,7 @@ export const deleteCustomerSupport = async (CustomerSupportId) => {
     const response = await axios.delete(`${CUSTOMER_SUPPORT_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: CustomerSupportId }
     });
@@ -122,7 +122,7 @@ export const updateCustomerSupport = async (data) => {
     const response = await axios.put(`${CUSTOMER_SUPPORT_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 

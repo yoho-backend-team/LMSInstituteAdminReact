@@ -1,10 +1,11 @@
+import secureLocalStorage from "react-secure-storage";
 
 
 const backEndUrl = process.env.REACT_APP_PUBLIC_API_URL;
 
 const getInstituteDetails = () => {
-    if(typeof(localStorage) !== "undefined"){
-    const institute = localStorage.getItem("institute")
+    if(typeof(secureLocalStorage) !== "undefined"){
+    const institute = secureLocalStorage.getItem("institute")
     return JSON.parse(institute)
     }else{
      return undefined
@@ -12,9 +13,15 @@ const getInstituteDetails = () => {
 }
 
 const getSelectedBranchId = () => {
+<<<<<<< HEAD
+    if(typeof(secureLocalStorage)!== "undefined"){
+    const branch = secureLocalStorage.getItem("selectedBranchId")
+    return branch
+=======
     if(typeof(localStorage)!== "undefined"){
     const branch = localStorage.getItem("selectedBranchId")
     return branch ? branch.replace(/^"|"$/g, '') : branch
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     }
 }
 
@@ -200,7 +207,7 @@ const generateEndpoints = () => {
            upgrade_request : `/api/subscription/institute/upgrade-subscription/`
         },
         activity : {
-            get : "/api/institutes/user/activity",
+            get : "/api/institutes/user/activities/",
         },
         reports : {
             get : `/api/institutes/${instituteId}/report/`

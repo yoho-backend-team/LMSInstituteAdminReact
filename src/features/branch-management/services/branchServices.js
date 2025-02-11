@@ -2,6 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
 const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/`;
 
@@ -51,7 +52,7 @@ export const deleteBranch = async (data) => {
     const response = await axios.delete(`${BRANCH_API_ENDPOINT}${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
     });
 
@@ -67,7 +68,7 @@ export const updateBranch = async (data) => {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -84,7 +85,7 @@ export const updateBranchStatus = async (data) => {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -101,7 +102,7 @@ export const getBranchById = async (data) => {
     const response = await axios.get(`${BRANCH_API_ENDPOINT}${data.branch_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
     });
     // Check if the response status is successful

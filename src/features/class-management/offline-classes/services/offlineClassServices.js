@@ -1,6 +1,7 @@
 // groupService.js
 import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const OFFLINE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/class-management/offline-class`;
 
@@ -21,7 +22,7 @@ export const searchOfflineClasses = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });

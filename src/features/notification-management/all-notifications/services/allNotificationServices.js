@@ -1,9 +1,10 @@
 // Notificationservice.js
 import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/notification-management`;
-// const NOTIFICATION_AUTHBYUSER_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/get-notification-by-auth`;
+
 export const getAllNotifications = async (data) => {
   try {
     const response = await client.notification.institute.get_institute_notification(data)
@@ -18,7 +19,7 @@ export const searchNotifications = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -50,7 +51,7 @@ export const deleteNotification = async (NotificationId) => {
     const response = await axios.delete(`${NOTIFICATION_API_ENDPOINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: NotificationId }
     });
@@ -71,7 +72,7 @@ export const updateNotification = async (data) => {
     const response = await axios.put(`${NOTIFICATION_API_ENDPOINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -91,10 +92,9 @@ export const resendNotification = async (data) => {
     const response = await axios.post(`${NOTIFICATION_API_ENDPOINT}/send-notification`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
-
 
     if (response.data.status) {
       return { success: true, message: 'Notification Resend successfully' };
@@ -107,9 +107,9 @@ export const resendNotification = async (data) => {
   }
 };
 
-export const getAllNotificationsByAuth = async (data,query) => {
+export const getAllNotificationsByAuth = async (data, query) => {
   try {
-    const response = await client.institute_notification.get_institute_notification(data,query)
+    const response = await client.institute_notification.get_institute_notification(data, query)
     return response?.data
   } catch (error) {
     // Log the error for debugging purposes
@@ -120,9 +120,9 @@ export const getAllNotificationsByAuth = async (data,query) => {
   }
 };
 
-export const getLastNotifications = async (data,query) => {
+export const getLastNotifications = async (data, query) => {
   try {
-    const response = await client.institute_notification.get_institute_notification(data,query)
+    const response = await client.institute_notification.get_institute_notification(data, query)
 
     return response?.data
   } catch (error) {

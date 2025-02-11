@@ -1,5 +1,6 @@
 // groupService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin`;
 
@@ -8,9 +9,14 @@ export const sendOtp = async (data) => {
         const response = await axios.post(`${FORGET_PASSWORD_API_ENDPOINT}/forget-password`, data, {
             headers: {
                 'Content-Type': 'application/json',
+<<<<<<< HEAD
+                Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
+            }
+=======
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             },
              
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
         });
         // Check if the response status is successful
         if (response.data.status) {
@@ -32,7 +38,7 @@ export const resendOtp = async (data) => {
         const response = await axios.get(`${FORGET_PASSWORD_API_ENDPOINT}/forget-password`, data, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+                Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
             }
         });
 
@@ -56,7 +62,7 @@ export const verifyOtp = async (data) => {
         const response = await axios.post(`${FORGET_PASSWORD_API_ENDPOINT}/verify-otp`, data, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${localStorage.getItem('token')}`
+                Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
             }
         });
 
