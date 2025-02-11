@@ -72,7 +72,7 @@ const Categories = () => {
                
                 display: 'flex',
                 alignItems: 'center',
-                 mt: 2 
+                  mt:4
               }}
               startIcon={<FilterListIcon />}
             >
@@ -86,6 +86,7 @@ const Categories = () => {
               backgroundColor: "#0CCE7F",
               ":hover": { backgroundColor: "#0AA865" },
               ml: 2,
+              mt:4
             }}
             startIcon={<Icon icon="tabler:plus" />}
           >
@@ -108,7 +109,7 @@ const Categories = () => {
           position: 'relative',
           left: 0,
           right: 0,
-          top:15,
+          top:10,
           backgroundColor: 'white', 
           padding: 2,
          
@@ -127,7 +128,7 @@ const Categories = () => {
           <CategorySkeleton />
         ) : (
           <Grid item xs={12}>
-            <Grid container spacing={2} className="match-height" sx={{ marginTop: 2 }}>
+            <Grid container spacing={2} className="match-height" sx={{ marginTop: 1 }}>
               {memoizedCategories?.data?.map((category, index) => (
                 <CategoryCard
                   key={index}

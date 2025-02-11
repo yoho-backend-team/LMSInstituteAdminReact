@@ -50,7 +50,7 @@ const Courses = () => {
       color="primary"
       onClick={toggleFilterVisibility}
       startIcon={<FilterListIcon />}
-      sx={{ mt: 2 }}
+      sx={{ mt: 4 }}
     >
       {isFilterVisible ? 'Hide Filters' : 'Show Filters'}
     </Button>
@@ -58,7 +58,8 @@ const Courses = () => {
           <Button
             sx={{ py: 1, borderRadius: '0.5rem', 
               backgroundColor: '#0CCE7F',
-              marginRight:"20px",  
+              marginRight:"20px", 
+              mt: 4,
               '&:hover': {
                 backgroundColor: '#0AA865',
                 

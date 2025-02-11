@@ -68,7 +68,7 @@ const UserFilterCard = ({ selectedBranchId, groups, toggle, setUserRefetch ,user
             onChange: (e) => handleRoleChange(e),
           }}
         >
-          <MenuItem value="">Select Status</MenuItem>
+          <MenuItem value="">Select Role</MenuItem>
           <MenuItem value="true">Active</MenuItem>
           <MenuItem value="false">Inactive</MenuItem>
         </TextField>
