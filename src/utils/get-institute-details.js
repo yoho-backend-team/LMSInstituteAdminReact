@@ -4,12 +4,7 @@ import { AUTH_TOKEN_KEY } from "store/constant";
 export function useInstitute(){
     return{
         getInstituteId(){
-<<<<<<< HEAD
             const institute = secureLocalStorage.getItem("institute")
-=======
-            const institute = localStorage.getItem("institute")
-            console.log(JSON.parse(institute)?.uuid,"---------------uuid----------------------------------");
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
             return JSON.parse(institute)?.uuid
             
         },
@@ -25,12 +20,7 @@ export function useInstitute(){
 }
 
 export function useBranchId(){
-<<<<<<< HEAD
       const id = secureLocalStorage.getItem("selectedBranchId")
-=======
-      const id = localStorage.getItem("selectedBranchId")
-      
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     return id
 }
 
