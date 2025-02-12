@@ -53,9 +53,9 @@ const TeacherFilter = (props) => {
     <Grid container spacing={1}>
       <Grid item xs={12}>
         <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-          <CardHeader title="Teaching Staff" />
+          <CardHeader  />
           <CardContent>
-            <Grid container spacing={3} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
               <Grid item xs={6} sm={4}>
               <Autocomplete
               fullWidth
@@ -86,7 +86,7 @@ const TeacherFilter = (props) => {
                   <MenuItem value={false}>Inactive</MenuItem>
                 </TextField>
               </Grid>
-              <Grid item sm={8} xs={6} sx={{marginRight:"92px"}}>
+              <Grid item  xs={6} sm={4}  >
                 <TextField
                   fullWidth
                   value={searchValue}
@@ -97,7 +97,7 @@ const TeacherFilter = (props) => {
                 />
               </Grid>
 
-             
+     
             </Grid>
           </CardContent>
         </Card>

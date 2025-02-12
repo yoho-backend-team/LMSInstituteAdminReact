@@ -174,12 +174,20 @@ const ProfileSection = () => {
                   <Box sx={{ p: 2 }}>
                     <Stack>
                     <Stack direction="row" spacing={0.5} alignItems="center">
-  <Typography variant="h4">{getGreeting()},</Typography>
-  <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
+  <Typography variant="h5" sx={{fontWeight:"600"}}>{getGreeting()},</Typography>
+  <Typography component="span" variant="h3" sx={{ fontWeight: 500,fontSize:"20px" }}>
     {user?.first_name} {user?.last_name}
   </Typography>
 </Stack>
-                      <Typography variant="subtitle2" sx={{marginBottom:"10px"}}> Admin</Typography>
+<Box sx={{display:"flex",alignItems:"center",justifyContent:"start"}}>
+<Chip 
+  label="Admin" 
+  color="primary" 
+  size="small" 
+  sx={{ fontWeight: "bold", borderRadius: "6px", p:1,width:"100px" ,mt:1}} 
+/>
+</Box>
+
                     </Stack>
                    
                    
@@ -249,60 +257,56 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                          transition: "all 0.3s ease",
-                          marginLeft:"25px",
-                          backgroundColor: theme.palette.primary.dark,
-                          '&:hover': {
-                            backgroundColor: theme.palette.primary.dark,
-                            color: theme.palette.common.white,
-                          },
-                          '&.Mui-selected': {
-                            
-                            color: theme.palette.common.white,
-                            '&:hover': {
-                              backgroundColor: theme.palette.primary.darker,
-                            },
-                          },
-                        }} 
-                          selected={selectedIndex === 0}
-                          // href="/profile-management/account-settings"
-                          onClick={(event) => {
-                            handleListItemClick(event, 0, '#');
-                            navigate('/profile-management/account-settings');
-                          }}
-                        >
-                         <ListItemIcon
-  sx={{
-    minWidth: "40px",
-    color: selectedIndex === 0 ? "white" : "inherit", 
-    "& svg": {
-      color: "black", 
-    },
+                       <ListItemButton
+  sx={{ 
+    border: "1px solid #E0E0E0", 
+    borderRadius: "8px",
+    padding: "8px 16px", 
+    transition: "all 0.3s ease",
+    ml:3.5,
+
+    '&:hover': {
+      backgroundColor: "#F5F5F5", 
+    }
+  }} 
+  selected={selectedIndex === 0}
+  onClick={(event) => {
+    handleListItemClick(event, 0, '#');
+    navigate('/profile-management/account-settings');
   }}
 >
-  <PersonIcon  />
-</ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2" sx={{ fontWeight: 500 }}>Profile</Typography>} />
-                        </ListItemButton>
+<ListItemIcon 
+    sx={{ 
+      minWidth: "32px", 
+      color: "black", 
+      '& svg': {
+        color: "black !important", 
+      }
+    }}
+  >
+    <PersonIcon />
+  </ListItemIcon>
+  <ListItemText 
+    primary={
+      <Typography variant="body2" sx={{ fontWeight: 500, color: "black" }}>
+        Profile
+      </Typography>
+    } 
+  />
+</ListItemButton>
+
                         <ListItemButton
-                         sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                         transition: "all 0.3s ease",
-                         marginLeft:"25px",
-                         backgroundColor: theme.palette.primary.dark,
-                         '&:hover': {
-                           backgroundColor: theme.palette.primary.dark,
-                           color: theme.palette.common.white,
-                         },
-                         '&.Mui-selected': {
-                           
-                           color: theme.palette.common.white,
-                           '&:hover': {
-                             backgroundColor: theme.palette.primary.darker,
-                           },
-                         },
-                       }} 
+                      sx={{ 
+                        border: "1px solid #E0E0E0", 
+                        borderRadius: "8px",
+                        padding: "8px 16px", 
+                        transition: "all 0.3s ease",
+                        ml:3.5,
+                    
+                        '&:hover': {
+                          backgroundColor: "#F5F5F5", 
+                        }
+                      }} 
                          selected={selectedIndex === 1}
                           onClick={(event) => {
                             handleListItemClick(event, 1, '#');
@@ -350,42 +354,43 @@ const ProfileSection = () => {
                             }
                           />
                         </ListItemButton> */}
-                        <ListItemButton
-                         sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                         transition: "all 0.3s ease",
-                         marginLeft:"25px",
-                         backgroundColor: theme.palette.primary.dark,
-                         '&:hover': {
-                           backgroundColor: theme.palette.primary.dark,
-                           color: theme.palette.common.white,
-                         },
-                         '&.Mui-selected': {
-                           
-                           color: theme.palette.common.white,
-                           '&:hover': {
-                             backgroundColor: theme.palette.primary.darker,
-                           },
-                         },
-                       }} 
-                          selected={selectedIndex === 4}
-                          onClick={handleLogout}
-                        >
-                         <ListItemIcon             
-  sx={{
-    minWidth: "40px",
-    color: selectedIndex === 0 ? "white" : "black",
-    "& svg": {
-      color: "black", 
-    
-    },
-     
-  }}
+                       <ListItemButton
+  sx={{ 
+    backgroundColor: "#E53935", // Red background
+    borderRadius: "8px",
+    padding: "10px 16px",
+    transition: "all 0.3s ease",
+    ml: 3.5,
+    '&:hover': {
+      backgroundColor: "#D32F2F", // Darker red on hover
+    }
+  }} 
+  onClick={handleLogout}
 >
-<LogoutIcon/>
-  
-</ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2" sx={{ fontWeight: 500 }}>Logout</Typography>} />
-                        </ListItemButton>
+  <ListItemIcon             
+    sx={{
+      minWidth: "40px",
+      color: "white", // White icon color
+      "& svg": {
+        color: "white !important", // Ensure it stays white
+      },
+    }}
+  >
+    <LogoutIcon/>
+  </ListItemIcon>
+  <ListItemText 
+    primary={
+      <Typography 
+        variant="body2" 
+        sx={{ fontWeight: 500, color: "white" }}
+      >
+        Logout
+      </Typography>
+    } 
+  />
+</ListItemButton>
+
+
                       </List>
                     </Box>
                   </PerfectScrollbar>

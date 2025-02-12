@@ -66,8 +66,20 @@ const StaffManagementView = () => {
             }}
           >
             {/* Placeholder for ProfilePicture */}
-            {/* <Skeleton variant="circular" width={100} height={100} sx={{ mr: { xs: 0, md: 6 } }} /> */}
-            <Box
+            <Box sx={{ display: 'flex', flexDirection: "column" }}>
+            <Skeleton variant="circular" width={100} height={100} sx={{backgroundColor:"grey", mr: { xs: 0, md: 6 } }} />
+            <Typography sx={{width:'50%',height:"25px",backgroundColor:'grey',mt:2,ml:2}}></Typography>
+            </Box>
+           
+            <Typography sx={{width:'130px',height:"35px",backgroundColor:'grey',mt:2,ml:107}}>
+            <Skeleton variant="rectangle" width={10} height={20} sx={{backgroundColor:"grey" }} />
+            </Typography>
+
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid  sm="12">
+      <Box
               sx={{
                 width: '100%',
                 display: 'flex',
@@ -86,21 +98,21 @@ const StaffManagementView = () => {
                   }}
                 >
                   {/* Placeholder for Name */}
-                  {/* <Skeleton variant="text" width={200} height={40} sx={{ mr: 4 }} /> */}
+                  <Skeleton variant="text" width={100} height={50} sx={{ mr: 6,backgroundColor:"grey" }} />
                   {/* Placeholder for Job Title */}
-                  {/* <Skeleton variant="text" width={100} height={20} sx={{ mr: 4 }} /> */}
+                  <Skeleton variant="text" width={100} height={50} sx={{ mr: 6, backgroundColor:"grey"}} />
                   {/* Placeholder for Location */}
-                  {/* <Skeleton variant="text" width={100} height={20} sx={{ mr: 4 }} /> */}
+                  <Skeleton variant="text" width={100} height={50} sx={{ mr: 6, backgroundColor:"grey" }} />
                   {/* Placeholder for Joined Date */}
-                  {/* <Skeleton variant="text" width={200} height={20} /> */}
+                  <Skeleton variant="text" width={100} height={50} sx={{mr:6, backgroundColor:"grey"}} />
+                  <Skeleton variant="text" width={100} height={50} sx={{backgroundColor:'grey',mr:6}} />
                 </Box>
               </Box>
               {/* Placeholder for Active Button */}
-              {/* <Skeleton variant="rectangular" width={120} height={40} /> */}
+              
             </Box>
-          </CardContent>
-        </Card>
       </Grid>
+      
       <Grid sx={{ mt: 2 }}>
         <TabContext value="1">
           <TabList
@@ -125,70 +137,89 @@ const StaffManagementView = () => {
       <Grid sx={{ mt: 1 }}>
         <Card>
           <CardContent sx={{ pb: 2 }}>
-            <Typography variant="body2" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
+            <Typography variant="body2" sx={{ color: 'text.disabled',backgroundColor:"grey", textTransform: 'uppercase',mt:-3,mr:-3,ml:-3 }}>
               <Skeleton width={100} height={50} />
             </Typography>
             <Box>
               <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:2 }}>
+                  <Skeleton width={200} height={40} />
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
+               
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 3, fontWeight: 500, color: 'text.secondary',mt:3,backgroundColor:"grey" }}>
+                  <Skeleton width={500} height={60} />
+                </Typography>
+                <Typography sx={{ mr: 4, fontWeight: 500, color: 'text.secondary',mt:3,backgroundColor:"grey"  }}>
+                  <Skeleton width={500} height={60} />
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3 }}>
+                  <Skeleton width={500} height={60} />
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3  }}>
+                  <Skeleton width={500} height={60} />
                 </Typography>
+                
+              </Box>
+
+            
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3 }}>
+                  <Skeleton width={1100} height={5} />
+                </Typography>
+               
+              </Box>
+
+              <Box sx={{ display: 'flex' }}>
+              <Typography sx={ { mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3} }>
+                  <Skeleton width={500} height={60} />
+                </Typography>
+              
               </Box>
               <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey" ,mt:10}}>
                   <Skeleton width={150} height={40} />
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
+               
+              </Box>
+              
+              <Box sx={{ display: 'flex' }}>
+              <Typography sx={ { mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3} }>
+                  <Skeleton width={500} height={60} />
                 </Typography>
+                <Typography sx={ { mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3} }>
+                  <Skeleton width={500} height={60} />
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3 }}>
+                  <Skeleton width={1100} height={5} />
+                </Typography>
+               
               </Box>
               <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
+              <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey" ,mt:10}}>
                   <Skeleton width={150} height={40} />
                 </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
+                
+              </Box>
+              <Box sx={{ display: 'flex',flexDirection:"column" }}>
+              <Typography sx={ { mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3} }>
+                  <Skeleton width={2000} height={60} />
+                </Typography>
+                <Typography sx={ { mr: 2, fontWeight: 500, color: 'text.secondary',backgroundColor:"grey",mt:3} }>
+                  <Skeleton width={2000} height={60} />
                 </Typography>
               </Box>
-              <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex' }}>
-                <Typography sx={{ mr: 2, fontWeight: 500, color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
-                </Typography>
-                <Typography sx={{ color: 'text.secondary' }}>
-                  <Skeleton width={150} height={40} />
-                </Typography>
-              </Box>
+              
             </Box>
           </CardContent>
 
-          <CardActions sx={{ display: 'flex', justifyContent: '' }}>
+          <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button variant="tonal" sx={{ mr: 2 }}>
               <Skeleton width={60} />
             </Button>

@@ -53,7 +53,8 @@ const CourseCardHeader = ({ selectedBranchId,courses,setCourseRefetch }) => {
         <TextField
           value={searchValue}
           sx={{
-            width: 600
+            width: 330,
+            mt:1
           }}
           placeholder="Search Courses"
           onChange={(e) => setSearchValue(e.target.value)}

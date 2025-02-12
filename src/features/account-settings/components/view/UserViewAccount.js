@@ -24,7 +24,7 @@ const Timeline = styled(MuiTimeline)({
 
 const UserViewAccount = ({ id }) => {
   const [activityLog, setActivityLog] = useState([]);
-
+  
   useEffect(() => {
     getUserLog(id, '1');
   }, [id]);
