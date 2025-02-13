@@ -39,10 +39,54 @@ const FaqDataGrid = () => {
   const faqs = useSelector(selectFaqs);
   const faqLoading = useSelector(selectLoading);
 
+  useEffect(() => {
+    const timeoutId = setTimeout(callback, delay);
 
+    return () => clearTimeout(timeoutId);
+  }, [callback, delay]);
+};
+
+const Community = () => {
+  const [userStatus, setUserStatus] = useState('online');
+  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
+  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
+  const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
+  const [chats, setChats] = useState(null);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [communityDetails, setCommunityDetails] = useState(null);
+  const communities = useSelector(selectCommunities);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const { showSpinner, hideSpinner } = useSpinner();
+  const [messages, setMessages] = useState([]);
+
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const hidden = useMediaQuery(theme.breakpoints.down('lg'));
+  const store = useSelector((state) => state.chat);
+  const skin = 'default';
+  const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
+  const sidebarWidth = smAbove ? 360 : 300;
+  const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
+  const [socket, setSocket] = useState(null);
+
+  const statusObj = {
+    busy: 'error',
+    away: 'warning',
+    online: 'success',
+    offline: 'secondary'
+  };
+
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_PUBLIC_API_URL);
+    setSocket(socket);
+  }, []);
+
+  useEffect(() => {
+    fetchFaqs(currentPage);
+  }, [currentPage]);
 
   const fetchFaqs = (page) => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
+    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
     const data = {
       branchid: institute?.branchid,
       instituteId: institute?._id,
@@ -53,7 +97,7 @@ const FaqDataGrid = () => {
   };
 
   useEffect(() => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
+    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
 
     const data = {
       branchid: selectedBranchId,
@@ -133,12 +177,11 @@ const FaqDataGrid = () => {
 
   useEffect(() => {
     if (faqs?.data?.length === 0 && currentPage > 1) {
-      setCurrentPage(currentPage - 1); 
-  } else {
-    fetchFaqs(currentPage); 
-    console.log("last page",faqs);
-    
-  }
+      setCurrentPage(currentPage - 1);
+    } else {
+      fetchFaqs(currentPage);
+      console.log('last page', faqs);
+    }
   }, [currentPage, refetch]);
 
   const handleStatusChange = (e, row) => {
@@ -149,9 +192,8 @@ const FaqDataGrid = () => {
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
-    // fetchFaqs(page);  
+    // fetchFaqs(page);
   };
-  
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);

@@ -15,6 +15,7 @@ import { getCommunityDetails } from 'features/community/services/communityServic
 import { io } from 'socket.io-client';
 import { useSpinner } from 'context/spinnerContext';
 import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem } from 'utils/localStroageService';
 
 const useTimeout = (callback, delay) => {
   useEffect(() => {
@@ -59,8 +60,8 @@ const Community = () => {
     setSocket(socket);
   }, []);
 
-  const userData = JSON.parse(secureLocalStorage.getItem("userData"));
-  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+  const userData = getSecureItem("userData");
+  const institute = getSecureItem('institute');
 
   useEffect(() => {
     const fetchData = async () => {

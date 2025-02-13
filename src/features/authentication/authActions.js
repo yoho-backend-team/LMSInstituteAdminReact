@@ -4,8 +4,9 @@ import toast from 'react-hot-toast';
 import client from 'api/client';
 import { HTTP_END_POINTS } from 'api/client/http_end_points';
 import secureLocalStorage from 'react-secure-storage';
+import { setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
 // import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
-import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
+// import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
 // import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
@@ -23,18 +24,18 @@ export const login = (username, password) => async (dispatch) => {
     });
 
     if (response.data.data.otpVerify) {
-      secureLocalStorage.setItem('otp', JSON.stringify(response.data.data));
+      setOtp(response.data.data);
       toast.success(response.data.message);
       return { otpVerify: true };
     }
 
-    secureLocalStorage.setItem('isAuthenticated', true);
-    secureLocalStorage.setItem('token', response.data.data.token);
-    secureLocalStorage.setItem('userData', JSON.stringify(response.data.data.user));
-    secureLocalStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
-    secureLocalStorage.setItem('branches', JSON.stringify(response.data.data.branches));
-    secureLocalStorage.setItem('institute', JSON.stringify(response.data.data.institute));
-    secureLocalStorage.setItem('selectedBranchId', JSON.stringify(response.data.data.branches[0]?.uuid));
+    setIsAuthenticated(true);
+    setToken(response.data.data.token);
+    setUserData(response.data.data.user);
+    setPermissions(response.data.data.permissions);
+    setBranches(response.data.data.branches);
+    setInstitute(response.data.data.institute);
+   setSelectedBranchId(response.data.data.branches[0]?.uuid);
 
     dispatch({
       type: 'LOGIN_SUCCESS',
@@ -70,12 +71,12 @@ export const VerifyOtp = (otp, email, token) => async (dispatch) => {
     const response = await client.users.verifyOtp(data);
 
     if (response.status === 'success') {
-      secureLocalStorage.setItem('isAuthenticated', true);
-      secureLocalStorage.setItem('token', response.data.token);
-      secureLocalStorage.setItem('userData', JSON.stringify(response.data.user));
-      secureLocalStorage.setItem('permissions', JSON.stringify(response.data.permissions));
-      secureLocalStorage.setItem('branches', JSON.stringify(response.data.branches));
-      secureLocalStorage.setItem('institute', JSON.stringify(response.data.institute));
+      setIsAuthenticated(true);
+      setToken(response.data.token);
+      setUserData(response.data.user);
+      setPermissions(response.data.permissions);
+      setBranches(response.data.branches);
+      setInstitute(response.data.institute);
       secureLocalStorage.removeItem('otp');
       console.log(response, 'response');
       dispatch({

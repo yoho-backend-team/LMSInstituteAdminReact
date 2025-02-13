@@ -14,7 +14,7 @@ import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } f
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
 import secureLocalStorage from 'react-secure-storage';
-import { setSelectedBranchId } from 'utils/localStroageService';
+import { getSecureItem, setSelectedBranchId } from 'utils/localStroageService';
 import usePushSubscription from 'usePushSubscription';
 
 // import { onMessageListener} from './firebase';
@@ -25,18 +25,18 @@ const App = () => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/sw.js')
-                .then((registration) => {
-                  // console.log('Service Worker registered with scope:', registration.scope);
-                      const user = JSON.parse(localStorage.getItem("userData"))
-                      const selectBranchId = localStorage.getItem("selectedBranchId")
-                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
-                })
-                .catch((error) => {
-                  console.error('Service Worker registration failed:', error);
-                });
-            }
-
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        // console.log('Service Worker registered with scope:', registration.scope);
+        const user = JSON.parse(localStorage.getItem('userData'));
+        const selectBranchId = localStorage.getItem('selectedBranchId');
+        usePushSubscription(user.role, user._id, user, user?.institute_id, JSON.parse(selectBranchId));
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  }
 
   const handleUpgradeClick = async () => {
     try {
@@ -54,8 +54,8 @@ const App = () => {
       };
       const response = await UpgradSubscriptionPlanWithId({ institute: getInstituteDetails() });
       setShowOverlay(false);
-      setSecureItem("requestPassed", true);
-      toast.success("Subscription Upgrade Request sent successfully");
+      setSecureItem('requestPassed', true);
+      toast.success('Subscription Upgrade Request sent successfully');
     } catch (error) {
       toast.error(error?.message);
     } finally {
@@ -64,7 +64,7 @@ const App = () => {
   };
 
   const handleCloseOverlay = () => {
-    setSecureItem("requestPassed", true);
+    setSecureItem('requestPassed', true);
     setShowOverlay(false);
   };
 
@@ -80,14 +80,14 @@ const App = () => {
   };
 
   useEffect(() => {
-    const isAuthenticatedUser = secureLocalStorage.getItem("isAuthenticated");
-    const selectBranchId = secureLocalStorage.getItem("selectedBranchId");
-    const user =secureLocalStorage.getItem("userData");
-    const notifiAdd = Cookies.get("instituteNotificationSubscription");
+    const isAuthenticatedUser = getSecureItem('isAuthenticated');
+    const selectBranchId = secureLocalStorage.getItem('selectedBranchId');
+    const user = getSecureItem('userData');
+    const notifiAdd = Cookies.get('instituteNotificationSubscription');
     const branches = secureLocalStorage.getItem('branches');
     if (!selectBranchId) {
-        // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
-        setSelectedBranchId(branches?.[0]?.uuid);
+      // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
+      setSelectedBranchId(branches?.[0]?.uuid);
     }
     if (isAuthenticatedUser && !notifiAdd) {
       registerSubscription(user?.role, user?._id, user, JSON.parse(selectBranchId), user?.institute_id);
@@ -106,11 +106,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    const isAuthenticatedUser = secureLocalStorage.getItem("isAuthenticated");
-    const requestState = secureLocalStorage.getItem("requestPassed");
+    const isAuthenticatedUser = getSecureItem('isAuthenticated');
+    const requestState = secureLocalStorage.getItem('requestPassed');
 
     const getInstituteDetails = () => {
-      const institute_details =secureLocalStorage.getItem('institute');
+      const institute_details = secureLocalStorage.getItem('institute');
       if (institute_details) {
         return institute_details;
       }
@@ -128,12 +128,7 @@ const App = () => {
         <CssBaseline />
         <DisableNumInputScroll />
         <NavigationScroll>
-          {showOverlay && (
-            <SubscriptionExpiredPopup
-              onClose={handleCloseOverlay}
-              onUpgrade={handleUpgradeClick}
-            />
-          )}
+          {showOverlay && <SubscriptionExpiredPopup onClose={handleCloseOverlay} onUpgrade={handleUpgradeClick} />}
           <Routes />
         </NavigationScroll>
       </ThemeProvider>

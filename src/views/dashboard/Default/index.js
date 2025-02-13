@@ -27,7 +27,7 @@ const Dashboard = () => {
       tooltipStyle: {
         top: '50px',
         left: '50px',
-        backgroundColor: '#ff8c00', // Custom tooltip color
+        backgroundColor: '#ff8c00' // Custom tooltip color
       },
       highlightStyle: {
         border: '2px solid #ff8c00',
@@ -36,8 +36,8 @@ const Dashboard = () => {
         left: '50px',
         width: '100%',
         height: '100px',
-        zIndex: 10,
-      },
+        zIndex: 10
+      }
     },
     {
       target: '.features',
@@ -45,7 +45,7 @@ const Dashboard = () => {
       tooltipStyle: {
         top: '200px',
         left: '50px',
-        backgroundColor: '#0CCE7F', // Green tooltip
+        backgroundColor: '#0CCE7F' // Green tooltip
       },
       highlightStyle: {
         border: '2px solid #0CCE7F',
@@ -54,9 +54,10 @@ const Dashboard = () => {
         left: '50px',
         width: '80%',
         height: '120px',
-        zIndex: 10,
-      },
-    },]
+        zIndex: 10
+      }
+    }
+  ];
 
   useEffect(() => {
     const getReports = async (props) => {
@@ -83,18 +84,17 @@ const Dashboard = () => {
       {loading ? (
         <DashboardSkeleton />
       ) : (
-        <Grid container spacing={2} sx={{ pt: "22px", pl: "22px" }}>
-      {/* <div>
-      <header className="header">
-        <h1>Welcome to Our Website</h1>
-      </header>
-      <section className="features">
-        <h2>Features</h2>
-        <p>Learn more about what we offer.</p>
-      </section>
-          
-      <Tour steps={steps} onTourComplete={() => alert('Tour Completed!')} />
-    </div> */}
+        <Grid container spacing={2} sx={{ pt: '22px', pl: '22px' }}>
+          <div>
+            <header className="header">
+              <h1>Welcome to Our Website</h1>
+            </header>
+            <section className="features">
+              <h2>Features</h2>
+              <p>Learn more about what we offer.</p>
+            </section>
+            <Tour steps={steps} onTourComplete={() => alert('Tour Completed!')} />
+          </div>
           {/* Top Stack Cards - Full Width */}
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -150,9 +150,9 @@ const Dashboard = () => {
                   avatarIcon="ph:student"
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={2.4} >
+              <Grid item xs={12} sm={6} md={2.4}>
                 <CardStatsVertical
-                  bg={"#d81b60"}
+                  bg={'#d81b60'}
                   stats={Reports?.courseCount}
                   chipText="+25.2%"
                   avatarColor="#880e4f"
@@ -164,7 +164,7 @@ const Dashboard = () => {
               </Grid>
             </Grid>
           </Grid>
-          
+
           {/* Card Data Section */}
           {/* <Grid item xs={8.5}>
             <Grid container spacing={1}>
@@ -218,13 +218,12 @@ const Dashboard = () => {
             </Grid>
           </Grid>
 
-             {/* AllActivity Section */}
+          {/* AllActivity Section */}
           <Grid item xs={12} md={3.5}>
             <AllActivity />
           </Grid>
 
           {/* Revenue and Popular Course */}
-          
 
           {/* Project Status and Support Tracker */}
           <Grid item xs={12} md={6}>

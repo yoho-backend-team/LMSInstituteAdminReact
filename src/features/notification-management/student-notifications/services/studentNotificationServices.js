@@ -8,7 +8,7 @@ const STUDENT_NOTIFICATION_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_UR
 
 export const getAllStudentNotifications = async (data) => {
   try {
-    const response = await client.notification.student.get_student_notification(data)
+    const response = await client.notification.student.get_student_notification(data);
     return response;
   } catch (error) {
     console.error('Error in getAllStudentNotifications:', error);
@@ -39,12 +39,12 @@ export const searchStudentNotifications = async (searchQuery) => {
 
 export const addStudentNotification = async (data) => {
   try {
-    const response = await client.notification.student.add_student_notification(data)
+    const response = await client.notification.student.add_student_notification(data);
 
     return { success: true, message: 'StudentNotification created successfully' };
   } catch (error) {
-    const error_message = getErrorMessage(error)
-    throw new Error(error_message)
+    const error_message = getErrorMessage(error);
+    throw new Error(error_message);
   }
 };
 

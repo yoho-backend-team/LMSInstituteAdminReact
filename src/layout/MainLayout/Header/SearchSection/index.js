@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
@@ -21,19 +22,9 @@ import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
 // project imports
 import Transitions from 'components/extended/Transitions';
 import { updateSelectedBranch } from 'features/authentication/authActions';
-import { useDispatch } from 'react-redux';
-// assets
-import {
-  // IconAdjustmentsHorizontal,
-  IconSearch
-  // IconX
-} from '@tabler/icons';
-import { shouldForwardProp } from '@mui/system';
 
-import { useSelector } from 'react-redux';
-
-// styles
-const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
+// Styles
+const PopperStyle = styled(Popper)(({ theme }) => ({
   zIndex: 1100,
   width: '99%',
   top: '-55px !important',
@@ -62,52 +53,10 @@ const OutlineInputStyle = styled(TextField)(({ theme }) => ({
   }
 }));
 
-const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => ({
-  ...theme.typography.commonAvatar,
-  ...theme.typography.mediumAvatar,
-  background: theme.palette.secondary.light,
-  color: theme.palette.secondary.dark,
-  '&:hover': {
-    background: theme.palette.secondary.dark,
-    color: theme.palette.secondary.light
-  }
-}));
-
-// ==============================|| SEARCH INPUT - MOBILE||============================== //
-
-const MobileSearch = () =>
-// { value, setValue, popupState }
-{
-  // const theme = useTheme();
-
-  return (
-    <OutlineInputStyle
-      id="input-search-header"
-      select
-      sx={{
-          backgroundColor : "red"
-      }}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      placeholder="Branch"
-      aria-describedby="search-helper-text"
-      inputProps={{ 'aria-label': 'weight' }}
-    />
-  );
-};
-
-MobileSearch.propTypes = {
-  value: PropTypes.string,
-  setValue: PropTypes.func,
-  popupState: PopupState
-};
-
-// ==============================|| SEARCH INPUT ||============================== //
-
 const SearchSection = () => {
   const theme = useTheme();
   const [value, setValue] = useState('Keelkattalai');
-  // Inside your component
+ 
   const branches = useSelector((state) => state.auth.branches);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -154,30 +103,43 @@ const SearchSection = () => {
           )}
         </PopupState>
       </Box>
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-        <OutlineInputStyle
-          id="input-search-header"
-          value={selectedBranchId?.trim()}
-          onChange={(e) => {
 
-            dispatch(updateSelectedBranch(e.target.value));
-            localStorage.setItem('selectedBranchId', e.target.value)
-          }}
-          placeholder="Search"
-          aria-describedby="search-helper-text"
-          inputProps={{ 'aria-label': 'weight' }}
-          select
-          label="Branch"
-        >
-          {branches?.map((branch, index) => (
-            <MenuItem value={branch?.uuid} key={index} selected={selectedBranchId === branch?.uuid}>
-              {branch?.branch_identity}
-            </MenuItem>
-          ))}
-        </OutlineInputStyle>
-      </Box>
+     
+        <Box sx={{ display: { xs: 'block', md: 'block' } }}>
+          <OutlineInputStyle
+            id="input-search-header"
+            value={selectedBranchId?.trim()}
+            onChange={(e) => {
+              dispatch(updateSelectedBranch(e.target.value));
+              localStorage.setItem('selectedBranchId', e.target.value);
+            }}
+            placeholder="Search"
+            aria-describedby="search-helper-text"
+            inputProps={{ 'aria-label': 'weight' }}
+            select
+            label="Branch"
+           
+          >
+            {branches?.map((branch, index) => (
+              <MenuItem
+                value={branch?.uuid}
+                key={index}
+                selected={selectedBranchId === branch?.uuid}
+              >
+                {branch?.branch_identity}
+              </MenuItem>
+            ))}
+          </OutlineInputStyle>
+        </Box>
+      
     </>
   );
+};
+
+SearchSection.propTypes = {
+  value: PropTypes.string,
+  setValue: PropTypes.func,
+  popupState: PopupState,
 };
 
 export default SearchSection;
