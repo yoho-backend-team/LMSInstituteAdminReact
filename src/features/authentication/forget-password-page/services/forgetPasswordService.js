@@ -2,15 +2,21 @@
 import axios from 'axios';
 import secureLocalStorage from 'react-secure-storage';
 
-const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user`;
+const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin`;
 
 export const sendOtp = async (data) => {
     try {
         const response = await axios.post(`${FORGET_PASSWORD_API_ENDPOINT}/forget-password`, data, {
             headers: {
                 'Content-Type': 'application/json',
+<<<<<<< HEAD
                 Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
             }
+=======
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            },
+             
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
         });
         // Check if the response status is successful
         if (response.data.status) {
@@ -21,7 +27,7 @@ export const sendOtp = async (data) => {
         }
     } catch (error) {
         // Log the error for debugging purposes
-        console.error('Error in send OTP:', error);
+        console.error('Error in send OTP:', error.response);
 
         // Throw the error again to propagate it to the calling function/component
         throw error;

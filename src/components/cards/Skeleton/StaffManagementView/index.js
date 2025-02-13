@@ -47,6 +47,7 @@ const StaffManagementView = () => {
   return (
     <>
       <Grid>
+        
         <Card>
           {/* Placeholder for CardMedia */}
           <Skeleton
@@ -188,7 +189,7 @@ const StaffManagementView = () => {
             </Box>
           </CardContent>
 
-          <CardActions sx={{ display: 'flex', justifyContent: '' }}>
+          <CardActions sx={{ display: 'flex',  }}>
             <Button variant="tonal" sx={{ mr: 2 }}>
               <Skeleton width={60} />
             </Button>

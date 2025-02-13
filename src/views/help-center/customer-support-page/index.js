@@ -19,7 +19,7 @@ const CustomerSupport = () => {
   }, []);
 
   return (
-    <MainCard title="Customer Suppport">
+    <MainCard title="Customer">
   
       <Fragment>
         <HelpHeader />

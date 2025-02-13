@@ -41,8 +41,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
-  const {show,hide} = useSpinner()
-
+  const { show, hide } = useSpinner()
+  
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -70,12 +70,12 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const getActiveTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'teaching', branch_id: selectedBranchId };
     const result = await getAllActiveTeachingStaffs(data);
-  
+
     setActiveTeachingStaff(result?.data);
   };
   const getActiveNonTeachingStaffs = async (selectedBranchId) => {
     const data = { type: 'non_teaching', branch_id: selectedBranchId };
-    const result = await getAllNonTeachingStaffs(data); 
+    const result = await getAllNonTeachingStaffs(data);
     setActiveNonTeachingStaff(result.data);
   };
   const getActiveBatchesByCourse = async (courseId) => {
@@ -86,11 +86,11 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
     }
   };
 
-  
+
 
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
-  
+
   const showErrors = (field, valueLen, min) => {
     if (valueLen === 0) {
       return `${field} field is required`;
@@ -109,7 +109,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       .required('Class Name field is required'),
     branch: yup.string().required('Branch field is required'),
     course: yup.string().required('Course field is required'),
-    batch: yup.object().required('Batch is required'),
+    batch: yup.object().required('Batch field is required'),
+    instructor: yup.array().required('Instructor field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
     start_time: yup.string().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required')
@@ -117,10 +118,10 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
 
   const defaultValues = {
     class_name: '',
-    branch: selectedBranchId,
+    branch: "",
     course: '',
-    batch: '',
-    classDate: new Date(),
+    batch: {},
+    classDate: null,
     start_time: null,
     end_time: null,
     instructor: [],
@@ -165,12 +166,12 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   }
 
   const onSubmit = async (data) => {
-    show()
+    // show()
     const filteredInstructorId = data.instructor?.map((staff) => staff._id);
     const filteredCoordinatorId = data.coordinator?.map((staff) => staff._id);
-    
+
     const dummyData = {
-      institute:useInstitute().getInstituteId(),
+      institute: useInstitute().getInstituteId(),
       class_name: data.class_name,
       branch: data.branch,
       course: data.course,
@@ -181,8 +182,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       instructors: filteredInstructorId,
       coordinators: filteredCoordinatorId,
     };
-    
-    
+
+
     try {
       const result = await addOfflineClass(dummyData);
 
@@ -200,26 +201,40 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
       hide()
     }
   };
-  
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
+      sx={{
+        '& .MuiPaper-root': {
+          width: '100%', maxWidth: 800,
+          background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          borderRadius: 2,
+        }
+      }}
     >
+
       <DialogTitle
         id="user-view-edit"
         sx={{
           textAlign: 'center',
           fontSize: '1.5rem !important',
           px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`]
+          pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(4)} !important`],
+          background: 'linear-gradient(to right, #6b46c1, #5a67d8)',
+          color: 'white',
+          fontWeight: 'bold',
+          padding: '1rem',
+         
         }}
       >
         Add Offline Class
       </DialogTitle>
+
 
       <DialogContent
         sx={{
@@ -228,9 +243,13 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
           px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
         }}
       >
+
         <DatePickerWrapper>
+
           <form onSubmit={handleSubmit(onSubmit)}>
+
             <Grid container spacing={4}>
+
               <Grid item xs={12}>
                 <Controller
                   name="class_name"
@@ -244,14 +263,49 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       placeholder="John Doe"
                       error={Boolean(errors.class_name)}
                       {...(errors.class_name && { helperText: errors.class_name.message })}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                 />
               </Grid>
+              
+
               <Grid item xs={12}>
                 <Controller
                   name="branch"
                   control={control}
+                  rules={{ required: 'Branch is required' }}
                   render={({ field: { value, onChange } }) => (
                     <Autocomplete
                       fullWidth
@@ -263,13 +317,47 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       }}
                       value={activeBranches.find((branch) => branch._id === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} />
+                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message}
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px',
+                            },
+
+                          }}
+                        />
                       )}
                     />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sx={{ mb: 2 }}>
+
+              <Grid item xs={12} sx={{}}>
                 <Controller
                   name="course"
                   control={control}
@@ -284,12 +372,46 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       }}
                       value={activeCourse.find((course) => course._id === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message} />
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message}
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px',
+                            },
+
+                          }}
+                        />
                       )}
                     />
                   )}
                 />
               </Grid>
+
               <Grid item xs={12} sm={12}>
                 <Controller
                   name="batch"
@@ -299,7 +421,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       {...field}
                       fullWidth
                       options={activeBatches}
-                      getOptionLabel={(option) => option?.batch_name}
+                      getOptionLabel={(option) => option?.batch_name || "" }
                       onChange={(event, newValue) => {
                         setValue('batch', newValue);
                       }}
@@ -307,10 +429,41 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          sx={{ mb: 2 }}
+                          
+
                           label="Batch"
-                          error={Boolean(errors.batch)}
-                          helperText={errors.batch?.message}
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px',
+                            },
+
+                          }}
                         />
                       )}
                     />
@@ -329,9 +482,43 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       className="full-width-datepicker"
                       onChange={onChange}
                       placeholderText="Click to select a date"
-                      customInput={<CustomInput label="ClassDate" />}
+                      customInput={<CustomInput label="ClassDate"
+                        sx={{
+                          backgroundColor: 'transparent',
+                          borderRadius: '8px',
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                            backgroundColor: 'white',
+                            '& fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'rgba(156, 163, 175, 1)',
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'rgba(96, 165, 250, 1)',
+                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                            },
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black',
+                            },
+                          },
+                          '& .MuiFormHelperText-root': {
+                            backgroundColor: 'transparent',
+                            color: 'red',
+
+                            borderRadius: '4px',
+                            marginTop: '4px',
+                          },
+
+                        }} />}
+
                     />
                   )}
+
                 />
                 {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message}</p>}
               </Grid>
@@ -347,12 +534,46 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           customInput={
                             <CustomInput
                               label="Start Time"
-                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                              sx={{
+                                border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px',
+                              }}
                             />
                           }
                           value={value}
                           onChange={onChange}
                           label="Start Time"
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px',
+                            },
+
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -378,7 +599,38 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           value={value}
                           onChange={onChange}
                           label="End Time"
-                        />
+                          sx={{
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)',
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                              },
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black',
+                              },
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px',
+                            },
+
+                          }} />
                       </LocalizationProvider>
                     )}
                   />
@@ -386,6 +638,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     <p style={{ color: '#EA5455', marginTop: '5px', marginLeft: '5px', fontSize: '12px' }}>{errors.end_time.message}</p>
                   )}
                 </Grid>
+
               </Grid>
 
               <Grid item xs={12} sm={12}>
@@ -411,11 +664,44 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      error={Boolean(errors.instructor)} helperText={errors.instructor?.message}
                       fullWidth
                       label="Instructors"
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
+                      }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
                       }}
                     />
                   )}
@@ -427,7 +713,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option.full_name}
+                      {option.full_name }
                     </li>
                   )}
                   renderTags={(value) => (
@@ -483,6 +769,38 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
+                      sx={{
+                        backgroundColor: 'transparent',
+                        borderRadius: '8px',
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '8px',
+                          backgroundColor: 'white',
+                          '& fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&:hover fieldset': {
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: 'rgba(96, 165, 250, 1)',
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
+                          },
+                        },
+                        '& .MuiInputLabel-root': {
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black',
+                          },
+                        },
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: 'red',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -519,20 +837,50 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
               </Grid>
-              <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                <Box>
-                  <Button type="submit" onClick={handleSubmit(onSubmit)} variant="contained" sx={{ mr: 3 }}>
-                    Submit
-                  </Button>
-                  <Button variant="tonal" color="error" onClick={handleClose}>
+
+
+              <Grid item xs={12}>
+
+                <Box display="flex" justifyContent="space-between">
+
+                  <Button variant="tonal" color="error" onClick={handleClose} sx={{
+                    border: '2px solid #D8B4FE',
+                    color: '#9333EA',
+                    backgroundColor: 'transparent',
+                    '&:hover': {
+                      backgroundColor: '#FAF5FF',
+                    },
+                  }}>
                     Cancel
                   </Button>
+
+
+
+                  <Button type="submit" onClick={handleSubmit(onSubmit)} variant="contained"
+                    sx={{
+                      background: 'linear-gradient(to right, #9333EA, #4F46E5)',
+                      color: 'white',
+                      '&:hover': {
+                        background: 'linear-gradient(to right, #7E22CE, #4338CA)',
+                      },
+                    }}  >
+                    Submit
+                  </Button>
                 </Box>
+
+
+
+
               </Grid>
+
             </Grid>
+
           </form>
+
         </DatePickerWrapper>
+
       </DialogContent>
+
     </Dialog>
   );
 };

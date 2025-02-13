@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -35,8 +35,9 @@ const StaffFilterCard = (props) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
+            <Typography variant='h2'>Staff ID card</Typography>
           <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-            <CardHeader title="ID card" />
+            {/* <CardHeader sx={{textAlign:'center'}} title="Staff ID card" /> */}
             <CardContent sx={{ pt: 0, display: "none" }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={4}>

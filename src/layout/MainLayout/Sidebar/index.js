@@ -21,7 +21,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
 
   const drawer = (
     <>
-      <Box sx={{ display: { xs: 'block', md: 'none' }, backgroundColor: "white" }}>
+      <Box sx={{ display: { xs: 'block', md: 'none',}, backgroundColor: "white" }}>
         <Box sx={{ display: 'flex', p: 2, mx: 'auto' }}>
           <LogoSection />
         </Box>
@@ -78,6 +78,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
       >
         {drawer}
       </Drawer>
+    
     </Box>
   );
 };

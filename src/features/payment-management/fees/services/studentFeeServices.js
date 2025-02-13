@@ -6,14 +6,22 @@ import secureLocalStorage from 'react-secure-storage';
 const STUDENT_FEE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/student-fee`;
 
 export const getAllStudentFees = async (data) => {
+  console.log(data);
+  const token = localStorage.getItem('token');
   try {
     const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
+<<<<<<< HEAD
         Authorization: `Token ${secureLocalStorage.getItem('token')}`
+=======
+        Authorization: `Bearer ${'Token ' + token}`
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
       },
       params: data
+
     });
+console.log(response);
 
     // Check if the response status is successful
     return response;

@@ -14,7 +14,7 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const AuthLogin = Loadable(lazy(() => import('views/authentication/login-page')));
 
 // User Management
-const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-overview-page')));
+const GroupsPage = Loadable(lazy(() => import('views/user-management/groups-page/groups[id]-page/groups-overview-page')));
 const AddGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-add-page')));
 const ViewGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups[id]-page')));
 const EditGroupPage = Loadable(lazy(() => import('views/user-management/groups-page/groups-edit-page')));
@@ -133,6 +133,14 @@ const AllNotifications = Loadable(lazy(() => import('views/profile-management/no
 
 //Forget Password
 const ForgetPassword = Loadable(lazy(() => import('views/authentication/forget-password-page')));
+
+//otp page
+const OTPInput = Loadable(lazy(() => import('features/authentication/forget-password-page/components/OTPInput')));
+
+//set password
+import  SetPasswordInput  from 'features/authentication/forget-password-page/components/SetPasswordInput';
+
+
 
 //Institute Settings 
 const InstituteManagement = Loadable(lazy(() => import("features/institute-management/compoents/index")))
@@ -507,6 +515,18 @@ const ApplicationRoutes = () => {
       <Route element={<MinimalLayout />}>
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Route>
+      
+     {/* otp page */}
+      {/* <Route path="/forget-password" element={<MainLayout />}>
+      <Route index element={<Navigate to={"/otp-page" }/>} />
+      <Route path='otp-page' element={<ForgetPassword />} />  
+      </Route> */}
+
+      {/* set-password  */}
+      {/* <Route element={<MinimalLayout />}>
+      <Route path="/set-password" element={<SetPasswordInput />} />  
+      </Route> */}
+
       <Route element={<MinimalLayout />}>
         <Route path="*" element={<Page404 />} />
       </Route>

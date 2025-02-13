@@ -188,6 +188,7 @@ const Notes = () => {
           open={NotesDeleteModalOpen}
           setOpen={setNotesDeleteModalOpen}
           description="Are you sure you want to delete this Notes?"
+          failureDescription="Delete request has been cancelled"
           title="Delete"
           handleSubmit={handleContentDelete}
         />

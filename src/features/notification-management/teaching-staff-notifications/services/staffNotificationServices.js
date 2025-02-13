@@ -88,18 +88,23 @@ export const updateStaffNotification = async (data) => {
 
 export const resendStaffNotification = async (data) => {
   try {
-    const response = await axios.post(`${STAFF_NOTIFICATION_API_ENDPOINT}/staff-notification-resend`, data, {
+    const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/notification/staff-notification-resend`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
+<<<<<<< HEAD
     if (response.data.status) {
       return { success: true, message: 'StaffNotification Resend successfully' };
     } else {
       return { success: false, message: 'Failed to resend StaffNotification' };
     }
+=======
+      return response;
+      
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
   } catch (error) {
     console.error('Error in resendStudentNotification:', error);
     throw error;

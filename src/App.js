@@ -13,13 +13,30 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+<<<<<<< HEAD
 import secureLocalStorage from 'react-secure-storage';
 import { getSecureItem, setSelectedBranchId } from 'utils/localStroageService';
 
+// import { onMessageListener} from './firebase';
+// ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
   const [showOverlay, setShowOverlay] = useState(false);
+
+  if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                  console.log('Service Worker registered with scope:', registration.scope);
+                      const user = JSON.parse(localStorage.getItem("userData"))
+                      const selectBranchId = localStorage.getItem("selectedBranchId")
+                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
+                })
+                .catch((error) => {
+                  console.error('Service Worker registration failed:', error);
+                });
+            }
+
 
   const handleUpgradeClick = async () => {
     try {

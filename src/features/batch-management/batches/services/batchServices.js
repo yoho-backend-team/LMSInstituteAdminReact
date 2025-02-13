@@ -22,6 +22,7 @@ export const getAllBatchesByBranch = async (data) => {
 export const getAllBatches = async (data) => {
   try {
     const response = await client.batch.getAll(data)
+   console.log(response.data,"------------------------------------------");
    
     return { success: true, data: response.data };
    
