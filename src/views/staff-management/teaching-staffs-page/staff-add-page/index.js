@@ -18,7 +18,7 @@ import CustomChip from 'components/mui/chip';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { addTeachingStaff } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import { forwardRef, useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -30,12 +30,17 @@ import { useBranchId, useInstitute } from 'utils/get-institute-details';
 import client from 'api/client';
 import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'utils/imageUtils';
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en'; // Add your preferred locale
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
     name: '',
-    password:"",
+    password: '',
     email: '',
     phone: '',
     alt_phone: '',
@@ -50,8 +55,7 @@ const StepperLinearWithValidation = () => {
     branch: '',
     designation: '',
     education_qualification: '',
-    username: '',
-    staffId:'',
+    staffId: '',
     logo: ''
   };
 
@@ -106,7 +110,7 @@ const StepperLinearWithValidation = () => {
     address_line_one: yup.string().required('Address line one is required'),
     address_line_two: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
-    gender: yup.string().required('Gender is required'),
+    gender: yup.string().required('Gender is required')
     // username: yup
     //   .string()
     //   .required('Username is required')
@@ -117,10 +121,11 @@ const StepperLinearWithValidation = () => {
   const navigate = useNavigate();
   const [activeCourse, setActiveCourse] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [showPassword,setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const { show, hide} = useSpinner()
+
+  const { show, hide } = useSpinner();
 
   useEffect(() => {
     const data = {
@@ -135,7 +140,7 @@ const StepperLinearWithValidation = () => {
       setActiveCourse(result?.data);
     }
   };
- console.log(useBranchId())
+
   const {
     setValue,
     setError,
@@ -162,7 +167,7 @@ const StepperLinearWithValidation = () => {
     width: 100,
     height: 100,
     marginRight: theme.spacing(6),
-    borderRadius: theme.shape.borderRadius
+    borderRadius: 50
   }));
 
   const ButtonStyled = styled(Button)(({ theme }) => ({
@@ -172,13 +177,13 @@ const StepperLinearWithValidation = () => {
     }
   }));
   const getInstituteDetails = () => {
-    if(typeof(localStorage) !== "undefined"){
-    const institute = localStorage.getItem("institute")
-    return JSON.parse(institute)
-    }else{
-     return undefined
+    if (typeof localStorage !== 'undefined') {
+      const institute = localStorage.getItem('institute');
+      return JSON.parse(institute);
+    } else {
+      return undefined;
     }
-}
+  };
 
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(4),
@@ -196,20 +201,19 @@ const StepperLinearWithValidation = () => {
   );
 
   const handleInputImageChange = async (file) => {
-  try {
-    show()
-    const { files } = file.target;
-    const form_data = new FormData()
-    form_data.append("file",files[0])
-    const response = await client.file.upload(form_data)
-    setLogo(response?.data?.file)
-    
-  } catch (error) {
-    hide()
-    toast.error(error?.message)
-  }finally{
-    hide()
-  }
+    try {
+      show();
+      const { files } = file.target;
+      const form_data = new FormData();
+      form_data.append('file', files[0]);
+      const response = await client.file.upload(form_data);
+      setLogo(response?.data?.file);
+    } catch (error) {
+      hide();
+      toast.error(error?.message);
+    } finally {
+      hide();
+    }
   };
 
   const handleInputImageReset = () => {
@@ -218,12 +222,11 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-
   const onSubmit = async () => {
     const personalData = personalControl._formValues;
-    const courseUUIDs = selectedCourses.map(option => option.uuid);
-    const branch_id = useBranchId()
-    console.log(branch_id,"branch_id")
+    console.log(personalData);
+    const logosrc = logo;
+    const courseUUIDs = selectedCourses.map((option) => option.uuid);
     const teaching_staffdata = {
       email: personalData.email,
       full_name: personalData.full_name,
@@ -233,8 +236,8 @@ const StepperLinearWithValidation = () => {
       // username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
-      branch_id : "87e53fd5-f85a-4b16-acfe-89bf30e0ea07",
-      qualification:personalData.education_qualification,
+      branch_id: selectedBranchId,
+      qualification: personalData.education_qualification,
       contact_info: {
         state: personalData.state,
         city: personalData.city,
@@ -246,8 +249,9 @@ const StepperLinearWithValidation = () => {
       },
       designation: personalData.designation,
       // role: personalData.role,
-      staffId:personalData.staffId,
-      image : logo,
+      staffId: personalData?.staffId,
+      image: logosrc,
+      logo: logosrc,
       user_details: 'InstituteTeachingStaff'
     };
     const filteredCourseId = selectedCourses?.map((course) => course.course_id);
@@ -262,8 +266,9 @@ const StepperLinearWithValidation = () => {
     data.append('alternate_number', personalData?.alt_phone);
     data.append('designation', personalData?.designation);
     data.append('type', 'teaching');
-    data.append('branch_id', branch_id);
+    data.append('branch_id', selectedBranchId);
     data.append('image', logo);
+    data.append('logo', logo);
     data.append('gender', personalData?.gender);
     data.append('address_line_1', personalData?.address_line_one);
     data.append('address_line_2', personalData?.address_line_two);
@@ -271,29 +276,23 @@ const StepperLinearWithValidation = () => {
     data.append('state', personalData?.state);
     data.append('pin_code', personalData?.pin_code);
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    // data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
-    // const isUserNameTaken = await checkUserName(personalData?.username);
+    try {
+      console.log('iam working before response 1');
 
-    // if (!isUserNameTaken.success) {
-    //   setError('username', {
-    //     type: 'manual',
-    //     message: 'Username is already taken'
-    //   });
-    // } else if (isUserNameTaken.success) {
-      try {
-        console.log("iam working before response 1");
+      const result = await addTeachingStaff(teaching_staffdata);
+      console.log(result, ' -------------');
 
-        const result = await addTeachingStaff(teaching_staffdata);
-        if (result.success) {
-          toast.success(result.message);
-          navigate(-1);
-        } else {
-          toast.error(result.message);
-        }
-      } catch (error) {
-        console.log(error);
+      if (result.message) {
+        toast.success(result.message);
+        navigate(-1);
+        return;
+      } else {
+        toast.error(result.message);
       }
+    } catch (error) {
+      console.log(error);
+    }
     // }
   };
 
@@ -303,7 +302,7 @@ const StepperLinearWithValidation = () => {
         <Grid container spacing={5}>
           <Grid item xs={12} sm={12}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ImgStyled src={ logo ? getImageUrl(logo) : logoSrc} alt="Profile Pic" />
+              <ImgStyled src={logo ? getImageUrl(logo) : logoSrc} alt="Profile Pic" />
               <div>
                 <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                   Upload Profile picture
@@ -319,12 +318,12 @@ const StepperLinearWithValidation = () => {
                   Reset
                 </ResetButtonStyled>
                 <Typography sx={{ mt: 4, color: 'text.disabled', justifyContent: 'center', display: 'flex' }}>
-                  Allowed PNG or JPEG. Max size of 800K.
+                  Allowed PNG or JPEG. Max size of 800Kb.
                 </Typography>
               </div>
             </Box>
           </Grid>
-          
+
           <Grid item xs={12} sm={6}>
             <Controller
               name="full_name"
@@ -344,36 +343,6 @@ const StepperLinearWithValidation = () => {
               )}
             />
           </Grid>
-          {/* <Grid item xs={12} sm={6}>
-                <Controller
-                  name="password"
-                  control={personalControl}
-                  // rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <CustomTextField
-                      fullWidth
-                      value={value}
-                      label="Password"
-                      type={showPassword ? "text" :"password"}
-                      onChange={onChange}
-                      placeholder=""
-                      error={Boolean(personalErrors['password'])}
-                      aria-describedby="stepper-linear-personal-institute_name"
-                      helperText={personalErrors?.password?.message}
-                      InputProps={{
-                        endAdornment:(
-                          <InputAdornment position="end" >
-                            <IconButton onClick={() => setShowPassword(!showPassword)} >
-                               {showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
-                  )}
-                />
-              </Grid>
- */}
 
           <Grid item xs={12} sm={6}>
             <Controller
@@ -396,7 +365,32 @@ const StepperLinearWithValidation = () => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Controller
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
+              <Controller
+                name="date_of_birth"
+                control={personalControl}
+                rules={{ required: 'Date of birth is required' }}
+                
+                render={({ field }) => (
+                  <DatePicker
+                    label="Date of Birth"
+                    format="DD/MM/YYYY"
+                    value={field.value ? dayjs(field.value) : null}
+                    error={Boolean(personalErrors.date_of_birth)}
+                {...(personalErrors.date_of_birth && { helperText: personalErrors.date_of_birth.message })}
+                    onChange={(date) => field.onChange(date)}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        error: Boolean(personalErrors?.date_of_birth),
+                        helperText: personalErrors?.date_of_birth?.message
+                      }
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+            {/* <Controller
               name="date_of_birth"
               control={personalControl}
               rules={{ required: true }}
@@ -417,7 +411,7 @@ const StepperLinearWithValidation = () => {
                   onChange={onChange}
                 />
               )}
-            />
+            /> */}
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller

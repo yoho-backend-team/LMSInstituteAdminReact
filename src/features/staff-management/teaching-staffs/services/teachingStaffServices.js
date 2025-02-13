@@ -84,6 +84,7 @@ export const addTeachingStaff = async (data) => {
         Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
+console.log(response,'response');
 
     if (response.data) {
       return { success: true, message: 'TeachingStaff created successfully' };
