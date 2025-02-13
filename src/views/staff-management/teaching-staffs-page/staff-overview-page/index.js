@@ -187,8 +187,8 @@ const Teaching = () => {
       border: '2px solid grey',
     }}
   />
-  {/* Conditionally render the green dot */}
-  {item?.is_active ? ( // Check if the user is active
+  
+  {item?.is_active ? (
     <Box
       sx={{
         position: 'absolute',
@@ -246,73 +246,55 @@ const Teaching = () => {
                       }}>
                         Status
                       </Box>
-                      <TextField
-  size="small"
-  select
-  SelectProps={{
-    value: item?.is_active,
-    onChange: (e) => handleStatusValue(e, item),
-  }}
-  sx={{
-    width: '40%',
-    mr:23,
-    borderRadius: '10px',
-    backgroundColor: '#22c55e', 
-    transition: 'all 0.3s ease', 
-
-   
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '10px', 
-      '& fieldset': {
-        borderColor: '#d1d5db', 
-      },
-      '&:hover fieldset': {
-        borderColor: '#d1d5db', 
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#d1d5db', 
-        borderWidth: '2px', 
-      },
-    },
-
-  
-    '& .MuiSelect-icon': {
-      color: 'white', 
-    },
-
-   
-    '& .MuiMenu-paper': {
-      marginTop: '8px', 
-      borderRadius: '10px',
-      boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', 
-    },
+                      <Box sx={{display:"flex",alignItems:"start",justifyContent:"start",ml:-20}}>
+                      <Box 
+  sx={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: 1, 
+    border: '1px solid #E0E0E0', 
+    borderRadius: '8px', 
+    padding: '6px 12px', 
+    width: 'fit-content',
+    backgroundColor: 'white',
+    
   }}
 >
-  <MenuItem
-    value={true}
+
+  <Box 
+    sx={{ 
+      width: 10, 
+      height: 10, 
+      borderRadius: '50%', 
+      backgroundColor: item?.is_active ? 'green' : 'gray' 
+    }} 
+  />
+  
+
+  <TextField
+    size="small"
+    select
+    variant="standard"
+    value={ item?.is_active}
+    onChange={ (e) => handleStatusValue(e, item)}
     sx={{
-      color: '#22c55e', // Green color for "Active"
-      fontWeight: '500', // Slightly bold
-      '&:hover': {
-        backgroundColor: '#f0fdf4', // Light green background on hover
+      minWidth: 100,
+      '& .MuiInputBase-root': {
+        border: 'none',
       },
+      '& .MuiSelect-select': {
+        padding: 0, 
+      },
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none !important', 
+      }
     }}
   >
-    Active
-  </MenuItem>
-  <MenuItem
-    value={false}
-    sx={{
-      color: '#ef4444', // Red color for "Inactive"
-      fontWeight: '500', // Slightly bold
-      '&:hover': {
-        backgroundColor: '#fef2f2', // Light red background on hover
-      },
-    }}
-  >
-    Inactive
-  </MenuItem>
-</TextField>
+    <MenuItem value="true">Active</MenuItem>
+    <MenuItem value="false">Inactive</MenuItem>
+  </TextField>
+</Box>
+</Box>
 
 <Button
   component={Link}
@@ -326,7 +308,7 @@ const Teaching = () => {
     padding: 1.2,
     borderRadius: "10px",
     '&:hover': {
-      backgroundColor: "#000000", 
+      backgroundColor: "grey.700", 
     }
   }}
 >

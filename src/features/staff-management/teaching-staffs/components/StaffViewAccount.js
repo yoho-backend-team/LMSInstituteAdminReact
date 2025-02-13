@@ -122,7 +122,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
         </Grid>
       </Paper>
     </Grid>
-    <Box my={2} sx={{color:"grey"}}> 
+    <Box my={2} sx={{color:"lightgrey"}}> 
   <Divider />
 </Box>
  
@@ -175,7 +175,7 @@ const UserViewAccount = ({ staff,  staffID, setRefetch }) => {
           </Grid>
           </Paper>
           </Grid>
-          <Box my={2} sx={{color:"grey"}}> 
+          <Box my={2} sx={{color:"lightgrey"}}> 
   <Divider />
 </Box>            
 <Typography variant="h6"  color="text.primary" sx={{fontSize:"20px",fontWeight:"500"}}>

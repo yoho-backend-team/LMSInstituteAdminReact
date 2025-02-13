@@ -134,9 +134,9 @@ const CategoryCard = (props) => {
     sx: { 
       '& .MuiMenuItem-root': { 
         display: 'flex', 
-        flexDirection: 'row-reverse' // Moves the icon to the right
+        flexDirection: 'row-reverse' 
       },
-      '& .MuiMenuItem-root svg': { ml: 2 } // Adds left margin to the icon for spacing
+      '& .MuiMenuItem-root svg': { ml: 2 } 
     } 
   }}
   iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
@@ -203,11 +203,15 @@ const CategoryCard = (props) => {
       },
       '& .MuiInput-underline:before': {
         borderBottom: 'none !important', 
-      }
+      },
+     
+      
     }}
   >
-    <MenuItem value="true">Active</MenuItem>
+    
+    <MenuItem  value="true">Active</MenuItem>
     <MenuItem value="false">Inactive</MenuItem>
+    
   </TextField>
 </Box>
 
