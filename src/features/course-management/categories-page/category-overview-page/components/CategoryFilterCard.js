@@ -39,44 +39,41 @@ const CategoryFilter = ({ selectedBranchId }) => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         <Grid item xs={12} >
         <Card sx={{ boxShadow: 'none', border: 'none' }}>
             <CardHeader
-              title={
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ fontWeight: 'bold', color: 'primary.main' }}
-                >
-                  Filter Course Categories
-                </Typography>
-              }
+            
             />
             <CardContent sx={{ pt: 0,backgroundColor:"white" }}>
-              <Grid container spacing={3}>
+              <Grid container spacing={3}  >
                 {/* Status Filter */}
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Filter by Status"
-                    value={statusValue}
-                    onChange={handleFilterByStatus}
-                    sx={{
-                       
-                        backgroundColor: 'white',
-                      
-                    }}
-                  >
-                    <MenuItem value={null}>All Statuses</MenuItem>
-                    <MenuItem value="true">Active</MenuItem>
-                    <MenuItem value="false">Inactive</MenuItem>
-                  </TextField>
-                </Grid>
+                <Grid item xs={12} sm={6}>
+  <TextField
+    select
+    fullWidth
+    label="Filter by Status"
+    value={statusValue}
+    onChange={handleFilterByStatus}
+    sx={{
+      backgroundColor: 'white',
+      '.MuiInputBase-root': {
+        height: '56px', 
+      },
+      '.MuiSelect-select': {
+        padding: '400px',
+      },
+    }}
+  >
+    <MenuItem value={null}>All Statuses</MenuItem>
+    <MenuItem value="true">Active</MenuItem>
+    <MenuItem value="false">Inactive</MenuItem>
+  </TextField>
+</Grid>
+
 
                 {/* Course Filter */}
-                <Grid item xs={3} sm={4}>
+                <Grid item xs={3} sm={6}>
                   <Autocomplete
                     fullWidth
                     options={Array.isArray(courses) ? courses : []}
@@ -93,9 +90,13 @@ const CategoryFilter = ({ selectedBranchId }) => {
                         {...params}
                         label="Filter by Course"
                         sx={{
-                          
-                            backgroundColor: 'white',
-                          
+                          backgroundColor: 'white',
+                          '.MuiInputBase-root': {
+                            height: '56px', 
+                          },
+                          '.MuiSelect-select': {
+                            padding: '400px',
+                          },
                         }}
                       />
                     )}

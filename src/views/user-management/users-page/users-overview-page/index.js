@@ -60,23 +60,40 @@ const UserList = () => {
  
 
   return (
-    <Grid container spacing={3} sx={{ position: 'relative' }}>
+    <Grid  container spacing={3} sx={{ position: 'relative' }}>
       <Grid item xs={12}>
         <UserHeaderSection users={users} groups={groups} />
+       
+       
+   
       </Grid>
 
       <Grid item xs={12} sx={{ zIndex: 20 , display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',}}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setGridVisible(!isGridVisible)}
-          sx={{ marginBottom: '16px' }}
-          startIcon={<FilterListIcon />}
-        >
-          {isGridVisible ? 'Hide Filter' : 'Show Filter '}
-        </Button>
+       <Grid alignItems="center">
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={() => setGridVisible(!isGridVisible)}
+    sx={{ marginBottom: '10px' }}
+    startIcon={<FilterListIcon />}
+  >
+    {isGridVisible ? 'Hide Filter' : 'Show Filter '}
+  </Button>
+  <span
+    style={{
+      mt:-3,
+      fontSize:"20px",
+      padding: '4px 8px',
+      borderRadius: '4px',
+      fontWeight: 'bold',
+    }}
+  >
+    Admin User
+  </span>
+</Grid>
+
         <Button
           onClick={toggleAddUserDrawer}  
           variant="contained"
@@ -100,15 +117,11 @@ const UserList = () => {
        <Grid
        item
        xs={12}
-       md={12}
+      
        sx={{
          position: 'relative',
-        
+         maxWidth: '220px',
          left: 0,
-         maxWidth: '250px', 
-         backgroundColor: 'rgba(255, 255, 255, 0.9)',
-         padding: '20px', 
-         boxSizing: 'border-box',
          mb: 2, 
        }}
      >

@@ -85,27 +85,36 @@ const CourseCard = (props) => {
           </CardMedia>
         </CardContent>
         <CardContent>
-          <Box>
-            <CustomChip
-              sx={{ px: 0, py: 2 }}
-              skin="light"
-              label={course?.category?.category_name}
-              rounded
-              color="secondary"
-              size="small"
-              variant="outlined"
-            />
-          </Box>
+        <Box>
+  <CustomChip
+    sx={{
+      backgroundColor: "#CCFBF1", 
+      color: "#065F46", 
+      fontWeight: 600, 
+      borderRadius: "8px", 
+      padding: "6px 3px", 
+      fontSize: "0.875rem", 
+    }}
+    skin="light"
+    label={course?.category?.category_name}
+    rounded
+    color="secondary"
+    size="small"
+    variant="outlined"
+  />
+</Box>
+
           <Box sx={{ mr: 2, mt: 1, display: 'flex', flexDirection: 'column', height: '50px' }}>
             <Typography
-              variant="h4"
+              variant="h3"
               sx={{
                 mt: 1.5,
                 overflow: 'hidden',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
-                textOverflow: 'ellipsis'
+                textOverflow: 'ellipsis',
+                color:"#14B8A6"
               }}
             >
               {course?.course_name &&
@@ -129,39 +138,83 @@ const CourseCard = (props) => {
               }}
             >
               <Icon icon="tabler:augmented-reality" fontSize={20} />
-              <Typography sx={{ color: 'text.secondary' }}>{course?.coursemodules?.length} Modules</Typography>
+              <Typography   variant="body2" 
+  sx={{ color: "gray.600",fontSize:"15px",fontWeight:500,mt:"2px" }} >{course?.coursemodules?.length} Modules</Typography>
             </Grid>
             <Grid>
-              <Typography variant="h4" sx={{ color: 'text.dark', mr: 1 }}>
+              <Typography   variant="h6" 
+  sx={{ fontWeight: "800",fontSize:"18px", color: "gray.300" }} >
                 ₹ {course?.price ? course?.price : course?.current_price}
               </Typography>
             </Grid>
           </Box>
         </CardContent>
         <CardActions className="demo-space-x" sx={{ pt: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Grid sx={{ mt: 1 }}>
-            <TextField
-              size="small"
-              select
-              sx={{ width: 100 }}
-              label="Status"
-              SelectProps={{ value: course?.is_active, onChange: (e) => handleStatusValue(e, course) }}
-            >
-              <MenuItem value="true">Active</MenuItem>
-              <MenuItem value="false">Inactive</MenuItem>
-            </TextField>
-          </Grid>
-          <Button
-            component={Link}
-            to="courses/view"
-            state={{ id: course?.uuid, category: course.category.uuid }}
-            size="medium"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 0.4, py: 0.8, width: 100, backgroundColor: "#0CCE7F", ":hover" : { backgroundColor: "#0AA865"} }}
-          >
-            View
-          </Button>
+        <Box 
+  sx={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: 1, 
+    border: '1px solid #E0E0E0', 
+    borderRadius: '8px', 
+    padding: '6px 12px', 
+    width: 'fit-content',
+    backgroundColor: 'white',
+    
+  }}
+>
+
+  <Box 
+    sx={{ 
+      width: 10, 
+      height: 10, 
+      borderRadius: '50%', 
+      backgroundColor: course?.is_active ? 'green' : 'gray' 
+    }} 
+  />
+  
+
+  <TextField
+    size="small"
+    select
+    variant="standard"
+    value={ course?.is_active} 
+    onChange={(e) => handleStatusValue(e, course)}
+    sx={{
+      minWidth: 100,
+      '& .MuiInputBase-root': {
+        border: 'none',
+      },
+      '& .MuiSelect-select': {
+        padding: 0, 
+      },
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none !important', 
+      }
+    }}
+  >
+    <MenuItem value="true">Active</MenuItem>
+    <MenuItem value="false">Inactive</MenuItem>
+  </TextField>
+</Box>
+<Button
+  component={Link}
+  to="courses/view"
+  state={{ id: course?.uuid }}
+  sx={{
+    fontSize: "10px",
+    padding: "4px 25px", 
+    minHeight: "38px", 
+    background: "linear-gradient(to right, #14B8A6, #10B981)", 
+    color: "white",
+    boxShadow: "0px 4px 6px rgba(20, 184, 166, 0.25)", 
+    "&:hover": {
+      background: "linear-gradient(to right, #0D9488, #059669)",
+    }
+  }}
+>
+  View
+</Button>
         </CardActions>
       </Card>
 

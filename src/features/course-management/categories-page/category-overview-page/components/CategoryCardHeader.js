@@ -43,59 +43,49 @@ const CategoryCardHeader = (props) => {
 
   return (
     <>
-      <Box
-        sx={{
-          pb: 2,
-          pt: 3,
-          px: 2,
-          width: '100%',
-          display: 'flex',
-         
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: 2,
-          
-          padding:"30px"
-        }}
-      >
-        <TextField
-          value={searchValue}
-          onChange={handleSearch}
-          placeholder="Search Category"
-          variant="outlined"
-          size="small"
-          sx={{
-            marginLeft:"10px",
-            width: 750,
-            backgroundColor: '#ffffff',
-            borderRadius: 1,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#e0e0e0',
-              },
-              '&:hover fieldset': {
-                borderColor: '#bdbdbd',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#0CCE7F',
-              },
-            },
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <Icon
-                  icon="tabler:search"
-                  color="action"
-                  onClick={triggerSearch}
-                  sx={{ cursor: 'pointer' }}
-                />
-              </InputAdornment>
-            ),
-          }}
+      <Box>
+      <TextField
+  value={searchValue}
+  onChange={handleSearch}
+  placeholder="Search Category"
+  variant="outlined"
+  size="small"
+  sx={{
+    marginLeft: "10px",
+    marginTop: "26px",
+    width: 350,
+    
+    backgroundColor: '#ffffff',
+    borderRadius: 1,
+    '& .MuiOutlinedInput-root': {
+      height: '55px', 
+      padding: '0 14px', 
+      borderRadius:"10px",
+      '& fieldset': {
+        borderColor: '#e0e0e0',
+      },
+      '&:hover fieldset': {
+        borderColor: '#bdbdbd',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#0CCE7F',
+      },
+    },
+  }}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <Icon
+          icon="tabler:search"
+          color="action"
+          onClick={triggerSearch}
+          sx={{ cursor: 'pointer' }}
         />
+      </InputAdornment>
+    ),
+  }}
+/>
+
    
       </Box>
       

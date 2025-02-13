@@ -166,13 +166,21 @@ const ProfileSection = () => {
                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]} sx={{ backgroundColor: 'light grey' }}>
                   <Box sx={{ p: 2 }}>
                     <Stack>
-                      <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">{getGreeting()},</Typography>
-                        <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          {user?.first_name} {user?.last_name}
-                        </Typography>
-                      </Stack>
-                      <Typography variant="subtitle2" sx={{ marginBottom: "10px" }}> Admin</Typography>
+                    <Stack direction="row" spacing={0.5} alignItems="center">
+  <Typography variant="h5" sx={{fontWeight:"600"}}>{getGreeting()},</Typography>
+  <Typography component="span" variant="h3" sx={{ fontWeight: 500,fontSize:"20px" }}>
+    {user?.first_name} {user?.last_name}
+  </Typography>
+</Stack>
+<Box sx={{display:"flex",alignItems:"center",justifyContent:"start"}}>
+<Chip 
+  label="Admin" 
+  color="primary" 
+  size="small" 
+  sx={{ fontWeight: "bold", borderRadius: "6px", p:1,width:"100px" ,mt:1}} 
+/>
+</Box>
+
                     </Stack>
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
@@ -231,22 +239,17 @@ const ProfileSection = () => {
                           <ListItemText primary={<Typography variant="body2" sx={{ fontWeight: 500 }}>Profile</Typography>} />
                         </ListItemButton>
                         <ListItemButton
-                         sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                         transition: "all 0.3s ease",
-                         marginLeft:"25px",
-                         backgroundColor: theme.palette.primary.dark,
-                         '&:hover': {
-                           backgroundColor: theme.palette.primary.dark,
-                           color: theme.palette.common.white,
-                         },
-                         '&.Mui-selected': {
-                           
-                           color: theme.palette.common.white,
-                           '&:hover': {
-                             backgroundColor: theme.palette.primary.darker,
-                           },
-                         },
-                       }} 
+                      sx={{ 
+                        border: "1px solid #E0E0E0", 
+                        borderRadius: "8px",
+                        padding: "8px 16px", 
+                        transition: "all 0.3s ease",
+                        ml:3.5,
+                    
+                        '&:hover': {
+                          backgroundColor: "#F5F5F5", 
+                        }
+                      }} 
                          selected={selectedIndex === 1}
                           onClick={(event) => {
                             handleListItemClick(event, 1, '#');
