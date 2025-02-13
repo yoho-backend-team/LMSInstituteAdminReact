@@ -17,14 +17,8 @@ export const getAllNonTeachingStaffs = async (data) => {
     // const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}branches/${useBranchId()}/non-teaching-staff/`, {
     const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${instituteUUID}/branches/${BranchId}/non-teaching-staff/`, {
       headers: {
-<<<<<<< HEAD
         'Content-Type': 'application/json',
         Authorization: `Token ${secureLocalStorage.getItem('token')}`
-=======
-        
-        Authorization: `Bearer ${'Token ' + token}`
-       
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
       },
       
     });

@@ -16,9 +16,6 @@ import { io } from 'socket.io-client';
 import { useSpinner } from 'context/spinnerContext';
 import secureLocalStorage from 'react-secure-storage';
 
-<<<<<<< HEAD
-const useTimeout = (callback, delay) => {
-=======
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -42,7 +39,6 @@ const FaqDataGrid = () => {
   const faqs = useSelector(selectFaqs);
   const faqLoading = useSelector(selectLoading);
 
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
   useEffect(() => {
     const timeoutId = setTimeout(callback, delay);
 
@@ -85,33 +81,12 @@ const Community = () => {
     setSocket(socket);
   }, []);
 
-<<<<<<< HEAD
-  const userData = JSON.parse(secureLocalStorage.getItem("userData"));
-  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = {
-        branchid: selectedBranchId,
-        userId: userData._id,
-        instituteId: institute._id
-      };
-
-      const response = await dispatch(getAllCommunities(data));
-      if (response && response.data.data && response.data.data.length > 0) {
-        const chatId = response.data.data[0]._id;
-        const updatedData = { ...data, chatId };
-      }
-    };
-    fetchData();
-  }, [dispatch, selectedBranchId, userData._id, institute._id]);
-=======
  useEffect(() => {
     fetchFaqs(currentPage);
   }, [currentPage]);
 
   const fetchFaqs = (page) => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
+    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
     const data = {
       branchid: institute?.branchid,
       instituteId: institute?._id,
@@ -122,7 +97,7 @@ const Community = () => {
   };
 
   useEffect(() => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
+    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
 
     const data = {
       branchid: selectedBranchId,
@@ -135,7 +110,7 @@ const Community = () => {
   }, [dispatch, selectedBranchId, refetch]);
 
   const getFaqCategories = async () => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
+    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
     const data = {
       branchid: selectedBranchId,
       instituteid: institute.uuid,
@@ -307,7 +282,6 @@ const Community = () => {
       )
     }
   ];
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
   useEffect(() => {
     const fetchData = async () => {
@@ -355,75 +329,6 @@ const Community = () => {
 
   return (
     <>
-<<<<<<< HEAD
-      {loading ? (
-        <CommunitySkeleton />
-      ) : (
-        <Box
-          className="app-chat"
-          sx={{
-            width: '100%',
-            display: 'flex',
-            height: '81vh',
-            flexDirection: 'row',
-            borderRadius: 1,
-            overflow: 'hidden',
-            position: 'relative',
-            backgroundColor: 'background.paper',
-            boxShadow: skin === 'bordered' ? 0 : 6,
-            ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
-          }}
-        >
-          <SidebarLeft
-            store={store}
-            hidden={hidden}
-            mdAbove={mdAbove}
-            dispatch={dispatch}
-            statusObj={statusObj}
-            userStatus={userStatus}
-            selectChat={selectChat}
-            getInitials={getInitials}
-            sidebarWidth={sidebarWidth}
-            setUserStatus={setUserStatus}
-            leftSidebarOpen={leftSidebarOpen}
-            removeSelectedChat={removeSelectedChat}
-            userProfileLeftOpen={userProfileLeftOpen}
-            formatDateToMonthShort={formatDateToMonthShort}
-            handleLeftSidebarToggle={handleLeftSidebarToggle}
-            handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-            communities={communities}
-            setChats={setChats}
-            chats={chats}
-            setSelectedBatch={setSelectedBatch}
-            setCommunityDetails={setCommunityDetails}
-            communityDetails={communityDetails}
-            socket={socket}
-            setMessages={setMessages}
-            messages={messages}
-          />
-          <ChatContent
-            store={store}
-            hidden={hidden}
-            sendMsg={sendMsg}
-            mdAbove={mdAbove}
-            dispatch={dispatch}
-            statusObj={statusObj}
-            getInitials={getInitials}
-            sidebarWidth={sidebarWidth}
-            userProfileRightOpen={userProfileRightOpen}
-            handleLeftSidebarToggle={handleLeftSidebarToggle}
-            handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
-            chats={chats}
-            selectedBatch={selectedBatch}
-            setChats={setChats}
-            communityDetails={communityDetails}
-            socket={socket}
-            messages={messages}
-            setMessages={setMessages}
-          />
-        </Box>
-      )}
-=======
       <Grid container>
         <Grid item xs={12}>
           {/* <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} /> */}
@@ -518,14 +423,9 @@ const Community = () => {
           onChange={handlePageChange}
         />
       </Grid>
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     </>
   );
 };
 Community.contentHeightFixed = true;
 
-<<<<<<< HEAD
-export default Community;
-=======
 export default FaqDataGrid;
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4

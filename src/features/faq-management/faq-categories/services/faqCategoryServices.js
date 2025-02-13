@@ -75,11 +75,7 @@ export const addFaqCategory = async (data) => {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-<<<<<<< HEAD
         Authorization: `token ${secureLocalStorage.getItem('token')}`
-=======
-        Authorization: `Bearer ${localStorage.getItem('token')}`
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
       }
     });
 

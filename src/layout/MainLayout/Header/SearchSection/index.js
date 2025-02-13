@@ -16,19 +16,6 @@ import {
 import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateSelectedBranch } from 'features/authentication/authActions';
-<<<<<<< HEAD
-import { useDispatch } from 'react-redux';
-// assets
-import {
-  IconSearch
-} from '@tabler/icons';
-import { shouldForwardProp } from '@mui/system';
-
-import { useSelector } from 'react-redux';
-import secureLocalStorage from 'react-secure-storage';
-=======
-
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
 // Styles
 const PopperStyle = styled(Popper)(({ theme }) => ({
@@ -59,54 +46,10 @@ const OutlineInputStyle = styled(TextField)(({ theme }) => ({
   },
 }));
 
-<<<<<<< HEAD
-const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => ({
-  ...theme.typography.commonAvatar,
-  ...theme.typography.mediumAvatar,
-  background: theme.palette.secondary.light,
-  color: theme.palette.secondary.dark,
-  '&:hover': {
-    background: theme.palette.secondary.dark,
-    color: theme.palette.secondary.light
-  }
-}));
-
-// ==============================|| SEARCH INPUT - MOBILE||============================== //
-
-const MobileSearch = () => {
-  return (
-    <OutlineInputStyle
-      id="input-search-header"
-      select
-      sx={{
-          backgroundColor : "red"
-      }}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      placeholder="Branch"
-      aria-describedby="search-helper-text"
-      inputProps={{ 'aria-label': 'weight' }}
-    />
-  );
-};
-
-MobileSearch.propTypes = {
-  value: PropTypes.string,
-  setValue: PropTypes.func,
-  popupState: PopupState
-};
-
-// ==============================|| SEARCH INPUT ||============================== //
-
-const SearchSection = () => {
-  const theme = useTheme();
-  const [value, setValue] = useState('Keelkattalai');
-=======
 const SearchSection = () => {
   const theme = useTheme();
   const [value, setValue] = useState('Keelkattalai');
  
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
   const branches = useSelector((state) => state.auth.branches);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
@@ -122,29 +65,6 @@ const SearchSection = () => {
           
         </IconButton>
       </Box>
-<<<<<<< HEAD
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-        <OutlineInputStyle
-          id="input-search-header"
-          value={selectedBranchId?.trim()}
-          onChange={(e) => {
-            dispatch(updateSelectedBranch(e.target.value));
-            secureLocalStorage.setItem('selectedBranchId', e.target.value);
-          }}
-          placeholder="Search"
-          aria-describedby="search-helper-text"
-          inputProps={{ 'aria-label': 'weight' }}
-          select
-          label="Branch"
-        >
-          {branches?.map((branch, index) => (
-            <MenuItem value={branch?.uuid} key={index} selected={selectedBranchId === branch?.uuid}>
-              {branch?.branch_identity}
-            </MenuItem>
-          ))}
-        </OutlineInputStyle>
-      </Box>
-=======
 
      
         <Box sx={{ display: { xs: 'block', md: 'block' } }}>
@@ -174,14 +94,10 @@ const SearchSection = () => {
           </OutlineInputStyle>
         </Box>
       
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     </>
   );
 };
 
-<<<<<<< HEAD
-export default SearchSection;
-=======
 SearchSection.propTypes = {
   value: PropTypes.string,
   setValue: PropTypes.func,
@@ -189,4 +105,3 @@ SearchSection.propTypes = {
 };
 
 export default SearchSection;
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4

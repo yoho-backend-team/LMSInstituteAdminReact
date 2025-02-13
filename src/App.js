@@ -13,7 +13,6 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
-<<<<<<< HEAD
 import secureLocalStorage from 'react-secure-storage';
 import { getSecureItem, setSelectedBranchId } from 'utils/localStroageService';
 

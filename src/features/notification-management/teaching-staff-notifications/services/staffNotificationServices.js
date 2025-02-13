@@ -95,16 +95,8 @@ export const resendStaffNotification = async (data) => {
       }
     });
 
-<<<<<<< HEAD
-    if (response.data.status) {
-      return { success: true, message: 'StaffNotification Resend successfully' };
-    } else {
-      return { success: false, message: 'Failed to resend StaffNotification' };
-    }
-=======
       return response;
       
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
   } catch (error) {
     console.error('Error in resendStudentNotification:', error);
     throw error;

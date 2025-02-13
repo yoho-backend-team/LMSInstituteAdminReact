@@ -13,15 +13,9 @@ const getInstituteDetails = () => {
 }
 
 const getSelectedBranchId = () => {
-<<<<<<< HEAD
     if(typeof(secureLocalStorage)!== "undefined"){
     const branch = secureLocalStorage.getItem("selectedBranchId")
-    return branch
-=======
-    if(typeof(localStorage)!== "undefined"){
-    const branch = localStorage.getItem("selectedBranchId")
     return branch ? branch.replace(/^"|"$/g, '') : branch
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     }
 }
 
