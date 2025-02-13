@@ -14,7 +14,7 @@ import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } f
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
 import secureLocalStorage from 'react-secure-storage';
-import { setSelectedBranchId } from 'utils/localStroageService';
+import { getSecureItem, setSelectedBranchId } from 'utils/localStroageService';
 
 
 const App = () => {
@@ -63,9 +63,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    const isAuthenticatedUser = secureLocalStorage.getItem("isAuthenticated");
+    const isAuthenticatedUser = getSecureItem("isAuthenticated");
     const selectBranchId = secureLocalStorage.getItem("selectedBranchId");
-    const user =secureLocalStorage.getItem("userData");
+    const user =getSecureItem("userData");
     const notifiAdd = Cookies.get("instituteNotificationSubscription");
     const branches = secureLocalStorage.getItem('branches');
     if (!selectBranchId) {
@@ -88,7 +88,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    const isAuthenticatedUser = secureLocalStorage.getItem("isAuthenticated");
+    const isAuthenticatedUser = getSecureItem("isAuthenticated");
     const requestState = secureLocalStorage.getItem("requestPassed");
 
     const getInstituteDetails = () => {

@@ -35,6 +35,7 @@ import { getUserDetails } from 'utils/check-auth-state';
 import { getImageUrl } from 'utils/imageUtils';
 import { profilePlaceholder } from 'utils/placeholders';
 import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem } from 'utils/localStroageService';
 
 const ProfileSection = () => {
   const theme = useTheme();
@@ -51,7 +52,7 @@ const ProfileSection = () => {
   const anchorRef = useRef(null);
 
   const handleLogout = async () => {
-    const user = JSON.parse(secureLocalStorage.getItem("userData"));
+    const user =getSecureItem("userData");
     dispatch(logout({ email: user.email }));
   };
 
