@@ -1,7 +1,7 @@
 // groupService.js
 import axios from 'axios';
 
-const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user`;
+const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin`;
 
 export const sendOtp = async (data) => {
     try {
