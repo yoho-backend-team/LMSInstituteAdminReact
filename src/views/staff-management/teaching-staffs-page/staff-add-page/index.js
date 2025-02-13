@@ -30,7 +30,6 @@ import { useBranchId, useInstitute } from 'utils/get-institute-details';
 import client from 'api/client';
 import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'utils/imageUtils';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
@@ -184,12 +183,8 @@ const StepperLinearWithValidation = () => {
       return JSON.parse(institute);
     } else {
       return undefined;
-    if(typeof(secureLocalStorage) !== "undefined"){
-    const institute = secureLocalStorage.getItem("institute")
-    return JSON.parse(institute)
-    }else{
-     return undefined
     }
+    
   };
 
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
