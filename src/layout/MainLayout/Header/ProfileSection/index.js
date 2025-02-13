@@ -23,14 +23,11 @@ import {
   Typography
 } from '@mui/material';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-<<<<<<< HEAD
-=======
 
 // project imports
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
@@ -42,10 +39,8 @@ import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from 'utils/check-auth-state';
 import { getImageUrl } from 'utils/imageUtils';
 import { profilePlaceholder } from 'utils/placeholders';
-<<<<<<< HEAD
 import secureLocalStorage from 'react-secure-storage';
 
-=======
 // ==============================|| PROFILE MENU ||============================== //
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -53,7 +48,6 @@ const getGreeting = () => {
   if (hour < 18) return "Good Afternoon";
   return "Good Evening";
 };
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
@@ -239,10 +233,6 @@ const ProfileSection = () => {
                           <ListItemText primary={<Typography variant="body2" sx={{ fontWeight: 500 }}>Profile</Typography>} />
                         </ListItemButton>
                         <ListItemButton
-<<<<<<< HEAD
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 1}
-=======
                          sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
                          transition: "all 0.3s ease",
                          marginLeft:"25px",
@@ -260,14 +250,11 @@ const ProfileSection = () => {
                          },
                        }} 
                          selected={selectedIndex === 1}
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
                           onClick={(event) => {
                             handleListItemClick(event, 1, '#');
                             navigate("/institute-management/settings")
                           }}
                         >
-<<<<<<< HEAD
-=======
                           <ListItemIcon
   sx={{
     minWidth: "40px",
@@ -281,12 +268,11 @@ const ProfileSection = () => {
 </ListItemIcon>
                            <ListItemText primary={<Typography variant='body2'sx={{ fontWeight: 500 }} >Settings</Typography>}></ListItemText>
                         </ListItemButton>
-                        {/* <ListItemButton
+                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
                           onClick={(event) => handleListItemClick(event, 1, '#')}
                         >
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
                           <ListItemIcon>
                             <IconSettings stroke={1.5} size="1.3rem" />
                           </ListItemIcon>

@@ -39,6 +39,7 @@ const CourseViewPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const courseId = location.state?.id;
+  const category = location.state.category
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [courseDeleteModelOpen, setCourseDeleteModelOpen] = useState(false);
   const [selectedCourseDeleteId, setSelectedCourseDeleteId] = useState(null);
@@ -48,7 +49,7 @@ const CourseViewPage = () => {
   const [course, setCourse] = useState(null);
 
   const [videoUrl, setVideoUrl] = useState('');
-
+ console.log(location.state,"state")
   useEffect(() => {
     if (courseId && selectedBranchId) {
       getCourseData(courseId);
@@ -59,7 +60,7 @@ const CourseViewPage = () => {
   const getCourseData = async (id) => {
     const data = {
     id: id,
-    category:"39cab3db-4c46-4685-aab8-99a4b4375d50"
+    category:category
     };
     const result = await getCourseDetails(data);
     setCourse(result?.data?.data);

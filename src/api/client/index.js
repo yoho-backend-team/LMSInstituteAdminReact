@@ -44,10 +44,10 @@ class Client {
     }
 
     category = {
-      getAll : (data) => HttpClient.get(HTTP_END_POINTS.category.getAll,data),
+      get : (data) => HttpClient.get(HTTP_END_POINTS.category.getAll,data),
       create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
-      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.update+`/${data.id}`,data),
-      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.delete+`/${data.uuid}`)
+      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)
     }
     course_module ={
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.course_module.get,params),

@@ -13,15 +13,9 @@ const getInstituteDetails = () => {
 }
 
 const getSelectedBranchId = () => {
-<<<<<<< HEAD
     if(typeof(secureLocalStorage)!== "undefined"){
     const branch = secureLocalStorage.getItem("selectedBranchId")
     return branch
-=======
-    if(typeof(localStorage)!== "undefined"){
-    const branch = localStorage.getItem("selectedBranchId")
-    return branch ? branch.replace(/^"|"$/g, '') : branch
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     }
 }
 
@@ -71,8 +65,8 @@ const generateEndpoints = () => {
 
         },
         category: {
-            getAll: `/api/institutes/faq/category`,
-            create: `/api/institutes/faq/category`,
+            getAll: `/api/institutes/${instituteId}/categories/`,
+            create: `/api/institutes/${instituteId}/categories`,
             update: `/api/institutes/faq/category/update/:uuid`,
             delete: `/api/institutes/faq/category/delete/:uuid`
         },

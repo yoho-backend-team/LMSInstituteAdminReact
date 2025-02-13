@@ -154,7 +154,7 @@ const CourseCard = (props) => {
           <Button
             component={Link}
             to="courses/view"
-            state={{ id: course?.uuid }}
+            state={{ id: course?.uuid, category: course.category.uuid }}
             size="medium"
             variant="contained"
             color="primary"

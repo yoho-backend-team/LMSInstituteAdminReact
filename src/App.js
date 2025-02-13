@@ -13,12 +13,9 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
-<<<<<<< HEAD
 import secureLocalStorage from 'react-secure-storage';
 import { setSelectedBranchId } from 'utils/localStroageService';
-=======
 import usePushSubscription from 'usePushSubscription';
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
 // import { onMessageListener} from './firebase';
 // ==============================|| APP ||============================== //

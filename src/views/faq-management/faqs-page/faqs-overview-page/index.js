@@ -16,9 +16,6 @@ import { io } from 'socket.io-client';
 import { useSpinner } from 'context/spinnerContext';
 import secureLocalStorage from 'react-secure-storage';
 
-<<<<<<< HEAD
-const useTimeout = (callback, delay) => {
-=======
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
@@ -270,7 +267,6 @@ const FaqDataGrid = () => {
       )
     }
   ];
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
   useEffect(() => {
     const fetchData = async () => {
@@ -318,75 +314,6 @@ const FaqDataGrid = () => {
 
   return (
     <>
-<<<<<<< HEAD
-      {loading ? (
-        <CommunitySkeleton />
-      ) : (
-        <Box
-          className="app-chat"
-          sx={{
-            width: '100%',
-            display: 'flex',
-            height: '81vh',
-            flexDirection: 'row',
-            borderRadius: 1,
-            overflow: 'hidden',
-            position: 'relative',
-            backgroundColor: 'background.paper',
-            boxShadow: skin === 'bordered' ? 0 : 6,
-            ...(skin === 'bordered' && { border: `1px solid ${theme.palette.divider}` })
-          }}
-        >
-          <SidebarLeft
-            store={store}
-            hidden={hidden}
-            mdAbove={mdAbove}
-            dispatch={dispatch}
-            statusObj={statusObj}
-            userStatus={userStatus}
-            selectChat={selectChat}
-            getInitials={getInitials}
-            sidebarWidth={sidebarWidth}
-            setUserStatus={setUserStatus}
-            leftSidebarOpen={leftSidebarOpen}
-            removeSelectedChat={removeSelectedChat}
-            userProfileLeftOpen={userProfileLeftOpen}
-            formatDateToMonthShort={formatDateToMonthShort}
-            handleLeftSidebarToggle={handleLeftSidebarToggle}
-            handleUserProfileLeftSidebarToggle={handleUserProfileLeftSidebarToggle}
-            communities={communities}
-            setChats={setChats}
-            chats={chats}
-            setSelectedBatch={setSelectedBatch}
-            setCommunityDetails={setCommunityDetails}
-            communityDetails={communityDetails}
-            socket={socket}
-            setMessages={setMessages}
-            messages={messages}
-          />
-          <ChatContent
-            store={store}
-            hidden={hidden}
-            sendMsg={sendMsg}
-            mdAbove={mdAbove}
-            dispatch={dispatch}
-            statusObj={statusObj}
-            getInitials={getInitials}
-            sidebarWidth={sidebarWidth}
-            userProfileRightOpen={userProfileRightOpen}
-            handleLeftSidebarToggle={handleLeftSidebarToggle}
-            handleUserProfileRightSidebarToggle={handleUserProfileRightSidebarToggle}
-            chats={chats}
-            selectedBatch={selectedBatch}
-            setChats={setChats}
-            communityDetails={communityDetails}
-            socket={socket}
-            messages={messages}
-            setMessages={setMessages}
-          />
-        </Box>
-      )}
-=======
       <Grid container>
         <Grid item xs={12}>
           {/* <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} /> */}
@@ -480,13 +407,8 @@ const FaqDataGrid = () => {
       <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
         <Pagination count={faqs?.last_page || 1} page={currentPage} onChange={handlePageChange} />
       </Grid>
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     </>
   );
 };
-Community.contentHeightFixed = true;
 
-<<<<<<< HEAD
-export default Community;
-=======
 export default FaqDataGrid;

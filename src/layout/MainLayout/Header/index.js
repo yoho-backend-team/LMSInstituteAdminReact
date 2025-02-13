@@ -112,11 +112,11 @@ const Header = ({ handleLeftDrawerToggle }) => {
     ) : (
       <LogoSection />
     )}  
-     <Typography variant="h2" sx={{ fontWeight: 800 }} marginLeft="10px" alignItems="center" justifyContent="center" marginTop="5px">
-    LMS
-  </Typography>
+     {/* <Typography variant="h2" sx={{ fontWeight: 800 }} marginLeft="10px" alignItems="center" justifyContent="center" marginTop="5px">
+     {useInstitute()?.getDetails()?.institute_name ?? ''}
+  </Typography> */}
   </Box>
-  <Box sx={{ position: 'relative', left: '180px' }}> {/* Moves the Avatar 100px to the right */}
+  <Box sx={{ position: 'relative' }}> {/* Moves the Avatar 100px to the right */}
     <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
       <Avatar
         variant="rounded"
@@ -144,7 +144,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
       </Box>
 
       {/* header search */}
-      {/* <SearchSection /> */}
+      <SearchSection />
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
 

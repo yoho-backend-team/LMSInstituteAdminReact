@@ -9,14 +9,8 @@ export const sendOtp = async (data) => {
         const response = await axios.post(`${FORGET_PASSWORD_API_ENDPOINT}/forget-password`, data, {
             headers: {
                 'Content-Type': 'application/json',
-<<<<<<< HEAD
                 Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
             }
-=======
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-             
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
         });
         // Check if the response status is successful
         if (response.data.status) {
