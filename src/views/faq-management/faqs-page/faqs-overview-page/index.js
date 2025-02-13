@@ -16,68 +16,261 @@ import { io } from 'socket.io-client';
 import { useSpinner } from 'context/spinnerContext';
 import secureLocalStorage from 'react-secure-storage';
 
+<<<<<<< HEAD
 const useTimeout = (callback, delay) => {
-  useEffect(() => {
-    const timeoutId = setTimeout(callback, delay);
-
-    return () => clearTimeout(timeoutId);
-  }, [callback, delay]);
-};
-
-const Community = () => {
-  const [userStatus, setUserStatus] = useState('online');
-  const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
-  const [userProfileLeftOpen, setUserProfileLeftOpen] = useState(false);
-  const [userProfileRightOpen, setUserProfileRightOpen] = useState(false);
-  const [chats, setChats] = useState(null);
-  const [selectedBatch, setSelectedBatch] = useState(null);
-  const [communityDetails, setCommunityDetails] = useState(null);
-  const communities = useSelector(selectCommunities);
+=======
+const FaqDataGrid = () => {
+  const [value, setValue] = useState('');
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const [editUserOpen, setEditUserOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [successDescription, setSuccessDescription] = useState('');
+  const [failureDescription, setFailureDescription] = useState('');
+  const [deletingItemId, setDeletingItemId] = useState(null);
+  const [statusOpen, setStatusDialogOpen] = useState(false);
+  const [faqCategories, setFaqCategories] = useState([]);
+  const [refetch, setRefetch] = useState(false);
+  const [selectedFaq, setSelectedFaq] = useState(null);
+  const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const { showSpinner, hideSpinner } = useSpinner();
-  const [messages, setMessages] = useState([]);
 
-  const theme = useTheme();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(10);
+
   const dispatch = useDispatch();
-  const hidden = useMediaQuery(theme.breakpoints.down('lg'));
-  const store = useSelector((state) => state.chat);
-  const skin = 'default';
-  const smAbove = useMediaQuery(theme.breakpoints.up('sm'));
-  const sidebarWidth = smAbove ? 360 : 300;
-  const mdAbove = useMediaQuery(theme.breakpoints.up('md'));
-  const [socket, setSocket] = useState(null);
+  const faqs = useSelector(selectFaqs);
+  const faqLoading = useSelector(selectLoading);
 
-  const statusObj = {
-    busy: 'error',
-    away: 'warning',
-    online: 'success',
-    offline: 'secondary'
+
+
+  const fetchFaqs = (page) => {
+    const institute = JSON.parse(localStorage.getItem('institute'));
+    const data = {
+      branchid: institute?.branchid,
+      instituteId: institute?._id,
+      page,
+      perPage: rowsPerPage
+    };
+    dispatch(getAllFaqs(data));
   };
 
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_PUBLIC_API_URL);
-    setSocket(socket);
-  }, []);
+    const institute = JSON.parse(localStorage.getItem('institute'));
 
-  const userData = JSON.parse(secureLocalStorage.getItem("userData"));
-  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+    const data = {
+      branchid: selectedBranchId,
+      instituteId: institute._id,
+      page: 1,
+      perPage: 10
+    };
+    console.log('data:', data);
+
+    dispatch(getAllFaqs(data));
+  }, [dispatch, selectedBranchId, refetch]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getFaqCategories = async () => {
+      const institute = JSON.parse(localStorage.getItem('institute'));
       const data = {
         branchid: selectedBranchId,
-        userId: userData._id,
-        instituteId: institute._id
+        instituteid: institute.uuid,
+        is_active: true,
+        page: 1,
+        perPage: 10
       };
-
-      const response = await dispatch(getAllCommunities(data));
-      if (response && response.data.data && response.data.data.length > 0) {
-        const chatId = response.data.data[0]._id;
-        const updatedData = { ...data, chatId };
-      }
+      const result = await getActiveFaqCategories(data);
+      setFaqCategories(result.data);
     };
-    fetchData();
-  }, [dispatch, selectedBranchId, userData._id, institute._id]);
+    getFaqCategories();
+  }, [selectedBranchId]);
+
+  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+
+  const handleDelete = (itemId) => {
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteApi = async () => {
+    try {
+      const data = {
+        id: deletingItemId
+      };
+      const response = await deleteFaq(data);
+      console.log('delete response data : ', response);
+
+      // if (faqs?.data?.length === 1 && currentPage > 1) {
+      //   setCurrentPage(currentPage - 1);
+      // }
+      if (response.success) {
+        setSuccessDescription('Item deleted successfully!');
+        setFailureDescription('');
+        // toast.success(response.message);
+        // fetchFaqs(currentPage);
+        setRefetch((state) => !state);
+      } else {
+        setFailureDescription('Failed to delete the item. Please try again.');
+        setSuccessDescription('');
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setFailureDescription('An error occurred while deleting the item.');
+      setSuccessDescription('');
+    }
+  };
+  // console.log(faqs,"faqs")
+  const handleStatusChangeApi = async () => {
+    const data = {
+      is_active: selectedFaqStatus,
+      uuid: selectedFaq?.uuid
+    };
+    const response = await updateStatusFaq(data);
+    if (response.success) {
+      toast.success(response.message);
+      fetchFaqs(currentPage);
+    } else {
+      toast.error(response.message);
+    }
+  };
+
+  useEffect(() => {
+    if (faqs?.data?.length === 0 && currentPage > 1) {
+      setCurrentPage(currentPage - 1); 
+  } else {
+    fetchFaqs(currentPage); 
+    console.log("last page",faqs);
+    
+  }
+  }, [currentPage, refetch]);
+
+  const handleStatusChange = (e, row) => {
+    setSelectedFaq(row);
+    setSelectedFaqStatus(e.target.value);
+    setStatusDialogOpen(true);
+  };
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+    // fetchFaqs(page);  
+  };
+  
+
+  const toggleEditUserDrawer = () => {
+    setEditUserOpen(!editUserOpen);
+  };
+
+  const columns = [
+    {
+      flex: 0.5,
+      headerName: 'Id',
+      sortable: false,
+      field: 'employee_id',
+      renderCell: ({ row }) => {
+        return (
+          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
+            {row?.id}
+          </Typography>
+        );
+      }
+    },
+    {
+      flex: 1.5,
+      field: 'title',
+      headerName: 'Faq Name',
+      sortable: false,
+      renderCell: ({ row }) => {
+        return (
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <Typography
+                noWrap
+                sx={{
+                  textAlign: 'justify',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: 'text.secondary'
+                }}
+              >
+                {row?.title}
+              </Typography>
+              <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
+                {row?.description}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      }
+    },
+    {
+      flex: 1,
+      field: 'Category',
+      headerName: 'Category',
+      sortable: false,
+      renderCell: ({ row }) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row?.title}
+            </Typography>
+          </Box>
+        );
+      }
+    },
+    {
+      flex: 1,
+      field: 'status',
+      headerName: 'Status',
+      sortable: false,
+      renderCell: ({ row }) => {
+        return (
+          <div>
+            <CustomTextField select value={row.is_active} onChange={(e) => handleStatusChange(e, row)}>
+              <MenuItem value="true">Active</MenuItem>
+              <MenuItem value="false">Inactive</MenuItem>
+            </CustomTextField>
+          </div>
+        );
+      }
+    },
+    {
+      flex: 1,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      sortable: false,
+      renderCell: ({ row }) => (
+        <Box sx={{ gap: 1 }}>
+          <OptionsMenu
+            menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
+            iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+            options={[
+              {
+                text: 'Edit',
+                icon: <Icon icon="tabler:edit" />,
+                menuItemProps: {
+                  onClick: () => {
+                    toggleEditUserDrawer();
+                  }
+                }
+              },
+              {
+                text: 'Delete',
+                icon: <Icon icon="mdi:delete-outline" />,
+                menuItemProps: {
+                  onClick: () => {
+                    handleDelete(row?.uuid);
+                  }
+                }
+              }
+            ]}
+          />
+        </Box>
+      )
+    }
+  ];
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
   useEffect(() => {
     const fetchData = async () => {
@@ -125,6 +318,7 @@ const Community = () => {
 
   return (
     <>
+<<<<<<< HEAD
       {loading ? (
         <CommunitySkeleton />
       ) : (
@@ -192,9 +386,107 @@ const Community = () => {
           />
         </Box>
       )}
+=======
+      <Grid container>
+        <Grid item xs={12}>
+          {/* <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} /> */}
+        </Grid>
+        <Grid item xs={12}>
+          <FaqTableHeader
+            value={value}
+            handleFilter={handleFilter}
+            faqCategories={faqCategories?.data}
+            toggle={toggleAddUserDrawer}
+            selectedBranchId={selectedBranchId}
+          />
+        </Grid>
+        {faqLoading ? (
+          <Grid item xs={12}>
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+              <FaqSkeleton />
+            </Card>
+          </Grid>
+        ) : (
+          <Grid item xs={12}>
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', mt: 1 }}>
+              <DataGrid
+                sx={{
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid#cfccd1',
+                    borderLeft: 'none',
+                    borderRight: 'none'
+                  },
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
+                    }
+                  },
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
+                  },
+                  '& .MuiDataGrid-columnHeader:hover': { backgroundColor: 'inherit', borderRight: 'none' }
+                }}
+                autoHeight
+                rowHeight={60}
+                rows={faqs?.data || []}
+                columns={columns}
+                getRowId={(row) => row._id || row.id}
+                disableRowSelectionOnClick
+                hideFooterPagination
+                hideFooter
+                onRowClick={handleRowClick}
+                disableColumnFilter
+                disableColumnMenu
+              />
+            </Card>
+          </Grid>
+        )}
+
+        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories?.data || []} setRefetch={setRefetch} />
+        <FaqEdit
+          open={editUserOpen}
+          toggle={toggleEditUserDrawer}
+          initialValues={selectedRow || {}}
+          faqCategories={faqCategories?.data}
+          setRefetch={setRefetch}
+        />
+
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setDeleteDialogOpen}
+          description="Are you sure you want to delete this item?"
+          title="Delete"
+          handleSubmit={handleDeleteApi}
+          successDescription={successDescription}
+          failureDescription={failureDescription}
+        />
+
+        <StatusDialog
+          open={statusOpen}
+          setOpen={setStatusDialogOpen}
+          description="Are you sure you want to Change Status"
+          title="Status"
+          handleSubmit={handleStatusChangeApi}
+        />
+      </Grid>
+      <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination count={faqs?.last_page || 1} page={currentPage} onChange={handlePageChange} />
+      </Grid>
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     </>
   );
 };
 Community.contentHeightFixed = true;
 
+<<<<<<< HEAD
 export default Community;
+=======
+export default FaqDataGrid;

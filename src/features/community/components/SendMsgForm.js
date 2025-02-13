@@ -11,7 +11,7 @@ const ChatFormWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   boxShadow: theme.shadows[1],
-  backgroundColor: "#202C33",
+  backgroundColor: "#2A2F32",
   padding: "15px",
   gap: "20px",
   justifyContent: 'space-between',
@@ -43,7 +43,6 @@ const SendMsgForm = (props) => {
   const handleSendMsg = async (e) => {
     e.preventDefault();
     socket.emit("sendMessage", { senderId : user?._id, content: msg, groupId : selectedBatch?._id, name : user?.full_name || user?.first_name  }, (response) => {
-
     });
 
     // const response = await sendMessage(data);
@@ -53,9 +52,13 @@ const SendMsgForm = (props) => {
 
     setMsg('');
   };
+  
+  console.log('Selected Batch:', selectedBatch);
+console.log('Socket Connected:', socket?.connected);
+
 
   return (
-    <Form onSubmit={handleSendMsg} sx={{ backgroundColor: "#202C33"}}>
+    <Form onSubmit={handleSendMsg} sx={{ backgroundColor: "#2A2F32"}}>
       <ChatFormWrapper>
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: "20px", backgroundColor: "#202C33" }}>
           <CustomTextField

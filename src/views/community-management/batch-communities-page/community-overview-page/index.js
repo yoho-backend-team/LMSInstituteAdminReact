@@ -111,6 +111,31 @@ const Community = () => {
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen);
   const handleUserProfileLeftSidebarToggle = () => setUserProfileLeftOpen(!userProfileLeftOpen);
   const handleUserProfileRightSidebarToggle = async () => {
+    console.log("Profile sidebar toggle clicked!");
+    
+    if (!selectedBatch) {  // Exit if no batch is selected
+      console.warn("⚠️ selectedBatch is null! Cannot fetch community details.");
+      return;  
+    }
+    try {
+      const result = await getCommunityDetails({ chatId: selectedBatch._id });
+  
+      if (result) {
+        console.log("✅ Community details fetched:", result.data);
+        setCommunityDetails(result.data);
+      } else {
+        console.warn("❌ Failed to fetch community details.");
+      }
+    } catch (error) {
+      console.error("🔥 Error fetching community details:", error);
+    }
+  
+    setUserProfileRightOpen((prev) => {
+      console.log("🟢 Toggling userProfileRightOpen:", !prev);
+      return !prev;
+    });
+  
+
     const result = await getCommunityDetails({ chatId: selectedBatch._id });
     if (result) {
       setCommunityDetails(result?.data);

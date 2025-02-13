@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Grid, TextField, Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
@@ -127,7 +128,8 @@ const StudyMaterialEdit = (props) => {
       styled(Button)(({ theme }) => ({
         [theme.breakpoints.down('sm')]: {
           width: '100%',
-          textAlign: 'center'
+          textAlign: 'center',
+          
         }
       })),
     []
@@ -144,7 +146,7 @@ const StudyMaterialEdit = (props) => {
       <Grid container spacing={1}>
         <Grid item md={12} sm={12}>
           <Header>
-            <Typography variant="h5">Edit Study Material</Typography>
+          <Chip   label="Edit Study Material " sx={{fontSize:'20px',border:2,borderColor:"#0cce7b" ,}}/>
             <IconButton
               size="small"
               onClick={handleClose}
@@ -155,7 +157,7 @@ const StudyMaterialEdit = (props) => {
                 backgroundColor: 'action.selected',
                 '&:hover': {
                   backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-                }
+                } 
               }}
             >
               <Icon icon="tabler:x" fontSize="1.125rem" />
@@ -167,11 +169,12 @@ const StudyMaterialEdit = (props) => {
                 {!selectedFile && <PDFViewer url={StudyMaterials?.file?getImageUrl(StudyMaterials.file):savedPdfUrl} />}
                 {selectedFile && <PDFViewer url={getImageUrl(selectedFile)} />}
 
-                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
+                <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 ,borderRadius: '50px' }}>
+                  <CloudUploadOutlinedIcon sx={{mr:1.5}}/>
                   Upload New File
                   <input
                     accept="application/pdf"
-                    style={{ display: 'none' }}
+                    style={{ display: 'none',  }}
                     id="account-settings-upload-file"
                     multiple={false}
                     type="file"
@@ -226,6 +229,7 @@ const StudyMaterialEdit = (props) => {
             </form>
           </Box>
         </Grid>
+        
       </Grid>
     </Drawer>
   );

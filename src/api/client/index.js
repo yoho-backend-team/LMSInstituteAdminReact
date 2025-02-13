@@ -2,9 +2,11 @@ import HttpClient from "./httpclinet";
 import { HTTP_END_POINTS } from "api/client/http_end_points";
 
 class Client {
+ 
     admin = {
       me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data),
-      change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data)
+      change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data),
+      forget_password:(data)=> HttpClient.post(HTTP_END_POINTS.admin.forget_password,data),
     }
     permission = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),
@@ -34,11 +36,18 @@ class Client {
             return HttpClient.uploadFile(HTTP_END_POINTS.file.upload, data);
         }
     }
+    faq = {
+      create : (data) => HttpClient.post(HTTP_END_POINTS.faq.create,data),
+      getAll : (data,params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,params,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq.delete+data.id),
+      update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq.update.replace(':uuid', uuid), data)
+    }
+
     category = {
-      get    : (params) => HttpClient.get(HTTP_END_POINTS.category.getAll,params),
+      getAll : (data) => HttpClient.get(HTTP_END_POINTS.category.getAll,data),
       create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
-      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
-      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)
+      update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.update+`/${data.id}`,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.delete+`/${data.uuid}`)
     }
     course_module ={
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.course_module.get,params),

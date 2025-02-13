@@ -23,7 +23,7 @@ const ChatWrapperStartChat = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   flexDirection: 'column',
   justifyContent: 'center',
-  backgroundColor: "#202C33"
+  backgroundColor: "#2A2F32"
 }));
 
 const ChatContent = (props) => {
@@ -97,7 +97,7 @@ const ChatContent = (props) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              backgroundColor: '#202c33',
+              backgroundColor: '#2A2F32',
               borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
               boxShadow: '0px 4px 10px -4px rgba(0, 0, 0, 0.1)'
             }}
@@ -160,7 +160,7 @@ const ChatContent = (props) => {
             </Box>
           </Box>
 
-          {messages ? <ChatLog hidden={hidden} data={messages} /> : null}
+          {messages ? <ChatLog hidden={hidden} data={messages} socket={socket} /> : null}
           <SendMsgForm store={store} socket={socket} dispatch={dispatch} sendMsg={sendMsg} selectedBatch={selectedBatch} setChats={setChats} />
           <UserProfileRight
             store={store}

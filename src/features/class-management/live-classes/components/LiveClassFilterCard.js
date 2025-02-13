@@ -8,13 +8,17 @@ import TextField from '@mui/material/TextField';
 import format from 'date-fns/format';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState,useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllLiveClasses } from '../redux/liveClassThunks';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { useInstitute } from 'utils/get-institute-details';
+
+import { Box,  } from '@mui/material';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Button from '@mui/material/Button';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -116,21 +120,102 @@ const LiveClassFilterCard = (props) => {
     }
   };
   
+     //toggle filter card
+     const [isCardOpen, setIsCardOpen] = useState(false);
+     const filterCardRef = useRef(null);
+
+   //toggle handler
+   const handleToggleCard = (event) => {
+     setIsCardOpen((prev) => !prev);
+   };
+
+ 
+
+
   return (
+
+
+    <Grid>
+       <Grid item xs={12}>
+        
+        <Box sx={{ mb: 2 , position: 'relative', zIndex: 1000}}>
+          <Button
+            variant="contained"
+            size="medium"
+              data-ignore-outside-click="true"
+            sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
+              onClick={(event) => {
+     
+    handleToggleCard(event);
+  }}
+          >
+          <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
+          </Button>
+
+
+
+
+        </Box>
+
+
+
+      </Grid>
+
+      {isCardOpen && (
+<>
+  
+  <Box
+         ref={filterCardRef}  
+         sx={{
+           position: 'relative',  
+           top: '19%',  
+           left:"50%",
+           
+           transform: 'translateX(-50%)',
+           zIndex: 999,  
+           width: '100%',    
+           backgroundColor: 'white',
+           boxShadow: 3,
+           borderRadius: 2,
+           p: 3,
+           mt: 3,
+           overflowY: 'auto',  
+           maxHeight: '80vh',
+           transition: 'left 0.3s ease',
+            
+         }}
+       >
+
     <DatePickerWrapper>
+
       <Grid container spacing={2}>
         <Grid item xs={12}>
+
           <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
+
             <CardHeader title="Filters" />
             <CardContent>
+
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  {/* <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
+
+                {/* <Grid item xs={12} sm={6}>
+                  <TextField select fullWidth label="Status" SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}>
                     <MenuItem value="">Select Options</MenuItem>
                     <MenuItem value="completed">Completed</MenuItem>
                     <MenuItem value="pending">Pending</MenuItem>
-                  </TextField> */}
-                </Grid>
+                  </TextField>
+                </Grid> */}
+
+<Grid item xs={12} sm={6}>
+  <Autocomplete
+    fullWidth
+    value={statusValue}
+    onChange={(event, newValue) => handleFilterByStatus({ target: { value: newValue } })}
+    options={['Select Options', 'completed', 'pending']}
+    renderInput={(params) => <TextField {...params} label="Status" />}
+  />
+</Grid>
+                
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
@@ -148,6 +233,7 @@ const LiveClassFilterCard = (props) => {
                     renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Course" />}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <Autocomplete
                     fullWidth
@@ -160,6 +246,7 @@ const LiveClassFilterCard = (props) => {
                     renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Batches" />}
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
                   <DatePicker
                     isClearable
@@ -188,6 +275,11 @@ const LiveClassFilterCard = (props) => {
         </Grid>
       </Grid>
     </DatePickerWrapper>
+    </Box>
+                    </>
+      )}
+     
+                        </Grid>
   );
 };
 

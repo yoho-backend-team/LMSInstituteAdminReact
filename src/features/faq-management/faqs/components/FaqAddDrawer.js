@@ -1,44 +1,79 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Grid, TextField, Typography } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Autocomplete,
+  Box,
+  Drawer,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { Controller, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { useState } from 'react';
 import * as yup from 'yup';
-import { addFaq } from '../services/faqServices';
+import { createFaq } from '../services/faqServices';
+import toast from 'react-hot-toast';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(6),
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  padding: theme.spacing(3),
+  borderBottom: `1px solid ${theme.palette.divider}`
+}));
+
+const CloseButton = styled(IconButton)(({ theme }) => ({
+  transition: 'background-color 0.3s, color 0.3s',
+  '&:hover': {
+    backgroundColor: theme.palette.error.light,
+    color: theme.palette.error.contrastText
+  }
+}));
+
+const FormContainer = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(4),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.background.paper,
+  boxShadow: theme.shadows[3]
 }));
 
 const schema = yup.object().shape({
-  name: yup.string().required('Category Name is required'),
+  name: yup.string().required('Title is required'),
   description: yup.string().required('Description is required'),
-  category: yup.object().required('Category is required')
+  category: yup.object().required('Category is required'),
+  accessby: yup.array().min(1, 'Accessby is required')
+  // vidlink: yup.string().url('Opional'),
+  // pagelink: yup.string().url('Optional')
 });
 
 const defaultValues = {
   name: '',
   description: '',
-  category: ''
+  category: '',
+  accessby: []
+  // vidlink: '',
+  // pagelink: ''
 };
 
-const FaqAddDrawer = (props) => {
-  const { open, toggle, faqCategories, setRefetch } = props;
+const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
+  const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const {
     reset,
     control,
-    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -48,32 +83,48 @@ const FaqAddDrawer = (props) => {
   });
 
   const handleClose = () => {
-    setValue('contact', Number(''));
-    setValue('category', '');
     reset();
     toggle();
   };
 
   const onSubmit = async (data) => {
-
-    const inputData = {
+    setSubmitting(true);
+    const faqData = {
       title: data.name,
       description: data.description,
-      category_id: data.category._id
+      category_id: data.category._id,
+      accessby: data.accessby,
+      uuid: data.uuid
+      // vidlink: data.vidlink,
+      // pagelink: data.pagelink
     };
-    const result = await addFaq(inputData);
-    if (result.success) {
-      toast.success(result.message);
-      setRefetch((state) => !state);
-      toggle();
-      reset();
-    } else {
-      toast.error(result.message);
+    try {
+      const result = await createFaq(faqData);
+      console.log('add data result', result);
+
+      if (result.success) {
+        setSuccessDialogOpen(true);
+        setRefetch((state) => !state);
+        toggle();
+        reset();
+        // toast.success('FAQ added successfully!');
+      } else {
+        toast.error('Failed to add FAQ. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting FAQ:', error);
+      toast.error('An error occurred. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
+  const closeSuccessDialog = () => {
+    setSuccessDialogOpen(false);
+  };
+
   return (
-    <DatePickerWrapper>
+    <>
       <Drawer
         open={open}
         anchor="right"
@@ -82,106 +133,194 @@ const FaqAddDrawer = (props) => {
         ModalProps={{ keepMounted: true }}
         sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 500 } } }}
       >
-        <Header>
-          <Typography variant="h5">Add Faq</Typography>
-          <IconButton
-            size="small"
-            onClick={handleClose}
+        <Box sx={{ p: 2, mt: 2, m: 3 }}>
+          <Box
             sx={{
-              p: '0.438rem',
-              borderRadius: 1,
-              color: 'text.primary',
-              backgroundColor: 'action.selected',
-              '&:hover': {
-                backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
-              }
+              boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+              background: 'rgb(232, 232, 238)',
+              borderTopLeftRadius: '8px',
+              borderTopRightRadius: '8px',
+              borderBottom: 'none'
             }}
           >
-            <Icon icon="tabler:x" fontSize="1.125rem" />
-          </IconButton>
-        </Header>
-        <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 2 }}
-                    label="Title"
-                    onChange={onChange}
-                    error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="description"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 2 }}
-                    label="description"
-                    onChange={onChange}
-                    error={Boolean(errors.description)}
-                    {...(errors.description && { helperText: errors.description.message })}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <Controller
-                name="category"
-                control={control}
-                render={({ field: { onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    sx={{ mb: 2 }}
-                    getOptionLabel={(option) => option.category_name}
-                    onChange={(e, newValue) => {
-                      onChange(newValue);
-                    }}
-                    options={faqCategories}
-                    renderInput={(params) => (
+            <Header>
+              <Typography variant="h5" fontWeight="bold">
+                Add FAQ
+              </Typography>
+              <CloseButton size="small" onClick={handleClose}>
+                <Icon icon="tabler:x" fontSize="1.125rem" />
+              </CloseButton>
+            </Header>
+          </Box>
+          <FormContainer
+            sx={{
+              borderTopLeftRadius: '0',
+              borderTopRightRadius: '0',
+              boxShadow: '0 .505rem .875rem 0 rgba(38,43,67,.16)'
+            }}
+          >
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Controller
+                    name="name"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
                       <TextField
-                        {...params}
-                        label="Select Category"
-                        error={Boolean(errors.category)}
-                        helperText={errors.category?.message}
+                        fullWidth
+                        label="Title"
+                        placeholder="Enter FAQ Title"
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.name)}
+                        helperText={errors.name?.message}
                       />
                     )}
                   />
-                )}
-              />
-            </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="description"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        fullWidth
+                        label="Description"
+                        placeholder="Enter FAQ Description"
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.description)}
+                        helperText={errors.description?.message}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Controller
+                    name="category"
+                    control={control}
+                    render={({ field: { onChange } }) => (
+                      <Autocomplete
+                        fullWidth
+                        options={faqCategories}
+                        getOptionLabel={(option) => option.category_name}
+                        onChange={(e, newValue) => onChange(newValue)}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Select Category"
+                            placeholder="Choose a Category"
+                            error={Boolean(errors.category)}
+                            helperText={errors.category?.message}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                </Grid>
+                {/* Accessby Dropdown */}
+                <Grid item xs={12}>
+                  <Controller
+                    name="accessby"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <FormControl fullWidth error={Boolean(errors.accessby)}>
+                        <InputLabel>Access By</InputLabel>
+                        <Select
+                          multiple
+                          value={value || []}
+                          onChange={(event) => {
+                            const selectedValue = event.target.value;
+                            onChange(selectedValue.length > 0 ? [selectedValue[selectedValue.length - 1]] : []);
+                          }}
+                          label="Access By"
+                        >
+                          <MenuItem value="instructor">Instructor</MenuItem>
+                          <MenuItem value="student">Student</MenuItem>
+                          <MenuItem value="none">None</MenuItem>
+                        </Select>
+                        {errors.accessby && (
+                          <Typography variant="body2" color="error">
+                            {errors.accessby?.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    )}
+                  />
+                </Grid>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
-              </Button>
-              <Button variant="tonal" color="secondary" onClick={handleClose}>
-                Cancel
-              </Button>
-            </Box>
-          </form>
+                {/* Videolink Input */}
+                {/* <Grid item xs={12}>
+                  <Controller
+                    name="vidlink"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        fullWidth
+                        label="Video Link"
+                        value={value || ''} // Default to an empty string if no value is provided
+                        onChange={onChange}
+                        error={Boolean(errors.vidlink)}
+                        helperText={errors.vidlink?.message}
+                        optional
+                      />
+                    )}
+                  />
+                </Grid> */}
+
+                {/* Pagelink Input */}
+                {/* <Grid item xs={12}>
+                  <Controller
+                    name="pagelink"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        fullWidth
+                        label="Page Link"
+                        value={value || ''} // Default to an empty string if no value is provided
+                        onChange={onChange}
+                        error={Boolean(errors.pagelink)}
+                        helperText={errors.pagelink?.message}
+                        optional
+                      />
+                    )}
+                  />
+                </Grid> */}
+              </Grid>
+              <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ mr: 2 }}>
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+              </Box>
+            </form>
+          </FormContainer>
         </Box>
       </Drawer>
-    </DatePickerWrapper>
+
+      {/* Success Dialog */}
+      <Dialog open={isSuccessDialogOpen} onClose={closeSuccessDialog}>
+        <DialogTitle>FAQ Added</DialogTitle>
+        <DialogContent>
+          <Typography>The FAQ was successfully added.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeSuccessDialog} variant="contained">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
 FaqAddDrawer.propTypes = {
-  open: PropTypes.any,
-  toggle: PropTypes.any,
-  faqCategories: PropTypes.any,
-  setRefetch: PropTypes.any
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  faqCategories: PropTypes.array.isRequired,
+  setRefetch: PropTypes.func.isRequired
 };
 
 export default FaqAddDrawer;

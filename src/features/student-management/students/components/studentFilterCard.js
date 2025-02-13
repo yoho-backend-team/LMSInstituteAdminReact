@@ -6,7 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -15,20 +15,27 @@ import { getAllBatches } from 'features/batch-management/batches/redux/batchThun
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { getAllStudents } from '../redux/studentThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import Sidebar from 'components/sidebar';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
-const StudentFilter = (props) => {
+const StudentFilter = (props ) => {
   const { selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
 
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const batch = useSelector(selectBatches);
-
-  const handleFilterByStatus = (e) => {
-    setStatusValue(e.target.value);
-    const data = { is_active: e.target.value, branch_id: selectedBranchId };
-    dispatch(getAllStudents(data));
-  };
+  
+  //toggle filter card
+  const [isCardOpen, setIsCardOpen] = useState(false);
+  const filterCardRef = useRef(null);
+ 
+  
+  // const handleFilterByStatus = (e) => {
+  //   setStatusValue(e.target.value);
+  //   const data = { is_active: e.target.value, branch_id: selectedBranchId };
+  //   dispatch(getAllStudents(data));
+  // };
 
   const [courses, setCourses] = useState([]);
   useEffect(() => {
@@ -62,13 +69,74 @@ const StudentFilter = (props) => {
     [dispatch]
   );
 
+  //toggle handler
+  const handleToggleCard = (event) => {
+    
+    setIsCardOpen((prev) => !prev);
+  };
+
+
+
+
+  
+  
+
+  
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
+
+        <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2}}>
+          <Button
+            variant="contained"
+            size="medium"
+              data-ignore-outside-click="true"
+            sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
+            onClick={handleToggleCard}
+          >
+          <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
+          </Button>
+        
+                <Box component={Link} to={'students/add'}>
+                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
+                    Add New Student
+                  </Button>
+                </Box>
+        </Box>
+             
+      </Grid>
+      {isCardOpen && (
+        <>
+
+         <Box
+         ref={filterCardRef}  
+         sx={{
+           position: 'relative',  
+           top: '19%',  
+           left:"50%",
+          
+           transform: 'translateX(-50%)',
+           zIndex: 999,  
+           width: '100%',    
+           backgroundColor: 'white',
+           boxShadow: 3,
+           borderRadius: 2,
+           p: 3,
+           mt: 3,
+           overflowY: 'auto',  
+           maxHeight: '80vh',
+           transition: 'left 0.3s ease',
+            
+         }}
+       >
+      <Grid item xs={12}>
+
         <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
           <CardHeader title="Students" />
           <CardContent>
+
             <Grid container spacing={3}>
+              
               <Grid item xs={12} sm={6}>
                 <Autocomplete
                   fullWidth
@@ -82,7 +150,8 @@ const StudentFilter = (props) => {
                   }}
                   options={courses}
                   getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Filter By Course" />}
+                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Filter By Course"
+                   />}
                 />
               </Grid>
 
@@ -103,7 +172,8 @@ const StudentFilter = (props) => {
                   renderInput={(params) => <TextField {...params} label="Filter By Batches" placeholder="Favorites" />}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+
+              {/* <Grid item xs={12} sm={6}>
                 <TextField
                   select
                   fullWidth
@@ -114,22 +184,39 @@ const StudentFilter = (props) => {
                   <MenuItem value="true">Active</MenuItem>
                   <MenuItem value="false">Inactive</MenuItem>
                 </TextField>
-              </Grid>
+              </Grid> */}
+
+<Grid item xs={12} sm={6}>
+  <Autocomplete
+    fullWidth
+    value={statusValue}
+    onChange={(e, newValue) => {
+      setStatusValue(newValue);
+      const data = { is_active: newValue, branch_id: selectedBranchId };
+      dispatch(getAllStudents(data));
+    }}
+    options={["", "true", "false"]}  
+    getOptionLabel={(option) => {
+      if (option === "true") return "Active";
+      if (option === "false") return "Inactive";
+      return "Select Status";
+    }}
+    renderInput={(params) => <TextField {...params} label="Filter By Status" />}
+  />
+</Grid>
+              
               <Grid item sm={3} xs={12}>
                 <TextField value={searchValue} placeholder="Search Student" onChange={(e) => handleSearch(e)} fullWidth />
               </Grid>
 
-              <Grid item xs={12} sm={3}>
-                <Box component={Link} to={'students/add'}>
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.6, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
-                    Add New Student
-                  </Button>
-                </Box>
-              </Grid>
+            
             </Grid>
           </CardContent>
         </Card>
       </Grid>
+      </Box>
+      </>
+      )}
     </Grid>
   );
 };

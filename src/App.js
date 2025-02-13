@@ -13,13 +13,33 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+<<<<<<< HEAD
 import secureLocalStorage from 'react-secure-storage';
 import { getSecureItem, setSelectedBranchId } from 'utils/localStroageService';
+=======
+import usePushSubscription from 'usePushSubscription';
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
 
+// import { onMessageListener} from './firebase';
+// ==============================|| APP ||============================== //
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
   const [showOverlay, setShowOverlay] = useState(false);
+
+  if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                  // console.log('Service Worker registered with scope:', registration.scope);
+                      const user = JSON.parse(localStorage.getItem("userData"))
+                      const selectBranchId = localStorage.getItem("selectedBranchId")
+                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
+                })
+                .catch((error) => {
+                  console.error('Service Worker registration failed:', error);
+                });
+            }
+
 
   const handleUpgradeClick = async () => {
     try {
@@ -58,7 +78,7 @@ const App = () => {
         await subscribe(registration, role, userId, user, institute, branch);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -69,7 +89,8 @@ const App = () => {
     const notifiAdd = Cookies.get("instituteNotificationSubscription");
     const branches = secureLocalStorage.getItem('branches');
     if (!selectBranchId) {
-      setSelectedBranchId(branches?.[0]?.uuid);
+        // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
+        setSelectedBranchId(branches?.[0]?.uuid);
     }
     if (isAuthenticatedUser && !notifiAdd) {
       registerSubscription(user?.role, user?._id, user, JSON.parse(selectBranchId), user?.institute_id);
@@ -83,7 +104,7 @@ const App = () => {
         setShowOverlay(true);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

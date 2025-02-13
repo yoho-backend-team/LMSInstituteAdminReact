@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -47,7 +48,8 @@ const StudentFilterCard = (props) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+            <Typography variant='h2'>Student ID card</Typography>
+          <Card sx={{display: "none" , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
             <CardHeader sx={{ fontSize: "24px" }} title="ID card" />
             <CardContent sx={{ pt: 0, display: "none" }}>
               <Grid container spacing={4}>

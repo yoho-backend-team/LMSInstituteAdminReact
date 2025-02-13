@@ -65,10 +65,10 @@ const StepperLinearWithValidation = () => {
       .string()
       .required('Full Name is required')
       .matches(/^[a-zA-Z\s]+$/, 'Full Name should only contain alphabets'),
-      password: yup
-    .string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+    //   password: yup
+    // .string()
+    // .required('Password is required')
+    // .min(6, 'Password must be at least 6 characters'),
     email: yup
       .string()
       .required('Email is required')
@@ -108,10 +108,10 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
     gender: yup.string().required('Gender is required'),
-    username: yup
-      .string()
-      .required('Username is required')
-      .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
+    // username: yup
+    //   .string()
+    //   .required('Username is required')
+    //   .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
   });
 
   // ** States
@@ -204,6 +204,7 @@ const StepperLinearWithValidation = () => {
     form_data.append("file",files[0])
     const response = await client.file.upload(form_data)
     setLogo(response?.data?.file)
+    
   } catch (error) {
     hide()
     toast.error(error?.message)
@@ -227,13 +228,13 @@ const StepperLinearWithValidation = () => {
     const teaching_staffdata = {
       email: personalData.email,
       full_name: personalData.full_name,
-      password: personalData.password,
+      // password: personalData.password,
       course: courseUUIDs,
       institute_id: useInstitute().getInstituteId(),
-      username: personalData.username,
+      // username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
-      branch_id : branch_id,
+      branch_id : "87e53fd5-f85a-4b16-acfe-89bf30e0ea07",
       qualification:personalData.education_qualification,
       contact_info: {
         state: personalData.state,
@@ -245,7 +246,7 @@ const StepperLinearWithValidation = () => {
         alternate_phone_number: personalData.alt_phone
       },
       designation: personalData.designation,
-      role: personalData.role,
+      // role: personalData.role,
       staffId:personalData.staffId,
       image : logo,
       user_details: 'InstituteTeachingStaff'
@@ -262,7 +263,7 @@ const StepperLinearWithValidation = () => {
     data.append('alternate_number', personalData?.alt_phone);
     data.append('designation', personalData?.designation);
     data.append('type', 'teaching');
-    data.append('branch_id', selectedBranchId);
+    data.append('branch_id', branch_id);
     data.append('image', logo);
     data.append('gender', personalData?.gender);
     data.append('address_line_1', personalData?.address_line_one);
@@ -271,7 +272,7 @@ const StepperLinearWithValidation = () => {
     data.append('state', personalData?.state);
     data.append('pin_code', personalData?.pin_code);
     data.append('dob', convertDateFormat(personalData?.date_of_birth));
-    data.append('username', personalData?.username);
+    // data.append('username', personalData?.username);
     data.append('education_qualification', personalData?.education_qualification);
     // const isUserNameTaken = await checkUserName(personalData?.username);
 
@@ -282,8 +283,10 @@ const StepperLinearWithValidation = () => {
     //   });
     // } else if (isUserNameTaken.success) {
       try {
+        console.log("iam working before response 1");
+
         const result = await addTeachingStaff(teaching_staffdata);
-        if (result. success) {
+        if (result.success) {
           toast.success(result.message);
           navigate(-1);
         } else {
@@ -322,6 +325,7 @@ const StepperLinearWithValidation = () => {
               </div>
             </Box>
           </Grid>
+          
           <Grid item xs={12} sm={6}>
             <Controller
               name="full_name"
@@ -341,7 +345,7 @@ const StepperLinearWithValidation = () => {
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
                 <Controller
                   name="password"
                   control={personalControl}
@@ -370,7 +374,7 @@ const StepperLinearWithValidation = () => {
                   )}
                 />
               </Grid>
-
+ */}
 
           <Grid item xs={12} sm={6}>
             <Controller
@@ -537,62 +541,6 @@ const StepperLinearWithValidation = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Controller
-              name="state"
-              control={personalControl}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  label="State"
-                  onChange={onChange}
-                  aria-describedby="stepper-linear-personal-state-helper"
-                  error={Boolean(personalErrors.state)}
-                  {...(personalErrors.state && { helperText: personalErrors.state.message })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="city"
-              control={personalControl}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  label="City"
-                  onChange={onChange}
-                  aria-describedby="stepper-linear-personal-city-helper"
-                  error={Boolean(personalErrors.city)}
-                  {...(personalErrors.city && { helperText: personalErrors.city.message })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
-              name="pin_code"
-              control={personalControl}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <CustomTextField
-                  fullWidth
-                  value={value}
-                  label="Pin Code"
-                  type="number"
-                  onChange={onChange}
-                  placeholder="Carter"
-                  aria-describedby="stepper-linear-personal-pin_code"
-                  error={Boolean(personalErrors.pin_code)}
-                  {...(personalErrors.pin_code && { helperText: personalErrors.pin_code.message })}
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Controller
               name="address_line_one"
               control={personalControl}
               rules={{ required: true }}
@@ -625,6 +573,62 @@ const StepperLinearWithValidation = () => {
                   aria-describedby="stepper-linear-personal-address_line_two"
                   error={Boolean(personalErrors.address_line_two)}
                   {...(personalErrors.address_line_two && { helperText: personalErrors.address_line_two.message })}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="city"
+              control={personalControl}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <CustomTextField
+                  fullWidth
+                  value={value}
+                  label="City"
+                  onChange={onChange}
+                  aria-describedby="stepper-linear-personal-city-helper"
+                  error={Boolean(personalErrors.city)}
+                  {...(personalErrors.city && { helperText: personalErrors.city.message })}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="state"
+              control={personalControl}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <CustomTextField
+                  fullWidth
+                  value={value}
+                  label="State"
+                  onChange={onChange}
+                  aria-describedby="stepper-linear-personal-state-helper"
+                  error={Boolean(personalErrors.state)}
+                  {...(personalErrors.state && { helperText: personalErrors.state.message })}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="pin_code"
+              control={personalControl}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <CustomTextField
+                  fullWidth
+                  value={value}
+                  label="Pin Code"
+                  type="number"
+                  onChange={onChange}
+                  placeholder="Carter"
+                  aria-describedby="stepper-linear-personal-pin_code"
+                  error={Boolean(personalErrors.pin_code)}
+                  {...(personalErrors.pin_code && { helperText: personalErrors.pin_code.message })}
                 />
               )}
             />
@@ -676,7 +680,7 @@ const StepperLinearWithValidation = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="username"
               control={personalControl}
@@ -709,7 +713,7 @@ const StepperLinearWithValidation = () => {
                 />
               )}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button type="submit" variant="contained">

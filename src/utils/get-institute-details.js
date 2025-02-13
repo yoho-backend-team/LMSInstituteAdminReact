@@ -6,6 +6,7 @@ export function useInstitute(){
         getInstituteId(){
             const institute = secureLocalStorage.getItem("institute")
             return JSON.parse(institute)?.uuid
+            
         },
         getInstituteMainId(){
             const institute = secureLocalStorage.getItem("institute")

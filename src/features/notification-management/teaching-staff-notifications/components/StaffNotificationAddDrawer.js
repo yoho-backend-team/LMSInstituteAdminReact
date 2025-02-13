@@ -21,6 +21,8 @@ import { useInstitute } from 'utils/get-institute-details';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
 import { useSpinner } from 'context/spinnerContext';
 
+import { Modal } from "@mui/material";
+
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -163,20 +165,39 @@ const StaffNotificationAddDrawer = (props) => {
   };
 
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+    <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    ModalProps={{ keepMounted: true }}
+    BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.5)" } }} 
+     
+  >
+
+<Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "90%", sm: 500, md: 600 },
+        height: "auto",  
+        maxHeight: "80vh", 
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+        overflowY: "auto",
+        transition: "all 0.3s ease-in-out",
+      }}
     >
-      <Header>
-        <Typography variant="h5">Add Staff Notification</Typography>
+      <Header sx={{mt:-7}}>
+        <Typography variant="h2"  sx={{ml:-4}}>Add Staff Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
           sx={{
+            mr:-7,
             p: '0.438rem',
             borderRadius: 1,
             color: 'text.primary',
@@ -185,7 +206,7 @@ const StaffNotificationAddDrawer = (props) => {
               backgroundColor: (theme) => `rgba(${theme.palette.secondary.main}, 0.16)`
             }
           }}
-        >
+          >
           <Icon icon="tabler:x" fontSize="1.125rem" />
         </IconButton>
       </Header>
@@ -194,7 +215,7 @@ const StaffNotificationAddDrawer = (props) => {
           {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
             <ImgStyled src={imgSrc} alt="Profile Pic" />
             <div>
-              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
+            <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
                 Upload
                 <input
                   hidden
@@ -204,9 +225,9 @@ const StaffNotificationAddDrawer = (props) => {
                   onChange={handleInputImageChange}
                   id="account-settings-upload-image"
                 />
-              </ButtonStyled>
-            </div>
-          </Box> */}
+                </ButtonStyled>
+                </div>
+                </Box> */}
 
           <Grid item xs={12} sx={{ mb: 2 }}>
             <Controller
@@ -214,7 +235,7 @@ const StaffNotificationAddDrawer = (props) => {
               control={control}
               render={({ value }) => (
                 <Autocomplete
-                  fullWidth
+                fullWidth
                   value={value}
                   onChange={(e, newValue) => {
                     setValue("branch",newValue.branch_identity)
@@ -230,9 +251,9 @@ const StaffNotificationAddDrawer = (props) => {
                       helperText={errors.branch?.message}
                     />
                   )}
+                  />
+                )}
                 />
-              )}
-            />
           </Grid>
 
           <Grid item xs={12} sm={12}>
@@ -266,8 +287,8 @@ const StaffNotificationAddDrawer = (props) => {
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
-                    />
-                  )}
+                      />
+                    )}
                 />
               )}
               renderOption={(props, option, { selected }) => (
@@ -277,7 +298,7 @@ const StaffNotificationAddDrawer = (props) => {
                     checkedIcon={<CheckBoxIcon fontSize="small" />}
                     style={{ marginRight: 8 }}
                     checked={selected}
-                  />
+                    />
                   {option?.full_name}
                 </li>
               )}
@@ -285,7 +306,7 @@ const StaffNotificationAddDrawer = (props) => {
                 <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                   {value?.map((option, index) => (
                     <CustomChip
-                      key={option?._id}
+                    key={option?._id}
                       label={option?.full_name}
                       onDelete={() => {
                         const updatedValue = [...value];
@@ -309,10 +330,10 @@ const StaffNotificationAddDrawer = (props) => {
              control={control}
              render={({ field: { onChange, onBlur, value } }) => (
                <Autocomplete
-                 multiple={false}
-                 freeSolo 
-                 disableCloseOnSelect={false}
-                 id="select-multiple-chip"
+               multiple={false}
+               freeSolo 
+               disableCloseOnSelect={false}
+               id="select-multiple-chip"
                  options={["Notification", "Classes", "Alerts", "Reminders"]} 
                  getOptionLabel={(option) => option}
                  value={value || ''} 
@@ -355,7 +376,7 @@ const StaffNotificationAddDrawer = (props) => {
               control={control}
               render={({ field: { value, onChange } }) => (
                 <TextField
-                  fullWidth
+                fullWidth
                   sx={{ mb: 2 }}
                   label="Title"
                   value={value}
@@ -363,8 +384,8 @@ const StaffNotificationAddDrawer = (props) => {
                   placeholder="Placeholder"
                   error={Boolean(errors.title)}
                   helperText={errors.title ? errors.title.message : null}
-                />
-              )}
+                  />
+                )}
             />
           </Grid>
 
@@ -386,7 +407,7 @@ const StaffNotificationAddDrawer = (props) => {
                   rows={4}
                 />
               )}
-            />
+              />
           </Grid>
 
           <Grid item xs={12} sm={12} >
@@ -407,17 +428,45 @@ const StaffNotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'flex-end', mt: 4 }}>
+
+<Button 
+variant="tonal"
+onClick={handleClose}
+sx={{ 
+mr: 3,
+backgroundColor: 'white', 
+color: 'black', 
+border: '1px solid #D3D3D3',  
+'&:hover': {
+  backgroundColor: '#f0f0f0',  
+  color: 'text.secondary',  
+},
+transition: 'all 0.3s ease',
+    }}>
+  Cancel
+</Button>
+
+<Button type="submit" variant="contained" 
+sx={{
+  backgroundColor: '#1976d2', 
+  color: 'white',  
+  '&:hover': {
+    backgroundColor: '#1565c0',  
+  },
+  '&:active': {
+    backgroundColor: '#0d47a1',  
+  },
+  transition: 'all 0.3s ease',  
+}}>
+  Add Notification
+</Button>
+
+</Box>
         </form>
       </Box>
-    </Drawer>
+    </Box>
+    </Modal>
   );
 };
 

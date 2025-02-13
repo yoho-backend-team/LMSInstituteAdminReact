@@ -29,6 +29,8 @@ const CategoriesDataGrid = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedFaqCategory, setSelectedFaqCategory] = useState(null);
   const [selectedFaqCategoryStatus, setSelectedFaqCategoryStatus] = useState(null);
+  const [successDescription, setSuccessDescription] = useState('');
+  const [failureDescription, setFailureDescription] = useState('');
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
@@ -39,19 +41,25 @@ const CategoriesDataGrid = () => {
   const faqCategories = useSelector(selectFaqCategories);
   const faqCategoryLoading = useSelector(selectLoading);
 
-  useEffect(() => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(10);
 
-    
+  useEffect(() => {
+    const institute = JSON.parse(localStorage.getItem('institute'));
+
     const data = {
       branchid: selectedBranchId,
-      instituteid: useInstitute().getInstituteId(),
-      page : 1,
-      perPage :10
+      instituteid: institute?._id,
+      page: currentPage,
+      perPage: rowsPerPage,
     };
-   
+    console.log('data:', data);
     dispatch(getAllFaqCategories(data));
-  }, [dispatch, selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, currentPage, refetch]);
 
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
   const handleRowClick = (params) => {
     setSelectedRow(params.row);
@@ -66,9 +74,9 @@ const CategoriesDataGrid = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedFaqCategoryStatus,
-      uuid: selectedFaqCategory?.uuid
+      uuid: selectedFaqCategory?.uuid,
     };
-    const response = await updateFaqCategory(data); 
+    const response = await updateFaqCategory(data);
     if (response.success) {
       toast.success(response.message);
       setRefetch((state) => !state);
@@ -77,27 +85,54 @@ const CategoriesDataGrid = () => {
     }
   };
 
+  // const handleDeleteApi = async () => {
+  //   const data = {
+  //     id: deletingItemId,
+  //   };
+  //   const response = await deleteFaqCategory(data);
+  //   if (response.success) {
+  //     // toast.success(response.message);
+  //     setRefetch((state) => !state);
+  //   } else {
+  //     toast.error(response.message);
+  //   }
+  // };
+
   const handleDeleteApi = async () => {
-    const data = {
-      id: deletingItemId
-    };
-    const response = await deleteFaqCategory(data);
-    if (response.success) {
-      toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
+    try {
+      const data = {
+        id: deletingItemId
+      };
+      const response = await deleteFaqCategory(data);
+      console.log('delete response data : ', response);
+
+      // if (faqs?.data?.length === 1 && currentPage > 1) {
+      //   setCurrentPage(currentPage - 1);
+      // }
+      if (response.success) {
+        setSuccessDescription('Item deleted successfully!');
+        setFailureDescription('');
+        // toast.success(response.message);
+        // fetchFaqs(currentPage);
+        setRefetch((state) => !state);
+      } else {
+        setFailureDescription('Failed to delete the item. Please try again.');
+        setSuccessDescription('');
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setFailureDescription('An error occurred while deleting the item.');
+      setSuccessDescription('');
     }
   };
+
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
+  const toggleEditUserDrawer = () => setEditUserOpen(!editUserOpen);
+
 
   const handleDelete = (itemId) => {
     setDeletingItemId(itemId);
     setDeleteDialogOpen(true);
-  };
-
-  const toggleEditUserDrawer = () => {
-    setEditUserOpen(!editUserOpen);
   };
 
   const columns = [
@@ -105,47 +140,52 @@ const CategoriesDataGrid = () => {
       flex: 0.5,
       headerName: 'Id',
       field: 'employee_id',
-      renderCell: ({ row }) => {
-        return (
-          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.id}
-          </Typography>
-        );
-      }
+      sortable: false,
+      renderCell: ({ row }) => (
+        <Typography
+          noWrap
+          sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}
+        >
+          {row?.id}
+        </Typography>
+      ),
     },
     {
       flex: 2.2,
       field: 'category_name',
       headerName: 'Category Name',
-      renderCell: ({ row }) => {
-        return (
-          <Box>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography
-                noWrap
-                sx={{
-                  textAlign: 'justify',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  color: 'text.secondary',
+      sortable: false,
+      renderCell: ({ row }) => (
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            <Typography
+              noWrap
+              sx={{
+                textAlign: 'justify',
+                fontSize: '15px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                 color: 'text.secondary',
                   '&:hover': { color: 'primary.main' }
-                }}
-              >
-                {row?.category_name}
-              </Typography>
-              <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
-                {row?.description}
-              </Typography>
-            </Box>
+              }}
+            >
+              {row?.category_name}
+            </Typography>
+            <Typography
+              noWrap
+              sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}
+            >
+              {row?.description}
+            </Typography>
           </Box>
-        );
-      }
+        </Box>
+      ),
     },
     {
       flex: 1,
       field: 'status',
       headerName: 'Status',
+      sortable: false,
       renderCell: ({ row }) => {
         return (
           <div>
@@ -159,9 +199,9 @@ const CategoriesDataGrid = () => {
     },
     {
       flex: 1,
-      sortable: false,
       field: 'actions',
       headerName: 'Actions',
+      sortable: false,
       renderCell: ({ row }) => (
         <Box sx={{ gap: 1 }}>
           <OptionsMenu
@@ -191,8 +231,8 @@ const CategoriesDataGrid = () => {
             ]}
           />
         </Box>
-      )
-    }
+      ),
+    },
   ];
 
   const handleFilter = useCallback(
@@ -227,7 +267,7 @@ const CategoriesDataGrid = () => {
           <ContentSkeleton />
         ) : (
           <Grid item xs={12}>
-            <Card sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)"}} >
+            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', mt: 1 }}>
               <DataGrid
                 autoHeight
                 key={"id"}
@@ -255,14 +295,14 @@ const CategoriesDataGrid = () => {
                   }
                 }}
                 rowHeight={60}
-                 rows={faqCategories?.data}
+                rows={faqCategories?.data || []}
                 columns={columns}
                 disableRowSelectionOnClick
+                disableColumnFilter
+                disableColumnMenu
+                onRowClick={handleRowClick}
                 hideFooterPagination
                 hideFooter
-                onRowClick={handleRowClick}
-                disableColumnFilter={true}
-                disableColumnMenu={true}
               />
             </Card>
           </Grid>
@@ -275,6 +315,8 @@ const CategoriesDataGrid = () => {
           description="Are you sure you want to delete this item?"
           title="Delete"
           handleSubmit={handleDeleteApi}
+          successDescription={successDescription}
+          failureDescription={failureDescription}
         />
         <StatusDialog
           open={statusOpen}
@@ -284,21 +326,12 @@ const CategoriesDataGrid = () => {
           handleSubmit={handleStatusChangeApi}
         />
       </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-      {faqCategories?.last_page !== 1 && (
-          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-            <Pagination
-              count={faqCategories?.last_page}
-              color="primary"
-              onChange={async (e, page) => {
-                const data = {
-                  page: page
-                };
-                dispatch(getAllFaqCategories(data));
-              }}
-            />
-          </Grid>
-        )}
+      <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+        <Pagination
+          count={faqCategories?.last_page || 1}
+          page={currentPage}
+          onChange={handlePageChange}
+        />
       </Grid>
     </>
   );

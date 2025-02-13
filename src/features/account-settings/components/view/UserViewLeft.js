@@ -34,111 +34,128 @@ const UserViewLeft = ({ userData, id, setRefetch }) => {
   const handleEditClose = () => setOpenEdit(false);
 
   return (
-    <Grid container spacing={3} justifyContent="center">
-      <Grid item xs={12}>
-        <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-          <CardContent
+    <Box
+      // sx={{
+      //   boxShadow: 2,
+      //   pt: 0,
+      //   borderRadius: 3,
+      //   width: {xs: 'full',sm:'50vw'},
+      //   height: '80vh',
+      //   display: 'flex',
+      //   justifyContent: 'center',
+      //   backgroundColor: 'white',
+      //   p: 5
+      // }}
+    >
+      <Card
+        sx={{
+          width: {sm: 'full',md:'50vw'},
+          backgroundColor: '#f5f5f5', // Changed background color to very light grey
+          color: '#fff',
+          borderRadius: 3,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+          padding: 2,
+          textAlign: 'center'
+        }}
+      >
+        {/* Pro Badge */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start', position: 'relative' }}>
+          {' '}
+          {/* Moved chip to the left */}
+          <Chip
+            label={userData?.is_active ? 'Active' : 'Inactive'}
             sx={{
-              pt: 4,
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
-              backgroundColor: 'primary.light',
-              color: 'primary.contrastText',
-              position: 'relative' // Added for absolute positioning inside this CardContent
+              position: 'absolute',
+              top: -16,
+              left: 16, // Positioned to the left
+              backgroundColor: userData?.is_active ? '#ffc107' : 'red',
+              color: '#000',
+              fontWeight: 'bold',
+              mt: 2
             }}
-          >
-            <Avatar
-              src={userData?.image ? getImageUrl(userData.image) : profilePlaceholder}
-              alt={userData?.name}
-              sx={{ width: 120, height: 120, mb: 3, border: '4px solid', borderColor: 'primary.main' }}
-            />
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: '120px',
-                right: 'calc(50% - 60px)', // Adjust this value based on avatar's alignment
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Tooltip title="Edit User Data" placement="right">
-                <Button
-                  onClick={handleEditClickOpen}
-                  sx={{
-                    backgroundColor: 'primary.main',
-                    color: 'success',
-                    minWidth: 0,
-                    padding: '6px',
-                    borderRadius: '50%',
-                    '&:hover': {
-                      backgroundColor: '#0aa865'
-                    }
-                  }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                    <path
-                      fill="white"
-                      d="m12.25 10.825l.925.925L18.6 6.325l-.925-.925zM5 19h.925l5.825-5.825l-.925-.925L5 18.075zm8.875-5.125l-3.75-3.75L14.3 5.95l-.725-.725L8.8 10q-.3.3-.7.3t-.7-.3t-.3-.712t.3-.713l4.75-4.75q.6-.6 1.413-.6t1.412.6l.725.725l1.25-1.25q.3-.3.713-.3t.712.3L20.7 5.625q.3.3.3.712t-.3.713zM4 21q-.425 0-.712-.288T3 20v-1.925q0-.4.15-.763t.425-.637l6.55-6.55l3.75 3.75l-6.55 6.55q-.275.275-.638.425t-.762.15z"
-                    />
-                  </svg>
-                </Button>
+          />
+        </Box>
+
+        {/* Avatar */}
+        <Avatar
+          src={userData?.image ? getImageUrl(userData.image) : profilePlaceholder}
+          alt={userData?.name}
+          sx={{ width: 100, height: 100, margin: '16px auto' }}
+        />
+
+        {/* Name and Location */}
+        <Typography variant="h3" fontWeight="bold">
+          {`${userData?.first_name || ''} ${userData?.last_name || ''}`}
+        </Typography>
+
+        <Typography variant="body2" sx={{ color: '#bbb' }}>
+          {userData?.email || 'N/A'}
+        </Typography>
+
+       
+        <Chip label={userData?.role?.identity || 'User'} variant='filled' sx={{backgroundColor:'#ff7407'}} ></Chip>
+
+        <CardContent sx={{ color: 'black' }}>
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2, textTransform: 'uppercase', fontWeight: 500 }}>
+            User Details
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <Box sx={{ display: 'grid', rowGap: 2 , boxShadow:3 ,p:2 }}>
+            {/* Name */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography color="text.primary" fontWeight={500}>
+                Name:
+              </Typography>
+              <Typography>{`${userData.first_name || ''} ${userData.last_name || ''}`}</Typography>
+            </Box>
+
+            {/* Email */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography color="text.primary" fontWeight={500}>
+                Email:
+              </Typography>
+              <Tooltip title={userData.email} arrow>
+                <Typography>{userData.email || 'N/A'}</Typography>
               </Tooltip>
             </Box>
-            <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 1 }}>
-              {`${userData?.first_name || ''} ${userData?.last_name || ''}`}
-            </Typography>
-            <Chip label={userData?.role?.identity || 'User'} color="warning" sx={{ textTransform: 'capitalize', fontWeight: 'bold' }} />
-          </CardContent>
 
-          <Divider />
-
-          <CardContent>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 3, textTransform: 'uppercase', fontWeight: 500 }}>
-              User Details
-            </Typography>
-            <Box sx={{ display: 'grid', rowGap: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography color="text.primary" fontWeight={500}>
-                  Name:
-                </Typography>
-                <Typography>{`${userData?.first_name || ''} ${userData?.last_name || ''}`}</Typography>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography color="text.primary" fontWeight={500}>
-                  Email:
-                </Typography>
-                <Typography>{userData?.email || 'N/A'}</Typography>
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography color="text.primary" fontWeight={500}>
-                  Status:
-                </Typography>
-                <Chip
-                  label={userData?.is_active ? 'Active' : 'Inactive'}
-                  style={{
-                    backgroundColor: userData?.is_active ? 'green' : 'red',
-                    color: 'white' // Ensures text is visible
-                  }}
-                  size="small"
-                />
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography color="text.primary" fontWeight={500}>
-                  Contact:
-                </Typography>
-                <Typography>{userData?.phone_number || 'N/A'}</Typography>
-              </Box>
+            {/* Status */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography color="text.primary" fontWeight={500}>
+                Status:
+              </Typography>
+              <Chip label={userData.is_active ? 'Active' : 'Inactive'}  size="small" />
             </Box>
-          </CardContent>
-        </Card>
-        <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
-      </Grid>
-    </Grid>
+
+            {/* Contact */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography color="text.primary" fontWeight={500}>
+                Contact:
+              </Typography>
+              <Typography>{userData.phone_number || 'N/A'}</Typography>
+            </Box>
+          </Box>
+        </CardContent>
+
+        {/* Buttons */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, marginTop: 2 }}>
+          <Button
+            variant="contained"
+            onClick={handleEditClickOpen}
+            sx={{
+              backgroundColor: '#00adb5',
+              textTransform: 'none',
+              borderRadius: 3,
+              padding: '8px 16px',
+              ':hover': { backgroundColor: '#007b7f' }
+            }}
+          >
+            Edit Profile
+          </Button>
+        </Box>
+      </Card>
+      <UserEditDialog id={id} userData={userData} openEdit={openEdit} handleEditClose={handleEditClose} setRefetch={setRefetch} />
+    </Box>
   );
 };
 

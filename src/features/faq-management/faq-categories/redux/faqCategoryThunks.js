@@ -6,7 +6,8 @@ export const getAllFaqCategories = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await fetchAllFaqCategories(data); // Implement this function in your services
-    dispatch(setFaqCategories(response?.data));
+    console.log("all categories:",response)
+    dispatch(setFaqCategories(response));
   } catch (error) {
     console.error(error);
   } finally {

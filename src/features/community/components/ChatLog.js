@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,12 +10,81 @@ import { formatTime } from 'utils/formatDate';
 import chatBg from "../../../assets/images/community/pattern.png"
 
 
+
 const ChatLog = (props) => {
   const { data, hidden, currentUser, socket } = props; 
   const chatArea = useRef(null);
   const user = getUserDetails();
 
+   const messageRefs = useRef(new Map());
+  const [isWindowFocused, setIsWindowFocused] = useState(document.hasFocus());
+  const [readMessages, setReadMessages] = useState(new Set());
+
   useEffect(() => {
+    const handleFocus = () => setIsWindowFocused(true);
+    const handleBlur = () => setIsWindowFocused(false);
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && isWindowFocused) {
+            const messageId = entry.target.getAttribute("data-id");
+  
+            if (!readMessages.has(messageId)) {
+              setTimeout(() => {
+                if (entry.isIntersecting && isWindowFocused) {
+                  triggerMessageRead(messageId);
+                }
+              }, 1500);
+            }
+          }
+        });
+      },
+      { threshold: 0.8 }
+    );
+  
+    
+    messageRefs.current.forEach((ref) => {
+      if (ref instanceof Element) {
+        observer.observe(ref);
+      }
+    });
+  
+    return () => {
+      observer.disconnect();
+    };
+  }, [data, isWindowFocused, readMessages]);
+  
+
+  const triggerMessageRead = (messageId) => {
+    const msg = data.find((m) => m._id === messageId);
+
+    if (msg && !readMessages.has(messageId)) {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+      console.log(formattedTime, messageId, msg);
+      socket.emit("messageRead",{ messageId: messageId, userId: instructor?._id})
+      setReadMessages((prevReadMessages) => new Set([...prevReadMessages, messageId]));
+    }
+  };
+
+  useEffect(() => {
+    
+    // socket.emit('messageRead', { messageId: data.group, userId: user?._id });
     if (data && data?.length) {
       scrollToBottom();
     }
@@ -27,12 +96,12 @@ const ChatLog = (props) => {
     }
   };
 
-  const triggerMessageRead = (messageId) => {
-    const msg = data.find((m) => m._id === messageId);
-    if (msg && !msg.read) {
-      socket.emit('messageRead', { messageId: msg._id, userId: user?._id });
-    }
-  };
+  // const triggerMessageRead = (messageId) => {
+  //   const msg = data.find((m) => m._id === messageId);
+  //   if (msg && !msg.read) {
+  //     socket.emit('messageRead', { messageId: msg._id, userId: user?._id });
+  //   }
+  // };
 
   const isSamePreviousUser = (index) => {
     if(index === 0) return false;

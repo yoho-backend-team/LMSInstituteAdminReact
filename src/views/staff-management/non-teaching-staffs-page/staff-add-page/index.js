@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -703,3 +704,5 @@ const StepperLinearWithValidation = () => {
   );
 };
 export default StepperLinearWithValidation;
+=======
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4

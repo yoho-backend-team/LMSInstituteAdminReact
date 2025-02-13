@@ -13,9 +13,15 @@ const getInstituteDetails = () => {
 }
 
 const getSelectedBranchId = () => {
+<<<<<<< HEAD
     if(typeof(secureLocalStorage)!== "undefined"){
     const branch = secureLocalStorage.getItem("selectedBranchId")
     return branch
+=======
+    if(typeof(localStorage)!== "undefined"){
+    const branch = localStorage.getItem("selectedBranchId")
+    return branch ? branch.replace(/^"|"$/g, '') : branch
+>>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
     }
 }
 
@@ -24,11 +30,15 @@ const generateEndpoints = () => {
     const branchId = getSelectedBranchId()
 
     const instituteId = institute? institute?.uuid  :""
+
+    // console.log(branchId,"branchId",instituteId)
     
     return {
         admin  : {
           me : `/api/institutes/auth/admin/me`,
-          change_password : "/api/institutes/auth/admin/change-password"
+          change_password : "/api/institutes/auth/admin/change-password",
+          forget_password: `/api/institutes/auth/admin/forget-password`,
+          
         },
         permission : {
             getAll : `/api/admin/institutes/permissions/all`,
@@ -51,11 +61,20 @@ const generateEndpoints = () => {
         },
         branch : {
             getAll : `/api/institutes/${instituteId}/branches/`,
-            create : `/api/institutes/${instituteId}/branches/`
+            create : `/api/institutes/${instituteId}/branches/`,
+        },
+        faq : {
+            create: `/api/institutes/faq`,  
+            getAll: `/api/institutes/faq/all`,  
+            delete: `/api/institutes/faq/delete/:uuid`,
+            update: `/api/institutes/faq/update/:uuid`
+
         },
         category: {
-            getAll: `/api/institutes/${instituteId}/categories/`,
-            create: `/api/institutes/${instituteId}/categories`
+            getAll: `/api/institutes/faq/category`,
+            create: `/api/institutes/faq/category`,
+            update: `/api/institutes/faq/category/update/:uuid`,
+            delete: `/api/institutes/faq/category/delete/:uuid`
         },
         course: {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,

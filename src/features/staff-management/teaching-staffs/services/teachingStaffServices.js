@@ -67,13 +67,16 @@ export const searchTeachingStaffs = async (searchQuery) => {
 
 export const addTeachingStaff = async (data) => {
   try {
+    console.log("iam working before response 2");
+    console.log(data);
+    
     const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff/register`, data, {
       headers: {
         Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
-    if (response.data.status) {
+    if (response.data) {
       return { success: true, message: 'TeachingStaff created successfully' };
     } else {
       return { success: false, message: 'Failed to create TeachingStaff' };

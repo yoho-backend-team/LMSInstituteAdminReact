@@ -9,7 +9,7 @@ import menuItem from 'menu-items';
 
 const MenuList = () => {
   const filteredData = [];
-
+// console.log('navItems',menuItem)
   menuItem?.items.forEach((item) => {
     if (item.children && item.children.length > 0) {
       const newItem = { ...item };

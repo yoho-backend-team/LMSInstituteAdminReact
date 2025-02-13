@@ -26,6 +26,9 @@ import { getImageUrl } from 'utils/imageUtils';
 import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
 import { imagePlaceholder } from 'utils/placeholders';
 import { useSpinner } from 'context/spinnerContext';
+import UploadIcon from '@mui/icons-material/Upload';
+
+import { Stepper, Step, StepLabel} from '@mui/material';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -249,23 +252,34 @@ const StepperLinearWithValidation = () => {
 
   return (
     <Card>
+
       <CardContent>
+
         <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+
           <Grid container spacing={5}>
+
             <Grid item xs={12}>
-              <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
+              <Typography variant="h1" sx={{ fontWeight: 600, color: 'text.primary' ,display:'flex',justifyContent:'center', textalign:'center' }}>
                 {steps[0].title}
               </Typography>
-              <Typography variant="caption" component="p">
+              <Typography variant="caption" component="p" sx={{fontSize:15,color:'grey',display:'flex',justifyContent:'center', textalign:'center' }}>
                 {steps[0].subtitle}
               </Typography>
             </Grid>
+
+
             <Grid item xs={12} sm={12}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'center' }}>
+
                 <ImgStyled src={logo?getImageUrl(logo):imagePlaceholder } alt="Profile Pic" />
-                <div>
-                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                    Upload Profile Picture
+
+              </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'center' }} >
+                <div >
+                  <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image" startIcon={<UploadIcon />} >
+                    Upload 
                     <input
                       hidden
                       type="file"
@@ -277,10 +291,13 @@ const StepperLinearWithValidation = () => {
                   <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
                     Reset
                   </ResetButtonStyled>
-                  <Typography sx={{ mt: 4, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+                  <Typography sx={{ mt:2, color: 'text.disabled',color:'grey' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
                 </div>
               </Box>
+
             </Grid>
+
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="student_first_name"
@@ -300,6 +317,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="student_last_name"
@@ -363,6 +381,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+            
             <Grid item xs={12} sm={6}>
               <Controller
                 name="gender"
@@ -417,6 +436,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="course"
@@ -464,6 +484,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="state"
@@ -482,6 +503,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="city"
@@ -500,6 +522,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="pin_code"
@@ -520,6 +543,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="address_line_one"
@@ -539,6 +563,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="address_line_two"
@@ -558,6 +583,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="student_phone_no"
@@ -578,6 +604,7 @@ const StepperLinearWithValidation = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <Controller
                 name="alt_phone"
@@ -619,15 +646,25 @@ const StepperLinearWithValidation = () => {
               />
             </Grid>
 
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Button variant="tonal" color="secondary" onClick={handleBack}>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+
+              <Button variant="tonal" color="secondary" onClick={handleBack} sx={{backgroundColor: '#f5f5f5', 
+            color:'black',
+            '&:hover': {
+              backgroundColor: '#e0e0e0',}}}>
                 Cancel
               </Button>
 
-              <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                Submit
+              <Button type="submit" variant="contained" sx={{ mr: 3,backgroundColor: 'black', 
+    color: 'white',           
+    '&:hover': {
+      backgroundColor: 'black', 
+      color: 'white',} }}>
+                Add Student
               </Button>
+
             </Grid>
+
           </Grid>
         </form>
       </CardContent>
