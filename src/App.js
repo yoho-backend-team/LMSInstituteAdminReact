@@ -29,9 +29,9 @@ const App = () => {
       .register('/sw.js')
       .then((registration) => {
         // console.log('Service Worker registered with scope:', registration.scope);
-        const user = JSON.parse(localStorage.getItem('userData'));
-        const selectBranchId = localStorage.getItem('selectedBranchId');
-        usePushSubscription(user.role, user._id, user, user?.institute_id, JSON.parse(selectBranchId));
+        const user = getSecureItem('userData');
+        const selectBranchId = getSecureItem('selectedBranchId');
+        usePushSubscription(user.role, user._id, user, user?.institute_id, selectBranchId);
       })
       .catch((error) => {
         console.error('Service Worker registration failed:', error);
@@ -85,6 +85,7 @@ const App = () => {
     const user = getSecureItem('userData');
     const notifiAdd = Cookies.get('instituteNotificationSubscription');
     const branches = secureLocalStorage.getItem('branches');
+    
     if (!selectBranchId) {
       // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
       setSelectedBranchId(branches?.[0]?.uuid);

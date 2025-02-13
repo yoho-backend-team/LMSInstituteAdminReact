@@ -13,6 +13,7 @@ const Axios = axios.create({
 
 Axios.interceptors.request.use((config)=> {
     const token = getSecureItem("token");
+    console.log(config,"config")
     if(token){
         config.headers["Authorization"] = `Token ${token ? token :""}`;
     }
@@ -40,7 +41,7 @@ Axios.interceptors.response.use(
 class HttpClient{
 
      async get(url,params){
-      const response = await Axios.get(url,params)
+      const response = await Axios.get(url,{params})
       return response.data
      }
 

@@ -12,9 +12,10 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
             if (sub) {
                 subscription = sub;
             } else {
+              console.log(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY,"process.env.REACT_WEBPUSH_PUBLIC_KEY")
                 return await registration.pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(process.env.WebPushpublicKey) // VAPID public key
+                    applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY) // VAPID public key
                 });
             }
         })
@@ -41,7 +42,7 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
 
 // Convert VAPID public key to Uint8Array
 const urlBase64ToUint8Array = (base64String) => {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const padding = '='.repeat((4 - base64String?.length % 4) % 4);
   const base64 = (base64String + padding)
     .replace(/\-/g, '+')
     .replace(/_/g, '/');

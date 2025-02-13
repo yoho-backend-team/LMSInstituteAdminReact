@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
@@ -15,6 +15,7 @@ import {
   Popper,
   MenuItem
 } from '@mui/material';
+import { IconSearch } from '@tabler/icons';
 
 // third-party
 import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
@@ -22,6 +23,8 @@ import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
 // project imports
 import Transitions from 'components/extended/Transitions';
 import { updateSelectedBranch } from 'features/authentication/authActions';
+
+import { shouldForwardProp } from '@mui/system';
 
 // Styles
 const PopperStyle = styled(Popper)(({ theme }) => ({
@@ -50,6 +53,17 @@ const OutlineInputStyle = styled(TextField)(({ theme }) => ({
     width: '100%',
     marginLeft: 4,
     background: '#fff'
+  }
+}));
+
+const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => ({
+  ...theme.typography.commonAvatar,
+  ...theme.typography.mediumAvatar,
+  background: theme.palette.secondary.light,
+  color: theme.palette.secondary.dark,
+  '&:hover': {
+    background: theme.palette.secondary.dark,
+    color: theme.palette.secondary.light
   }
 }));
 

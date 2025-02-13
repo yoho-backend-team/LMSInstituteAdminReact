@@ -15,6 +15,8 @@ const Students = () => {
   // States
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
+  const institute_id = useInstitute().getInstituteId()
+
   const dispatch = useDispatch();
   const studentAttendance = useSelector(selectStudentAttendances);
 
@@ -22,8 +24,10 @@ const Students = () => {
   const [refetch, setRefetch] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId,institute_id:useInstitute().getInstituteId(), page: '1' }));
+    dispatch(getAllStudentAttendances({ branch_id: selectedBranchId,institute_id: institute_id , page: '1' }));
   }, [selectedBranchId, dispatch, refetch]);
+
+  
 
   return (
     <>
