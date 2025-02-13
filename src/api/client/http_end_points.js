@@ -1,10 +1,11 @@
+import secureLocalStorage from "react-secure-storage";
 
 
 const backEndUrl = process.env.REACT_APP_PUBLIC_API_URL;
 
 const getInstituteDetails = () => {
-    if(typeof(localStorage) !== "undefined"){
-    const institute = localStorage.getItem("institute")
+    if(typeof(secureLocalStorage) !== "undefined"){
+    const institute = secureLocalStorage.getItem("institute")
     return JSON.parse(institute)
     }else{
      return undefined
@@ -12,8 +13,8 @@ const getInstituteDetails = () => {
 }
 
 const getSelectedBranchId = () => {
-    if(typeof(localStorage)!== "undefined"){
-    const branch = localStorage.getItem("selectedBranchId")
+    if(typeof(secureLocalStorage)!== "undefined"){
+    const branch = secureLocalStorage.getItem("selectedBranchId")
     return branch ? branch.replace(/^"|"$/g, '') : branch
     }
 }
@@ -24,7 +25,7 @@ const generateEndpoints = () => {
 
     const instituteId = institute? institute?.uuid  :""
 
-    console.log(branchId,"branchId",instituteId)
+    // console.log(branchId,"branchId",instituteId)
     
     return {
         admin  : {
@@ -54,11 +55,20 @@ const generateEndpoints = () => {
         },
         branch : {
             getAll : `/api/institutes/${instituteId}/branches/`,
-            create : `/api/institutes/${instituteId}/branches/`
+            create : `/api/institutes/${instituteId}/branches/`,
+        },
+        faq : {
+            create: `/api/institutes/faq`,  
+            getAll: `/api/institutes/faq/all`,  
+            delete: `/api/institutes/faq/delete/:uuid`,
+            update: `/api/institutes/faq/update/:uuid`
+
         },
         category: {
             getAll: `/api/institutes/${instituteId}/categories/`,
-            create: `/api/institutes/${instituteId}/categories`
+            create: `/api/institutes/${instituteId}/categories`,
+            update: `/api/institutes/faq/category/update/:uuid`,
+            delete: `/api/institutes/faq/category/delete/:uuid`
         },
         course: {
             get: `${backEndUrl}/api/institutes/${instituteId}/branches/`,
@@ -191,7 +201,7 @@ const generateEndpoints = () => {
            upgrade_request : `/api/subscription/institute/upgrade-subscription/`
         },
         activity : {
-            get : "/api/institutes/user/activity",
+            get : "/api/institutes/user/activities/",
         },
         reports : {
             get : `/api/institutes/${instituteId}/report/`

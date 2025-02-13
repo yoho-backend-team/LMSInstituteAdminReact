@@ -64,20 +64,18 @@ const Categories = () => {
       <div ref={wrapperRef}>
         <Grid container>
           <Grid item xs={12} sx={{ display:"flex" ,alignItems:"center",justifyContent:"space-between"}}>
+            <Grid  >
             <Button
               variant="contained"
               color="primary"
               onClick={toggleFilters}
-              sx={{
-               
-                display: 'flex',
-                alignItems: 'center',
-                 mt: 2 
-              }}
+              
               startIcon={<FilterListIcon />}
             >
               {showFilters ? 'Hide Filters' : 'Show Filters'}
             </Button>
+            <span style={{fontSize:"20px",fontWeight:"500"}}> Course Categories</span>
+            </Grid>
             <Button
             onClick={handleAdd}
             variant="contained"
@@ -86,6 +84,7 @@ const Categories = () => {
               backgroundColor: "#0CCE7F",
               ":hover": { backgroundColor: "#0AA865" },
               ml: 2,
+              
             }}
             startIcon={<Icon icon="tabler:plus" />}
           >
@@ -108,14 +107,21 @@ const Categories = () => {
           position: 'relative',
           left: 0,
           right: 0,
-          top:15,
+          top:10,
           backgroundColor: 'white', 
-          padding: 2,
+          
+          display:"flex",
+          justifyContent:"start",
+          alignItems:"center"
          
         }}
       >
         <CategoryFilter selectedBranchId={selectedBranchId} />
-        <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
+        <CategoryCardHeader setCategoryRefetch={setCategoryRefetch}
+/>
+
+
+
       </Box>
       
         )}
@@ -127,7 +133,7 @@ const Categories = () => {
           <CategorySkeleton />
         ) : (
           <Grid item xs={12}>
-            <Grid container spacing={2} className="match-height" sx={{ marginTop: 2 }}>
+            <Grid container spacing={2} className="match-height" sx={{ marginTop: 1 }}>
               {memoizedCategories?.data?.map((category, index) => (
                 <CategoryCard
                   key={index}

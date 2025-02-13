@@ -36,6 +36,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en'; // Add your preferred locale
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+
 
 const StepperLinearWithValidation = () => {
   const defaultPersonalValues = {
@@ -182,6 +184,11 @@ const StepperLinearWithValidation = () => {
       return JSON.parse(institute);
     } else {
       return undefined;
+    if(typeof(secureLocalStorage) !== "undefined"){
+    const institute = secureLocalStorage.getItem("institute")
+    return JSON.parse(institute)
+    }else{
+     return undefined
     }
   };
 

@@ -29,6 +29,8 @@ const CategoriesDataGrid = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [selectedFaqCategory, setSelectedFaqCategory] = useState(null);
   const [selectedFaqCategoryStatus, setSelectedFaqCategoryStatus] = useState(null);
+  const [successDescription, setSuccessDescription] = useState('');
+  const [failureDescription, setFailureDescription] = useState('');
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingItemId, setDeletingItemId] = useState(null);
   const [statusOpen, setStatusDialogOpen] = useState(false);
@@ -43,12 +45,15 @@ const CategoriesDataGrid = () => {
   const [rowsPerPage] = useState(10);
 
   useEffect(() => {
+    const institute = JSON.parse(localStorage.getItem('institute'));
+
     const data = {
       branchid: selectedBranchId,
-      instituteid: useInstitute().getInstituteId(),
+      instituteid: institute?._id,
       page: currentPage,
       perPage: rowsPerPage,
     };
+    console.log('data:', data);
     dispatch(getAllFaqCategories(data));
   }, [dispatch, selectedBranchId, currentPage, refetch]);
 
@@ -80,16 +85,44 @@ const CategoriesDataGrid = () => {
     }
   };
 
+  // const handleDeleteApi = async () => {
+  //   const data = {
+  //     id: deletingItemId,
+  //   };
+  //   const response = await deleteFaqCategory(data);
+  //   if (response.success) {
+  //     // toast.success(response.message);
+  //     setRefetch((state) => !state);
+  //   } else {
+  //     toast.error(response.message);
+  //   }
+  // };
+
   const handleDeleteApi = async () => {
-    const data = {
-      id: deletingItemId,
-    };
-    const response = await deleteFaqCategory(data);
-    if (response.success) {
-      // toast.success(response.message);
-      setRefetch((state) => !state);
-    } else {
-      toast.error(response.message);
+    try {
+      const data = {
+        id: deletingItemId
+      };
+      const response = await deleteFaqCategory(data);
+      console.log('delete response data : ', response);
+
+      // if (faqs?.data?.length === 1 && currentPage > 1) {
+      //   setCurrentPage(currentPage - 1);
+      // }
+      if (response.success) {
+        setSuccessDescription('Item deleted successfully!');
+        setFailureDescription('');
+        // toast.success(response.message);
+        // fetchFaqs(currentPage);
+        setRefetch((state) => !state);
+      } else {
+        setFailureDescription('Failed to delete the item. Please try again.');
+        setSuccessDescription('');
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setFailureDescription('An error occurred while deleting the item.');
+      setSuccessDescription('');
     }
   };
 
@@ -262,7 +295,7 @@ const CategoriesDataGrid = () => {
                   }
                 }}
                 rowHeight={60}
-                rows={faqCategories?.data}
+                rows={faqCategories?.data || []}
                 columns={columns}
                 disableRowSelectionOnClick
                 disableColumnFilter
@@ -282,6 +315,8 @@ const CategoriesDataGrid = () => {
           description="Are you sure you want to delete this item?"
           title="Delete"
           handleSubmit={handleDeleteApi}
+          successDescription={successDescription}
+          failureDescription={failureDescription}
         />
         <StatusDialog
           open={statusOpen}

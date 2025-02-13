@@ -36,8 +36,15 @@ class Client {
             return HttpClient.uploadFile(HTTP_END_POINTS.file.upload, data);
         }
     }
+    faq = {
+      create : (data) => HttpClient.post(HTTP_END_POINTS.faq.create,data),
+      getAll : (data,params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,params,data),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq.delete+data.id),
+      update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq.update.replace(':uuid', uuid), data)
+    }
+
     category = {
-      get    : (params) => HttpClient.get(HTTP_END_POINTS.category.getAll,params),
+      get : (data) => HttpClient.get(HTTP_END_POINTS.category.getAll,data),
       create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
       update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)

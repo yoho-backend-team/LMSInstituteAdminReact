@@ -3,6 +3,7 @@ import { createContext, useState, useEffect } from 'react';
 
 // ** ThemeConfig Import
 import themeConfig from 'configs/themeConfig';
+import secureLocalStorage from 'react-secure-storage';
 
 const initialSettings = {
   themeColor: 'primary',
@@ -33,7 +34,7 @@ const staticSettings = {
 const restoreSettings = () => {
   let settings = null;
   try {
-    const storedData = window.localStorage.getItem('settings');
+    const storedData = secureLocalStorage.getItem('settings');
     if (storedData) {
       settings = { ...JSON.parse(storedData), ...staticSettings };
     } else {
@@ -55,7 +56,7 @@ const storeSettings = (settings) => {
   delete initSettings.navHidden;
   delete initSettings.lastLayout;
   delete initSettings.toastPosition;
-  window.localStorage.setItem('settings', JSON.stringify(initSettings));
+  secureLocalStorage.setItem('settings', JSON.stringify(initSettings));
 };
 
 // ** Create Context

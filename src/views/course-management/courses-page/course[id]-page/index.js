@@ -3,6 +3,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import CodeIcon from '@mui/icons-material/Code';
 import {
   Accordion,
   AccordionActions,
@@ -38,6 +39,7 @@ const CourseViewPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const courseId = location.state?.id;
+  const category = location.state.category
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [courseDeleteModelOpen, setCourseDeleteModelOpen] = useState(false);
   const [selectedCourseDeleteId, setSelectedCourseDeleteId] = useState(null);
@@ -47,7 +49,7 @@ const CourseViewPage = () => {
   const [course, setCourse] = useState(null);
 
   const [videoUrl, setVideoUrl] = useState('');
-
+ console.log(location.state,"state")
   useEffect(() => {
     if (courseId && selectedBranchId) {
       getCourseData(courseId);
@@ -58,7 +60,7 @@ const CourseViewPage = () => {
   const getCourseData = async (id) => {
     const data = {
     id: id,
-    category:"39cab3db-4c46-4685-aab8-99a4b4375d50"
+    category:category
     };
     const result = await getCourseDetails(data);
     setCourse(result?.data?.data);
@@ -141,47 +143,58 @@ const CourseViewPage = () => {
   </Box>
 
   <CardContent sx={{ padding: 3, position: 'relative' }}>
-    <Typography variant="h4" fontWeight="bold" gutterBottom>
+
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+    <Typography variant="h1" fontWeight="bold" gutterBottom>
       {course?.course_name}
     </Typography>
 
-    <Typography variant="body1" color="text.secondary" gutterBottom>
+    <Typography variant="h3" color="primary" fontWeight="bold" sx={{mb:3}}>
+        ₹ {course?.price ? course?.price : course?.current_price}
+      </Typography>
+        
+    </Box>
+
+    <Typography variant="h5" color="gray" gutterBottom>
       {course?.description}
     </Typography>
 
     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1, mt: 2 }}>
-      <CustomChip label={course?.category?.category_name} color="secondary" skin="light" size="small" />
+      
+       <CustomChip  icon={<CodeIcon fontSize="small" sx={{ mr: 0 }}/>} label={course?.category?.category_name} color="secondary" skin="light" size="small"  sx={{ '.MuiChip-label': { pl: 1 } }} />
     </Box>
 
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 3 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Icon icon="mdi:clock-outline" style={{ fontSize: '20px' }} />
-        <Typography variant="body1" color="text.secondary">
+
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 ,mt:2}}>
+<Box sx={{display:'flex'}}>
+        <Icon icon="mdi:clock-outline" style={{ fontSize: '20px'}} />
+        <Typography variant="body1" color="text.secondary" sx={{ml:1 }}>
           Duration:
         </Typography>
         <Typography variant="body1" fontWeight="medium">
           {course?.duration}
         </Typography>
-      </Box>
+</Box>
 
-      <Typography variant="h3" color="primary" fontWeight="bold">
-        ₹ {course?.price ? course?.price : course?.current_price}
-      </Typography>
-    </Box>
-
-    <IconButton
+<Box>
+  <IconButton
       onClick={() => handleDelete(course)}
       color="error"
       sx={{ 
-        position: 'absolute', 
-        top: 16, 
-        right: 16, 
         backgroundColor: 'rgba(255,0,0,0.1)', 
         '&:hover': { backgroundColor: 'rgba(255,0,0,0.2)' } 
       }}
     >
       <Icon icon="mdi:delete-outline" style={{ fontSize: '20px' }} />
     </IconButton>
+</Box>
+
+      </Box>
+
+    
+
+  
+
   </CardContent>
 </Card>
 

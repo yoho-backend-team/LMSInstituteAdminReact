@@ -3,14 +3,15 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import client from 'api/client';
 import { HTTP_END_POINTS } from 'api/client/http_end_points';
+import secureLocalStorage from 'react-secure-storage';
+import { setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
 // import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
-import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
+// import { removeSecureItem, setBranches, setInstitute, setIsAuthenticated, setOtp, setPermissions, setSelectedBranchId, setToken, setUserData } from 'utils/localStroageService';
 const LOGIN_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/admin/login/`;
 const LOGOUT_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/admin/institute-user/logout`;
 // import { updateFcmToken } from 'features/user-management/users-page/services/userServices';
 // import { requestForToken } from '../../firebase';
 export const login = (username, password) => async (dispatch) => {
-  
   let data = {
     email: username,
     password: password
@@ -21,72 +22,63 @@ export const login = (username, password) => async (dispatch) => {
         'Content-Type': 'application/json'
       }
     });
-   
-    if(response.data.data.otpVerify){
-      localStorage.setItem("otp",JSON.stringify(response.data.data))
-      //  setOtp("otp",JSON.stringify(response.data.data))
-       toast.success(response.data.message)
-       return {otpVerify:true}
+
+    if (response.data.data.otpVerify) {
+      setOtp(response.data.data);
+      toast.success(response.data.message);
+      return { otpVerify: true };
     }
 
-      
-      localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('token', response.data.data.token);
-      localStorage.setItem('userData', JSON.stringify(response.data.data.user));
-      localStorage.setItem('permissions', JSON.stringify(response.data.data.permissions));
-      localStorage.setItem('branches', JSON.stringify(response.data.data.branches));
-      localStorage.setItem("institute",JSON.stringify(response.data.data.institute))
-      localStorage.setItem('selectedBranchId', JSON.stringify(response.data.data.branches[0]?.uuid))
-    
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: {
-          token: response.data.data.token,
-          userData: response.data.data.user,
-          permissions: response.data.data.permissions,
-          branches: response.data.data.branches,
-          institute: response.data.data.institue,
-          selectedBranchId: response.data.data.branches[0]?.uuid
-        }
-      });
-      // const fcmToken = await requestForToken();
-      // const updateToken = await updateFcmToken({ fcm_token: fcmToken });
+    setIsAuthenticated(true);
+    setToken(response.data.data.token);
+    setUserData(response.data.data.user);
+    setPermissions(response.data.data.permissions);
+    setBranches(response.data.data.branches);
+    setInstitute(response.data.data.institute);
+   setSelectedBranchId(response.data.data.branches[0]?.uuid);
 
-      window.location.replace('/');
-      toast.success('Login Successful');
-      return { success: true, message: 'Login successfully' };
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: {
+        token: response.data.data.token,
+        userData: response.data.data.user,
+        permissions: response.data.data.permissions,
+        branches: response.data.data.branches,
+        institute: response.data.data.institute,
+        selectedBranchId: response.data.data.branches[0]?.uuid
+      }
+    });
+
+    window.location.replace('/');
+    toast.success('Login Successful');
+    return { success: true, message: 'Login successfully' };
   } catch (error) {
-    // Dispatch error action
-    console.log(error,"error")
     dispatch({
       type: 'LOGIN_FAILURE',
       payload: error?.response?.data?.message
     });
-    throw new Error(error?.response?.data?.message)
+    throw new Error(error?.response?.data?.message);
   }
 };
 
-export const VerifyOtp = (otp,email,token) => async (dispatch) => {
-  const data ={
-    otp : otp,
-    email : email ,
-    token : token 
-  }
+export const VerifyOtp = (otp, email, token) => async (dispatch) => {
+  const data = {
+    otp: otp,
+    email: email,
+    token: token
+  };
   try {
-    
-  
-    const response = await client.users.verifyOtp(data)
+    const response = await client.users.verifyOtp(data);
 
-    if (response.status==="success") {
-      
-      localStorage.setItem('isAuthenticated', true);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userData', JSON.stringify(response.data.user));
-      localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
-      localStorage.setItem('branches', JSON.stringify(response.data.branches));
-      localStorage.setItem("institute",JSON.stringify(response.data.institute))
-      localStorage.removeItem("otp")
-     console.log(response,"response")
+    if (response.status === 'success') {
+      setIsAuthenticated(true);
+      setToken(response.data.token);
+      setUserData(response.data.user);
+      setPermissions(response.data.permissions);
+      setBranches(response.data.branches);
+      setInstitute(response.data.institute);
+      secureLocalStorage.removeItem('otp');
+      console.log(response, 'response');
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -118,11 +110,10 @@ export const VerifyOtp = (otp,email,token) => async (dispatch) => {
       payload: error.response.data.message
     });
   }
-}
+};
 
 export const logout = (data) => async (dispatch) => {
   try {
-    
     // const response = await axios.post(
     //   LOGOUT_API_ENDPOINT,
     //   {},
@@ -133,17 +124,16 @@ export const logout = (data) => async (dispatch) => {
     //     }
     //   }
     // );
-    const response = await client.users.logout(data)
+    const response = await client.users.logout(data);
 
     if (response.status) {
       // Remove token and user ID from localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('userData');
-      localStorage.removeItem('permissions');
-      localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('branches');
-      localStorage.removeItem("institute")
-      
+      secureLocalStorage.removeItem('token');
+      secureLocalStorage.removeItem('userData');
+      secureLocalStorage.removeItem('permissions');
+      secureLocalStorage.removeItem('isAuthenticated');
+      secureLocalStorage.removeItem('branches');
+      secureLocalStorage.removeItem('institute');
 
       // Dispatch logout action
       dispatch({

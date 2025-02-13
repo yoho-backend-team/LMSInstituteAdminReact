@@ -36,7 +36,7 @@ const UserViewLeft = ({ student }) => {
       />
       <CardContent sx={{ pt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ProfilePicture src={imageUrl} alt="profile-picture" sx={{mt:-10}}/>
-        <Typography variant="h5" sx={{ mt: 2, fontWeight: '600', color: 'text.primary' }}>
+        <Typography variant="h5" sx={{ mb:4, fontWeight: '600', color: 'text.primary' }}>
           {student.first_name} {student.last_name}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", color: "text.secondary", mb: 2 }}>

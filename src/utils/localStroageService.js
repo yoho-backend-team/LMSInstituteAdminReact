@@ -48,5 +48,3 @@ export const getSecureItem = (key) => {
     return item;
   }
 };
-
-

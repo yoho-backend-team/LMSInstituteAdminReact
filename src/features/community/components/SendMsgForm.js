@@ -43,7 +43,6 @@ const SendMsgForm = (props) => {
   const handleSendMsg = async (e) => {
     e.preventDefault();
     socket.emit("sendMessage", { senderId : user?._id, content: msg, groupId : selectedBatch?._id, name : user?.full_name || user?.first_name  }, (response) => {
-
     });
 
     // const response = await sendMessage(data);

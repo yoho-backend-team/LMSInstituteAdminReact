@@ -43,7 +43,7 @@ const UserViewLeft = ({ staff }) => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src={ staff?.image ? getImageUrl(staff?.image) : profilePlaceholder} alt="profile-picture" />
+        <ProfilePicture sx={{borderRadius:"50%",mb:5}} src={ staff?.image ? getImageUrl(staff?.image) : profilePlaceholder} alt="profile-picture" />
         <Box
           sx={{
             width: '100%',
@@ -63,7 +63,7 @@ const UserViewLeft = ({ staff }) => {
                 alignItems: 'center'
               }}
             >
-              <Typography variant="h3" sx={{ mr: 4, display: 'flex', alignItems: 'center', textTransform : "capitalize" }}>
+              <Typography variant="h3" sx={{ display: 'flex', alignItems: 'center',justifyContent:"start", textTransform : "capitalize" ,ml:-15,mt:8}}>
                 {staff?.full_name}
               </Typography>
             </Box>

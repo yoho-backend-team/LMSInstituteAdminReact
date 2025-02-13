@@ -1,6 +1,7 @@
 // groupService.js
 import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const STUDENT_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/student`;
 
@@ -18,12 +19,13 @@ export const getAllStudentsByBatch = async (data) => {
     throw error;
   }
 };
+
 export const getAllStudents = async (data) => {
   try {
     // const response = await axios.get(`${STUDENT_API_END_POINT}/read-by-branch-id?page=${data?.page}`, {
     //   headers: {
     //     'Content-Type': 'application/json',
-    //     Authorization: `Bearer ${localStorage.getItem('token')}`
+    //     Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
     //   },
     //   params: data
     // });
@@ -50,7 +52,8 @@ export const addStudent = async (data) => {
     return { success: true, message: 'Student created successfully' };
   } catch (error) {
     console.error('Error in addStudent:', error);
-    return { success: false, message: error?.response?.data?.message };  }
+    return { success: false, message: error?.response?.data?.message };  
+  }
 };
 
 export const deleteStudent = async (data) => {

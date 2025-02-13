@@ -1,4 +1,6 @@
 import axios from "axios";
+import secureLocalStorage from "react-secure-storage";
+import { getSecureItem } from "utils/localStroageService";
 
 
 const Axios = axios.create({
@@ -10,7 +12,8 @@ const Axios = axios.create({
 });
 
 Axios.interceptors.request.use((config)=> {
-    const token = localStorage.getItem("token");
+    const token = getSecureItem("token");
+    console.log(config,"config")
     if(token){
         config.headers["Authorization"] = `Token ${token ? token :""}`;
     }
@@ -25,7 +28,7 @@ Axios.interceptors.response.use(
             removeSecureItem('token');
             removeSecureItem('userData');
             removeSecureItem('permissions');
-            removeSecureItem('isAuthenticated');
+            removeSecureItem('auth');
             removeSecureItem('branches');
             removeSecureItem("institute")
             window.location.replace("/#/login")

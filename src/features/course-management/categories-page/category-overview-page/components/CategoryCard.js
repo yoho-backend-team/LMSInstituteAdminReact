@@ -107,20 +107,19 @@ const CategoryCard = (props) => {
             paddingTop: 3,
           }}
         >
-          <Box>
+          <Box sx={{display:"flex",justifyContent:"space-between" ,alignItems:"center"}}>
             <Typography
-              variant="h5"
-              sx={{
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                textOverflow: 'ellipsis',
-                fontWeight: 'bold',
-                fontSize: '1.25rem',
-                color: 'text.primary',
-                mb: 1
-              }}
+               variant="h2"
+               sx={{
+                 fontSize: "1.5rem", 
+                 fontWeight: "bold",
+                 letterSpacing: "-0.01562em", 
+                 background: "linear-gradient(to bottom right, #10B981, #8B5CF6)",
+                 WebkitBackgroundClip: "text",
+                 WebkitTextFillColor: "transparent",
+                 display: "inline-block",
+               }}
+             
             >
               {category?.category_name}
             </Typography>
@@ -129,42 +128,90 @@ const CategoryCard = (props) => {
                 {category?.course?.length} Courses
               </Typography>
             )}
-          </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
-            <TextField
-              size="small"
-              select
-              label="Status"
-              SelectProps={{ value: category?.is_active, onChange: (e) => handleStatusValue(e, category) }}
-              sx={{ minWidth: 100 }}
-            >
-              <MenuItem value="true">Active</MenuItem>
-              <MenuItem value="false">Inactive</MenuItem>
-            </TextField>
-            <OptionsMenu
-              menuProps={{ sx: { '& .MuiMenuItem-root svg': { mr: 2 } } }}
-              iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
-              options={[
-                {
-                  text: 'Edit',
-                  icon: <Icon icon="tabler:edit" />,
-                  menuItemProps: {
-                    onClick: () => {
-                      handleEditClick();
-                    }
-                  }
-                },
-                {
-                  text: 'Delete',
-                  icon: <Icon icon="mdi:delete-outline" />,
-                  menuItemProps: {
-                    onClick: () => handleDelete(category?.uuid)
-                  }
-                }
-              ]}
-            />
+<OptionsMenu 
+  menuProps={{ 
+    sx: { 
+      '& .MuiMenuItem-root': { 
+        display: 'flex', 
+        flexDirection: 'row-reverse' // Moves the icon to the right
+      },
+      '& .MuiMenuItem-root svg': { ml: 2 } // Adds left margin to the icon for spacing
+    } 
+  }}
+  iconButtonProps={{ size: 'small', sx: { color: 'text.secondary' } }}
+  options={[
+    {
+      text: 'Edit',
+      icon: <Icon icon="tabler:edit" />,
+      menuItemProps: {
+        onClick: () => {
+          handleEditClick();
+        }
+      }
+    },
+    {
+      text: 'Delete',
+      icon: <Icon icon="mdi:delete-outline" />,
+      menuItemProps: {
+        onClick: () => handleDelete(category?.uuid)
+      }
+    }
+  ]}
+/>
+
           </Box>
+          <span style={{mt:5,color:"grey",display:"inline-block"}}>Status</span>
+          <Box 
+  sx={{ 
+    display: 'flex', 
+    alignItems: 'center', 
+    gap: 1, 
+    border: '1px solid #E0E0E0', 
+    borderRadius: '8px', 
+    padding: '6px 12px', 
+    width: 'fit-content',
+    backgroundColor: 'white',
+    mt:-2 
+  }}
+>
+
+  <Box 
+    sx={{ 
+      width: 10, 
+      height: 10, 
+      borderRadius: '50%', 
+      backgroundColor: category?.is_active ? 'green' : 'gray' 
+    }} 
+  />
+  
+
+  <TextField
+    size="small"
+    select
+    variant="standard"
+  
+    value={category?.is_active}
+    onChange={(e) => handleStatusValue(e, category)}
+    sx={{
+      minWidth: 100,
+      '& .MuiInputBase-root': {
+        border: 'none',
+      },
+      '& .MuiSelect-select': {
+        padding: 0, 
+      },
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none !important', 
+      }
+    }}
+  >
+    <MenuItem value="true">Active</MenuItem>
+    <MenuItem value="false">Inactive</MenuItem>
+  </TextField>
+</Box>
+
+ 
         </CardContent>
       </Card>
 

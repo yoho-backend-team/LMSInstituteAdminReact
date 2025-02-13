@@ -38,7 +38,7 @@ const TableHeader = (props) => {
   return (
     <Grid container spacing={2} alignItems="center" sx={{ mt: 2, width: "120rem" }}>
       {/* Search Field */}
-      <Grid item xs={12} md={8} lg={4}>
+      <Grid item xs={12} md={2} lg={2}>
         <TextField
           value={searchValue}
           fullWidth

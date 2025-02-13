@@ -46,7 +46,7 @@ const UserViewAccount = ({ id }) => {
     
 
     try {
-      const token = localStorage.getItem('token');
+      const token = secureLocalStorage.getItem('token');
 
       if (!token) {
         console.error('Authentication token is missing!');

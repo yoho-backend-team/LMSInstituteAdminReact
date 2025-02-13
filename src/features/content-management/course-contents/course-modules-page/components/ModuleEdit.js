@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import ReactPlayer from 'react-player';
 import * as yup from 'yup';
 import { updateCourseModule } from '../services/moduleServices';
+import secureLocalStorage from 'react-secure-storage';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -66,7 +67,7 @@ const ModuleEdit = (props) => {
       url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/user-management/course/get-all`,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     };
 

@@ -19,6 +19,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import * as yup from 'yup';
 import { addFaqCategory } from '../services/faqCategoryServices';
+import secureLocalStorage from 'react-secure-storage';
+import toast from 'react-hot-toast';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,7 +46,7 @@ const FormContainer = styled(Box)(({ theme }) => ({
 }));
 
 const schema = yup.object().shape({
-  name: yup.string().required('Title Name is required'),
+  name: yup.string().required('Category Name is required'),
   description: yup.string().required('Description is required')
 });
 
@@ -56,6 +58,14 @@ const defaultValues = {
 const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
+
+  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+  const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
+
+  const requestData = {
+    branchid: selectedBranchId,
+    institute_id: institute ? institute._id : ''
+  }; 
 
   const {
     reset,
@@ -76,26 +86,30 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const onSubmit = async (data) => {
     setSubmitting(true);
     const institute = JSON.parse(localStorage.getItem('institute'));
-    const selectedBranchId = localStorage.getItem('selectedBranchId');
+    const selectedBranchId = localStorage.getItem('selectedBranchId') || '';
 
+    const cleanedBranchId = selectedBranchId ? selectedBranchId.replace(/^"|"$/g, '') : '';
+  
     const inputData = {
-      category_name: data.name,
+      category_name: data.name, 
       description: data.description,
-      branchid: selectedBranchId,
+      branchId: cleanedBranchId,
       institute_id: institute ? institute._id : ''
     };
-
+  
+    console.log("Sending Data:", inputData);
+  
     try {
       const result = await addFaqCategory(inputData);
       setSubmitting(false);
-
+  
       if (result.success) {
         setSuccessDialogOpen(true);
         setRefetch((state) => !state);
         toggle();
         reset();
       } else {
-        alert(result.response?.data?.message || 'Failed to create category');
+        toast.error(result.message || 'Failed to create category');
       }
     } catch (error) {
       setSubmitting(false);
@@ -103,6 +117,7 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
       alert('An error occurred while adding the category. Please try again.');
     }
   };
+  
 
   const closeSuccessDialog = () => {
     setSuccessDialogOpen(false);
@@ -147,21 +162,21 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                <Controller
-                name="name"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 2 }}
-                    label="Title"
-                    onChange={onChange}
-                    error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
+                  <Controller
+                    name="name"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        fullWidth
+                        label="Category "
+                        placeholder="Enter Category Name"
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.name)}
+                        helperText={errors.name?.message}
+                      />
+                    )}
                   />
-                )}
-              />
                 </Grid>
                 <Grid item xs={12}>
                   <Controller
@@ -180,23 +195,6 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
                     )}
                   />
                 </Grid>
-                {/* <Grid item xs={12}>
-                <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        label="Category "
-                        placeholder="Enter Category Name"
-                        value={value}
-                        onChange={onChange}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
-                      />
-                    )}
-                  />
-                </Grid> */}
               </Grid>
               <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
                 <Button type="submit" variant="contained" disabled={isSubmitting} sx={{ mr: 2 }}>

@@ -39,26 +39,29 @@ const Courses = () => {
   }, [dispatch, selectedBranchId, courseRefetch]);
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh' }}>
+    <div style={{  minHeight: '100vh' }}>
       {/* Filter Toggle Button */}
       
 
 <Grid container>
   <Grid item xs={12} sx={{   position: 'relative',display:"flex" ,alignItems:"center",justifyContent:"space-between"}}>
+    <Grid>
     <Button 
       variant="contained"
       color="primary"
       onClick={toggleFilterVisibility}
       startIcon={<FilterListIcon />}
-      sx={{ mt: 2 }}
+      sx={{mr:1 }}
     >
       {isFilterVisible ? 'Hide Filters' : 'Show Filters'}
     </Button>
-
+    <span style={{fontSize:"20px",fontWeight:"500"}}>Institute Courses</span>
+</Grid>
           <Button
             sx={{ py: 1, borderRadius: '0.5rem', 
               backgroundColor: '#0CCE7F',
-              marginRight:"20px",  
+              marginRight:"20px", 
+              
               '&:hover': {
                 backgroundColor: '#0AA865',
                 
@@ -75,31 +78,33 @@ const Courses = () => {
       
   </Grid>
   {isFilterVisible && (
-        <div
-          style={{
-            position: 'relative',
-           width:'100%',
-           top:10,
-            left: 0,
-            right: 0,
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-           cursor:"pointer",
-            padding: '16px',
-            boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
-            '&:hover': {
-              backgroundColor: '#0AA865',
-              
-            },
-          }}
-        >
-          <CourseFilter selectedBranchId={selectedBranchId} />
-          <CourseCardHeader
-            setCourseRefetch={setCourseRefetch}
-            selectedBranchId={selectedBranchId}
-            courses={courses}
-          />
-        </div>
-      )}
+  <ClickAwayListener onClickAway={() => setIsFilterVisible(false)}>
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        top: 10,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        cursor: 'pointer',
+        padding: '16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+      }}
+    >
+      <CourseFilter selectedBranchId={selectedBranchId} />
+      <CourseCardHeader
+        setCourseRefetch={setCourseRefetch}
+        selectedBranchId={selectedBranchId}
+        courses={courses}
+      />
+    </div>
+  </ClickAwayListener>
+)}
+
 </Grid>
 
          
@@ -108,6 +113,7 @@ const Courses = () => {
       <div
         style={{
           position: 'relative',
+          marginTop:"10px",
           
           transition: 'filter 0.3s ease-in-out',
         }}

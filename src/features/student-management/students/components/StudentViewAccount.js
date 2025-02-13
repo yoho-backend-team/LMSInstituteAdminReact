@@ -55,16 +55,16 @@ const UserViewAccount = ({ student }) => {
                 <Box sx={{ pt: 4 }}>
                   <Box sx={{ display: 'flex', mb: 3 }}>
                     <Typography sx={{ mr: 2, fontWeight: 600, color:  '#444444' }}>Username:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem',mt:"-2px",ml:5 }}>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:"37px" }}>
                       {student.full_name}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444' }}>Email:</Typography>
-                    <Typography sx={{ color: '#000000',fontWeight: 500 , fontSize: '1.1rem',mt:"-2px",ml:8}}>{student.email}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444' }}>Email:</Typography>
+                    <Typography sx={{ color: '#000000',fontWeight: 500 , fontSize: '1rem',mt:"-2px",ml:8}}>{student.email}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3, alignItems: 'center' }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Status:</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Status:</Typography>
                     <CustomChip
                       rounded
                       skin="light"
@@ -75,36 +75,36 @@ const UserViewAccount = ({ student }) => {
                     />
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Gender:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem',mt:"-2px",ml:5 }}>{student.gender}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Gender:</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:7 }}>{student.gender}Male</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>DOB:</Typography>
-                    <Typography sx={{ color: '#000000' , fontWeight: 500, fontSize: '1.1rem',mt:"-2px",ml:9}}>{student.dob}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>DOB:</Typography>
+                    <Typography sx={{ color: '#000000' , fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:9}}>{student.dob}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Qualification:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem' ,mt:"-2px",textTransform: 'capitalize',ml:"20px" }}>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Qualification:</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem' ,mt:"-2px",textTransform: 'capitalize',ml:"20px" }}>
                       {student.qualification}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Contact:</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Contact:</Typography>
                     <Typography sx={{ color: '#000000', fontWeight: 500,ml:6}}> {student?.contact_info?.phone_number}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Alt Contact:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500  ,ml:3}}>+91 {student?.contact_info?.alternate_phone_number}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Alt Contact:</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500  ,marginLeft:"27px"}}>+91 {student?.contact_info?.alternate_phone_number}</Typography>
                   </Box>
                   <Box sx={{ mb: 3 }}>
-                    <Typography sx={{ mr: 2, mb: 1, fontWeight: 500, color: '#444444'  }}>Address:</Typography>
-                    <Typography sx={{ color:'#000000', fontWeight: 500 ,fontSize:"1.1rem", mb: 1,mt:"-28px",ml:"115px" }}>
+                    <Typography sx={{ mr: 2, mb: 1, fontWeight: 600, color: '#444444'  }}>Address:</Typography>
+                    <Typography sx={{ color:'#000000' , fontWeight: 500,fontSize:"1rem", mb: 1,mt:"-28px",ml:"117px" }}>
                       {student.contact_info.address1}, {student?.contact_info?.address2}
                     </Typography>
-                    <Typography sx={{ color: '#000000',fontweight:"1500",fontSize:"1.1rem", mb: 1,mt:"-2px",ml:14 }}>
+                    <Typography sx={{ color: '#000000',fontWeight: 500,fontSize:"1rem", mb: 1,mt:"-2px",ml:"113px" }}>
                       {student.city}-{student?.contact_info?.pincode}
                     </Typography>
-                    <Typography sx={{ color: '#000000',fontweight:"500",fontSize:"1.1rem", mb: 1,mt:"-2px",ml:14 }}>{student?.contact_info?.state}</Typography>
+                    <Typography sx={{ color: '#000000',fontWeight:500,fontSize:"1rem", mb: 1,mt:"-2px",marginLeft:"117px" }}>{student?.contact_info?.state}</Typography>
                   </Box>
                 </Box>
               </Grid>
@@ -114,30 +114,30 @@ const UserViewAccount = ({ student }) => {
                 </Typography>
                 <Box sx={{ pt: 4 }}>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Course Id :</Typography>
-                    <Typography sx={{ color: '#000000' , fontWeight: 500, fontSize: '1.1rem',mt:"-2px",ml:"40px"}}>{student?.userDetail?.course?.id}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Course Id :</Typography>
+                    <Typography sx={{ color: '#000000' , fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:"40px"}}>{student?.userDetail?.course?.id}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Course Name :</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem',mt:"-2px",ml:"15px" }}>{student?.userDetail?.course?.course_name}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Course Name :</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:"15px" }}>{student?.userDetail?.course?.course_name}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Course Duration :</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem',mt:"-2px" ,ml:"-2px"}}>{student?.userDetail?.course?.duration}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Course Duration :</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px" ,ml:"-2px"}}>{student?.userDetail?.course?.duration}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Course Price :</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem' }}>{student?.userDetail?.course?.price}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Course Price :</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',marginLeft:"20px"}}>{student?.userDetail?.course?.price}10$</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 500, color: '#444444'  }}>Learning Format :</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1.1rem',mt:"-2px"}}>{student?.userDetail?.course?.class_type[0]}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Learning Format :</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px"}}>{student?.userDetail?.course?.class_type[0]}</Typography>
                   </Box>
                 </Box>
               </Grid>
             </Grid>
           </CardContent>
-          <CardActions sx={{ display: 'flex', justifyContent: '' }}>
+          <CardActions sx={{ display: 'flex', justifyContent: 'end', alignItems:"end" }}>
             <Button
               component={Link}
               state={{ student: student }}

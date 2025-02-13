@@ -9,14 +9,15 @@ import { default as Avatar, default as CustomAvatar } from 'components/mui/avata
 import { getOfflineClassDetails } from 'features/class-management/offline-classes/services/offlineClassServices';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch ,useSelector} from 'react-redux';
 import { useLocation } from 'react-router';
 import { getInitials } from 'utils/get-initials';
 import { profilePlaceholder } from 'utils/placeholders';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
+import OfflineClassSkeleton from 'components/cards/Skeleton/OfflineClassSkeleton';
 import { Search, LocationOn } from '@mui/icons-material'
 import { styled } from '@mui/material/styles'
+
 
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SearchIcon from '@mui/icons-material/Search';
@@ -77,7 +78,7 @@ const ViewOfflineClass = () => {
   const location = useLocation();
   const offlineClassId = location.state.id;
   const [offlineClassData, setOfflineClassData] = useState(null);
-
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredStudents = offlineClassData?.batch?.student?.filter((student) =>
@@ -107,6 +108,9 @@ const ViewOfflineClass = () => {
     } catch (error) {
       console.log(error);
     }
+   finally {
+    setLoading(false); // Stop loading after data is fetched
+  }
   };
 
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 7 });
@@ -189,6 +193,9 @@ const ViewOfflineClass = () => {
 
 
   return (
+<>
+{loading?(<OfflineClassSkeleton/>):(
+
 
     <Box>
 
@@ -459,6 +466,8 @@ const ViewOfflineClass = () => {
         </Card>
       </Grid>
     </Box>
+  )}
+    </>
   );
 };
 

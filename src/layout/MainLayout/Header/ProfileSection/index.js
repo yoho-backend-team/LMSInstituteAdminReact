@@ -1,8 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-
 import { useSelector } from 'react-redux';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import {
   Avatar,
@@ -25,8 +22,6 @@ import {
   Switch,
   Typography
 } from '@mui/material';
-
-// third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project imports
@@ -37,16 +32,16 @@ import MainCard from 'components/cards/MainCard';
 import Transitions from 'components/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
-// import { Link } from 'react-router-dom';
 import { logout } from 'features/authentication/authActions';
 import { useDispatch } from 'react-redux';
-
-// assets
 import { IconLogout, IconSearch, IconSettings, IconUser, IconUserCircle } from '@tabler/icons';
 import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from 'utils/check-auth-state';
 import { getImageUrl } from 'utils/imageUtils';
 import { profilePlaceholder } from 'utils/placeholders';
+import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem } from 'utils/localStroageService';
+
 // ==============================|| PROFILE MENU ||============================== //
 const getGreeting = () => {
   const hour = new Date().getHours();
@@ -65,15 +60,12 @@ const ProfileSection = () => {
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
-  const user = getUserDetails()
-  /**
-   * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-   * */
+  const user = getUserDetails();
   const anchorRef = useRef(null);
+
   const handleLogout = async () => {
-    const user = JSON.parse(localStorage.getItem("userData"))
-    
-    dispatch(logout({email:user.email}));
+    const user = getSecureItem("userData");
+    dispatch(logout({ email: user.email }));
   };
 
   const handleClose = (event) => {
@@ -91,6 +83,7 @@ const ProfileSection = () => {
       navigate(route);
     }
   };
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -128,7 +121,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={ user?.image ? getImageUrl(user?.image):profilePlaceholder}
+            src={user?.image ? getImageUrl(user?.image) : profilePlaceholder}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',
@@ -170,76 +163,36 @@ const ProfileSection = () => {
           <Transitions in={open} {...TransitionProps}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]} sx={{backgroundColor:'light grey'}}>
+                <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]} sx={{ backgroundColor: 'light grey' }}>
                   <Box sx={{ p: 2 }}>
                     <Stack>
                     <Stack direction="row" spacing={0.5} alignItems="center">
-  <Typography variant="h4">{getGreeting()},</Typography>
-  <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
+  <Typography variant="h5" sx={{fontWeight:"600"}}>{getGreeting()},</Typography>
+  <Typography component="span" variant="h3" sx={{ fontWeight: 500,fontSize:"20px" }}>
     {user?.first_name} {user?.last_name}
   </Typography>
 </Stack>
-                      <Typography variant="subtitle2" sx={{marginBottom:"10px"}}> Admin</Typography>
+<Box sx={{display:"flex",alignItems:"center",justifyContent:"start"}}>
+<Chip 
+  label="Admin" 
+  color="primary" 
+  size="small" 
+  sx={{ fontWeight: "bold", borderRadius: "6px", p:1,width:"100px" ,mt:1}} 
+/>
+</Box>
+
                     </Stack>
-                   
-                   
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
-                      {/* <UpgradePlanCard /> */}
-                      {/* <Divider /> */}
-                      {/* <Card
-                        sx={{
-                          bgcolor: theme.palette.primary.light,
-                          my: 2
-                        }}
-                      > */}
-                        {/* <CardContent>
-                          <Grid container spacing={3} direction="column">
-                            <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="subtitle1">Start DND Mode</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Switch
-                                    color="primary"
-                                    checked={sdm}
-                                    onChange={(e) => setSdm(e.target.checked)}
-                                    name="sdm"
-                                    size="small"
-                                  />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                            <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="subtitle1">Allow Notifications</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Switch
-                                    checked={notification}
-                                    onChange={(e) => setNotification(e.target.checked)}
-                                    name="sdm"
-                                    size="small"
-                                  />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </CardContent> */}
-                      {/* </Card> */}
-                      {/* <Divider /> */}
                       <List
                         component="nav"
                         sx={{
                           width: '100%',
                           maxWidth: 350,
                           minWidth: 300,
-                          marginTop:'-20px',
-                          marginLeft:'-30px',
-                         
+                          marginTop: '-20px',
+                          marginLeft: '-30px',
                           borderRadius: '10px',
                           [theme.breakpoints.down('md')]: {
                             minWidth: '100%'
@@ -250,63 +203,57 @@ const ProfileSection = () => {
                         }}
                       >
                         <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                          transition: "all 0.3s ease",
-                          marginLeft:"25px",
-                          backgroundColor: theme.palette.primary.dark,
-                          '&:hover': {
-                            backgroundColor: theme.palette.primary.dark,
-                            color: theme.palette.common.white,
-                          },
-                          '&.Mui-selected': {
-                            
-                            color: theme.palette.common.white,
+                          sx={{
+                            borderRadius: `${customization.borderRadius}px`,
+                            backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
+                            transition: "all 0.3s ease",
+                            marginLeft: "25px",
                             '&:hover': {
-                              backgroundColor: theme.palette.primary.darker,
+                              backgroundColor: theme.palette.primary.dark,
+                              color: theme.palette.common.white,
                             },
-                          },
-                        }} 
+                            '&.Mui-selected': {
+                              color: theme.palette.common.white,
+                              '&:hover': {
+                                backgroundColor: theme.palette.primary.darker,
+                              },
+                            },
+                          }}
                           selected={selectedIndex === 0}
-                          // href="/profile-management/account-settings"
                           onClick={(event) => {
                             handleListItemClick(event, 0, '#');
                             navigate('/profile-management/account-settings');
                           }}
                         >
-                         <ListItemIcon
-  sx={{
-    minWidth: "40px",
-    color: selectedIndex === 0 ? "white" : "inherit", 
-    "& svg": {
-      color: "black", 
-    },
-  }}
->
-  <PersonIcon  />
-</ListItemIcon>
+                          <ListItemIcon
+                            sx={{
+                              minWidth: "40px",
+                              color: selectedIndex === 0 ? "white" : "inherit",
+                              "& svg": {
+                                color: "black",
+                              },
+                            }}
+                          >
+                            <PersonIcon />
+                          </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2" sx={{ fontWeight: 500 }}>Profile</Typography>} />
                         </ListItemButton>
                         <ListItemButton
-                         sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                         transition: "all 0.3s ease",
-                         marginLeft:"25px",
-                         backgroundColor: theme.palette.primary.dark,
-                         '&:hover': {
-                           backgroundColor: theme.palette.primary.dark,
-                           color: theme.palette.common.white,
-                         },
-                         '&.Mui-selected': {
-                           
-                           color: theme.palette.common.white,
-                           '&:hover': {
-                             backgroundColor: theme.palette.primary.darker,
-                           },
-                         },
-                       }} 
+                      sx={{ 
+                        border: "1px solid #E0E0E0", 
+                        borderRadius: "8px",
+                        padding: "8px 16px", 
+                        transition: "all 0.3s ease",
+                        ml:3.5,
+                    
+                        '&:hover': {
+                          backgroundColor: "#F5F5F5", 
+                        }
+                      }} 
                          selected={selectedIndex === 1}
                           onClick={(event) => {
                             handleListItemClick(event, 1, '#');
-                            navigate("/institute-management/settings")
+                            navigate("/institute-management/settings");
                           }}
                         >
                           <ListItemIcon
@@ -322,68 +269,47 @@ const ProfileSection = () => {
 </ListItemIcon>
                            <ListItemText primary={<Typography variant='body2'sx={{ fontWeight: 500 }} >Settings</Typography>}></ListItemText>
                         </ListItemButton>
-                        {/* <ListItemButton
+                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
                           onClick={(event) => handleListItemClick(event, 1, '#')}
                         >
                           <ListItemIcon>
-                            <IconUser stroke={1.5} size="1.3rem" />
+                            <IconSettings stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Grid container spacing={1} justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="body2">Social Profile</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Chip
-                                    label="02"
-                                    size="small"
-                                    sx={{
-                                      bgcolor: theme.palette.warning.dark,
-                                      color: theme.palette.background.default
-                                    }}
-                                  />
-                                </Grid>
-                              </Grid>
-                            }
-                          />
-                        </ListItemButton> */}
+                          <ListItemText primary={<Typography variant='body2' sx={{ fontWeight: 500 }}>Settings</Typography>} />
+                        </ListItemButton>
                         <ListItemButton
-                         sx={{ borderRadius: `${customization.borderRadius}px`, backgroundColor: selectedIndex === 0 ? theme.palette.primary.light : "transparent",
-                         transition: "all 0.3s ease",
-                         marginLeft:"25px",
-                         backgroundColor: theme.palette.primary.dark,
-                         '&:hover': {
-                           backgroundColor: theme.palette.primary.dark,
-                           color: theme.palette.common.white,
-                         },
-                         '&.Mui-selected': {
-                           
-                           color: theme.palette.common.white,
-                           '&:hover': {
-                             backgroundColor: theme.palette.primary.darker,
-                           },
-                         },
-                       }} 
+                          sx={{
+                            borderRadius: `${customization.borderRadius}px`,
+                            backgroundColor: selectedIndex === 4 ? theme.palette.primary.light : "transparent",
+                            transition: "all 0.3s ease",
+                            marginLeft: "25px",
+                            '&:hover': {
+                              backgroundColor: theme.palette.primary.dark,
+                              color: theme.palette.common.white,
+                            },
+                            '&.Mui-selected': {
+                              color: theme.palette.common.white,
+                              '&:hover': {
+                                backgroundColor: theme.palette.primary.darker,
+                              },
+                            },
+                          }}
                           selected={selectedIndex === 4}
                           onClick={handleLogout}
                         >
-                         <ListItemIcon             
-  sx={{
-    minWidth: "40px",
-    color: selectedIndex === 0 ? "white" : "black",
-    "& svg": {
-      color: "black", 
-    
-    },
-     
-  }}
->
-<LogoutIcon/>
-  
-</ListItemIcon>
+                          <ListItemIcon
+                            sx={{
+                              minWidth: "40px",
+                              color: selectedIndex === 4 ? "white" : "black",
+                              "& svg": {
+                                color: "black",
+                              },
+                            }}
+                          >
+                            <LogoutIcon />
+                          </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2" sx={{ fontWeight: 500 }}>Logout</Typography>} />
                         </ListItemButton>
                       </List>
