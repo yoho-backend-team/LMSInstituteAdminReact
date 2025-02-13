@@ -12,11 +12,7 @@ export const getAllStudentFees = async (data) => {
     const response = await axios.get(`${STUDENT_FEE_API_ENDPOINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-<<<<<<< HEAD
         Authorization: `Token ${secureLocalStorage.getItem('token')}`
-=======
-        Authorization: `Bearer ${'Token ' + token}`
->>>>>>> a8d8554387264e85ea792f13f7281cd5e0c92bd4
       },
       params: data
 

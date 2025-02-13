@@ -55,8 +55,6 @@ const defaultValues = {
   description: ''
 };
 
-
-   
 const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -67,7 +65,7 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const requestData = {
     branchid: selectedBranchId,
     institute_id: institute ? institute._id : ''
-  };
+  }; 
 
   const {
     reset,
@@ -116,7 +114,7 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
     } catch (error) {
       setSubmitting(false);
       console.error('Error in creating FaqCategory:', error);
-      toast.error(error.response?.data?.message || 'An error occurred while adding the category. Please try again.');
+      alert('An error occurred while adding the category. Please try again.');
     }
   };
   

@@ -44,28 +44,6 @@ export const getAllFaqCategories = async (data) => {
 
 export const searchFaqCategories = async (searchQuery) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
-      },
-      params: { keyword: searchQuery }
-    });
-
-    if (response.data) {
-      return { success: true, data: response.data };
-    } else {
-      return { success: false, message: 'Failed to fetch search results' };
-    }
-  } catch (error) {
-    console.error('Error in searchFaqCategories:', error);
-    throw error;
-  }
-};
-
-export const addFaqCategory = async (inputData) => {
-  try {
-    console.log("inputData", inputData);
 
     const { instituteId } = inputData;
 
