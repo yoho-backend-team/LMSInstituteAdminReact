@@ -1,5 +1,6 @@
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
@@ -169,7 +170,6 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
            position: 'relative',  
            top: '19%',  
            left:"50%",
-          
            transform: 'translateX(-50%)',
            zIndex: 999,  
            width: '100%',    
@@ -192,13 +192,21 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
 
       <Grid item xs={12} sm={12}>
         
-        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-          <CardHeader title="Batches" />
+        
+          <CardHeader title={ <Typography 
+      variant="h3"  
+      sx={{ 
+        fontSize: '1.5rem',  
+        fontWeight: 'bold', 
+      }}
+    >
+      Batches
+    </Typography>} />
           <CardContent>
 
             <Grid container spacing={3}>
 
-             <Grid item xs={12} sm={6}> {/* changed textfield to Autocompletegrid for avoid auto exit in filtercard while clicking dropdown */}
+             <Grid item xs={12} sm={6}> 
   <Autocomplete
     fullWidth
     value={filterstatusValue}
@@ -283,7 +291,7 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
              
             </Grid>
           </CardContent>
-        </Card>
+         
       </Grid>
     </DatePickerWrapper>
     </Box>

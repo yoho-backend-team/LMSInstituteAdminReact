@@ -60,7 +60,7 @@ const CourseViewPage = () => {
   const getCourseData = async (id) => {
     const data = {
     id: id,
-    category:category
+    category:"39cab3db-4c46-4685-aab8-99a4b4375d50"
     };
     const result = await getCourseDetails(data);
     setCourse(result?.data?.data);
