@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid,Select, MenuItem, Button, FormControl, InputLabel } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import AllActivity from './card/Allactivity';
@@ -7,6 +7,7 @@ import CardPopularCourse from './card/CardPopularCourse';
 import CardProjectStatus from './card/CardProjectStatus';
 import CardStatsVertical from './card/CardStatsVertical';
 import RevenueReport from './card/RevenueReport';
+import ExpenseReport from './card/ExpenseReport';
 import CardSupportTracker from './card/CardSupportTracker';
 import DashboardSkeleton from 'components/cards/Skeleton/DashboardSkeleton';
 import client from 'api/client';
@@ -14,11 +15,18 @@ import { useSpinner } from 'context/spinnerContext';
 import toast from 'react-hot-toast';
 import Tour from 'components/tour/Tour';
 
+import FlipChart from './card/FlipChart';
+
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [Reports, setReports] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { show, hide } = useSpinner();
+
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); 
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());  
+
+  const [chartType, setChartType] = useState('revenue');
 
   const steps = [
     {
@@ -59,32 +67,46 @@ const Dashboard = () => {
     }
   ];
 
-  useEffect(() => {
-    const getReports = async (props) => {
-      try {
+  const getReports = async (props) => {
+    try {
         show();
         const response = await client.reports.get(props);
         setReports(response);
       } catch (error) {
-        toast.error(error?.message);
+        toast.error(error?.message );
       } finally {
         hide();
       }
     };
+
+    useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1000);
+
     const data = { branch: selectedBranchId };
     getReports(data);
+
     return () => clearTimeout(timer);
   }, [selectedBranchId]);
+
+
+  const handleFilter = () => {
+    const data = { branch: selectedBranchId, month: selectedMonth, year: selectedYear };
+    getReports(data);
+  };
 
   return (
     <Grid container spacing={2} className="match-height">
       {loading ? (
         <DashboardSkeleton />
       ) : (
-        <Grid container spacing={2} sx={{ pt: '22px', pl: '22px' }}>
+        <Grid container spacing={2} sx={{ pt: '22px', pl: '22px'}}>
+
+<Grid container alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
+
+<Grid item>
+
           <div>
             <header className="header">
               <h1>Welcome to Our Website</h1>
@@ -95,6 +117,45 @@ const Dashboard = () => {
             </section>
             <Tour steps={steps} onTourComplete={() => alert('Tour Completed!')} />
           </div>
+</Grid>
+
+          <Grid item   gap={2} sx={{ p: 2 ,display:'flex'}}>
+
+        <FormControl size="small">
+          <InputLabel>Month</InputLabel>
+          <Select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+            {Array.from({ length: 12 }, (_, i) => (
+              <MenuItem key={i + 1} value={i + 1}>
+                {new Date(0, i).toLocaleString('en', { month: 'long' })}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl size="small">
+          <InputLabel>Year</InputLabel>
+          <Select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+            {Array.from({ length: 5 }, (_, i) => (
+              <MenuItem key={i} value={new Date().getFullYear() - i}>
+                {new Date().getFullYear() - i}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Button variant="contained" color="primary"  onClick={handleFilter}>
+          Apply Filter
+        </Button>
+
+      </Grid>
+
+</Grid>
+
+      
+         
+
+
+
           {/* Top Stack Cards - Full Width */}
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -208,14 +269,20 @@ const Dashboard = () => {
             
           </Grid> */}
           <Grid item xs={12} md={8.5}>
+
             <Grid container spacing={2}>
+
               <Grid item xs={12} md={7}>
-                <RevenueReport revenue={Reports?.revenue} />
+                {/* <RevenueReport revenue={Reports?.revenue} /> */}
+                <FlipChart revenue={Reports?.revenue} expense={Reports?.expense} />
               </Grid>
+
               <Grid item xs={12} md={5}>
                 <CardPopularCourse courses={Reports?.popularCourses} />
               </Grid>
+
             </Grid>
+
           </Grid>
 
           {/* AllActivity Section */}

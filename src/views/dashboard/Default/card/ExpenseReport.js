@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import CustomTextField from 'components/mui/text-field';
 import ReactApexChart from 'react-apexcharts';
 
-const RevenueReport = ({ revenue }) => {
+const ExpenseReport = ({ expense }) => {
   const theme = useTheme();
   const colors = Array(9).fill(theme.palette.primary.main);
   const options = {
@@ -89,7 +89,7 @@ const RevenueReport = ({ revenue }) => {
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
   {/* Properly aligned heading */}
   <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left', mt: 2, marginBottom: '26px' }}>
-    Revenue
+    Expense
   </Typography>
 
   {/* Increased Card size with background color */}
@@ -98,12 +98,12 @@ const RevenueReport = ({ revenue }) => {
       boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
       borderRadius: '8px',
       minHeight: 450,
-      backgroundColor: '#f0f9ff', // Light blue background for the Card
+      backgroundColor: '#f0f9ff',  
     }}
   >
-    
+
     <CardContent sx={{ p: 3 }}>
-      <ReactApexChart type="bar" options={options} series={[{ data: revenue }]} height={320} />
+      <ReactApexChart type="bar" options={options} series={[{ data: expense }]} height={320} />
     </CardContent>
   </Card>
 </Box>
@@ -111,4 +111,4 @@ const RevenueReport = ({ revenue }) => {
   );
 };
 
-export default RevenueReport;
+export default ExpenseReport;

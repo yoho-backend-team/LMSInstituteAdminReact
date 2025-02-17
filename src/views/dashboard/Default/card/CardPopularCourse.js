@@ -54,7 +54,7 @@ const CardPopularCourse = ({ courses }) => {
   return (
     <Box>
       {/* Header Section */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' ,mt:0.5}}>
       <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left',mt:2 }}>
         Popular Courses
       </Typography>
@@ -84,7 +84,7 @@ const CardPopularCourse = ({ courses }) => {
       </Box>
 
       {/* Cards Section */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 2 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 2 ,mt:4.5 }}>
   {courses?.map((item, index) => (
     <Card
       key={item.course_name}

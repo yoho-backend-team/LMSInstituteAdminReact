@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button,Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -131,8 +131,9 @@ const StudentFilter = (props ) => {
        >
       <Grid item xs={12}>
 
-        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-          <CardHeader title="Students" />
+          <CardHeader title={ <Typography variant="h3"  sx={{fontSize: '1.5rem',fontWeight: 'bold'}}>
+      Students
+    </Typography>} />
           <CardContent>
 
             <Grid container spacing={3}>
@@ -212,7 +213,7 @@ const StudentFilter = (props ) => {
             
             </Grid>
           </CardContent>
-        </Card>
+         
       </Grid>
       </Box>
       </>
