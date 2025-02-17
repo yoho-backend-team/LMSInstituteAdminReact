@@ -22,6 +22,8 @@ const Courses = () => {
 
   const [courseRefetch, setCourseRefetch] = useState(false);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
   
   const toggleFilterVisibility = () => {
     setIsFilterVisible((prev) => !prev);
@@ -29,14 +31,22 @@ const Courses = () => {
 
   
  
-
   useEffect(() => {
-    const data = {
-      id: selectedBranchId,
-      page: '1',
+    const fetchCourses = () => {
+      const data = {
+        id: selectedBranchId,
+        page: currentPage, 
+      };
+      dispatch(getAllCourses(data));
     };
-    dispatch(getAllCourses(data));
-  }, [dispatch, selectedBranchId, courseRefetch]);
+
+    fetchCourses();
+  }, [dispatch, selectedBranchId, courseRefetch, currentPage]);
+
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);  
+  };
+
 
   return (
     <div style={{  minHeight: '100vh' }}>
@@ -142,13 +152,8 @@ const Courses = () => {
             <Pagination
               count={courses?.last_page}
               color="primary"
-              onChange={(e, page) => {
-                const data = {
-                  id: selectedBranchId,
-                  page: page,
-                };
-                dispatch(getAllCourses(data));
-              }}
+              page={currentPage}
+              onChange={handlePageChange}
             />
           </Grid>
         )}

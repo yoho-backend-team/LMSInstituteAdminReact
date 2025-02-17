@@ -1,4 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
+import {Typography} from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -132,9 +133,9 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
 
         <Grid item xs={12}>
 
-          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
+         
 
-            <CardHeader title="Filters" />
+            <CardHeader title={ <Typography variant="h3"  sx={{fontSize: '1.5rem',fontWeight: 'bold'}}>Filters</Typography>}/>
 
             <CardContent>
 
@@ -177,7 +178,7 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
 
             </CardContent>
 
-          </Card>
+          
 
         </Grid>
 

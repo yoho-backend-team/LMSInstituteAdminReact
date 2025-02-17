@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField as CustomTextField, TextField } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -115,7 +116,7 @@ const StepperLinearWithValidation = () => {
     branch: selectedBranchId,
     designation: '',
     education_qualification: '',
-    username: '',
+    // username: '',
     studentId:'',
     logo: ''
   };
@@ -223,7 +224,7 @@ const StepperLinearWithValidation = () => {
         alternate_phone_number : "+91"+personalData?.alt_phone
       },
       qualification : personalData.qualification,
-      username : personalData.username,
+      // username : personalData.username,
       dob : convertDateFormat(personalData.date_of_birth),
       gender : personalData.gender,
       branch_id : personalData.branch,
@@ -590,13 +591,17 @@ const StepperLinearWithValidation = () => {
                 control={personalControl}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
+                  
                   <CustomTextField
                     fullWidth
                     type="number"
                     value={value}
                     label="Phone Number"
                     onChange={onChange}
-                    placeholder="Carter"
+                    placeholder=""
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                    }}
                     error={Boolean(personalErrors['student_phone_no'])}
                     aria-describedby="stepper-linear-personal-phone"
                     helperText={personalErrors.student_phone_no?.message}
@@ -617,30 +622,13 @@ const StepperLinearWithValidation = () => {
                     type="number"
                     label="Alt Phone Number"
                     onChange={onChange}
-                    placeholder="Carter"
+                    placeholder=""
+                    InputProps={{
+                      startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                    }}
                     error={Boolean(personalErrors['alt_phone'])}
                     aria-describedby="stepper-linear-personal-alt_phone"
                     helperText={personalErrors.alt_phone?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="username"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="Username"
-                    onChange={onChange}
-                    placeholder="carterLeonard"
-                    error={Boolean(personalErrors['username'])}
-                    aria-describedby="stepper-linear-account-username"
-                    helperText={personalErrors.username?.message}
                   />
                 )}
               />
