@@ -14,7 +14,7 @@ const BranchSkeleton = () => {
             <CardHeader title={<Skeleton animation="wave" height={25} width={140} style={{ marginBottom: 6 }} />} />
           </Box>
 
-          <Box sx={{display:'flex',justifyContent:'space-around',mb:3}}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', mb: 3 }}>
             <Box sx={{ p: 1 }}>
               {[1, 2].map((item, index) => (
                 <Box
@@ -28,7 +28,7 @@ const BranchSkeleton = () => {
                     <Skeleton variant="circular" width={34} height={34} />
                   </CustomAvatar>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Typography variant="h6" sx={{mt:2}}>
+                    <Typography variant="h6" sx={{ mt: 2 }}>
                       <Skeleton animation="wave" height={24} width={100} />
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'text.disabled' }}>
@@ -52,7 +52,7 @@ const BranchSkeleton = () => {
                     <Skeleton variant="circular" width={34} height={34} />
                   </CustomAvatar>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Typography variant="h6" sx={{mt:2}}>
+                    <Typography variant="h6" sx={{ mt: 2 }}>
                       <Skeleton animation="wave" height={24} width={100} />
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'text.disabled' }}>
@@ -69,9 +69,9 @@ const BranchSkeleton = () => {
       {/* Second Card */}
 
       <Grid item xs={12} sm={6}>
-        <Card sx={{ pt: 1,pb:4}}>
-          <Grid container display={'flex'} justifyContent={'space-around'} >
-            <Box sx={{mt:2}}>
+        <Card sx={{ pt: 1, pb: 4 }}>
+          <Grid container display={'flex'} justifyContent={'space-around'}>
+            <Box sx={{ mt: 2 }}>
               <Typography variant="h1">
                 <Skeleton animation="wave" height={40} width={100} />
               </Typography>
@@ -100,10 +100,9 @@ const BranchSkeleton = () => {
                 </Box>
               ))}
             </Box>
-            <Box sx={{mt:2}}>
+            <Box sx={{ mt: 2 }}>
               {/* <ReactApexCharts type="radialBar" height={250} options={{}} series={[85]} /> */}
-            <Skeleton variant="rectangular" width={150} height={160} animation="wave" sx={{ mb: 4 }} />
-
+              <Skeleton variant="rectangular" width={150} height={160} animation="wave" sx={{ mb: 4 }} />
             </Box>
           </Grid>
         </Card>

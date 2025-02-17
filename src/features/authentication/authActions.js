@@ -35,7 +35,7 @@ export const login = (username, password) => async (dispatch) => {
     setPermissions(response.data.data.permissions);
     setBranches(response.data.data.branches);
     setInstitute(response.data.data.institute);
-   setSelectedBranchId(response.data.data.branches[0]?.uuid);
+   setSelectedBranchId(response.data.data.branches[3]?.uuid || response.data.data.branches[0]?.uuid);
 
     dispatch({
       type: 'LOGIN_SUCCESS',
@@ -49,6 +49,7 @@ export const login = (username, password) => async (dispatch) => {
       }
     });
 
+    console.log(response.data.data.branches[0]?.uuid)
     window.location.replace('/');
     toast.success('Login Successful');
     return { success: true, message: 'Login successfully' };

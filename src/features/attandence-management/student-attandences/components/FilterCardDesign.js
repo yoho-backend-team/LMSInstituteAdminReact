@@ -2,7 +2,7 @@ import { Box, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
 import png from '../../../../assets/images/attendance/warden.png';
 import { IconCalendarEvent } from '@tabler/icons';
-import LocationComponent from 'features/cities/componenets/LocationCom';
+// import LocationComponent from 'features/cities/componenets/LocationCom';
 
 const FilterCardDesign = ({ show, setShow, back }) => {
   const innerContainer = {
@@ -15,10 +15,7 @@ const FilterCardDesign = ({ show, setShow, back }) => {
     background: "linear-gradient(to right,#2c3e50,#bdc3c7)"
   };
 
-  const [city, setCity] = useState(false);
-
   return (
-    city ? (
       <Box>
         <Box style={innerContainer}>
           <Box style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
@@ -36,9 +33,6 @@ const FilterCardDesign = ({ show, setShow, back }) => {
           </Box>
         </Box>
       </Box>
-    ) : (
-      <LocationComponent />
-    )
   );
 };
 
