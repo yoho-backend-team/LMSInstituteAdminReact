@@ -20,18 +20,9 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
             }
         })
         .then((sub) => {
-          //  subscription = sub;
-          //  console.log(subscription,"subcrip")
-    
-          // fetch(`${process.env.REACT_APP_PUBLIC_API_URL}/api/notification/institute/subscribe`, {
-          //   method: 'POST',
-          //   headers: { 'Content-Type': 'application/json' },
-          //   body: JSON.stringify({ subscription: subscription })
-          // });
-
-    const endPoint = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification/institute/subscribe`
-    // console.log(endPoint,process.env.REACT_APP_PUBLIC_API_URL)
-    axios.post(endPoint,{subscription,role,userId,user,institute,branch})
+           const subs = sub || subscription
+          const endPoint = `${process.env.REACT_APP_PUBLIC_API_URL}/api/notification/institute/subscribe`
+          axios.post(endPoint,{subscription:subs,role,userId,user,institute,branch})
         })
         .catch((error) => console.error('Error subscribing to push notifications', error));
     }

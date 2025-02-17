@@ -13,6 +13,8 @@ import navigation from 'menu-items';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
 import PropTypes from 'prop-types';
+import usePushSubscription from 'usePushSubscription';
+import axios from 'axios';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
@@ -51,6 +53,29 @@ const MainLayout = ({  }) => {
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
   };
+  const user = JSON.parse(localStorage.getItem("userData"))
+ 
+  window.addEventListener("online", () => {
+  axios.post("http://localhost:3002/online",{user:user._id})
+  });
+
+ window.addEventListener("offline", () => {
+  axios.post("http://localhost:3002/offline",{user:user._id})
+  });
+
+
+   if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                  console.log('Service Worker registered with scope:', registration.scope);
+                     
+                      const selectBranchId = localStorage.getItem("selectedBranchId")
+                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
+                })
+                .catch((error) => {
+                  console.error('Service Worker registration failed:', error);
+                });
+            }
 
  
  

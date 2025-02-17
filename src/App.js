@@ -24,19 +24,6 @@ const App = () => {
   const customization = useSelector((state) => state.customization);
   const [showOverlay, setShowOverlay] = useState(false);
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((registration) => {
-        // console.log('Service Worker registered with scope:', registration.scope);
-        const user = getSecureItem('userData');
-        const selectBranchId = getSecureItem('selectedBranchId');
-        usePushSubscription(user.role, user._id, user, user?.institute_id, selectBranchId);
-      })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-      });
-  }
 
   const handleUpgradeClick = async () => {
     try {
@@ -90,8 +77,9 @@ const App = () => {
       // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
       setSelectedBranchId(branches?.[0]?.uuid);
     }
-    if (isAuthenticatedUser && !notifiAdd) {
-      registerSubscription(user?.role, user?._id, user, JSON.parse(selectBranchId), user?.institute_id);
+    if(isAuthenticatedUser && !notifiAdd){
+      console.log(user?.institute_id)
+      //  regiserSubscription(user?.role,user?._id,user,JSON.parse(selectBranchId),user?.institute_id)
     }
   }, []);
 
