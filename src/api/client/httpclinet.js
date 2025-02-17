@@ -13,7 +13,7 @@ const Axios = axios.create({
 
 Axios.interceptors.request.use((config)=> {
     const token = getSecureItem("token");
-    console.log(config,"config")
+    // console.log(config,"config")
     if(token){
         config.headers["Authorization"] = `Token ${token ? token :""}`;
     }

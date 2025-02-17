@@ -20,7 +20,7 @@ import { updateFaqCategory } from 'features/faq-management/faq-categories/servic
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { useInstitute } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
@@ -45,7 +45,8 @@ const CategoriesDataGrid = () => {
   const [rowsPerPage] = useState(10);
 
   useEffect(() => {
-    const institute = JSON.parse(localStorage.getItem('institute'));
+    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+    console.log('instituteId:', institute._id);
 
     const data = {
       branchid: selectedBranchId,
