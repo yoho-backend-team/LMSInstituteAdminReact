@@ -18,7 +18,7 @@ import axios from 'axios';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'; 
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -39,12 +39,12 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
   ),
   marginLeft: open ? 0 : -(drawerWidth - 20),
   width: `calc(100% - ${drawerWidth}px)`,
-  backgroundColor: "#F3F4F6",  // Ensure the background is light for visibility
+  backgroundColor: '#F3F4F6' // Ensure the background is light for visibility
 }));
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
-const MainLayout = ({  }) => {
+const MainLayout = ({}) => {
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
@@ -77,8 +77,6 @@ const MainLayout = ({  }) => {
                 });
             }
 
- 
- 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -101,8 +99,11 @@ const MainLayout = ({  }) => {
       <Sidebar drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
 
       {/* main content */}
-      <Main theme={theme} sx={{ marginLeft: leftDrawerOpened ? '0px' : 'null', paddingLeft: '50px', marginTop: '86px' }} open={leftDrawerOpened}>
-      
+      <Main
+        theme={theme}
+        sx={{ marginLeft: leftDrawerOpened ? '0px' : 'null', paddingLeft: '50px', marginTop: '86px' }}
+        open={leftDrawerOpened}
+      >
         {/* breadcrumb */}
         <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
         <Outlet />
@@ -110,6 +111,5 @@ const MainLayout = ({  }) => {
     </Box>
   );
 };
-
 
 export default MainLayout;
