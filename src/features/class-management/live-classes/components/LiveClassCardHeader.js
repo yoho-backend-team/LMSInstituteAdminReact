@@ -87,8 +87,7 @@ const LiveClassCardHeader = (props) => {
     <>
       <Box
         sx={{
-          pb: 1,
-          pt: 3,
+          
           width: '100%',
           display: 'flex',
           flexWrap: 'wrap',
@@ -96,23 +95,6 @@ const LiveClassCardHeader = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <WaveTextField
-          value={searchValue}
-          sx={{
-            width: "80%"
-          }}
-          placeholder="Search Class"
-          onChange={(e) => handleSearch(e)}
-          label={
-            <>
-              {[..."Search Class"].map((char, index) => (
-                <span key={index} style={{ "--index": index }}>{char}</span>
-              ))}
-            </>
-          }
-        />
-        
-
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Live Class

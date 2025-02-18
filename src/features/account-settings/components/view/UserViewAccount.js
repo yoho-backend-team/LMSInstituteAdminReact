@@ -46,15 +46,14 @@ const UserViewAccount = ({ id }) => {
     
 
     try {
-      const token = secureLocalStorage.getItem('token');
+      const token = localStorage.getItem('token');
 
       if (!token) {
         console.error('Authentication token is missing!');
         toast.error('Authentication token is missing!');
         return;
       }
-      const backendUrl = process.env.REACT_APP_PUBLIC_API_URL
-      const response = await axios.get(`${backendUrl}/api/institutes/user/activity`, {
+      const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/user/activities/`, {
         params: { user_id: userId, page: page },
         headers: { Authorization: `Bearer ${'Token ' + token}` }
       });

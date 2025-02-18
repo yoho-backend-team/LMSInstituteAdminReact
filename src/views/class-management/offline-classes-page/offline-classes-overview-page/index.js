@@ -34,7 +34,6 @@ const OfflineClass = () => {
     <>
       <Grid>
         <OfflineClassFilterCard selectedBranchId={selectedBranchId} />
-        <OfflineClassCardHeader offlineClasses={offlineClasses} selectedBranchId={selectedBranchId} setRefetch={setofflineClassRefetch} offlineClassRefetch={offlineClassRefetch} />
         {loading ? (
           <ClassSkeleton />
         ) : (

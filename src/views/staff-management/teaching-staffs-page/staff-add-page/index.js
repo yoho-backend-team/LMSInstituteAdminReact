@@ -209,7 +209,10 @@ const StepperLinearWithValidation = () => {
       const form_data = new FormData();
       form_data.append('file', files[0]);
       const response = await client.file.upload(form_data);
-      setLogo(response?.data?.file);
+      if(response.status=='success'){
+        toast.success(response.message);
+        setLogo(response?.data?.file);
+      }
     } catch (error) {
       hide();
       toast.error(error?.message);
@@ -285,7 +288,7 @@ const StepperLinearWithValidation = () => {
       const result = await addTeachingStaff(teaching_staffdata);
       console.log(result, ' -------------');
 
-      if (result.message) {
+      if (result.success) {
         toast.success(result.message);
         navigate(-1);
         return;
