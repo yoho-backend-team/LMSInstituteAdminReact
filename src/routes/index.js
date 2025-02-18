@@ -170,7 +170,7 @@ const ApplicationRoutes = () => {
     const permission = permissions?.filter((obj) => obj.identity === module)
     const action = permissionReq ? permissionReq : "read_permission"
     const hasAccess = hasPermission(permissionCode,permission[0],action);
-  
+    //  console.log(permissions,module,permissionReq,hasAccess,permissionCode)
     return hasAccess ? element : <Navigate to="/unauthorized" />;
   };
 

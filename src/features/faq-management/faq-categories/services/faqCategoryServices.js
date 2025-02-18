@@ -28,9 +28,9 @@ export const getAllFaqCategories = async (data) => {
   try {
     console.log("API response data: ",data);
     
-    const response = await client.category.getAll(data);
+    const response = await client.faq_category.getAll({},data);
     console.log('All categories data:', response);
-    if (response?.status) {
+    if (response) {
       return response;
     } else {
       throw new Error(`Failed to fetch Faqcategory. Status: ${response.status}`);
@@ -76,7 +76,7 @@ export const addFaqCategory = async (inputData) => {
       instituteId,   
     };
 
-    const response = await client.category.create(requestData); 
+    const response = await client.faq_category.create(requestData); 
     console.log('API Response:', response);
 
     if (response?.status === 200 || response?.status === 201) {
@@ -92,7 +92,7 @@ export const addFaqCategory = async (inputData) => {
 
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await client.category.delete(data);
+    const response = await client.faq_category.delete(data);
 
     if (response.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
@@ -130,12 +130,7 @@ export const updateFaqCategory = async (data) => {
   try {
     const { uuid } = data;
 
-    const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update/${uuid}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.faq_category.update(uuid, data);
 
     if (response.data.status) {
       return { success: true, message: 'FaqCategory updated successfully' };
