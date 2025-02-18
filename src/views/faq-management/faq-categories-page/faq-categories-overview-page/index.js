@@ -15,12 +15,13 @@ import FaqCategoriesEdit from 'features/faq-management/faq-categories/components
 import FaqCategoriesTableHeader from 'features/faq-management/faq-categories/components/FaqCategoriesTableHeader';
 import { selectFaqCategories, selectLoading } from 'features/faq-management/faq-categories/redux/faqCategorySelectors';
 import { getAllFaqCategories } from 'features/faq-management/faq-categories/redux/faqCategoryThunks';
-import { deleteFaqCategory, updateStatusFaqCategory} from 'features/faq-management/faq-categories/services/faqCategoryServices';
+import { deleteFaqCategory, updateStatusFaqCategory } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import { updateFaqCategory } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import secureLocalStorage from 'react-secure-storage';
+import { useInstitute } from 'utils/get-institute-details';
 
 const CategoriesDataGrid = () => {
   const [value, setValue] = useState('');
@@ -45,14 +46,14 @@ const CategoriesDataGrid = () => {
   const [rowsPerPage] = useState(10);
 
   useEffect(() => {
-    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
-    console.log('instituteId:', institute._id);
+    const institute = useInstitute().getDetails();
+    console.log('instituteId:', institute.uuid);
 
     const data = {
       branchid: selectedBranchId,
-      instituteid: institute?._id,
+      instituteid: institute?.uuid,
       page: currentPage,
-      perPage: rowsPerPage,
+      perPage: rowsPerPage
     };
     console.log('data:', data);
     dispatch(getAllFaqCategories(data));
@@ -75,7 +76,7 @@ const CategoriesDataGrid = () => {
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedFaqCategoryStatus,
-      uuid: selectedFaqCategory?.uuid,
+      uuid: selectedFaqCategory?.uuid
     };
     const response = await updateFaqCategory(data);
     if (response.success) {
@@ -99,10 +100,15 @@ const CategoriesDataGrid = () => {
   //   }
   // };
 
+  const handleDelete = (itemId) => {
+    setDeletingItemId(itemId);
+    setDeleteDialogOpen(true);
+  };
+
   const handleDeleteApi = async () => {
     try {
       const data = {
-        id: deletingItemId
+        uuid: deletingItemId
       };
       const response = await deleteFaqCategory(data);
       console.log('delete response data : ', response);
@@ -113,8 +119,6 @@ const CategoriesDataGrid = () => {
       if (response.success) {
         setSuccessDescription('Item deleted successfully!');
         setFailureDescription('');
-        // toast.success(response.message);
-        // fetchFaqs(currentPage);
         setRefetch((state) => !state);
       } else {
         setFailureDescription('Failed to delete the item. Please try again.');
@@ -130,12 +134,6 @@ const CategoriesDataGrid = () => {
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
   const toggleEditUserDrawer = () => setEditUserOpen(!editUserOpen);
 
-
-  const handleDelete = (itemId) => {
-    setDeletingItemId(itemId);
-    setDeleteDialogOpen(true);
-  };
-
   const columns = [
     {
       flex: 0.5,
@@ -143,13 +141,10 @@ const CategoriesDataGrid = () => {
       field: 'employee_id',
       sortable: false,
       renderCell: ({ row }) => (
-        <Typography
-          noWrap
-          sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}
-        >
+        <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
           {row?.id}
         </Typography>
-      ),
+      )
     },
     {
       flex: 2.2,
@@ -166,21 +161,18 @@ const CategoriesDataGrid = () => {
                 fontSize: '15px',
                 fontWeight: 600,
                 textDecoration: 'none',
-                 color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' }
+                color: 'text.secondary',
+                '&:hover': { color: 'primary.main' }
               }}
             >
               {row?.category_name}
             </Typography>
-            <Typography
-              noWrap
-              sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}
-            >
+            <Typography noWrap sx={{ textAlign: 'justify', color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
               {row?.description}
             </Typography>
           </Box>
         </Box>
-      ),
+      )
     },
     {
       flex: 1,
@@ -232,8 +224,8 @@ const CategoriesDataGrid = () => {
             ]}
           />
         </Box>
-      ),
-    },
+      )
+    }
   ];
 
   const handleFilter = useCallback(
@@ -271,28 +263,28 @@ const CategoriesDataGrid = () => {
             <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', mt: 1 }}>
               <DataGrid
                 autoHeight
-                key={"id"}
+                key={'id'}
                 sx={{
-                  '& .MuiDataGrid-row' : {
-                    border: "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   },
-                  "& .MuiDataGrid-row" : {
-                    border : "1px solid #e6e5e7",
-                    borderLeft: "none",
-                    borderRight: "none",
-                    ":hover" : {
-                       backgroundColor : "#f5f5f7",
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-row': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    ':hover': {
+                      backgroundColor: '#f5f5f7',
+                      border: '1px solid #e6e5e7',
+                      borderLeft: 'none',
+                      borderRight: 'none'
                     }
                   },
-                  "& .MuiDataGrid-columnHeaders" : {
-                       border : "1px solid #e6e5e7",
-                       borderLeft: "none",
-                       borderRight: "none"
+                  '& .MuiDataGrid-columnHeaders': {
+                    border: '1px solid #e6e5e7',
+                    borderLeft: 'none',
+                    borderRight: 'none'
                   }
                 }}
                 rowHeight={60}
@@ -328,11 +320,7 @@ const CategoriesDataGrid = () => {
         />
       </Grid>
       <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination
-          count={faqCategories?.last_page || 1}
-          page={currentPage}
-          onChange={handlePageChange}
-        />
+        <Pagination count={faqCategories?.last_page || 1} page={currentPage} onChange={handlePageChange} />
       </Grid>
     </>
   );

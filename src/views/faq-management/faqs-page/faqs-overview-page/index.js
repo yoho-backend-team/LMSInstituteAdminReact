@@ -49,19 +49,19 @@ const FaqDataGrid = () => {
 
 
 
-  const fetchFaqs = (page) => {
-    const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+  const fetchFaqs =  (page) => {
+    const institute = useInstitute().getDetails();
   
-    const params = {
-      branchid: institute?.branchid,  
-      instituteId: institute?._id,  
+    const data = {
+      branchid: selectedBranchId,  
+      instituteId: institute?.uuid,  
       page: page,  
       perPage: rowsPerPage
     };
   
-    console.log('Fetching FAQs with params:', params);  
+    console.log('Fetching FAQs with params:', data);  
   
-    dispatch(getAllFaqs(params));  
+    dispatch(getAllFaqs(data));  
   };
   
   
@@ -125,12 +125,8 @@ const FaqDataGrid = () => {
       if (response.success) {
         setSuccessDescription('Item deleted successfully!');
         setFailureDescription('');
-        toast.success(response.message);
-  
-        // Optimistically update UI by removing the item immediately
-        setFaqs((prevFaqs) => prevFaqs.filter((faq) => faq.uuid !== deletingItemId));
-  
         setRefetch((state) => !state);  
+        
       } else {
         setFailureDescription('Failed to delete the item. Please try again.');
         setSuccessDescription('');
@@ -143,7 +139,6 @@ const FaqDataGrid = () => {
   };
   
   
-  // console.log(faqs,"faqs")
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedFaqStatus,
@@ -374,7 +369,7 @@ const FaqDataGrid = () => {
                 }}
                 autoHeight
                 rowHeight={60}
-                rows={faqs?.data || []}  // Make sure to pass dynamic rows
+                rows={faqs?.data || []} 
                 columns={columns}
                 getRowId={(row) => row._id || row.id}
                 disableRowSelectionOnClick

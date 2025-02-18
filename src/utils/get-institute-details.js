@@ -6,6 +6,7 @@ export function useInstitute() {
     getInstituteId() {
       const institute = secureLocalStorage.getItem('institute');
 
+      // console.log('instituteUUID :', institute?.uuid);
       return JSON.parse(institute)?.uuid;
     },
     getInstituteMainId() {
@@ -14,6 +15,8 @@ export function useInstitute() {
     },
     getDetails() {
       const institute = secureLocalStorage.getItem('institute');
+      console.log('instituteUUID :', JSON.stringify(institute));
+
       return JSON.parse(institute);
     }
   };

@@ -106,6 +106,7 @@ export const createFaq = async (faqData) => {
 
 export const deleteFaq = async (data) => {
   try {
+    console.log("delete data",data);
     const response = await client.faq.delete({ uuid: data.uuid });
     console.log("delete response",response);
 
