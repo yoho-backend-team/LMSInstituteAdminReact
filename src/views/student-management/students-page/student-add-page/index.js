@@ -250,7 +250,7 @@ const StepperLinearWithValidation = () => {
   return (
     <Card>
       <CardContent>
-        <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
+        <form key={1} onSubmit={()=>handlePersonalSubmit(onSubmit())}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
               <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary' }}>
