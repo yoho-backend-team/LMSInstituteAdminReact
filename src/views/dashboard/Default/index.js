@@ -129,19 +129,6 @@ const Dashboard = () => {
 
 <Grid container alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
 
-<Grid item>
-
-          <div>
-            <header className="header">
-              <h1>Welcome to Our Website</h1>
-            </header>
-            <section className="features">
-              <h2>Features</h2>
-              <p>Learn more about what we offer.</p>
-            </section>
-          </div>
-</Grid>
-
           <Grid item   gap={2} sx={{ p: 2 ,display:'flex'}}>
 
         <FormControl size="small">
@@ -173,12 +160,6 @@ const Dashboard = () => {
       </Grid>
 
 </Grid>
-
-      
-         
-
-
-
           {/* Top Stack Cards - Full Width */}
           <Joyride
             steps={steps}
