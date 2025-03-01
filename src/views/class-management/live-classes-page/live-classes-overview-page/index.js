@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import LiveClassCard from 'features/class-management/live-classes/components/LiveClassCard';
-import LiveClassCardHeader from 'features/class-management/live-classes/components/LiveClassCardHeader';
 import LiveClassFilterCard from 'features/class-management/live-classes/components/LiveClassFilterCard';
 import ClassSkeleton from 'components/cards/Skeleton/ClassSkeleton';
 import { selectLiveClasses, selectLoading } from 'features/class-management/live-classes/redux/liveClassSelectors';
@@ -31,7 +30,6 @@ const LiveClass = () => {
     <>
       <Grid>
         <LiveClassFilterCard selectedBranchId={selectedBranchId} />
-        <LiveClassCardHeader selectedBranchId={selectedBranchId} setRefetch={setRefetch} />
         {loading  ? (
           <LiveClassSkeleton liveClasses={liveClasses?.data} />
         ) : (

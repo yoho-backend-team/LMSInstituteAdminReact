@@ -1,4 +1,4 @@
-import { Grid, Button, Box } from '@mui/material';
+import { Grid, Button, Box, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import CategorySkeleton from 'components/cards/Skeleton/CategorySkeleton';
 import CategoryCard from 'features/course-management/categories-page/category-overview-page/components/CategoryCard';
@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router';
 import NoDataFoundComponent from 'components/empty/noDataFound';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Icon from 'components/icon';
+import CloseIcon from '@mui/icons-material/Close';
 import CategoryAddModal from 'features/course-management/categories-page/category-overview-page/components/CategoryAddModal';
 const Categories = () => {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
@@ -35,7 +36,7 @@ const Categories = () => {
   useEffect(() => {
     const data = {
       branch_id: selectedBranchId,
-      page: '1',
+      page: '1'
     };
     dispatch(getAllCourseCategories(data));
   }, [dispatch, selectedBranchId, categoryRefetch]);
@@ -50,96 +51,68 @@ const Categories = () => {
     setShowFilters((prev) => !prev);
   };
 
-
-  
-
- 
-
-
- 
-
-  
   return (
     <Box sx={{ position: 'relative' }}>
       <div ref={wrapperRef}>
         <Grid container>
-          <Grid item xs={12} sx={{ display:"flex" ,alignItems:"center",justifyContent:"space-between"}}>
-            <Grid  >
+          <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{display: 'flex', alignItems: 'center',gap:4}}>
+              <Button variant="contained" sx={{p:1}} color="primary" onClick={toggleFilters} startIcon={<FilterListIcon />}>
+                {showFilters ? 'Hide Filters' : 'Show Filters'}
+              </Button>
+              <Typography variant="h2">Course Categories</Typography>
+            </Box>
             <Button
+              onClick={handleAdd}
               variant="contained"
               color="primary"
-              onClick={toggleFilters}
               
-              startIcon={<FilterListIcon />}
+              sx={{
+                backgroundColor: '#0CCE7F',
+                ':hover': { backgroundColor: '#0AA865' },
+                ml: 2
+              }}
+              startIcon={<Icon icon="tabler:plus" />}
             >
-              {showFilters ? 'Hide Filters' : 'Show Filters'}
+              Add New Category
             </Button>
-            <span style={{fontSize:"20px",fontWeight:"500"}}> Course Categories</span>
-            </Grid>
-            <Button
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "#0CCE7F",
-              ":hover": { backgroundColor: "#0AA865" },
-              ml: 2,
-              
-            }}
-            startIcon={<Icon icon="tabler:plus" />}
-          >
-            Add New Category
-          </Button>
+            
           </Grid>
-          
-       
-      
-      <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose}  />
 
+          <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose} />
         </Grid>
-
         {/* Overlay for Filters */}
         {showFilters && (
-        <Box
-        ref={filterRef}
-        
-        sx={{
-          position: 'relative',
-          left: 0,
-          right: 0,
-          top:10,
-          backgroundColor: 'white', 
-          
-          display:"flex",
-          justifyContent:"start",
-          alignItems:"center"
-         
-        }}
-      >
-        <CategoryFilter selectedBranchId={selectedBranchId} />
-        <CategoryCardHeader setCategoryRefetch={setCategoryRefetch}
-/>
-
-
-
-      </Box>
-      
+          <Box
+            ref={filterRef}
+            sx={{
+              position: 'relative',
+              left: 0,
+              right: 0,
+              top: 10,
+              backgroundColor: 'white',
+              barderRadius:20,
+              display: 'flex',
+              justifyContent: 'start',
+              alignItems: 'center'
+            }}
+          >
+            <CategoryFilter selectedBranchId={selectedBranchId} />
+            <CategoryCardHeader setCategoryRefetch={setCategoryRefetch} />
+            <Button sx={{backgroundColor:'transparent', '&:hover': { backgroundColor: 'transparent' },}} onClick={toggleFilters}><CloseIcon/></Button>
+          </Box>
         )}
       </div>
 
       {/* Main Content */}
-      <Grid container >
+      <Grid container>
         {categoriesLoading ? (
           <CategorySkeleton />
         ) : (
           <Grid item xs={12}>
             <Grid container spacing={2} className="match-height" sx={{ marginTop: 1 }}>
               {memoizedCategories?.data?.map((category, index) => (
-                <CategoryCard
-                  key={index}
-                  category={category}
-                  setCategoryRefetch={setCategoryRefetch}
-                />
+                <CategoryCard key={index} category={category} setCategoryRefetch={setCategoryRefetch} />
               ))}
             </Grid>
           </Grid>
@@ -155,28 +128,27 @@ const Categories = () => {
         )}
 
         {/* Pagination */}
-        {memoizedCategories?.last_page !== 1 &&
-          memoizedCategories?.last_page !== 0 && (
-            <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-              <Pagination
-                count={memoizedCategories?.last_page}
-                color="primary"
-                sx={{
-                  backgroundColor: '#0CCE7F',
-                  '&:hover': {
-                    backgroundColor: '#0AA865',
-                  },
-                }}
-                onChange={async (e, page) => {
-                  const data = {
-                    branch_id: selectedBranchId,
-                    page: page,
-                  };
-                  dispatch(getAllCourseCategories(data));
-                }}
-              />
-            </Grid>
-          )}
+        {memoizedCategories?.last_page !== 1 && memoizedCategories?.last_page !== 0 && (
+          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={memoizedCategories?.last_page}
+              color="primary"
+              sx={{
+                backgroundColor: '#0CCE7F',
+                '&:hover': {
+                  backgroundColor: '#0AA865'
+                }
+              }}
+              onChange={async (e, page) => {
+                const data = {
+                  branch_id: selectedBranchId,
+                  page: page
+                };
+                dispatch(getAllCourseCategories(data));
+              }}
+            />
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

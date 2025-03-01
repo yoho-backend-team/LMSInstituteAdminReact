@@ -19,7 +19,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      branch_id: selectedBranchId
     };
     getCourses(data);
   }, [selectedBranchId]);
@@ -40,37 +40,34 @@ const CategoryFilter = ({ selectedBranchId }) => {
   return (
     <DatePickerWrapper>
       <Grid container spacing={2}>
-        <Grid item xs={12} >
-        <Card sx={{ boxShadow: 'none', border: 'none' }}>
-            <CardHeader
-            
-            />
-            <CardContent sx={{ pt: 0,backgroundColor:"white" }}>
-              <Grid container spacing={3}  >
+        <Grid item xs={12}>
+          <Card sx={{ boxShadow: 'none', border: 'none' }}>
+            <CardHeader />
+            <CardContent sx={{ pt: 0, backgroundColor: 'white' }}>
+              <Grid container spacing={3}>
                 {/* Status Filter */}
                 <Grid item xs={12} sm={6}>
-  <TextField
-    select
-    fullWidth
-    label="Filter by Status"
-    value={statusValue}
-    onChange={handleFilterByStatus}
-    sx={{
-      backgroundColor: 'white',
-      '.MuiInputBase-root': {
-        height: '56px', 
-      },
-      '.MuiSelect-select': {
-        padding: '400px',
-      },
-    }}
-  >
-    <MenuItem value={null}>All Statuses</MenuItem>
-    <MenuItem value="true">Active</MenuItem>
-    <MenuItem value="false">Inactive</MenuItem>
-  </TextField>
-</Grid>
-
+                  <TextField
+                    select
+                    fullWidth
+                    label="Filter by Status"
+                    value={statusValue}
+                    onChange={handleFilterByStatus}
+                    sx={{
+                      backgroundColor: 'white',
+                      '.MuiInputBase-root': {
+                        height: '56px'
+                      },
+                      '.MuiSelect-select': {
+                        padding: '400px'
+                      }
+                    }}
+                  >
+                    <MenuItem value={null}>All Statuses</MenuItem>
+                    <MenuItem value="true">Active</MenuItem>
+                    <MenuItem value="false">Inactive</MenuItem>
+                  </TextField>
+                </Grid>
 
                 {/* Course Filter */}
                 <Grid item xs={3} sm={6}>
@@ -81,7 +78,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     onChange={(e, newValue) => {
                       const data = {
                         course_id: newValue?.course_id,
-                        branch_id: selectedBranchId,
+                        branch_id: selectedBranchId
                       };
                       dispatch(getAllCourseCategories(data));
                     }}
@@ -92,11 +89,11 @@ const CategoryFilter = ({ selectedBranchId }) => {
                         sx={{
                           backgroundColor: 'white',
                           '.MuiInputBase-root': {
-                            height: '56px', 
+                            height: '56px'
                           },
                           '.MuiSelect-select': {
-                            padding: '400px',
-                          },
+                            padding: '400px'
+                          }
                         }}
                       />
                     )}
@@ -112,8 +109,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
 };
 
 CategoryFilter.propTypes = {
-  selectedBranchId: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 
 export default CategoryFilter;
-
