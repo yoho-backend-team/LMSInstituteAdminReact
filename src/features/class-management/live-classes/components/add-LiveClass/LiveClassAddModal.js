@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, Grid } from '@mui/material';
+import { Checkbox, Grid ,Typography} from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -46,6 +46,34 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
   const {show,hide} = useSpinner()
+
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [classDateSelected, setClassDateSelected] = useState(false);
+
+  const handleBranchChange = (newValue) => {
+  setSelectedBranch(newValue);
+  setSelectedCourse(null); // Reset course when branch changes
+  setSelectedBatch(null); // Reset batch when branch changes
+  setClassDateSelected(false); // Reset class date when branch changes
+};
+
+const handleCourseChange = (newValue) => {
+  setSelectedCourse(newValue);
+  setSelectedBatch(null); // Reset batch when course changes
+  setClassDateSelected(false); // Reset class date when course changes
+};
+
+const handleBatchChange = (newValue) => {
+  setSelectedBatch(newValue);
+  setClassDateSelected(false); // Reset class date when batch changes
+};
+
+const handleClassDateChange = (newValue) => {
+  setClassDateSelected(true);
+};
+  
 
   console.log(activeNonTeachingStaff);
   
@@ -301,6 +329,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?._id);
                         getActiveCoursesByBranch(newValue?.branch_id);
+                        handleBranchChange(newValue);
                       }}
                       value={activeBranches.find((branch) => branch._id === value) || null}
                       renderInput={(params) => (
@@ -355,11 +384,19 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?._id);
                         getActiveBatchesByCourse(newValue?._id);
+                        handleCourseChange(newValue);
                       }}
                       value={activeCourse.find((course) => course._id === value) || null}
+                      disabled={!selectedBranch}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message}
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message
+                          || (!selectedBranch && 'Please select a branch first to enable course selection.')
+                        }
                         sx={{
+                          '& .MuiInputBase-root.Mui-disabled': {
+                            backgroundColor: '#f0f0f0'  
+                          },
+                          cursor: !selectedBranch ? 'not-allowed' : 'text',
                           backgroundColor: 'transparent',
                           borderRadius: '8px',
                           '& .MuiOutlinedInput-root': {
@@ -384,7 +421,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           },
                           '& .MuiFormHelperText-root': {
                             backgroundColor: 'transparent',
-                            color: 'red',
+                            color: selectedBranch ? 'red':'black',
   
                             borderRadius: '4px',
                             marginTop: '4px',
@@ -410,15 +447,20 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
         getOptionLabel={(option) => option?.batch_name || ''}
         onChange={(event, newValue) => {
           setValue('batch', newValue);
+          handleBatchChange(newValue);
         }}
+        disabled={!selectedCourse}
         value={field.value}
         renderInput={(params) => (
           <TextField
-            {...params}
-            label="Batch"
-            error={Boolean(errors.batch)}
-            helperText={errors.batch?.message}
+            {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message 
+              || (!selectedCourse && 'Please select a Course first to enable Batch selection.')
+            }
             sx={{
+              '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'  
+                            },
+                            cursor: !selectedCourse ? 'not-allowed' : 'text',
               mb: '2',
               backgroundColor: 'transparent',
               borderRadius: '8px',
@@ -444,7 +486,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
               },
               '& .MuiFormHelperText-root': {
                 backgroundColor: 'transparent',
-                color: 'red',
+                color:selectedCourse? 'red' :'black',
                 borderRadius: '4px',
                 marginTop: '4px',
               },
@@ -465,10 +507,18 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       selected={value}
                       id="basic-input"
                       className="full-width-datepicker"
-                      onChange={onChange}
+                      onChange={(date) => {
+                        onChange(date);
+                        handleClassDateChange(date);
+                      }}
                       placeholderText="Click to select a date"
+                      disabled={!selectedBatch}
                       customInput={<CustomInput label="ClassDate"
                         sx={{
+                          '& .MuiInputBase-root.Mui-disabled': {
+                            backgroundColor: '#f0f0f0'  
+                          },
+                          cursor: !selectedBatch ? 'not-allowed' : 'text',
                           backgroundColor: 'white',
                           borderRadius: '8px',
                           '& .MuiOutlinedInput-root': {
@@ -494,7 +544,21 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     />
                   )}
                 />
-                {errors.class_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.class_date.message}</p>}
+                {/* {errors.class_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.class_date.message}</p>} */}
+                {errors.class_date ? (
+    <Typography variant="body2" color="error" sx={{ marginTop: '5px' }}>
+      {errors.class_date.message}
+    </Typography>
+  ) : (
+    !selectedBatch && (
+      <Typography variant="body2" color="textSecondary" sx={{ marginTop: '5px',ml:2,fontSize: '0.8rem' , '& .MuiInputBase-root.Mui-disabled': {
+        backgroundColor: '#f0f0f0'  
+      },
+      cursor: !selectedBatch ? 'not-allowed' : 'text',}}>
+        Please select a batch first to enable the class date.
+      </Typography>
+    )
+  )}
               </Grid>
               <Grid container item xs={6} spacing={2}>
                 <Grid item md={6} sm={12}>
@@ -507,13 +571,20 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           customInput={
                             <CustomInput
                               label="Start Time"
-                              sx={{ border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                              sx={{ 
+                                
+                                border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
                             />
                           }
                           value={value}
                           onChange={onChange}
                           label="Start Time"
+                          disabled={!classDateSelected} 
                           sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'  
+                            },
+                            cursor: !classDateSelected ? 'not-allowed' : 'text',
                             backgroundColor: 'white',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
@@ -555,13 +626,18 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           customInput={
                             <CustomInput
                               label="End Time"
-                              sx={{ border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
-                            />
-                          }
-                          value={value}
-                          onChange={onChange}
-                          label="End Time"
-                          sx={{
+                              sx={{  
+                                border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                                />
+                              }
+                              value={value}
+                              onChange={onChange}
+                              label="End Time"
+                              disabled={!classDateSelected}
+                          sx={{'& .MuiInputBase-root.Mui-disabled': {
+                                backgroundColor: '#f0f0f0'  
+                              },
+                              cursor: !classDateSelected ? 'not-allowed' : 'text',
                             backgroundColor: 'white',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
@@ -612,13 +688,15 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                     } else {
                       setSelectedInstructors(newValue);
                       setValue('instructor', newValue);
+
                     }
                   }}
+                  disabled={!classDateSelected}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       error={Boolean(errors.instructor)}
-            helperText={errors.instructor?.message}
+            helperText={errors.instructor?.message || (!classDateSelected && 'Please select a ClassDate first to enable Instructor selection.')}
                       fullWidth
                       label="Instructors"
                       InputProps={{
@@ -627,10 +705,15 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         
                       }}
                       sx={{
-                        backgroundColor: 'white',
+                        '& .MuiInputBase-root.Mui-disabled': {
+                          backgroundColor: '#f0f0f0'  
+                        },
+                        cursor: !classDateSelected ? 'not-allowed' : 'text',
+                        backgroundColor: 'transparent',
                         borderRadius: '8px',
                         '& .MuiOutlinedInput-root': {
                           borderRadius: '8px',
+                          backgroundColor: 'white',
                           '& fieldset': {
                             borderColor: 'rgba(156, 163, 175, 1)',
                           },
@@ -648,7 +731,15 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                             color: 'black',
                           },
                         },
-                      }} 
+                        '& .MuiFormHelperText-root': {
+                          backgroundColor: 'transparent',
+                          color: classDateSelected? 'red':'black',
+
+                          borderRadius: '4px',
+                          marginTop: '4px',
+                        },
+
+                      }}
                     />
                   )}
                   renderOption={(props, option, { selected }) => (
@@ -706,16 +797,22 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       setValue('coordinator', newValue);
                     }
                   }}
+                  disabled={selectedInstructors.length === 0}
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      error={Boolean(errors.coordinator)} helperText={errors.coordinator?.message || (!classDateSelected && 'Please select a Instructor first to enable Coordinates selection.')}
                       fullWidth
                       label="Coordinates"
+
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
-                      sx={{
+                      sx={{ '& .MuiInputBase-root.Mui-disabled': {
+                        backgroundColor: '#f0f0f0'  
+                      },
+                      cursor: selectedInstructors.length === 0 ? 'not-allowed' : 'text',
                         backgroundColor: 'transparent',
                         borderRadius: '8px',
                         '& .MuiOutlinedInput-root': {
@@ -740,7 +837,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
-                          color: 'red',
+                          color:selectedInstructors.length === 0?  'black' :'red',
 
                           borderRadius: '4px',
                           marginTop: '4px',

@@ -17,8 +17,12 @@ import {
   TableRow,
   TextField,
   Tooltip,
-  Typography
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '@mui/material';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import AddGroupSkeleton from 'components/cards/Skeleton/AddGroupSkeleton';
 import Icon from 'components/icon';
 import { selectGroups } from 'features/user-management/groups-page/redux/groupSelectors';
@@ -211,66 +215,123 @@ const GroupAddPage = () => {
 
   // Render permissions table rows
   const renderPermissions = useMemo(() => {
-    return permissions.map((module) =>
-      <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' }, '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.04)',
-        transition: 'background-color 0.2s ease'
-      },
-      borderLeft: '4px solid transparent',
-      '&:hover': {
-        backgroundColor: 'ghostwhite'
-      } }}>
-          <TableCell
-            sx={{
-              fontWeight: 500,
-              whiteSpace: 'nowrap', 
-              fontSize: '1.1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.5, 
-              m:2 
-            }}
-          >
-            {module?.identity}
-          </TableCell>
-          <TableCell sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-          {module?.permission?.map((permission, index) => (
-            <TableCell key={index} 
-            elevation={0}
-            sx={{
-              p: 1,
-              borderRadius: '8px',
-              backgroundColor: selectedCheckbox.includes(permission._id) 
-                ? 'rgba(25, 118, 210, 0.08)'
-                : ' ',
+  //   return permissions.map((module) =>
+
+  //     <TableRow key={module?.id} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' }, '&:hover': {
+  //       backgroundColor: 'rgba(0, 0, 0, 0.04)',
+  //       transition: 'background-color 0.2s ease'
+  //     },
+  //     borderLeft: '4px solid transparent',
+  //     '&:hover': {
+  //       backgroundColor: 'ghostwhite'
+  //     } }}>
+
+  //         <TableCell
+  //           sx={{
+  //             fontWeight: 500,
+  //             whiteSpace: 'nowrap', 
+  //             fontSize: '1.1rem',
+  //             display: 'flex',
+  //             alignItems: 'center',
+  //             gap: 1.5, 
+  //             m:2 
+  //           }}
+  //         >
+  //           {module?.identity}
+  //         </TableCell>
+
+  //         <TableCell sx={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+  //         {module?.permission?.map((permission, index) => (
+  //           <TableCell key={index} 
+  //           elevation={0}
+  //           sx={{
+  //             p: 1,
+  //             borderRadius: '8px',
+  //             backgroundColor: selectedCheckbox.includes(permission._id) 
+  //               ? 'rgba(25, 118, 210, 0.08)'
+  //               : ' ',
                
               
-            }}
-            >
-              <FormControlLabel
-                label={permission.name}
-                sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
-                control={
-                  <Checkbox
-                    size="small"
-                    id={permission?._id}
-                    onChange={(e) => {togglePermission(permission._id),handleSelectPermissions(module,permission,index,e)}}
-                    checked={selectedCheckbox.includes(permission._id)}
-                    sx={{
-                      '& svg': {
-                        border: !selectedCheckbox.includes(permission._id) && '1px solid #000', 
-                        borderRadius: '4px',
-                      }
-                    }}
-                  />
-                }
-              />
-            </TableCell>
+  //           }}
+  //           >
+  //             <FormControlLabel
+  //               label={permission.name}
+  //               sx={{ '& .MuiTypography-root': { color: 'text.secondary' } }}
+  //               control={
+  //                 <Checkbox
+  //                   size="small"
+  //                   id={permission?._id}
+  //                   onChange={(e) => {togglePermission(permission._id),handleSelectPermissions(module,permission,index,e)}}
+  //                   checked={selectedCheckbox.includes(permission._id)}
+  //                   sx={{
+  //                     '& svg': {
+  //                       border: !selectedCheckbox.includes(permission._id) && '1px solid #000', 
+  //                       borderRadius: '4px',
+  //                     }
+  //                   }}
+  //                 />
+  //               }
+  //             />
+  //           </TableCell>
+  //         ))}
+  //          </TableCell>
+  //       </TableRow>
+  //   );
+  // }, [permissions, selectedCheckbox, togglePermission]);
+
+  return permissions.map((module) => (
+    <Accordion key={module?.id} sx={{ mb: 1,width:"125%" }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        sx={{
+          "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.04)" },
+          borderLeft: "4px solid transparent",
+        }}
+      >
+        <Typography sx={{ fontWeight: 500, fontSize: "1.1rem" }}>{module?.identity}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Grid container spacing={2}>
+          {module?.permission?.map((permission, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Box
+                sx={{
+                  p: 1,
+                  borderRadius: "8px",
+                  backgroundColor: selectedCheckbox.includes(permission._id)
+                    ? "rgba(25, 118, 210, 0.08)"
+                    : "transparent",
+                }}
+              >
+                <FormControlLabel
+                  label={permission.name}
+                  sx={{ "& .MuiTypography-root": { color: "text.secondary" } }}
+                  control={
+                    <Checkbox
+                      size="small"
+                      id={permission?._id}
+                      onChange={(e) => {
+                        togglePermission(permission._id)
+                        handleSelectPermissions(module, permission, index, e)
+                      }}
+                      checked={selectedCheckbox.includes(permission._id)}
+                      sx={{
+                        "& svg": {
+                          border: !selectedCheckbox.includes(permission._id) && "1px solid #000",
+                          borderRadius: "4px",
+                        },
+                      }}
+                    />
+                  }
+                />
+              </Box>
+            </Grid>
           ))}
-           </TableCell>
-        </TableRow>
-    );
-  }, [permissions, selectedCheckbox, togglePermission]);
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
+  ))
+}, [permissions, selectedCheckbox, togglePermission, handleSelectPermissions])
 
   return (
     <>
