@@ -38,14 +38,14 @@ class Client {
     }
     faq = {
       create : (data) => HttpClient.post(HTTP_END_POINTS.faq.create,data),
-      getAll : (params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,{params}),
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,params),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq.delete.replace(':uuid', data.uuid) ,data),
       update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq.update.replace(':uuid', uuid), data)
     }
     faq_category = {
       create : (data) => HttpClient.post(HTTP_END_POINTS.faq_category.create,data),
-      getAll : (data,params) => HttpClient.get(HTTP_END_POINTS.faq_category.getAll,params,data),
-      delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq_category.delete+data.id),
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.faq_category.getAll,params),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq_category.delete.replace(':uuid', data.uuid) ,data),
       update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq_category.update.replace(':uuid', uuid), data)
     }
 

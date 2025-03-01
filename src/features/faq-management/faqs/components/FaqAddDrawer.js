@@ -54,8 +54,7 @@ const schema = yup.object().shape({
   description: yup.string().required('Description is required'),
   category: yup.object().required('Category is required'),
   accessby: yup.array().min(1, 'Accessby is required')
-  // vidlink: yup.string().url('Opional'),
-  // pagelink: yup.string().url('Optional')
+  
 });
 
 const defaultValues = {
@@ -63,8 +62,7 @@ const defaultValues = {
   description: '',
   category: '',
   accessby: []
-  // vidlink: '',
-  // pagelink: ''
+  
 };
 
 const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {

@@ -26,9 +26,9 @@ export const getActiveFaqCategories = async (data) => {
 
 export const getAllFaqCategories = async (data) => {
   try {
-    console.log("API response data: ",data);
+    console.log("API sending data: ",data);
     
-    const response = await client.faq_category.getAll({},data);
+    const response = await client.faq_category.getAll(data);
     console.log('All categories data:', response);
     if (response) {
       return response;
@@ -63,36 +63,30 @@ export const searchFaqCategories = async (searchQuery) => {
   }
 };
 
-export const addFaqCategory = async (inputData) => {
+export const addFaqCategory = async (faq_CategoryData) => {
   try {
-    console.log("inputData", inputData);
+    console.log("inputData", faq_CategoryData);
 
-    const { instituteId } = inputData;
-
-    console.log("instituteId :", instituteId);
-
-    const requestData = {
-      ...inputData,  
-      instituteId,   
-    };
-
-    const response = await client.faq_category.create(requestData); 
+    const response = await client.faq_category.create(faq_CategoryData); 
     console.log('API Response:', response);
 
-    if (response?.status === 200 || response?.status === 201) {
-      return { success: true, message: 'Faq Category created successfully' };
-    } else {
-      return { success: false, message: response?.data?.message || 'Failed to create FaqCategory' };
+    if (!response?.status) {
+      throw new Error(`Failed to create FAQ_CATEGORY : ${response.status} ${response.statusText}`);
     }
+    return  response;
   } catch (error) {
-    console.error('Error in addFaqCategory:', error.response?.data || error);
-    throw error;
+    console.error('Error in addFaqCategory:', error.message);
+    return { success: false, message: error.message };
   }
 };
 
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await client.faq_category.delete(data);
+    console.log("deleting send data:", data.uuid);
+    
+    const response = await client.faq_category.delete({ uuid: data.uuid });
+    console.log("API delete response:",response);
+    
 
     if (response.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
@@ -132,7 +126,7 @@ export const updateFaqCategory = async (data) => {
 
     const response = await client.faq_category.update(uuid, data);
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'FaqCategory updated successfully' };
     } else {
       return { success: false, message: 'Failed to update FaqCategory' };
