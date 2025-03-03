@@ -43,7 +43,7 @@ const menuItems = {
     allNotifications,
     certificateManagement,
     IdCardManagement,
-    placementManagement,
+    // placementManagement,
     helpCenter,
     ticketManagement,
     FaqManagement,

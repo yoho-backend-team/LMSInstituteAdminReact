@@ -161,7 +161,7 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
-
+  
   const handleBack = () => {
     Navigate(-1);
   };

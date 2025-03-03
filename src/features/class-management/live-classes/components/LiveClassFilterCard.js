@@ -17,7 +17,7 @@ import { getAllLiveClasses } from '../redux/liveClassThunks';
 import { getAllBatches } from 'features/batch-management/batches/services/batchServices';
 import { useInstitute } from 'utils/get-institute-details';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Button from '@mui/material/Button';
 import LiveClassCardHeader from './LiveClassCardHeader';

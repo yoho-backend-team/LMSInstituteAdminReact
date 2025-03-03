@@ -29,6 +29,7 @@ const AllActivity = () => {
          setHasMore(false)
       }
     } catch (error) {
+      setHasMore(false)
       console.log(error,"error")
     }
     setLoading(false)
