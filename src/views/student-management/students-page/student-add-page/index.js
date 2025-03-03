@@ -267,7 +267,7 @@ const getActiveBatchesByCourse = async (courseId) => {
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
       branch_id: personalData.branch,
-      batch: personalData.batch,
+      batch_id: personalData.batch,
       course: personalData.course,
       image: logo,
       logo:logo,
