@@ -1,4 +1,4 @@
-import { Grid,Select, MenuItem, Button, FormControl, InputLabel } from '@mui/material';
+import { Grid,Select, Menu,MenuItem, Button, FormControl, InputLabel ,Box} from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import AllActivity from './card/Allactivity';
@@ -14,7 +14,7 @@ import client from 'api/client';
 import { useSpinner } from 'context/spinnerContext';
 import toast from 'react-hot-toast';
 import Tour from 'components/tour/Tour';
-
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import FlipChart from './card/FlipChart';
 
 const Dashboard = () => {
@@ -23,6 +23,7 @@ const Dashboard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { show, hide } = useSpinner();
 
+  const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());  
 
@@ -94,7 +95,18 @@ const Dashboard = () => {
   const handleFilter = () => {
     const data = { branch: selectedBranchId, month: selectedMonth, year: selectedYear };
     getReports(data);
+    console.log("Filtering for:", selectedMonth, selectedYear);
+    handleClose();
   };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  
 
   return (
     <Grid container spacing={2} className="match-height">
@@ -119,35 +131,80 @@ const Dashboard = () => {
           </div>
 </Grid>
 
-          <Grid item   gap={2} sx={{ p: 2 ,display:'flex'}}>
+<Grid item >
 
-        <FormControl size="small">
-          <InputLabel>Month</InputLabel>
-          <Select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-            {Array.from({ length: 12 }, (_, i) => (
-              <MenuItem key={i + 1} value={i + 1}>
-                {new Date(0, i).toLocaleString('en', { month: 'long' })}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+<Box sx={{mb:9}}>
+       
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClick}
+        endIcon={<ArrowDropDownIcon />}
+      >
+        Choose Period
+      </Button>
 
-        <FormControl size="small">
-          <InputLabel>Year</InputLabel>
-          <Select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-            {Array.from({ length: 5 }, (_, i) => (
-              <MenuItem key={i} value={new Date().getFullYear() - i}>
-                {new Date().getFullYear() - i}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      
+      <Menu sx={{mt:1}}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        MenuListProps={{ "aria-labelledby": "timeline-button" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <Box sx={{ p: 2, width: 250 }}>  
+          <Grid container spacing={2}>
+             
+            <Grid item xs={12}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Month</InputLabel>
+                <Select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                >
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <MenuItem key={i + 1} value={i + 1}>
+                      {new Date(0, i).toLocaleString("en", { month: "long" })}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-        <Button variant="contained" color="primary"  onClick={handleFilter}>
-          Apply Filter
-        </Button>
+            
+            <Grid item xs={12}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Year</InputLabel>
+                <Select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  MenuProps={{ 
+                    PaperProps: { 
+                      style: { maxHeight: 200 }  
+                    } 
+                  }}
+                >
+                  {Array.from({ length:new Date().getFullYear() - 1999 }, (_, i) => (
+                    <MenuItem key={i} value={2000 + i}>
+                      {2000 + i}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-      </Grid>
+             
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+              <Button variant="contained" color="primary" onClick={handleFilter}>
+                Apply 
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Menu>
+    </Box>
+</Grid>
 
 </Grid>
 
@@ -156,7 +213,7 @@ const Dashboard = () => {
 
 
 
-          {/* Top Stack Cards - Full Width */}
+           
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={2.4}>

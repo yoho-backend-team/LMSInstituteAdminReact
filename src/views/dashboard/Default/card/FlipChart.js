@@ -1,4 +1,4 @@
-import { Box, Button, Grid,Typography } from '@mui/material';
+import { Box, Button, Grid,Typography ,Tabs,Tab} from '@mui/material';
 import { useState } from 'react';
 import RevenueReport from './RevenueReport';
 import ExpenseReport from './ExpenseReport';
@@ -9,31 +9,34 @@ const FlipChart = ({ revenue, expense }) => {
   return (
     <Grid container spacing={2} justifyContent="center" sx={{mt:0.5}}>
       {/* Buttons & Chart in Same Grid */}
-      <Grid item xs={12} md={10} lg={8}>
+      <Grid item xs={12} md={10} lg={8} sx={{mt:-1.5}}>
         <Box sx={{ width: '100%', textAlign: 'center'  }}>
-          {/* Toggle Buttons */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-          <Typography
-              onClick={() => setChartType('revenue')}
-              sx={{
-                cursor: 'pointer',
-                fontWeight: chartType === 'revenue' ? 'bold' : 'normal',
-                textDecoration: chartType === 'revenue' ? 'underline' : 'none',
-              }}
-            >
-              Revenue
-            </Typography>
-            <Typography
-              onClick={() => setChartType('expense')}
-              sx={{
-                cursor: 'pointer',
-                fontWeight: chartType === 'expense' ? 'bold' : 'normal',
-                textDecoration: chartType === 'expense' ? 'underline' : 'none',
-              }}
-            >
-              Expense
-            </Typography>
-          </Box>
+
+
+          {/* Tabs Buttons */}
+          
+          <Tabs
+            value={chartType}
+            onChange={(e, newValue) => setChartType(newValue)}
+            centered
+            sx={{
+            
+              "& .MuiTab-root": {
+                fontSize: "1.2rem", // Increase tab font size
+                fontWeight: "bold",
+                textTransform: "none",
+              },
+              "& .Mui-selected": {
+                color: "#1976D2", // Highlight active tab
+              },
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#1976D2", // Indicator color
+              },
+            }}
+          >
+            <Tab label="Revenue" value="revenue" />
+            <Tab label="Expense" value="expense" />
+          </Tabs>
         </Box>
 
         {/* Flip Animation Container */}
