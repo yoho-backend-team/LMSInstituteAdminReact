@@ -1,4 +1,4 @@
-import { Grid,Select, MenuItem, Button, FormControl, InputLabel } from '@mui/material';
+import { Grid,Select, Menu,MenuItem, Button, FormControl, InputLabel ,Box} from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import AllActivity from './card/Allactivity';
@@ -16,6 +16,8 @@ import toast from 'react-hot-toast';
 import Joyride from 'react-joyride';
 import secureLocalStorage from 'react-secure-storage';
 
+import Tour from 'components/tour/Tour';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import FlipChart from './card/FlipChart';
 
 const Dashboard = () => {
@@ -25,6 +27,7 @@ const Dashboard = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const { show, hide } = useSpinner();
 
+  const [anchorEl, setAnchorEl] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());  
 
@@ -118,7 +121,18 @@ const Dashboard = () => {
       secureLocalStorage.setItem('tourCompleted', 'true');
       setTourRun(false);
     }
+    console.log("Filtering for:", selectedMonth, selectedYear);
+    handleClose();
   };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  
 
   return (
     <Grid container spacing={2} className="match-height">
@@ -130,34 +144,94 @@ const Dashboard = () => {
 <Grid container alignItems="center" justifyContent="space-between" sx={{ p: 2 }}>
 
           <Grid item   gap={2} sx={{ p: 2 ,display:'flex'}}>
+<Grid item>
 
-        <FormControl size="small">
-          <InputLabel>Month</InputLabel>
-          <Select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-            {Array.from({ length: 12 }, (_, i) => (
-              <MenuItem key={i + 1} value={i + 1}>
-                {new Date(0, i).toLocaleString('en', { month: 'long' })}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <div>
+            <header className="header">
+              <h1>Welcome to Our Website</h1>
+            </header>
+            <section className="features">
+              <h2>Features</h2>
+              <p>Learn more about what we offer.</p>
+            </section>
+            <Tour steps={steps} onTourComplete={() => alert('Tour Completed!')} />
+          </div>
+</Grid>
 
-        <FormControl size="small">
-          <InputLabel>Year</InputLabel>
-          <Select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-            {Array.from({ length: 5 }, (_, i) => (
-              <MenuItem key={i} value={new Date().getFullYear() - i}>
-                {new Date().getFullYear() - i}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+<Grid item >
 
-        <Button variant="contained" color="primary"  onClick={handleFilter}>
-          Apply Filter
-        </Button>
+<Box sx={{mb:9}}>
+       
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleClick}
+        endIcon={<ArrowDropDownIcon />}
+      >
+        Choose Period
+      </Button>
 
-      </Grid>
+      
+      <Menu sx={{mt:1}}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        MenuListProps={{ "aria-labelledby": "timeline-button" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <Box sx={{ p: 2, width: 250 }}>  
+          <Grid container spacing={2}>
+             
+            <Grid item xs={12}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Month</InputLabel>
+                <Select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                >
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <MenuItem key={i + 1} value={i + 1}>
+                      {new Date(0, i).toLocaleString("en", { month: "long" })}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            
+            <Grid item xs={12}>
+              <FormControl fullWidth size="small">
+                <InputLabel>Year</InputLabel>
+                <Select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  MenuProps={{ 
+                    PaperProps: { 
+                      style: { maxHeight: 200 }  
+                    } 
+                  }}
+                >
+                  {Array.from({ length:new Date().getFullYear() - 1999 }, (_, i) => (
+                    <MenuItem key={i} value={2000 + i}>
+                      {2000 + i}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+             
+            <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+              <Button variant="contained" color="primary" onClick={handleFilter}>
+                Apply 
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Menu>
+    </Box>
+</Grid>
 
 </Grid>
           {/* Top Stack Cards - Full Width */}
