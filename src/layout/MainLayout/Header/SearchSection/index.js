@@ -10,7 +10,6 @@ import {
   ButtonBase,
   Card,
   Grid,
-  //  InputAdornment,
   TextField,
   Popper,
   MenuItem
@@ -25,6 +24,7 @@ import Transitions from 'components/extended/Transitions';
 import { updateSelectedBranch } from 'features/authentication/authActions';
 
 import { shouldForwardProp } from '@mui/system';
+import { useEffect } from 'react';
 
 // Styles
 const PopperStyle = styled(Popper)(({ theme }) => ({
@@ -40,7 +40,6 @@ const PopperStyle = styled(Popper)(({ theme }) => ({
 const OutlineInputStyle = styled(TextField)(({ theme }) => ({
   minWidth: 434,
   marginLeft: 16,
-  // paddingLeft: 16,
   paddingRight: 16,
   '& input': {
     background: 'transparent !important',
@@ -69,11 +68,20 @@ const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => (
 
 const SearchSection = () => {
   const theme = useTheme();
-  const [value, setValue] = useState('Keelkattalai');
- 
+
   const branches = useSelector((state) => state.auth.branches);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
+
+  const primeBranch = branches.find((branch) => branch.isPrimary) || {};
+  const [defaultValue, setDefaultValue] = useState(primeBranch.uuid);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId) || primeBranch.uuid;
+
+  useEffect(() => {
+    if (primeBranch.uuid) {
+      dispatch(updateSelectedBranch(primeBranch.uuid));
+      localStorage.setItem('selectedBranchId', primeBranch.uuid);
+    }
+  }, [dispatch, primeBranch]);
 
   return (
     <>
@@ -104,7 +112,7 @@ const SearchSection = () => {
                         <Box sx={{ p: 2 }}>
                           <Grid container alignItems="center" justifyContent="space-between">
                             <Grid item xs>
-                              <MobileSearch value={value} setValue={setValue} popupState={popupState} />
+                              <MobileSearch value={defaultValue} setDefaultValue={setDefaultValue} popupState={popupState} />
                             </Grid>
                           </Grid>
                         </Box>
@@ -118,34 +126,27 @@ const SearchSection = () => {
         </PopupState>
       </Box>
 
-     
-        <Box sx={{ display: { xs: 'block', md: 'block' } }}>
-          <OutlineInputStyle
-            id="input-search-header"
-            value={selectedBranchId?.trim()}
-            onChange={(e) => {
-              dispatch(updateSelectedBranch(e.target.value));
-              localStorage.setItem('selectedBranchId', e.target.value);
-            }}
-            placeholder="Search"
-            aria-describedby="search-helper-text"
-            inputProps={{ 'aria-label': 'weight' }}
-            select
-            label="Branch"
-           
-          >
-            {branches?.map((branch, index) => (
-              <MenuItem
-                value={branch?.uuid}
-                key={index}
-                selected={selectedBranchId === branch?.uuid}
-              >
-                {branch?.branch_identity}
-              </MenuItem>
-            ))}
-          </OutlineInputStyle>
-        </Box>
-      
+      <Box sx={{ display: { xs: 'block', md: 'block' } }}>
+        <OutlineInputStyle
+          id="input-search-header"
+          value={selectedBranchId?.trim()}
+          onChange={(e) => {
+            dispatch(updateSelectedBranch(e.target.value));
+            localStorage.setItem('selectedBranchId', e.target.value);
+          }}
+          placeholder="Search"
+          aria-describedby="search-helper-text"
+          inputProps={{ 'aria-label': 'weight' }}
+          select
+          label="Branch"
+        >
+          {branches?.map((branch, index) => (
+            <MenuItem value={branch?.uuid} key={index} selected={selectedBranchId === branch?.uuid}>
+              {branch?.branch_identity}
+            </MenuItem>
+          ))}
+        </OutlineInputStyle>
+      </Box>
     </>
   );
 };
@@ -153,7 +154,7 @@ const SearchSection = () => {
 SearchSection.propTypes = {
   value: PropTypes.string,
   setValue: PropTypes.func,
-  popupState: PopupState,
+  popupState: PopupState
 };
 
 export default SearchSection;

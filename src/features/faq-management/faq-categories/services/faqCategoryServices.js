@@ -7,20 +7,27 @@ const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/
 
 export const getActiveFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
+    const response = await axios.get(`${FaqS_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
 
-    return response;
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Faqs. Status: ${response.status}`);
+    }
   } catch (error) {
-    console.error('Error in getAllFaqCategories:', error);
+    // Log the error for debugging purposes
+    console.error('Error in getAllFaqs:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw new Error(`${error?.response.data?.message}`);
+    throw error;
   }
 };
 

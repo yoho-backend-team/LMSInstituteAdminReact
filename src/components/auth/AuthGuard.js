@@ -52,6 +52,7 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Secure Storage Import
 import secureLocalStorage from 'react-secure-storage'
+import { getSecureItem } from 'utils/localStroageService'
 
 const AuthGuard = props => {
   const { children, fallback } = props
@@ -62,7 +63,7 @@ const AuthGuard = props => {
       if (!router.isReady) {
         return
       }
-      if (auth.user === null && !secureLocalStorage.getItem('userData')) {
+      if (auth.user === null && !getSecureItem('userData')) {
         if (router.asPath !== '/') {
           router.replace({
             pathname: '/login',

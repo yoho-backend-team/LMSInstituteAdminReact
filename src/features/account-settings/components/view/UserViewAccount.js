@@ -22,6 +22,7 @@ import UserViewLeft from './UserViewLeft';
 import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import Animations from './Animations';
 import StaffManagementViewsample from './Animations';
+import secureLocalStorage from 'react-secure-storage';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {

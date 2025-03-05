@@ -13,6 +13,7 @@ import { getAllStudentClosedTickets } from 'features/ticket-management/student/r
 import { selectLoading, selectStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketSelectors';
 import { getAllStudentOpenTickets } from 'features/ticket-management/student/redux/open-tickets/studentOpenTicketThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import NoDataFoundComponent from 'components/empty/noDataFound';
 
 const StudentTicketsPage = () => {
   const [value, setValue] = useState('open');
@@ -52,6 +53,7 @@ const StudentTicketsPage = () => {
       {studentLoading ? (
         <StudentTicketsCardsSkeleton />
       ) : (
+        <>
         <TabContext value={value}>
           <TabList
             onChange={handleChange}
@@ -88,6 +90,7 @@ const StudentTicketsPage = () => {
             <Tab value="close" label={<Typography variant="h6">Closed Tickets</Typography>} />
           </TabList>
           <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
+          {studentOpenTickets?.data?.data?.length > 0 ? (
             <Grid container spacing={2}>
               {studentOpenTickets?.data?.data?.map((ticket, index) => (
                 <OpenTicketCard
@@ -98,37 +101,37 @@ const StudentTicketsPage = () => {
                 />
               ))}
             </Grid>
-            {studentOpenTickets?.data?.last_page !== 1 && (
-              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination
-                  count={studentOpenTickets?.data?.last_page}
-                  color="primary"
-                  onChange={(e, page) => {
-                    dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, page: page }));
-                  }}
-                />
-              </Grid>
+            ) : (
+              <NoDataFoundComponent title="No Open Tickets Found" description="There are currently no open tickets." buttonText="Refresh" onAdd={() => setRefetch(!refetch)} />
             )}
+           
+            
           </TabPanel>
           <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
+          {studentClosedTickets?.data?.data?.length > 0 ? (
             <Grid container spacing={2}>
               {studentClosedTickets?.data?.data?.map((ticket, index) => (
                 <ClosedTicketCard key={index} ticket={ticket} />
               ))}
             </Grid>
-            {studentClosedTickets?.data?.last_page !== 1 && (
-              <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <Pagination
-                  count={studentClosedTickets?.data?.last_page}
-                  color="primary"
-                  onChange={(e, page) => {
-                    dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, page: page }));
-                  }}
-                />
-              </Grid>
+            ) : (
+              <NoDataFoundComponent title="No Closed Tickets Found" description="There are currently no closed tickets." buttonText="Refresh" onAdd={() => setRefetch(!refetch)} />
             )}
+            
           </TabPanel>
         </TabContext>
+         {studentOpenTickets?.data?.last_page !== 1 && (
+          <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <Pagination
+              count={studentOpenTickets?.data?.last_page}
+              color="primary"
+              onChange={(e, page) => {
+                dispatch(getAllStudentOpenTickets({ branch_id: selectedBranchId, page: page }));
+              }}
+            />
+          </Grid>
+        )}
+        </>
       )}
     </MainCard>
   );

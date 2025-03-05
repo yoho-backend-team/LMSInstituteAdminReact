@@ -3,6 +3,7 @@ import secureLocalStorage from "react-secure-storage";
 
 // authReducer.js
 const branches = JSON.parse(secureLocalStorage.getItem('branches'));
+console.log("Branchessss",branches)
 const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
 const haveBranchId = () => {
   if (branches) {

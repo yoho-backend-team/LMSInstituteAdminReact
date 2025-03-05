@@ -11,6 +11,7 @@ export const getAllBranchesByInstitute = async (data) => {
     const response = await client.branch.getAll(data)
 
     // Check if the response status is successful
+    console.log("Branch Response",response)
     if (response.status) {
       return response;
     } else {
@@ -105,14 +106,17 @@ export const getBranchById = async (data) => {
         Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
     });
+    
     // Check if the response status is successful
+    
     if (response.data.status) {
       return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch BranchesById. Status: ${response.status}`);
     }
-  } catch (error) {
+  } 
+  catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getBranchById:', error);
     // Throw the error again to propagate it to the calling function/component
