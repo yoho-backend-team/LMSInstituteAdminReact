@@ -88,9 +88,10 @@ const OTPInput = ({ userId, handleOtpVerify , setOtp  }) => {
 
     if (result.success) {
       toast.success(result.message);
-      handleOtpVerify();
       setOtp(true);
+      handleOtpVerify();
     }
+    
     // console.warn(inputData);
   };
 

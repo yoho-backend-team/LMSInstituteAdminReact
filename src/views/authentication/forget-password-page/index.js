@@ -25,8 +25,8 @@ const Login = () => {
     setOtp((state) => !state);
   };
   const handleOtpVerify = () => {
-    setOtp((state) => !state);
-    setShowPasswordInput((state) => !state);
+    setOtp(false); 
+    setShowPasswordInput(true); 
   };
 
   const handlePasswordResetSuccess = () => {

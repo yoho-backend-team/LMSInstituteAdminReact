@@ -55,7 +55,6 @@ const UserNameAndEmailInput = ({ handleSendOtp, setUserId,setOtp }) => {        
     if (result.success) {
       toast.success(result.message);
       setUserId({ email: result.email, token: result.token  });
-      // setOtp(true);
       handleSendOtp();
     }
   };
