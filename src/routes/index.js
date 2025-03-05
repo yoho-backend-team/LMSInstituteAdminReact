@@ -1,5 +1,19 @@
 import { lazy } from 'react';
 
+//to check the session expire modal manually 
+ /**
+import { showSessionExpiredModal } from 'api/client/httpclinet';
+import React from 'react';
+import { useEffect } from 'react';
+const TestModal = () => {
+  React.useEffect(() => {
+    showSessionExpiredModal(); // Trigger the modal on page load
+  }, []);
+  
+  return <div>Session Expired Modal Test Page</div>;
+};
+ */
+
 // project imports
 import Loadable from 'components/loadable';
 import MinimalLayout from 'layout/MinimalLayout';
@@ -516,6 +530,11 @@ const ApplicationRoutes = () => {
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Route>
       
+      {/* route to check the session expire modal */}
+      {/* <Route element={<MinimalLayout />}>
+      <Route path="/test" element={<TestModal />} />
+      </Route> */}
+
      {/* otp page */}
       {/* <Route path="/forget-password" element={<MainLayout />}>
       <Route index element={<Navigate to={"/otp-page" }/>} />
