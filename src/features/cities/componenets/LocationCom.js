@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { loadCities, loadCountries, loadStates } from "../redux/locationThunks";
-import { selectCities, selectCountries, selectStates } from "../redux/locationSelectors";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadCities, loadCountries, loadStates } from '../redux/locationThunks';
+import { selectCities, selectCountries, selectStates } from '../redux/locationSelectors';
 
 const LocationComponent = () => {
   const dispatch = useDispatch();
@@ -16,14 +16,14 @@ const LocationComponent = () => {
 
   const handleCountryChange = (e) => {
     const countryCode = e.target.value;
-    setSelectedCountryCode(countryCode); 
-    dispatch(loadStates(countryCode)); 
+    setSelectedCountryCode(countryCode);
+    dispatch(loadStates(countryCode));
   };
 
   const handleStateChange = (e) => {
     const stateCode = e.target.value;
     if (selectedCountryCode) {
-      dispatch(loadCities(selectedCountryCode, stateCode)); 
+      dispatch(loadCities(selectedCountryCode, stateCode));
     } else {
       console.error('Country code not found for the selected state');
     }
@@ -31,8 +31,7 @@ const LocationComponent = () => {
 
   const handleCityChange = (e) => {
     const cityId = e.target.value;
-    console.log("Selected city ID:", cityId);
-    
+    console.log('Selected city ID:', cityId);
   };
 
   return (

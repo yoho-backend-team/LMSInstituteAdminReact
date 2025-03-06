@@ -58,7 +58,7 @@ const UserNameAndEmailInput = ({ handleSendOtp, setUserId,setOtp }) => {        
       handleSendOtp();
     }
   };
- 
+ <Typography>Hello</Typography>
 
 
   return (
