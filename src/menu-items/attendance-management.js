@@ -44,17 +44,17 @@ const pages = {
           breadcrumbs: false,
           visible: hasPermission('can_view_teaching_staff_attendance',"TeachingStaff Attendances")
         },
-        {
-          id: 'non-teaching-staff-attendances',
-          title: 'Non Teaching Staff Attendances',
-          icon: IconCalendarEvent,
-          type: 'item',
-          url: '/attendance-management/non-teaching-staff-attendances',
-          target: false,
+        // {
+        //   id: 'non-teaching-staff-attendances',
+        //   title: 'Non Teaching Staff Attendances',
+        //   icon: IconCalendarEvent,
+        //   type: 'item',
+        //   url: '/attendance-management/non-teaching-staff-attendances',
+        //   target: false,
 
-          breadcrumbs: false,
-          visible: hasPermission('can_view_non_teaching_staff_attendance','NonTeachingStaff Attendances')
-        }
+        //   breadcrumbs: false,
+        //   visible: hasPermission('can_view_non_teaching_staff_attendance','NonTeachingStaff Attendances')
+        // }
       ]
     }
   ]

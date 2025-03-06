@@ -33,6 +33,7 @@ import FeesEditDrawer from './FeesEditDrawer';
 import FeesViewDrawer from './FeesViewDrawer';
 import jsPDF from 'jspdf';
 import { useInstitute } from 'utils/get-institute-details';
+import NoDataFoundComponent from 'components/empty/noDataFound';
 // import { useSpinner } from 'context/spinnerContext';
 
 // ** Styled component for the link in the dataTable
@@ -428,7 +429,7 @@ const FeesTable = () => {
           <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
             {StudentFeesLoading ? (
               <FeesTableSkeleton />
-            ) : (
+            ) : StudentFees?.data?.length > 0 ? (
               <DataGrid
                 sx={{
                   '& .MuiDataGrid-row': {
@@ -466,6 +467,13 @@ const FeesTable = () => {
                 disableColumnMenu={true}
                 disableColumnFilter={true}
                 disableColumnSorting={true}
+              />
+            ) : ( 
+              <NoDataFoundComponent
+                title="No Student Fees Found"
+                description="No Student Fees found for the selected criteria"
+                buttonText="Add Student Fees"
+                onAdd={toggleAddUserDrawer}
               />
             )}
             {StudentFees?.last_page !== 1 && (
@@ -506,6 +514,7 @@ const FeesTable = () => {
         title="Delete"
         handleSubmit={handleFeeDelete}
       />
+          
     </DatePickerWrapper>
   );
 };

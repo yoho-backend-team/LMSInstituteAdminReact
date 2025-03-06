@@ -23,18 +23,17 @@ import AuthIllustrationV1Wrapper from 'features/authentication/components/AuthIl
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { checkAuthState, getOtpDetails } from 'utils/check-auth-state';
-import NewLogo from "../../../assets/images/logo/logo.png";
-import LoginBg from "assets/images/auth/login-bg.jpg";
-import LoginBg2 from "assets/images/auth/login-bg.jpg";
+import NewLogo from '../../../assets/images/logo/logo.png';
+import LoginBg from 'assets/images/auth/login-bg.jpg';
 import secureLocalStorage from 'react-secure-storage';
 
-const LeftImageBox = styled(Box)({
-  backgroundImage: `url(${LoginBg})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  width: '100%',
-  height: '100vh',
-});
+// const LeftImageBox = styled(Box)({
+//   backgroundImage: `url(${LoginBg})`,
+//   backgroundSize: 'cover',
+//   backgroundPosition: 'center',
+//   width: '100%',
+//   height: '100vh',
+// });
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -95,7 +94,7 @@ const Login = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({ defaultValues });
 
   // ** Vars
@@ -139,7 +138,7 @@ const Login = () => {
   };
 
   const getDevOtp = () => {
-    const otpToken = JSON.parse(secureLocalStorage.getItem("otp"));
+    const otpToken = JSON.parse(secureLocalStorage.getItem('otp'));
     return otpToken?.otp;
   };
 
@@ -169,26 +168,46 @@ const Login = () => {
 
   return (
     <AuthWrapper1>
-      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: "initial" }}>
+      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: 'initial', overflow: 'auto' }}>
         <Grid item xs={12}>
-          <Grid container sx={{ minHeight: 'calc(100vh - 68px)' }}>
-            <Grid item xs={6} sx={{
-              backgroundImage: `url(${LoginBg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              width: '100%',
-              height: '100vh',
-            }} >
+          <Grid container>
+            <Grid
+              item
+              xs={6}
+              sx={{
+                backgroundImage: `url(${LoginBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                width: '100%',
+                height: '100vh'
+              }}
+            >
               {/* <LeftImageBox /> */}
             </Grid>
             {!otp && (
-              <Grid item xs={6} sx={{ mb: 0, display: "flex", backgroundColor: `#BEE1F5`, alignItems: "center", justifyContent: "center", backgroundImage: `url(${LoginBg2})`, backgroundSize: "cover" }}>
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  mb: 0,
+                  display: 'flex',
+                  backgroundColor: `#BEE1F5`,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundImage: `url(${LoginBg})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  width: '100%',
+                  height: '100vh',
+                  overflow: 'auto'
+                }}
+              >
                 <AuthCardWrapper>
                   <Grid container spacing={2} alignItems="center" justifyContent="center">
                     <Grid item sx={{ mb: 2 }}>
                       <Link to="#">
                         {/* <Logo /> */}
-                        <img src={NewLogo} alt='KIAQ' width={184} height={64} />
+                        <img src={NewLogo} alt="KIAQ" width={184} height={64} />
                       </Link>
                     </Grid>
                     <Grid item xs={12}>
@@ -225,7 +244,7 @@ const Login = () => {
                           OTP
                         </Typography>
                       </Box>
-                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Typography variant="h3" sx={{ ml: 2.5, fontWeight: 700 }}>
                           Your Otp is - {getDevOtp()}
                         </Typography>
@@ -240,11 +259,13 @@ const Login = () => {
                         <Typography variant="h6">{getOtpDetails().email}</Typography>
                       </Box>
                       <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>Type your 6 digit security code</Typography>
-                      <form onSubmit={handleSubmit(async () => {
-                        const otp = values.join(" ").toString().replace(/\s+/g, '');
-                        const otpToken = JSON.parse(secureLocalStorage.getItem("otp"));
-                        await dispatch(VerifyOtp(otp, otpToken.email, otpToken.token));
-                      })}>
+                      <form
+                        onSubmit={handleSubmit(async () => {
+                          const otp = values.join(' ').toString().replace(/\s+/g, '');
+                          const otpToken = JSON.parse(secureLocalStorage.getItem('otp'));
+                          await dispatch(VerifyOtp(otp, otpToken.email, otpToken.token));
+                        })}
+                      >
                         <CleaveWrapper
                           sx={{
                             display: 'flex',

@@ -7,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
+import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -149,7 +150,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
         Add Category
       </DialogTitle>
         <Typography variant="caption" color="textSecondary" sx={{mx:4,ml:3,color:'grey',fontSize: '0.9rem !important',}}>
-        Create a new course category with an image. The image should be PNG or JPEG format.
+        Create a new course category with an image.
               </Typography>
       <DialogContent
         sx={{
@@ -160,6 +161,24 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
+          <Grid item xs={12}>
+              <Controller
+                name="category"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    fullWidth
+                    value={value}
+                    label="Category Name"
+                    onChange={onChange}
+                    placeholder="Enter category name"
+                    error={Boolean(errors.category)}
+                    helperText={errors.category ? errors.category.message : ''}
+                  />
+                )}
+              />
+            </Grid>
+
             <Grid item xs={12} display="flex" justifyContent="center" flexDirection="column" alignItems="center">
               {imgSrc ? (
                 <>
@@ -171,7 +190,9 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
                   </Box>
                 </>
               ) : (
-                <Button variant="contained" component="label" sx={{
+                <Button variant="contained" component="label" 
+                startIcon={<Icon icon="tabler:upload" />}
+                sx={{
                   backgroundColor: 'white',
                   color: 'black',
                   '&:hover': {
@@ -197,23 +218,6 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
                 {errors?.image?.message}
               </Typography>
               }
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="category"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    label="Category Name"
-                    onChange={onChange}
-                    placeholder="Enter category name"
-                    error={Boolean(errors.category)}
-                    helperText={errors.category ? errors.category.message : ''}
-                  />
-                )}
-              />
             </Grid>
           </Grid>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>

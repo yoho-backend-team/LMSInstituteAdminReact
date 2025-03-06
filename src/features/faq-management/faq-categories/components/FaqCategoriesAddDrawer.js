@@ -21,6 +21,7 @@ import * as yup from 'yup';
 import { addFaqCategory } from '../services/faqCategoryServices';
 import secureLocalStorage from 'react-secure-storage';
 import toast from 'react-hot-toast';
+import { getBranchObjectId, useBranchId, useInstitute } from 'utils/get-institute-details';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -59,13 +60,6 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
 
-  const institute = JSON.parse(secureLocalStorage.getItem('institute'));
-  const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
-
-  const requestData = {
-    branchid: selectedBranchId,
-    institute_id: institute ? institute._id : ''
-  }; 
 
   const {
     reset,
@@ -85,36 +79,39 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
 
   const onSubmit = async (data) => {
     setSubmitting(true);
-    const institute = JSON.parse(localStorage.getItem('institute'));
-    const selectedBranchId = localStorage.getItem('selectedBranchId') || '';
+    const institute = useInstitute().getDetails();
+    const selectedBranchId = useBranchId();
+    console.log('Selected Branch:', selectedBranchId);
 
     const cleanedBranchId = selectedBranchId ? selectedBranchId.replace(/^"|"$/g, '') : '';
   
-    const inputData = {
+    const faq_CategoryData = {
       category_name: data.name, 
       description: data.description,
-      branchId: cleanedBranchId,
-      institute_id: institute ? institute._id : ''
+      branchid: cleanedBranchId,
+      institute_id: institute?._id
     };
   
-    console.log("Sending Data:", inputData);
+    console.log("Sending Data:", faq_CategoryData);
   
     try {
-      const result = await addFaqCategory(inputData);
+      const result = await addFaqCategory(faq_CategoryData);
       setSubmitting(false);
+      console.log('result:', result);
   
-      if (result.success) {
+      if (result.status) {
         setSuccessDialogOpen(true);
         setRefetch((state) => !state);
         toggle();
         reset();
       } else {
-        toast.error(result.message || 'Failed to create category');
+        toast.error('Failed to add Faq_Category. Please try again.');
       }
     } catch (error) {
+      console.error('Error submitting Faq_Category:', error);
+      toast.error('An error occurred. Please try again.');
+    } finally {
       setSubmitting(false);
-      console.error('Error in creating FaqCategory:', error);
-      alert('An error occurred while adding the category. Please try again.');
     }
   };
   

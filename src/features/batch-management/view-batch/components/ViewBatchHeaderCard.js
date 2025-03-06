@@ -8,7 +8,15 @@ import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
 import CustomChip from 'components/mui/chip';
 
+import { format } from 'date-fns';
+
 const EcommerceStatistics = ({ batchData, theme }) => {
+
+    
+    const formatDate = (dateString) => {
+      if (!dateString) return '';
+      return format(new Date(dateString), 'yyyy/MM/dd'); 
+    };
 
   const CardStyle = styled(Card)(({ theme }) => ({
     borderColor: theme.palette.mode === 'light' ? theme.palette.primary.main : theme.palette.primary.main,
@@ -104,12 +112,12 @@ const EcommerceStatistics = ({ batchData, theme }) => {
 
                   <Grid item xs={12} sm={3} sx={{ mt: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-                      <CustomChip label={batchData.start_date} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{
+                      <CustomChip label={formatDate(batchData.start_date)} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{
                         background: 'linear-gradient(to right, #3b82f6, #7c3aed)',
                         color: 'white'
                       }} />
                       <div className="connect" />
-                      <CustomChip label={batchData.end_date} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{
+                      <CustomChip label={formatDate(batchData.end_date)} size="large" color="secondary" variant="tonal" skin="dark" rounded sx={{
                         background: 'linear-gradient(to right, #3b82f6, #7c3aed)',
                         color: 'white'
                       }} />

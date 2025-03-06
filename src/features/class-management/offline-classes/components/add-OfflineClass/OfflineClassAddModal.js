@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, Grid } from '@mui/material';
+import { Checkbox, Grid,Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -29,6 +29,7 @@ import * as yup from 'yup';
 import { addOfflineClass } from '../../services/offlineClassServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
+import { Link } from 'react-router-dom';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -42,6 +43,35 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const { show, hide } = useSpinner()
+
+
+  const [selectedBranch, setSelectedBranch] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [classDateSelected, setClassDateSelected] = useState(false);
+
+  const handleBranchChange = (newValue) => {
+  setSelectedBranch(newValue);
+  setSelectedCourse(null); // Reset course when branch changes
+  setSelectedBatch(null); // Reset batch when branch changes
+  setClassDateSelected(false); // Reset class date when branch changes
+};
+
+const handleCourseChange = (newValue) => {
+  setSelectedCourse(newValue);
+  setSelectedBatch(null); // Reset batch when course changes
+  setClassDateSelected(false); // Reset class date when course changes
+};
+
+const handleBatchChange = (newValue) => {
+  setSelectedBatch(newValue);
+  setClassDateSelected(false); // Reset class date when batch changes
+};
+
+const handleClassDateChange = (newValue) => {
+  setClassDateSelected(true);
+};
+  
   
   useEffect(() => {
     getActiveBranchesByUser();
@@ -235,7 +265,6 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
         Add Offline Class
       </DialogTitle>
 
-
       <DialogContent
         sx={{
           pt: (theme) => [`${theme.spacing(6)} !important`, `${theme.spacing(2)} !important`],
@@ -314,6 +343,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?._id);
                         getActiveCoursesByBranch(newValue?.uuid);
+                        handleBranchChange(newValue);
+                        
                       }}
                       value={activeBranches.find((branch) => branch._id === value) || null}
                       renderInput={(params) => (
@@ -369,11 +400,19 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       onChange={(event, newValue) => {
                         onChange(newValue?._id);
                         getActiveBatchesByCourse(newValue?._id);
+                        handleCourseChange(newValue);
                       }}
                       value={activeCourse.find((course) => course._id === value) || null}
+                      disabled={!selectedBranch}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message}
+                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message 
+                          || (!selectedBranch && 'Please select a branch first to enable course selection.')
+                        }
                           sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                                  backgroundColor: '#f0f0f0'  
+                                },
+                                cursor: !selectedBranch ? 'not-allowed' : 'text',
                             backgroundColor: 'transparent',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
@@ -398,8 +437,8 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                             },
                             '& .MuiFormHelperText-root': {
                               backgroundColor: 'transparent',
-                              color: 'red',
-
+                              color: selectedBranch ? 'red':'black',
+                              
                               borderRadius: '4px',
                               marginTop: '4px',
                             },
@@ -424,15 +463,20 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       getOptionLabel={(option) => option?.batch_name || "" }
                       onChange={(event, newValue) => {
                         setValue('batch', newValue);
+                        handleBatchChange(newValue);
                       }}
+                      disabled={!selectedCourse}
                       value={field.value}
                       renderInput={(params) => (
                         <TextField
-                          {...params}
-                          
-
-                          label="Batch"
+                          {...params} label="Select Batch" error={Boolean(errors.course)} helperText={errors.course?.message 
+                            || (!selectedCourse && 'Please select a Course first to enable Batch selection.')
+                          }
                           sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'  
+                            },
+                            cursor: !selectedCourse ? 'not-allowed' : 'text',
                             backgroundColor: 'transparent',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
@@ -457,7 +501,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                             },
                             '& .MuiFormHelperText-root': {
                               backgroundColor: 'transparent',
-                              color: 'red',
+                              color:selectedCourse? 'red' :'black',
 
                               borderRadius: '4px',
                               marginTop: '4px',
@@ -480,10 +524,19 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       selected={value}
                       id="basic-input"
                       className="full-width-datepicker"
-                      onChange={onChange}
+                      onChange={(date) => {
+                        onChange(date);
+                        handleClassDateChange(date);
+                      }}
                       placeholderText="Click to select a date"
+                      disabled={!selectedBatch}
                       customInput={<CustomInput label="ClassDate"
+                       
                         sx={{
+                          '& .MuiInputBase-root.Mui-disabled': {
+                            backgroundColor: '#f0f0f0'  
+                          },
+                          cursor: !selectedBatch ? 'not-allowed' : 'text',
                           backgroundColor: 'transparent',
                           borderRadius: '8px',
                           '& .MuiOutlinedInput-root': {
@@ -514,13 +567,30 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                             marginTop: '4px',
                           },
 
-                        }} />}
+                        }}
+                       
+                         />
+                        }
 
                     />
                   )}
 
                 />
-                {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message}</p>}
+                {/* {errors.classDate && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.classDate.message }</p>} */}
+                {errors.classDate ? (
+    <Typography variant="body2" color="error" sx={{ marginTop: '5px' }}>
+      {errors.classDate.message}
+    </Typography>
+  ) : (
+    !selectedBatch && (
+      <Typography variant="body2" color="textSecondary" sx={{ marginTop: '5px',ml:2,fontSize: '0.8rem' , '& .MuiInputBase-root.Mui-disabled': {
+        backgroundColor: '#f0f0f0'  
+      },
+      cursor: !selectedBatch ? 'not-allowed' : 'text',}}>
+        Please select a batch first to enable the class date.
+      </Typography>
+    )
+  )}
               </Grid>
 
               <Grid container item xs={6} spacing={2}>
@@ -542,7 +612,12 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           value={value}
                           onChange={onChange}
                           label="Start Time"
+                          disabled={!classDateSelected} 
                           sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'  
+                            },
+                            cursor: !classDateSelected ? 'not-allowed' : 'text',
                             backgroundColor: 'transparent',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
@@ -599,7 +674,12 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                           value={value}
                           onChange={onChange}
                           label="End Time"
+                          disabled={!classDateSelected} 
                           sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'  
+                            },
+                            cursor: !classDateSelected ? 'not-allowed' : 'text',
                             backgroundColor: 'transparent',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
@@ -661,10 +741,11 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       setValue('instructor', newValue);
                     }
                   }}
+                  disabled={!classDateSelected}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      error={Boolean(errors.instructor)} helperText={errors.instructor?.message}
+                      error={Boolean(errors.instructor)} helperText={errors.instructor?.message || (!classDateSelected && 'Please select a ClassDate first to enable Instructor selection.')}
                       fullWidth
                       label="Instructors"
                       InputProps={{
@@ -672,6 +753,10 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
                       sx={{
+                        '& .MuiInputBase-root.Mui-disabled': {
+                          backgroundColor: '#f0f0f0'  
+                        },
+                        cursor: !classDateSelected ? 'not-allowed' : 'text',
                         backgroundColor: 'transparent',
                         borderRadius: '8px',
                         '& .MuiOutlinedInput-root': {
@@ -696,7 +781,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
-                          color: 'red',
+                          color: classDateSelected? 'red':'black',
 
                           borderRadius: '4px',
                           marginTop: '4px',
@@ -760,9 +845,11 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                       setValue('coordinator', newValue);
                     }
                   }}
+                  disabled={selectedInstructors.length === 0}
                   renderInput={(params) => (
                     <TextField
-                      {...params}
+                      {...params} 
+                      error={Boolean(errors.coordinator)} helperText={errors.coordinator?.message || (!classDateSelected && 'Please select a Instructor first to enable Coordinates selection.')}
                       fullWidth
                       label="Coordinates"
                       InputProps={{
@@ -770,6 +857,10 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                       }}
                       sx={{
+                        '& .MuiInputBase-root.Mui-disabled': {
+                          backgroundColor: '#f0f0f0'  
+                        },
+                        cursor: selectedInstructors.length === 0 ? 'not-allowed' : 'text',
                         backgroundColor: 'transparent',
                         borderRadius: '8px',
                         '& .MuiOutlinedInput-root': {
@@ -794,8 +885,7 @@ const OfflineClassAddModal = ({ open, handleAddClose, setRefetch }) => {
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
-                          color: 'red',
-
+                          color:selectedInstructors.length === 0?  'black' :'red',
                           borderRadius: '4px',
                           marginTop: '4px',
                         },

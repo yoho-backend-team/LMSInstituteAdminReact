@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import TicketResolutionPage from '../TicketResolutionPage';
+import NoDataFoundComponent from 'components/empty/noDataFound';
 
 const StaffTicketsPage = () => {
   const [value, setValue] = useState('open');
@@ -27,15 +28,42 @@ const StaffTicketsPage = () => {
   const staffLoading = useSelector(selectLoading);
   const [openResolveDrawer, setOpenResolveDrawer] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState({});
-
   const [refetch, setRefetch] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    dispatch(getAllStaffOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1', institute_id: useInstitute().getInstituteId() }));
+    const fetchOpenTickets = async () => {
+      try {
+        setError(null); 
+        const response = await dispatch(getAllStaffOpenTickets({ 
+          branch_id: selectedBranchId, 
+          status: 'opened', 
+          page: '1', 
+          institute_id: useInstitute().getInstituteId() 
+        }));
+  
+        
+        if (response.error) {
+          throw new Error(response.error.message || "Failed to fetch open tickets.");
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+  
+    fetchOpenTickets();
   }, [selectedBranchId, dispatch, refetch]);
+  
 
   useEffect(() => {
-    dispatch(getAllStaffClosedTickets({ branch_id: selectedBranchId, status: 'closed', page: '1', institute_id: useInstitute().getInstituteId() }));
+    dispatch(getAllStaffClosedTickets(
+      { 
+        branch_id: selectedBranchId, 
+        status: 'closed', 
+        page: '1', 
+        institute_id: useInstitute().getInstituteId() 
+      }
+    ));
   }, [selectedBranchId, dispatch, refetch]);
 
   const handleCloseDrawer = () => {
@@ -52,7 +80,7 @@ const StaffTicketsPage = () => {
   };
 
   return (
-    <MainCard title="Staff Tickets" sx={{ minHeight: '100vh' }}>
+    <MainCard title="Staff Tickets" sx={{ minHeight: '100vh', margin: '10 auto', }}>
       {staffLoading ? (
         <TicketsCardsSkeleton />
       ) : (
@@ -94,6 +122,7 @@ const StaffTicketsPage = () => {
               <Tab value="close" label={<Typography variant='h6'>Closed Tickets</Typography>} />
             </CustomTabList>
             <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
+            {studentOpenTickets?.data?.data?.length > 0 ? (
               <Grid container spacing={2}>
                 {studentOpenTickets?.data?.data?.map((ticket, index) => (
                   <OpenTicketCard
@@ -104,13 +133,20 @@ const StaffTicketsPage = () => {
                   />
                 ))}
               </Grid>
+            ) : error ? (
+                <NoDataFoundComponent title="No Open Tickets Found" description="There are currently no open tickets." buttonText="Refresh" onAdd={() => setRefetch(!refetch)} />
+              ) : null }
             </TabPanel>
             <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
+            {studentClosedTickets?.data?.data?.length > 0 ? (
               <Grid container spacing={2}>
                 {studentClosedTickets?.data?.data?.map((ticket, index) => (
                   <ClosedTicketCard key={index} ticket={ticket} />
                 ))}
               </Grid>
+            ) : (
+                <NoDataFoundComponent title="No Closed Tickets Found" description="There are currently no closed tickets." buttonText="Refresh" onAdd={() => setRefetch(!refetch)} />
+              )}
             </TabPanel>
           </TabContext>
           {studentClosedTickets?.data?.last_page !== 1 && (

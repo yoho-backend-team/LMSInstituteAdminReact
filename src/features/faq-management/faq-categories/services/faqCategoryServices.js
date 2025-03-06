@@ -7,30 +7,37 @@ const FAQ_CATEGORY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/
 
 export const getActiveFaqCategories = async (data) => {
   try {
-    const response = await axios.get(`${FAQ_CATEGORY_API_END_POINT}`, {
+    const response = await axios.get(`${FaqS_CATEGORY_API_END_POINT}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
 
-    return response;
+    // Check if the response status is successful
+    if (response.data.status) {
+      return response;
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch Faqs. Status: ${response.status}`);
+    }
   } catch (error) {
-    console.error('Error in getAllFaqCategories:', error);
+    // Log the error for debugging purposes
+    console.error('Error in getAllFaqs:', error);
 
     // Throw the error again to propagate it to the calling function/component
-    throw new Error(`${error?.response.data?.message}`);
+    throw error;
   }
 };
 
 export const getAllFaqCategories = async (data) => {
   try {
-    console.log("API response data: ",data);
+    console.log("API sending data: ",data);
     
-    const response = await client.category.getAll(data);
+    const response = await client.faq_category.getAll(data);
     console.log('All categories data:', response);
-    if (response?.status) {
+    if (response) {
       return response;
     } else {
       throw new Error(`Failed to fetch Faqcategory. Status: ${response.status}`);
@@ -63,36 +70,30 @@ export const searchFaqCategories = async (searchQuery) => {
   }
 };
 
-export const addFaqCategory = async (inputData) => {
+export const addFaqCategory = async (faq_CategoryData) => {
   try {
-    console.log("inputData", inputData);
+    console.log("inputData", faq_CategoryData);
 
-    const { instituteId } = inputData;
-
-    console.log("instituteId :", instituteId);
-
-    const requestData = {
-      ...inputData,  
-      instituteId,   
-    };
-
-    const response = await client.category.create(requestData); 
+    const response = await client.faq_category.create(faq_CategoryData); 
     console.log('API Response:', response);
 
-    if (response?.status === 200 || response?.status === 201) {
-      return { success: true, message: 'Faq Category created successfully' };
-    } else {
-      return { success: false, message: response?.data?.message || 'Failed to create FaqCategory' };
+    if (!response?.status) {
+      throw new Error(`Failed to create FAQ_CATEGORY : ${response.status} ${response.statusText}`);
     }
+    return  response;
   } catch (error) {
-    console.error('Error in addFaqCategory:', error.response?.data || error);
-    throw error;
+    console.error('Error in addFaqCategory:', error.message);
+    return { success: false, message: error.message };
   }
 };
 
 export const deleteFaqCategory = async (data) => {
   try {
-    const response = await client.category.delete(data);
+    console.log("deleting send data:", data.uuid);
+    
+    const response = await client.faq_category.delete({ uuid: data.uuid });
+    console.log("API delete response:",response);
+    
 
     if (response.status) {
       return { success: true, message: 'FaqCategory deleted successfully' };
@@ -130,14 +131,9 @@ export const updateFaqCategory = async (data) => {
   try {
     const { uuid } = data;
 
-    const response = await axios.put(`${FAQ_CATEGORY_API_END_POINT}/update/${uuid}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    });
+    const response = await client.faq_category.update(uuid, data);
 
-    if (response.data.status) {
+    if (response.status) {
       return { success: true, message: 'FaqCategory updated successfully' };
     } else {
       return { success: false, message: 'Failed to update FaqCategory' };

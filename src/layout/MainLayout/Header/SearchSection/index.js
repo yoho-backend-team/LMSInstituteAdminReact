@@ -25,6 +25,7 @@ import { updateSelectedBranch } from 'features/authentication/authActions';
 
 import { shouldForwardProp } from '@mui/system';
 import { useEffect } from 'react';
+import secureLocalStorage from 'react-secure-storage';
 
 // Styles
 const PopperStyle = styled(Popper)(({ theme }) => ({
@@ -77,10 +78,10 @@ const SearchSection = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId) || primeBranch.uuid;
 
   useEffect(() => {
-    if (primeBranch.uuid) {
-      dispatch(updateSelectedBranch(primeBranch.uuid));
-      localStorage.setItem('selectedBranchId', primeBranch.uuid);
-    }
+    // if (primeBranch.uuid) {
+    //   dispatch(updateSelectedBranch(primeBranch.uuid));
+    //   localStorage.setItem('selectedBranchId', primeBranch.uuid);
+    // }
   }, [dispatch, primeBranch]);
 
   return (
@@ -132,7 +133,7 @@ const SearchSection = () => {
           value={selectedBranchId?.trim()}
           onChange={(e) => {
             dispatch(updateSelectedBranch(e.target.value));
-            localStorage.setItem('selectedBranchId', e.target.value);
+            secureLocalStorage.setItem('selectedBranchId', e.target.value);
           }}
           placeholder="Search"
           aria-describedby="search-helper-text"

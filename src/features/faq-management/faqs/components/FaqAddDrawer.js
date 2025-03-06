@@ -53,23 +53,20 @@ const schema = yup.object().shape({
   name: yup.string().required('Title is required'),
   description: yup.string().required('Description is required'),
   category: yup.object().required('Category is required'),
-  accessby: yup.array().min(1, 'Accessby is required')
-  // vidlink: yup.string().url('Opional'),
-  // pagelink: yup.string().url('Optional')
+  accessby: yup.array().of(yup.string()).min(1, 'Accessby is required')
 });
 
 const defaultValues = {
   name: '',
   description: '',
   category: '',
-  accessby: []
-  // vidlink: '',
-  // pagelink: ''
+  accessby: ['none']
 };
 
 const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
+  // console.log('faqCategories in add page :', faqCategories);
 
   const {
     reset,
@@ -202,8 +199,9 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
                     render={({ field: { onChange } }) => (
                       <Autocomplete
                         fullWidth
-                        options={faqCategories}
-                        getOptionLabel={(option) => option.category_name}
+                        options={faqCategories || []}
+                        getOptionLabel={(option) => (option?.category_name || 'unnamed')}
+                        getOptionKey={(option) => option?.id || option?.category_name || Math.random().toString()}
                         onChange={(e, newValue) => onChange(newValue)}
                         renderInput={(params) => (
                           <TextField

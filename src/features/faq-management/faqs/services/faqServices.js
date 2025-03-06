@@ -45,11 +45,12 @@ export const getActivesByBranch = async (data) => {
 
 export const getAllFaqs = async (data) => {
   try {
+    console.log("API response data: ",data);
     const response = await client.faq.getAll(data);
     console.log("getall data response",response);
     
 
-    if (response?.status) {
+    if (response) {
       return response;
     } else {
       throw new Error(`Failed to fetch Faqs. Status: ${response.status}`);
@@ -105,13 +106,9 @@ export const createFaq = async (faqData) => {
 
 export const deleteFaq = async (data) => {
   try {
-    const response = await axios.delete(`${FAQ_API_END_POINT}/delete/${data.id}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${secureLocalStorage.getItem('token')}`
-      },
-      params: data
-    });
+    console.log("delete data",data);
+    const response = await client.faq.delete({ uuid: data.uuid });
+    console.log("delete response",response);
 
 
     if (response.data.status) {
@@ -127,13 +124,8 @@ export const deleteFaq = async (data) => {
 
 export const updateFaq = async (inputData) => {
   try {
-    const {uuid} = data
-    const response = await axios.put(`${FAQ_API_END_POINT}/update/${uuid}`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${secureLocalStorage.getItem('token')}`
-      }
-    });
+    const {uuid} = inputData;
+    const response = await client.faq.update(uuid, inputData);
 
 
     if (!uuid) {

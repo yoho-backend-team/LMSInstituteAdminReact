@@ -1,4 +1,5 @@
 // groupService.js
+import client from 'api/client';
 import axios from 'axios';
 import secureLocalStorage from 'react-secure-storage';
 
@@ -6,15 +7,12 @@ const FORGET_PASSWORD_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/ap
 
 export const sendOtp = async (data) => {
     try {
-        const response = await axios.post(`${FORGET_PASSWORD_API_ENDPOINT}/forget-password`, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
-            }
-        });
+        console.log('Sending OTP data ...', data);
+        const response = await client.admin.forget_password(data);
+        console.log('API Response in sendotp:',response);
         // Check if the response status is successful
-        if (response.data.status) {
-            return { success: true, data: response?.data?.data, message: response?.data?.message };
+        if (response.status) {
+            return { success: true, email: response?.email, message: response?.message ,token:response?.token ,otp: response?.otp };
         } else {
             // If the response status is not successful, throw an error
             throw new Error(`Failed to Send OTP. Status: ${response.status}`);
@@ -53,16 +51,12 @@ export const resendOtp = async (data) => {
 };
 export const verifyOtp = async (data) => {
     try {
-        const response = await axios.post(`${FORGET_PASSWORD_API_ENDPOINT}/verify-otp`, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
-            }
-        });
+        console.log('Verifying OTP data ...', data);
+        const response = await client.admin.verfiy_otp(data);
 
         // Check if the response status is successful
-        if (response.data.status) {
-            return { success: true, data: response?.data?.data, message: response?.data?.message };
+        if (response.status) {
+            return { success: true,  message: response?.message , otp: response?.otp };
         } else {
             // If the response status is not successful, throw an error
             throw new Error(`Failed to Verify OTP. Status: ${response.status}`);

@@ -32,7 +32,8 @@ const generateEndpoints = () => {
           me : `/api/institutes/auth/admin/me`,
           change_password : "/api/institutes/auth/admin/change-password",
           forget_password: `/api/institutes/auth/admin/forget-password`,
-          
+          verfiy_otp : `/api/institutes/auth/admin/validate-otp`,
+          reset_password : `/api/institutes/auth/admin/update-password`,
         },
         permission : {
             getAll : `/api/admin/institutes/permissions/all`,
@@ -62,7 +63,12 @@ const generateEndpoints = () => {
             getAll: `/api/institutes/faq/all`,  
             delete: `/api/institutes/faq/delete/:uuid`,
             update: `/api/institutes/faq/update/:uuid`
-
+        },
+        faq_category : {
+            create: `/api/institutes/faq/category`,  
+            getAll: `/api/institutes/faq/category`,  
+            update: `/api/institutes/faq/category/update/:uuid`,
+            delete: `/api/institutes/faq/category/delete/:uuid`,
         },
         category: {
             getAll: `/api/institutes/${instituteId}/categories/`,

@@ -72,9 +72,10 @@ export const addTeachingStaff = async (data) => {
     
     const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff/register`, data, {
       headers: {
-        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        Authorization: `Token ${localStorage.getItem('token')}`
       }
     });
+console.log(response,'response');
 
     if (response.data) {
       return { success: true, message: 'TeachingStaff created successfully' };

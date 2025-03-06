@@ -9,58 +9,8 @@ import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { setOfflineClasses } from '../redux/offlineClassSlice';
 import OfflineClassAddModal from './add-OfflineClass/OfflineClassAddModal';
 
-import { styled } from "@mui/material/styles";
-const WaveTextField = styled(TextField)({
-  position: "relative",
-  width: "80%",
-  "& label": {
-    position: "absolute",
-    left: "0px",
-    top: "6px",  
-    display: "flex",
-    gap: "2px",
-    fontSize: "18px", 
-    color: "#999",
-    pointerEvents: "none",
-    transition: "0.3s ease all",
-  },
-  "& label span": {
-    transition: "0.2s ease",
-    transitionDelay: "calc(var(--index) * 0.05s)",
-  },
-  "& .MuiInputBase-root": {
-    fontSize: "14px",  
-    padding: "20px 5px 8px", 
-    width: "100%",
-    background: "transparent",
-    position: "relative",
-  },
-  "& .MuiInputBase-input": {
-    padding: "5px 0px",  
-  },
-  "& .MuiInputBase-input::placeholder": {
-    color: "transparent",  
-  },
-  "& .MuiInputBase-input:focus ~ label span, & .MuiInputBase-input:not(:placeholder-shown) ~ label span": {
-    transform: "translateY(-18px)",  
-    fontSize: "13px",
-    color: "#5264AE",
-  },
-  "& .MuiInputBase-root::after": {
-    content: "''",
-    height: "2px",
-    width: "0%",
-    position: "absolute",
-    bottom: "0",
-    left: "0",
-    background: "#5264AE",  
-    transition: "0.3s ease all",
-  },
-  "& .MuiInputBase-input:focus ~ .MuiInputBase-root::after": {
-    width: "100%",
-  },
-});
-
+ 
+ 
 const OfflineClassCardHeader = (props) => {
   const { selectedBranchId, setRefetch,offlineClasses ,offlineClassRefetch} = props;
   const [searchValue, setSearchValue] = useState('');
@@ -96,8 +46,7 @@ const OfflineClassCardHeader = (props) => {
     <>
       <Box
         sx={{
-          pb: 1,
-          pt: 3,
+         
           width: '100%',
           display: 'flex',
           flexWrap: 'wrap',
@@ -105,7 +54,7 @@ const OfflineClassCardHeader = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <WaveTextField
+        <TextField
           value={searchValue}
           sx={{
             width: '80%'

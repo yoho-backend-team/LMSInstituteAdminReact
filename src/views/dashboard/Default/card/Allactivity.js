@@ -29,6 +29,7 @@ const AllActivity = () => {
          setHasMore(false)
       }
     } catch (error) {
+      setHasMore(false)
       console.log(error,"error")
     }
     setLoading(false)
@@ -70,12 +71,13 @@ const AllActivity = () => {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left',mt:2 }}>
+      <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left',mt:2.5 }}>
         Recent Activities
       </Typography>
       <Card
         ref={containerRef}
         sx={{
+          mt:7.5,
           backgroundColor: "white",
           p: 3,
           height: "455px",

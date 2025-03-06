@@ -72,7 +72,7 @@ const NotificationSection = () => {
     const fetchData = async () => {
       try {
         const data = { institute_id : useInstitute().getInstituteId() };
-        const query = { branch_id : JSON.parse(branch_id), status: "unread" }
+        const query = { branch_id : branch_id, status: "unread" }
         const result = await getLastNotifications(data,query);
         // console.log(result,"result")
         setNotifications(result.data);
@@ -106,7 +106,7 @@ const NotificationSection = () => {
 
   useEffect(() => {
     socket.connect()
-    socket.emit("JoinInstituteNotification",{branchId : JSON.parse(branch_id)})
+    socket.emit("JoinInstituteNotification",{branchId : branch_id})
     socket.on("triggerInstituteNotification",(notification) => {
       console.log(notification,"notification")
         setNotifications((prevNotification) => [...prevNotification,notification.notification])
