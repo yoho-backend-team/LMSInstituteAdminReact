@@ -7,6 +7,8 @@ class Client {
       me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data),
       change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data),
       forget_password:(data)=> HttpClient.post(HTTP_END_POINTS.admin.forget_password,data),
+      verfiy_otp : (data) => HttpClient.post(HTTP_END_POINTS.admin.verfiy_otp,data),
+      reset_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.reset_password,data),
     }
     permission = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),

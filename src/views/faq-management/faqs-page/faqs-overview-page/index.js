@@ -6,6 +6,7 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import FaqSkeleton from 'components/cards/Skeleton/FaqSkeleton';
+import NoDataFoundComponent from 'components/empty/noDataFound';
 import Icon from 'components/icon';
 import { default as DeleteDialog, default as StatusDialog } from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
@@ -38,59 +39,57 @@ const FaqDataGrid = () => {
   const [refetch, setRefetch] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState(null);
   const [selectedFaqStatus, setSelectedFaqStatus] = useState(null);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10);
+  const [error, setError] = useState(false);
 
   const dispatch = useDispatch();
   const faqs = useSelector(selectFaqs);
   const faqLoading = useSelector(selectLoading);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-
-
-  const fetchFaqs =  (page) => {
-    const institute = useInstitute().getDetails();
-  
-    const data = {
-      branchid: selectedBranchId,  
-      instituteId: institute?.uuid,  
-      page: page,  
-      perPage: rowsPerPage
-    };
-  
-    console.log('Fetching FAQs with params:', data);  
-  
-    dispatch(getAllFaqs(data));  
+  const fetchFaqs = async (page) => {
+    try {
+      const institute = useInstitute().getDetails();
+      const data = {
+        branchid: selectedBranchId,
+        instituteId: institute?.uuid,
+        page: page,
+        perPage: rowsPerPage
+      };
+      dispatch(getAllFaqs(data));
+      setError(false);
+    } catch (error) {
+      console.error('Error fetching FAQs:', error);
+      setError(true);
+    }
   };
-  
-  
 
   useEffect(() => {
     const storedInstitute = secureLocalStorage.getItem('institute');
     if (!storedInstitute) {
-        console.error('Institute data not found in localStorage');
-        return;
+      console.error('Institute data not found in localStorage');
+      return;
     }
 
     const institute = JSON.parse(storedInstitute);
     if (!institute || !institute._id) {
-        console.error('Invalid institute data:', institute);
-        return;
+      console.error('Invalid institute data:', institute);
+      return;
     }
 
     console.log('institutedetails:', institute);
 
     const data = {
-        branchid: selectedBranchId,
-        instituteId: institute._id,
-        page: 1,
-        perPage: rowsPerPage
+      branchid: selectedBranchId,
+      instituteId: institute._id,
+      page: 1,
+      perPage: rowsPerPage
     };
     console.log('data:', data);
 
     dispatch(getAllFaqs(data));
-}, [dispatch, selectedBranchId, refetch]);
+  }, [dispatch, selectedBranchId, refetch]);
 
 
   useEffect(() => {
@@ -118,15 +117,14 @@ const FaqDataGrid = () => {
 
   const handleDeleteApi = async () => {
     try {
-      const data = { uuid: deletingItemId }; 
+      const data = { uuid: deletingItemId };
       const response = await deleteFaq(data);
       console.log('Delete response data:', response);
-  
+
       if (response.success) {
         setSuccessDescription('Item deleted successfully!');
         setFailureDescription('');
-        setRefetch((state) => !state);  
-        
+        setRefetch((state) => !state);
       } else {
         setFailureDescription('Failed to delete the item. Please try again.');
         setSuccessDescription('');
@@ -137,8 +135,7 @@ const FaqDataGrid = () => {
       setSuccessDescription('');
     }
   };
-  
-  
+
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedFaqStatus,
@@ -153,13 +150,11 @@ const FaqDataGrid = () => {
     }
   };
 
-
   const handlePageChange = (event, page) => {
-  console.log('Page changed to:', page);  
-  setCurrentPage(page);
-  fetchFaqs(page);  
-};
-
+    console.log('Page changed to:', page);
+    setCurrentPage(page);
+    fetchFaqs(page);
+  };
 
   useEffect(() => {
     console.log('Current Page:', currentPage);
@@ -169,18 +164,12 @@ const FaqDataGrid = () => {
       fetchFaqs(currentPage);
     }
   }, [currentPage, refetch]);
-  
 
   const handleStatusChange = (e, row) => {
     setSelectedFaq(row);
     setSelectedFaqStatus(e.target.value);
     setStatusDialogOpen(true);
   };
-
-  
-  
-  
-  
 
   const toggleEditUserDrawer = () => {
     setEditUserOpen(!editUserOpen);
@@ -339,16 +328,11 @@ const FaqDataGrid = () => {
               <FaqSkeleton />
             </Card>
           </Grid>
-        ) : (
+        ) : faqs?.data?.length > 0 ? (
           <Grid item xs={12}>
             <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', mt: 1 }}>
               <DataGrid
                 sx={{
-                  '& .MuiDataGrid-row': {
-                    border: '1px solid#cfccd1',
-                    borderLeft: 'none',
-                    borderRight: 'none'
-                  },
                   '& .MuiDataGrid-row': {
                     border: '1px solid #e6e5e7',
                     borderLeft: 'none',
@@ -369,7 +353,7 @@ const FaqDataGrid = () => {
                 }}
                 autoHeight
                 rowHeight={60}
-                rows={faqs?.data || []} 
+                rows={faqs?.data?.data || []}
                 columns={columns}
                 getRowId={(row) => row._id || row.id}
                 disableRowSelectionOnClick
@@ -381,9 +365,18 @@ const FaqDataGrid = () => {
               />
             </Card>
           </Grid>
-        )}
+        ) : error ? (
+          <Grid item xs={12}>
+            <NoDataFoundComponent
+              title={error}
+              description={error.message}
+              buttonText="Retry"
+              onAdd={() => fetchFaqs(currentPage)}
+            />
+          </Grid>
+        ) : null }
 
-        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories?.data || []} setRefetch={setRefetch} />
+        <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories || []} setRefetch={setRefetch} />
         <FaqEdit
           open={editUserOpen}
           toggle={toggleEditUserDrawer}

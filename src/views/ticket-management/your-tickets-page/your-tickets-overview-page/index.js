@@ -14,6 +14,7 @@ import { getAllClosedTickets } from 'features/ticket-management/your-tickets/red
 import { selectLoading, selectOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketSelectors';
 import { getAllOpenTickets } from 'features/ticket-management/your-tickets/redux/open-tickets/yourOpenTicketThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import NoDataFoundComponent from 'components/empty/noDataFound';
 
 const YourTicketsPage = () => {
   const [value, setValue] = useState('open');
@@ -59,6 +60,7 @@ const YourTicketsPage = () => {
       {studentLoading ? (
         <AdminTicketsCardsSkeleton />
       ) : (
+        <>
         <Grid container spacing={2}>
           <Grid marginTop={5} item xs={12}>
             <TabContext value={value}>
@@ -98,30 +100,34 @@ const YourTicketsPage = () => {
               </TabList>
 
               <TabPanel value="open" sx={{ pl: 0, pr: 0 }}>
+            {adminOpenTickets?.data?.data?.length > 0 ? (
                 <Grid container spacing={2}>
                   {adminOpenTickets?.data?.map((ticket, index) => (
                     <OpenTicketCard key={index} ticket={ticket} handleSelectedTicket={handleSelectedTicket} />
                   ))}
-                  {adminOpenTickets.length > 1 && (
-                    <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                      <Pagination
-                        count={adminOpenTickets?.last_page}
-                        color="primary"
-                        onChange={(e, page) => {
-                          dispatch(getAllOpenTickets({ branch_id: selectedBranchId, page: page }));
-                        }}
-                      />
-                    </Grid>
-                  )}
+                  
                 </Grid>
+                ) : (
+                  <NoDataFoundComponent title="No Open Tickets Found" description="There are currently no open tickets." buttonText="Refresh" onAdd={() => setRefetch(!refetch)} />
+                )}
               </TabPanel>
 
               <TabPanel value="close" sx={{ pl: 0, pr: 0 }}>
+            {adminOpenTickets?.data?.data?.length > 0 ? (
                 <Grid container spacing={2}>
                   {adminClosedTickets?.data?.map((ticket, index) => (
                     <ClosedTicketCard key={index} ticket={ticket} />
                   ))}
-                  {adminClosedTickets.length > 1 && (
+                  
+                </Grid>
+                ) : (
+                  <NoDataFoundComponent title="No Closed Tickets Found" description="There are currently no closed tickets." buttonText="Refresh" onAdd={() => setRefetch(!refetch)} />
+                )}
+              </TabPanel>
+            </TabContext>
+          </Grid>
+        </Grid>
+        {adminClosedTickets.length > 1 && (
                     <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
                       <Pagination
                         count={adminClosedTickets?.last_page}
@@ -132,11 +138,7 @@ const YourTicketsPage = () => {
                       />
                     </Grid>
                   )}
-                </Grid>
-              </TabPanel>
-            </TabContext>
-          </Grid>
-        </Grid>
+        </>
       )}
       <CreateTicketDrawer
         open={openCreateTicketDrawer}

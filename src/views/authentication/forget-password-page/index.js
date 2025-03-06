@@ -7,89 +7,92 @@ import UserNameAndEmailInput from 'features/authentication/forget-password-page/
 import OTPInput from 'features/authentication/forget-password-page/components/OTPInput';
 import SetPasswordInput from 'features/authentication/forget-password-page/components/SetPasswordInput';
 
-
-import LoginBg from "assets/images/auth/login-bg.jpg";
-import LoginBg2 from "assets/images/auth/login-bg.jpg"
-
+import LoginBg from 'assets/images/auth/login-bg.jpg';
+import LoginBg2 from 'assets/images/auth/login-bg.jpg';
+import { useNavigate } from 'react-router';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 
- 
-
 const Login = () => {
-    const [otp, setOtp] = useState(false);
-    const [userId, setUserId] = useState('');
-    const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const [otp, setOtp] = useState(false);
+  const [userId, setUserId] = useState('');
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const navigate = useNavigate();
 
-    // ** Hooks
+  // ** Hooks
 
-    const handleSendOtp = () => {
-        setOtp((state) => !state);
-    };  
-    const handleOtpVerify = () => {
-        setOtp((state) => !state);
-        setShowPasswordInput((state) => !state);
-    };
+  const handleSendOtp = () => {
+    setOtp((state) => !state);
+  };
+  const handleOtpVerify = () => {
+    setOtp(false); 
+    setShowPasswordInput(true); 
+  };
 
-    // ** Vars
+  const handlePasswordResetSuccess = () => {
+    setShowPasswordInput(false);
+    setOtp(false);
+    setUserId('');
+    navigate('/login');
+  };
+  
 
-    return (
-        
-        <AuthWrapper1>
-        <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: "initial" }}>
-            <Grid item xs={12}>
-                <Grid container sx={{ minHeight: 'calc(100vh - 68px)' }}>
-                    <Grid 
-                        item 
-                        xs={6} 
-                        sx={{
-                            backgroundImage: `url(${LoginBg})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            width: '100%',
-                            height: '100vh',
-                        }} 
-                    />
-                    <Grid 
-                        item 
-                        xs={6} 
-                        sx={{ 
-                            mb: 0, 
-                            display: "flex",
-                            backgroundColor: `#BEE1F5`, 
-                            alignItems: "center", 
-                            justifyContent: "center", 
-                            backgroundImage: `url(${LoginBg2})`, 
-                            backgroundSize: "cover" 
-                        }}
-                    >
-                        <Grid 
-                            container 
-                            justifyContent="center" 
-                            alignItems="center" 
-                        >
-                            {!otp && !showPasswordInput && (
-                                <UserNameAndEmailInput handleSendOtp={handleSendOtp} setUserId={setUserId} setOtp={setOtp} />   //*setOtp={setOtp}
-                            )}
-                            {otp && (
-                                <OTPInput 
-                                    setShowPasswordInput={setShowPasswordInput} 
-                                    setOtp={setOtp} 
-                                    userId={userId} 
-                                    handleOtpVerify={handleOtpVerify} 
-                                />
-                            )}
-                            {showPasswordInput && <SetPasswordInput />}
-                        </Grid>
-                    </Grid>
-                </Grid>
+  // ** Vars
+
+  return (
+    <AuthWrapper1>
+      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: 'initial' }}>
+        <Grid item xs={12}>
+          <Grid container sx={{ minHeight: 'calc(100vh - 68px)' }}>
+            <Grid
+              item
+              xs={6}
+              sx={{
+                backgroundImage: `url(${LoginBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                width: '100%',
+                height: '100vh'
+              }}
+            />
+            <Grid
+              item
+              xs={6}
+              sx={{
+                mb: 0,
+                display: 'flex',
+                backgroundColor: `#BEE1F5`,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundImage: `url(${LoginBg2})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                width: '100%',
+                height: '100vh',
+                overflow: 'auto'
+              }}
+            >
+              <Grid container justifyContent="center" alignItems="center">
+                {!otp && !showPasswordInput && (
+                  <UserNameAndEmailInput handleSendOtp={handleSendOtp} setUserId={setUserId} setOtp={setOtp} /> //*setOtp={setOtp}
+                )}
+                
+                {otp && (
+                  <OTPInput setShowPasswordInput={setShowPasswordInput} setOtp={setOtp} userId={userId} handleOtpVerify={handleOtpVerify} />
+                )}  
+
+                {showPasswordInput && <SetPasswordInput  userId={userId}  onPasswordResetSuccess={handlePasswordResetSuccess} />}
+
+              </Grid>
             </Grid>
-            <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
-                <AuthFooter />
-            </Grid>
+          </Grid>
         </Grid>
+        <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
+          <AuthFooter />
+        </Grid>
+      </Grid>
     </AuthWrapper1>
-    );
+  );
 };
 
 export default Login;

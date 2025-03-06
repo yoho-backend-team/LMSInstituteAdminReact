@@ -32,8 +32,9 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 
 
+import 'dayjs/locale/en'; // Add your preferred locale
+
 import { Stepper, Step, StepLabel } from '@mui/material';
-import { borderRadius } from '@mui/system';
 
 const StepperLinearWithValidation = () => {
   const steps = [
@@ -156,6 +157,7 @@ const StepperLinearWithValidation = () => {
     control: personalControl,
     setValue,
     handleSubmit: handlePersonalSubmit,
+    getValues,
     formState: { errors: personalErrors }
   } = useForm({
     defaultValues: defaultPersonalValues,
@@ -313,6 +315,7 @@ const handleClose = () => {
     }
   };
   return (
+    <>
     <Card>
       <CardContent>
         <form onSubmit={handlePersonalSubmit(onSubmit)}>
@@ -499,9 +502,7 @@ const handleClose = () => {
                       />
                     )}
                   />
-                )}
-              />
-            </Grid>
+                </Grid>
 
             <Grid item xs={12} sm={6}>
               <Controller
@@ -529,235 +530,55 @@ const handleClose = () => {
                       />
                     )}
                   />
-                )}
-              />
+                </Grid>
+              </Grid>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="batch"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeBatches}
-                    getOptionLabel={(option) => option.batch_name}
-                    value={activeBatches}
-                    onChange={(event, newValue) => {
-                      setValue('batch', newValue ? newValue.uuid : '');
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Select Batch"
-                        error={Boolean(personalErrors['batch'])}
-                        helperText={personalErrors.batch?.message}
-                        id="custom-select"
-                        aria-describedby="stepper-linear-personal-branch"
-                      />
-                    )}
-                  />
-                )}
-              />
+            {/* Contact Info Section */}
+            <Grid item xs={12}>
+              <Typography variant="h3" lineHeight={3}>
+                Contact Info
+              </Typography>
+              <Grid container spacing={3}>
+                {[
+                  { name: 'address_line_one', label: 'Address Line One' },
+                  { name: 'address_line_two', label: 'Address Line Two' },
+                  { name: 'city', label: 'City' },
+                  { name: 'state', label: 'State' },
+                  { name: 'pin_code', label: 'Pin Code', type: 'number' },
+                  { name: 'student_phone_no', label: 'Phone Number', type: 'number', adornment: '+91' },
+                  { name: 'alt_phone', label: 'Alt Phone Number', type: 'number', adornment: '+91' }
+                ].map(({ name, label, type, adornment }, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Controller
+                      name={name}
+                      control={personalControl}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <CustomTextField
+                          fullWidth
+                          label={label}
+                          value={value}
+                          onChange={onChange}
+                          type={type}
+                          InputProps={adornment ? { startAdornment: <InputAdornment position="start">{adornment}</InputAdornment> } : null}
+                          error={Boolean(personalErrors[name])}
+                          helperText={personalErrors[name]?.message}
+                        />
+                      )}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
             </Grid>
 
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="qualification"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="Qualification"
-                    onChange={onChange}
-                    error={Boolean(personalErrors.state)}
-                    aria-describedby="stepper-linear-personal-qualification-helper"
-                    helperText={personalErrors.qualification?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="state"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="State"
-                    onChange={onChange}
-                    error={Boolean(personalErrors.state)}
-                    aria-describedby="stepper-linear-personal-state-helper"
-                    helperText={personalErrors.state?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="city"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="City"
-                    onChange={onChange}
-                    error={Boolean(personalErrors.city)}
-                    aria-describedby="stepper-linear-personal-city-helper"
-                    helperText={personalErrors.city?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="pin_code"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="Pin Code"
-                    type="number"
-                    onChange={onChange}
-                    placeholder="Carter"
-                    error={Boolean(personalErrors['pin_code'])}
-                    aria-describedby="stepper-linear-personal-pin_code"
-                    helperText={personalErrors.pin_code?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="address_line_one"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="Address Line One"
-                    onChange={onChange}
-                    placeholder="Carter"
-                    error={Boolean(personalErrors['address_line_one'])}
-                    aria-describedby="stepper-linear-personal-address_line_one"
-                    helperText={personalErrors.address_line_one?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="address_line_two"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    label="Address Line Two"
-                    onChange={onChange}
-                    placeholder="Carter"
-                    error={Boolean(personalErrors['address_line_two'])}
-                    aria-describedby="stepper-linear-personal-address_line_two"
-                    helperText={personalErrors.address_line_two?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="student_phone_no"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    type="number"
-                    value={value}
-                    label="Phone Number"
-                    onChange={onChange}
-                    placeholder=""
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">+91</InputAdornment>
-                    }}
-                    error={Boolean(personalErrors['student_phone_no'])}
-                    aria-describedby="stepper-linear-personal-phone"
-                    helperText={personalErrors.student_phone_no?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="alt_phone"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <CustomTextField
-                    fullWidth
-                    value={value}
-                    type="number"
-                    label="Alt Phone Number"
-                    onChange={onChange}
-                    placeholder=""
-                    InputProps={{
-                      startAdornment: <InputAdornment position="start">+91</InputAdornment>
-                    }}
-                    error={Boolean(personalErrors['alt_phone'])}
-                    aria-describedby="stepper-linear-personal-alt_phone"
-                    helperText={personalErrors.alt_phone?.message}
-                  />
-                )}
-              />
-            </Grid>
-
+            {/* Submit and Cancel Buttons */}
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              <Button
-                variant="tonal"
-                color="secondary"
-                onClick={handleBack}
-                sx={{
-                  backgroundColor: '#f5f5f5',
-                  color: 'black',
-                  '&:hover': {
-                    backgroundColor: '#e0e0e0'
-                  }
-                }}
-              >
+              <Button variant="tonal" color="secondary" onClick={handleBack}>
                 Cancel
               </Button>
 
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  mr: 3,
-                  backgroundColor: 'black',
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'black',
-                    color: 'white'
-                  }
-                }}
-              >
+              <Button type="submit" variant="contained">
                 Add Student
               </Button>
             </Grid>
@@ -805,6 +626,7 @@ const handleClose = () => {
 
       </CardContent>
     </Card>
+    </>
   );
 };
 export default StepperLinearWithValidation;
