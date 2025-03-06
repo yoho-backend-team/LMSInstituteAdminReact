@@ -53,7 +53,8 @@ const StepperLinearWithValidation = () => {
     education_qualification: '',
     username: '',
     staffId: '',
-    logo: ''
+    logo: '',
+    selectedCourses: [],
   };
 
   const CustomInput = forwardRef(({ ...props }, ref) => {
@@ -112,6 +113,11 @@ const StepperLinearWithValidation = () => {
     //   .string()
     //   .required('Username is required')
     //   .matches(/^[a-zA-Z0-9]+$/, 'Username should only contain alphabets and numbers')
+
+    selectedCourses: yup
+    .array()
+    .min(1, "Please select at least one course") 
+    .required("Please select at least one course"), 
   });
 
   // ** States
@@ -130,6 +136,8 @@ const StepperLinearWithValidation = () => {
     getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
+
+  
   const getActiveCoursesByBranch = async (data) => {
     const result = await getAllCourses(data);
     if (result?.data) {
@@ -147,6 +155,10 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
+
+  useEffect(() => {
+    setValue("selectedCourses", selectedCourses);
+  }, [selectedCourses, setValue]);
 
   function convertDateFormat(input) {
     var originalDate = new Date(input);
@@ -501,7 +513,7 @@ const StepperLinearWithValidation = () => {
                           placeholder="Leonard"
                           aria-describedby="stepper-linear-personal-institute_name"
                           error={Boolean(personalErrors.full_name)}
-                          {...(personalErrors.name && { helperText: personalErrors.name.message })}
+                          {...(personalErrors.full_name && { helperText: personalErrors.full_name.message })}
                         />
                       )}
                     />
@@ -597,34 +609,54 @@ const StepperLinearWithValidation = () => {
                       getOptionLabel={(option) => option.course_name}
                       value={selectedCourses}
                       onChange={(e, newValue) => {
-                        if (newValue && newValue.some((option) => option.id === 'selectAll')) {
-                          setSelectedCourses(activeCourse.filter((option) => option.id !== 'selectAll'));
+                        let updatedCourses;
+                        // if (newValue && newValue.some((option) => option.id === 'selectAll')) {
+                        //     updatedCourses=activeCourse.filter((option) => option.id !== 'selectAll');
+                        // } else {
+                        //    updatedCourses=newValue;
+                        // }
+                        const isSelectAllClicked = newValue.some((option) => option.course_id === "selectAll");
+                        if(isSelectAllClicked){
+                          if (selectedCourses.length === activeCourse.length) {
+                            updatedCourses = [];
+                          } else {
+                            
+                            updatedCourses = activeCourse;
+                          }
                         } else {
-                          setSelectedCourses(newValue);
-                        }
+                          updatedCourses = newValue;
+                        }                   
+                        setSelectedCourses(updatedCourses);
+                        setValue("selectedCourses", updatedCourses, { shouldValidate: true });
                       }}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           fullWidth
                           label="Select Course"
+                          error={Boolean(personalErrors.selectedCourses)}
+                          helperText={personalErrors.selectedCourses?.message}
                           InputProps={{
                             ...params.InputProps,
                             style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
                           }}
                         />
                       )}
-                      renderOption={(props, option, { selected }) => (
-                        <li {...props}>
-                          <Checkbox
-                            icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                            checkedIcon={<CheckBoxIcon fontSize="small" />}
-                            style={{ marginRight: 8 }}
-                            checked={selected}
-                          />
-                          {option.course_name}
+                      renderOption={(props, option, { selected }) =>{
+                        const isAllSelected =
+                        option.course_id === "selectAll" && selectedCourses.length === activeCourse.length;
+                        return (
+                          <li {...props}>
+                            <Checkbox
+                              icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                              checkedIcon={<CheckBoxIcon fontSize="small" />}
+                              style={{ marginRight: 8 }}
+                              checked={selected || isAllSelected}
+                              />
+                               {option.course_name}
                         </li>
-                      )}
+
+                        );}}
                       renderTags={(value) => (
                         <div style={{ display: 'flex', flexWrap: 'nowrap', overflowX: 'auto', scrollbarWidth: 'none' }}>
                           {value.map((option, index) => (
@@ -642,8 +674,8 @@ const StepperLinearWithValidation = () => {
                           ))}
                         </div>
                       )}
-                      isOptionEqualToValue={(option, value) => option.id === value.id}
-                    />
+                      isOptionEqualToValue={(option, value) =>  option.id === value.id}
+                    /> 
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
@@ -707,11 +739,16 @@ const StepperLinearWithValidation = () => {
                           type="number"
                           value={value}
                           label="Phone Number"
-                          onChange={onChange}
-                          placeholder=""
+                          // onChange={onChange}
+                          onChange={(e) => {
+                            const newValue = e.target.value.replace(/\D/g, "").slice(0, 10); 
+                            onChange(newValue);
+                          }}
+                          placeholder="Enter 10-digit phone number"
                           aria-describedby="stepper-linear-personal-phone"
                           InputProps={{
-                            startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                            startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                            inputProps: { maxLength: 10 },
                           }}
                           error={Boolean(personalErrors.phone)}
                           {...(personalErrors.phone && { helperText: personalErrors.phone.message })}
@@ -731,11 +768,16 @@ const StepperLinearWithValidation = () => {
                           value={value}
                           type="number"
                           label="Alt Phone Number"
-                          onChange={onChange}
-                          placeholder=""
+                          // onChange={onChange}
+                          onChange={(e) => {
+                            const newValue = e.target.value.replace(/\D/g, "").slice(0, 10);  
+                            onChange(newValue);
+                          }}
+                          placeholder="Enter 10-digit phone number"
                           aria-describedby="stepper-linear-personal-alt_phone"
                           InputProps={{
-                            startAdornment: <InputAdornment position="start">+91</InputAdornment>
+                            startAdornment: <InputAdornment position="start">+91</InputAdornment>,
+                            inputProps: { maxLength: 10 },
                           }}
                           error={Boolean(personalErrors.alt_phone)}
                           {...(personalErrors.alt_phone && { helperText: personalErrors.alt_phone.message })}
