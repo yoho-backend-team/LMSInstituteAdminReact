@@ -38,7 +38,6 @@ const Students = () => {
     <>
       <Grid>
         <Grid container spacing={2}>
-
           <Grid item xs={12} md={12} lg={12} mb={2}>
             <StudentFilter selectedBranchId={selectedBranchId} />
           </Grid>
@@ -47,36 +46,42 @@ const Students = () => {
             {StudentsLoading ? (
               <StudentSkeleton />
             ) : (
-
               <Box>
-
                 <Grid container spacing={12}>
                   {Students?.map((item, index) => (
-                    <Grid key={index} item xs={12} sm={6} md={4} >
-
-
+                    <Grid key={index} item xs={12} sm={6} md={4}>
                       {/* <Card sx={{ backgroundColor: 'primary.dark', pb: 1, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}> */}
-                      <Card sx={{
-                        textAlign: 'center', height: '120%', borderRadius: "15px",
-                        width: '100%',
-                        maxWidth: 400,
-                        mx: 'auto',
-                        overflow: 'hidden',
-                        transition: 'all 300ms',
-                        boxShadow: 'none',
-                        '&:hover': {
-                          boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)',
-                        },
-                        '&:hover:dark': {
-                          boxShadow: '0 0.5rem 1rem rgba(255,255,255,0.1)',
-                        },
-                      }}>
-
-                        <Box sx={{ position: "relative", backgroundColor: "grey.200", paddingTop: "48px", paddingBottom: "32px", height: "40%",
-                          background: 'linear-gradient(145deg,rgb(236, 236, 236) 0%,rgb(148, 150, 153) 100%)',
-                          backdropFilter: 'blur(4px)',
-                          backgroundColor: '#E5E7EB',
-                         }}>
+                      <Card
+                        sx={{
+                          textAlign: 'center',
+                          height: '120%',
+                          borderRadius: '15px',
+                          width: '100%',
+                          maxWidth: 400,
+                          mx: 'auto',
+                          overflow: 'hidden',
+                          transition: 'all 300ms',
+                          boxShadow: 'none',
+                          '&:hover': {
+                            boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)'
+                          },
+                          '&:hover:dark': {
+                            boxShadow: '0 0.5rem 1rem rgba(255,255,255,0.1)'
+                          }
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            position: 'relative',
+                            backgroundColor: 'grey.200',
+                            paddingTop: '48px',
+                            paddingBottom: '32px',
+                            height: '40%',
+                            background: 'linear-gradient(145deg,rgb(236, 236, 236) 0%,rgb(148, 150, 153) 100%)',
+                            backdropFilter: 'blur(4px)',
+                            backgroundColor: '#E5E7EB'
+                          }}
+                        >
                           <Avatar
                             alt="image"
                             src={`${getImageUrl(item?.image)}`}
@@ -88,27 +93,25 @@ const Students = () => {
                               right: 0,
                               bottom: -32,
                               mx: 'auto',
-                              position: "absolute",
-                              border: "2px solid",
-                              borderColor: "background.paper",
-                              boxShadow: 3,
+                              position: 'absolute',
+                              border: '2px solid',
+                              borderColor: 'background.paper',
+                              boxShadow: 3
                             }}
                           />
 
-
-<Box
-      sx={{
-        position: 'absolute',
-        top: 10,
-        right: 10,
-        width: 12,
-        height: 12,
-        borderRadius: '50%',
-        backgroundColor: item?.is_active ? '#22C55E' : '#9CA3AF', 
-      }}
-      title={item?.is_active ? 'Active' : 'Inactive'}
-    >
-  </Box>
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 10,
+                              right: 10,
+                              width: 12,
+                              height: 12,
+                              borderRadius: '50%',
+                              backgroundColor: item?.is_active ? '#22C55E' : '#9CA3AF'
+                            }}
+                            title={item?.is_active ? 'Active' : 'Inactive'}
+                          ></Box>
                         </Box>
 
                         <Typography variant="h3" sx={{ mt: 6 }}>
@@ -123,9 +126,8 @@ const Students = () => {
                           size="x-small"
                         />
 
-
-                        <Box sx={{ height: 20, display: 'flex', justifyContent: 'center', textAlign: 'center', }}>
-                          <LocationOnIcon sx={{ fontSize: 20, mr: 0.2, mt: '-1', cursor: "default", color: 'black' }} />
+                        <Box sx={{ height: 20, display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                          <LocationOnIcon sx={{ fontSize: 20, mr: 0.2, mt: '-1', cursor: 'default', color: 'black' }} />
                           <Typography
                             variant="h6"
                             sx={{
@@ -134,7 +136,7 @@ const Students = () => {
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
                               WebkitBoxOrient: 'vertical',
-                              textOverflow: 'ellipsis',
+                              textOverflow: 'ellipsis'
                               // mt: 1.75
                             }}
                           >
@@ -148,14 +150,13 @@ const Students = () => {
                         <Stack alignItems="center">
                           <SocialsButton initialColor sx={{ my: 2.5 }} item={item} />
                         </Stack>
-
                       </Card>
                       <Box sx={{ backgroundColor: 'primary.main', borderRadius: ' 0 0 15px 15px', width: '240' }}></Box>
                       {/* </Card>                                            */}
                     </Grid>
                   ))}
                 </Grid>
-   
+
                 {Students?.last_page !== 1 && (
                   <Box sx={{ mt: 9, display: 'flex', justifyContent: 'flex-end' }}>
                     <Pagination

@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField as CustomTextField, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete from '@mui/material/Autocomplete';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -103,6 +104,7 @@ const StepperLinearWithValidation = () => {
 
   const defaultPersonalValues = {
     student_first_name: '',
+    student_last_name: '',
     student_email: '',
     student_phone_no: '',
     alt_phone: '',
@@ -117,7 +119,7 @@ const StepperLinearWithValidation = () => {
     branch: selectedBranchId,
     designation: '',
     education_qualification: '',
-    // username: '',
+    username: '',
     studentId: '',
     logo: ''
   };
@@ -150,6 +152,7 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
+  console.log('personalErrors', personalErrors);
 
   const handleBack = () => {
     Navigate(-1);
@@ -168,8 +171,8 @@ const StepperLinearWithValidation = () => {
     width: 100,
     height: 100,
     marginRight: theme.spacing(6),
-    borderRadius: 10,
-    boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)',
+    borderRadius: 50,
+    boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)'
   }));
 
   const ButtonStyled = styled(Button)(({ theme }) => ({
@@ -230,7 +233,7 @@ const StepperLinearWithValidation = () => {
         alternate_phone_number: '+91' + personalData?.alt_phone
       },
       qualification: personalData.qualification,
-      // username : personalData.username,
+      username : personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
       branch_id: personalData.branch,
@@ -263,188 +266,282 @@ const StepperLinearWithValidation = () => {
         <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
           <Grid container spacing={5}>
             {/* Title Section */}
-            <Grid item xs={12} textAlign="center">
+            <Grid item xs={12} textAlign="left">
               <Typography variant="h1" fontWeight={600} color="primary">
                 {steps[0].title}
               </Typography>
             </Grid>
 
+            {/* Dotted Divider */}
+            <Grid item xs={12}>
+              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.200', width: '100%', my: 2 }} />
+            </Grid>
+
             {/* Profile Upload Section */}
-            <Grid item xs={12} textAlign="center">
-              <ImgStyled src={logo ? getImageUrl(logo) : imagePlaceholder} alt="Profile Pic" />
-              <Box mt={2}>
-                <ButtonStyled component="label" variant="contained" htmlFor="upload-image" startIcon={<UploadIcon />}>
-                  Upload
-                  <input hidden type="file" accept="image/png, image/jpeg" onChange={handleInputImageChange} id="upload-image" />
-                </ButtonStyled>
-                <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
-                  Reset
-                </ResetButtonStyled>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ mt: 1, color: 'grey.500' }}>
+                  Upload Profile Picture
+                </Typography>
                 <Typography sx={{ mt: 1, color: 'grey' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  flex: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  border: '2px dashed ',
+                  borderColor: 'grey.300',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  width: '100%',
+                  height: '150px',
+                  backgroundColor: 'grey.100'
+                }}
+              >
+                {logo ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                    <ImgStyled
+                      src={logo ? getImageUrl(logo) : logoSrc}
+                      alt="Profile Pic"
+                      style={{ maxHeight: '100px', maxWidth: '100px', objectFit: 'contain' }}
+                    />
+                    <Box>
+                      <Typography sx={{ color: 'grey.600', fontSize: '14px' }}>{logo}</Typography>
+                      <Typography sx={{ color: 'grey.500', fontSize: '12px' }}>PNG, JPG</Typography>
+                      <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
+                        Reset
+                      </ResetButtonStyled>
+                    </Box>
+                  </Box>
+                ) : (
+                  <>
+                    <CloudUploadIcon sx={{ fontSize: 40, color: 'grey.400' }} />
+                    <Typography sx={{ mt: 1, color: 'grey.600' }}>
+                      <Typography component="label" sx={{ color: 'teal', fontWeight: 'bold', cursor: 'pointer' }} htmlFor="upload-image">
+                        Upload an image
+                      </Typography>{' '}
+                      or drag and drop
+                    </Typography>
+                    <Typography sx={{ color: 'grey.500', fontSize: '12px' }}>PNG, JPG</Typography>
+                    <input hidden type="file" accept="image/png, image/jpeg" onChange={handleInputImageChange} id="upload-image" />
+                  </>
+                )}
               </Box>
             </Grid>
 
-            {/* Student Details Section */}
+            {/* Dotted Divider */}
             <Grid item xs={12}>
-              <Typography variant="h3" lineHeight={3}>
-                Student Details
-              </Typography>
-              <Grid container spacing={3}>
-                {[
-                  { name: 'student_first_name', label: 'First Name', placeholder: 'Leonard' },
-                  { name: 'student_last_name', label: 'Last Name' },
-                  { name: 'student_email', label: 'Email', placeholder: 'example@email.com' },
-                  { name: 'date_of_birth', label: 'Date Of Birth', component: DatePicker },
-                  { name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'] },
-                  { name: 'qualification', label: 'Qualification' }
-                ].map(({ name, label, placeholder, component, options }, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
-                    <Controller
-                      name={name}
-                      control={personalControl}
-                      rules={{ required: true }}
-                      render={({ field: { value, onChange } }) =>
-                        component ? (
-                          <DatePicker
-                            selected={value}
-                            customInput={
-                              <CustomTextField
-                                label={label}
-                                error={Boolean(personalErrors[name])}
-                                helperText={personalErrors[name]?.message}
-                              />
-                            }
-                            onChange={onChange}
-                          />
-                        ) : options ? (
-                          <CustomTextField
-                            select
-                            fullWidth
-                            label={label}
-                            value={value}
-                            onChange={onChange}
-                            error={Boolean(personalErrors[name])}
-                            helperText={personalErrors[name]?.message}
-                          >
-                            {options.map((opt, i) => (
-                              <MenuItem key={i} value={opt}>
-                                {opt}
-                              </MenuItem>
-                            ))}
-                          </CustomTextField>
-                        ) : (
-                          <CustomTextField
-                            fullWidth
-                            label={label}
-                            value={value}
-                            onChange={onChange}
-                            placeholder={placeholder}
-                            error={Boolean(personalErrors[name])}
-                            helperText={personalErrors[name]?.message}
-                          />
-                        )
-                      }
-                    />
-                  </Grid>
-                ))}
-
-                {/* Branch Field  */}
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="branch"
-                    control={personalControl}
-                    rules={{ required: true }}
-                    render={({ field: { value } }) => (
-                      <Autocomplete
-                        fullWidth
-                        options={activeBranches}
-                        getOptionLabel={(option) => option.branch_identity}
-                        value={activeBranches.find((branch) => branch.uuid === value) || null}
-                        onChange={(event, newValue) => {
-                          setValue('branch', newValue ? newValue.uuid : '');
-                          getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Select Branch"
-                            error={Boolean(personalErrors['branch'])}
-                            helperText={personalErrors.branch?.message}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                {/* Course Field  */}
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="course"
-                    control={personalControl}
-                    rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
-                      <Autocomplete
-                        fullWidth
-                        options={activeCourse}
-                        getOptionLabel={(option) => option.course_name}
-                        value={activeCourse.find((course) => course.uuid === value) || null}
-                        onChange={(event, newValue) => {
-                          onChange(newValue ? newValue.uuid : '');
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Select Course"
-                            error={Boolean(personalErrors['course'])}
-                            helperText={personalErrors.course?.message}
-                            id="custom-select"
-                            aria-describedby="stepper-linear-personal-course"
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
+              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.200', width: '100%', my: 2 }} />
             </Grid>
 
-            {/* Contact Info Section */}
-            <Grid item xs={12}>
-              <Typography variant="h3" lineHeight={3}>
-                Contact Info
-              </Typography>
-              <Grid container spacing={3}>
-                {[
-                  { name: 'address_line_one', label: 'Address Line One' },
-                  { name: 'address_line_two', label: 'Address Line Two' },
-                  { name: 'city', label: 'City' },
-                  { name: 'state', label: 'State' },
-                  { name: 'pin_code', label: 'Pin Code', type: 'number' },
-                  { name: 'student_phone_no', label: 'Phone Number', type: 'number', adornment: '+91' },
-                  { name: 'alt_phone', label: 'Alt Phone Number', type: 'number', adornment: '+91' }
-                ].map(({ name, label, type, adornment }, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
+            {/* Student Details Section */}
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ mt: 1, color: 'grey.500' }}>
+                  Student Details
+                </Typography>
+                <Typography sx={{ mt: 1, color: 'grey' }}>Add user details here </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  flex: 2,
+                  border: '1px solid',
+                  borderColor: 'grey.200',
+                  padding: '20px',
+                  borderRadius: '8px',
+                  width: '100%',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'grey.100'
+                 }}
+              >
+                <Grid container spacing={3}>
+                  {[
+                    { name: 'student_first_name', label: 'First Name', placeholder: 'Leonard' },
+                    { name: 'student_last_name', label: 'Last Name', placeholder: 'Lee' },
+                    { name: 'student_email', label: 'Email', placeholder: 'example@email.com' },
+                    { name: 'date_of_birth', label: 'Date Of Birth', component: DatePicker },
+                    { name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'] },
+                    { name: 'qualification', label: 'Qualification' }
+                  ].map(({ name, label, placeholder, component, options }, index) => (
+                    <Grid item xs={12} sm={6} key={index}>
+                      <Controller
+                        name={name}
+                        control={personalControl}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) =>
+                          component ? (
+                            <DatePicker
+                              selected={value}
+                              customInput={
+                                <CustomTextField
+                                  label={label}
+                                  error={Boolean(personalErrors[name])}
+                                  helperText={personalErrors[name]?.message}
+                                  sx={{ backgroundColor: 'grey.100' }}
+                                />
+                              }
+                              onChange={onChange}
+                            />
+                          ) : options ? (
+                            <CustomTextField
+                              select
+                              fullWidth
+                              label={label}
+                              value={value}
+                              onChange={onChange}
+                              error={Boolean(personalErrors[name])}
+                              helperText={personalErrors[name]?.message}
+                              sx={{ backgroundColor: 'grey.100' }}
+                            >
+                              {options.map((opt, i) => (
+                                <MenuItem key={i} value={opt}>
+                                  {opt}
+                                </MenuItem>
+                              ))}
+                            </CustomTextField>
+                          ) : (
+                            <CustomTextField
+                              fullWidth
+                              label={label}
+                              value={value}
+                              onChange={onChange}
+                              placeholder={placeholder}
+                              error={Boolean(personalErrors[name])}
+                              helperText={personalErrors[name]?.message}
+                              sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )
+                        }
+                      />
+                    </Grid>
+                  ))}
+
+                  {/* Branch Field  */}
+                  <Grid item xs={12} sm={6}>
                     <Controller
-                      name={name}
+                      name="branch"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { value, onChange } }) => (
-                        <CustomTextField
+                      render={({ field: { value } }) => (
+                        <Autocomplete
                           fullWidth
-                          label={label}
-                          value={value}
-                          onChange={onChange}
-                          type={type}
-                          InputProps={adornment ? { startAdornment: <InputAdornment position="start">{adornment}</InputAdornment> } : null}
-                          error={Boolean(personalErrors[name])}
-                          helperText={personalErrors[name]?.message}
+                          options={activeBranches}
+                          getOptionLabel={(option) => option.branch_identity}
+                          value={activeBranches.find((branch) => branch.uuid === value) || null}
+                          onChange={(event, newValue) => {
+                            setValue('branch', newValue ? newValue.uuid : '');
+                            getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Select Branch"
+                              error={Boolean(personalErrors['branch'])}
+                              helperText={personalErrors.branch?.message}
+                              sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )}
                         />
                       )}
                     />
                   </Grid>
-                ))}
-              </Grid>
+
+                  {/* Course Field  */}
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="course"
+                      control={personalControl}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <Autocomplete
+                          fullWidth
+                          options={activeCourse}
+                          getOptionLabel={(option) => option.course_name}
+                          value={activeCourse.find((course) => course.uuid === value) || null}
+                          onChange={(event, newValue) => {
+                            onChange(newValue ? newValue.uuid : '');
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Select Course"
+                              error={Boolean(personalErrors['course'])}
+                              helperText={personalErrors.course?.message}
+                              id="custom-select"
+                              aria-describedby="stepper-linear-personal-course"
+                              sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+
+            {/* Dotted Divider */}
+            <Grid item xs={12}>
+              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.200', width: '100%', my: 2 }} />
+            </Grid>
+
+            {/* Contact Info Section */}
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ mt: 1, color: 'grey.500' }}>
+                  Contact Info
+                </Typography>
+              </Box>
+              <Box 
+              sx={{ 
+                flex: 2,
+                border: '1px solid',
+                borderColor: 'grey.200',
+                padding: '20px',
+                borderRadius: '8px',
+                width: '100%',
+                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                backgroundColor: 'grey.100' 
+                }}>
+                <Grid container spacing={3}>
+                  {[
+                    { name: 'address_line_one', label: 'Address Line One' },
+                    { name: 'address_line_two', label: 'Address Line Two' },
+                    { name: 'city', label: 'City' },
+                    { name: 'state', label: 'State' },
+                    { name: 'pin_code', label: 'Pin Code', type: 'number' },
+                    { name: 'student_phone_no', label: 'Phone Number', type: 'number', adornment: '+91' },
+                    { name: 'alt_phone', label: 'Alt Phone Number', type: 'number', adornment: '+91' }
+                  ].map(({ name, label, type, adornment }, index) => (
+                    <Grid item xs={12} sm={6} key={index}>
+                      <Controller
+                        name={name}
+                        control={personalControl}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) => (
+                          <CustomTextField
+                            fullWidth
+                            label={label}
+                            value={value}
+                            onChange={onChange}
+                            type={type}
+                            InputProps={
+                              adornment ? { startAdornment: <InputAdornment position="start">{adornment}</InputAdornment> } : null
+                            }
+                            error={Boolean(personalErrors[name])}
+                            helperText={personalErrors[name]?.message}
+                          />
+                        )}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             </Grid>
 
             {/* Submit and Cancel Buttons */}
