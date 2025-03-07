@@ -19,6 +19,7 @@ import axios from 'axios';
 // assets
 import { IconChevronRight } from '@tabler/icons';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import secureLocalStorage from 'react-secure-storage';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -53,7 +54,7 @@ const MainLayout = ({}) => {
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
   };
-  const user = JSON.parse(localStorage.getItem("userData"))
+  const user = JSON.parse(secureLocalStorage.getItem("userData"))
  
   window.addEventListener("online", () => {
   axios.post("http://localhost:3002/online",{user:user._id})
@@ -67,10 +68,9 @@ const MainLayout = ({}) => {
    if ('serviceWorker' in navigator) {
               navigator.serviceWorker.register('/service-worker.js')
                 .then((registration) => {
-                  console.log('Service Worker registered with scope:', registration.scope);
-                     
-                      const selectBranchId = localStorage.getItem("selectedBranchId")
-                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
+                  console.log('Service Worker registered with scope:', registration.scope);                 
+                      const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
+                      usePushSubscription(user?.role,user._id,user,user?.institute_id,selectedBranchId)
                 })
                 .catch((error) => {
                   console.error('Service Worker registration failed:', error);

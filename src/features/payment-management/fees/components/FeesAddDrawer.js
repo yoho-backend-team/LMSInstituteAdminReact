@@ -92,6 +92,7 @@ const FeesAddDrawer = (props) => {
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
   const [students, setStudents] = useState([]);
+console.log(activeBatches,'activeBatches');
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -124,6 +125,7 @@ const FeesAddDrawer = (props) => {
     show();
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
+
     if (result?.success) {
       hide();
       setActiveBatches(result?.data);

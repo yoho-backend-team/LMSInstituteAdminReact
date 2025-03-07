@@ -69,7 +69,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
       <Grid container spacing={2}>
         {liveClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}  >
-            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #07edc9', backgroundImage: `url(${DummyImage})`, backgroundPosition: "right" , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #07edc9',  backgroundPosition: "right" , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
            borderRadius: 2,
            transition: 'all 0.3s ease-in-out',
            '&:hover': {
@@ -89,7 +89,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                         WebkitBoxOrient: 'vertical',
                         textAlign: 'center'
                       }}
-                      variant="h3"
+                      variant="h4"
                       gutterBottom
                       textAlign="center"
                     >

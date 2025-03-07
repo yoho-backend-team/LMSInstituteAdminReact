@@ -3,6 +3,7 @@ import client from 'api/client';
 import axios from 'axios';
 import { useBranchId, useInstitute } from 'utils/get-institute-details';
 import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem } from 'utils/localStroageService';
 
 const TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/teaching-staff`;
 
@@ -72,7 +73,7 @@ export const addTeachingStaff = async (data) => {
     
     const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/teaching-staff/register`, data, {
       headers: {
-        Authorization: `Token ${secureLocalStorage.getItem('token')}`
+        Authorization: `Token ${getSecureItem('token')}`
       }
     });
 console.log(response,'response');
