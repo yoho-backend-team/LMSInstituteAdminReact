@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField as CustomTextField, TextField } from '@mui/material';
-import { Dialog, DialogTitle, DialogContent, DialogActions, } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete from '@mui/material/Autocomplete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -26,13 +25,10 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
-// import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
-// import { imagePlaceholder } from 'utils/placeholders';
+import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
+import { imagePlaceholder } from 'utils/placeholders';
 import { useSpinner } from 'context/spinnerContext';
 import UploadIcon from '@mui/icons-material/Upload';
-import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
-
-
 import 'dayjs/locale/en'; // Add your preferred locale
 
 import { Stepper, Step, StepLabel } from '@mui/material';
@@ -87,10 +83,10 @@ const StepperLinearWithValidation = () => {
     address_line_two: yup.string().required('Address Line Two is required'),
     date_of_birth: yup.string().required(),
     gender: yup.string().required(),
-    // username: yup
-    //   .string()
-    //   .required('User Name is required')
-    //   .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters')
+    username: yup
+      .string()
+      .required('User Name is required')
+      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters')
     // staffId:yup.string().required('Unique Id'),
   });
 
@@ -98,9 +94,6 @@ const StepperLinearWithValidation = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const Navigate = useNavigate();
   const { show, hide } = useSpinner();
-    const [dialogMessage, setDialogMessage] = useState('');
-  const [dialogTitle, setDialogTitle] = useState('');
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const data = {
@@ -109,9 +102,9 @@ const StepperLinearWithValidation = () => {
     getActiveCoursesByBranch(data);
   }, [selectedBranchId]);
 
-
   const defaultPersonalValues = {
     student_first_name: '',
+    student_last_name: '',
     student_email: '',
     student_phone_no: '',
     alt_phone: '',
@@ -123,9 +116,8 @@ const StepperLinearWithValidation = () => {
     date_of_birth: '',
     gender: '',
     course: '',
-    batch:'',
     branch: selectedBranchId,
-    // designation: '',
+    designation: '',
     education_qualification: '',
     // username: '',
     studentId: '',
@@ -140,12 +132,9 @@ const StepperLinearWithValidation = () => {
     }
   };
 
-
-
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
     getActiveBranchesByUser();
-    getActiveBatchesByCourse()
   }, []);
 
   const getActiveBranchesByUser = async () => {
@@ -163,6 +152,7 @@ const StepperLinearWithValidation = () => {
     defaultValues: defaultPersonalValues,
     resolver: yupResolver(personalSchema)
   });
+  console.log('personalErrors', personalErrors);
 
   const handleBack = () => {
     Navigate(-1);
@@ -181,15 +171,14 @@ const StepperLinearWithValidation = () => {
     width: 100,
     height: 100,
     marginRight: theme.spacing(6),
-    borderRadius: 10,
-    boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)',
+    borderRadius: 50,
+    boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)'
   }));
 
   const ButtonStyled = styled(Button)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      textAlign: 'center',
-      borderRadius: 50
+      textAlign: 'center'
     }
   }));
 
@@ -204,7 +193,7 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
+  const [logoSrc, setLogoSrc] = useState('');
 
   const handleInputImageChange = async (file) => {
     show();
@@ -212,9 +201,6 @@ const StepperLinearWithValidation = () => {
     const data = new FormData();
     data.append('file', files[0]);
     const response = await client.file.upload(data);
-
-    
-    toast.success(response.message);
     setLogo(response.data.file);
     hide();
   };
@@ -225,29 +211,13 @@ const StepperLinearWithValidation = () => {
       'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
   };
-const [activeBatches,setActiveBatches]=useState()
-console.log(activeBatches,'activeBatches');
 
-
-const getActiveBatchesByCourse = async (courseId) => {
-  show();
-  const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
-  const result = await getBatchesByCourse(data);
-  if (result?.success) {
-    hide();
-    setActiveBatches(result?.data);
-  } else {
-    hide();
-  }
-};
-  console.log(personalErrors)
   const onSubmit = async () => {
-    console.log('iam working before result 0');
+    console.log('hello');
 
-    const personalData = personalControl?._formValues;
-    console.log(personalData.batch);
-    
+    const personalData = getValues();
     show();
+
     const student_data = {
       first_name: personalData.student_first_name,
       last_name: personalData.student_last_name,
@@ -267,68 +237,38 @@ const getActiveBatchesByCourse = async (courseId) => {
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
       branch_id: personalData.branch,
-      batch_id: personalData.batch,
       course: personalData.course,
       image: logo,
-      logo:logo,
-      studentId: personalData.studentId,
-      type:'payment'
+      studentId: personalData.studentId
     };
 
-    
- 
     try {
-      console.log('iam working before result 1');
-      console.log('Student Data:', student_data); 
       const result = await addStudent(student_data);
 
       if (result.success) {
         hide();
-        setDialogTitle('Success');
-        setDialogMessage(result.message);
-        setOpen(true);
         toast.success(result.message);
         Navigate(-1);
-        return;
       } else {
         hide();
-        setDialogTitle('Error');
-        setDialogMessage(result.message);
-        setOpen(true);
         toast.error(result.message);
       }
     } catch (error) {
       hide();
-      setDialogTitle('Error');
-      setDialogMessage('An error occurred while adding the student.');
-      setOpen(true);
-      console.error(error);
+      console.log(error);
     }
     // }
   };
-const handleClose = () => {
-    setOpen(false);
-    if (dialogTitle === 'Success') {
-      Navigate(-1);
-    }
-  };
+
   return (
-    <>
     <Card>
       <CardContent>
-        <form onSubmit={handlePersonalSubmit(onSubmit)}>
+        <form key={1} onSubmit={handlePersonalSubmit(onSubmit)}>
           <Grid container spacing={5}>
             {/* Title Section */}
-            <Grid item xs={12} textAlign="center">
+            <Grid item xs={12} textAlign="left">
               <Typography variant="h1" fontWeight={600} color="primary">
                 {steps[0].title}
-              </Typography>
-              <Typography
-                variant="caption"
-                component="p"
-                sx={{ fontSize: 15, color: 'grey', display: 'flex', justifyContent: 'center', textalign: 'center' }}
-              >
-                {steps[0].subtitle}
               </Typography>
             </Grid>
 
@@ -338,16 +278,11 @@ const handleClose = () => {
             </Grid>
 
             {/* Profile Upload Section */}
-            <Grid item xs={12} textAlign="center">
-              <ImgStyled src={logo ? getImageUrl(logo) : imagePlaceholder} alt="Profile Pic" />
-              <Box mt={2}>
-                <ButtonStyled component="label" variant="contained" htmlFor="upload-image" startIcon={<UploadIcon />}>
-                  Upload
-                  <input hidden type="file" accept="image/png, image/jpeg" onChange={handleInputImageChange} id="upload-image" />
-                </ButtonStyled>
-                <ResetButtonStyled color="error" variant="tonal" onClick={handleInputImageReset}>
-                  Reset
-                </ResetButtonStyled>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ mt: 1, color: 'grey.500' }}>
+                  Upload Profile Picture
+                </Typography>
                 <Typography sx={{ mt: 1, color: 'grey' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
               </Box>
 
@@ -404,128 +339,155 @@ const handleClose = () => {
             </Grid>
 
             {/* Student Details Section */}
-            <Grid item xs={12}>
-              <Typography variant="h3" lineHeight={3}>
-                Student Details
-              </Typography>
-              <Grid container spacing={3}>
-                {[
-                  { name: 'student_first_name', label: 'First Name', placeholder: 'Leonard' },
-                  { name: 'student_last_name', label: 'Last Name' },
-                  { name: 'student_email', label: 'Email', placeholder: 'example@email.com' },
-                  { name: 'date_of_birth', label: 'Date Of Birth', component: DatePicker },
-                  { name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'] },
-                  { name: 'qualification', label: 'Qualification' }
-                ].map(({ name, label, placeholder, component, options }, index) => (
-                  <Grid item xs={12} sm={6} key={index}>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ mt: 1, color: 'grey.500' }}>
+                  Student Details
+                </Typography>
+                <Typography sx={{ mt: 1, color: 'grey' }}>Add user details here </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  flex: 2,
+                  border: '1px solid',
+                  borderColor: 'grey.200',
+                  padding: '20px',
+                  borderRadius: '8px',
+                  width: '100%',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'grey.100'
+                 }}
+              >
+                <Grid container spacing={3}>
+                  {[
+                    { name: 'student_first_name', label: 'First Name', placeholder: 'Leonard' },
+                    { name: 'student_last_name', label: 'Last Name', placeholder: 'Lee' },
+                    { name: 'student_email', label: 'Email', placeholder: 'example@email.com' },
+                    { name: 'date_of_birth', label: 'Date Of Birth', component: DatePicker },
+                    { name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'] },
+                    { name: 'qualification', label: 'Qualification' }
+                  ].map(({ name, label, placeholder, component, options }, index) => (
+                    <Grid item xs={12} sm={6} key={index}>
+                      <Controller
+                        name={name}
+                        control={personalControl}
+                        rules={{ required: true }}
+                        render={({ field: { value, onChange } }) =>
+                          component ? (
+                            <DatePicker
+                              selected={value}
+                              customInput={
+                                <CustomTextField
+                                  label={label}
+                                  error={Boolean(personalErrors[name])}
+                                  helperText={personalErrors[name]?.message}
+                                  sx={{ backgroundColor: 'grey.100' }}
+                                />
+                              }
+                              onChange={onChange}
+                            />
+                          ) : options ? (
+                            <CustomTextField
+                              select
+                              fullWidth
+                              label={label}
+                              value={value}
+                              onChange={onChange}
+                              error={Boolean(personalErrors[name])}
+                              helperText={personalErrors[name]?.message}
+                              sx={{ backgroundColor: 'grey.100' }}
+                            >
+                              {options.map((opt, i) => (
+                                <MenuItem key={i} value={opt}>
+                                  {opt}
+                                </MenuItem>
+                              ))}
+                            </CustomTextField>
+                          ) : (
+                            <CustomTextField
+                              fullWidth
+                              label={label}
+                              value={value}
+                              onChange={onChange}
+                              placeholder={placeholder}
+                              error={Boolean(personalErrors[name])}
+                              helperText={personalErrors[name]?.message}
+                              sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )
+                        }
+                      />
+                    </Grid>
+                  ))}
+
+                  {/* Branch Field  */}
+                  <Grid item xs={12} sm={6}>
                     <Controller
-                      name={name}
+                      name="branch"
                       control={personalControl}
                       rules={{ required: true }}
-                      render={({ field: { value, onChange } }) =>
-                        component ? (
-                          <DatePicker
-                            selected={value}
-                            customInput={
-                              <CustomTextField
-                                label={label}
-                                error={Boolean(personalErrors[name])}
-                                helperText={personalErrors[name]?.message}
-                              />
-                            }
-                            onChange={onChange}
-                          />
-                        ) : options ? (
-                          <CustomTextField
-                            select
-                            fullWidth
-                            label={label}
-                            value={value}
-                            onChange={onChange}
-                            error={Boolean(personalErrors[name])}
-                            helperText={personalErrors[name]?.message}
-                          >
-                            {options.map((opt, i) => (
-                              <MenuItem key={i} value={opt}>
-                                {opt}
-                              </MenuItem>
-                            ))}
-                          </CustomTextField>
-                        ) : (
-                          <CustomTextField
-                            fullWidth
-                            label={label}
-                            value={value}
-                            onChange={onChange}
-                            placeholder={placeholder}
-                            error={Boolean(personalErrors[name])}
-                            helperText={personalErrors[name]?.message}
-                          />
-                        )
-                      }
+                      render={({ field: { value } }) => (
+                        <Autocomplete
+                          fullWidth
+                          options={activeBranches}
+                          getOptionLabel={(option) => option.branch_identity}
+                          value={activeBranches.find((branch) => branch.uuid === value) || null}
+                          onChange={(event, newValue) => {
+                            setValue('branch', newValue ? newValue.uuid : '');
+                            getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Select Branch"
+                              error={Boolean(personalErrors['branch'])}
+                              helperText={personalErrors.branch?.message}
+                              sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )}
+                        />
+                      )}
                     />
                   </Grid>
-                ))}
 
-                {/* Branch Field  */}
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="branch"
-                    control={personalControl}
-                    rules={{ required: true }}
-                    render={({ field: { value } }) => (
-                      <Autocomplete
-                        fullWidth
-                        options={activeBranches}
-                        getOptionLabel={(option) => option.branch_identity}
-                        value={activeBranches.find((branch) => branch.uuid === value) || null}
-                        onChange={(event, newValue) => {
-                          setValue('branch', newValue ? newValue.uuid : '');
-                          getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Select Branch"
-                            error={Boolean(personalErrors['branch'])}
-                            helperText={personalErrors.branch?.message}
-                          />
-                        )}
-                      />
-                    )}
-                  />
+                  {/* Course Field  */}
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="course"
+                      control={personalControl}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange } }) => (
+                        <Autocomplete
+                          fullWidth
+                          options={activeCourse}
+                          getOptionLabel={(option) => option.course_name}
+                          value={activeCourse.find((course) => course.uuid === value) || null}
+                          onChange={(event, newValue) => {
+                            onChange(newValue ? newValue.uuid : '');
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Select Course"
+                              error={Boolean(personalErrors['course'])}
+                              helperText={personalErrors.course?.message}
+                              id="custom-select"
+                              aria-describedby="stepper-linear-personal-course"
+                              sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </Grid>
                 </Grid>
+              </Box>
+            </Grid>
 
-                {/* Course Field  */}
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="course"
-                    control={personalControl}
-                    rules={{ required: true }}
-                    render={({ field: { value, onChange } }) => (
-                      <Autocomplete
-                        fullWidth
-                        options={activeCourse}
-                        getOptionLabel={(option) => option.course_name}
-                        value={activeCourse.find((course) => course.uuid === value) || null}
-                        onChange={(event, newValue) => {
-                          onChange(newValue ? newValue.uuid : '');
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Select Course"
-                            error={Boolean(personalErrors['course'])}
-                            helperText={personalErrors.course?.message}
-                            id="custom-select"
-                            aria-describedby="stepper-linear-personal-course"
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
+            {/* Dotted Divider */}
+            <Grid item xs={12}>
+              <Box sx={{ borderBottom: '2px dashed ', borderColor: 'grey.200', width: '100%', my: 2 }} />
             </Grid>
 
             {/* Contact Info Section */}
@@ -594,49 +556,8 @@ const handleClose = () => {
             </Grid>
           </Grid>
         </form>
-        <Dialog
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
-        sx: {
-          borderRadius: 3, // Rounded corners
-          boxShadow: 6, // Subtle shadow effect
-          padding: 2,
-          backgroundColor: "#fff",
-          maxWidth: "400px",
-        },
-      }}
-      transitionDuration={300} // Smooth fade effect
-    >
-      <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", color: "#333", textAlign: "center" }}>
-        {dialogTitle}
-      </DialogTitle>
-      <DialogContent sx={{ textAlign: "center" }}>
-        <Typography sx={{ fontSize: "1rem", color: "#666", lineHeight: 1.5 }}>
-          {dialogMessage}
-        </Typography>
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: "center", paddingBottom: 2 }}>
-        <Button
-          onClick={handleClose}
-          sx={{
-            backgroundColor: "#007bff",
-            color: "#fff",
-            "&:hover": { backgroundColor: "#0056b3" },
-            padding: "8px 20px",
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: "bold",
-          }}
-        >
-          OK
-        </Button>
-      </DialogActions>
-    </Dialog>
-
       </CardContent>
     </Card>
-    </>
   );
 };
 export default StepperLinearWithValidation;
