@@ -267,7 +267,10 @@ const AddBatchPage = () => {
                           onChange={(event, newValue) => {
                             setValue('branch', newValue ? newValue.uuid : '');
                             getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
-                            setSelectedBranch(newValue?.uuid)
+                            setSelectedBranch(newValue?.uuid);
+                            setValue('course', ''); // Reset course when branch changes
+                            setValue('students', []); // Reset students when branch changes
+
                           }}
                           options={activeBranches}
                           getOptionLabel={(option) => option.branch_identity || ''}
@@ -276,7 +279,7 @@ const AddBatchPage = () => {
                               {...params}
                               label="Branch"
                               error={Boolean(errors.branch)}
-                              helperText={errors.branch?.message}
+                              helperText={errors.branch?.message || 'Select a branch to see available courses.'}
                             />
                           )}
                         />
@@ -290,11 +293,14 @@ const AddBatchPage = () => {
                       control={control}
                       render={({ value }) => (
                         <Autocomplete
-                          disabled={control._defaultValues.branch.length === 0}
+                          // disabled={control._defaultValues.branch.length === 0}
+                          disabled={!selectedBranch} // Disable if no branch is selected
+
                           value={value}
                           onChange={(event, newValue) => {
                             setValue('course', newValue ? newValue.uuid : '');
                             getStudentByCourseId(newValue.uuid);
+                            setValue('students', []);// Reset students when course changes
                           }}
                           options={activeCourse}
                           getOptionLabel={(option) => option.course_name || ''}
@@ -303,7 +309,15 @@ const AddBatchPage = () => {
                               {...params}
                               label="Course"
                               error={Boolean(errors.course)}
-                              helperText={errors.course?.message}
+                              helperText={errors.course?.message ||
+                                (!selectedBranch && 'Please select a branch first to enable course selection.')
+                              }
+                              sx={{
+                                '& .MuiInputBase-root.Mui-disabled': {
+                                  backgroundColor: '#f0f0f0'  
+                                },
+                                cursor: !selectedBranch ? 'not-allowed' : 'text'
+                              }}
                             />
                           )}
                         />
@@ -322,6 +336,7 @@ const AddBatchPage = () => {
                           fullWidth
                           label="Students"
                           id="select-multiple-chip"
+                          disabled={!selectedBranch || !control._formValues.course} // Disable if branch or course is not selected
                           SelectProps={{
                             MenuProps,
                             multiple: true,
@@ -342,7 +357,15 @@ const AddBatchPage = () => {
                             )
                           }}
                           error={Boolean(errors.students)}
-                          helperText={errors.students?.message}
+                          helperText={errors.students?.message ||
+                            (!control._formValues.course &&
+                              'Please select a course to view and select students.')}
+                              sx={{
+                                '& .MuiInputBase-root.Mui-disabled': {
+                                  backgroundColor: '#f0f0f0' 
+                                },
+                                cursor: !selectedBranch || !control._formValues.course ? 'not-allowed' : 'text'
+                              }}
                         >
                           {activeStudents.map((student, index) => (
                             <MenuItem key={index} value={student?.uuid}>

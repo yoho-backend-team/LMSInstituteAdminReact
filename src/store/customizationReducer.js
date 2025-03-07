@@ -1,21 +1,22 @@
 // project imports
 import config from 'config';
+import secureLocalStorage from 'react-secure-storage';
 
 // action - state management
 import * as actionTypes from './actions';
 
 const getInitialDarkModeState = () => {
-  const storedDarkMode = localStorage.getItem('darkMode');
+  const storedDarkMode = secureLocalStorage.getItem('darkMode');
   return storedDarkMode ? JSON.parse(storedDarkMode) : false;
 };
 
 const getInitialFontFamilyState = () => {
-  const storedFontFamily = localStorage.getItem('fontFamily');
+  const storedFontFamily = secureLocalStorage.getItem('fontFamily');
   return storedFontFamily || config.fontFamily;
 };
 
 const getInitialBorderRadiusState = () => {
-  const storedBorderRadius = localStorage.getItem('borderRadius');
+  const storedBorderRadius = secureLocalStorage.getItem('borderRadius');
   return storedBorderRadius || config.borderRadius;
 };
 
@@ -45,21 +46,21 @@ const customizationReducer = (state = initialState, action) => {
         opened: action.opened
       };
     case actionTypes.SET_FONT_FAMILY:
-      // Save to local storage
-      localStorage.setItem('fontFamily', action.fontFamily);
+      // Save to secure local storage
+      secureLocalStorage.setItem('fontFamily', action.fontFamily);
       return {
         ...state,
         fontFamily: action.fontFamily
       };
     case actionTypes.SET_BORDER_RADIUS:
-      // Save to local storage
-      localStorage.setItem('borderRadius', action.borderRadius);
+      // Save to secure local storage
+      secureLocalStorage.setItem('borderRadius', action.borderRadius);
       return {
         ...state,
         borderRadius: action.borderRadius
       };
     case actionTypes.TOGGLE_DARK_MODE:
-      localStorage.setItem('darkMode', JSON.stringify(!state.darkMode));
+      secureLocalStorage.setItem('darkMode', JSON.stringify(!state.darkMode));
 
       return {
         ...state,

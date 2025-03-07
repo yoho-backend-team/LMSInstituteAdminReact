@@ -19,6 +19,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { useState } from 'react';
 import * as yup from 'yup';
 import { addFaqCategory } from '../services/faqCategoryServices';
+import secureLocalStorage from 'react-secure-storage';
+import toast from 'react-hot-toast';
+import { getBranchObjectId, useBranchId, useInstitute } from 'utils/get-institute-details';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -57,6 +60,7 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
 
+
   const {
     reset,
     control,
@@ -75,34 +79,42 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
 
   const onSubmit = async (data) => {
     setSubmitting(true);
-    const institute = JSON.parse(localStorage.getItem('institute'));
-    const selectedBranchId = localStorage.getItem('selectedBranchId');
+    const institute = useInstitute().getDetails();
+    const selectedBranchId = useBranchId();
+    console.log('Selected Branch:', selectedBranchId);
 
-    const inputData = {
-      category_name: data.name,
+    const cleanedBranchId = selectedBranchId ? selectedBranchId.replace(/^"|"$/g, '') : '';
+  
+    const faq_CategoryData = {
+      category_name: data.name, 
       description: data.description,
-      branchid: selectedBranchId,
-      institute_id: institute ? institute._id : ''
+      branchid: cleanedBranchId,
+      institute_id: institute?._id
     };
-
+  
+    console.log("Sending Data:", faq_CategoryData);
+  
     try {
-      const result = await addFaqCategory(inputData);
+      const result = await addFaqCategory(faq_CategoryData);
       setSubmitting(false);
-
-      if (result.success) {
+      console.log('result:', result);
+  
+      if (result.status) {
         setSuccessDialogOpen(true);
         setRefetch((state) => !state);
         toggle();
         reset();
       } else {
-        alert(result.response?.data?.message || 'Failed to create category');
+        toast.error('Failed to add Faq_Category. Please try again.');
       }
     } catch (error) {
+      console.error('Error submitting Faq_Category:', error);
+      toast.error('An error occurred. Please try again.');
+    } finally {
       setSubmitting(false);
-      console.error('Error in creating FaqCategory:', error);
-      alert('An error occurred while adding the category. Please try again.');
     }
   };
+  
 
   const closeSuccessDialog = () => {
     setSuccessDialogOpen(false);
@@ -147,21 +159,21 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                <Controller
-                name="name"
-                control={control}
-                render={({ field: { value, onChange } }) => (
-                  <TextField
-                    fullWidth
-                    value={value}
-                    sx={{ mb: 2 }}
-                    label="Title"
-                    onChange={onChange}
-                    error={Boolean(errors.name)}
-                    {...(errors.name && { helperText: errors.name.message })}
+                  <Controller
+                    name="name"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <TextField
+                        fullWidth
+                        label="Category "
+                        placeholder="Enter Category Name"
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.name)}
+                        helperText={errors.name?.message}
+                      />
+                    )}
                   />
-                )}
-              />
                 </Grid>
                 <Grid item xs={12}>
                   <Controller
@@ -176,23 +188,6 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
                         onChange={onChange}
                         error={Boolean(errors.description)}
                         helperText={errors.description?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                <Controller
-                    name="name"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <TextField
-                        fullWidth
-                        label="Category "
-                        placeholder="Enter Category Name"
-                        value={value}
-                        onChange={onChange}
-                        error={Boolean(errors.name)}
-                        helperText={errors.name?.message}
                       />
                     )}
                   />

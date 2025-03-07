@@ -21,6 +21,7 @@ import { useState } from 'react';
 import HelpAddModal from './Modal/helpAddModal';
 import HelpEditModal from './Modal/helpEditModal';
 import PropTypes from 'prop-types';
+import secureLocalStorage from 'react-secure-storage';
 
 const MuiBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -111,7 +112,7 @@ const HelpPage = ({ data, activeTab, handleChange, helps, SetLoad }) => {
       maxBodyLength: Infinity,
       url: `${process.env.REACT_APP_PUBLIC_API_URL}/api/platform/admin/platform-management/platform-faqs/delete`,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: datainput
     };
@@ -251,4 +252,4 @@ HelpPage.propTypes = {
   SetLoad: PropTypes.any,
   
 };
-export default HelpPage;
+export default HelpPage; 

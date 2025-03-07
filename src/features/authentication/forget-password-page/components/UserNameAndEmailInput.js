@@ -42,19 +42,19 @@ const UserNameAndEmailInput = ({ handleSendOtp, setUserId,setOtp }) => {        
   });
 
   const handleOtpSend = async (data) => {
-    console.log("Sending OTP...");  
+    console.log("entering / userdetails :",data.username);  
     const inputData = {
       email: data.username
     };
    
-              //  setOtp(true);                                                      //* 
-   
+              //  setOtp(true);                                                    
+   console.log('user email:', inputData);
 
     const result = await sendOtp(inputData);
-    console.log(result);
+    console.log('api response data: ',result);
     if (result.success) {
       toast.success(result.message);
-      setUserId(result?.data?.id);
+      setUserId({ email: result.email, token: result.token  });
       handleSendOtp();
     }
   };

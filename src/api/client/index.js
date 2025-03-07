@@ -7,6 +7,8 @@ class Client {
       me : (data) => HttpClient.get(HTTP_END_POINTS.admin.me,data),
       change_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.change_password,data),
       forget_password:(data)=> HttpClient.post(HTTP_END_POINTS.admin.forget_password,data),
+      verfiy_otp : (data) => HttpClient.post(HTTP_END_POINTS.admin.verfiy_otp,data),
+      reset_password : (data) => HttpClient.post(HTTP_END_POINTS.admin.reset_password,data),
     }
     permission = {
       getAll : (params) => HttpClient.get(HTTP_END_POINTS.permission.getAll),
@@ -36,8 +38,21 @@ class Client {
             return HttpClient.uploadFile(HTTP_END_POINTS.file.upload, data);
         }
     }
+    faq = {
+      create : (data) => HttpClient.post(HTTP_END_POINTS.faq.create,data),
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.faq.getAll,params),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq.delete.replace(':uuid', data.uuid) ,data),
+      update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq.update.replace(':uuid', uuid), data)
+    }
+    faq_category = {
+      create : (data) => HttpClient.post(HTTP_END_POINTS.faq_category.create,data),
+      getAll : (params) => HttpClient.get(HTTP_END_POINTS.faq_category.getAll,params),
+      delete : (data) => HttpClient.delete(HTTP_END_POINTS.faq_category.delete.replace(':uuid', data.uuid) ,data),
+      update: (uuid, data) => HttpClient.update(HTTP_END_POINTS.faq_category.update.replace(':uuid', uuid), data)
+    }
+
     category = {
-      get    : (params) => HttpClient.get(HTTP_END_POINTS.category.getAll,params),
+      get : (data) => HttpClient.get(HTTP_END_POINTS.category.getAll,data),
       create : (data) => HttpClient.post(HTTP_END_POINTS.category.create,data),
       update : (data) =>  HttpClient.update(HTTP_END_POINTS.category.create+`/${data.id}`,data),
       delete : (data) => HttpClient.delete(HTTP_END_POINTS.category.create+`/${data.id}`)

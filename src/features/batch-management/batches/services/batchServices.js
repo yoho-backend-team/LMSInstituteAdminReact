@@ -1,6 +1,7 @@
 // groupService.js
 import client from 'api/client';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute`;
 
@@ -21,7 +22,6 @@ export const getAllBatchesByBranch = async (data) => {
 export const getAllBatches = async (data) => {
   try {
     const response = await client.batch.getAll(data)
-   console.log(response.data,"------------------------------------------");
    
     return { success: true, data: response.data };
    
@@ -36,6 +36,7 @@ export const getBatchesByCourse = async (data) => {
   try {
     const response = await client.batch.getAll(data)
     // Check if the response status is successful
+    console.log(response.data);
     
       return { success: true, data: response.data };
       
@@ -74,7 +75,7 @@ export const getAllActiveBatchesByCourse = async (data) => {
     const response = await axios.get(`${BATCH_API_ENDPOINT}/get-by-course-id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });

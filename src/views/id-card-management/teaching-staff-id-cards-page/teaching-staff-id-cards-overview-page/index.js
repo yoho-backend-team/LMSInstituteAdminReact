@@ -17,8 +17,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getInitials } from 'utils/get-initials';
 import { useInstitute } from 'utils/get-institute-details';
 import generateStaffIDCardPDF from 'utils/id-generator';
-import { getImageUrl } from 'utils/imageUtils';
 import generateIDCardPDF from 'utils/pdfGenerator';
+import { getImageUrl } from 'utils/imageUtils';
 
 const roleColors = {
   admin: 'error',
@@ -181,7 +181,7 @@ const TeachingIdCard = () => {
                               left: 0,
                               width: '100%',
                               height: '100%',
-                              backgroundImage: `url('https://png.pngtree.com/background/20210714/original/pngtree-blue-business-atmosphere-line-board-background-material-picture-image_1216242.jpg')`, // Replace with your image URL
+                              backgroundImage: `url('https://clipart-library.com/new_gallery/750538_vector-bg-png.jpg')`, // Replace with your image URL
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
                               backgroundRepeat: 'no-repeat',
@@ -203,7 +203,7 @@ const TeachingIdCard = () => {
                               />
                             </Box>
                             <Typography variant="h3" fontWeight="bold" sx={{ color: '#000', textAlign: 'center' }}>
-                              <span style={{ color: '#28a745' }}>{item.name} </span>
+                              <span style={{ color: '#28a745',textTransform: "uppercase"  }}>{item.name} </span>
                             </Typography>
                             <Typography variant="subtitle2" color="textSecondary" textAlign="center">
                               {item.role.identity}
@@ -234,22 +234,22 @@ const TeachingIdCard = () => {
                                 {item.contact}
                               </Typography>
                             </Box>
-                            <Box sx={{ marginTop: 3, textAlign: 'center' }}>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                            <Box sx={{ marginTop: 1,mb:0, textAlign: 'center' }}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
                                 <path
                                   fill="currentColor"
                                   fill-rule="evenodd"
                                   d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
                                 />
                               </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
                                 <path
                                   fill="currentColor"
                                   fill-rule="evenodd"
                                   d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
                                 />
                               </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
                                 <path
                                   fill="currentColor"
                                   fill-rule="evenodd"
@@ -260,7 +260,7 @@ const TeachingIdCard = () => {
                           </Box>
                         </Card>
                           </Card>
-                        <Card className="back" sx={{ width: '100%', minHeight: 410 ,position: 'relative',}}>
+                        <Card className="back" sx={{ width: '100%', minHeight: 410 ,position: 'relative'}}>
                            {/* Background Image with Opacity */}
                            <Box
                             sx={{
@@ -269,7 +269,7 @@ const TeachingIdCard = () => {
                               left: 0,
                               width: '100%',
                               height: '100%',
-                              backgroundImage: `url('https://png.pngtree.com/background/20210714/original/pngtree-blue-business-atmosphere-line-board-background-material-picture-image_1216242.jpg')`, // Replace with your image URL
+                              backgroundImage: `url('https://clipart-library.com/new_gallery/750538_vector-bg-png.jpg')`, // Replace with your image URL
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
                               backgroundRepeat: 'no-repeat',
@@ -277,7 +277,7 @@ const TeachingIdCard = () => {
                               // Keeps it behind content
                             }}
                           />
-                          <CardContent sx={{ pt: 2 , position: 'relative', zIndex: 1}}>
+                          <CardContent sx={{ pt: 2 , position: 'relative', zIndex: 1,mt:2}}>
                             <Typography variant="h3" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                               Details
                             </Typography>
@@ -361,7 +361,7 @@ const TeachingIdCard = () => {
                             </Box>
 
                             <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-                              <Button variant="contained" onClick={() => generateStaffIDCardPDF(item)}>
+                              <Button variant="contained" sx={{borderRadius:50}} onClick={() => generateIDCardPDF(item)}>
                                 Download
                               </Button>
                             </Box>

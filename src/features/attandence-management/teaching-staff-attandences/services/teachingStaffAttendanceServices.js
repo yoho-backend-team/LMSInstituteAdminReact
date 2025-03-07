@@ -2,6 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
 const TEACHING_STAFF_ATTENDANCES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/attendance`;
 
@@ -39,7 +40,7 @@ export const searchTeachingStaffAttendances = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -80,7 +81,7 @@ export const deleteTeachingStaffAttendance = async (TeachingStaffAttendanceId) =
     const response = await axios.delete(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: TeachingStaffAttendanceId }
     });
@@ -101,7 +102,7 @@ export const updateTeachingStaffAttendance = async (data) => {
     const response = await axios.put(`${TEACHING_STAFF_ATTENDANCES_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 

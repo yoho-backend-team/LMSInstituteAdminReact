@@ -22,10 +22,14 @@ import { addStudentNotification } from '../services/studentNotificationServices'
 import { useSpinner } from 'context/spinnerContext';
 import { title } from '_mock/text';
 import { useInstitute } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
+
+import { Modal } from "@mui/material";
+
 
 const NotificationAddDrawer = (props) => {
   const { open, toggle, setStudentNotificationRefetch } = props;
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner();
 
   const [inputValue, setInputValue] = useState('');
   const image =
@@ -86,13 +90,11 @@ const NotificationAddDrawer = (props) => {
       .string()
       .required('Title is required')
       .matches(/^[a-zA-Z0-9\s]+$/, 'Title should not contain special characters'),
-    description: yup
-      .string()
-      .required('Body is required'),
+    description: yup.string().required('Body is required'),
     course: yup.object().required('Course is required'),
     batch: yup.object().required('Batch is required'),
-    notification_type : yup.string().required("Type is required"),
-    link : yup.string().optional()
+    notification_type: yup.string().required('Type is required'),
+    link: yup.string().optional()
   });
 
   const defaultValues = {
@@ -101,8 +103,8 @@ const NotificationAddDrawer = (props) => {
     students: [],
     title: '',
     description: '',
-    notification_type : '',
-    link : ''
+    notification_type: '',
+    link: ''
   };
 
   const {
@@ -120,41 +122,41 @@ const NotificationAddDrawer = (props) => {
   const handleClose = () => {
     setInputValue('');
     setImgSrc(image);
-    setSelectedImage(''); 
+    setSelectedImage('');
     reset();
     toggle();
   };
 
-  const instituteId = localStorage.getItem('userData') ? JSON.parse(localStorage.getItem('userData')).institute_id : null;
+  const instituteId = secureLocalStorage.getItem('userData') ? JSON.parse(secureLocalStorage.getItem('userData')).institute_id : null;
 
   const onSubmit = async (data) => {
-    try{
-      show()
-      const studentIds = data?.students?.map((user)=>user?._id)
+    try {
+      show();
+      const studentIds = data?.students?.map((user) => user?._id);
       const notification = {
-        institute : useInstitute().getInstituteId(),
-        course : data?.course?._id,
-        batch : data?.batch?._id,
-        branch : selectedBranchId,
-        title : data?.title,
-        body : data?.description,
-        student : studentIds,
-        link : data?.link,
-        type : data?.notification_type
-      }
-      
+        institute: useInstitute().getInstituteId(),
+        course: data?.course?._id,
+        batch: data?.batch?._id,
+        branch: selectedBranchId,
+        title: data?.title,
+        body: data?.description,
+        student: studentIds,
+        link: data?.link,
+        type: data?.notification_type
+      };
+
       const result = await addStudentNotification(notification);
       toast.success(result.message);
       handleClose();
       setStudentNotificationRefetch((state) => !state);
-      hide()
-    }catch(error){
-      toast.error(error?.message)
-    }finally{
-     hide()
+      hide();
+    } catch (error) {
+      toast.error(error?.message);
+    } finally {
+      hide();
     }
-
   };
+
   const ImgStyled = styled('img')(({ theme }) => ({
     width: 100,
     height: 100,
@@ -183,20 +185,40 @@ const NotificationAddDrawer = (props) => {
   };
 
   return (
-    <Drawer
-      open={open}
-      anchor="right"
-      variant="temporary"
-      onClose={handleClose}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: '100%', sm: 700 } } }}
+ 
+
+    <Modal
+    open={open}
+    onClose={handleClose}
+    closeAfterTransition
+    ModalProps={{ keepMounted: true }}
+    BackdropProps={{ style: { backgroundColor: "rgba(0,0,0,0.5)" } }} 
+     
+  >
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "90%", sm: 500, md: 600 },
+        height: "auto",  
+        maxHeight: "80vh", 
+        bgcolor: "background.paper",
+        boxShadow: 24,
+        p: 3,
+        borderRadius: 2,
+        overflowY: "auto",
+        transition: "all 0.3s ease-in-out",
+      }}
     >
-      <Header>
-        <Typography variant="h5">Add Notification</Typography>
+     <Header sx={{mt:-7}}>
+        <Typography variant="h2" sx={{ml:-4}} >Add Notification</Typography>
         <IconButton
           size="small"
           onClick={handleClose}
           sx={{
+            mr:-7,
             p: '0.438rem',
             borderRadius: 1,
             color: 'text.primary',
@@ -206,28 +228,11 @@ const NotificationAddDrawer = (props) => {
             }
           }}
         >
-          <Icon icon="tabler:x" fontSize="1.125rem" />
+          <Icon icon="tabler:x" fontSize="1.125rem"  />
         </IconButton>
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
-            <ImgStyled src={imgSrc} alt="Profile Pic" />
-            <div>
-              <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-image">
-                Upload
-                <input
-                  hidden
-                  type="file"
-                  value={inputValue}
-                  accept="image/png, image/jpeg"
-                  onChange={handleInputImageChange}
-                  id="account-settings-upload-image"
-                />
-              </ButtonStyled>
-            </div>
-          </Box> */}
-
           <Grid item xs={12} sm={12}>
             <Controller
               name="course"
@@ -349,51 +354,50 @@ const NotificationAddDrawer = (props) => {
           </Grid>
 
           <Grid item xs={12} sm={12}>
-           <Controller
-             name="notification_type"
-             control={control}
-             render={({ field: { onChange, onBlur, value } }) => (
-               <Autocomplete
-                 multiple={false}
-                 freeSolo // Allow custom input
-                 disableCloseOnSelect={false}
-                 id="select-multiple-chip"
-                 options={["Notification", "Classes", "Alerts", "Reminders"]} // Add default options here
-                 getOptionLabel={(option) => option}
-                 value={value || ''} // Ensure the value is handled correctly
-                 onChange={(event, newValue) => {
-                   onChange(newValue);
-                 }}
-                 renderInput={(params) => (
-                   <TextField
-                     {...params}
-                     sx={{ mb: 2 }}
-                     fullWidth
-                     label={"Notification type"}
-                     error={Boolean(errors.notification_type)}
-                     helperText={errors?.notification_type ? errors.notification_type.message : null}
-                     InputProps={{
-                       ...params.InputProps,
-                       style: { overflowY: "hidden", overflowX: "auto", maxHeight: 55 }
-                     }}
-                   />
-                 )}
-                 renderOption={(props, option, { selected }) => (
-                   <li {...props}>
-                     <Checkbox
-                       // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                       // checkedIcon={<CheckBoxIcon fontSize="small" />}
-                       style={{ marginRight: 8 }}
-                       checked={selected}
-                     />
-                     {option}
-                   </li>
-                 )}
-               />
-             )}
-           />
+            <Controller
+              name="notification_type"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Autocomplete
+                  multiple={false}
+                  freeSolo // Allow custom input
+                  disableCloseOnSelect={false}
+                  id="select-multiple-chip"
+                  options={['Notification', 'Classes', 'Alerts', 'Reminders']} // Add default options here
+                  getOptionLabel={(option) => option}
+                  value={value || ''} // Ensure the value is handled correctly
+                  onChange={(event, newValue) => {
+                    onChange(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      sx={{ mb: 2 }}
+                      fullWidth
+                      label={'Notification type'}
+                      error={Boolean(errors.notification_type)}
+                      helperText={errors?.notification_type ? errors.notification_type.message : null}
+                      InputProps={{
+                        ...params.InputProps,
+                        style: { overflowY: 'hidden', overflowX: 'auto', maxHeight: 55 }
+                      }}
+                    />
+                  )}
+                  renderOption={(props, option, { selected }) => (
+                    <li {...props}>
+                      <Checkbox
+                        // icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+                        // checkedIcon={<CheckBoxIcon fontSize="small" />}
+                        style={{ marginRight: 8 }}
+                        checked={selected}
+                      />
+                      {option}
+                    </li>
+                  )}
+                />
+              )}
+            />
           </Grid>
-
 
           <Grid item xs={12} sm={12}>
             <Controller
@@ -435,35 +439,69 @@ const NotificationAddDrawer = (props) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={12} >
-            <Controller 
-             name='link'
-             control={control}
-             render={({field:{value,onChange}}) => (
-              <TextField 
-              fullWidth
-              sx={{ mb: 2}}
-              label="Link"
-              value={value}
-              onChange={onChange}
-              error={Boolean(errors?.link)}
-              helperText={errors?.link ? errors?.link.message : null}
-              />
-             )}
+          <Grid item xs={12} sm={12}>
+            <Controller
+              name="link"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  label="Link"
+                  value={value}
+                  onChange={onChange}
+                  error={Boolean(errors?.link)}
+                  helperText={errors?.link ? errors?.link.message : null}
+                />
+              )}
             />
           </Grid>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
-            <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-              Submit
-            </Button>
-            <Button variant="tonal" color="secondary" onClick={handleClose}>
+          <Box sx={{ display: 'flex', alignItems: 'center',justifyContent:'flex-end', mt: 4 }}>
+
+            <Button 
+            variant="tonal"
+            onClick={handleClose}
+           sx={{ 
+            mr: 3,
+            backgroundColor: 'white', 
+            color: 'black', 
+            border: '1px solid #D3D3D3',  
+            '&:hover': {
+              backgroundColor: '#f0f0f0',  
+              color: 'text.secondary',  
+            },
+            transition: 'all 0.3s ease',
+                }}>
               Cancel
             </Button>
+
+            <Button type="submit" variant="contained" 
+            sx={{
+              backgroundColor: '#1976d2', 
+              color: 'white',  
+              '&:hover': {
+                backgroundColor: '#1565c0',  
+              },
+              '&:active': {
+                backgroundColor: '#0d47a1',  
+              },
+              transition: 'all 0.3s ease',  
+            }}>
+              Add Notification
+            </Button>
+
           </Box>
         </form>
       </Box>
-    </Drawer>
+     
+
+     
+       
+    </Box>
+
+  </Modal>
+   
   );
 };
 

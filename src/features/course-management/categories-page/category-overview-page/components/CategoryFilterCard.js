@@ -19,7 +19,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
 
   useEffect(() => {
     const data = {
-      branch_id: selectedBranchId,
+      branch_id: selectedBranchId
     };
     getCourses(data);
   }, [selectedBranchId]);
@@ -39,29 +39,14 @@ const CategoryFilter = ({ selectedBranchId }) => {
 
   return (
     <DatePickerWrapper>
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Card
-            sx={{
-              boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
-              borderRadius: 2,
-            }}
-          >
-            <CardHeader
-              title={
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ fontWeight: 'bold', color: 'primary.main' }}
-                >
-                  Filter Course Categories
-                </Typography>
-              }
-            />
-            <CardContent sx={{ pt: 0 }}>
+          <Card sx={{ boxShadow: 'none', border: 'none' }}>
+            <CardHeader />
+            <CardContent sx={{ pt: 0, backgroundColor: 'white' }}>
               <Grid container spacing={3}>
                 {/* Status Filter */}
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     select
                     fullWidth
@@ -69,9 +54,13 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     value={statusValue}
                     onChange={handleFilterByStatus}
                     sx={{
-                      '.MuiOutlinedInput-root': {
-                        backgroundColor: 'background.paper',
+                      backgroundColor: 'white',
+                      '.MuiInputBase-root': {
+                        height: '56px'
                       },
+                      '.MuiSelect-select': {
+                        padding: '400px'
+                      }
                     }}
                   >
                     <MenuItem value={null}>All Statuses</MenuItem>
@@ -81,7 +70,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
                 </Grid>
 
                 {/* Course Filter */}
-                <Grid item xs={3} sm={4}>
+                <Grid item xs={3} sm={6}>
                   <Autocomplete
                     fullWidth
                     options={Array.isArray(courses) ? courses : []}
@@ -89,7 +78,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
                     onChange={(e, newValue) => {
                       const data = {
                         course_id: newValue?.course_id,
-                        branch_id: selectedBranchId,
+                        branch_id: selectedBranchId
                       };
                       dispatch(getAllCourseCategories(data));
                     }}
@@ -98,9 +87,13 @@ const CategoryFilter = ({ selectedBranchId }) => {
                         {...params}
                         label="Filter by Course"
                         sx={{
-                          '.MuiOutlinedInput-root': {
-                            backgroundColor: 'background.paper',
+                          backgroundColor: 'white',
+                          '.MuiInputBase-root': {
+                            height: '56px'
                           },
+                          '.MuiSelect-select': {
+                            padding: '400px'
+                          }
                         }}
                       />
                     )}
@@ -116,8 +109,7 @@ const CategoryFilter = ({ selectedBranchId }) => {
 };
 
 CategoryFilter.propTypes = {
-  selectedBranchId: PropTypes.any,
+  selectedBranchId: PropTypes.any
 };
 
 export default CategoryFilter;
-

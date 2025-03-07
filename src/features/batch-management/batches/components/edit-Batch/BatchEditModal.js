@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, TextField as CustomTextField, Grid } from '@mui/material';
+import { Button, TextField as CustomTextField, Grid,Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
@@ -15,6 +15,7 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { updateBatch } from '../../services/batchServices';
 import { getChangedFields } from 'utils/getChanges';
+
 
 const CustomInput = forwardRef((props, ref) => {
   return <CustomTextField fullWidth {...props} inputRef={ref} autoComplete="off" />;
@@ -99,11 +100,27 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
       uuid : selectedBatch?.uuid,
       student:studentIds,
     };
-    const changeFields = getChangedFields(selectedBatch,inputData)
-    if(!changeFields.is_changed){
-      toast.error("No changes detected. Please make some changes before updating.")
-      return;
-    }
+
+    // Manually compare fields
+  const hasChanges = [
+    selectedBatch?.batch_name !== inputData?.batch_name,
+    selectedBatch?.start_date !== inputData?.start_date,
+    selectedBatch?.end_date !== inputData?.end_date,
+    JSON.stringify(selectedBatch?.students) !== JSON.stringify(inputData?.students),
+  ].some(Boolean);
+
+  if (!hasChanges) {
+    toast.error('No changes detected. Please make some changes before updating.');
+    return;
+  }
+
+
+    // const changeFields = getChangedFields(selectedBatch,inputData)
+    // if(!changeFields.is_changed){
+    //   toast.error("No changes detected. Please make some changes before updating.")
+    //   return;
+    // }
+
     const result = await updateBatch(inputData);
 
     if (result.success) {
@@ -118,13 +135,15 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
   };
 
   const handleStartDateChange = (date) => {
-    setValue('startDate', date);
-    setStartDate(date);
+    const formattedDate = new Date(date).toLocaleDateString();  
+    setValue('start_date', formattedDate); 
+    setStartDate(new Date(date)); 
   };
-
+  
   const handleEndDateChange = (date) => {
-    setValue('endDate', date);
-    setEndDate(date);
+    const formattedDate = new Date(date).toLocaleDateString();  
+    setValue('end_date', formattedDate);  
+    setEndDate(new Date(date));  
   };
 
   return (
@@ -133,7 +152,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
         open={open}
         onClose={handleClose}
         aria-labelledby="user-view-edit"
-        aria-describedby="user-view-edit-description"
+        aria-describedby="user-view-edit-description" 
         sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800 } }}
       >
         <DialogTitle
@@ -142,10 +161,12 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
             textAlign: 'center',
             fontSize: '1.5rem !important',
             px: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
-            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`]
-          }}
+            pt: (theme) => [`${theme.spacing(3)} !important`, `${theme.spacing(3)} !important`],
+          background: 'linear-gradient(to right, #6366F1, #8B5CF6)' }}
         >
-          Edit Batch
+         
+              <Typography variant="h1" sx={{ py: 3, color: 'white' }} >Create New Batch</Typography>
+            
         </DialogTitle>
         <DialogContent
           sx={{
@@ -188,6 +209,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             value={value}
                             showYearDropdown
                             showMonthDropdown
+                             dateFormat="MM/dd/yyyy"
                             placeholderText="MM-DD-YYYY"
                             customInput={
                               <CustomInput label="Start Date" error={Boolean(errors.start_date)} helperText={errors.start_date?.message} />
@@ -208,6 +230,7 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             value={value}
                             showYearDropdown
                             showMonthDropdown
+                             dateFormat="MM/dd/yyyy"
                             placeholderText="MM-DD-YYYY"
                             customInput={
                               <CustomInput label="End Date" error={Boolean(errors.end_date)} helperText={errors.end_date?.message} />
@@ -251,16 +274,36 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                     </Grid>
                   </Grid>
                 </CardContent>
-                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                  <Box>
-                    <Button type="submit" variant="contained" sx={{ mr: 3 }}>
-                      Update
-                    </Button>
-                    <Button variant="tonal" color="error" onClick={handleClose}>
+
+                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6, marginBottom: 12, gap: 2 }}>                  <Box>
+
+
+                    <Button variant="tonal" color="secondary" onClick={handleClose} sx={{
+                    backgroundColor: '#f5f5f5',
+                    color: 'black', mr: 2,
+                    '&:hover': {
+                      backgroundColor: '#e0e0e0',
+                    }
+                  }}>
                       Cancel
                     </Button>
+
+
+                    <Button type="submit" variant="contained" sx={{
+                    mr: 3, background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
+                    color: 'white',
+                    '&:hover': {
+                      background: 'linear-gradient(to right, #4F46E5, #6B21A8)',
+                      color: 'white',
+                    }
+                  }}>
+                      Update
+                    </Button>
+                    
                   </Box>
                 </Grid>
+
+
               </form>
             </DatePickerWrapper>
           </Grid>

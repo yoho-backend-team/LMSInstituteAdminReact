@@ -6,30 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import CustomTextField from 'components/mui/text-field';
 import ReactApexChart from 'react-apexcharts';
 
-const tabData = [
-  {
-    type: 'orders',
-    avatarIcon: 'tabler:shopping-cart',
-    series: [{ data: [28, 10, 45, 38, 15, 30, 35, 28, 8] }]
-  },
-  {
-    type: 'sales',
-    avatarIcon: 'tabler:chart-bar',
-    series: [{ data: [35, 25, 15, 40, 42, 25, 48, 8, 30] }]
-  },
-  {
-    type: 'profit',
-    avatarIcon: 'tabler:currency-dollar',
-    series: [{ data: [10, 22, 27, 33, 42, 32, 27, 22, 8] }]
-  },
-  {
-    type: 'income',
-    avatarIcon: 'tabler:chart-pie-2',
-    series: [{ data: [5, 9, 12, 18, 20, 25, 30, 36, 48] }]
-  }
-];
-
-const RevenueReport = ({revenue}) => {
+const RevenueReport = ({ revenue }) => {
   const theme = useTheme();
   const colors = Array(9).fill(theme.palette.primary.main);
   const options = {
@@ -41,15 +18,16 @@ const RevenueReport = ({revenue}) => {
       bar: {
         borderRadius: 6,
         distributed: true,
-        columnWidth: '35%',
+        columnWidth: '25%',
         startingShape: 'rounded',
-        dataLabels: { position: 'top' }
+        dataLabels: { position: 'top' },
+        
       }
     },
     legend: { show: false },
     tooltip: { enabled: true },
     dataLabels: {
-      offsetY: -15,
+      offsetY: -10,
       formatter: (val) => `${val}k`,
       style: {
         fontWeight: 500,
@@ -59,46 +37,38 @@ const RevenueReport = ({revenue}) => {
     },
     colors,
     states: {
-      hover: {
-        filter: { type: 'none' }
-      },
-      active: {
-        filter: { type: 'none' }
-      }
+      hover: { filter: { type: 'none' } },
+      active: { filter: { type: 'none' } }
     },
     grid: {
       show: true,
-      padding: {
-        top: 20,
-        left: -5,
-        right: -8,
-        bottom: -12
-      }
+      padding: { top: 20, left: 0, right: 0, bottom: 10 }
     },
     xaxis: {
-      lines : { show: true },
       axisTicks: { show: true },
       axisBorder: { color: theme.palette.divider },
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
       labels: {
         style: {
-          // colors: theme.palette.text.disabled,
           fontFamily: theme.typography.fontFamily,
           fontSize: theme.typography.body2.fontSize
-        }
-      }
-    },
-    yaxis: {
-      lines : {
-        show : true
+        },
+        
+        padding: 30, 
       },
+      tickAmount: 12,
+      tickPlacement: 'between', 
+    }
+    
+,    
+    yaxis: {
       labels: {
-        offsetX: -15,
+        offsetX: -10,
         formatter: (val) => `₹${val}k`,
         style: {
           colors: theme.palette.text.disabled,
           fontFamily: theme.typography.fontFamily,
-          fontSize: theme.typography.body2.fontSize
+          fontSize: '0.75rem',
         }
       }
     },
@@ -107,42 +77,37 @@ const RevenueReport = ({revenue}) => {
         breakpoint: theme.breakpoints.values.sm,
         options: {
           plotOptions: {
-            bar: { 
-              columnWidth: '60%' ,
-              distributed: true
-            }
+            bar: { columnWidth: '55%', distributed: true }
           },
-          grid: {
-            padding: { right: 20 }
-          }
+          grid: { padding: { right: 20 } }
         }
       }
     ]
   };
 
   return (
-    <Box>
-      <Box component={'h2'} sx={{ fontSize: 16, mb: 2.5 }}>
-        Revenue
-      </Box>
-      <Card  sx={{ boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",  borderRadius: "8px"}} >
-        <CardHeader
-          // action={
-          //   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          //     <Typography sx={{ mr: 2, fontSize: 12 }}>Sort By:</Typography>
-          //     <CustomTextField select defaultValue={10} id="custom-select">
-          //       <MenuItem value={10}>Month</MenuItem>
-          //       <MenuItem value={20}>Year</MenuItem>
-          //     </CustomTextField>
-          //   </Box>
-          // }
-          sx={{ pb: 0 }}
-        />
-        <CardContent>
-          <ReactApexChart type="bar" options={options} series={[{data:revenue}] || []} />
-        </CardContent>
-      </Card>
-    </Box>
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+  {/* Properly aligned heading */}
+  <Typography variant="h5" sx={{ mb: 2.5, fontWeight: 600, textAlign: 'left', mt: 2, marginBottom: '26px' }}>
+    Revenue
+  </Typography>
+
+  {/* Increased Card size with background color */}
+  <Card
+    sx={{
+      boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+      borderRadius: '8px',
+      minHeight: 450,
+      backgroundColor: '#f0f9ff', // Light blue background for the Card
+    }}
+  >
+    
+    <CardContent sx={{ p: 3 }}>
+      <ReactApexChart type="bar" options={options} series={[{ data: revenue }]} height={320} />
+    </CardContent>
+  </Card>
+</Box>
+
   );
 };
 

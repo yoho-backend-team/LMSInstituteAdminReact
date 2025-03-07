@@ -5,9 +5,12 @@ import { setFaqCategories, setLoading } from './faqCategorySlice';
 export const getAllFaqCategories = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    const response = await fetchAllFaqCategories(data); // Implement this function in your services
-    console.log("all categories",response)
-    dispatch(setFaqCategories(response?.data));
+    console.log('All categories  details:', data);
+    const response = await fetchAllFaqCategories(data); 
+    console.log('All categories  response:', response);
+
+    
+    dispatch(setFaqCategories(response));
   } catch (error) {
     console.error(error);
   } finally {

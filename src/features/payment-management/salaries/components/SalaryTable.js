@@ -329,13 +329,11 @@ const SalaryTable = () => {
             <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
               {/* <CardHeader title="Salary" /> */}
               <CardContent>
-                <Grid container spacing={6}>
+                <Grid container spacing={4}>
                   <Grid item xs={12} sm={4}>
                     <TextField
                       value={searchValue}
-                      sx={{
-                        width: 400
-                      }}
+                    fullWidth
                       placeholder="Search Salary"
                       onChange={(e) => handleSearch(e)}
                     />

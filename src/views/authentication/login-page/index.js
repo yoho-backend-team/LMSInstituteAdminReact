@@ -22,19 +22,18 @@ import 'cleave.js/dist/addons/cleave-phone.us';
 import AuthIllustrationV1Wrapper from 'features/authentication/components/AuthIllustrationV1Wrapper';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import {checkAuthState,getOtpDetails} from 'utils/check-auth-state';
-import NewLogo from "../../../assets/images/logo/logo.png"
-import LoginBg from "assets/images/auth/login-bg.jpg";
-import LoginBg2 from "assets/images/auth/login-bg.jpg"
+import { checkAuthState, getOtpDetails } from 'utils/check-auth-state';
+import NewLogo from '../../../assets/images/logo/logo.png';
+import LoginBg from 'assets/images/auth/login-bg.jpg';
+import secureLocalStorage from 'react-secure-storage';
 
-
-const LeftImageBox = styled(Box)({
-  backgroundImage: `url(${LoginBg})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  width: '100%',
-  height: '100vh',
-});
+// const LeftImageBox = styled(Box)({
+//   backgroundImage: `url(${LoginBg})`,
+//   backgroundSize: 'cover',
+//   backgroundPosition: 'center',
+//   width: '100%',
+//   height: '100vh',
+// });
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -70,32 +69,32 @@ const defaultValues = {
   val5: '',
   val6: ''
 };
+
 const Login = () => {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const [otp, setOtp] = useState(false);
-  const [values,setValues] = useState(Array(6).fill(''))
+  const [values, setValues] = useState(Array(6).fill(''));
   const handleotppage = () => setOtp(!otp);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // ** State
   const [isBackspace, setIsBackspace] = useState(false);
 
   // ** Hooks
-
-  useEffect(()=>{
+  useEffect(() => {
     const checkLoginState = () => {
-      if(checkAuthState()){
-        setOtp(true)
+      if (checkAuthState()) {
+        setOtp(true);
       }
-    }
-    checkLoginState()
-  })
+    };
+    checkLoginState();
+  }, []);
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({ defaultValues });
 
   // ** Vars
@@ -104,13 +103,13 @@ const Login = () => {
   const handleChange = (event, onChange) => {
     if (!isBackspace) {
       onChange(event);
-    
+
       setValues((prevValues) => {
         const newValues = [...prevValues];
         newValues[index] = event.target.value;
         return newValues;
       });
-      
+
       // @ts-ignore
       const form = event.target.form;
       const index = [...form].indexOf(event.target);
@@ -139,9 +138,9 @@ const Login = () => {
   };
 
   const getDevOtp = () => {
-    const otpToken =JSON.parse(localStorage.getItem("otp"))
-    return otpToken?.otp
-  }
+    const otpToken = JSON.parse(secureLocalStorage.getItem('otp'));
+    return otpToken?.otp;
+  };
 
   const renderInputs = () => {
     return Object.keys(defaultValues).map((val, index) => (
@@ -166,28 +165,49 @@ const Login = () => {
       />
     ));
   };
+
   return (
     <AuthWrapper1>
-      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: "initial" }}>
+      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh', flexWrap: 'initial', overflow: 'auto' }}>
         <Grid item xs={12}>
-          <Grid container  sx={{ minHeight: 'calc(100vh - 68px)' }}>
-            <Grid item xs={6} sx={{
-              backgroundImage: `url(${LoginBg})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              width: '100%',
-              height: '100vh',
-            }} >
-               {/* <LeftImageBox /> */}
+          <Grid container>
+            <Grid
+              item
+              xs={6}
+              sx={{
+                backgroundImage: `url(${LoginBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                width: '100%',
+                height: '100vh'
+              }}
+            >
+              {/* <LeftImageBox /> */}
             </Grid>
             {!otp && (
-              <Grid item xs={6} sx={{ mb: 0, display: "flex",backgroundColor: `#BEE1F5`, alignItems: "center", justifyContent: "center", backgroundImage: `url(${LoginBg2})`, backgroundSize: "cover" }}>
+              <Grid
+                item
+                xs={6}
+                sx={{
+                  mb: 0,
+                  display: 'flex',
+                  backgroundColor: `#BEE1F5`,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundImage: `url(${LoginBg})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  width: '100%',
+                  height: '100vh',
+                  overflow: 'auto'
+                }}
+              >
                 <AuthCardWrapper>
                   <Grid container spacing={2} alignItems="center" justifyContent="center">
                     <Grid item sx={{ mb: 2 }}>
                       <Link to="#">
                         {/* <Logo /> */}
-                        <img src={NewLogo} alt='KIAQ' width={184} height={64} />
+                        <img src={NewLogo} alt="KIAQ" width={184} height={64} />
                       </Link>
                     </Grid>
                     <Grid item xs={12}>
@@ -218,19 +238,17 @@ const Login = () => {
                     <CardContent sx={{ p: (theme) => `${theme.spacing(5, 5, 5)} !important` }}>
                       <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <div>
-                        <Logo />
+                          <Logo />
                         </div>
                         <Typography variant="h3" sx={{ ml: 2.5, fontWeight: 700 }}>
                           OTP
                         </Typography>
-                       
                       </Box>
-                      <Box sx={{ display: "flex", alignItems:"center", justifyContent: "center"}}>
-                      <Typography variant="h3" sx={{ ml: 2.5, fontWeight: 700 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Typography variant="h3" sx={{ ml: 2.5, fontWeight: 700 }}>
                           Your Otp is - {getDevOtp()}
                         </Typography>
                       </Box>
-                     
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="h4" sx={{ mb: 1.5 }}>
                           Two-Step Verification 💬
@@ -241,11 +259,13 @@ const Login = () => {
                         <Typography variant="h6">{getOtpDetails().email}</Typography>
                       </Box>
                       <Typography sx={{ fontWeight: 500, color: 'text.secondary' }}>Type your 6 digit security code</Typography>
-                      <form onSubmit={handleSubmit(async() => {
-                        const otp = values.join(" ").toString().replace(/\s+/g, '')
-                        const otpToken =JSON.parse(localStorage.getItem("otp"))
-                        await dispatch(VerifyOtp(otp,otpToken.email,otpToken.token))
-                        })}>
+                      <form
+                        onSubmit={handleSubmit(async () => {
+                          const otp = values.join(' ').toString().replace(/\s+/g, '');
+                          const otpToken = JSON.parse(secureLocalStorage.getItem('otp'));
+                          await dispatch(VerifyOtp(otp, otpToken.email, otpToken.token));
+                        })}
+                      >
                         <CleaveWrapper
                           sx={{
                             display: 'flex',
@@ -271,7 +291,7 @@ const Login = () => {
                         </Button>
                       </form>
                       <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Typography sx={{ color: 'text.secondary' }}>Didnt get the code?</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>Didn't get the code?</Typography>
                         <Typography component={LinkStyled} to="/" onClick={(e) => e.preventDefault()} sx={{ ml: 1 }}>
                           Resend
                         </Typography>

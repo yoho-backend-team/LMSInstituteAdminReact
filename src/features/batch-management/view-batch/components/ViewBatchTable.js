@@ -14,15 +14,26 @@ const ViewBatchTable = ({ students }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
+
   if (!students) {
     return null;
   }
-  const filteredStudents = students.filter((student) => student?.full_name.toLowerCase().includes(searchQuery.toLowerCase()));
 
+  const filteredStudents = students.filter((student) => 
+    student?.full_name.toLowerCase().includes(searchQuery.toLowerCase()));
 
+  const startIndex = (page - 1) * itemsPerPage;
+  const paginatedStudents = filteredStudents.slice(startIndex, startIndex + itemsPerPage);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+    setPage(1); 
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   return (
@@ -37,7 +48,7 @@ const ViewBatchTable = ({ students }) => {
 
         {/* Student Cards Layout */}
         <Grid container spacing={3} sx={{ mt: 2 }}>
-          {filteredStudents.map((student) => (
+          {paginatedStudents.map((student) => (
             <Grid item xs={12} sm={6} md={4} key={student.id}>
 
               <Card sx={{ borderRadius: 2, boxShadow: 2, p: 2, transition: 'all 0.3s ease-in-out', '&:hover':{transform: 'translateY(-4px)',
@@ -95,9 +106,17 @@ const ViewBatchTable = ({ students }) => {
 
         
       </Grid>
-      <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Pagination count={10} color="primary" />
-      </Grid>
+      
+      
+          <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+            <Pagination
+              count={Math.ceil(filteredStudents.length / itemsPerPage)}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+            />
+          </Grid>
+        
     </>
   );
 };

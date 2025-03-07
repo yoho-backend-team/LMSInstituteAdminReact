@@ -23,14 +23,14 @@ const FeesCardHeader = (props) => {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Button onClick={toggles} variant="contained" color="primary" startIcon={<Icon icon="line-md:filter-twotone" />}>
+          <Button onClick={toggles} variant="contained" sx={{fontSize:20}} color="primary" startIcon={<Icon icon="line-md:filter-twotone" />}>
             Filter
           </Button>
           <Typography variant="h2" ml={2}>Fees</Typography>
         </Box>
 
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button onClick={toggle} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
+          <Button onClick={toggle} variant="contained" sx={{fontSize:20}} color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Fee
           </Button>
         </Box>

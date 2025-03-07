@@ -9,6 +9,8 @@ import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { setOfflineClasses } from '../redux/offlineClassSlice';
 import OfflineClassAddModal from './add-OfflineClass/OfflineClassAddModal';
 
+ 
+ 
 const OfflineClassCardHeader = (props) => {
   const { selectedBranchId, setRefetch,offlineClasses ,offlineClassRefetch} = props;
   const [searchValue, setSearchValue] = useState('');
@@ -44,8 +46,7 @@ const OfflineClassCardHeader = (props) => {
     <>
       <Box
         sx={{
-          pb: 1,
-          pt: 3,
+         
           width: '100%',
           display: 'flex',
           flexWrap: 'wrap',
@@ -76,6 +77,13 @@ const OfflineClassCardHeader = (props) => {
              </InputAdornment>
             )
           }}
+          label={
+            <>
+              {[..."Search Class"].map((char, index) => (
+                <span key={index} style={{ "--index": index }}>{char}</span>
+              ))}
+            </>
+          }
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>

@@ -1,9 +1,11 @@
-import { CardContent, TextField } from '@mui/material';
+import { Avatar, CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import CustomChip from 'components/mui/chip';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import PhoneIcon from '@mui/icons-material/Phone';
 import { DataGrid } from '@mui/x-data-grid';
 import Icon from 'components/icon';
 import { default as StatusChangeDialog, default as UserDeleteModel } from 'components/modal/DeleteModel';
@@ -27,7 +29,7 @@ const renderClient = (row) => {
     return (
       <CustomAvatar
         src={getImageUrl(row?.image)}
-        sx={{ mr: 2.5, width: 50, height: 50, borderRadius: '12px' }}
+        sx={{ width: 68, height: 68, borderRadius: '50%', objectFit: "cover", }}
       />
     );
   } else {
@@ -121,77 +123,132 @@ const UserBodySection = ({ users, setUserRefetch, selectedBranchId }) => {
 
   return (
     <Box>
-      <Grid container spacing={3}>
+      <Grid container spacing={12}>
         {users?.data?.map((user) => (
+
           <Grid item xs={12} sm={6} md={4} key={user?.uuid}>
-            <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', borderRadius: 2 }}>
-              <CardContent sx={{ display: 'flex', flexDirection: 'column', padding: 3 }}>
-                {/* Avatar and User Info Section */}
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {renderClient(user)}
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Typography
-                      noWrap
-                      sx={{
-                        fontWeight: 600,
-                        fontSize: '1.1rem',
-                        color: 'text.primary',
-                        '&:hover': { color: 'primary.main' }
-                      }}
-                    >
-                      {`${user?.first_name} ${user?.last_name}`}
-                    </Typography>
-                    <Typography noWrap variant="body2" sx={{ color: 'text.secondary' }}>
-                      {user?.email}
-                    </Typography>
-                  </Box>
-                </Box>
 
-                {/* Phone Section */}
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
-                    Phone
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                    {user?.phone_number || 'Not available'}
-                  </Typography>
-                </Box>
+            {/* <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)', borderRadius: 2 }}> */}
+            <Card sx={{
+              textAlign: 'center', height: '100%', borderRadius: "15px",
+              width: '100%',
+              maxWidth: 400,
+              mx: 'auto',
+              overflow: 'hidden',
+              transition: 'all 300ms',
+              boxShadow: 'none',
+              '&:hover': {
+                boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.1)',
+              },
+              '&:hover:dark': {
+                boxShadow: '0 0.5rem 1rem rgba(255,255,255,0.1)',
+              },
+            }}>
 
-                {/* Role Section */}
-                <Box sx={{ mt: 2 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
-                    Role
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                    {user?.role?.identity || 'No role assigned'}
-                  </Typography>
-                </Box>
+              <Box sx={{
+                position: "relative", backgroundColor: "grey.200", paddingTop: "48px", paddingBottom: "32px", height: "35%",
+                background: 'linear-gradient(145deg,rgb(236, 236, 236) 0%,rgb(148, 150, 153) 100%)',
+                backdropFilter: 'blur(4px)',
+                backgroundColor: '#E5E7EB',
+              }}>
 
-                {/* Status Section */}
-                <Box sx={{ mt: 2 }}>
-                  <TextField
-                    size="small"
-                    select
-                    value={user?.is_active}
-                    label="Status"
-                    onChange={(e) => handleStatusValue(e, user)}
-                    fullWidth
-                    sx={{ marginBottom: 1 }}
+                {/* user profile section */}
+                {renderClient(user) && (
+                  <Box
+                    sx={{
+                      width: 68,
+                      height: 68,
+                      zIndex: 11,
+                      left: 0,
+                      right: 0,
+                      bottom: -32,
+                      mx: "auto",
+                      position: "absolute",
+                      border: "2px solid",
+                      borderColor: "background.paper",
+                      boxShadow: 3,
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      objectFit: "cover",
+                    }}
                   >
-                    <MenuItem value={true}>Active</MenuItem>
-                    <MenuItem value={false}>Inactive</MenuItem>
-                  </TextField>
-                </Box>
+                    {renderClient(user)}
+                  </Box>)}
 
-                {/* Divider */}
-                <Divider sx={{ my: 2 }} />
 
-                {/* Actions Section */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* action section */}
+                <Box sx={{ position: 'absolute', top: 10, right: 10, }}>
                   <RowOptions id={user?.uuid} />
                 </Box>
-              </CardContent>
+
+
+               
+
+              </Box>
+
+              {/* Name & email section */}
+              <Typography variant="h3" sx={{ mt: 6 }}>
+                {`${user?.first_name} ${user?.last_name}`}
+              </Typography>
+
+              <CustomChip
+                skin="light"
+                label={user?.email}
+                sx={{ color: 'grey', mb: 1, mt: 1 }}
+                size="x-small"
+              />
+
+              {/* Phone Section */}
+              <Box sx={{ mt: 2 }}>
+
+                <Typography variant="body2" sx={{ color: 'text.primary', display: 'inline-flex', alignItems: 'center' }}>
+                  <PhoneIcon sx={{ fontSize: 18, mr: 1 }} /> {user?.phone_number || 'Not available'}
+                </Typography>
+              </Box>
+
+              {/* Role Section */}
+              <Box sx={{
+                mt: 2,
+                mb: 3,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'success.main',
+                color: 'common.white',
+                borderRadius: '12px',
+                padding: '4px 12px',
+                fontWeight: 'bold',
+              }}>
+                <Typography variant="body2" sx={{ color: 'text.primary', fontSize: 12, textAlign: 'center' }}>
+                  {user?.role?.identity || 'No role assigned'}
+                </Typography>
+              </Box>
+
+             
+
+{/* Status Section */}
+<Box sx={{mb:12 }}>
+
+<TextField
+  size="small"
+  select
+  value={user?.is_active}
+  label="Status"
+  onChange={(e) => handleStatusValue(e, user)}
+   
+  sx={{width:'80% '}}
+>
+  <MenuItem value={true}>Active</MenuItem>
+  <MenuItem value={false}>Inactive</MenuItem>
+  </TextField>
+  </Box>
+ 
+
             </Card>
+
           </Grid>
         ))}
       </Grid>

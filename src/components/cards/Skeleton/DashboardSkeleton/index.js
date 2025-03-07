@@ -14,7 +14,7 @@ const DashboardSkeleton = () => {
     <Grid container spacing={2} sx={{ pt: "22px", pl: "22px" }}>
       <Grid item xs={12}>
         <Grid container spacing={2}>
-          {[...Array(5)].map((index) => (
+          {[...Array(5)].map((_,index) => (
              <Grid item xs={12} sm={6} md={2.4} key={index} >
                  <CustomSkeleton width={"100%"} height={103} />
               </Grid>

@@ -1,5 +1,6 @@
 // groupService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const NON_TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/staff-salary`;
 
@@ -8,7 +9,7 @@ export const getAllNonTeachingStaffSalaries = async (selectedBranchId) => {
     const response = await axios.get(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { branch_id: selectedBranchId }
     });
@@ -34,7 +35,7 @@ export const searchNonTeachingStaffSalaries = async (searchQuery) => {
     const response = await axios.get('/data_storage/user-management/groups/AllGroups.json', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -55,7 +56,7 @@ export const addNonTeachingStaffSalary = async (data) => {
     const response = await axios.post(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/create`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -75,7 +76,7 @@ export const deleteNonTeachingStaffSalary = async (NonTeachingStaffSalaryId) => 
     const response = await axios.delete(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: { id: NonTeachingStaffSalaryId }
     });
@@ -96,7 +97,7 @@ export const updateNonTeachingStaffSalary = async (data) => {
     const response = await axios.put(`${NON_TEACHING_STAFF_SALARIES_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 

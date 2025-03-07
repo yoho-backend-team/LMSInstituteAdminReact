@@ -4,8 +4,8 @@ import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import { forwardRef, useCallback, useState,useRef } from 'react';
-import { Box,  } from '@mui/material';
+import { forwardRef, useCallback, useState, useRef } from 'react';
+import { Box, Typography } from '@mui/material';
 import format from 'date-fns/format';
 import DatePicker from 'react-datepicker';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -17,12 +17,9 @@ import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
 import { getAllBatches } from '../redux/batchThunks';
 import PropTypes from 'prop-types';
-import SearchIcon from "@mui/icons-material/Search"
+import SearchIcon from '@mui/icons-material/Search';
 import { serialize } from 'stylis';
 import FilterListIcon from '@mui/icons-material/FilterList';
-
-
-
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -34,10 +31,10 @@ const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth inputRef={ref} {...updatedProps} label={props.label || ''} value={value} />;
 });
 
-const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
+const BatchFilterCard = (props, { handleLeftDrawerToggle }) => {
   // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const { selectedBranchId ,batches} = props;
+  const { selectedBranchId, batches } = props;
 
   const [startDateRange, setStartDateRange] = useState(null);
   const [dates, setDates] = useState([]);
@@ -45,9 +42,9 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
   const [searchValue, setSearchValue] = useState('');
   const [filterstatusValue, setFilterStatusValue] = useState('');
 
-   //toggle filter card
-    const [isCardOpen, setIsCardOpen] = useState(false);
-    const filterCardRef = useRef(null);
+  //toggle filter card
+  const [isCardOpen, setIsCardOpen] = useState(false);
+  const filterCardRef = useRef(null);
 
   // const handleFilterByStatus = (e) => {
   //   setFilterStatusValue(e.target.value);
@@ -90,9 +87,9 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
 
     if (batches?.length > 0) {
       setSuggestions(batches);
-    }   
-     getCourses(data);
-  }, [selectedBranchId,batches]);
+    }
+    getCourses(data);
+  }, [selectedBranchId, batches]);
 
   const getCourses = async (data) => {
     const result = await getAllCourses(data);
@@ -103,14 +100,12 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
 
   const handleSearch = useCallback(
     (e) => {
-      dispatch(getAllBatches({ batch_name: searchValue?.batch_name,branch_id:selectedBranchId}));
+      dispatch(getAllBatches({ batch_name: searchValue?.batch_name, branch_id: selectedBranchId }));
     },
     [dispatch, selectedBranchId]
   );
 
-
   const handleSearchIconClick = () => {
-    
     const data = {
       search: searchValue,
       branch_id: selectedBranchId
@@ -118,222 +113,160 @@ const BatchFilterCard = (props,{handleLeftDrawerToggle}) => {
     dispatch(getAllBatches(data));
   };
 
-   //toggle handler
-   const handleToggleCard = (event) => {
-    event.stopPropagation(); // Prevent triggering the click outside handler
+  //toggle handler
+  const handleToggleCard = (event) => {
     setIsCardOpen((prev) => !prev);
   };
- // Prevent background scrolling when card is open
- useEffect(() => {
-  if (isCardOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = 'auto';
-  }
-  return () => {
-    document.body.style.overflow = 'auto';
-  };
-}, [isCardOpen]);
-
-
-// Close the filter card if clicked outside
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (filterCardRef.current && !filterCardRef.current.contains(event.target) && 
-    !document.querySelector('.MuiAutocomplete-popper')?.contains(event.target) && // Ignore clicks inside Autocomplete dropdown
-    !document.querySelector('.MuiPopover-root')?.contains(event.target) && // Ignore clicks inside Menu dropdowns
-    !document.querySelector('.react-datepicker')?.contains(event.target)&&
-    !document.querySelector('.MuiMenu-paper')?.contains(event.target) &&
-     event.target.getAttribute('data-ignore-outside-click') !== 'true') {
-      setIsCardOpen(false);
-    }
-  };
-
-  // Add event listener for clicks outside the filter card
-  document.addEventListener('mousedown', handleClickOutside);
-
-  // Clean up the event listener
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutside);
-  };
-}, []);
-  
-
-// useEffect(() => {
-//   // Update the sidebar state based on the passed down function
-//   handleLeftDrawerToggle(setIsSidebarOpen);
-// }, [handleLeftDrawerToggle]);
 
   return (
     <Grid>
-
-
-
-<Grid item xs={12}>
-        
-        <Box sx={{ mb: 2 , position: 'relative', zIndex: 1000}}>
+      <Grid item xs={12}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Button
             variant="contained"
             size="medium"
-              data-ignore-outside-click="true"
-            sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: "#0CCE7F", ":hover": { backgroundColor: "#0AA865" } }}
+            data-ignore-outside-click="true"
+            sx={{ width: '130px', py: 1.6, borderRadius: 2, backgroundColor: '#0CCE7F', ':hover': { backgroundColor: '#0AA865' } }}
             onClick={handleToggleCard}
           >
-          <FilterListIcon/> {isCardOpen ? 'Hide' : 'Show Filter'}
+            <FilterListIcon /> {isCardOpen ? 'Hide' : 'Show Filter'}
           </Button>
+
+          <Box component={Link} to={'batches/add'}>
+            <Button
+              variant="contained"
+              size="medium"
+              fullWidth
+              sx={{ py: 1.7, borderRadius: 2, backgroundColor: '#0CCE7F', ':hover': { backgroundColor: '#0AA865' } }}
+            >
+              Add New Batch
+            </Button>
+          </Box>
         </Box>
       </Grid>
 
       {isCardOpen && (
-<>
-{/* Overlay for background blur */}
-      <Box
-    sx={{
-      position:'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',  
-      backdropFilter: 'blur(4px)', 
-      zIndex: 998,  
-    }}
-  />
-  
-  <Box
-         ref={filterCardRef}  
-         sx={{
-           position: 'fixed',  
-           top: '19%',  
-           left:"60%",
-          //  left: isSidebarOpen ? 'calc(60% + 200px)' : '60%',
-           transform: 'translateX(-50%)',
-           zIndex: 999,  
-           width: '80%',    
-           backgroundColor: 'white',
-           boxShadow: 3,
-           borderRadius: 2,
-           p: 3,
-           mt: 3,
-           overflowY: 'auto',  
-           maxHeight: '80vh',
-           transition: 'left 0.3s ease',
-            
-         }}
-       >
+        <>
+          <Box
+            ref={filterCardRef}
+            sx={{
+              position: 'relative',
+              top: '19%',
+              left: '50%',
 
-      
+              transform: 'translateX(-50%)',
+              zIndex: 999,
+              width: '100%',
+              backgroundColor: 'white',
+              boxShadow: 3,
+              borderRadius: 2,
+              p: 3,
+              mt: 3,
+              overflowY: 'auto',
+              maxHeight: '80vh',
+              transition: 'left 0.3s ease'
+            }}
+          >
+            <DatePickerWrapper>
+              <Grid item xs={12} sm={12}>
+                <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+                  <CardHeader title="Batches" />
+                  <CardContent>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} sm={6}>
+                        {' '}
+                        {/* changed textfield to Autocompletegrid for avoid auto exit in filtercard while clicking dropdown */}
+                        <Autocomplete
+                          fullWidth
+                          value={filterstatusValue}
+                          onChange={(e, newValue) => {
+                            setFilterStatusValue(newValue);
+                            const data = { is_active: newValue, branch_id: selectedBranchId };
+                            dispatch(getAllBatches(data));
+                          }}
+                          options={['', 'true', 'false']}
+                          getOptionLabel={(option) => {
+                            if (option === 'true') return 'Active';
+                            if (option === 'false') return 'Inactive';
+                            return 'Select Status';
+                          }}
+                          renderInput={(params) => <TextField {...params} label="Search By Status" />}
+                        />
+                      </Grid>
 
-    <DatePickerWrapper>
+                      <Grid item xs={12} sm={6}>
+                        <DatePicker
+                          isClearable
+                          selectsRange
+                          monthsShown={2}
+                          endDate={endDateRange}
+                          selected={startDateRange}
+                          startDate={startDateRange}
+                          shouldCloseOnSelect={false}
+                          id="date-range-picker-months"
+                          onChange={handleOnChangeRange}
+                          customInput={
+                            <CustomInput
+                              dates={dates}
+                              setDates={setDates}
+                              label="Search Between Dates"
+                              end={endDateRange}
+                              start={startDateRange}
+                            />
+                          }
+                        />
+                      </Grid>
 
+                      <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                          fullWidth
+                          onChange={(e, newValue) => {
+                            const data = {
+                              course: newValue?._id || '',
+                              branch_id: selectedBranchId
+                            };
+                            dispatch(getAllBatches(data));
+                          }}
+                          options={courses}
+                          getOptionLabel={(option) => option.course_name || ''}
+                          renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
+                        />
+                      </Grid>
 
-      <Grid item xs={12} sm={12}>
-        
-        <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-          <CardHeader title="Batches" />
-          <CardContent>
-
-            <Grid container spacing={3}>
-
-             <Grid item xs={12} sm={6}> {/* changed textfield to Autocompletegrid for avoid auto exit in filtercard while clicking dropdown */}
-  <Autocomplete
-    fullWidth
-    value={filterstatusValue}
-    onChange={(e, newValue) => {
-      setFilterStatusValue(newValue);
-      const data = { is_active: newValue, branch_id: selectedBranchId };
-      dispatch(getAllBatches(data));
-    }}
-    options={["", "true", "false"]}   
-    getOptionLabel={(option) => {
-      if (option === "true") return "Active";
-      if (option === "false") return "Inactive";
-      return "Select Status";
-    }}
-    renderInput={(params) => <TextField {...params} label="Search By Status" />}
-  />
-</Grid>
-
-
-              <Grid item xs={12} sm={6}>
-                <DatePicker
-                  isClearable
-                  selectsRange
-                  monthsShown={2}
-                  endDate={endDateRange}
-                  selected={startDateRange}
-                  startDate={startDateRange}
-                  shouldCloseOnSelect={false}
-                  id="date-range-picker-months"
-                  onChange={handleOnChangeRange}
-                  customInput={
-                    <CustomInput dates={dates} setDates={setDates} label="Search Between Dates" end={endDateRange} start={startDateRange} />
-                  }
-                  
-                />
+                      <Grid item xs={12} sm={6}>
+                        <Autocomplete
+                          fullWidth
+                          value={searchValue}
+                          onChange={(e, newValue) => setSearchValue(newValue)}
+                          // onChange={handleSearch}
+                          options={suggestions || []}
+                          getOptionLabel={(option) => option?.batch_name}
+                          defaultValue={'search here'}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Search Batch"
+                              InputProps={{
+                                ...params.InputProps,
+                                endAdornment: (
+                                  <Button onClick={handleSearch} sx={{ p: 0 }}>
+                                    <SearchIcon />
+                                  </Button>
+                                )
+                              }}
+                            />
+                          )}
+                        />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <Autocomplete
-                  fullWidth
-                  onChange={(e, newValue) => {
-                    const data = {
-                      course: newValue?._id || '',
-                      branch_id: selectedBranchId
-                    };
-                    dispatch(getAllBatches(data));
-                  }}
-                  options={courses}
-                  getOptionLabel={(option) => option.course_name || ''}
-                  renderInput={(params) => <TextField sx={{ mb: 2 }} {...params} label="Search By Course" />}
-                />
-              </Grid>
-
-              
-              
-              <Grid item xs={12} sm={6}>
-              <Autocomplete
-                fullWidth
-                value={searchValue}
-                onChange={(e,newValue)=>setSearchValue(newValue)}
-                // onChange={handleSearch}
-                options={suggestions||[]}
-                getOptionLabel={(option) => option?.batch_name}
-                defaultValue={'search here'}
-                renderInput={(params) => (
-                  <TextField
-                  {...params}
-                  label="Search Batch"
-                  InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <Button onClick={handleSearch} sx={{ p: 0 }}>
-                          <SearchIcon />
-                        </Button>
-                      )
-                    }}
-                    />
-                )}
-              />
-              </Grid>
-
-              <Grid item xs={12} sm={12} sx={{display:'flex',justifyContent:'flex-end'}}>
-                <Box component={Link} to={'batches/add'}>
-                  <Button variant="contained" size="medium" fullWidth sx={{ py: 1.7, borderRadius: 2, backgroundColor : "#0CCE7F", ":hover" : { backgroundColor: "#0AA865" } }}>
-                    Add New Batch
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-    </DatePickerWrapper>
-    </Box>
-                    </>
+            </DatePickerWrapper>
+          </Box>
+        </>
       )}
     </Grid>
-
   );
 };
 

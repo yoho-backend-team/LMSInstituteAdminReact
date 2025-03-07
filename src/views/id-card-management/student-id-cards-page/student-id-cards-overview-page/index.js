@@ -117,7 +117,8 @@ const StudentIdCard = () => {
                   key={index}
                   item
                   xs={12}
-                  sm={3}
+                  sm={6}
+                  lg={4}
                   sx={{
                     position: 'relative',
                     width: '100%',
@@ -152,36 +153,82 @@ const StudentIdCard = () => {
                       }
                     }}
                   >
-                    <Card className="front" sx={{ width: '100%', minHeight: 410, boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
+                    <Card className="front" sx={{ width: 300, height: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat', boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
                       <CardContent sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        {item.image ? (
-                          <CardMedia
-                           alt={item.name}
-                           image={getImageUrl(item?.image)}
-                           sx={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1), 0px 2px 6px rgba(0, 0, 0, 0.06)"}}
-                           component="img"
-                           height="240"
-                          />
-                        ) : (
-                          <CustomAvatar skin="light" color={statusColors.active} sx={{ width: 100, height: 100, mb: 3, fontSize: '3rem' }}>
-                            {getInitials(item.name)}
-                          </CustomAvatar>
-                        )}
-                        <Typography variant="h4" sx={{ my: 2 }}>
-                          {item.name} 
-                        </Typography>
-                        <CustomChip rounded skin="light" size="small" label={`${item.email}`} color={statusColors.active} />
-                        {/* <Box mt={3}>
-                          <img
-                            style={{ borderRadius: '10px' }}
-                            height={100}
-                            src={item.qr_code}
-                            alt="qrCode"
-                          />
-                        </Box> */}
+                      <Box sx={{ flex: 1, padding: 2, position: 'relative', zIndex: 1 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                              <CustomAvatar
+                                sx={{ width: 90, height: 90, bgcolor: '#ffffff', border: '4px solid #28a745' }}
+                                src={getImageUrl(item?.image)}
+                                alt="Profile Picture"
+                              />
+                            </Box>
+                            <Typography variant="h3" fontWeight="bold" sx={{ color: '#000', textAlign: 'center' }}>
+                              <span style={{ color: '#28a745',textTransform: "uppercase"  }}>{item.name} </span>
+                            </Typography>
+                            <Typography variant="subtitle2" color="textSecondary" textAlign="center">
+                              {item.role.identity}
+                            </Typography>
+                            <Box sx={{ alignContent:'center', paddingTop: 2, display: 'grid', gap: 0.5, gridTemplateColumns: 'auto 1fr' }}>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>ID No:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.student_id}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Username:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                              {item.name}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Email:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.email}{' '}
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                <b>Phone:</b>
+                              </Typography>
+                              <Typography variant="body2" sx={{ color: '#000' }}>
+                                {item.contact}
+                              </Typography>
+                            </Box>
+                            <Box sx={{  textAlign: 'center' }}>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                <path
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                />
+                              </svg>
+                            </Box>
+                          </Box>
+
                       </CardContent>
                     </Card>
-                    <Card className="back" sx={{ width: '100%', minHeight: 410 }}>
+                    <Card className="back" sx={{ width: 300, height: 410,backgroundImage: `url('https://static.vecteezy.com/system/resources/previews/025/802/253/large_2x/abstract-background-design-template-yellow-and-black-color-web-template-banner-vector.jpg')`, // Replace with your image URL
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat', }}>
                       <CardContent sx={{ pb: 2 }}>
                         <Typography variant="h3" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                           Details
@@ -266,7 +313,7 @@ const StudentIdCard = () => {
                         </Box>
 
                         <Box sx={{ mt: 4, display: 'flex', justifyContent: "flex-end" }}>
-                          <Button variant="contained" onClick={() => generateIDCardPDF(item)}>
+                          <Button variant="contained" sx={{backgroundColor:'#fcd828',color:'black' ,borderRadius:50,":hover":{backgroundColor:'#e4c424'}}} onClick={() => generateIDCardPDF(item)}>
                             Download
                           </Button>
                         </Box>

@@ -2,6 +2,7 @@
 import client from 'api/client';
 import axios from 'axios';
 import { getErrorMessage } from 'utils/error-handler';
+import secureLocalStorage from 'react-secure-storage';
 
 const BRANCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/1450d694-350b-4d78-90e9-ae2bc21f8677/branches/`;
 
@@ -10,6 +11,7 @@ export const getAllBranchesByInstitute = async (data) => {
     const response = await client.branch.getAll(data)
 
     // Check if the response status is successful
+    console.log("Branch Response",response)
     if (response.status) {
       return response;
     } else {
@@ -51,7 +53,7 @@ export const deleteBranch = async (data) => {
     const response = await axios.delete(`${BRANCH_API_ENDPOINT}${data.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
     });
 
@@ -67,7 +69,7 @@ export const updateBranch = async (data) => {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.uuid}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -84,7 +86,7 @@ export const updateBranchStatus = async (data) => {
     const response = await axios.patch(`${BRANCH_API_ENDPOINT}${data.id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -101,17 +103,20 @@ export const getBranchById = async (data) => {
     const response = await axios.get(`${BRANCH_API_ENDPOINT}${data.branch_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
     });
+    
     // Check if the response status is successful
+    
     if (response.data.status) {
       return { success: true, data: response.data };
     } else {
       // If the response status is not successful, throw an error
       throw new Error(`Failed to fetch BranchesById. Status: ${response.status}`);
     }
-  } catch (error) {
+  } 
+  catch (error) {
     // Log the error for debugging purposes
     console.error('Error in getBranchById:', error);
     // Throw the error again to propagate it to the calling function/component

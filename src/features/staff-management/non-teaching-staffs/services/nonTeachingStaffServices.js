@@ -3,19 +3,24 @@ import client from 'api/client';
 import axios from 'axios';
 import { useInstitute } from 'utils/get-institute-details';
 import { useBranchId } from 'utils/get-institute-details';
+import secureLocalStorage from 'react-secure-storage';
 
 const NON_TEACHING_STAFF_API_END_POINT_get = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes`;
 
-const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/Non-teaching-staff`;
+const NON_TEACHING_STAFF_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/`;
 
 export const getAllNonTeachingStaffs = async (data) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/`, {
+    const BranchId=data.branch_id
+    const instituteUUID = JSON.parse(localStorage.getItem("institute") || "{}")?.uuid;
+    const token = localStorage.getItem('token');
+    // const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}branches/${useBranchId()}/non-teaching-staff/`, {
+    const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${instituteUUID}/branches/${BranchId}/non-teaching-staff/`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
-      params: data
+      
     });
 
     // Check if the response status is successful
@@ -39,12 +44,10 @@ export const getAllActiveNonTeachingStaffs = async (data) => {
     const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/active`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
-
-    
 
     // Check if the response status is successful
     if (response.data.status) {
@@ -64,11 +67,10 @@ export const getAllActiveNonTeachingStaffs = async (data) => {
 
 export const searchNonTeachingStaffs = async (searchQuery) => {
   try {
-    const response = await axios.get
-    (`${NON_TEACHING_STAFF_API_END_POINT}/search`, {
+    const response = await axios.get(`${NON_TEACHING_STAFF_API_END_POINT}/search`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: { search: searchQuery }
     });
@@ -89,10 +91,9 @@ export const addNonTeachingStaff = async (data) => {
     const response = await axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/auth/Non-teaching-staff/register`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
-    
 
     if (response.data.status) {
       return { success: true, message: 'NonTeachingStaff created successfully' };
@@ -110,7 +111,7 @@ export const deleteNonTeachingStaff = async (data) => {
     const response = await axios.delete(`${NON_TEACHING_STAFF_API_END_POINT_get}/${data?.instituteId}/branches/${data?.branchid}/non-teaching-staff/${data?.id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -132,7 +133,7 @@ export const updateNonTeachingStaff = async (data) => {
       data,
       {
         headers: {
-          Authorization: `Token ${localStorage.getItem('token')}`
+          Authorization: `Token ${secureLocalStorage.getItem('token')}`
         }
       }
     );
@@ -148,29 +149,26 @@ export const updateNonTeachingStaff = async (data) => {
   }
 };
 
-
 export const nonTeachingStaffById = async (data) => {
   try {
     const response = await client.users.getnonstaffWithId(data)
- // Check if the response status is successful
- if (response.status) {
-   return { success: true, data: response.data };
- } else {
-   // If the response status is not successful, throw an error
-   throw new Error(`Failed to fetch a Nonstaff. Status: ${response.status}`);
- }
-} catch (error) {
- // Log the error for debugging purposes
- console.error('Error in fetching  Nonstaff:', error);
+    // Check if the response status is successful
+    if (response.status) {
+      return { success: true, data: response.data };
+    } else {
+      // If the response status is not successful, throw an error
+      throw new Error(`Failed to fetch a Nonstaff. Status: ${response.status}`);
+    }
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error in fetching  Nonstaff:', error);
 
- // Throw the error again to propagate it to the calling function/component
- throw error;
-}
+    // Throw the error again to propagate it to the calling function/component
+    throw error;
+  }
 };
 
-
-
-export const nonteachstaffStatusChange = async (uuid,data) => {
+export const nonteachstaffStatusChange = async (uuid, data) => {
   try {
     const response = await axios.put(
       `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/${useInstitute().getInstituteId()}/branches/${useBranchId()}/non-teaching-staff/updatestatus/${uuid}`,
@@ -178,7 +176,7 @@ export const nonteachstaffStatusChange = async (uuid,data) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Token ${localStorage.getItem('token')}`
+          Authorization: `Token ${secureLocalStorage.getItem('token')}`
         }
       }
     );

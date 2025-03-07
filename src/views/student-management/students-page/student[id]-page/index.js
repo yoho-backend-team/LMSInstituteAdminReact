@@ -64,13 +64,26 @@ const UserView = () => {
             
           <IconButton 
             onClick={handleBackClick} 
-            sx={{ marginBottom: '16px', alignSelf: 'flex-start',marginTop:"10px" ,color:"#333",backgroundColor:"lightgrey",borderRadius:"20px",marginRight:"10px"}}
+            style={{
+              backgroundColor: "#00C853", 
+              color: "white",
+              border: "none",
+              borderRadius: "20px", 
+              padding: "2px 12px",
+              fontSize: "20px",
+              cursor: "pointer",
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+              marginRight:"10px",
+              marginBottom:"2px",
+              transition: "background-color 0.3s ease",
+            
+            }}
             
           >
             <ArrowBack />
           </IconButton>
         
-              Personal Information
+                Personal Information
             </Typography>
             <Divider sx={{ marginBottom: '24px' }} />
             <UserViewLeft student={student} />

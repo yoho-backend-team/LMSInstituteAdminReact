@@ -1,5 +1,6 @@
 import axios from 'axios';
-import client from 'api/client';            
+import client from 'api/client';
+import secureLocalStorage from 'react-secure-storage';
 
 const COMMUNITY_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institute`;
 
@@ -27,7 +28,7 @@ export const getCommunityDetails = async (data) => {
     const response = await axios.get(`${COMMUNITY_API_END_POINT}/get-by-batch-id`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -70,7 +71,7 @@ export const sendMessage = async (data) => {
       headers: {
         // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -90,7 +91,7 @@ export const deleteCommunity = async (data) => {
     const response = await axios.delete(`${COMMUNITY_API_END_POINT}/delete`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -111,7 +112,7 @@ export const updateCommunity = async (data) => {
     const response = await axios.post(`${COMMUNITY_API_END_POINT}/update`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${secureLocalStorage.getItem('token')}`
       }
     });
 

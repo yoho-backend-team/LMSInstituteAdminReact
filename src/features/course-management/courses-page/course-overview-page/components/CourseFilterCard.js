@@ -38,8 +38,8 @@ const CourseFilter = ({ selectedBranchId }) => {
     <DatePickerWrapper>
       <Grid container spacing={6}>
         <Grid item xs={12}>
-          <Card sx={{ boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }} >
-            <CardHeader title="Institute Courses" />
+          <Card sx={{ boxShadow : "none" }} >
+            <CardHeader  />
             <CardContent sx={{ pt: 0 }}>
               <Grid container spacing={4}>
                 <Grid item xs={12} sm={6}>
@@ -49,6 +49,15 @@ const CourseFilter = ({ selectedBranchId }) => {
                     label="Search By Status"
                     defaultValue={''}
                     SelectProps={{ value: statusValue, onChange: (e) => handleFilterByStatus(e) }}
+                    sx={{
+                     
+                      '.MuiInputBase-root': {
+                        height: '56px', 
+                      },
+                      '.MuiSelect-select': {
+                        padding: '500px',
+                      },
+                    }}
                   >
                     <MenuItem value="">Select Status</MenuItem>
                     <MenuItem value="1">Active</MenuItem>
@@ -71,7 +80,16 @@ const CourseFilter = ({ selectedBranchId }) => {
                     }}
                     id="autocomplete-multiple-outlined"
                     getOptionLabel={(option) => option.category_name || ''}
-                    renderInput={(params) => <TextField {...params} label="Search By Categories" placeholder="Favorites" />}
+                    renderInput={(params) => <TextField {...params} label="Search By Categories" placeholder="Favorites"    
+                    sx={{
+                     
+                      '.MuiInputBase-root': {
+                        height: '56px', 
+                      },
+                      '.MuiSelect-select': {
+                        padding: '500px',
+                      },
+                    }} />}
                   />
                 </Grid>
               </Grid>

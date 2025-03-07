@@ -1,12 +1,11 @@
 import { TextField, InputAdornment } from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+
 import Icon from 'components/icon';
-import PropTypes from 'prop-types';
+
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllCourseCategories } from '../../redux/courseCategoryThunks';
-import CategoryAddModal from './CategoryAddModal';
 
 const CategoryCardHeader = (props) => {
   // ** Props
@@ -20,13 +19,10 @@ const CategoryCardHeader = (props) => {
   const dispatch = useDispatch();
 
   // Callback function to handle search
-  const handleSearch = useCallback(
-    (e) => {
-      const searchInput = e.target.value;
-      setSearchValue(searchInput);
-    },
-    []
-  );
+  const handleSearch = useCallback((e) => {
+    const searchInput = e.target.value;
+    setSearchValue(searchInput);
+  }, []);
 
   // Function to trigger search on icon click
   const triggerSearch = useCallback(() => {
@@ -43,22 +39,7 @@ const CategoryCardHeader = (props) => {
 
   return (
     <>
-      <Box
-        sx={{
-          pb: 2,
-          pt: 3,
-          px: 2,
-          width: '100%',
-          display: 'flex',
-          marginTop: "10px",
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: 'white',
-          borderRadius: 2,
-          boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
-        }}
-      >
+      <Box>
         <TextField
           value={searchValue}
           onChange={handleSearch}
@@ -66,58 +47,38 @@ const CategoryCardHeader = (props) => {
           variant="outlined"
           size="small"
           sx={{
-            marginLeft:"10px",
-            width: 750,
+            marginLeft: '10px',
+            marginTop: '26px',
+            width: 350,
+
             backgroundColor: '#ffffff',
             borderRadius: 1,
             '& .MuiOutlinedInput-root': {
+              height: '55px',
+              padding: '0 14px',
+              borderRadius: '10px',
               '& fieldset': {
-                borderColor: '#e0e0e0',
+                borderColor: '#e0e0e0'
               },
               '&:hover fieldset': {
-                borderColor: '#bdbdbd',
+                borderColor: '#bdbdbd'
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#0CCE7F',
-              },
-            },
+                borderColor: '#0CCE7F'
+              }
+            }
           }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <Icon
-                  icon="tabler:search"
-                  color="action"
-                  onClick={triggerSearch}
-                  sx={{ cursor: 'pointer' }}
-                />
+                <Icon icon="tabler:search" color="action" onClick={triggerSearch} sx={{ cursor: 'pointer' }} />
               </InputAdornment>
-            ),
+            )
           }}
         />
-        <Box sx={{ marginRight:"20px",display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
-          <Button
-            onClick={handleAdd}
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "#0CCE7F",
-              ":hover": { backgroundColor: "#0AA865" },
-              ml: 2,
-            }}
-            startIcon={<Icon icon="tabler:plus" />}
-          >
-            Add New Category
-          </Button>
-        </Box>
       </Box>
-      <CategoryAddModal open={isAddModalOpen} handleAddClose={handleAddClose} setCategoryRefetch={setCategoryRefetch} />
     </>
   );
-};
-
-CategoryCardHeader.propTypes = {
-  setCategoryRefetch: PropTypes.any
 };
 
 export default CategoryCardHeader;

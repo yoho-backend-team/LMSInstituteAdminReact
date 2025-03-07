@@ -18,6 +18,8 @@ import toast from 'react-hot-toast';
 import SearchIcon from '@mui/icons-material/Search';
 import { getImageUrl } from 'utils/imageUtils';
 
+import OnlineClassSkeleton from 'components/cards/Skeleton/OnlineClassSkeleton.js';
+
 const renderClient = (row) => {
   
   if (row?.image) {
@@ -46,6 +48,7 @@ const ViewLiveClass = () => {
   const liveClassId = location.state.id;
   const [liveClassData, setLiveClassData] = useState(null);
   const {show,hide} = useSpinner()
+  const [loading, setLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 });
@@ -81,6 +84,8 @@ const ViewLiveClass = () => {
       }
     } catch (error) {
       console.log(error);
+    }finally {
+      setLoading(false); // Stop loading after data is fetched
     }
   };
 
@@ -155,6 +160,11 @@ function calculateTimeDifference(startTime, endTime) {
 }
 
   return (
+    <>
+   {loading? (<OnlineClassSkeleton/>):
+   (
+
+  
     <Box sx={{ p: 3}} >
       
       <Card variant="outlined" sx={{ mb: 3, borderColor: '#ddd', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
@@ -345,6 +355,8 @@ function calculateTimeDifference(startTime, endTime) {
       </Card>
 
     </Box>
+     )}
+    </>
   );
 };
 

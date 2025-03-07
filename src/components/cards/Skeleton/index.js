@@ -13,7 +13,7 @@ const WaveSkeleton = styled(Box)(({ reverse }) => ({
     left: '-100%',
     width: '100%',
     height: '100%',
-    background: reverse
+    background: reverse === "true"
       ? 'linear-gradient(-90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%)'
       : 'linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%)',
     animation: 'wave 1.5s infinite ease-in-out',
@@ -28,7 +28,7 @@ const WaveSkeleton = styled(Box)(({ reverse }) => ({
   },
 }));
 
-const CustomSkeleton = ({ variant = 'rectangular', width, height, reverse = false, ...props }) => {
+const CustomSkeleton = ({ variant = 'rectangular', width, height, reverse ="false", ...props }) => {
  
   const isCircular = variant === 'circular';
   const isRectangular = variant === 'rectangular';

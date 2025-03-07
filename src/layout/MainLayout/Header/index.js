@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Avatar, Box, ButtonBase,Typography } from '@mui/material';
+import { Avatar, Box, ButtonBase, Typography } from '@mui/material';
 
 // project imports
 import LogoSection from '../LogoSection';
@@ -11,6 +11,7 @@ import ProfileSection from './ProfileSection';
 import NotificationSection from './NotificationSection';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkMode } from 'store/actions';
+import { useNavigate } from 'react-router-dom'; 
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
@@ -69,20 +70,25 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     borderRadius: 20 / 2
   }
 }));
+
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.customization.darkMode); // Adjust the selector based on your state structure
+  const navigate = useNavigate();
 
   const handleToggleDarkMode = () => {
     dispatch(toggleDarkMode());
   };
 
-
   const handleSidebarToggle = () => {
-    setIsSidebarOpen(prevState => !prevState);
+    setIsSidebarOpen((prevState) => !prevState);
     handleLeftDrawerToggle(!isSidebarOpen); // Passing the updated state to the parent
   };
+  const handleImageClick = () => {
+    navigate('/profile-management/account-settings');
+  };
+
 
   return (
     <>
@@ -96,39 +102,62 @@ const Header = ({ handleLeftDrawerToggle }) => {
           }
         }}
       >
-        <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: "center" }}>
-          {
-            useInstitute().getDetails().image ? 
-            <img src={getImageUrl(useInstitute().getDetails().logo ?? useInstitute().getDetails().image)} alt={useInstitute().getDetails().institute_name} width={80} height={40}  />
-            :
+        <Box component="span" sx={{ display: { xs: 'none', md: 'flex' }, flexGrow: 1, justifyContent: 'center' }}>
+          {useInstitute()?.getDetails()?.image ? (
+            <Box>
+              <Avatar
+                src={getImageUrl(useInstitute().getDetails()?.logo ?? useInstitute().getDetails()?.image)}
+                alt={useInstitute().getDetails().institute_name}
+                width={40}
+                height={40}
+                style={{
+                  objectFit: 'cover', // Ensures the image fills the square dimensions
+                  borderRadius: '8px',
+                  width: '100px',
+                  height: '50px' // Optional: Adds rounded corners for a neat look
+                }}
+                onClick={handleImageClick}
+              />
+            </Box>
+          ) : (
             <LogoSection />
-          }
-
+          )}
+          {/* <Typography variant="h2" sx={{ fontWeight: 800 }} marginLeft="10px" alignItems="center" justifyContent="center" marginTop="5px">
+     {useInstitute()?.getDetails()?.institute_name ?? ''}
+  </Typography> */}
         </Box>
-        <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
-          <Avatar
-            variant="rounded"
-            sx={{
-              ...theme.typography.commonAvatar,
-              ...theme.typography.mediumAvatar,
-              transition: 'all .2s ease-in-out',
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
-              '&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
-              }
-            }}
-            onClick={handleLeftDrawerToggle}
-            color="inherit"
-          >
-            <IconMenu2 stroke={1.5} size="1.3rem" />
-          </Avatar>
-        </ButtonBase>
+        <Box sx={{ position: 'relative' }}>
+          {' '}
+          {/* Moves the Avatar 100px to the right */}
+          <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+            <Avatar
+              variant="rounded"
+              sx={{
+                ...theme.typography.commonAvatar,
+                ...theme.typography.mediumAvatar,
+                transition: 'all .2s ease-in-out',
+                background: theme.palette.secondary.light,
+                color: theme.palette.secondary.dark,
+                '&:hover': {
+                  background: theme.palette.secondary.dark,
+                  color: theme.palette.secondary.light
+                }
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleLeftDrawerToggle();
+              }}
+              color="inherit"
+            >
+              <IconMenu2 stroke={1.5} size="1.3rem" />
+            </Avatar>
+          </ButtonBase>
+        </Box>
       </Box>
 
       {/* header search */}
-      {/* <SearchSection /> */}
+      <SearchSection />
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
 

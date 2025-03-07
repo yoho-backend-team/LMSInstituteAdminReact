@@ -1,19 +1,11 @@
 import { useSelector } from 'react-redux';
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
-
-
-// routing
 import Routes from 'routes';
-
-// defaultTheme
 import themes from 'themes';
-
-// project imports
 import NavigationScroll from 'layout/NavigationScroll';
 import DisableNumInputScroll from 'components/disableNumberscroll';
-import { useEffect } from 'react';
 import { regSw, subscribe } from 'helpers';
 import Cookies from 'js-cookie';
 import SubscriptionExpiredPopup from 'components/pop-up/subscriptionPopup';
@@ -21,6 +13,8 @@ import UpgradePrompt from 'components/pop-up/freeTrialPopup';
 import { getInstituteCurrentSubscriptionStatus, UpgradSubscriptionPlanWithId } from 'features/common/services';
 import toast from 'react-hot-toast';
 import { useSpinner } from 'context/spinnerContext';
+import secureLocalStorage from 'react-secure-storage';
+import { getSecureItem, setSelectedBranchId } from 'utils/localStroageService';
 import usePushSubscription from 'usePushSubscription';
 
 // import { onMessageListener} from './firebase';
@@ -29,153 +23,101 @@ import usePushSubscription from 'usePushSubscription';
 const App = () => {
   const customization = useSelector((state) => state.customization);
   const [showOverlay, setShowOverlay] = useState(false);
-  // const [open, setOpen] = useState(false);
-  // const { show , hide  } = useSpinner()
-
-  if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                  console.log('Service Worker registered with scope:', registration.scope);
-                      const user = JSON.parse(localStorage.getItem("userData"))
-                      const selectBranchId = localStorage.getItem("selectedBranchId")
-                      usePushSubscription(user.role,user._id,user,user?.institute_id,JSON.parse(selectBranchId))
-                })
-                .catch((error) => {
-                  console.error('Service Worker registration failed:', error);
-                });
-            }
 
 
   const handleUpgradeClick = async () => {
-    try{
-      show()
+    try {
+      show();
       const getInstituteDetails = () => {
-        const institute_details = localStorage.getItem('institute')
-        if(institute_details){
-           try {
-           const parsed_data =  JSON.parse(institute_details)
-            return parsed_data
-           } catch (error) {
-             return institute_details
-           }
+        const institute_details = secureLocalStorage.getItem('institute');
+        if (institute_details) {
+          try {
+            const parsed_data = JSON.parse(institute_details);
+            return parsed_data;
+          } catch (error) {
+            return institute_details;
+          }
         }
-      }
-    
-      const response = await UpgradSubscriptionPlanWithId({ institute: getInstituteDetails()})
+      };
+      const response = await UpgradSubscriptionPlanWithId({ institute: getInstituteDetails() });
       setShowOverlay(false);
-      localStorage.setItem("requestPassed",true)
-      toast.success("Subscription Upgrade Request sended successfully")
-    }catch(error){
-     toast.error(error?.message)
-    }finally{
-      hide()
+      setSecureItem('requestPassed', true);
+      toast.success('Subscription Upgrade Request sent successfully');
+    } catch (error) {
+      toast.error(error?.message);
+    } finally {
+      hide();
     }
-
   };
 
   const handleCloseOverlay = () => {
-    localStorage.setItem("requestPassed",true)
+    setSecureItem('requestPassed', true);
     setShowOverlay(false);
   };
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
 
-  // const handleUpgrade = () => {
-  //   console.log("Redirecting to upgrade page...");
-  //   setOpen(false);
-  // };
-
-  // onMessageListener()
-  // .then((payload) => {
-  // })
-  // .catch((err) => );
-
-  // useEffect(()=>{
-  //   requestForToken()
-  // },[])
-
-  const regiserSubscription = async (role,userId,user,branch,institute) => {
+  const registerSubscription = async (role, userId, user, branch, institute) => {
     try {
-      const registeration = await regSw()
-      console.log(registeration,"registeration",institute,branch)
-      if(registeration){
-        await subscribe(registeration,role,userId,user,institute,branch)
+      const registration = await regSw();
+      if (registration) {
+        await subscribe(registration, role, userId, user, institute, branch);
       }
     } catch (error) {
-      console.log(error)
+      // console.log(error);
     }
-  }
+  };
 
-  
-
-  useEffect(() =>{
-    const isAuthenticatedUser = localStorage.getItem("isAuthenticated")
-    const selectBranchId = localStorage.getItem("selectedBranchId")
-    const user = JSON.parse(localStorage.getItem("userData"))
-    const notifiAdd = Cookies.get("instituteNotificationSubscription")
-    const branches = JSON.parse(localStorage.getItem('branches'));
-    console.log(selectBranchId)
-    if(!selectBranchId){
-      localStorage.setItem("selectedBranchId",branches?.[0]?.uuid)
+  useEffect(() => {
+    const isAuthenticatedUser = getSecureItem('isAuthenticated');
+    const selectBranchId = secureLocalStorage.getItem('selectedBranchId');
+    const user = getSecureItem('userData');
+    const notifiAdd = Cookies.get('instituteNotificationSubscription');
+    const branches = secureLocalStorage.getItem('branches');
+    
+    if (!selectBranchId) {
+      // localStorage.setItem("selectedBranchId",branches?.[0]?.uuid);
+      setSelectedBranchId(branches?.[0]?.uuid);
     }
     if(isAuthenticatedUser && !notifiAdd){
       console.log(user?.institute_id)
-       regiserSubscription(user?.role,user?._id,user,JSON.parse(selectBranchId),user?.institute_id)
+      //  regiserSubscription(user?.role,user?._id,user,JSON.parse(selectBranchId),user?.institute_id)
     }
-  },[])
+  }, []);
 
   const getSubscriptionStatusAndUpdate = async (data) => {
     try {
-     const response = await  getInstituteCurrentSubscriptionStatus(data)
-     console.log(response)
-     if(response?.planStatus){
-       setShowOverlay(true)
-     }
+      const response = await getInstituteCurrentSubscriptionStatus(data);
+      if (response?.planStatus) {
+        setShowOverlay(true);
+      }
     } catch (error) {
-      console.log(error)
+      // console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    const isAuthenticatedUser = localStorage.getItem("isAuthenticated")
-    const requestState = localStorage.getItem("requestPassed")
+    const isAuthenticatedUser = getSecureItem('isAuthenticated');
+    const requestState = secureLocalStorage.getItem('requestPassed');
 
     const getInstituteDetails = () => {
-      const institute_details = localStorage.getItem('institute')
-      if(institute_details){
-         try {
-         const parsed_data =  JSON.parse(institute_details)
-          return parsed_data
-         } catch (error) {
-           return institute_details
-         }
+      const institute_details = secureLocalStorage.getItem('institute');
+      if (institute_details) {
+        return institute_details;
       }
-    }
-  
-    
+    };
 
-    if(isAuthenticatedUser && !requestState&&!showOverlay){
-      const data = { institute : getInstituteDetails()?.uuid }
-     getSubscriptionStatusAndUpdate(data)
+    if (isAuthenticatedUser && !requestState && !showOverlay) {
+      const data = { institute: getInstituteDetails()?.uuid };
+      getSubscriptionStatusAndUpdate(data);
     }
-  },[])
-  
+  }, []);
+
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline />
         <DisableNumInputScroll />
         <NavigationScroll>
-          {/* {
-            open && <UpgradePrompt onClose={handleClose} onUpgrade={handleUpgrade} />
-          }*/}
-          {
-          showOverlay && <SubscriptionExpiredPopup
-           onClose={handleCloseOverlay}
-           onUpgrade={handleUpgradeClick}
-          />
-          } 
+          {showOverlay && <SubscriptionExpiredPopup onClose={handleCloseOverlay} onUpgrade={handleUpgradeClick} />}
           <Routes />
         </NavigationScroll>
       </ThemeProvider>

@@ -69,7 +69,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
       <Grid container spacing={2}>
         {liveClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}  >
-            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #07edc9', backgroundImage: `url(${DummyImage})`, backgroundPosition: "right" , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #07edc9',  backgroundPosition: "right" , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
            borderRadius: 2,
            transition: 'all 0.3s ease-in-out',
            '&:hover': {
@@ -89,7 +89,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                         WebkitBoxOrient: 'vertical',
                         textAlign: 'center'
                       }}
-                      variant="h3"
+                      variant="h4"
                       gutterBottom
                       textAlign="center"
                     >
@@ -148,37 +148,17 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                      <Typography variant="h4" >End Time</Typography>
                    </Box>
                 </Grid>
-                <Grid item justifyContent="space-between" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
-                  <Tooltip title="start date" >
-                    <Box sx={{  display: 'flex', flexDirection: "row", gap: "3px" }}>
-                      <IconCalendar />
-                      <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                      {new Date(card?.start_date).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  </Tooltip>
 
-                  <Typography sx={{ fontWeight: "bold"}} > - </Typography>
 
-                  <Tooltip title="Start time" >
-                    <Box sx={{ display: 'flex', gap: "3px", alignItems: "center"}} >
-                      <ScheduleIcon />
-                      <Typography variant="h6" sx={{ fontWeight: "bold"}} >
-                      {new Date(card?.start_time).toLocaleTimeString()}
-                      </Typography>
-                    </Box>
-                  </Tooltip>
-
-                  <Typography sx={{ fontWeight: "bold"}} >to</Typography>
-
-                  <Tooltip title="End time" >
-                    <Box sx={{ display: "flex", gap: "3px", alignItems: "center"}} >
-                        <ScheduleIcon />
-                        <Typography variant="h6" sx={{ fontWeight: "bold"}} >
-                         {new Date(card?.end_time).toLocaleTimeString()}
-                        </Typography>
-                    </Box>
-                  </Tooltip>
+                <Grid  item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
+                <Box>
+                    <IconCalendar />
+                  </Box>
+                  <Box sx={{ ml: 1 }}>
+                    <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
+                      {card?.start_date} / {card?.start_time} to {card?.end_time}{' '}
+                    </Typography>
+                  </Box>
 
                 </Grid>
 

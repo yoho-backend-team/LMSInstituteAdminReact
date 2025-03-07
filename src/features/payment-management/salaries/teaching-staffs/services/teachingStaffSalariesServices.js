@@ -1,5 +1,6 @@
 // groupService.js
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const TEACHING_STAFF_SALARIES_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/payments/staff-salary`;
 
@@ -8,7 +9,7 @@ export const getAllStaffSalaries = async (data) => {
     const response = await axios.get(`${TEACHING_STAFF_SALARIES_API_END_POINT}/all`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -28,7 +29,7 @@ export const addTeachingStaffSalary = async (data) => {
     const response = await axios.post(`${TEACHING_STAFF_SALARIES_API_END_POINT}`, data, {
       headers: {
         // 'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 
@@ -48,7 +49,7 @@ export const deleteTeachingStaffSalary = async (data) => {
     const response = await axios.delete(`${TEACHING_STAFF_SALARIES_API_END_POINT}/${data.transaction_id}`, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       },
       params: data
     });
@@ -65,7 +66,7 @@ export const updateTeachingStaffSalary = async (data) => {
     const response = await axios.put(`${TEACHING_STAFF_SALARIES_API_END_POINT}/update/${data._id}`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     }); 
    return { success: true, message: 'TeachingStaffSalary updated successfully' };
@@ -80,7 +81,7 @@ export const updateTeachingStaffSalaryStatus = async (data) => {
     const response = await axios.post(`${TEACHING_STAFF_SALARIES_API_END_POINT}/status`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem('token')}`
+        Authorization: `Token ${secureLocalStorage.getItem('token')}`
       }
     });
 

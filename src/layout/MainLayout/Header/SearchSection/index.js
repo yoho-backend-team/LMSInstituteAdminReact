@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
@@ -9,11 +10,11 @@ import {
   ButtonBase,
   Card,
   Grid,
-  //  InputAdornment,
   TextField,
   Popper,
   MenuItem
 } from '@mui/material';
+import { IconSearch } from '@tabler/icons';
 
 // third-party
 import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
@@ -21,15 +22,13 @@ import PopupState, { bindPopper, bindToggle } from 'material-ui-popup-state';
 // project imports
 import Transitions from 'components/extended/Transitions';
 import { updateSelectedBranch } from 'features/authentication/authActions';
-import { useDispatch } from 'react-redux';
-// assets
 
 import { shouldForwardProp } from '@mui/system';
+import { useEffect } from 'react';
+import secureLocalStorage from 'react-secure-storage';
 
-import { useSelector } from 'react-redux';
-
-// styles
-const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
+// Styles
+const PopperStyle = styled(Popper)(({ theme }) => ({
   zIndex: 1100,
   width: '99%',
   top: '-55px !important',
@@ -42,7 +41,6 @@ const PopperStyle = styled(Popper, { shouldForwardProp })(({ theme }) => ({
 const OutlineInputStyle = styled(TextField)(({ theme }) => ({
   minWidth: 434,
   marginLeft: 16,
-  // paddingLeft: 16,
   paddingRight: 16,
   '& input': {
     background: 'transparent !important',
@@ -69,57 +67,36 @@ const HeaderAvatarStyle = styled(Avatar, { shouldForwardProp })(({ theme }) => (
   }
 }));
 
-// ==============================|| SEARCH INPUT - MOBILE||============================== //
-
-const MobileSearch = () =>
-// { value, setValue, popupState }
-{
-  // const theme = useTheme();
-
-  return (
-    <OutlineInputStyle
-      id="input-search-header"
-      select
-      sx={{
-          backgroundColor : "red"
-      }}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      placeholder="Branch"
-      aria-describedby="search-helper-text"
-      inputProps={{ 'aria-label': 'weight' }}
-    />
-  );
-};
-
-MobileSearch.propTypes = {
-  value: PropTypes.string,
-  setValue: PropTypes.func,
-  popupState: PopupState
-};
-
-// ==============================|| SEARCH INPUT ||============================== //
-
 const SearchSection = () => {
   const theme = useTheme();
-  const [value, setValue] = useState('Keelkattalai');
-  // Inside your component
+
   const branches = useSelector((state) => state.auth.branches);
-  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const dispatch = useDispatch();
-  console.log(selectedBranchId,"selectedBranchId",branches,branches?.[0]?.uuid === selectedBranchId,typeof(selectedBranchId),typeof(branches?.[0]?.uuid),selectedBranchId )
+
+  const primeBranch = branches.find((branch) => branch.isPrimary) || {};
+  const [defaultValue, setDefaultValue] = useState(primeBranch.uuid);
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId) || primeBranch.uuid;
+
+  useEffect(() => {
+    // if (primeBranch.uuid) {
+    //   dispatch(updateSelectedBranch(primeBranch.uuid));
+    //   localStorage.setItem('selectedBranchId', primeBranch.uuid);
+    // }
+  }, [dispatch, primeBranch]);
+
   return (
     <>
-      <Box sx={{ display: 'flex',justifyConetent:'flex-center',alignItems:'center',width:'100%' }}>
+      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
         <PopupState variant="popper" popupId="demo-popup-popper">
           {(popupState) => (
             <>
-            <Box sx={{ ml: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
-  <ButtonBase sx={{ borderRadius: '12px' }}>
-    
-  </ButtonBase>
-</Box>
-
+              <Box sx={{ ml: 2 }}>
+                <ButtonBase sx={{ borderRadius: '12px' }}>
+                  <HeaderAvatarStyle variant="rounded" {...bindToggle(popupState)}>
+                    <IconSearch stroke={1.5} size="1.2rem" />
+                  </HeaderAvatarStyle>
+                </ButtonBase>
+              </Box>
               <PopperStyle {...bindPopper(popupState)} transition>
                 {({ TransitionProps }) => (
                   <>
@@ -136,7 +113,7 @@ const SearchSection = () => {
                         <Box sx={{ p: 2 }}>
                           <Grid container alignItems="center" justifyContent="space-between">
                             <Grid item xs>
-                              <MobileSearch value={value} setValue={setValue} popupState={popupState} />
+                              <MobileSearch value={defaultValue} setDefaultValue={setDefaultValue} popupState={popupState} />
                             </Grid>
                           </Grid>
                         </Box>
@@ -149,14 +126,14 @@ const SearchSection = () => {
           )}
         </PopupState>
       </Box>
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+
+      <Box sx={{ display: { xs: 'block', md: 'block' } }}>
         <OutlineInputStyle
           id="input-search-header"
           value={selectedBranchId?.trim()}
           onChange={(e) => {
-
             dispatch(updateSelectedBranch(e.target.value));
-            localStorage.setItem('selectedBranchId', e.target.value)
+            secureLocalStorage.setItem('selectedBranchId', e.target.value);
           }}
           placeholder="Search"
           aria-describedby="search-helper-text"
@@ -173,6 +150,12 @@ const SearchSection = () => {
       </Box>
     </>
   );
+};
+
+SearchSection.propTypes = {
+  value: PropTypes.string,
+  setValue: PropTypes.func,
+  popupState: PopupState
 };
 
 export default SearchSection;

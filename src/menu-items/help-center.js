@@ -1,14 +1,9 @@
 // assets
-import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconHelp } from '@tabler/icons';
 
 // constant
+import { IconKey, IconShieldLock, IconUser, IconUsers, IconCash, IconHelp } from '@tabler/icons';
 const icons = {
-  IconKey,
-  IconShieldLock,
-  IconUser,
-  IconUsers,
-  IconCash,
-  IconHelp
+  Icon1: IconHelp
 };
 import AddIcon from '@mui/icons-material/Add';
 import { hasPermission } from 'hooks/hasPermissions';
@@ -23,7 +18,7 @@ const pages = {
       id: 'authentication',
       title: 'Help Center',
       type: 'collapse',
-      icon: icons.IconHelp,
+      icon: icons.Icon1,
 
       children: [
         {
@@ -31,10 +26,10 @@ const pages = {
           title: 'Help Faqs',
           type: 'item',
           url: '/help-center/help-faqs',
-          icon: icons.IconHelp,
+          icon: icons.Icon1,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_help_faqs_support_view','Help Faqs')
+          visible: hasPermission('inst_help_faqs_support_view', 'Help Faqs')
         },
         {
           id: 'Add Help Category',
@@ -44,7 +39,7 @@ const pages = {
           icon: AddIcon,
           target: false,
           breadcrumbs: false,
-          visible: hasPermission('inst_help_faqs_support_view','Help Faqs')
+          visible: hasPermission('inst_help_faqs_support_view', 'Help Faqs')
         }
       ]
     }
