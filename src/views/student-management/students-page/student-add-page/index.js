@@ -477,62 +477,66 @@ const handleClose = () => {
             </Grid>
 
             <Grid item xs={12} sm={6}>
-              <Controller
-                name="branch"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeBranches}
-                    getOptionLabel={(option) => option.branch_identity}
-                    value={activeBranches.find((branch) => branch.uuid === value) || null}
-                    onChange={(event, newValue) => {
-                      setValue('branch', newValue ? newValue.uuid : '');
-                      getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Select Branch"
-                        error={Boolean(personalErrors['branch'])}
-                        helperText={personalErrors.branch?.message}
-                        id="custom-select"
-                        aria-describedby="stepper-linear-personal-branch"
-                      />
-                    )}
-                  />
-                </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="course"
-                control={personalControl}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
-                  <Autocomplete
-                    fullWidth
-                    options={activeCourse}
-                    getOptionLabel={(option) => option.course_name}
-                    value={activeCourse.find((course) => course.uuid === value) || null}
-                    onChange={(event, newValue) => {
-                      onChange(newValue ? newValue.uuid : '');
-                      getActiveBatchesByCourse(newValue ? { courseId: newValue.uuid } : '')
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Select Course"
-                        error={Boolean(personalErrors['course'])}
-                        helperText={personalErrors.course?.message}
-                        id="custom-select"
-                        aria-describedby="stepper-linear-personal-course"
-                      />
-                    )}
-                  />
-                </Grid>
+                <Controller
+                  name="branch"
+                  control={personalControl}
+                  rules={{ required: true }}
+                  render={({ field: { value } }) => (
+                    <Autocomplete
+                      fullWidth
+                      options={activeBranches}
+                      getOptionLabel={(option) => option.branch_identity}
+                      value={activeBranches.find((branch) => branch.uuid === value) || null}
+                      onChange={(event, newValue) => {
+                        setValue('branch', newValue ? newValue.uuid : '');
+                        getActiveCoursesByBranch(newValue ? { branch_id: newValue.uuid } : '');
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Select Branch"
+                          error={Boolean(personalErrors.branch)}
+                          helperText={personalErrors.branch?.message}
+                          id="custom-select"
+                          aria-describedby="stepper-linear-personal-branch"
+                        />
+                      )}
+                    />
+                  )}
+                />
               </Grid>
-            </Grid>
+
+
+              <Grid item xs={12} sm={6}>
+               <Controller
+                 name="course"
+    control={personalControl}
+    rules={{ required: true }}
+    render={({ field: { value, onChange } }) => (
+      <Autocomplete
+        fullWidth
+        options={activeCourse}
+        getOptionLabel={(option) => option.course_name}
+        value={activeCourse.find((course) => course.uuid === value) || null}
+        onChange={(event, newValue) => {
+          onChange(newValue ? newValue.uuid : '');
+          getActiveBatchesByCourse(newValue ? { courseId: newValue.uuid } : '');
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Select Course"
+            error={Boolean(personalErrors.course)}
+            helperText={personalErrors.course?.message}
+            id="custom-select"
+            aria-describedby="stepper-linear-personal-course"
+          />
+        )}
+      />
+                 )}
+               />
+              </Grid>
+
 
             {/* Contact Info Section */}
             <Grid item xs={12}>

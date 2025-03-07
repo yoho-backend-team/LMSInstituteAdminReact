@@ -31,6 +31,7 @@ import { useSpinner } from 'context/spinnerContext';
 import { getImageUrl } from 'utils/imageUtils';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en'; // Add your preferred locale
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -113,7 +114,7 @@ const StepperLinearWithValidation = () => {
     address_line_one: yup.string().required('Address line one is required'),
     address_line_two: yup.string().required('Address line two is required'),
     date_of_birth: yup.string().required('Date of birth is required'),
-    gender: yup.string().required('Gender is required')
+    gender: yup.string().required('Gender is required'),
     // username: yup
     //   .string()
     //   .required('Username is required')
@@ -543,6 +544,7 @@ const StepperLinearWithValidation = () => {
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <Controller
                       name="date_of_birth"
                       control={personalControl}
@@ -551,7 +553,7 @@ const StepperLinearWithValidation = () => {
                         <DatePicker
                           id="issue-date"
                           dateFormat={'dd/MM/yyyy'}
-                          value={value}
+                          value={ value ? new Date(value) : null}
                           selected={value}
                           customInput={
                             <CustomInput
@@ -565,6 +567,7 @@ const StepperLinearWithValidation = () => {
                         />
                       )}
                     />
+                  </LocalizationProvider>
                   </Grid>
 
                   <Grid item xs={12} sm={6}>
