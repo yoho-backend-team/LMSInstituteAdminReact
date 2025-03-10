@@ -7,7 +7,11 @@ const STAFF_TICKET_UPDATE_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_UR
 
 export const getAllStaffTickets = async (data) => {
   try {
+    console.log('sending data',data);
+    
     const response = await client.ticket.staff_ticket(data)
+    console.log('received response:',response);
+    
     // Check if the response status is successful
     return response;
   } catch (error) {
