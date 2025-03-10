@@ -23,6 +23,7 @@ import StaffManagementView from 'components/cards/Skeleton/StaffManagementView';
 import Animations from './Animations';
 import StaffManagementViewsample from './Animations';
 import secureLocalStorage from 'react-secure-storage';
+import client from 'api/client/index';
 
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root:before': {
@@ -40,34 +41,27 @@ const UserViewAccount = ({ id }) => {
   useEffect(() => {
     setCurrentPage(1);
     getUserLog(id, '1');
-  }, [id]);
+  }, [id ,]);
 
   const getUserLog = async (userId, page) => {
     // console.log('User ID:', userId, 'Page:', page);
     
 
     try {
-      const token = localStorage.getItem('token');
+      const data = { page : page}
+     
 
-      if (!token) {
-        console.error('Authentication token is missing!');
-        toast.error('Authentication token is missing!');
-        return;
-      }
-      const response = await axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/institutes/user/activities/`, {
-        params: { user_id: userId, page: page },
-        headers: { Authorization: `Bearer ${'Token ' + token}` }
-      });
+      const response = await client.activity.get(data);
       // console.log(response.data.pagination.totalPages);
       
-      console.log(response.data);
+      console.log(response);
 
-      if (response.data.status === 'success') {
+      if (response.status === 'success') {
         setLoading(false);
         setActivityLog(response.data); // Update your state
-        setTotalPages(response.data.pagination.totalPages); // Total pages from API response
-        setCurrentPage(response.data.pagination.currentPage); // Update current page
-        toast.success(response.data?.message);
+        setTotalPages(response.pagination.totalPages); // Total pages from API response
+        setCurrentPage(response.pagination.currentPage); // Update current page
+        toast.success(response.message);
         
         return;
       }
@@ -104,7 +98,7 @@ const UserViewAccount = ({ id }) => {
       <StaffManagementViewsample />) :(
           <CardContent sx={{ height: '63vh',  overflow: 'scroll' }}>
             <Timeline>
-              {activityLog?.data?.map((item, index) => (
+              {activityLog.map((item, index) => (
                 <TimelineItem key={index}>
                   <TimelineSeparator>
                     <TimelineDot color="warning" />
