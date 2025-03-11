@@ -34,6 +34,8 @@ const AllNotifications = () => {
     fetchNotifications(newValue);
   };
 
+   let readNotification = []; let unreadNotification =[];
+
   // Fetch notifications based on the selected status
   const fetchNotifications = async (status) => {
     setLoading(true);
@@ -50,6 +52,14 @@ const AllNotifications = () => {
       setLoading(false);
     }
   };
+
+   notifications.map(item=>{
+    if (item.status == 'unread') {
+          unreadNotification.push(item)
+    }else{
+          readNotification.push(item)
+    }
+  })
 
   // Fetch notifications initially based on query params
   useEffect(() => {
@@ -84,10 +94,10 @@ const AllNotifications = () => {
   };
 
   // Render notifications list
-  const renderNotifications = () => (
+  const renderNotifications = (notification) => (
     <Grid container spacing={2}>
-      {notifications.length > 0 ? (
-        notifications.map((item, index) => (
+      {notification.length > 0 ? (
+        notification.map((item, index) => (
           <Grid item xs={12} key={index}>
             <Box
               onClick={() => handleNotificationClick(item)}
@@ -173,9 +183,9 @@ const AllNotifications = () => {
             <Tab value="read" label="Read" />
             <Tab value="unread" label="Unread" />
           </TabList>
-          <TabPanel value="all">{loading ? 'Loading...' : renderNotifications()}</TabPanel>
-          <TabPanel value="read">{loading ? 'Loading...' : renderNotifications()}</TabPanel>
-          <TabPanel value="unread">{loading ? 'Loading...' : renderNotifications()}</TabPanel>
+          <TabPanel value="all">{loading ? 'Loading...' : renderNotifications(notifications)}</TabPanel>
+          <TabPanel value="read">{loading ? 'Loading...' : renderNotifications(readNotification)}</TabPanel>
+          <TabPanel value="unread">{loading ? 'Loading...' : renderNotifications(unreadNotification)}</TabPanel>
         </TabContext>
         {renderModal()}
       </CardContent>
