@@ -78,6 +78,7 @@ export const showSessionExpiredModal = () => {
 
 Axios.interceptors.request.use((config)=> {
     const token = getSecureItem("token");
+    console.log(token,"token")
     // console.log(config,"config")
     if(token){
         config.headers["Authorization"] = `Token ${token ? token :""}`;

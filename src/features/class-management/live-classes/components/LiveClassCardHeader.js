@@ -49,7 +49,7 @@ const LiveClassCardHeader = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <TextField
+        {/* <TextField
           value={searchValue}
           sx={{
             width: "80%"
@@ -63,7 +63,7 @@ const LiveClassCardHeader = (props) => {
               ))}
             </>
           }
-        />
+        /> */}
 
          
         
