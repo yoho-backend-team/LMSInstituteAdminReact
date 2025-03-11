@@ -34,9 +34,10 @@ export const getAllBatches = async (data) => {
 };
 export const getBatchesByCourse = async (data) => {
   try {
+    console.log('batches sending data:', data);
     const response = await client.batch.getAll(data)
     // Check if the response status is successful
-    console.log(response.data);
+    console.log('batch api response',response.data);
     
       return { success: true, data: response.data };
       

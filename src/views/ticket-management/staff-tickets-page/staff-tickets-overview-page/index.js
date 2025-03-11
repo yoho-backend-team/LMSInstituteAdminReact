@@ -31,28 +31,10 @@ const StaffTicketsPage = () => {
   const [refetch, setRefetch] = useState(false);
   const [error, setError] = useState(null);
 
+
+  
   useEffect(() => {
-    const fetchOpenTickets = async () => {
-      try {
-        setError(null); 
-        const response = await dispatch(getAllStaffOpenTickets({ 
-          branch_id: selectedBranchId, 
-          status: 'opened', 
-          page: '1', 
-          institute_id: useInstitute().getInstituteId() 
-        }));
-        console.log('open ticket response',response);
-  
-        
-        if (response.error) {
-          throw new Error(response.error.message || "Failed to fetch open tickets.");
-        }
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-  
-    fetchOpenTickets();
+    dispatch(getAllStaffOpenTickets({ branch_id: selectedBranchId, status: 'opened', page: '1', institute_id: useInstitute().getInstituteId() }));
   }, [selectedBranchId, dispatch, refetch]);
   
 
