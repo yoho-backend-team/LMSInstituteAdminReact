@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField as CustomTextField, TextField } from '@mui/material';
+import { TextField as CustomTextField, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Autocomplete from '@mui/material/Autocomplete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -25,12 +25,13 @@ import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useInstitute } from 'utils/get-institute-details';
 import { getImageUrl } from 'utils/imageUtils';
-import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
-import { imagePlaceholder } from 'utils/placeholders';
+// import ImagePlaceholder from 'components/cards/Skeleton/ImagePlaceholder';
+// import { imagePlaceholder } from 'utils/placeholders';
 import { useSpinner } from 'context/spinnerContext';
-import UploadIcon from '@mui/icons-material/Upload';
-import 'dayjs/locale/en'; // Add your preferred locale
+// import UploadIcon from '@mui/icons-material/Upload';
+import { getBatchesByCourse } from 'features/batch-management/batches/services/batchServices';
 
+import 'dayjs/locale/en';
 import { Stepper, Step, StepLabel } from '@mui/material';
 
 const StepperLinearWithValidation = () => {
@@ -82,11 +83,11 @@ const StepperLinearWithValidation = () => {
     address_line_one: yup.string().required('Address Line One is required'),
     address_line_two: yup.string().required('Address Line Two is required'),
     date_of_birth: yup.string().required(),
-    gender: yup.string().required(),
-    username: yup
-      .string()
-      .required('User Name is required')
-      .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters')
+    gender: yup.string().required()
+    // username: yup
+    //   .string()
+    //   .required('User Name is required')
+    //   .matches(/^[a-zA-Z0-9\s]+$/, 'User Name should not contain special characters')
     // staffId:yup.string().required('Unique Id'),
   });
 
@@ -94,6 +95,10 @@ const StepperLinearWithValidation = () => {
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const Navigate = useNavigate();
   const { show, hide } = useSpinner();
+
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const data = {
@@ -116,11 +121,12 @@ const StepperLinearWithValidation = () => {
     date_of_birth: '',
     gender: '',
     course: '',
+    batch:'',
     branch: selectedBranchId,
-    designation: '',
+    // designation: '',
     education_qualification: '',
     // username: '',
-    studentId: '',
+    // studentId: '',
     logo: ''
   };
 
@@ -135,6 +141,7 @@ const StepperLinearWithValidation = () => {
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
     getActiveBranchesByUser();
+    getActiveBatchesByCourse()
   }, []);
 
   const getActiveBranchesByUser = async () => {
@@ -193,7 +200,7 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState('');
+  const [logoSrc, setLogoSrc] = useState('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
 
   const handleInputImageChange = async (file) => {
     show();
@@ -210,6 +217,22 @@ const StepperLinearWithValidation = () => {
     setLogoSrc(
       'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
     );
+  };
+
+  const [activeBatches, setActiveBatches] = useState();
+  console.log(activeBatches, 'activeBatches');
+
+  const getActiveBatchesByCourse = async (courseId) => {
+    show();
+    const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
+    const result = await getBatchesByCourse(data);
+    
+    if (result?.success) {
+      hide();
+      setActiveBatches(result?.data);
+    } else {
+      hide();
+    }
   };
 
   const onSubmit = async () => {
@@ -233,13 +256,15 @@ const StepperLinearWithValidation = () => {
         alternate_phone_number: '+91' + personalData?.alt_phone
       },
       qualification: personalData.qualification,
-      username : personalData.username,
+      username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
       branch_id: personalData.branch,
+      batch_id: personalData.batch,
       course: personalData.course,
-      image: logo,
-      studentId: personalData.studentId
+      logo: logo,
+      type:'payment'
+      // studentId: personalData.studentId
     };
 
     try {
@@ -247,17 +272,34 @@ const StepperLinearWithValidation = () => {
 
       if (result.success) {
         hide();
+        setDialogTitle('Success');
+        setDialogMessage(result.message);
+        setOpen(true);
         toast.success(result.message);
         Navigate(-1);
+        return;
       } else {
         hide();
+        setDialogTitle('Error');
+        setDialogMessage(result.message);
+        setOpen(true);
         toast.error(result.message);
       }
     } catch (error) {
       hide();
+      setDialogTitle('Error');
+      setDialogMessage('An error occurred while adding the student.');
+      setOpen(true);
       console.log(error);
     }
     // }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    if (dialogTitle === 'Success') {
+      Navigate(-1);
+    }
   };
 
   return (
@@ -357,7 +399,7 @@ const StepperLinearWithValidation = () => {
                   width: '100%',
                   boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                   backgroundColor: 'grey.100'
-                 }}
+                }}
               >
                 <Grid container spacing={3}>
                   {[
@@ -366,7 +408,8 @@ const StepperLinearWithValidation = () => {
                     { name: 'student_email', label: 'Email', placeholder: 'example@email.com' },
                     { name: 'date_of_birth', label: 'Date Of Birth', component: DatePicker },
                     { name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'] },
-                    { name: 'qualification', label: 'Qualification' }
+                    { name: 'qualification', label: 'Qualification' },
+                    { name: 'batch', label: 'Batch' , options: ['Morning', 'Afternoon'] }
                   ].map(({ name, label, placeholder, component, options }, index) => (
                     <Grid item xs={12} sm={6} key={index}>
                       <Controller
@@ -497,17 +540,18 @@ const StepperLinearWithValidation = () => {
                   Contact Info
                 </Typography>
               </Box>
-              <Box 
-              sx={{ 
-                flex: 2,
-                border: '1px solid',
-                borderColor: 'grey.200',
-                padding: '20px',
-                borderRadius: '8px',
-                width: '100%',
-                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                backgroundColor: 'grey.100' 
-                }}>
+              <Box
+                sx={{
+                  flex: 2,
+                  border: '1px solid',
+                  borderColor: 'grey.200',
+                  padding: '20px',
+                  borderRadius: '8px',
+                  width: '100%',
+                  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                  backgroundColor: 'grey.100'
+                }}
+              >
                 <Grid container spacing={3}>
                   {[
                     { name: 'address_line_one', label: 'Address Line One' },
@@ -556,6 +600,47 @@ const StepperLinearWithValidation = () => {
             </Grid>
           </Grid>
         </form>
+
+        <Dialog
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        sx: {
+          borderRadius: 3, // Rounded corners
+          boxShadow: 6, // Subtle shadow effect
+          padding: 2,
+          backgroundColor: "#fff",
+          maxWidth: "400px",
+        },
+      }}
+      transitionDuration={300} // Smooth fade effect
+    >
+      <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", color: "#333", textAlign: "center" }}>
+        {dialogTitle}
+      </DialogTitle>
+      <DialogContent sx={{ textAlign: "center" }}>
+        <Typography sx={{ fontSize: "1rem", color: "#666", lineHeight: 1.5 }}>
+          {dialogMessage}
+        </Typography>
+      </DialogContent>
+      <DialogActions sx={{ justifyContent: "center", paddingBottom: 2 }}>
+        <Button
+          onClick={handleClose}
+          sx={{
+            backgroundColor: "#007bff",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#0056b3" },
+            padding: "8px 20px",
+            borderRadius: 2,
+            textTransform: "none",
+            fontWeight: "bold",
+          }}
+        >
+          OK
+        </Button>
+      </DialogActions>
+    </Dialog>
+
       </CardContent>
     </Card>
   );

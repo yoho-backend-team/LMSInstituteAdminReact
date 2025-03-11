@@ -41,6 +41,7 @@ const StaffTicketsPage = () => {
           page: '1', 
           institute_id: useInstitute().getInstituteId() 
         }));
+        console.log('open ticket response',response);
   
         
         if (response.error) {
