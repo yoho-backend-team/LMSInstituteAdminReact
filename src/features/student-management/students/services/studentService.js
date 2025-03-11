@@ -48,8 +48,9 @@ export const getAllStudents = async (data) => {
 
 export const addStudent = async (data) => {
   try {
-    const response = await client.users.studentRegister(data)  
-    if(response.data){
+    const response = await client.users.studentRegister(data) 
+    console.log('student response',response); 
+    if(response.status){
 
       return { success: true, message: 'Student created successfully' };
     }

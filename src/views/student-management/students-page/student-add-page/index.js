@@ -222,7 +222,7 @@ const StepperLinearWithValidation = () => {
     );
   };
 
-  const [activeBatches, setActiveBatches] = useState();
+  const [activeBatches, setActiveBatches] = useState([]);
   console.log( 'activeBatches',activeBatches);
   console.log( 'activecourse',activeCourse);
 
@@ -231,11 +231,11 @@ const StepperLinearWithValidation = () => {
     show();
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
-    console.log( 'result batches',result,);
+    console.log( 'result batches',result);
 
     if (result?.success) {
       hide();
-      setActiveBatches(result);
+      setActiveBatches(result.data);
     } else {
       hide();
     }
@@ -275,7 +275,7 @@ const StepperLinearWithValidation = () => {
 
     try {
       const result = await addStudent(student_data);
-
+      console.log('student add result:',result)
       if (result.success) {
         hide();
         setDialogTitle('Success');
@@ -542,7 +542,7 @@ const StepperLinearWithValidation = () => {
                           fullWidth
                           options={activeBatches }
                           getOptionLabel={(option) => option.batch_name}
-                          value={activeBatches }
+                          value={activeBatches.find(batch => batch.uuid === value) || null }
                           onChange={(event, newValue) => {
                             setValue('batch', newValue ? newValue.uuid : '');
                           }}
