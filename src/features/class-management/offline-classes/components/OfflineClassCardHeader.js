@@ -54,7 +54,7 @@ const OfflineClassCardHeader = (props) => {
           justifyContent: 'space-between'
         }}
       >
-        <TextField
+        {/* <TextField
           value={searchValue}
           sx={{
             width: '80%'
@@ -84,7 +84,7 @@ const OfflineClassCardHeader = (props) => {
               ))}
             </>
           }
-        />
+        /> */}
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', mt: { xs: 3, sm: 0 } }}>
           <Button onClick={() => handleAdd()} variant="contained" color="primary" startIcon={<Icon icon="tabler:plus" />}>
             Add Offline Class

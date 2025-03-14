@@ -31,7 +31,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
   const [selectedClass, setSelectedClass] = useState('');
   const [liveclassDeleteModelOpen, setLiveclassDeleteModelOpen] = useState(false);
   const [selectedLiveclassDeleteId, setSelectedLiveclassDeleteId] = useState(null);
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner()
 
   const handleDelete = useCallback((itemId) => {
     setSelectedLiveclassDeleteId(itemId);
@@ -69,13 +69,15 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
       <Grid container spacing={2}>
         {liveClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}  >
-            <Card sx={{ p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #07edc9',  backgroundPosition: "right" , boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
-           borderRadius: 2,
-           transition: 'all 0.3s ease-in-out',
-           '&:hover': {
-            transform: 'scale(1.05) translateY(-4px)', 
-             boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-           }}}>
+            <Card sx={{
+              p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #07edc9', backgroundPosition: "right", boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+              borderRadius: 2,
+              transition: 'all 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.05) translateY(-4px)',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              }
+            }}>
               <Grid container direction="column" spacing={1}>
                 <Grid item sx={{ alignItems: 'center', justifyContent: "flex-start", display: 'flex', mt: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -98,9 +100,9 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                   </Box>
                 </Grid>
                 <Grid item sx={{ justifyContent: "space-between", display: 'flex', mb: 2, mt: 1 }}>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center"}} >
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center" }} >
                     <Typography variant="h5" >{card?.batch?.student?.length} Students</Typography>
-                    <AvatarGroup className="pull-up" max={4} sx={{ justifyContent: "center"}} >
+                    <AvatarGroup className="pull-up" max={4} sx={{ justifyContent: "center" }} >
                       {card?.batch?.student?.map((student, studentIndex) => {
                         return (
                           <Tooltip title={student?.full_name} >
@@ -114,49 +116,80 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
                       })}
                     </AvatarGroup>
                   </Box>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center"}} >
-                     <Typography variant="h5" >{card?.instructors?.length} Instructors</Typography>
-                     <AvatarGroup max={2} sx={{ justifyContent: "center"}} >
-                       {
-                        card?.instructors?.map((instructor,index) => {
-                          return(
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center" }} >
+                    <Typography variant="h5" >{card?.instructors?.length} Instructors</Typography>
+                    <AvatarGroup max={2} sx={{ justifyContent: "center" }} >
+                      {
+                        card?.instructors?.map((instructor, index) => {
+                          return (
                             <Tooltip title={instructor?.full_name} >
-                               <Avatar 
+                              <Avatar
                                 key={instructor?._id}
                                 src={getImageUrl(instructor?.image)}
                                 alt={instructor?.full_name}
-                               />
+                              />
                             </Tooltip>
                           )
-                        }) 
-                       }
-                     </AvatarGroup>
+                        })
+                      }
+                    </AvatarGroup>
                   </Box>
                 </Grid>
 
                 <Grid item justifyContent="center" display="none">
                   <Typography sx={{ fontWeight: '500' }}>{card?.batch?.student?.length ?? 0} Students on this class</Typography>
                 </Grid>
-                <Grid sx={{ display: "none", justifyContent: "space-between",ml:1}} >
-                   <Box>
-                     <Typography variant="h4" >Start Date</Typography>
-                   </Box>
-                   <Box>
-                     <Typography variant="h4" >Start Time</Typography>
-                   </Box>
-                   <Box>
-                     <Typography variant="h4" >End Time</Typography>
-                   </Box>
+                <Grid sx={{ display: "none", justifyContent: "space-between", ml: 1 }} >
+                  <Box>
+                    <Typography variant="h4" >Start Date</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="h4" >Start Time</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="h4" >End Time</Typography>
+                  </Box>
                 </Grid>
 
 
-                <Grid  item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
-                <Box>
+                <Grid item justifyContent="center" alignItems="center" sx={{ verticalAlign: 'center' }} display="flex" mb={2}>
+                  <Box>
                     <IconCalendar />
                   </Box>
                   <Box sx={{ ml: 1 }}>
                     <Typography variant="h6" sx={{ alignItems: 'center', display: 'flex', fontWeight: 'bold' }}>
-                      {card?.start_date} / {card?.start_time} to {card?.end_time}{' '}
+                      {/* {card?.start_date} / {card?.start_time} to {card?.end_time}{' '} */}
+                      {card?.start_date
+                        ? new Date(card.start_date).toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })
+                        : "Invalid Date"}
+
+                      {" | "}
+
+                      {card?.start_time
+                        ? new Date(card.start_time).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })
+                        : "Invalid Time"}
+
+                      {" - "}
+
+                      {card?.end_time
+                        ? new Date(card.end_time).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: true
+                        })
+                        : "Invalid Time"}
+
+
+
                     </Typography>
                   </Box>
 
