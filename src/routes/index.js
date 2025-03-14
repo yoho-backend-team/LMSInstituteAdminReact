@@ -141,6 +141,9 @@ const EditTeachingStaff = Loadable(lazy(() => import('views/staff-management/tea
 const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-management/non-teaching-staffs-page/staff[id]-page')));
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students-page/student-overview-page')));
+const ReportGenerator = Loadable(lazy(() => import('views/report-generation')));
+const ViewReport = Loadable(lazy(() => import('views/report-generation'))); ;
+const ScheduleReport = Loadable(lazy(() => import('views/report-generation'))); ;;
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students-page/student[id]-page')));
 const AddNewStudent = Loadable(lazy(() => import('views/student-management/students-page/student-add-page')));
 const EditStudent = Loadable(lazy(() => import('views/student-management/students-page/student-edit-page')));
@@ -862,11 +865,13 @@ const ApplicationRoutes = () => {
       <Route element={<MinimalLayout />}>
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Route>
-      
-      {/* route to check the session expire modal */}
-      {/* <Route element={<MinimalLayout />}>
-      <Route path="/test" element={<TestModal />} />
-      </Route> */}
+
+ 
+
+     
+      <Route element={<MinimalLayout />}>
+      <Route path="/report" element={<ReportGenerator />} />
+      </Route>
 
      {/* otp page */}
       {/* <Route path="/forget-password" element={<MainLayout />}>
@@ -889,6 +894,8 @@ const ApplicationRoutes = () => {
         <Route path="/server-error" element={<Page500 />} />
       </Route>
     </Routes>
+
+    
   );
 };
 
