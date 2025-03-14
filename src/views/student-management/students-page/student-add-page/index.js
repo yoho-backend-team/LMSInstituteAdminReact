@@ -121,7 +121,7 @@ const StepperLinearWithValidation = () => {
     date_of_birth: '',
     gender: '',
     course: '',
-    batch:'',
+    batch: '',
     branch: selectedBranchId,
     // designation: '',
     education_qualification: '',
@@ -132,6 +132,7 @@ const StepperLinearWithValidation = () => {
 
   const getActiveCoursesByBranch = async (data) => {
     const result = await getAllCourses(data);
+    console.log('course result :',result)
 
     if (result?.data) {
       setActiveCourse(result?.data);
@@ -141,7 +142,7 @@ const StepperLinearWithValidation = () => {
   const [activeBranches, setActiveBranches] = useState([]);
   useEffect(() => {
     getActiveBranchesByUser();
-    getActiveBatchesByCourse()
+    getActiveBatchesByCourse();
   }, []);
 
   const getActiveBranchesByUser = async () => {
@@ -200,7 +201,9 @@ const StepperLinearWithValidation = () => {
   }));
 
   const [logo, setLogo] = useState('');
-  const [logoSrc, setLogoSrc] = useState('https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg');
+  const [logoSrc, setLogoSrc] = useState(
+    'https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352010-stock-illustration-default-placeholder-man-and-woman.jpg'
+  );
 
   const handleInputImageChange = async (file) => {
     show();
@@ -219,17 +222,20 @@ const StepperLinearWithValidation = () => {
     );
   };
 
-  const [activeBatches, setActiveBatches] = useState();
-  console.log(activeBatches, 'activeBatches');
+  const [activeBatches, setActiveBatches] = useState([]);
+  console.log( 'activeBatches',activeBatches);
+  console.log( 'activecourse',activeCourse);
 
   const getActiveBatchesByCourse = async (courseId) => {
+    console.log("entering the function",courseId)
     show();
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
-    
+    console.log( 'result batches',result);
+
     if (result?.success) {
       hide();
-      setActiveBatches(result?.data);
+      setActiveBatches(result.data);
     } else {
       hide();
     }
@@ -263,13 +269,13 @@ const StepperLinearWithValidation = () => {
       batch_id: personalData.batch,
       course: personalData.course,
       logo: logo,
-      type:'payment'
+      type: 'payment'
       // studentId: personalData.studentId
     };
 
     try {
       const result = await addStudent(student_data);
-
+      console.log('student add result:',result)
       if (result.success) {
         hide();
         setDialogTitle('Success');
@@ -408,8 +414,7 @@ const StepperLinearWithValidation = () => {
                     { name: 'student_email', label: 'Email', placeholder: 'example@email.com' },
                     { name: 'date_of_birth', label: 'Date Of Birth', component: DatePicker },
                     { name: 'gender', label: 'Gender', options: ['Male', 'Female', 'Other'] },
-                    { name: 'qualification', label: 'Qualification' },
-                    { name: 'batch', label: 'Batch' , options: ['Morning', 'Afternoon'] }
+                    { name: 'qualification', label: 'Qualification' }
                   ].map(({ name, label, placeholder, component, options }, index) => (
                     <Grid item xs={12} sm={6} key={index}>
                       <Controller
@@ -508,7 +513,8 @@ const StepperLinearWithValidation = () => {
                           value={activeCourse.find((course) => course.uuid === value) || null}
                           onChange={(event, newValue) => {
                             onChange(newValue ? newValue.uuid : '');
-                          }}
+                            getActiveBatchesByCourse(newValue ? { courseId: newValue.uuid } : '')                         
+                           }}
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -518,6 +524,36 @@ const StepperLinearWithValidation = () => {
                               id="custom-select"
                               aria-describedby="stepper-linear-personal-course"
                               sx={{ backgroundColor: 'grey.100' }}
+                            />
+                          )}
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                  {/* batch field */}
+                  <Grid item xs={12} sm={6}>
+                    <Controller
+                      name="batch"
+                      control={personalControl}
+                      rules={{ required: true }}
+                      render={({ field: { value } }) => (
+                        <Autocomplete
+                          fullWidth
+                          options={activeBatches }
+                          getOptionLabel={(option) => option.batch_name}
+                          value={activeBatches.find(batch => batch.uuid === value) || null }
+                          onChange={(event, newValue) => {
+                            setValue('batch', newValue ? newValue.uuid : '');
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Select Batch"
+                              error={Boolean(personalErrors['batch'])}
+                              helperText={personalErrors.batch?.message}
+                              id="custom-select"
+                              aria-describedby="stepper-linear-personal-branch"
                             />
                           )}
                         />
@@ -602,45 +638,40 @@ const StepperLinearWithValidation = () => {
         </form>
 
         <Dialog
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
-        sx: {
-          borderRadius: 3, // Rounded corners
-          boxShadow: 6, // Subtle shadow effect
-          padding: 2,
-          backgroundColor: "#fff",
-          maxWidth: "400px",
-        },
-      }}
-      transitionDuration={300} // Smooth fade effect
-    >
-      <DialogTitle sx={{ fontWeight: "bold", fontSize: "1.5rem", color: "#333", textAlign: "center" }}>
-        {dialogTitle}
-      </DialogTitle>
-      <DialogContent sx={{ textAlign: "center" }}>
-        <Typography sx={{ fontSize: "1rem", color: "#666", lineHeight: 1.5 }}>
-          {dialogMessage}
-        </Typography>
-      </DialogContent>
-      <DialogActions sx={{ justifyContent: "center", paddingBottom: 2 }}>
-        <Button
-          onClick={handleClose}
-          sx={{
-            backgroundColor: "#007bff",
-            color: "#fff",
-            "&:hover": { backgroundColor: "#0056b3" },
-            padding: "8px 20px",
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: "bold",
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            sx: {
+              borderRadius: 3, // Rounded corners
+              boxShadow: 6, // Subtle shadow effect
+              padding: 2,
+              backgroundColor: '#fff',
+              maxWidth: '400px'
+            }
           }}
+          transitionDuration={300} // Smooth fade effect
         >
-          OK
-        </Button>
-      </DialogActions>
-    </Dialog>
-
+          <DialogTitle sx={{ fontWeight: 'bold', fontSize: '1.5rem', color: '#333', textAlign: 'center' }}>{dialogTitle}</DialogTitle>
+          <DialogContent sx={{ textAlign: 'center' }}>
+            <Typography sx={{ fontSize: '1rem', color: '#666', lineHeight: 1.5 }}>{dialogMessage}</Typography>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'center', paddingBottom: 2 }}>
+            <Button
+              onClick={handleClose}
+              sx={{
+                backgroundColor: '#007bff',
+                color: '#fff',
+                '&:hover': { backgroundColor: '#0056b3' },
+                padding: '8px 20px',
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 'bold'
+              }}
+            >
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       </CardContent>
     </Card>
   );
