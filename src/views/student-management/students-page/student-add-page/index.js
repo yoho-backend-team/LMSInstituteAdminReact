@@ -132,7 +132,7 @@ const StepperLinearWithValidation = () => {
 
   const getActiveCoursesByBranch = async (data) => {
     const result = await getAllCourses(data);
-    console.log('course result :',result)
+    console.log('course result :', result);
 
     if (result?.data) {
       setActiveCourse(result?.data);
@@ -223,15 +223,15 @@ const StepperLinearWithValidation = () => {
   };
 
   const [activeBatches, setActiveBatches] = useState([]);
-  console.log( 'activeBatches',activeBatches);
-  console.log( 'activecourse',activeCourse);
+  console.log('activeBatches', activeBatches);
+  console.log('activecourse', activeCourse);
 
   const getActiveBatchesByCourse = async (courseId) => {
-    console.log("entering the function",courseId)
+    console.log('entering the function', courseId);
     show();
     const data = { course_id: courseId, branch_id: selectedBranchId }; // Include branch_id in the request data
     const result = await getBatchesByCourse(data);
-    console.log( 'result batches',result);
+    console.log('result batches', result);
 
     if (result?.success) {
       hide();
@@ -262,20 +262,22 @@ const StepperLinearWithValidation = () => {
         alternate_phone_number: '+91' + personalData?.alt_phone
       },
       qualification: personalData.qualification,
-      username: personalData.username,
+      // username: personalData.username,
       dob: convertDateFormat(personalData.date_of_birth),
       gender: personalData.gender,
       branch_id: personalData.branch,
       batch_id: personalData.batch,
       course: personalData.course,
+      image: logo,
       logo: logo,
       type: 'payment'
       // studentId: personalData.studentId
     };
 
     try {
+      console.log('student sending data:', student_data);
       const result = await addStudent(student_data);
-      console.log('student add result:',result)
+      console.log('student add result:', result);
       if (result.success) {
         hide();
         setDialogTitle('Success');
@@ -369,13 +371,23 @@ const StepperLinearWithValidation = () => {
                   <>
                     <CloudUploadIcon sx={{ fontSize: 40, color: 'grey.400' }} />
                     <Typography sx={{ mt: 1, color: 'grey.600' }}>
-                      <Typography component="label" sx={{ color: 'teal', fontWeight: 'bold', cursor: 'pointer' }} htmlFor="upload-image">
+                      <Typography
+                        component="label"
+                        sx={{ color: 'teal', fontWeight: 'bold', cursor: 'pointer' }}
+                        htmlFor="account-settings-upload-image"
+                      >
                         Upload an image
                       </Typography>{' '}
                       or drag and drop
                     </Typography>
                     <Typography sx={{ color: 'grey.500', fontSize: '12px' }}>PNG, JPG</Typography>
-                    <input hidden type="file" accept="image/png, image/jpeg" onChange={handleInputImageChange} id="upload-image" />
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/png, image/jpeg"
+                      onChange={handleInputImageChange}
+                      id="account-settings-upload-image"
+                    />
                   </>
                 )}
               </Box>
@@ -513,8 +525,8 @@ const StepperLinearWithValidation = () => {
                           value={activeCourse.find((course) => course.uuid === value) || null}
                           onChange={(event, newValue) => {
                             onChange(newValue ? newValue.uuid : '');
-                            getActiveBatchesByCourse(newValue ? { courseId: newValue.uuid } : '')                         
-                           }}
+                            getActiveBatchesByCourse(newValue ? { courseId: newValue.uuid } : '');
+                          }}
                           renderInput={(params) => (
                             <TextField
                               {...params}
@@ -540,9 +552,9 @@ const StepperLinearWithValidation = () => {
                       render={({ field: { value } }) => (
                         <Autocomplete
                           fullWidth
-                          options={activeBatches }
+                          options={activeBatches}
                           getOptionLabel={(option) => option.batch_name}
-                          value={activeBatches.find(batch => batch.uuid === value) || null }
+                          value={activeBatches.find((batch) => batch.uuid === value) || null}
                           onChange={(event, newValue) => {
                             setValue('batch', newValue ? newValue.uuid : '');
                           }}

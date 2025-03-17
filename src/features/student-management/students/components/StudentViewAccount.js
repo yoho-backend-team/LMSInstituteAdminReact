@@ -39,7 +39,7 @@ const UserViewAccount = ({ student }) => {
     }
   };
 
-  console.log(student,"student")
+  console.log("student details in front page",student)
 
   if (student&&Object.keys(student).length!==0) {
     return (
@@ -76,7 +76,7 @@ const UserViewAccount = ({ student }) => {
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
                     <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Gender:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:7 }}>{student.gender}Male</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500, fontSize: '1rem',mt:"-2px",ml:7 }}>{student.gender}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
                     <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>DOB:</Typography>

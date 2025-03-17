@@ -99,7 +99,7 @@ const StepperLinearWithValidation = () => {
 
   const defaultPersonalValues = {
     last_name: '',
-    name: '',
+    first_name: '',
     email: '',
     phone_no: '',
     alternate_number: '',
@@ -112,7 +112,7 @@ const StepperLinearWithValidation = () => {
     gender: '',
     course: '',
     branch: selectedBranchId,
-    designation: '',
+    // designation: '',
     education_qualification: '',
     username: '',
     logo: ''
@@ -128,6 +128,7 @@ const StepperLinearWithValidation = () => {
   const {
     control: personalControl,
     setValue,
+    getValues,
     handleSubmit: handlePersonalSubmit,
     formState: { errors: personalErrors }
   } = useForm({
@@ -152,7 +153,7 @@ const StepperLinearWithValidation = () => {
         gender,
         qualification,
         username,
-        full_name,
+        // full_name,
         contact_info
       } = studentData;
 
@@ -169,7 +170,7 @@ const StepperLinearWithValidation = () => {
       setValue('dob', new Date(dob) || '');
       setValue('gender', gender || '');
       setValue('education_qualification', qualification || '');
-      setValue('username', full_name || '');
+      setValue('username', username || '');
       setValue("course",studentData?.userDetail?.course?._id)
       setSelectedCourses([studentData?.userDetail?.course]);
     }
@@ -236,7 +237,8 @@ const StepperLinearWithValidation = () => {
 
 
   const onSubmit = useCallback(async () => {
-    const personalData = personalControl?._formValues;
+    const personalData = getValues();
+    console.log('personalData:', personalData);
     const filteredCourseId = selectedCourses?.map((course) => course._id);
     const data = new FormData();
     const new_user_data = {
@@ -244,6 +246,8 @@ const StepperLinearWithValidation = () => {
       first_name : personalData?.first_name,
       last_name : personalData?.last_name,
       email : personalData?.email,
+      gender : personalData?.gender,
+      dob : convertDateFormat(personalData?.dob),
       contact_info : {
         phone_number : "+91"+personalData?.phone_no,
         alternate_phone_number : "+91"+personalData?.alternate_number,
@@ -254,10 +258,10 @@ const StepperLinearWithValidation = () => {
         state : personalData?.state
       },
       uuid : studentData?.uuid,
-      username : personalData?.full_name,
+      username : personalData?.username,
       image : logo ? logo : studentData?.image
     }
-    
+    console.log('updating data fields:', new_user_data);
     const result = await updateStudent(new_user_data);
 
     if (result.success) {
