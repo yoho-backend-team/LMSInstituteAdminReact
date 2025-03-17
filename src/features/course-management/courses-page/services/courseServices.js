@@ -90,6 +90,15 @@ export const getAllCourses = async (data) => {
   }
 };
 
+export const getAllInstructorsWithCourse = async (data) => {
+  try{
+  const response = await client.batch.getInstructors(data)
+  return { data: response?.data }
+  }catch(error){
+    return { success: false, message: error?.response?.data?.message }
+  }
+}
+
 export const addCourse = async (data, file) => {
   try {
     const response = await client.course.create(data)
