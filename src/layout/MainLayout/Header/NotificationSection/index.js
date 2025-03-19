@@ -74,7 +74,6 @@ const NotificationSection = () => {
         const data = { institute_id : useInstitute().getInstituteId() };
         const query = { branch_id : branch_id, status: "unread" }
         const result = await getLastNotifications(data,query);
-        // console.log(result,"result")
         setNotifications(result.data);
       } catch (error) {
         console.error('Error fetching notifications:', error);
@@ -82,6 +81,16 @@ const NotificationSection = () => {
     };
     fetchData();
   }, []);
+
+  let readNotification = []; let unreadNotification =[];
+
+  notifications.map(item=>{
+    if (item.status == 'unread') {
+          unreadNotification.push(item)
+    }else{
+          readNotification.push(item)
+    }
+  })
 
   const anchorRef = useRef(null);
 
@@ -205,7 +214,7 @@ const NotificationSection = () => {
                             <Typography variant="subtitle1">All Notification</Typography>
                             <Chip
                               size="small"
-                              label={notifications?.length}
+                              label={unreadNotification.length}
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.warning.dark,
@@ -249,7 +258,7 @@ const NotificationSection = () => {
                           </Grid>
                         </Grid>
                         {/* Notification List */}
-                        <NotificationList notifications={notifications} onClose={() => setOpen(false)} />
+                        <NotificationList notifications={unreadNotification} onClose={() => setOpen(false)} />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>

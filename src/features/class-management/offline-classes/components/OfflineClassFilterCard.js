@@ -1,5 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
-import {Typography} from '@mui/material';
+import {Typography,InputAdornment,IconButton} from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -11,17 +11,22 @@ import PropTypes from 'prop-types';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
+import { setOfflineClasses } from '../redux/offlineClassSlice';
 import { getAllOfflineClasses } from '../redux/offlineClassThunks';
 import { useInstitute } from 'utils/get-institute-details';
 import { Box } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Button from '@mui/material/Button';
 import OfflineClassCardHeader from './OfflineClassCardHeader';
+import Icon from 'components/icon';
 
-const OfflineClassFilterCard = ({ selectedBranchId }) => {
+
+const OfflineClassFilterCard = ({ selectedBranchId, offlineClasses, offlineClassRefetch, setRefetch  }) => {
   const [statusValue, setStatusValue] = useState('');
   const dispatch = useDispatch();
   const [selectedBatch, setSelectedBatch] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
+  const [search, setSearch] = useState(false);
 
   const handleFilterByStatus = (e) => {
     setStatusValue(e.target.value);
@@ -73,6 +78,22 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
   const handleToggleCard = (event) => {
     setIsCardOpen((prev) => !prev);
   };
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+    if (e.target.value.length === 0) {
+      setSearch(false);
+    }
+  };
+
+  const handleSearchSubmit = (value) => {
+    const data = offlineClasses?.data?.filter((i) => i.class_name.toLowerCase().includes(value.toLowerCase()));
+    if (data && data.length !== 0) {
+      setSearch(true);
+      dispatch(setOfflineClasses({ data }));
+    }
+  };
+
 
   return (
     <Grid>
@@ -150,6 +171,36 @@ const OfflineClassFilterCard = ({ selectedBranchId }) => {
                             renderInput={(params) => <TextField {...params} label=" Batches" placeholder="Favorites" />}
                           />
                         </Grid>
+                        <Grid item xs={12}>
+                      <TextField
+                        value={searchValue}
+                        fullWidth
+                        placeholder="Search Class"
+                        onChange={handleSearch}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              {search ? (
+                                <IconButton onClick={() => { setSearch(false); setSearchValue(''); setRefetch(!offlineClassRefetch); }}>
+                                  <Icon icon="material-symbols:close" />
+                                </IconButton>
+                              ) : (
+                                <IconButton onClick={() => handleSearchSubmit(searchValue)}>
+                                  <Icon icon="material-symbols:search" />
+                                </IconButton>
+                              )}
+                            </InputAdornment>
+                          )
+                        }}
+                        label={
+                          <>
+                            {[..."Search Class"].map((char, index) => (
+                              <span key={index} style={{ "--index": index }}>{char}</span>
+                            ))}
+                          </>
+                        }
+                      />
+                    </Grid>
                       </Grid>
                     </CardContent>
                   </Card>

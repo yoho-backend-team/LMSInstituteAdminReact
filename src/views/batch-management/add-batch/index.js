@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import CustomChip from 'components/mui/chip';
 import { addBatch } from 'features/batch-management/batches/services/batchServices';
 import { getActiveBranches } from 'features/branch-management/services/branchServices';
-import { getAllCourses, getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
+import { getAllCourses, getAllInstructorsWithCourse, getStudentByCourse } from 'features/course-management/courses-page/services/courseServices';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -28,6 +28,8 @@ const AddBatchPage = () => {
   const [selectedBranch, setSelectedBranch] = useState('')
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [selectedInstructor,setSelectedInstructors] = useState([])
+  const [selectedInstructorIds,setSelectedInstructorIds] = useState([])
   const [activeCourse, setActiveCourse] = useState([]);
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -62,7 +64,14 @@ const AddBatchPage = () => {
         message: 'Please select at least one Student',
         test: (value) => value && value.length > 0
       })
-      .nullable()
+      .nullable(),
+    instructors : yup.array()
+    .min(1, 'Please select at least one Student')
+    .test({
+      name: 'atLeastOneStudent',
+      message: 'Please select at least one Student',
+      test: (value) => value && value.length > 0
+    })
   });
 
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
@@ -92,6 +101,7 @@ const AddBatchPage = () => {
 
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeStudents, setActiveStudents] = useState([]);
+  const [InstructorList,setInstructorList] = useState([])
 
   useEffect(() => {
     getActiveBranchesByUser();
@@ -108,7 +118,8 @@ const AddBatchPage = () => {
     branch: selectedBranchId,
     startDate: null,
     endDate: null,
-    students: []
+    students: [],
+    instructors: []
   };
 
   const {
@@ -128,14 +139,27 @@ const AddBatchPage = () => {
     setSelectedStudents(filteredStudents);
   };
 
+  const handleInstructorChange = (event) => {
+    setValue("instructors",event.target.value)
+    const filterInstructors = InstructorList.filter((instructor) => event.target.value.includes(instructor.uuid) )
+    setSelectedInstructorIds(event.target.value)
+    setSelectedInstructors(filterInstructors)
+  }
+
   const getStudentByCourseId = async (courseId) => {
     const result = await getStudentByCourse({ branch_id: selectedBranch, course_id: courseId })
     setActiveStudents(result.data);
   };
 
+  const getInstructorByCourseId = async (courseId) => {
+    const result = await getAllInstructorsWithCourse({branch_id: selectedBranch, course_id: courseId})
+    setInstructorList(result.data)
+  }
+
 
   const onSubmit = async (data) => {
     const instituteId = useInstitute().getInstituteId()
+    console.log(data,"data")
     const inputData = {
       batch_name: data.batchName,
       start_date: convertDateFormat(data.startDate),
@@ -143,7 +167,8 @@ const AddBatchPage = () => {
       branch_id: data.branch,
       course: data.course,
       student: data.students,
-      institute_id: instituteId
+      institute_id: instituteId,
+      instructor : data.instructors
     };
     const result = await addBatch(inputData);
 
@@ -170,7 +195,7 @@ const AddBatchPage = () => {
     setValue('endDate', date);
     setEndDate(date);
   };
-  console.log(control._defaultValues.branch.length, control?._defaultValues, control?._formValues)
+  console.log(control._defaultValues.branch.length, control?._defaultValues, control?._formValues,InstructorList)
 
   return (
     <Grid container spacing={4} sx={{ p: 1 }}>
@@ -300,6 +325,7 @@ const AddBatchPage = () => {
                           onChange={(event, newValue) => {
                             setValue('course', newValue ? newValue.uuid : '');
                             getStudentByCourseId(newValue.uuid);
+                            getInstructorByCourseId(newValue?._id)
                             setValue('students', []);// Reset students when course changes
                           }}
                           options={activeCourse}
@@ -370,6 +396,58 @@ const AddBatchPage = () => {
                           {activeStudents.map((student, index) => (
                             <MenuItem key={index} value={student?.uuid}>
                               {student?.full_name}
+                            </MenuItem>
+                          ))}
+                        </CustomTextField>
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={12}>
+                    <Controller
+                      name="instructors"
+                      control={control}
+                      render={({ value }) => (
+                        <CustomTextField
+                          value={value}
+                          select
+                          fullWidth
+                          label="Teachers"
+                          id="select-multiple-chip"
+                          disabled={!selectedBranch || !control._formValues.course} // Disable if branch or course is not selected
+                          SelectProps={{
+                            MenuProps,
+                            multiple: true,
+                            value: selectedInstructorIds,
+                            onChange: (e) => handleInstructorChange(e),
+                            renderValue: () => (
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                {selectedInstructor.map((instructor) => (
+                                  <CustomChip
+                                    key={instructor.uuid}
+                                    label={`${instructor.full_name}`}
+                                    sx={{ m: 0.75 }}
+                                    skin="light"
+                                    color="primary"
+                                  />
+                                ))}
+                              </Box>
+                            )
+                          }}
+                          error={Boolean(errors.instructors)}
+                          helperText={errors.students?.instructor ||
+                            (!control._formValues.course &&
+                              'Please select a course to view and select teachers.')}
+                              sx={{
+                                '& .MuiInputBase-root.Mui-disabled': {
+                                  backgroundColor: '#f0f0f0' 
+                                },
+                                cursor: !selectedBranch || !control._formValues.course ? 'not-allowed' : 'text'
+                              }}
+                        >
+                          {InstructorList.map((instructor, index) => (
+                            <MenuItem key={index} value={instructor?.uuid}>
+                              {instructor?.full_name}
                             </MenuItem>
                           ))}
                         </CustomTextField>

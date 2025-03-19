@@ -88,6 +88,7 @@ class Client {
   };
   batch = {
     create: (data, options) => HttpClient.post(HTTP_END_POINTS.batch.create + `${data.branch_id}/courses/${data.course}/batches`, data),
+    getInstructors : (data) => HttpClient.get(HTTP_END_POINTS.batch.create+`${data.branch_id}/instructors/${data.course_id}`),
     getAll: (params) => HttpClient.get(HTTP_END_POINTS.batch.getAll + params.branch_id + '/batches/all', params),
     getWithId: (params) => HttpClient.get(HTTP_END_POINTS.batch.getWithId + `${params.batch_id}`),
     update: (params) => HttpClient.update(HTTP_END_POINTS.batch.update + params?.uuid, params),

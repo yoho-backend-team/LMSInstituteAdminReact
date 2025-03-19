@@ -1,5 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
-import {Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import format from 'date-fns/format';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import PropTypes from 'prop-types';
-import { forwardRef, useEffect, useState, useRef } from 'react';
+import { forwardRef, useEffect, useState, useRef ,useCallback} from 'react';
 import DatePicker from 'react-datepicker';
 import { useDispatch } from 'react-redux';
 import DatePickerWrapper from 'styles/libs/react-datepicker';
@@ -40,6 +40,16 @@ const LiveClassFilterCard = (props) => {
   const [dates, setDates] = useState([]);
   const [endDateRange, setEndDateRange] = useState(null);
   const [selectedBatch, setSelectedBatch] = useState(null);
+ const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = useCallback(
+     (e) => {
+       const searchInput = e.target.value;
+       dispatch(getAllLiveClasses({ search: searchInput, branch_id: selectedBranchId }));
+       setSearchValue(searchInput);
+     },
+     [dispatch]
+   );
 
   const [courses, setCourses] = useState([]);
   useEffect(() => {
@@ -252,6 +262,23 @@ const LiveClassFilterCard = (props) => {
                                 end={endDateRange}
                                 start={startDateRange}
                               />
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            value={searchValue}
+                            sx={{
+                              width: "100%"
+                            }}
+                            placeholder="Search Class"
+                            onChange={(e) => handleSearch(e)}
+                            label={
+                              <>
+                                {[..."Search Class"].map((char, index) => (
+                                  <span key={index} style={{ "--index": index }}>{char}</span>
+                                ))}
+                              </>
                             }
                           />
                         </Grid>
