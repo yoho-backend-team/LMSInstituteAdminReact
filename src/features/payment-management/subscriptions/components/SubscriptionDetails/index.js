@@ -8,6 +8,9 @@ import PropTypes from 'prop-types';
 import { hexToRGBA } from 'utils/hex-to-rgba';
 import { getImageUrl } from 'utils/imageUtils';
 import { imagePlaceholder } from 'utils/placeholders';
+import { useState } from "react";
+import axios from "axios";
+
 
 // ** Styled Component for the wrapper of whole component
 const BoxWrapper = styled(Box)(({ theme }) => ({
@@ -28,6 +31,55 @@ const BoxFeature = styled(Box)(({ theme }) => ({
 const SubscriptionDetails = (props) => {
   // ** Props
   const { data ,plan} = props;
+
+console.log(JSON.stringify(data)+"the data sis");
+
+  const instituteId = plan?.[0]?.instituteId?._id;
+  const cancelled = plan?.[0]?.instituteId?.is_cancelled;
+
+console.log("Institute ID is:", instituteId,cancelled);
+
+const [pendingSubscription, setPendingSubscription] = useState(null); // Track pending subscription
+const [isAnyPending, setIsAnyPending] = useState(false); // Track if any button is pending
+
+
+const handleUpgrade = async(subscriptionId) => {
+  
+  if (isAnyPending) {
+    console.log("A request is already pending. Blocking new request.");
+    return;
+  }
+  setIsAnyPending(true); // Prevent any new requests
+
+  console.log("Selected Subscription ID:", subscriptionId);
+  console.log("Institute pending is:", isAnyPending);
+
+
+  setPendingSubscription(subscriptionId); // Set only this subscription as "Pending"
+
+  try {
+    const response = await axios.post(
+      `http://localhost:3002/api/subscription/institute/upgrade-subscription/${instituteId}/request`,
+      {
+        "id":subscriptionId
+    }
+    );
+    setIsAnyPending(true); // Now it properly prevents new requests
+
+    console.log("Upgrade successful:", response.data);
+
+    // After a successful response, the button should stay as "Pending"
+  } catch (error) {
+    console.error("Upgrade failed:", error.response.data.message);
+    setPendingSubscription(null); // Reset if API call fails
+    setIsAnyPending(false);
+    alert( error.response.data.message)
+
+  }
+
+
+  // Now you can use this subscriptionId to make an API call
+};
 
   const renderFeatures = () => {
     if (!Array.isArray(data?.features)) {
@@ -87,9 +139,30 @@ const SubscriptionDetails = (props) => {
         </Box>
       </Box>
       <BoxFeature>{renderFeatures()}</BoxFeature>
-      <Button fullWidth color={data?.currentPlan ? 'success' : 'primary'} variant={data?.popularPlan ? 'contained' : 'tonal'}>
-        {data?._id === plan?.[0]?.subscriptionId?._id ? 'Your Current Plan' : 'Upgrade'}
-      </Button>
+      {/* <Button fullWidth color={data?.currentPlan ? 'success' : 'primary'} variant={data?.popularPlan ? 'contained' : 'tonal'}>
+        {data?._id === plan?.[0]?.subscriptionId?._id ? 'Your  Plan' : 'Upgrade'}
+      </Button> */}
+      {/* <Button
+  fullWidth
+  color={data?.currentPlan ? "success" : "primary"}
+  variant={data?.popularPlan ? "contained" : "tonal"}
+  onClick={() => handleUpgrade(data?._id)}
+>
+  {data?._id === plan?.[0]?.subscriptionId?._id ? "Your Plan" : "Upgrade"}
+</Button> */}
+<Button
+  fullWidth
+  color={data?.currentPlan ? "success" : "primary"}
+  variant={data?.popularPlan ? "contained" : "tonal"}
+  onClick={() => handleUpgrade(data?._id)}
+  // disabled={pendingSubscription === data?._id}
+  disabled={
+    data?._id === plan?.[0]?.subscriptionId?._id || // Disable if it's the current plan
+    isAnyPending // Disable if another request is pending
+  }>
+  {pendingSubscription === data?._id ? "Pending..." : data?._id === plan?.[0]?.subscriptionId?._id ? "Your Plan" : "Upgrade"}
+</Button>
+
     </BoxWrapper>
   );
 };
