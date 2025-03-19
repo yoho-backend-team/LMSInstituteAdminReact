@@ -173,7 +173,7 @@ const StudentCertificateTableHeader = (props) => {
                       onClick={toggle} 
                       variant="contained" 
                       sx={{ '& svg': { mr: 2 },py:1,backgroundColor:!selectedBatch && selectedCourses.length===0?"grey":""}}
-                      disabled={!selectedBatch || selectedCourses.length === 0}
+                      // disabled={!selectedBatch || selectedCourses.length === 0}
                     >
                       <Icon fontSize="1.125rem" icon="tabler:plus" />
                       Add Student Certificate
