@@ -112,14 +112,15 @@ const handleUpgrade = async(subscriptionId) => {
     setModalOpen(!modalOpen);
   };
 
-  const handleUpgrade = () => {
-    const userConfirmed = window.confirm('Are you sure you want to upgrade?');
-    if (userConfirmed) {
-      setIsUpgrade(true);
-      alert('Upgrade in progress...');
-      dispatch(setUpgrade(data));
-    }
-  };
+  // const handleUpgrade = () => {
+  //   const userConfirmed = window.confirm('Are you sure you want to upgrade?');
+  //   if (userConfirmed) {
+  //     setIsUpgrade(true);
+  //     alert('Upgrade in progress...');
+  //     dispatch(setUpgrade(data));
+  //   }
+  // };
+  
   const handleClose = () => {
     const userCancel = window.confirm('Are you sure Want to cancel?');
     if (userCancel) {
@@ -359,7 +360,9 @@ const handleUpgrade = async(subscriptionId) => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Modal>
+      {/* </Box> */}
+      
       <BoxFeature>{renderFeatures()}</BoxFeature>
       {/* <Button fullWidth color={data?.currentPlan ? 'success' : 'primary'} variant={data?.popularPlan ? 'contained' : 'tonal'}>
         {data?._id === plan?.[0]?.subscriptionId?._id ? 'Your  Plan' : 'Upgrade'}
