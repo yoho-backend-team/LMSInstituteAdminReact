@@ -5,13 +5,20 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { PDFViewer } from 'react-view-pdf';
 import { getImageUrl } from 'utils/imageUtils';
+import { PrintCertificate } from '../services/studentCertificateServices';
+import PdfRender from './PdfRender';
 
-const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
-  const savedPdfUrl = `${process.env.REACT_APP_PUBLIC_API_URL}/storage/${certificate?.certificate_file}`;
-  console.log(certificate,'certificate')
-
+const StudentCertificateView = ({ open, handleViewClose, certificate }) => {
+  const [data, setdata] = useState('')
+  if(certificate){
+    calldata(certificate._id)
+  }
+ async function calldata(id){
+    setdata( await PrintCertificate(id))
+ }
   return (
     <div>
       <Dialog
@@ -21,6 +28,7 @@ const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
         aria-labelledby="user-view-View"
         aria-describedby="user-view-View-description"
       >
+      
         <DialogTitle
           id="user-view-View"
           sx={{
@@ -48,7 +56,7 @@ const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
               <Typography variant="h5" sx={{ color: 'text.secondary', fontSize: 12 }}>
                 {certificate?.student?.email}
               </Typography>
-              <Typography>JHe,fflmmd</Typography>
+              <Typography>{certificate?.student[0]?.first_name}</Typography>
             </Box>
           </Box>
 
@@ -63,11 +71,9 @@ const StudentCertificateView = ({ open, handleViewClose, certificate, }) => {
             px: (theme) => [`${theme.spacing(5)} !important`, `${theme.spacing(8)} !important`]
           }}
         >
-          <Grid item xs={12} sm={12} sx={{ mb: 4 }}>
-            <PDFViewer url={getImageUrl(certificate?.file_upload)} />
-          </Grid>
+        <PdfRender data={data}/> 
           
-        </DialogContent>
+       </DialogContent> 
       </Dialog>
     </div>
   );
