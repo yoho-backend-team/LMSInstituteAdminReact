@@ -9,16 +9,54 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { formatTime } from 'utils/formatDate';
 import chatBg from "../../../assets/images/community/pattern.png"
 
-
+import IconButton from "@mui/material/IconButton"; 
+import Menu from "@mui/material/Menu";  
+import MenuItem from "@mui/material/MenuItem";  
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const ChatLog = (props) => {
   const { data, hidden, currentUser, socket } = props; 
   const chatArea = useRef(null);
   const user = getUserDetails();
 
+  const [messages, setMessages] = useState(data);  
+  const [anchorEl, setAnchorEl] = useState(null);  
+  const [selectedMessage, setSelectedMessage] = useState(null);  
+  const [hoveredMessage, setHoveredMessage] = useState(null);
+  const [menuPosition, setMenuPosition] = useState(null);
+
+
    const messageRefs = useRef(new Map());
   const [isWindowFocused, setIsWindowFocused] = useState(document.hasFocus());
   const [readMessages, setReadMessages] = useState(new Set());
+
+  // Handles opening the delete menu
+  const handleMenuOpen = (event, messageId) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    setMenuPosition({ top: rect.top + window.scrollY, left: rect.left + rect.width + 5 }); 
+    setAnchorEl(event.currentTarget);
+    setSelectedMessage(messageId);
+  };
+
+  
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedMessage(null);
+  };
+   
+   const handleDeleteMessage = () => {
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg._id === selectedMessage ? { ...msg, deleted: true } : msg
+      )
+    );
+
+    // Notify server
+    socket.emit("deleteMessage", { messageId: selectedMessage, userId: user?._id });
+    setSelectedMessage(null);
+    handleMenuClose(); // Close menu after deletion
+  };
+
 
   useEffect(() => {
     const handleFocus = () => setIsWindowFocused(true);
@@ -82,19 +120,39 @@ const ChatLog = (props) => {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    // socket.emit('messageRead', { messageId: data.group, userId: user?._id });
-    if (data && data?.length) {
-      scrollToBottom();
-    }
-  }, [data]);
+  //   // socket.emit('messageRead', { messageId: data.group, userId: user?._id });
+  //   if (data && data?.length) {
+  //     scrollToBottom();
+  //   }
+  // }, [data]);
 
-  const scrollToBottom = () => {
-    if (chatArea.current) {
-      chatArea.current.scrollTop = chatArea.current.scrollHeight;
-    }
-  };
+  // const scrollToBottom = () => {
+  //   if (chatArea.current) {
+  //     chatArea.current.scrollTop = chatArea.current.scrollHeight;
+  //   }
+  // };
+
+    // Ensure scrolling to the latest message
+    useEffect(() => {
+      const handleNewMessage = (newMessage) => {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        scrollToBottom();
+      };
+    
+      socket.on("newMessage", handleNewMessage);
+    
+      return () => {
+        socket.off("newMessage", handleNewMessage);
+      };
+    }, [socket]);
+  
+    const scrollToBottom = () => {
+      if (chatArea.current) {
+        chatArea.current.scrollTop = chatArea.current.scrollHeight;
+      }
+    };
 
   // const triggerMessageRead = (messageId) => {
   //   const msg = data.find((m) => m._id === messageId);
@@ -108,102 +166,131 @@ const ChatLog = (props) => {
     console.log(index,data[index].sender.toString()===data[index -1 ].sender.toString())
     return data[index].sender.toString() === data[index - 1].sender.toString()
   }
+
   console.log(user,"user")
+
+  
   const renderChats = () => {
-    if (data) {
-       return  data.map((message, index) => {
-        const isCurrentUser = message.sender === user?._id
-        const isPreviousUser = isSamePreviousUser(index)
-        console.log(isPreviousUser)
-        return(
+    return messages.map((message, index) => {
+      const isCurrentUser = message.sender === user?._id;
+      const isPreviousUser = isSamePreviousUser(index);
+
+      return (
         <Box
-          key={index}
+          key={message._id}
           display="flex"
-          flexDirection={isCurrentUser ? 'row-reverse' : 'row'}
+          flexDirection={isCurrentUser ? "row-reverse" : "row"}
           alignItems="flex-start"
-          sx={{ 
-            minWidth: "200px" ,
-            
-          }}
+          sx={{ minWidth: "200px" }}
           mb={1}
+          onMouseEnter={() => setHoveredMessage(message._id)}
+          onMouseLeave={() => setHoveredMessage(null)}
         >
-          {!isPreviousUser && <CustomAvatar src={message?.sender?.avatar} /> }
+           
+          {!isPreviousUser && <CustomAvatar src={message?.sender?.avatar} />}
+
           <Box
             ml={isCurrentUser ? 0 : isPreviousUser ? "55px" : 2}
             mr={isCurrentUser && !isPreviousUser ? 2 : isPreviousUser ? "55px" : 0}
             p={1}
             borderRadius={1}
-            sx={{ padding: '12px', fontSize: "0.9em", borderRadius: "10px", position: "relative", 
-              display: 'flex',
+            sx={{
+              padding: "12px",
+              fontSize: "0.9em",
+              borderRadius: "10px",
+              position: "relative",
+              display: "flex",
               flexDirection: isCurrentUser ? "row" : "column",
               gap: isCurrentUser && "5px",
-              "::before" : isCurrentUser && !isPreviousUser ? {
-                content: '""',
-                position: "absolute",
-                top: "0",
-                right: "-12px",
-                width: "20px",
-                height: "20px",
-                background: `linear-gradient(
-                 135deg,
-                 #dcf8c6 0%,
-                 #dcf8c6 50%,
-                 transparent 50%,
-                 transparent
-             )`
-              }
-              :!isPreviousUser &&{
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: "-12px",
-                width: "20px",
-                height: "20px",
-                background: `linear-gradient(
-                             225deg,
-                             #fff 0%,
-                             #fff 50%,
-                             transparent 50%,
-                             transparent
-                           )`
-              }
-             }}
-            bgcolor={isCurrentUser ? '#dcf8c8' : '#fff'}
-            color={ isCurrentUser ? 'black' : 'black'}
+              "&:hover .delete-btn": { display: "block" },
+            }}
+            bgcolor={isCurrentUser ? "#dcf8c8" : "#fff"}
+            color={"black"}
             maxWidth="70%"
           >
-            {!isPreviousUser &&(
+           
+            {!isPreviousUser && (
               <Typography variant="caption">
-                {!isCurrentUser &&  message?.sender_name }
+                {!isCurrentUser && message?.sender_name}
               </Typography>
             )}
-            <Typography sx={{ fontSize: "0.925rem"}}>{message.message}</Typography>
-            <Box sx={{ display: "flex", justifyContent: isCurrentUser ? "end" : "start", alignItems: "flex-end"}}>
-            <Typography variant="caption" sx={{ color: '#727272'}}>
+
+            
+            <Typography sx={{ fontSize: "0.925rem", fontStyle: message.deleted ? "italic" : "normal" }}>
+              {message.deleted ? "This message was deleted" : message.message}
+            </Typography>
+
+             
+            <Box sx={{ display: "flex", justifyContent: isCurrentUser ? "end" : "start" }}>
+              <Typography variant="caption" sx={{ color: "#727272" }}>
                 {formatTime(message?.createdAt)}
               </Typography>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent:  message.sender === user?._id ? "end" : "start", mt: 1 }}>
-              {isCurrentUser && (
-                <Typography >
-                  {message?.status?.some(s => s.delivered) && !message?.status?.every(s => s.delivered) && (
-                    <DoneIcon sx={{  width: '17px', height: '17px' }} />
+
+            
+            {isCurrentUser && (
+              <Box sx={{ display: "flex", justifyContent: "end", mt: 1 }}>
+                {message?.status?.some((s) => s.delivered) &&
+                  !message?.status?.every((s) => s.delivered) && (
+                    <DoneIcon sx={{ width: "17px", height: "17px" }} />
                   )}
-                  {message?.status?.every(s => s.delivered) && !message?.status?.every(s => s.read) && (
-                    <DoneAllIcon sx={{ width: '17px', height: '17px' }} />
+                {message?.status?.every((s) => s.delivered) &&
+                  !message?.status?.every((s) => s.read) && (
+                    <DoneAllIcon sx={{ width: "17px", height: "17px" }} />
                   )}
-                  {message?.status?.every(s => s.read) && (
-                    <DoneAllIcon sx={{  width: '17px', height: '17px' }} />
-                  )}
-                </Typography>
-              )}
-            </Box>
-                     </Box>
+                {message?.status?.every((s) => s.read) && (
+                  <DoneAllIcon sx={{ width: "17px", height: "17px" }} />
+                )}
+              </Box>
+            )}
+
+           
+            {isCurrentUser && !message.deleted && (
+              <>
+              <IconButton
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: "5px",
+                  right: "5px",
+                  color: "gray",
+                  display: hoveredMessage === message._id ? "block" : "none",
+                }}
+                onClick={(event) => handleMenuOpen(event, message._id)}
+                >
+                <ArrowDropDownIcon />
+              </IconButton>
+            
+               <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl && selectedMessage === message._id)}
+                  onClose={handleMenuClose}
+                  anchorReference="anchorPosition"
+                  anchorPosition={menuPosition ? { top: menuPosition.top, left: menuPosition.left } : undefined}
+  sx={{
+    "& .MuiPaper-root": {
+      width: "80px",
+      padding: "4px",
+      borderRadius: "6px",
+      boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+      textAlign: "center",
+      position: "absolute",  
+      backgroundColor: "white",
+      marginLeft:'8px'
+    },
+  }}
+                >
+                  <MenuItem onClick={handleDeleteMessage} sx={{ fontSize: "0.75rem", 
+      padding: "4px 10px", 
+      display:"flex",
+      textAlign: "center",}}>Delete</MenuItem>
+                </Menu>
+                </>
+            )}
+          </Box>
         </Box>
-      )});
-    } else {
-      return <Typography>No messages found</Typography>;
-    }
+      );
+    });
   };
 
   return (
