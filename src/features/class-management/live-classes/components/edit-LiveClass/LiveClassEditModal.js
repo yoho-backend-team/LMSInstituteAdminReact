@@ -47,7 +47,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     start_time: yup.string().required('Class StartTime field is required'),
     end_time: yup.string().required('Class EndTime field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    coordinators: yup.array()
+    // .min(1, 'At least one coordinator must be selected').required('coordinator field is required')
   });
 
   const defaultValues = {
@@ -120,7 +121,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
 
   const handleClose = () => {
     handleEditClose();
-    reset(defaultValues);
+    // reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
@@ -140,7 +141,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     getActiveTeachingStaffs(selectedBranchId);
     getActiveNonTeachingStaffs(selectedBranchId);
   }, [selectedBranchId]);
-
+ console.log(liveClasses,"liveClasses",defaultValues,control._formValues,errors)
   function convertDateFormat(input) {
     var originalDate = new Date(input);
     var year = originalDate.getFullYear();

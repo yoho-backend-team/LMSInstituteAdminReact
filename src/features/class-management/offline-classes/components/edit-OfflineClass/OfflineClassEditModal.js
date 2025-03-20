@@ -113,7 +113,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
 
   const handleClose = () => {
     handleEditClose();
-    reset(defaultValues);
+    // reset(defaultValues);
   };
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
