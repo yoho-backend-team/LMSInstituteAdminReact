@@ -121,7 +121,7 @@ const StepperLinearWithValidation = () => {
     date_of_birth: '',
     gender: '',
     course: '',
-    batch: '',
+    // batch: '',
     branch: selectedBranchId,
     // designation: '',
     education_qualification: '',
@@ -544,7 +544,7 @@ const StepperLinearWithValidation = () => {
                   </Grid>
 
                   {/* batch field */}
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <Controller
                       name="batch"
                       control={personalControl}
@@ -571,7 +571,7 @@ const StepperLinearWithValidation = () => {
                         />
                       )}
                     />
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Box>
             </Grid>

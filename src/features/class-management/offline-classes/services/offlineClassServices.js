@@ -7,6 +7,7 @@ const OFFLINE_CLASS_API_END_POINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api
 
 export const getAllOfflineClasses = async (data) => {
   try {
+    console.log("params",data)
     const response = await client?.offline_class?.getAll(data)
     // Check if the response status is successful
     return response;

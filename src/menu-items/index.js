@@ -49,7 +49,7 @@ const menuItems = {
     helpCenter,
     ticketManagement,
     FaqManagement,
-    reportgeneretion
+    // reportgeneretion
 
   ]
 };

@@ -25,6 +25,7 @@ const OfflineClass = () => {
       page: '1'
     };
     show()
+    console.log(data,"data")
     dispatch(getAllOfflineClasses(data));
     hide()
   }, [dispatch, selectedBranchId, offlineClassRefetch]);
