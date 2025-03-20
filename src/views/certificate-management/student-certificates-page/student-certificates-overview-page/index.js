@@ -24,6 +24,7 @@ import {
 import { getAllStudentCertificates } from 'features/certificate-management/student-certificates/redux/studentCertificateThunks';
 import {
   deleteStudentCertificate,
+  PrintCertificate,
   updateStudentCertificateStatus
 } from 'features/certificate-management/student-certificates/services/studentCertificateServices';
 import { useEffect } from 'react';
@@ -33,6 +34,7 @@ import { getInitials } from 'utils/get-initials';
 import { useInstitute } from 'utils/get-institute-details';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import html2pdf from "html2pdf.js"
 
 const userStatusObj = {
   1: 'success',
@@ -73,55 +75,17 @@ const StudenrCertificate = () => {
       );
     }
   };
-  const downloadPDF = (row) => {
-  const doc = new jsPDF();
-  const marginLeft = 10;
-  const marginTop = 10;
-  const lineHeight = 10;
-
-  // Set document properties
-  doc.setProperties({
-    title: 'Student Certificate',
-  });
-
-  // Add title
-  doc.setFontSize(16);
-  doc.text('Student Certificate', marginLeft, marginTop);
-
-  // Add details
-  doc.setFontSize(12);
-  doc.text(`Certificate Name: ${row.certificate_name}`, marginLeft, marginTop + lineHeight * 2);
-  doc.text(`Description: ${row.description}`, marginLeft, marginTop + lineHeight * 3);
-  doc.text(`Student Name: ${row.student[0].full_name}`, marginLeft, marginTop + lineHeight * 4);
-  doc.text(`Student Email: ${row.student[0].email}`, marginLeft, marginTop + lineHeight * 5);
-  doc.text(`Status: ${row.is_active ? 'Active' : 'Inactive'}`, marginLeft, marginTop + lineHeight * 6);
-
-  // Add table with autoTable
-  autoTable(doc, {
-    startY: marginTop + lineHeight * 8,
-    head: [['Field', 'Value']],
-    body: [
-      ['Certificate Name', row.certificate_name],
-      ['Description', row.description],
-      ['Student Name', row.student[0].full_name],
-      ['Student Email', row.student[0].email],
-      ['Status', row.is_active ? 'Active' : 'Inactive'],
-    ],
-    styles: { fontSize: 12 },
-    headStyles: { fillColor: [22, 160, 133] },
-    alternateRowStyles: { fillColor: [240, 240, 240] },
-  });
-
-  // Add footer
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
-    doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.getWidth() - marginLeft - 10, doc.internal.pageSize.getHeight() - 10);
-  }
-
-  // Save PDF
-  doc.save('student_certificate.pdf');
+  const downloadPDF = async(row) => {
+    const data = await PrintCertificate(row._id)
+    const options = {
+            filename: `${row.student[0].full_name}.pdf`,
+            jsPDF: {format: 'a4', orientation: 'landscape' },
+            html2canvas: { scale: 2, useCORS: true }
+        };
+    html2pdf()
+    .from(data)
+    .set(options)
+    .save();
 };
  
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);

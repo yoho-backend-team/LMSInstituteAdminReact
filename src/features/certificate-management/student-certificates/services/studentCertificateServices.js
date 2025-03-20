@@ -3,10 +3,11 @@ import axios from 'axios';
 import secureLocalStorage from 'react-secure-storage';
 
 const STUDENT_CERTIFICATE_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/certificate`;
+const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
 
 export const getAllStudentCertificates = async (data) => {
   try {
-    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/${data?.InstituteId}/${data?.branchid}`, {
+    const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/${data?.InstituteId}/${selectedBranchId}`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Token ${secureLocalStorage.getItem('token')}`
@@ -60,6 +61,16 @@ export const addStudentCertificate = async (data) => {
     throw error;
   }
 };
+
+export const PrintCertificate = async (data) =>{
+  try {
+     const response = await axios.get(`${STUDENT_CERTIFICATE_API_ENDPOINT}/print/${data}`)
+     return response.data.htmlContent
+  } catch (error) {
+     console.error('Error in addStudentCertificate:', error);
+     throw error
+  }
+}
 
 export const deleteStudentCertificate = async (certificateid) => {
   try {

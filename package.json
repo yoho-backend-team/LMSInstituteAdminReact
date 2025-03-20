@@ -48,7 +48,7 @@
     "firebase": "^10.9.0",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
-    "html2pdf.js": "^0.10.2",
+    "html2pdf.js": "^0.10.3",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "8.5.1",
     "jspdf": "^2.5.2",
