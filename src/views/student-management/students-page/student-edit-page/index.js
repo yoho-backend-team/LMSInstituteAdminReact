@@ -115,6 +115,7 @@ const StepperLinearWithValidation = () => {
     // designation: '',
     education_qualification: '',
     username: '',
+    full_name: '',
     logo: ''
   };
 
@@ -153,7 +154,7 @@ const StepperLinearWithValidation = () => {
         gender,
         qualification,
         username,
-        // full_name,
+        full_name,
         contact_info
       } = studentData;
 
@@ -170,7 +171,7 @@ const StepperLinearWithValidation = () => {
       setValue('dob', new Date(dob) || '');
       setValue('gender', gender || '');
       setValue('education_qualification', qualification || '');
-      setValue('username', username || '');
+      setValue('username', full_name || '');
       setValue("course",studentData?.userDetail?.course?._id)
       setSelectedCourses([studentData?.userDetail?.course]);
     }
@@ -249,8 +250,8 @@ const StepperLinearWithValidation = () => {
       gender : personalData?.gender,
       dob : convertDateFormat(personalData?.dob),
       contact_info : {
-        phone_number : "+91"+personalData?.phone_no,
-        alternate_phone_number : "+91"+personalData?.alternate_number,
+        phone_number : "+91 "+personalData?.phone_no,
+        alternate_phone_number : "+91 "+personalData?.alternate_number,
         address1 : personalData?.address_line_1,
         address2 : personalData?.address_line_2,
         city : personalData?.city,
@@ -258,7 +259,7 @@ const StepperLinearWithValidation = () => {
         state : personalData?.state
       },
       uuid : studentData?.uuid,
-      username : personalData?.username,
+      username : personalData?.full_name,
       image : logo ? logo : studentData?.image
     }
     console.log('updating data fields:', new_user_data);
