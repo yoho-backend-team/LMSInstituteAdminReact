@@ -12,17 +12,20 @@ import Icon from 'components/icon';
 import PropTypes from 'prop-types';
 
 const   DeleteDialog = (props) => {
-  const { open, setOpen, handleSubmit, description, title , successDescription, failureDescription} = props;
+  const { open, setOpen, handleSubmit, description, title , successDescription, failureDescription , setRefetch} = props;
 
   const [userInput, setUserInput] = useState('yes');
   const [secondDialogOpen, setSecondDialogOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const handleSecondDialogClose = () => setSecondDialogOpen(false);
+  const handleSecondDialogClose = () => {
+    setSecondDialogOpen(false);
+    setRefetch((state) => !state);
+  }
 
 
   
   const handleConfirmation = (value) => {
-    console.log("hello");
+    // console.log("hello");
     handleClose();
     setUserInput(value);
     setSecondDialogOpen(true);

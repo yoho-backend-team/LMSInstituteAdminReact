@@ -141,7 +141,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     getActiveTeachingStaffs(selectedBranchId);
     getActiveNonTeachingStaffs(selectedBranchId);
   }, [selectedBranchId]);
- console.log(liveClasses,"liveClasses",defaultValues,control._formValues,errors)
+//  console.log(liveClasses,"liveClasses",defaultValues,control._formValues,errors)
   function convertDateFormat(input) {
     var originalDate = new Date(input);
     var year = originalDate.getFullYear();
@@ -169,8 +169,8 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
     const result = await updateLiveClass(new_class_data);
 
     if (result.success) {
-      setRefetch((state) => !state);
       toast.success(result.message);
+      setRefetch((state) => !state);
       handleClose();
     } else {
       toast.error(result?.message)
@@ -529,7 +529,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                 />
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
@@ -625,7 +625,7 @@ const LiveClassEditModal = ({ open, handleEditClose, liveClasses, setRefetch }) 
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <TextField

@@ -74,7 +74,7 @@ const LiveClassCardHeader = (props) => {
           </Button>
         </Box>
       </Box>
-      <LiveClassAddModal setRefetch={setRefetch} open={isAddModalOpen} handleAddClose={handleAddClose} />
+      <LiveClassAddModal setRefetch={setRefetch}  open={isAddModalOpen} handleAddClose={handleAddClose} />
     </>
   );
 };
