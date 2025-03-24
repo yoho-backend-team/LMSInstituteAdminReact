@@ -73,7 +73,7 @@ const SearchSection = () => {
   const branches = useSelector((state) => state.auth.branches);
   const dispatch = useDispatch();
 
-  const primeBranch = branches.find((branch) => branch.isPrimary) || {};
+  const primeBranch = branches?.find((branch) => branch.isPrimary) || {};
   const [defaultValue, setDefaultValue] = useState(primeBranch.uuid);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId) || primeBranch.uuid;
 
