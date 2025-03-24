@@ -114,7 +114,7 @@ const OfflineClassFilterCard = ({ selectedBranchId, offlineClasses, offlineClass
           <Typography variant='h2'> Offline Class</Typography>
         </Box>
         <Box>
-          <OfflineClassCardHeader/>
+          <OfflineClassCardHeader setRefetch={setRefetch}/>
         </Box>
 
         </Box>

@@ -393,12 +393,16 @@ const StaffNotificationAddDrawer = (props) => {
             <Controller
               name="body"
               control={control}
+              rules={{
+                required: false,
+              }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   fullWidth
                   sx={{ mb: 2 }}
                   label="Body"
                   value={value}
+                  
                   onChange={onChange}
                   placeholder="Placeholder"
                   error={Boolean(errors.body)}

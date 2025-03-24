@@ -14,7 +14,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import CustomChip from 'components/mui/chip';
 import dayjs from 'dayjs';
-import { getAllActiveNonTeachingStaffs,getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
+import {
+  getAllActiveNonTeachingStaffs,
+  getAllNonTeachingStaffs
+} from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-staffs/services/teachingStaffServices';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
@@ -43,8 +46,10 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
       .matches(/^[a-zA-Z0-9\s]+$/, 'Class Name should not contain special characters')
       .required('Class Name field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
+    start_time: yup.date().required('Class StartTime field is required'),
+    end_time: yup.date().required('Class EndTime field is required'),
     instructors: yup.array().min(1, 'At least one instructor must be selected').required('Instructor field is required'),
-    coordinators: yup.array().min(1, 'At least one coordinator must be selected').required('coordinator field is required')
+    coordinators: yup.array().optional()
   });
 
   const defaultValues = {
@@ -67,7 +72,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     mode: 'onChange',
     resolver: yupResolver(schema)
   });
-  const {show,hide} = useSpinner()
+  // const { show, hide } = useSpinner();
   const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [selectedCoordinates, setSelectedCoordinates] = useState([]);
 
@@ -83,7 +88,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
 
   useEffect(() => {
     if (offlineClasses) {
-      show()
+      // show();
       setSelectedCoordinates(offlineClasses?.coordinators);
       setSelectedInstructors(offlineClasses?.instructors);
       setValue('class_name', offlineClasses.class_name || '');
@@ -93,7 +98,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
       setValue('end_time', dayjs(offlineClasses.end_time) || null);
       setValue('instructors', offlineClasses.instructors || []);
       setValue('coordinators', offlineClasses?.coordinators || []);
-      hide()
+      // hide();
     }
   }, [offlineClasses, setValue]);
 
@@ -110,7 +115,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
       setValue('coordinators', offlineClasses.coordinators);
     }
   }, [offlineClasses, setValue]);
-
+  console.log(errors,"errors")
   const handleClose = () => {
     handleEditClose();
     // reset(defaultValues);
@@ -130,10 +135,10 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
   };
 
   useEffect(() => {
-    show()
+    // show();
     getActiveTeachingStaffs(selectedBranchId);
     getActiveNonTeachingStaffs(selectedBranchId);
-    hide()
+    // hide();
   }, [selectedBranchId]);
 
   function convertDateFormat(input) {
@@ -145,48 +150,59 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
     return formattedDateString;
   }
 
+  console.log('hello');
   const onSubmit = async (data) => {
-    show()
+    console.log("before hit the api , entering the function");
+    // show();
+    const formattedStartTime = data.start_time
+      ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.start_time).format('HH:mm:ss')}`).toISOString()
+      : null;
+
+    const formattedEndTime = data.end_time
+      ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.end_time).format('HH:mm:ss')}`).toISOString()
+      : null;
     const filteredInstructorId = data?.instructors?.map((staff) => staff._id);
     const filteredCoordinatorId = data?.coordinators?.map((staff) => staff._id);
 
     const offline_class_data = {
-      class_name : data.class_name,
-      uuid : offlineClasses?.uuid,
-      start_date : data?.classDate,
-      start_time : data?.start_time,
-      end_time : data?.end_time,
-      coordinators : filteredCoordinatorId,
-      instructors : filteredInstructorId
-    }
-   
+      class_name: data.class_name,
+      uuid: offlineClasses?.uuid,
+      start_date: data?.classDate,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
+      coordinators: filteredCoordinatorId,
+      instructors: filteredInstructorId
+    };
+
     const result = await updateOfflineClass(offline_class_data);
 
     if (result.success) {
-      setRefetch((state) => !state);
+      // hide();
       toast.success(result.message);
+      setRefetch((state) => !state);
       handleClose();
-      hide()
     } else {
-      let errorMessage = '';
+      // let errorMessage = '';
+      // hide();
       toast.error(result?.message);
-      hide()
     }
   };
 
-  
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800,
-        background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
+      sx={{
+        '& .MuiPaper-root': {
+          width: '100%',
+          maxWidth: 800,
+          background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          borderRadius: 2,
-       },
-     }}
+          borderRadius: 2
+        }
+      }}
     >
       <DialogTitle
         id="user-view-edit"
@@ -199,7 +215,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
           color: 'white',
           fontWeight: 'bold',
           padding: '1rem',
-          mb:2
+          mb: 2
         }}
       >
         Edit Offline Class
@@ -235,34 +251,33 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                           borderRadius: '8px',
                           backgroundColor: 'white',
                           '& fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&:hover fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&.Mui-focused fieldset': {
                             borderColor: 'rgba(96, 165, 250, 1)',
-                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                          },
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
                         },
                         '& .MuiInputLabel-root': {
                           color: 'black',
                           '&.Mui-focused': {
-                            color: 'black',
-                          },
+                            color: 'black'
+                          }
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
                           color: 'red',
 
                           borderRadius: '4px',
-                          marginTop: '4px',
-                        },
-
+                          marginTop: '4px'
+                        }
                       }}
                     />
                   )}
-                    />
+                />
               </Grid>
 
               <Grid item xs={6}>
@@ -276,40 +291,42 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                       className="full-width-datepicker"
                       onChange={onChange}
                       placeholderText="Click to select a date"
-                      customInput={<CustomInput label="ClassDate"
-                        sx={{
-                          backgroundColor: 'transparent',
-                          borderRadius: '8px',
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                            backgroundColor: 'white',
-                            '& fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'rgba(96, 165, 250, 1)',
-                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                            },
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'black',
-                            '&.Mui-focused': {
-                              color: 'black',
-                            },
-                          },
-                          '& .MuiFormHelperText-root': {
+                      customInput={
+                        <CustomInput
+                          label="ClassDate"
+                          sx={{
                             backgroundColor: 'transparent',
-                            color: 'red',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
 
-                            borderRadius: '4px',
-                            marginTop: '4px',
-                          },
-
-                        }}
-                      />}
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
+                        />
+                      }
                     />
                   )}
                 />
@@ -340,30 +357,29 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                               borderRadius: '8px',
                               backgroundColor: 'white',
                               '& fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&:hover fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&.Mui-focused fieldset': {
                                 borderColor: 'rgba(96, 165, 250, 1)',
-                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                              },
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
                             },
                             '& .MuiInputLabel-root': {
                               color: 'black',
                               '&.Mui-focused': {
-                                color: 'black',
-                              },
+                                color: 'black'
+                              }
                             },
                             '& .MuiFormHelperText-root': {
                               backgroundColor: 'transparent',
                               color: 'red',
 
                               borderRadius: '4px',
-                              marginTop: '4px',
-                            },
-
+                              marginTop: '4px'
+                            }
                           }}
                         />
                       </LocalizationProvider>
@@ -397,30 +413,29 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                               borderRadius: '8px',
                               backgroundColor: 'white',
                               '& fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&:hover fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&.Mui-focused fieldset': {
                                 borderColor: 'rgba(96, 165, 250, 1)',
-                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                              },
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
                             },
                             '& .MuiInputLabel-root': {
                               color: 'black',
                               '&.Mui-focused': {
-                                color: 'black',
-                              },
+                                color: 'black'
+                              }
                             },
                             '& .MuiFormHelperText-root': {
                               backgroundColor: 'transparent',
                               color: 'red',
 
                               borderRadius: '4px',
-                              marginTop: '4px',
-                            },
-
+                              marginTop: '4px'
+                            }
                           }}
                         />
                       </LocalizationProvider>
@@ -439,7 +454,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   id="select-multiple-chip"
                   options={[{ _id: 'selectAll', full_name: 'Select All' }, ...activeTeachingStaff]}
                   getOptionLabel={(option) => option.full_name}
-                  value={selectedInstructors||[]}
+                  value={selectedInstructors || []}
                   onChange={(e, newValue) => {
                     if (newValue && newValue.some((option) => option._id === 'selectAll')) {
                       setSelectedInstructors(activeTeachingStaff.filter((option) => option._id !== 'selectAll'));
@@ -468,30 +483,29 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                           borderRadius: '8px',
                           backgroundColor: 'white',
                           '& fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&:hover fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&.Mui-focused fieldset': {
                             borderColor: 'rgba(96, 165, 250, 1)',
-                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                          },
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
                         },
                         '& .MuiInputLabel-root': {
                           color: 'black',
                           '&.Mui-focused': {
-                            color: 'black',
-                          },
+                            color: 'black'
+                          }
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
                           color: 'red',
 
                           borderRadius: '4px',
-                          marginTop: '4px',
-                        },
-
+                          marginTop: '4px'
+                        }
                       }}
                     />
                   )}
@@ -530,7 +544,7 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                 />
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
@@ -626,35 +640,41 @@ const OfflineClassEditModal = ({ open, handleEditClose, offlineClasses, setRefet
                   selectalltext="Select All"
                   selectallprops={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
-              <Grid item xs={12} >
+              <Grid item xs={12}>
                 <Box display="flex" justifyContent="space-between">
-
-                  <Button onClick={handleClose} variant="tonal" color="error" sx={{
-                    border: '2px solid #D8B4FE',
-                    color: '#9333EA',
-                    backgroundColor: 'transparent',
-                    '&:hover': {
-                      backgroundColor: '#FAF5FF',
-                    },
-                  }}>
+                  <Button
+                    onClick={handleClose}
+                    variant="tonal"
+                    color="error"
+                    sx={{
+                      border: '2px solid #D8B4FE',
+                      color: '#9333EA',
+                      backgroundColor: 'transparent',
+                      '&:hover': {
+                        backgroundColor: '#FAF5FF'
+                      }
+                    }}
+                  >
                     Cancel
                   </Button>
 
-                  <Button type="submit" variant="contained"  sx={{
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
                       background: 'linear-gradient(to right, #9333EA, #4F46E5)',
                       color: 'white',
                       '&:hover': {
-                        background: 'linear-gradient(to right, #7E22CE, #4338CA)',
-                      },
-                    }}>
+                        background: 'linear-gradient(to right, #7E22CE, #4338CA)'
+                      }
+                    }}
+                  >
                     Submit
                   </Button>
                 </Box>
               </Grid>
-
-
             </Grid>
           </form>
         </DatePickerWrapper>

@@ -70,6 +70,7 @@ const Batch = () => {
   useEffect(() => {
     dispatch(getAllBatches({ branch_id: selectedBranchId, page: '1' }));
   }, [dispatch, selectedBranchId, batchRefetch]);
+  
 
   const handleStatusChangeApi = async () => {
     const data = {

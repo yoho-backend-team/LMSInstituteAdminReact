@@ -70,7 +70,7 @@ const MainLayout = ({}) => {
                 .then((registration) => {
                   console.log('Service Worker registered with scope:', registration.scope);                 
                       const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
-                      usePushSubscription(user?.role,user._id,user,user?.institute_id,selectedBranchId)
+                      usePushSubscription(user?.role,user?._id,user,user?.institute_id,selectedBranchId)
                 })
                 .catch((error) => {
                   console.error('Service Worker registration failed:', error);

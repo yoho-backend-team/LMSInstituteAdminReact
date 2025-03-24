@@ -31,6 +31,7 @@ import * as yup from 'yup';
 import { addLiveClass } from '../../services/liveClassServices';
 import { useInstitute } from 'utils/get-institute-details';
 import dayjs from 'dayjs';
+import { formatTime } from 'utils/formatDate';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -219,7 +220,7 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
         batch: data.batch._id,
         start_date: convertDateFormat(data.class_date),
         start_time: formattedStartTime,
-        end_time: formattedEndTime,
+        end_time:  formattedEndTime,
         instructors: filteredInstructorId,
         coordinators: filteredCoordinatorId,
         video_url: data.videoUrl
