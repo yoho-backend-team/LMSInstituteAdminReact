@@ -30,6 +30,7 @@ import { addOfflineClass } from '../../services/offlineClassServices';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -142,7 +143,7 @@ const handleClassDateChange = (newValue) => {
     batch: yup.object().required('Batch field is required'),
     instructor: yup.array().required('Instructor field is required'),
     classDate: yup.date().nullable().required('Class Date field is required'),
-    start_time: yup.string().required('Start Time field is required'),
+    start_time: yup.date().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required')
   });
 
@@ -196,7 +197,14 @@ const handleClassDateChange = (newValue) => {
   }
 
   const onSubmit = async (data) => {
-    // show()
+    show();
+    const formattedStartTime = data.start_time
+            ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.start_time).format('HH:mm:ss')}`).toISOString()
+            : null;
+    
+          const formattedEndTime = data.end_time
+            ? dayjs(`${convertDateFormat(data.classDate)}T${dayjs(data.end_time).format('HH:mm:ss')}`).toISOString()
+            : null;
     const filteredInstructorId = data.instructor?.map((staff) => staff._id);
     const filteredCoordinatorId = data.coordinator?.map((staff) => staff._id);
 
@@ -207,8 +215,8 @@ const handleClassDateChange = (newValue) => {
       course: data.course,
       batch: data.batch._id,
       start_date: convertDateFormat(data.classDate),
-      start_time: data.start_time,
-      end_time: data.end_time,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
       instructors: filteredInstructorId,
       coordinators: filteredCoordinatorId,
     };
@@ -218,17 +226,21 @@ const handleClassDateChange = (newValue) => {
       const result = await addOfflineClass(dummyData);
 
       if (result.success) {
-        setRefetch((state) => !state);
-        handleClose();
-        reset();
         hide()
+        // reset();
         toast.success(result.message);
+        setRefetch((state) => !state);
+        setSelectedInstructors([]);
+        handleClose();
       } else {
         hide()
         toast.error(result.message);
       }
     } catch (error) {
-      hide()
+      console.error('Error submitting class:', error);
+    }
+    finally {
+      hide();
     }
   };
 
@@ -825,7 +837,7 @@ const handleClassDateChange = (newValue) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
@@ -926,7 +938,7 @@ const handleClassDateChange = (newValue) => {
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
 
 
               <Grid item xs={12}>

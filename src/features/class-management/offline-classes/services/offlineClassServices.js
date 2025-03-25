@@ -51,7 +51,7 @@ export const addOfflineClass = async (data) => {
 
 export const deleteOfflineClass = async (data) => {
   try {
-    const response = await client.offline_class.delete(data)
+    const response = await client?.offline_class.delete(data)
 
     return { success: true, message: 'OfflineClass deleted successfully' };
   } catch (error) {
@@ -63,6 +63,7 @@ export const deleteOfflineClass = async (data) => {
 export const updateOfflineClass = async (data) => {
   try {
     const response = await client.offline_class.update(data)
+    console.log(response, 'response');
     return { success: true, message: 'OfflineClass updated successfully' };
   } catch (error) {
     console.error('Error in updateOfflineClass:', error);

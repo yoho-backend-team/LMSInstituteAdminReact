@@ -11,30 +11,30 @@ import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 
 const OfflineClass = () => {
+  const [refetch, setRefetch] = useState(false);
   const [offlineClassRefetch, setofflineClassRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const offlineClasses = useSelector(selectOfflineClasses);
   const loading = useSelector(selectLoading);
   const dispatch = useDispatch();
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner();
 
   useEffect(() => {
     const data = {
       branch: selectedBranchId,
-      institute : useInstitute().getInstituteId(),
+      institute: useInstitute().getInstituteId(),
       page: '1'
     };
-    show()
-    console.log(data,"data")
+    show();
+    console.log(data, 'data');
     dispatch(getAllOfflineClasses(data));
-    hide()
-  }, [dispatch, selectedBranchId, offlineClassRefetch]);
+    hide();
+  }, [dispatch, selectedBranchId, offlineClassRefetch, refetch]);
 
-  
   return (
     <>
       <Grid>
-        <OfflineClassFilterCard selectedBranchId={selectedBranchId} />
+        <OfflineClassFilterCard selectedBranchId={selectedBranchId} setRefetch={setRefetch} />
         {loading ? (
           <ClassSkeleton />
         ) : (
@@ -43,17 +43,18 @@ const OfflineClass = () => {
               offlineClassRefetch={offlineClassRefetch}
               setofflineClassRefetch={setofflineClassRefetch}
               offlineClasses={offlineClasses?.data}
+              setRefetch={setRefetch}
             />
           </Grid>
         )}
-        
+
         {offlineClasses?.last_page !== 1 && (
           <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
             <Pagination
               count={offlineClasses?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllOfflineClasses({ branch: selectedBranchId,institute:useInstitute().getInstituteId(),page: page }));
+                dispatch(getAllOfflineClasses({ branch: selectedBranchId, institute: useInstitute().getInstituteId(), page: page }));
               }}
             />
           </Grid>

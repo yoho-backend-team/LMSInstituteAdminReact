@@ -19,11 +19,11 @@ import { deleteOfflineClass } from '../services/offlineClassServices';
 import OfflineClassEditModal from './edit-OfflineClass/OfflineClassEditModal';
 import { useSpinner } from 'context/spinnerContext';
 
-const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
+const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch, setRefetch }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState({});
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const { show, hide } = useSpinner()
+  const { show, hide } = useSpinner();
 
   const [offlineClassDeleteModelOpen, setOfflineClassDeleteModelOpen] = useState(false);
 
@@ -43,16 +43,17 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
   }, []);
 
   const handleOfflineClassDelete = async () => {
-    show()
+    show();
     const data = { uuid: selectedOfflineClassDeleteId };
     const result = await deleteOfflineClass(data);
     if (result.success) {
-      hide()
+      hide();
       toast.success(result.message);
-      setofflineClassRefetch((state) => !state);
+      setRefetch((state) => !state);
     } else {
-      hide()
-      toast.error(result.message);
+      hide();
+      console.log('delete error', result.message);
+      // toast.error(result.message);
     }
   };
 
@@ -61,15 +62,20 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
       <Grid container spacing={2}>
         {offlineClasses?.map((card, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{
-              p: 3, position: 'relative', borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1', boxShadow: "0 .25rem .875rem 0 rgba(38,43,67,.16)",
-              borderRadius: 2,
-              transition: 'all 0.3s ease-in-out',
-              '&:hover': {
-                transform: 'scale(1.05) translateY(-4px)',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              }
-            }}>
+            <Card
+              sx={{
+                p: 3,
+                position: 'relative',
+                borderTop: card.status === 'pending' ? '4px solid green' : '4px solid #7cf2e1',
+                boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
+                borderRadius: 2,
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05) translateY(-4px)',
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                }
+              }}
+            >
               <Grid container direction="column" spacing={1}>
                 <Grid item sx={{ alignItems: 'center', justifyContent: 'center', display: 'flex', mt: 1 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -118,33 +124,32 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
                       {/* {card?.start_date} / {card?.start_time} to {card?.end_time}{' '} */}
                       {card?.start_date
                         ? new Date(card.start_date).toLocaleDateString('en-US', {
-                          weekday: 'short',
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })
-                        : "Invalid Date"}
+                            weekday: 'short',
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })
+                        : 'Invalid Date'}
 
-                      {" | "}
+                      {' | '}
 
                       {card?.start_time
                         ? new Date(card.start_time).toLocaleTimeString('en-US', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: true
-                        })
-                        : "Invalid Time"}
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })
+                        : 'Invalid Time'}
 
-                      {" - "}
+                      {' - '}
 
                       {card?.end_time
                         ? new Date(card.end_time).toLocaleTimeString('en-US', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          hour12: true
-                        })
-                        : "Invalid Time"}
-
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })
+                        : 'Invalid Time'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -200,7 +205,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
           </Grid>
         ))}
         <OfflineClassEditModal
-          setRefetch={setofflineClassRefetch}
+          setRefetch={setRefetch}
           selectedBranchId={selectedBranchId}
           offlineClasses={selectedClass}
           open={isEditModalOpen}
@@ -212,6 +217,7 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
           description="Are you sure you want to delete this item?"
           title="Delete"
           handleSubmit={handleOfflineClassDelete}
+          setRefetch={setRefetch}
         />
       </Grid>
     </>
@@ -219,8 +225,8 @@ const OfflineClassCard = ({ offlineClasses, setofflineClassRefetch }) => {
 };
 
 OfflineClassCard.propTypes = {
-  offlineClassRefetch: PropTypes.any,
-  setofflineClassRefetch: PropTypes.any
+  refetch: PropTypes.any,
+  setRefetch: PropTypes.any
 };
 
 export default OfflineClassCard;

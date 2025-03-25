@@ -8,6 +8,7 @@ const BATCH_API_ENDPOINT = `${process.env.REACT_APP_PUBLIC_API_URL}/api/institut
 export const getAllBatchesByBranch = async (data) => {
   try {
     const response = await client.batch.getAll(data)
+    console.log('batches response in services:', response);
 
     // Check if the response status is successful
 
