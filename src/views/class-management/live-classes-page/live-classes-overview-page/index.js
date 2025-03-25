@@ -25,11 +25,11 @@ const LiveClass = () => {
     };
     dispatch(getAllLiveClasses(data));
   }, [dispatch, selectedBranchId, refetch]);
-  console.log( liveClasses , "liveClasses")
+  // console.log( liveClasses , "liveClasses")
   return (
     <>
       <Grid>
-        <LiveClassFilterCard selectedBranchId={selectedBranchId} />
+        <LiveClassFilterCard selectedBranchId={selectedBranchId} setRefetch={setRefetch}/>
         {loading  ? (
           <LiveClassSkeleton liveClasses={liveClasses?.data} />
         ) : (

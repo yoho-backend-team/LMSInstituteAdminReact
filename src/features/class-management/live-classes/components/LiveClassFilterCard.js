@@ -33,7 +33,7 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 const LiveClassFilterCard = (props) => {
-  const { selectedBranchId } = props;
+  const { selectedBranchId , setRefetch } = props;
   const dispatch = useDispatch();
   const [statusValue, setStatusValue] = useState('');
   const [startDateRange, setStartDateRange] = useState(null);
@@ -160,7 +160,7 @@ const LiveClassFilterCard = (props) => {
             <Typography variant="h2">Live Class</Typography>
           </Box>
           <Box>
-            <LiveClassCardHeader />
+            <LiveClassCardHeader  setRefetch={setRefetch}/>
           </Box>
         </Box>
       </Grid>

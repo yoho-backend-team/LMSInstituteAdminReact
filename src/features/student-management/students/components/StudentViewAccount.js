@@ -15,6 +15,7 @@ import { deleteStudent } from '../services/studentService';
 import { default as UserSubscriptionDialog, default as UserSuspendDialog } from './UserSubscriptionDialog';
 
 const UserViewAccount = ({ student }) => {
+  console.log("student details in front page",student);
   // ** States
   const [suspendDialogOpen, setSuspendDialogOpen] = useState(false);
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
@@ -89,12 +90,12 @@ const UserViewAccount = ({ student }) => {
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
-                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Contact:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500,ml:6}}> {student?.contact_info?.phone_number}</Typography>
+                    <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Contact: </Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500,ml:6}}>  {student?.contact_info?.phone_number}</Typography>
                   </Box>
                   <Box sx={{ display: 'flex', mb: 3 }}>
                     <Typography sx={{ mr: 2, fontWeight: 600, color: '#444444'  }}>Alt Contact:</Typography>
-                    <Typography sx={{ color: '#000000', fontWeight: 500  ,marginLeft:"27px"}}>+91 {student?.contact_info?.alternate_phone_number}</Typography>
+                    <Typography sx={{ color: '#000000', fontWeight: 500  ,marginLeft:"27px"}}> &nbsp; {student?.contact_info?.alternate_phone_number}</Typography>
                   </Box>
                   <Box sx={{ mb: 3 }}>
                     <Typography sx={{ mr: 2, mb: 1, fontWeight: 600, color: '#444444'  }}>Address:</Typography>

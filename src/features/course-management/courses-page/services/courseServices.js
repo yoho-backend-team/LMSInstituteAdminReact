@@ -113,7 +113,9 @@ export const addCourse = async (data, file) => {
 
 export const getStudentByCourse = async (data) => {
   try {
+    console.log('course response before api hits: ',data)
     const response = await client.users.getStudentsWithCourse(data)
+    console.log('course response after api hits: ',response)
 
     if (response.status) {
       return response;

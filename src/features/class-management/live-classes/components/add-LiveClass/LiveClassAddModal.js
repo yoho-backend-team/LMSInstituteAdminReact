@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { Checkbox, Grid ,Typography} from '@mui/material';
+import { Checkbox, Grid, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -20,7 +20,6 @@ import { getAllActiveTeachingStaffs } from 'features/staff-management/teaching-s
 import { getAllNonTeachingStaffs } from 'features/staff-management/non-teaching-staffs/services/nonTeachingStaffServices';
 import { useSpinner } from 'context/spinnerContext';
 
-
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -31,6 +30,8 @@ import DatePickerWrapper from 'styles/libs/react-datepicker';
 import * as yup from 'yup';
 import { addLiveClass } from '../../services/liveClassServices';
 import { useInstitute } from 'utils/get-institute-details';
+import dayjs from 'dayjs';
+import { formatTime } from 'utils/formatDate';
 
 const CustomInput = forwardRef(({ ...props }, ref) => {
   const { label, readOnly } = props;
@@ -39,13 +40,14 @@ const CustomInput = forwardRef(({ ...props }, ref) => {
 });
 
 const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
+  // console.log('receiving the setrefech:', setRefetch);
   const [activeTeachingStaff, setActiveTeachingStaff] = useState([]);
   const [activeNonTeachingStaff, setActiveNonTeachingStaff] = useState([]);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [activeBranches, setActiveBranches] = useState([]);
   const [activeCourse, setActiveCourse] = useState([]);
   const [activeBatches, setActiveBatches] = useState([]);
-  const {show,hide} = useSpinner()
+  const { show, hide } = useSpinner();
 
   const [selectedBranch, setSelectedBranch] = useState(null);
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -53,30 +55,29 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
   const [classDateSelected, setClassDateSelected] = useState(false);
 
   const handleBranchChange = (newValue) => {
-  setSelectedBranch(newValue);
-  setSelectedCourse(null); // Reset course when branch changes
-  setSelectedBatch(null); // Reset batch when branch changes
-  setClassDateSelected(false); // Reset class date when branch changes
-};
+    setSelectedBranch(newValue);
+    setSelectedCourse(null); // Reset course when branch changes
+    setSelectedBatch(null); // Reset batch when branch changes
+    setClassDateSelected(false); // Reset class date when branch changes
+  };
 
-const handleCourseChange = (newValue) => {
-  setSelectedCourse(newValue);
-  setSelectedBatch(null); // Reset batch when course changes
-  setClassDateSelected(false); // Reset class date when course changes
-};
+  const handleCourseChange = (newValue) => {
+    setSelectedCourse(newValue);
+    setSelectedBatch(null); // Reset batch when course changes
+    setClassDateSelected(false); // Reset class date when course changes
+  };
 
-const handleBatchChange = (newValue) => {
-  setSelectedBatch(newValue);
-  setClassDateSelected(false); // Reset class date when batch changes
-};
+  const handleBatchChange = (newValue) => {
+    setSelectedBatch(newValue);
+    setClassDateSelected(false); // Reset class date when batch changes
+  };
 
-const handleClassDateChange = (newValue) => {
-  setClassDateSelected(true);
-};
-  
+  const handleClassDateChange = (newValue) => {
+    setClassDateSelected(true);
+  };
 
-  console.log(activeNonTeachingStaff);
-  
+  // console.log(activeNonTeachingStaff);
+
   useEffect(() => {
     getActiveBranchesByUser();
   }, []);
@@ -89,10 +90,13 @@ const handleClassDateChange = (newValue) => {
 
   const getActiveBranchesByUser = async () => {
     const result = await getActiveBranches();
+    console.log('branch getting:', result);
     setActiveBranches(result.data);
   };
   const getActiveCoursesByBranch = async (selectedBranchId) => {
+    console.log('Before API hitting active courses for branch:', selectedBranchId);
     const result = await getAllCourses({ branch_id: selectedBranchId });
+    console.log('After API hitting active courses for branch:', result);
 
     if (result?.data) {
       setActiveCourse(result?.data);
@@ -138,7 +142,7 @@ const handleClassDateChange = (newValue) => {
     course: yup.string().required('Course is required'),
     batch: yup.object().nullable().required('Batch is required'),
     class_date: yup.date().nullable().required('Class Date field is required'),
-    start_time: yup.string().required('Start Time field is required'),
+    start_time: yup.date().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required'),
     videoUrl: yup.string().required('VideoUrl field is required'),
     instructor: yup.array().min(1, 'At least one item must be selected').required('instructor field is required')
@@ -195,38 +199,50 @@ const handleClassDateChange = (newValue) => {
   }
 
   const onSubmit = async (data) => {
-    show()
-    const filteredInstructorId = data.instructor?.map((staff) => staff._id);
-    const filteredCoordinatorId = data.coordinator?.map((staff) => staff._id);
-    const dummyData = {
-      institute: useInstitute().getInstituteId(),
-      class_name: data.class_name,
-      branch: data.branch,
-      course: data.course,
-      batch: data.batch._id,
-      start_date: convertDateFormat(data.class_date),
-      start_time: data.start_time,
-      end_time: data.end_time,
-      instructors: filteredInstructorId,
-      coordinators: filteredCoordinatorId,
-      video_url: data.videoUrl
-    };
+    show();
 
     try {
+      const formattedStartTime = data.start_time
+        ? dayjs(`${convertDateFormat(data.class_date)}T${dayjs(data.start_time).format('HH:mm:ss')}`).toISOString()
+        : null;
+
+      const formattedEndTime = data.end_time
+        ? dayjs(`${convertDateFormat(data.class_date)}T${dayjs(data.end_time).format('HH:mm:ss')}`).toISOString()
+        : null;
+      const filteredInstructorId = data.instructor?.map((staff) => staff._id);
+      const filteredCoordinatorId = data.coordinator?.map((staff) => staff._id);
+
+      const dummyData = {
+        institute: useInstitute().getInstituteId(),
+        class_name: data.class_name,
+        branch: data.branch,
+        course: data.course,
+        batch: data.batch._id,
+        start_date: convertDateFormat(data.class_date),
+        start_time: formattedStartTime,
+        end_time:  formattedEndTime,
+        instructors: filteredInstructorId,
+        coordinators: filteredCoordinatorId,
+        video_url: data.videoUrl
+      };
+
       const result = await addLiveClass(dummyData);
 
       if (result.success) {
-        hide()
-        setRefetch((state) => !state);
+        hide();
         toast.success(result.message);
+        setRefetch((state) => !state);
+        setSelectedInstructors([]);
         handleClose();
       } else {
-        hide()
+        hide();
         toast.error(result.message);
       }
     } catch (error) {
-      hide()
-      toast.error(error)
+      console.error('Error submitting class:', error);
+      // toast.error(error.message || 'Something went wrong!');
+    } finally {
+      hide();
     }
   };
 
@@ -236,11 +252,15 @@ const handleClassDateChange = (newValue) => {
       onClose={handleClose}
       aria-labelledby="user-view-edit"
       aria-describedby="user-view-edit-description"
-      sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 800,
-        background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        borderRadius: 2,
-       } }}
+      sx={{
+        '& .MuiPaper-root': {
+          width: '100%',
+          maxWidth: 800,
+          background: 'linear-gradient(to bottom right, #f0e7ff, #e0f2ff)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          borderRadius: 2
+        }
+      }}
     >
       <DialogTitle
         id="user-view-edit"
@@ -252,7 +272,7 @@ const handleClassDateChange = (newValue) => {
           background: 'linear-gradient(to right, #6b46c1, #5a67d8)',
           color: 'white',
           fontWeight: 'bold',
-          padding: '1rem',
+          padding: '1rem'
         }}
       >
         Add Live Class
@@ -288,30 +308,29 @@ const handleClassDateChange = (newValue) => {
                           borderRadius: '8px',
                           backgroundColor: 'white',
                           '& fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&:hover fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&.Mui-focused fieldset': {
                             borderColor: 'rgba(96, 165, 250, 1)',
-                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                          },
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
                         },
                         '& .MuiInputLabel-root': {
                           color: 'black',
                           '&.Mui-focused': {
-                            color: 'black',
-                          },
+                            color: 'black'
+                          }
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
                           color: 'red',
 
                           borderRadius: '4px',
-                          marginTop: '4px',
-                        },
-
+                          marginTop: '4px'
+                        }
                       }}
                     />
                   )}
@@ -333,39 +352,42 @@ const handleClassDateChange = (newValue) => {
                       }}
                       value={activeBranches.find((branch) => branch._id === value) || null}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Branch" error={Boolean(errors.branch)} helperText={errors.branch?.message} 
-                        sx={{
-                          backgroundColor: 'transparent',
-                          borderRadius: '8px',
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                            backgroundColor: 'white',
-                            '& fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
-                            },
-                            '&:hover fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'rgba(96, 165, 250, 1)',
-                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                            },
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'black',
-                            '&.Mui-focused': {
-                              color: 'black',
-                            },
-                          },
-                          '& .MuiFormHelperText-root': {
+                        <TextField
+                          {...params}
+                          label="Select Branch"
+                          error={Boolean(errors.branch)}
+                          helperText={errors.branch?.message}
+                          sx={{
                             backgroundColor: 'transparent',
-                            color: 'red',
-  
-                            borderRadius: '4px',
-                            marginTop: '4px',
-                          },
-  
-                        }}
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: 'red',
+
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
                         />
                       )}
                     />
@@ -389,46 +411,49 @@ const handleClassDateChange = (newValue) => {
                       value={activeCourse.find((course) => course._id === value) || null}
                       disabled={!selectedBranch}
                       renderInput={(params) => (
-                        <TextField {...params} label="Select Course" error={Boolean(errors.course)} helperText={errors.course?.message
-                          || (!selectedBranch && 'Please select a branch first to enable course selection.')
-                        }
-                        sx={{
-                          '& .MuiInputBase-root.Mui-disabled': {
-                            backgroundColor: '#f0f0f0'  
-                          },
-                          cursor: !selectedBranch ? 'not-allowed' : 'text',
-                          backgroundColor: 'transparent',
-                          borderRadius: '8px',
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                            backgroundColor: 'white',
-                            '& fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
+                        <TextField
+                          {...params}
+                          label="Select Course"
+                          error={Boolean(errors.course)}
+                          helperText={
+                            errors.course?.message || (!selectedBranch && 'Please select a branch first to enable course selection.')
+                          }
+                          sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'
                             },
-                            '&:hover fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'rgba(96, 165, 250, 1)',
-                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                            },
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'black',
-                            '&.Mui-focused': {
-                              color: 'black',
-                            },
-                          },
-                          '& .MuiFormHelperText-root': {
+                            cursor: !selectedBranch ? 'not-allowed' : 'text',
                             backgroundColor: 'transparent',
-                            color: selectedBranch ? 'red':'black',
-  
-                            borderRadius: '4px',
-                            marginTop: '4px',
-                          },
-  
-                        }} />
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: selectedBranch ? 'red' : 'black',
 
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
+                        />
                       )}
                     />
                   )}
@@ -436,67 +461,70 @@ const handleClassDateChange = (newValue) => {
               </Grid>
 
               <Grid item xs={12}>
-  <Controller
-    name="batch"
-    control={control}
-    render={({ field }) => (
-      <Autocomplete
-        {...field}
-        fullWidth
-        options={activeBatches}
-        getOptionLabel={(option) => option?.batch_name || ''}
-        onChange={(event, newValue) => {
-          setValue('batch', newValue);
-          handleBatchChange(newValue);
-        }}
-        disabled={!selectedCourse}
-        value={field.value}
-        renderInput={(params) => (
-          <TextField
-            {...params} label="Batch" error={Boolean(errors.batch)} helperText={errors.batch?.message 
-              || (!selectedCourse && 'Please select a Course first to enable Batch selection.')
-            }
-            sx={{
-              '& .MuiInputBase-root.Mui-disabled': {
-                              backgroundColor: '#f0f0f0'  
+                <Controller
+                  name="batch"
+                  control={control}
+                  render={({ field }) => (
+                    <Autocomplete
+                      {...field}
+                      fullWidth
+                      options={activeBatches}
+                      getOptionLabel={(option) => option?.batch_name || ''}
+                      onChange={(event, newValue) => {
+                        setValue('batch', newValue);
+                        handleBatchChange(newValue);
+                      }}
+                      disabled={!selectedCourse}
+                      value={field.value}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Batch"
+                          error={Boolean(errors.batch)}
+                          helperText={
+                            errors.batch?.message || (!selectedCourse && 'Please select a Course first to enable Batch selection.')
+                          }
+                          sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'
                             },
                             cursor: !selectedCourse ? 'not-allowed' : 'text',
-              mb: '2',
-              backgroundColor: 'transparent',
-              borderRadius: '8px',
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-                backgroundColor: 'white',
-                '& fieldset': {
-                  borderColor: 'rgba(156, 163, 175, 1)',
-                },
-                '&:hover fieldset': {
-                  borderColor: 'rgba(156, 163, 175, 1)',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: 'rgba(96, 165, 250, 1)',
-                  boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: 'black',
-                '&.Mui-focused': {
-                  color: 'black',
-                },
-              },
-              '& .MuiFormHelperText-root': {
-                backgroundColor: 'transparent',
-                color:selectedCourse? 'red' :'black',
-                borderRadius: '4px',
-                marginTop: '4px',
-              },
-            }}
-          />
-        )}
-      />
-    )}
-  />
-</Grid>
+                            mb: '2',
+                            backgroundColor: 'transparent',
+                            borderRadius: '8px',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              backgroundColor: 'white',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
+                            },
+                            '& .MuiInputLabel-root': {
+                              color: 'black',
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            },
+                            '& .MuiFormHelperText-root': {
+                              backgroundColor: 'transparent',
+                              color: selectedCourse ? 'red' : 'black',
+                              borderRadius: '4px',
+                              marginTop: '4px'
+                            }
+                          }}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
 
               <Grid item xs={6}>
                 <Controller
@@ -513,52 +541,65 @@ const handleClassDateChange = (newValue) => {
                       }}
                       placeholderText="Click to select a date"
                       disabled={!selectedBatch}
-                      customInput={<CustomInput label="ClassDate"
-                        sx={{
-                          '& .MuiInputBase-root.Mui-disabled': {
-                            backgroundColor: '#f0f0f0'  
-                          },
-                          cursor: !selectedBatch ? 'not-allowed' : 'text',
-                          backgroundColor: 'white',
-                          borderRadius: '8px',
-                          '& .MuiOutlinedInput-root': {
+                      customInput={
+                        <CustomInput
+                          label="ClassDate"
+                          sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'
+                            },
+                            cursor: !selectedBatch ? 'not-allowed' : 'text',
+                            backgroundColor: 'white',
                             borderRadius: '8px',
-                            '& fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: '8px',
+                              '& fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&:hover fieldset': {
+                                borderColor: 'rgba(156, 163, 175, 1)'
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: 'rgba(96, 165, 250, 1)',
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
                             },
-                            '&:hover fieldset': {
-                              borderColor: 'rgba(156, 163, 175, 1)',
-                            },
-                            '&.Mui-focused fieldset': {
-                              borderColor: 'rgba(96, 165, 250, 1)',
-                              boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                            },
-                          },
-                          '& .MuiInputLabel-root': {
-                            color: 'black',
-                            '&.Mui-focused': {
+                            '& .MuiInputLabel-root': {
                               color: 'black',
-                            },
-                          },
-                        }}  />}
+                              '&.Mui-focused': {
+                                color: 'black'
+                              }
+                            }
+                          }}
+                        />
+                      }
                     />
                   )}
                 />
                 {/* {errors.class_date && <p style={{ color: 'red', margin: '5px 0 0', fontSize: '0.875rem' }}>{errors.class_date.message}</p>} */}
                 {errors.class_date ? (
-    <Typography variant="body2" color="error" sx={{ marginTop: '5px' }}>
-      {errors.class_date.message}
-    </Typography>
-  ) : (
-    !selectedBatch && (
-      <Typography variant="body2" color="textSecondary" sx={{ marginTop: '5px',ml:2,fontSize: '0.8rem' , '& .MuiInputBase-root.Mui-disabled': {
-        backgroundColor: '#f0f0f0'  
-      },
-      cursor: !selectedBatch ? 'not-allowed' : 'text',}}>
-        Please select a batch first to enable the class date.
-      </Typography>
-    )
-  )}
+                  <Typography variant="body2" color="error" sx={{ marginTop: '5px' }}>
+                    {errors.class_date.message}
+                  </Typography>
+                ) : (
+                  !selectedBatch && (
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      sx={{
+                        marginTop: '5px',
+                        ml: 2,
+                        fontSize: '0.8rem',
+                        '& .MuiInputBase-root.Mui-disabled': {
+                          backgroundColor: '#f0f0f0'
+                        },
+                        cursor: !selectedBatch ? 'not-allowed' : 'text'
+                      }}
+                    >
+                      Please select a batch first to enable the class date.
+                    </Typography>
+                  )
+                )}
               </Grid>
               <Grid container item xs={6} spacing={2}>
                 <Grid item md={6} sm={12}>
@@ -571,18 +612,19 @@ const handleClassDateChange = (newValue) => {
                           customInput={
                             <CustomInput
                               label="Start Time"
-                              sx={{ 
-                                
-                                border: errors.start_time ? '1px solid red' : 'none', borderRadius: '7px' }}
+                              sx={{
+                                border: errors.start_time ? '1px solid red' : 'none',
+                                borderRadius: '7px'
+                              }}
                             />
                           }
                           value={value}
                           onChange={onChange}
                           label="Start Time"
-                          disabled={!classDateSelected} 
+                          disabled={!classDateSelected}
                           sx={{
                             '& .MuiInputBase-root.Mui-disabled': {
-                              backgroundColor: '#f0f0f0'  
+                              backgroundColor: '#f0f0f0'
                             },
                             cursor: !classDateSelected ? 'not-allowed' : 'text',
                             backgroundColor: 'white',
@@ -590,23 +632,23 @@ const handleClassDateChange = (newValue) => {
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '8px',
                               '& fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&:hover fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&.Mui-focused fieldset': {
                                 borderColor: 'rgba(96, 165, 250, 1)',
-                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                              },
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
                             },
                             '& .MuiInputLabel-root': {
                               color: 'black',
                               '&.Mui-focused': {
-                                color: 'black',
-                              },
-                            },
-                          }} 
+                                color: 'black'
+                              }
+                            }
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -626,40 +668,43 @@ const handleClassDateChange = (newValue) => {
                           customInput={
                             <CustomInput
                               label="End Time"
-                              sx={{  
-                                border: errors.end_time ? '1px solid red' : 'none', borderRadius: '7px' }}
-                                />
-                              }
-                              value={value}
-                              onChange={onChange}
-                              label="End Time"
-                              disabled={!classDateSelected}
-                          sx={{'& .MuiInputBase-root.Mui-disabled': {
-                                backgroundColor: '#f0f0f0'  
-                              },
-                              cursor: !classDateSelected ? 'not-allowed' : 'text',
+                              sx={{
+                                border: errors.end_time ? '1px solid red' : 'none',
+                                borderRadius: '7px'
+                              }}
+                            />
+                          }
+                          value={value}
+                          onChange={onChange}
+                          label="End Time"
+                          disabled={!classDateSelected}
+                          sx={{
+                            '& .MuiInputBase-root.Mui-disabled': {
+                              backgroundColor: '#f0f0f0'
+                            },
+                            cursor: !classDateSelected ? 'not-allowed' : 'text',
                             backgroundColor: 'white',
                             borderRadius: '8px',
                             '& .MuiOutlinedInput-root': {
                               borderRadius: '8px',
                               '& fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&:hover fieldset': {
-                                borderColor: 'rgba(156, 163, 175, 1)',
+                                borderColor: 'rgba(156, 163, 175, 1)'
                               },
                               '&.Mui-focused fieldset': {
                                 borderColor: 'rgba(96, 165, 250, 1)',
-                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                              },
+                                boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                              }
                             },
                             '& .MuiInputLabel-root': {
                               color: 'black',
                               '&.Mui-focused': {
-                                color: 'black',
-                              },
-                            },
-                          }} 
+                                color: 'black'
+                              }
+                            }
+                          }}
                         />
                       </LocalizationProvider>
                     )}
@@ -688,7 +733,6 @@ const handleClassDateChange = (newValue) => {
                     } else {
                       setSelectedInstructors(newValue);
                       setValue('instructor', newValue);
-
                     }
                   }}
                   disabled={!classDateSelected}
@@ -696,17 +740,19 @@ const handleClassDateChange = (newValue) => {
                     <TextField
                       {...params}
                       error={Boolean(errors.instructor)}
-            helperText={errors.instructor?.message || (!classDateSelected && 'Please select a ClassDate first to enable Instructor selection.')}
+                      helperText={
+                        errors.instructor?.message ||
+                        (!classDateSelected && 'Please select a ClassDate first to enable Instructor selection.')
+                      }
                       fullWidth
                       label="Instructors"
                       InputProps={{
                         ...params.InputProps,
                         style: { overflowX: 'auto', maxHeight: 55, overflowY: 'hidden' }
-                        
                       }}
                       sx={{
                         '& .MuiInputBase-root.Mui-disabled': {
-                          backgroundColor: '#f0f0f0'  
+                          backgroundColor: '#f0f0f0'
                         },
                         cursor: !classDateSelected ? 'not-allowed' : 'text',
                         backgroundColor: 'transparent',
@@ -715,30 +761,29 @@ const handleClassDateChange = (newValue) => {
                           borderRadius: '8px',
                           backgroundColor: 'white',
                           '& fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&:hover fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&.Mui-focused fieldset': {
                             borderColor: 'rgba(96, 165, 250, 1)',
-                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                          },
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
                         },
                         '& .MuiInputLabel-root': {
                           color: 'black',
                           '&.Mui-focused': {
-                            color: 'black',
-                          },
+                            color: 'black'
+                          }
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
-                          color: classDateSelected? 'red':'black',
+                          color: classDateSelected ? 'red' : 'black',
 
                           borderRadius: '4px',
-                          marginTop: '4px',
-                        },
-
+                          marginTop: '4px'
+                        }
                       }}
                     />
                   )}
@@ -777,7 +822,7 @@ const handleClassDateChange = (newValue) => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={12}>
+              {/* <Grid item xs={12} sm={12}>
                 <Autocomplete
                   disableCloseOnSelect
                   multiple
@@ -879,7 +924,7 @@ const handleClassDateChange = (newValue) => {
                   selectAllText="Select All"
                   SelectAllProps={{ sx: { fontWeight: 'bold' } }}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <Controller
                   name="videoUrl"
@@ -900,30 +945,29 @@ const handleClassDateChange = (newValue) => {
                           borderRadius: '8px',
                           backgroundColor: 'white',
                           '& fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&:hover fieldset': {
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderColor: 'rgba(156, 163, 175, 1)'
                           },
                           '&.Mui-focused fieldset': {
                             borderColor: 'rgba(96, 165, 250, 1)',
-                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)',
-                          },
+                            boxShadow: '0 0 0 3px rgba(229, 231, 235, 0.5)'
+                          }
                         },
                         '& .MuiInputLabel-root': {
                           color: 'black',
                           '&.Mui-focused': {
-                            color: 'black',
-                          },
+                            color: 'black'
+                          }
                         },
                         '& .MuiFormHelperText-root': {
                           backgroundColor: 'transparent',
                           color: 'red',
 
                           borderRadius: '4px',
-                          marginTop: '4px',
-                        },
-
+                          marginTop: '4px'
+                        }
                       }}
                     />
                   )}
@@ -931,35 +975,38 @@ const handleClassDateChange = (newValue) => {
               </Grid>
 
               <Grid item xs={12}>
-
-                <Box  display="flex" justifyContent="space-between">
-
-
-                  <Button variant="tonal" color="error" onClick={handleClose} sx={{
-                    border: '2px solid #D8B4FE',
-                    color: '#9333EA',
-                    backgroundColor: 'transparent',
-                    '&:hover': {
-                      backgroundColor: '#FAF5FF',
-                    },
-                  }}>
+                <Box display="flex" justifyContent="space-between">
+                  <Button
+                    variant="tonal"
+                    color="error"
+                    onClick={handleClose}
+                    sx={{
+                      border: '2px solid #D8B4FE',
+                      color: '#9333EA',
+                      backgroundColor: 'transparent',
+                      '&:hover': {
+                        backgroundColor: '#FAF5FF'
+                      }
+                    }}
+                  >
                     Cancel
                   </Button>
 
-                  <Button type="submit" variant="contained" sx={{
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
                       background: 'linear-gradient(to right, #9333EA, #4F46E5)',
                       color: 'white',
                       '&:hover': {
-                        background: 'linear-gradient(to right, #7E22CE, #4338CA)',
-                      },
-                    }} >
+                        background: 'linear-gradient(to right, #7E22CE, #4338CA)'
+                      }
+                    }}
+                  >
                     Submit
                   </Button>
-
                 </Box>
-
               </Grid>
-
             </Grid>
           </form>
         </DatePickerWrapper>

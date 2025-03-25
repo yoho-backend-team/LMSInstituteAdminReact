@@ -36,6 +36,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
   const handleDelete = useCallback((itemId) => {
     setSelectedLiveclassDeleteId(itemId);
     setLiveclassDeleteModelOpen(true);
+    
   }, []);
 
   const handleLiveclassDelete = async () => {
@@ -48,7 +49,8 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
       setRefetch((state) => !state);
     } else {
       hide()
-      toast.error(result.message);
+      console.log('delete error', result.message);
+      // toast.error(result.message);
     }
   };
 
@@ -63,7 +65,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
     navigator.clipboard.writeText(text);
     toast.success('Link copied to clipboard');
   };
-  console.log(liveClasses)
+  // console.log(liveClasses)
   return (
     <>
       <Grid container spacing={2}>
@@ -268,6 +270,7 @@ const LiveClassCard = ({ setRefetch, liveClasses }) => {
           description="Are you sure you want to delete this Live Class? "
           title="Delete"
           handleSubmit={handleLiveclassDelete}
+          setRefetch={setRefetch}
         />
       </Grid>
     </>
