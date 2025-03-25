@@ -42,7 +42,7 @@ const schema = yup.object().shape({
   branch: yup.string().required('Branch is required'),
   batch: yup.object().required('Batch is required'),
   student: yup.string().required('Students is required'),
-  certificate_name: yup.string().required('Certificate Name is required')
+  // certificate_name: yup.string().required('Certificate Name is required')
 });
 
 const defaultValues = {
@@ -50,8 +50,8 @@ const defaultValues = {
   course: '',
   batch: null,
   student: '',
-  certificate_name: '',
-  description: ''
+  // certificate_name: '',
+  // description: ''
 };
 
 const StudentCertificateAddDrawer = (props) => {
@@ -144,8 +144,8 @@ const StudentCertificateAddDrawer = (props) => {
     var bodyFormData = new FormData();
     bodyFormData.append('file_upload', studymaterialPdf);
     bodyFormData.append('student', data.student);
-    bodyFormData.append('certificate_name', data.certificate_name);
-    bodyFormData.append('description', data.description);
+    // bodyFormData.append('certificate_name', data.certificate_name);
+    // bodyFormData.append('description', data.description);
     bodyFormData.append('branch_id', selectedBranchId);
 
     const branch = activeBranches.filter(i=>i.branch_identity===data.branch);
@@ -156,8 +156,8 @@ const StudentCertificateAddDrawer = (props) => {
       branch_id: branch[0].uuid,
       institute_id: useInstitute().getInstituteId(),
       batch_id: data.batch._id,
-      description: data.description,
-      certificate_name: data.certificate_name,
+      // description: data.description,
+      // certificate_name: data.certificate_name,
       course: data.batch.course.uuid,
     };
 
@@ -323,7 +323,9 @@ const StudentCertificateAddDrawer = (props) => {
               />
             </Grid>
 
-            {/* Certificate Name */}
+
+{/*
+           
             <Grid item xs={12} sm={12} sx={{mb: 4 }}>
               <Controller
                 name="certificate_name"
@@ -343,7 +345,7 @@ const StudentCertificateAddDrawer = (props) => {
               />
             </Grid>
 
-            {/* Description */}
+            
             <Grid item xs={12} sm={12}>
               <Controller
                 name="description"
@@ -361,8 +363,7 @@ const StudentCertificateAddDrawer = (props) => {
                   />
                 )}
               />
-            </Grid>
-
+            </Grid> */}
             {/* Submit and Cancel Buttons */}
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 4,justifyContent:'space-between'}}>
               <Button type="submit" variant="contained" sx={{ mr: 3, borderRadius: 2,width:'30%',py:1}}>

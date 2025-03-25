@@ -224,7 +224,7 @@ const StudenrCertificate = () => {
       }
     },
     {
-      flex: 0.25,
+      flex: 1,
       minWidth: 280,
       field: 'fullName',
       headerName: 'User',
@@ -279,36 +279,36 @@ const StudenrCertificate = () => {
         );
       }
     },
-    {
-      flex: 1,
-      minWidth: 180,
-      field: 'status',
-      headerName: 'Status',
-      renderCell: ({ row }) => {
-        return (
-          <TextField
-            size="small"
-            select
-            value={row?.is_active}
-            label="status"
-            id="custom-select"
-            sx={{
-              color: userStatusObj[row?.is_active]
-            }}
-            onChange={(e) => handleStatusValue(e, row)}
-            SelectProps={{
-              sx: {
-                borderColor: row.is_active? 'success' : 'error',
-                color: userStatusObj[row?.is_active]
-              }
-            }}
-          >
-            <MenuItem value={true}>Active</MenuItem>
-            <MenuItem value={false}>Inactive</MenuItem>
-          </TextField>
-        );
-      }
-    },
+    // {
+    //   flex: 1,
+    //   minWidth: 180,
+    //   field: 'status',
+    //   headerName: 'Status',
+    //   renderCell: ({ row }) => {
+    //     return (
+    //       <TextField
+    //         size="small"
+    //         select
+    //         value={row?.is_active}
+    //         label="status"
+    //         id="custom-select"
+    //         sx={{
+    //           color: userStatusObj[row?.is_active]
+    //         }}
+    //         onChange={(e) => handleStatusValue(e, row)}
+    //         SelectProps={{
+    //           sx: {
+    //             borderColor: row.is_active? 'success' : 'error',
+    //             color: userStatusObj[row?.is_active]
+    //           }
+    //         }}
+    //       >
+    //         <MenuItem value={true}>Active</MenuItem>
+    //         <MenuItem value={false}>Inactive</MenuItem>
+    //       </TextField>
+    //     );
+    //   }
+    // },
     {
       flex: 0.1,
       minWidth: 100,

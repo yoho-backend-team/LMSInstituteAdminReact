@@ -153,7 +153,7 @@ const StudentCertificateEdit = (props) => {
       </Header>
       <Box sx={{ p: (theme) => theme.spacing(0, 6, 6) }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          {/* <Grid item xs={12} sm={12} sx={{ mb: 4, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
             {!selectedFile && <PDFViewer url={savedPdfUrl} />}
             {selectedFile && <PDFViewer url={URL.createObjectURL(selectedFile)} />}
             <ButtonStyled component="label" variant="contained" htmlFor="account-settings-upload-file" sx={{ mt: 2 }}>
@@ -168,7 +168,7 @@ const StudentCertificateEdit = (props) => {
                 onChange={handleFileUpload}
               />
             </ButtonStyled>
-          </Grid>
+          </Grid> */}
 
           <Controller
             name="certificate_name"
@@ -187,7 +187,7 @@ const StudentCertificateEdit = (props) => {
             )}
           />
 
-          <Controller
+          {/* <Controller
             name="description"
             control={control}
             render={({ field: { value, onChange } }) => (
@@ -202,7 +202,7 @@ const StudentCertificateEdit = (props) => {
                 {...(errors.description && { helperText: errors.description.message })}
               />
             )}
-          />
+          /> */}
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type="submit" variant="contained" sx={{ mr: 3 }}>

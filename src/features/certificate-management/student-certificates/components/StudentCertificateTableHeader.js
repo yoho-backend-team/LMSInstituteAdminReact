@@ -89,7 +89,7 @@ const StudentCertificateTableHeader = (props) => {
     dispatch(getAllStudentCertificates(data));
   };
 
-  const [shows, setShows] = useState(false);
+  const [shows, setShows] = useState(true);
   const handleClose = () => {
     setShows(!shows);
   };
