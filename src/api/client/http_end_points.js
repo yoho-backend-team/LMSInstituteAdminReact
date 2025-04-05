@@ -211,6 +211,11 @@ const generateEndpoints = () => {
         },
         reports : {
             get : `/api/institutes/${instituteId}/report/`
+        },
+        placements : {
+            create : `/api/placements/create`,
+            getAll : `	/api/placements`,
+            update : `/api/placements/update`,
         }
     };
 };
