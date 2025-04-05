@@ -62,6 +62,10 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
 
   const handleInputImageChange = useCallback(async (file) => {
     const { files } = file.target;
+    const image = files[0]
+     if (image.size > 1048576) {
+     return toast.success("image upload lesser than 1mb")
+    }
     show()
     if (files && files[0]) {
       const img = new Image();

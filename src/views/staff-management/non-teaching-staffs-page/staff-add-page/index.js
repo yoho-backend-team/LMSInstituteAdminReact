@@ -197,6 +197,10 @@ const StepperLinearWithValidation = () => {
   const handleInputImageChange = (file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    const image = files[0]
+     if (image.size > 1048576) {
+      return toast.success("image upload lesser than 1mb")
+    }
     if (files && files.length !== 0) {
       reader.onload = () => setLogoSrc(reader.result);
       reader.readAsDataURL(files[0]);

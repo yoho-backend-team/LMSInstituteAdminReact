@@ -221,6 +221,10 @@ const StepperLinearWithValidation = () => {
   const handleInputImageChange = async(file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    const image = files[0]
+    if (image.size > 1048576) {
+      return toast.success("image upload lesser than 1mb")
+    }
     const data = new FormData()
     data.append("file",files[0])
     const file_upload = await client.file.upload(data)

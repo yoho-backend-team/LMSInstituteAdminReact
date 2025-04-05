@@ -161,12 +161,17 @@ const UserEditDialog = ({ openEdit, handleEditClose, userData, setRefetch }) => 
 
   const handleInputImageChange = async (file) => {
     const { files } = file.target;
-    const form_data = new FormData()
-    form_data.append("file",files[0])
-    const data = await client.file.upload(form_data)
-    toast.success(data.message)
-    setSelectedImage(data?.data?.file)
-    setImgSrc(data?.data?.file)
+    const image = files[0]
+     if (image.size > 1048576) {
+      toast.success("image upload lesser than 1mb")
+    }else{
+      const form_data = new FormData()
+      form_data.append("file",files[0])
+      const data = await client.file.upload(form_data)
+      toast.success(data.message)
+      setSelectedImage(data?.data?.file)
+      setImgSrc(data?.data?.file)
+    }
   };
 
   const onSubmit = async (data) => {

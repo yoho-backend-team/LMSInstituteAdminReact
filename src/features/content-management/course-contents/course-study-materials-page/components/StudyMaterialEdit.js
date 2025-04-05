@@ -87,6 +87,10 @@ const StudyMaterialEdit = (props) => {
       if (mimeType === 'application/pdf') {
         const formData = new FormData()
         formData.append("file",files[0])
+        const data = files[0]
+        if (data.size > 1048576) {
+          return toast.success("pdf upload lesser than 1mb")
+        }
         const file = await client.file.upload(formData)
         toast.success(file.message)
         setSelectedFile(file.data.file)

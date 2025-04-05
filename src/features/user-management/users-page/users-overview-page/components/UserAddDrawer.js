@@ -175,15 +175,20 @@ const SidebarAddUser = (props) => {
   const handleInputImageChange = async (file) => {
     const reader = new FileReader();
     const { files } = file.target;
-    const data = new FormData()
-    data.append("file",files[0])
-    try {
-      const fileUpload = await client.file.upload(data)
-      setImgSrc(fileUpload?.data?.file)  
-      toast.success(fileUpload?.message)
-    } catch (error) {
-      toast.error(error?.response?.data?.message)
-    }
+    const image = files[0]
+    if (image.size > 1048576) {
+      toast.success("image upload lesser than 1mb")
+    }else{
+      const data = new FormData()
+      data.append("file",files[0])
+      try {
+        const fileUpload = await client.file.upload(data)
+        setImgSrc(fileUpload?.data?.file)  
+        toast.success(fileUpload?.message)
+      } catch (error) {
+        toast.error(error?.response?.data?.message)
+      }
+    } 
   };
 
   const handleClose = () => {
