@@ -334,7 +334,7 @@ const StaffNotificationAddDrawer = (props) => {
                freeSolo 
                disableCloseOnSelect={false}
                id="select-multiple-chip"
-                 options={["Notification", "Classes", "Alerts", "Reminders"]} 
+                 options={['Notification','Placement','Alerts','Reminders','Warning','Payment','Attendance','Classes','Events','Holiday']} 
                  getOptionLabel={(option) => option}
                  value={value || ''} 
                  onChange={(event, newValue) => {

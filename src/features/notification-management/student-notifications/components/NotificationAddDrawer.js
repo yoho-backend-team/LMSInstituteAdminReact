@@ -363,7 +363,7 @@ const NotificationAddDrawer = (props) => {
                   freeSolo // Allow custom input
                   disableCloseOnSelect={false}
                   id="select-multiple-chip"
-                  options={['Notification', 'Classes', 'Alerts', 'Reminders']} // Add default options here
+                  options={['Notification','Placement','Alert','Remainder','Warning','Payment','Attendance','Classes','Events','Holiday']} // Add default options here
                   getOptionLabel={(option) => option}
                   value={value || ''} // Ensure the value is handled correctly
                   onChange={(event, newValue) => {
