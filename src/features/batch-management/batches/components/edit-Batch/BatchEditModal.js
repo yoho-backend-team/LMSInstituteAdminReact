@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, TextField as CustomTextField, Grid, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
+import CustomChip from 'components/mui/chip';
 import CardContent from '@mui/material/CardContent';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -310,22 +311,41 @@ const BatchEditModal = ({ open, handleEditClose, selectedBatch, setBatchRefetch 
                             id="students-autocomplete"
                             options={activeStudents}
                             getOptionLabel={(option) => option?.full_name}
-                            renderInput={(params) => (
-                              <CustomTextField
-                                {...params}
-                                value={value}
-                                onChange={onChange}
-                                label="Students"
-                                fullWidth
-                                error={Boolean(errors.students)}
-                                helperText={errors.students?.message}
-                              />
-                            )}
                             value={selectedStudents}
                             onChange={(event, newValue) => {
                               setValue('students', newValue);
                               setSelectedStudents(newValue);
                             }}
+                            disableClearable
+                            isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
+                            renderTags={(tagValue, getTagProps) => (
+                              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                {tagValue.map((option, index) => (
+                                  <CustomChip
+                                    key={option?.uuid}
+                                    label={option?.full_name}
+                                    sx={{ m: 0.75 }}
+                                    skin="black"
+                                    color="primary"
+                                    {...getTagProps({ index })}
+                                  />
+                                ))}
+                              </Box>
+                            )}
+                            renderInput={(params) => (
+                              <CustomTextField
+                                {...params}
+                                label="Students"
+                                fullWidth
+                                error={Boolean(errors.students)}
+                                sx={{
+                                  '& .MuiInputBase-root.Mui-disabled': {
+                                    backgroundColor: '#f0f0f0'
+                                  },
+                                  cursor: !selectedBranch || !control._formValues.course ? 'not-allowed' : 'text'
+                                }}
+                              />
+                            )}
                           />
                         )}
                       />
