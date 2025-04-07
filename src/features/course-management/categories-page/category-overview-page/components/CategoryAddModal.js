@@ -73,7 +73,7 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
 
       img.onload = async () => {
         // Check if the resolution is within the allowed range
-        if ((img.width >= 300 && img.width <= 388)) {
+        // if ((img.width >= 300 && img.width <= 388)) {
           const data = new FormData();
           data.append("file", files[0]);
 
@@ -82,10 +82,10 @@ const CategoryAddModal = ({ open, handleAddClose, setCategoryRefetch }) => {
           setValue("image",response?.data?.file)
           setImgSrc(response.data.file);
           hide()
-        } else {
-          hide()
-          toast.error('Image resolution must be between 300x300 and 388x300 pixels');
-        }
+        // } else {
+        //   hide()
+        //   toast.error('Image resolution must be between 300x300 and 388x300 pixels');
+        // }
       };
 
       img.onerror = () => {
