@@ -213,7 +213,7 @@ class Client {
     get: (query) => HttpClient.get(HTTP_END_POINTS.reports.get + query?.branch, query)
   };
   placements = {
-    getAll : () => httpclinet.get(HTTP_END_POINTS.placements.getAll),
+    getAll : (data) => httpclinet.get(HTTP_END_POINTS.placements.getAll,data),
     create : (data) => httpclinet.post(HTTP_END_POINTS.placements.create,data),
     update : (data) => httpclinet.update(HTTP_END_POINTS.placements.update + data?.uuid,data),
   };

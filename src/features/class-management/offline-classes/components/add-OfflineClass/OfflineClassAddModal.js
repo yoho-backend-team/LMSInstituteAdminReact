@@ -145,7 +145,7 @@ const handleClassDateChange = (newValue) => {
     classDate: yup.date().nullable().required('Class Date field is required'),
     start_time: yup.date().required('Start Time field is required'),
     end_time: yup.date().nullable().required('End Time field is required')
-  });
+  });//
 
   const defaultValues = {
     class_name: '',

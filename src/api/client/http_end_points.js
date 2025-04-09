@@ -214,7 +214,7 @@ const generateEndpoints = () => {
         },
         placements : {
             create : `/api/placements/create`,
-            getAll : `	/api/placements`,
+            getAll : `/api/placements/all`,
             update : `/api/placements/update`,
         }
     };
