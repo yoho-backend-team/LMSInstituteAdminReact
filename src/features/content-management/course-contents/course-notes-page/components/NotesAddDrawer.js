@@ -111,6 +111,9 @@ const CourseNotesAddDrawer = (props) => {
 
   const handleSetPdf = (data) => {
     setnotesPdf(data);
+    if (data.size > 1048576) {
+      return toast.success("pdf upload lesser than 1mb")
+    }
     // setValue('pdf_file', data);
   };
 

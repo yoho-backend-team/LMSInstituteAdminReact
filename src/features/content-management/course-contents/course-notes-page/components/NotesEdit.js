@@ -96,6 +96,10 @@ const NotesEdit = (props) => {
   const handleFileUpload = useCallback((file) => {
     const reader = new FileReader();
     const { files } = file.target;
+    const data = files[0]
+    if (data.size > 1048576) {
+      return toast.success("pdf upload lesser than 1mb")
+    }
     if (files && files.length !== 0) {
       reader.onload = () => setSavedPdfUrl(reader.result);
       setSelectedFile(files[0]);

@@ -23,11 +23,12 @@ import usePushSubscription from 'usePushSubscription';
 const App = () => {
   const customization = useSelector((state) => state.customization);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [SecureItem, setSecureItem] = useState(null)
 
 
   const handleUpgradeClick = async () => {
     try {
-      show();
+      // show();
       const getInstituteDetails = () => {
         const institute_details = secureLocalStorage.getItem('institute');
         if (institute_details) {
@@ -46,7 +47,7 @@ const App = () => {
     } catch (error) {
       toast.error(error?.message);
     } finally {
-      hide();
+      // hide();
     }
   };
 
@@ -101,7 +102,7 @@ const App = () => {
     const getInstituteDetails = () => {
       const institute_details = secureLocalStorage.getItem('institute');
       if (institute_details) {
-        return institute_details;
+        return JSON.parse(institute_details);
       }
     };
 

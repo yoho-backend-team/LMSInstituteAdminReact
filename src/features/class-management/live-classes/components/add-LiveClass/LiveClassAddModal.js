@@ -219,8 +219,8 @@ const LiveClassAddModal = ({ open, handleAddClose, setRefetch }) => {
         course: data.course,
         batch: data.batch._id,
         start_date: convertDateFormat(data.class_date),
-        start_time: formattedStartTime,
-        end_time:  formattedEndTime,
+        start_time: new Date(data.start_time).toISOString(),
+        end_time:  new Date(data.end_time).toISOString(),
         instructors: filteredInstructorId,
         coordinators: filteredCoordinatorId,
         video_url: data.videoUrl

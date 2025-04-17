@@ -112,11 +112,16 @@ const StudyMaterialAddDrawer = (props) => {
 
   const handleSetPdf = async (data) => {
     setstudymaterialPdf(data);
-    const fileData = new FormData();
-    fileData.append('file', fileData);
-    // setValue('pdf_file', data);
-    // const file = await client.file.upload(data)
-    // setValue("file",file.data.file)
+    if (data.size > 1048576) {
+     return toast.success("pdf upload lesser than 1mb")
+    }else{
+     const fileData = new FormData();
+     fileData.append('file', fileData);
+     setValue('pdf_file', data);
+     const file = await client.file.upload(data)
+     setValue("file",file.data.file)
+     toast.success("pdf uploaded")
+    }
   };
 
   const handleClose = () => {
