@@ -151,7 +151,7 @@ const EditStudent = Loadable(lazy(() => import('views/student-management/student
 // placement Management
 
 const Placement = Loadable(lazy(() => import('views/placement-management/placement/placement')));
-const AddPlacement = Loadable(lazy(() => import('features/placement/add-placement')));
+const AddPlacement = Loadable(lazy(() => import('features/placement/add-placement')));//
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));

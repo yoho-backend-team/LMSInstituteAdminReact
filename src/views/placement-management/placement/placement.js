@@ -10,6 +10,7 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
 const Placement = () => {
+  const [refetch, setRefetch] = useState(false);
   const [placements, setPlacements] = useState([]);
   const [loading, setLoading] = useState(true);
   const instituteId = useInstitute().getDetails();
