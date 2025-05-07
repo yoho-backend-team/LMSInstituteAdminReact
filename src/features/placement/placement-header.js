@@ -7,7 +7,7 @@ const PlacementHeader = () => {
   const navigate = useNavigate();
 
   const handleOpenForm = () => {
-    navigate('/placement-form');//
+    navigate('/placement-form');
   };
 
   return (

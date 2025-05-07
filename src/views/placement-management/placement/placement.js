@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 const Placement = () => {
   const [refetch, setRefetch] = useState(false);
   const [placements, setPlacements] = useState([]);
+  const [selecetedPlacement, setSelectedplacement] = useState();
   const [loading, setLoading] = useState(true);
   const instituteId = useInstitute().getDetails();
 
@@ -19,6 +20,7 @@ const Placement = () => {
     const getAllPlacements = async () => {
       try {
         const res = await client.placements.getAll({ institute_id: instituteId._id });
+        console.log("placements",placements)
         setPlacements(res.data);
       } catch (err) {
         console.error('Failed to fetch placements', err);
@@ -29,6 +31,10 @@ const Placement = () => {
 
     getAllPlacements();
   }, []);
+
+  const handleEdit = () => {
+   
+  }
 
   return (
     <>
@@ -89,6 +95,7 @@ const Placement = () => {
                                   icon: <Icon icon="tabler:edit" />,
                                   menuItemProps: {
                                     onClick: () => {
+                                      setSelectedplacement(placement._id);
                                       handleEdit();
                                     }
                                   }
@@ -97,7 +104,7 @@ const Placement = () => {
                                   text: 'Delete',
                                   icon: <Icon icon="mdi:delete-outline" />,
                                   menuItemProps: {
-                                    // onClick: () => handleDelete(card?.uuid)
+                                    onClick: () => handleDelete(placement?._id)
                                   }
                                 }
                               ]}
