@@ -30,7 +30,7 @@ const TeachingStaffSidebarLeft = (props) => {
     staffId,
     staff
   } = props;
-
+  
   const getStaffAttendance = async (data) => {
     const result = await getTeachingStaffAttendanceById(data);
     if (result) {
