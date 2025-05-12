@@ -24,6 +24,8 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import secureLocalStorage from 'react-secure-storage';
 import { useInstitute } from 'utils/get-institute-details';
+import { useStudent } from 'utils/get-student-details';
+
 
 const FaqDataGrid = () => {
   const [value, setValue] = useState('');
