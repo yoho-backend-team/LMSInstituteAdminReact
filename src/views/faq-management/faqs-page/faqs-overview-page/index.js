@@ -11,7 +11,7 @@ import Icon from 'components/icon';
 import { default as DeleteDialog, default as StatusDialog } from 'components/modal/DeleteModel';
 import CustomTextField from 'components/mui/text-field';
 import OptionsMenu from 'components/option-menu';
-import { getActiveFaqCategories } from 'features/faq-management/faq-categories/services/faqCategoryServices';
+import { getActiveFaqCategories, getAllFaqCategories } from 'features/faq-management/faq-categories/services/faqCategoryServices';
 import FaqAccordian from 'features/faq-management/faqs/components/FaqAccordian';
 import FaqAddDrawer from 'features/faq-management/faqs/components/FaqAddDrawer';
 import FaqEdit from 'features/faq-management/faqs/components/FaqEdit';
@@ -50,53 +50,10 @@ const FaqDataGrid = () => {
   const faqLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
-  const fetchFaqs = async (page) => {
-    try {
-      const institute = useInstitute().getDetails();
-      const data = {
-        branchid: selectedBranchId,
-        instituteId: institute?.uuid,
-        page: page,
-        perPage: rowsPerPage
-      };
-      dispatch(getAllFaqs(data));
-      setError(false);
-    } catch (error) {
-      console.error('Error fetching FAQs:', error);
-      setError(true);
-    }
-  };
-
-  useEffect(() => {
-    const storedInstitute = secureLocalStorage.getItem('institute');
-    if (!storedInstitute) {
-      console.error('Institute data not found in localStorage');
-      return;
-    }
-
-    const institute = JSON.parse(storedInstitute);
-    if (!institute || !institute._id) {
-      console.error('Invalid institute data:', institute);
-      return;
-    }
-
-    console.log('institutedetails:', institute);
-
-    const data = {
-      branchid: selectedBranchId,
-      instituteId: institute._id,
-      page: 1,
-      perPage: rowsPerPage
-    };
-    console.log('data:', data);
-
-    dispatch(getAllFaqs(data));
-  }, [dispatch, selectedBranchId, refetch]);
-
-
   useEffect(() => {
     const getFaqCategories = async () => {
-      const institute = JSON.parse(secureLocalStorage.getItem('institute'));
+      const institute = useInstitute().getDetails();
+      console.log("institue uuid",institute.uuid);
       const data = {
         branchid: selectedBranchId,
         instituteid: institute.uuid,
@@ -104,11 +61,37 @@ const FaqDataGrid = () => {
         page: 1,
         perPage: 10
       };
-      const result = await getActiveFaqCategories(data);
+      const result = await getAllFaqCategories(data);
+      console.log("faqcategories objectid:",result)
       setFaqCategories(result.data);
     };
     getFaqCategories();
   }, [selectedBranchId]);
+  console.log("faqcat id:",faqCategories);
+
+  const fetchFaqs = async (page) => {
+  try {
+    const institute = useInstitute().getDetails();
+    const data = {
+      branchid: selectedBranchId,
+      instituteId: institute?.uuid,
+      page: page,
+      perPage: rowsPerPage,
+      catid: faqCategories.map((category => category._id))
+    };
+    console.log("faq sending data:", data);
+    
+    const response = await dispatch(getAllFaqs(data)); 
+    console.log("Response after dispatch:", response); 
+
+    setError(false);
+  } catch (error) {
+    console.error('Error fetching FAQs:', error);
+    setError(true);
+  }
+};
+
+
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -355,7 +338,7 @@ const FaqDataGrid = () => {
                 }}
                 autoHeight
                 rowHeight={60}
-                rows={faqs?.data?.data || []}
+                rows={faqs?.data || []}
                 columns={columns}
                 getRowId={(row) => row._id || row.id}
                 disableRowSelectionOnClick
