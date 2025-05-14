@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import secureLocalStorage from 'react-secure-storage';
 
 const usePushSubscription = (role,userId,user,institute,branch) => {
 
   let subscription;
-  
+  const LastRunDate = new Date().toISOString()
     if ('serviceWorker' in navigator && 'PushManager' in window) {
       navigator.serviceWorker.ready
         .then(async (registration) => {
@@ -12,12 +13,13 @@ const usePushSubscription = (role,userId,user,institute,branch) => {
             if (sub) {
                 subscription = sub;
             } else {
-              console.log(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY,"process.env.REACT_WEBPUSH_PUBLIC_KEY")
+              // console.log(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY,"process.env.REACT_WEBPUSH_PUBLIC_KEY")
                 return await registration.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array(process.env.REACT_APP_WEBPUSH_PUBLIC_KEY) // VAPID public key
                 });
             }
+            secureLocalStorage.setItem('LastRunDate',LastRunDate)
         })
         .then((sub) => {
            const subs = sub || subscription
