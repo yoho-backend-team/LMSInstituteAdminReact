@@ -8,6 +8,7 @@ export const getAllFaqs = (data) => async (dispatch) => {
     const response = await fetchAllFaqs(data); 
     console.log('All faqs  response:', response);
     dispatch(setFaqs(response));
+    return response;
   } catch (error) {
     console.error(error);
   } finally {

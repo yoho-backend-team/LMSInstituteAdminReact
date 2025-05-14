@@ -9,18 +9,25 @@ import Avatar from '@mui/material/Avatar';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import OptionsMenu from 'components/option-menu';
 import { Link } from 'react-router-dom';
+import EditPlacementModal from 'features/placement/edit-placement';
 const Placement = () => {
   const [refetch, setRefetch] = useState(false);
   const [placements, setPlacements] = useState([]);
-  const [selecetedPlacement, setSelectedplacement] = useState();
+  const [selectedPlacement, setSelectedplacement] = useState();
   const [loading, setLoading] = useState(true);
   const instituteId = useInstitute().getDetails();
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  const handleEdit = () => {
+    setOpenEditModal(true);
+  };
 
   useEffect(() => {
     const getAllPlacements = async () => {
       try {
         const res = await client.placements.getAll({ institute_id: instituteId._id });
-        console.log("placements",placements)
+        console.log('placements', placements);
         setPlacements(res.data);
       } catch (err) {
         console.error('Failed to fetch placements', err);
@@ -30,11 +37,7 @@ const Placement = () => {
     };
 
     getAllPlacements();
-  }, []);
-
-  const handleEdit = () => {
-   
-  }
+  }, [refetch]);
 
   return (
     <>
@@ -95,7 +98,7 @@ const Placement = () => {
                                   icon: <Icon icon="tabler:edit" />,
                                   menuItemProps: {
                                     onClick: () => {
-                                      setSelectedplacement(placement._id);
+                                      setSelectedplacement(placement?._id);
                                       handleEdit();
                                     }
                                   }
@@ -120,6 +123,16 @@ const Placement = () => {
           )}
         </Grid>
       </Grid>
+
+      {/* Edit Placement Modal */}
+      {openEditModal && (
+        <EditPlacementModal 
+          open={openEditModal}
+          onClose={() => setOpenEditModal(false)}
+          placementId={selectedPlacement}
+          refetch={() => setRefetch(prev => !prev)}
+        />
+      )}
     </>
   );
 };

@@ -68,52 +68,28 @@ const FaqDataGrid = () => {
   console.log("faqcat id:",faqCategories);
 
   const fetchFaqs = async (page) => {
-    try {
-      const institute = useInstitute().getDetails();
-      const data = {
-        branchid: selectedBranchId,
-        instituteId: institute?.uuid,
-        page: page,
-        perPage: rowsPerPage,
-        catid:faqCategories.map((category => category._id))
-      };
-      console.log("faq sending data:", data)
-      dispatch(getAllFaqs(data));
-      setError(false);
-    } catch (error) {
-      console.error('Error fetching FAQs:', error);
-      setError(true);
-    }
-  };
-
-  useEffect(() => {
-    const storedInstitute = secureLocalStorage.getItem('institute');
-    if (!storedInstitute) {
-      console.error('Institute data not found in localStorage');
-      return;
-    }
-
+  try {
     const institute = useInstitute().getDetails();
-    if (!institute || !institute._id) {
-      console.error('Invalid institute data:', institute);
-      return;
-    }
-
-    console.log('institutedetails:', institute);
-
     const data = {
       branchid: selectedBranchId,
-      instituteId: institute._id,
-      page: 1,
-      perPage: rowsPerPage
+      instituteId: institute?.uuid,
+      page: page,
+      perPage: rowsPerPage,
+      catid: faqCategories.map((category => category._id))
     };
-    console.log('data:', data);
+    console.log("faq sending data:", data);
+    
+    const response = await dispatch(getAllFaqs(data)); 
+    console.log("Response after dispatch:", response); 
 
-    dispatch(getAllFaqs(data));
-  }, [dispatch, selectedBranchId, refetch]);
+    setError(false);
+  } catch (error) {
+    console.error('Error fetching FAQs:', error);
+    setError(true);
+  }
+};
 
 
- 
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
 
@@ -360,7 +336,7 @@ const FaqDataGrid = () => {
                 }}
                 autoHeight
                 rowHeight={60}
-                rows={faqs?.data?.data || []}
+                rows={faqs?.data || []}
                 columns={columns}
                 getRowId={(row) => row._id || row.id}
                 disableRowSelectionOnClick
