@@ -22,6 +22,7 @@ import { addFaqCategory } from '../services/faqCategoryServices';
 import secureLocalStorage from 'react-secure-storage';
 import toast from 'react-hot-toast';
 import { getBranchObjectId, useBranchId, useInstitute } from 'utils/get-institute-details';
+import { useSelector } from 'react-redux';
 
 const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -60,7 +61,6 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
   const [isSuccessDialogOpen, setSuccessDialogOpen] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
 
-
   const {
     reset,
     control,
@@ -76,29 +76,29 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
     reset();
     toggle();
   };
+  const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
     const institute = useInstitute().getDetails();
-    const selectedBranchId = useBranchId();
     console.log('Selected Branch:', selectedBranchId);
 
     const cleanedBranchId = selectedBranchId ? selectedBranchId.replace(/^"|"$/g, '') : '';
-  
+
     const faq_CategoryData = {
-      category_name: data.name, 
+      category_name: data.name,
       description: data.description,
       branchid: cleanedBranchId,
       institute_id: institute?._id
     };
-  
-    console.log("Sending Data:", faq_CategoryData);
-  
+
+    console.log('Sending Data:', faq_CategoryData);
+
     try {
       const result = await addFaqCategory(faq_CategoryData);
       setSubmitting(false);
       console.log('result:', result);
-  
+
       if (result.status) {
         setSuccessDialogOpen(true);
         setRefetch((state) => !state);
@@ -114,7 +114,6 @@ const FaqCategoriesAddDrawer = ({ open, toggle, setRefetch }) => {
       setSubmitting(false);
     }
   };
-  
 
   const closeSuccessDialog = () => {
     setSuccessDialogOpen(false);

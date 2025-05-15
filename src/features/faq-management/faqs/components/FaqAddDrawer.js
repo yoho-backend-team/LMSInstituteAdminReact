@@ -102,13 +102,14 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
     };
     try {
       const result = await createFaq(faqData);
+      setSubmitting(false);
       console.log('add data result', result);
 
       if (result.success) {
         setSuccessDialogOpen(true);
+        setRefetch((state) => !state);
         toggle();
         reset();
-        setRefetch((state) => !state);
         // toast.success('FAQ added successfully!');
       } else {
         toast.error('Failed to add FAQ. Please try again.');
