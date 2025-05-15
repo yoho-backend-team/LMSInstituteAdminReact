@@ -71,7 +71,7 @@ const handleUpgrade = async(subscriptionId) => {
 
   try {
     const response = await axios.post(
-      `http://localhost:3002/api/subscription/institute/upgrade-subscription/${instituteId}/request`,
+      `${process.env.REACT_APP_PUBLIC_API_URL}/api/subscription/institute/upgrade-subscription/${instituteId}/request`,
       {
         "id":subscriptionId
     }
