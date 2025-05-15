@@ -126,7 +126,7 @@ const AddPlacement = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await client.placements.create(); // Adjust this according to your API
+        const res = await client.placements.create(); 
         setActiveStudents(res.data || []);
       } catch (err) {
         console.error('Failed to fetch students', err);

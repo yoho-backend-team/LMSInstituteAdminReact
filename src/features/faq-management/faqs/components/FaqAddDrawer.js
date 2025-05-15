@@ -60,7 +60,7 @@ const defaultValues = {
   name: '',
   description: '',
   category: '',
-  accessby: ['none']
+  accessby: ['']
 };
 
 const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
@@ -90,13 +90,19 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
       title: data.name,
       description: data.description,
       category_id: data.category._id,
-      accessby: data.accessby,
-      uuid: data.uuid
+      accessby: data.accessby.map(str => 
+        str
+          .split(' ')
+          .map(word => word[0].toUpperCase() + word.slice(1))
+          .join(' ')
+      ),
+            uuid: data.uuid
       // vidlink: data.vidlink,
       // pagelink: data.pagelink
     };
     try {
       const result = await createFaq(faqData);
+      setSubmitting(false);
       console.log('add data result', result);
 
       if (result.success) {
@@ -233,9 +239,10 @@ const FaqAddDrawer = ({ open, toggle, faqCategories, setRefetch }) => {
                           }}
                           label="Access By"
                         >
-                          <MenuItem value="instructor">Instructor</MenuItem>
-                          <MenuItem value="student">Student</MenuItem>
-                          <MenuItem value="none">None</MenuItem>
+                          <MenuItem value="Student">Student</MenuItem>
+                          <MenuItem value="Institute Admin">Institute Admin</MenuItem>
+                          <MenuItem value="Teaching Staff">Teaching Staff</MenuItem>
+                          <MenuItem value="Non Teaching Staff">Non Teaching Staff</MenuItem>
                         </Select>
                         {errors.accessby && (
                           <Typography variant="body2" color="error">

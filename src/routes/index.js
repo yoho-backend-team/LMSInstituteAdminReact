@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
-//to check the session expire modal manually 
- /**
+//to check the session expire modal manually
+/**
 import { showSessionExpiredModal } from 'api/client/httpclinet';
 import React from 'react';
 import { useEffect } from 'react';
@@ -142,8 +142,8 @@ const ViewNonTeachingProfile = Loadable(lazy(() => import('views/staff-managemen
 // Student Management
 const StudentsPage = Loadable(lazy(() => import('views/student-management/students-page/student-overview-page')));
 const ReportGenerator = Loadable(lazy(() => import('views/report-generation')));
-const ViewReport = Loadable(lazy(() => import('views/report-generation'))); ;
-const ScheduleReport = Loadable(lazy(() => import('views/report-generation'))); ;;
+const ViewReport = Loadable(lazy(() => import('views/report-generation')));
+const ScheduleReport = Loadable(lazy(() => import('views/report-generation')));
 const ViewStudentProfile = Loadable(lazy(() => import('views/student-management/students-page/student[id]-page')));
 const AddNewStudent = Loadable(lazy(() => import('views/student-management/students-page/student-add-page')));
 const EditStudent = Loadable(lazy(() => import('views/student-management/students-page/student-edit-page')));
@@ -151,7 +151,7 @@ const EditStudent = Loadable(lazy(() => import('views/student-management/student
 // placement Management
 
 const Placement = Loadable(lazy(() => import('views/placement-management/placement/placement')));
-const AddPlacement = Loadable(lazy(() => import('features/placement/add-placement')));
+const AddPlacement = Loadable(lazy(() => import('features/placement/add-placement'))); //
 
 //Error Pages
 const Page404 = Loadable(lazy(() => import('views/error-pages/404-page')));
@@ -197,11 +197,11 @@ const ApplicationRoutes = () => {
   const hasPermission = (permissionCode, permission, action) => {
     return permissionCode === permission?.[action]?.code;
   };
-  
-  const ProtectedRoute = ({ element, permissionCode,module ,permissionReq }) => {
-    const permission = permissions?.filter((obj) => obj.identity === module)
-    const action = permissionReq ? permissionReq : "read_permission"
-    const hasAccess = hasPermission(permissionCode,permission[0],action);
+
+  const ProtectedRoute = ({ element, permissionCode, module, permissionReq }) => {
+    const permission = permissions?.filter((obj) => obj.identity === module);
+    const action = permissionReq ? permissionReq : 'read_permission';
+    const hasAccess = hasPermission(permissionCode, permission[0], action);
     //  console.log(permissions,module,permissionReq,hasAccess,permissionCode)
     return hasAccess ? element : <Navigate to="/unauthorized" />;
   };
@@ -853,9 +853,18 @@ const ApplicationRoutes = () => {
         <Route element={<ProtectedRoute element={<Placement />} />}>
           <Route path="placement" element={<Placement />} />
         </Route>
-        <Route element={<ProtectedRoute element={<AddPlacement />} permissionCode={'can_create_institute_course'} module={'Courses'} permissionReq={"create_permission"} />}>
-            <Route path="placement-form" element={<AddPlacement />} />
-          </Route>
+        <Route
+          element={
+            <ProtectedRoute
+              element={<AddPlacement />}
+              permissionCode={'can_create_institute_course'}
+              module={'Courses'}
+              permissionReq={'create_permission'}
+            />
+          }
+        >
+          <Route path="placement-form" element={<AddPlacement />} />
+        </Route>
       </Route>
 
       {/* UnAuth Pages */}
@@ -866,14 +875,11 @@ const ApplicationRoutes = () => {
         <Route path="/forget-password" element={<ForgetPassword />} />
       </Route>
 
- 
-
-     
       <Route element={<MinimalLayout />}>
-      <Route path="/report" element={<ReportGenerator />} />
+        <Route path="/report" element={<ReportGenerator />} />
       </Route>
 
-     {/* otp page */}
+      {/* otp page */}
       {/* <Route path="/forget-password" element={<MainLayout />}>
       <Route index element={<Navigate to={"/otp-page" }/>} />
       <Route path='otp-page' element={<ForgetPassword />} />  
@@ -894,8 +900,6 @@ const ApplicationRoutes = () => {
         <Route path="/server-error" element={<Page500 />} />
       </Route>
     </Routes>
-
-    
   );
 };
 
