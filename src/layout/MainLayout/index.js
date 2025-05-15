@@ -50,6 +50,8 @@ const MainLayout = ({}) => {
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
   const dispatch = useDispatch();
+  const LastRunDate = secureLocalStorage.getItem('LastRunDate').split('T')[0]
+  const DateNow = new Date().toISOString().split('T')[0]
 
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
@@ -57,26 +59,29 @@ const MainLayout = ({}) => {
   const user = JSON.parse(secureLocalStorage.getItem("userData"))
  
   window.addEventListener("online", () => {
-  axios.post("http://localhost:3002/online",{user:user._id})
+  axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/online`,{user:user._id})
   });
 
  window.addEventListener("offline", () => {
-  axios.post("http://localhost:3002/offline",{user:user._id})
+  axios.post(`${process.env.REACT_APP_PUBLIC_API_URL}/offline`,{user:user._id})
   });
 
 
-   if ('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('/service-worker.js')
-                .then((registration) => {
-                  console.log('Service Worker registered with scope:', registration.scope);                 
-                      const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');
-                      usePushSubscription(user?.role,user?._id,user,user?.institute_id,selectedBranchId)
-                })
-                .catch((error) => {
-                  console.error('Service Worker registration failed:', error);
-                });
-            }
+  if ('serviceWorker' in navigator) {
+    if(DateNow != LastRunDate){
+      navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);                 
+            const selectedBranchId = secureLocalStorage.getItem('selectedBranchId');        
+               usePushSubscription(user?.role,user?._id,user,user?.institute_id,selectedBranchId)
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+    }
+  }
 
+   
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
