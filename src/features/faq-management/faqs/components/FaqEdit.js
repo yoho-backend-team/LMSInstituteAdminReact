@@ -51,6 +51,7 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
   const {
     reset,
     control,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -61,7 +62,7 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
 
   useEffect(() => {
     if (open && initialValues?.uuid) {
-      reset(initialValues);
+      reset(initialValues || defaultValues);
     }
   }, [open, reset, initialValues]);
 
@@ -76,20 +77,16 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
     const inputData = {
       title: data?.title,
       description: data?.description,
-      uuid: initialValues?.uuid,
+      uuid: String(initialValues?.uuid),
     };
   
     try {
       const result = await updateFaq(inputData);
 
-      // console.log("after api uuid :",result.updatedFaq?.uuid);
-  
       if (result.success) {
         setSuccessDialogOpen(true);
-        setRefetch((state) => !state);
         toggle();
-        reset();
-        // toast.success(result.message);
+        setRefetch((state) => !state);
       } else {
         toast.error("Failed to edit FAQ. Please try again.");
       }
@@ -102,6 +99,7 @@ const FaqEdit = ({ open, toggle, initialValues, setRefetch }) => {
   
 
   const handleClose = () => {
+    setValue('contact', Number(''));
     toggle();
     reset();
   };
