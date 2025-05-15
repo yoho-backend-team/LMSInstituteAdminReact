@@ -76,7 +76,7 @@ const TeachingStaffFilterCard = (props) => {
               <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
                 <Button
                   onClick={handleNavigate}
-                  style={{ backgroundColor: 'black', height: 10, position: 'absolute', right: 40, marginTop: 20 }}
+                  style={{ backgroundColor: 'black', height: 10, position: 'absolute', right: 80, marginTop: 20 }}
                 >
                   <IconX stroke={2} />
                 </Button>

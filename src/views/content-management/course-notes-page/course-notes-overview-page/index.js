@@ -1,4 +1,4 @@
-import { CardContent, TextField } from '@mui/material';
+import { Button, CardContent, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
+import { IconArrowNarrowLeft } from '@tabler/icons-react';
 import ContentSkeleton from 'components/cards/Skeleton//UserSkeleton';
 import NoteSkelton from 'components/cards/Skeleton/ContentSkeleton/NoteSkelton';
 import Icon from 'components/icon';
@@ -26,8 +27,10 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 const Notes = () => {
+  const navigate=useNavigate()
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -37,7 +40,7 @@ const Notes = () => {
   const [refetch, setRefetch] = useState(false);
   const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-  const [page,setPage] = useState("1")
+  const [page, setPage] = useState('1');
 
   const userStatusObj = {
     true: 'success',
@@ -45,18 +48,17 @@ const Notes = () => {
   };
 
   const handleStatusValue = (event, note) => {
-    console.log(note,"users")
+    console.log(note, 'users');
     setStatusChangeDialogOpen(true);
     setStatusValue(note);
   };
 
   const handleStatusChangeApi = async () => {
-    
     const data = {
       is_active: !statusValue?.is_active,
       id: statusValue?.uuid
     };
-    console.log(data,statusValue,selectedRow)
+    console.log(data, statusValue, selectedRow);
     const response = await updateCourseNotesStatus(data);
 
     if (response.success) {
@@ -87,7 +89,6 @@ const Notes = () => {
       toast.error(result.message);
     }
   };
-  
 
   const dispatch = useDispatch();
   const Notes = useSelector(selectCourseNotes);
@@ -118,10 +119,12 @@ const Notes = () => {
     setEditUserOpen(!editUserOpen);
   };
 
-
   return (
     <>
       <Grid container spacing={2}>
+        <Button variant="contained" sx={{ mt:2, ml: 2 }} onClick={() => navigate('/content-management/study-materials')}>
+          <IconArrowNarrowLeft stroke={2} />
+        </Button>
         <Grid item xs={12}>
           <NotesHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
@@ -131,26 +134,24 @@ const Notes = () => {
             {NotesLoading ? (
               <NoteSkelton />
             ) : (
-              <Grid container xs={12} spacing={2} >
-                {
-                  Notes?.data?.map((note,index) => (
-                     <Grid item xs={4}>
-                       <NotesCard
-                        page={page}
-                        index={index}
-                        initialStatus={note?.is_active}
-                        name={note?.title}
-                        note={note}
-                        courseName={note?.course?.course_name}
-                        handleRowClick={handleRowClick}
-                        handleStatusValue={handleStatusValue}
-                        handleDelete={handleDelete}
-                        setViewModalOpen={setViewModalOpen}
-                        toggleEditUserDrawer={toggleEditUserDrawer}
-                       />
-                     </Grid>
-                  ))
-                }
+              <Grid container xs={12} spacing={2}>
+                {Notes?.data?.map((note, index) => (
+                  <Grid item xs={4}>
+                    <NotesCard
+                      page={page}
+                      index={index}
+                      initialStatus={note?.is_active}
+                      name={note?.title}
+                      note={note}
+                      courseName={note?.course?.course_name}
+                      handleRowClick={handleRowClick}
+                      handleStatusValue={handleStatusValue}
+                      handleDelete={handleDelete}
+                      setViewModalOpen={setViewModalOpen}
+                      toggleEditUserDrawer={toggleEditUserDrawer}
+                    />
+                  </Grid>
+                ))}
               </Grid>
               // <DataGrid
               //   sx={{ p: 2 }}
@@ -173,7 +174,7 @@ const Notes = () => {
                     color="primary"
                     onChange={(e, page) => {
                       dispatch(getAllCourseNotes({ branch: selectedBranchId, page: page }));
-                      setPage(page)
+                      setPage(page);
                     }}
                   />
                 </Grid>

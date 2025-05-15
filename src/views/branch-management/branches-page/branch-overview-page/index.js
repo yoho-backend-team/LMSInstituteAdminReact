@@ -27,6 +27,7 @@ const BranchesOverviewPage = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <BranchHeader branches={branches} setRefetchBranch={setRefetchBranch} refetchBranch={refetchBranch} />
+         
         </Grid>
         {branchLoading ? (
           <BranchMainSkeleton />

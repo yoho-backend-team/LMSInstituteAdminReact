@@ -19,6 +19,8 @@ import { useInstitute } from 'utils/get-institute-details';
 import generateStaffIDCardPDF from 'utils/id-generator';
 import generateIDCardPDF from 'utils/pdfGenerator';
 import { getImageUrl } from 'utils/imageUtils';
+import { useNavigate } from 'react-router';
+import { IconArrowLeft } from '@tabler/icons-react';
 
 const roleColors = {
   admin: 'error',
@@ -35,12 +37,12 @@ const statusColors = {
 };
 
 const TeachingIdCard = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const StaffIdCards = useSelector(selectStaffIdCards);
   const StaffIdCardsLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
   const [staffIdRefetch, setStaffIdRefetch] = useState(false);
-
 
   useEffect(() => {
     dispatch(getAllStaffIdCards({ branchid: selectedBranchId, instituteid: useInstitute().getInstituteId(), page: '1' }));
@@ -98,6 +100,9 @@ const TeachingIdCard = () => {
     <>
       <Grid>
         <Grid container spacing={1} className="match-height">
+          <Button sx={{ my: 2,ml:1}} variant='contained' onClick={() => navigate('/id-card-management/student-id-cards')}>
+            <IconArrowLeft />
+          </Button>
           <Grid item xs={12} sm={12}>
             <StaffFilterCard
               selectedBranchId={selectedBranchId}
@@ -122,7 +127,7 @@ const TeachingIdCard = () => {
                       sm={4}
                       lg={3}
                       // xl={2}
-                      
+
                       sx={{
                         position: 'relative',
                         width: '100%',
@@ -157,112 +162,114 @@ const TeachingIdCard = () => {
                           }
                         }}
                       >
-                        <Card className="front" sx={{ width: '100%', minHeight: 410,boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)" }}>
-                            <Card
-                          sx={{
-                            width: '100%',
-                            minHeight: 410,
-                            borderRadius: 3,
-                            boxShadow: 3,
-                            padding: 2,
-                            paddingRight: 0,
-                            backgroundColor: '#ffffff',
-                            border: '1px solid #ddd',
-                            display: 'flex',
-                            position: 'relative', // Required for absolute positioning of pseudo-element
-                            overflow: 'hidden' // Ensures pseudo-element stays within card boundaries
-                          }}
-                        >
+                        <Card className="front" sx={{ width: '100%', minHeight: 410, boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
+                          <Card
+                            sx={{
+                              width: '100%',
+                              minHeight: 410,
+                              borderRadius: 3,
+                              boxShadow: 3,
+                              padding: 2,
+                              paddingRight: 0,
+                              backgroundColor: '#ffffff',
+                              border: '1px solid #ddd',
+                              display: 'flex',
+                              position: 'relative', // Required for absolute positioning of pseudo-element
+                              overflow: 'hidden' // Ensures pseudo-element stays within card boundaries
+                            }}
+                          >
+                            {/* Background Image with Opacity */}
+                            <Box
+                              sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                backgroundImage: `url('https://clipart-library.com/new_gallery/750538_vector-bg-png.jpg')`, // Replace with your image URL
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                opacity: 0.8 // Adjust opacity level (0.1 to 1)
+                                // Keeps it behind content
+                              }}
+                            />
+
+                            {/* Sidebar */}
+                            {/* <Box sx={{ backgroundColor: '#28a745', width: 20, borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }} /> */}
+
+                            {/* Main Content */}
+                            <Box sx={{ flex: 1, padding: 2, position: 'relative', zIndex: 1 }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+                                <CustomAvatar
+                                  sx={{ width: 90, height: 90, bgcolor: '#ffffff', border: '4px solid #28a745' }}
+                                  src={getImageUrl(item?.image)}
+                                  alt="Profile Picture"
+                                />
+                              </Box>
+                              <Typography variant="h3" fontWeight="bold" sx={{ color: '#000', textAlign: 'center' }}>
+                                <span style={{ color: '#28a745', textTransform: 'uppercase' }}>{item.name} </span>
+                              </Typography>
+                              <Typography variant="subtitle2" color="textSecondary" textAlign="center">
+                                {item.role.identity}
+                              </Typography>
+                              <Box
+                                sx={{ alignContent: 'center', paddingTop: 2, display: 'grid', gap: 0.5, gridTemplateColumns: 'auto 1fr' }}
+                              >
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  <b>ID No:</b>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  {item.staff_id}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  <b>Username:</b>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  {item.name}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  <b>Email:</b>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  {item.email}{' '}
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  <b>Phone:</b>
+                                </Typography>
+                                <Typography variant="body2" sx={{ color: '#000' }}>
+                                  {item.contact}
+                                </Typography>
+                              </Box>
+                              <Box sx={{ marginTop: 1, mb: 0, textAlign: 'center' }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                  <path
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                    d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                  />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                  <path
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                    d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                  />
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
+                                  <path
+                                    fill="currentColor"
+                                    fill-rule="evenodd"
+                                    d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
+                                  />
+                                </svg>
+                              </Box>
+                            </Box>
+                          </Card>
+                        </Card>
+                        <Card className="back" sx={{ width: '100%', minHeight: 410, position: 'relative' }}>
                           {/* Background Image with Opacity */}
                           <Box
-                            sx={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              width: '100%',
-                              height: '100%',
-                              backgroundImage: `url('https://clipart-library.com/new_gallery/750538_vector-bg-png.jpg')`, // Replace with your image URL
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat',
-                              opacity: 0.8 // Adjust opacity level (0.1 to 1)
-                              // Keeps it behind content
-                            }}
-                          />
-
-                          {/* Sidebar */}
-                          {/* <Box sx={{ backgroundColor: '#28a745', width: 20, borderTopLeftRadius: 12, borderBottomLeftRadius: 12 }} /> */}
-
-                          {/* Main Content */}
-                          <Box sx={{ flex: 1, padding: 2, position: 'relative', zIndex: 1 }}>
-                            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-                              <CustomAvatar
-                                sx={{ width: 90, height: 90, bgcolor: '#ffffff', border: '4px solid #28a745' }}
-                                src={getImageUrl(item?.image)}
-                                alt="Profile Picture"
-                              />
-                            </Box>
-                            <Typography variant="h3" fontWeight="bold" sx={{ color: '#000', textAlign: 'center' }}>
-                              <span style={{ color: '#28a745',textTransform: "uppercase"  }}>{item.name} </span>
-                            </Typography>
-                            <Typography variant="subtitle2" color="textSecondary" textAlign="center">
-                              {item.role.identity}
-                            </Typography>
-                            <Box sx={{ alignContent:'center', paddingTop: 2, display: 'grid', gap: 0.5, gridTemplateColumns: 'auto 1fr' }}>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                <b>ID No:</b>
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                {item.staff_id}
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                <b>Username:</b>
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                              {item.name}
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                <b>Email:</b>
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                {item.email}{' '}
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                <b>Phone:</b>
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: '#000' }}>
-                                {item.contact}
-                              </Typography>
-                            </Box>
-                            <Box sx={{ marginTop: 1,mb:0, textAlign: 'center' }}>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-                                <path
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
-                                />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-                                <path
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
-                                />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-                                <path
-                                  fill="currentColor"
-                                  fill-rule="evenodd"
-                                  d="M2 6h1v12H2zm2 0h2v12H4zm4 0h1v12H8zm2 0h3v12h-3zm4 0h1v12h-1zm3 0h1v12h-1zm2 0h1v12h-1zm2 0h1v12h-1z"
-                                />
-                              </svg>
-                            </Box>
-                          </Box>
-                        </Card>
-                          </Card>
-                        <Card className="back" sx={{ width: '100%', minHeight: 410 ,position: 'relative'}}>
-                           {/* Background Image with Opacity */}
-                           <Box
                             sx={{
                               position: 'absolute',
                               top: 0,
@@ -277,7 +284,7 @@ const TeachingIdCard = () => {
                               // Keeps it behind content
                             }}
                           />
-                          <CardContent sx={{ pt: 2 , position: 'relative', zIndex: 1,mt:2}}>
+                          <CardContent sx={{ pt: 2, position: 'relative', zIndex: 1, mt: 2 }}>
                             <Typography variant="h3" sx={{ color: 'text.disabled', textTransform: 'uppercase' }}>
                               Details
                             </Typography>
@@ -361,7 +368,7 @@ const TeachingIdCard = () => {
                             </Box>
 
                             <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-                              <Button variant="contained" sx={{borderRadius:50}} onClick={() => generateIDCardPDF(item)}>
+                              <Button variant="contained" sx={{ borderRadius: 50 }} onClick={() => generateIDCardPDF(item)}>
                                 Download
                               </Button>
                             </Box>

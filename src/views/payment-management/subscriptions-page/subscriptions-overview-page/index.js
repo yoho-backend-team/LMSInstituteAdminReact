@@ -13,6 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import { useInstitute } from 'utils/get-institute-details';
+import { useNavigate } from 'react-router';
+import { Button } from '@mui/material';
+import { IconArrowLeft } from '@tabler/icons-react';
 
 const CardContent = styled(MuiCardContent)(({ theme }) => ({
   padding: `${theme.spacing(2, 2)} !important`,
@@ -24,8 +27,8 @@ const CardContent = styled(MuiCardContent)(({ theme }) => ({
   }
 }));
 
-
 const Subscription = () => {
+  const navigate=useNavigate()
   const [refetch, setRefetch] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
@@ -49,16 +52,15 @@ const Subscription = () => {
   useEffect(() => {
     dispatch(
       getSubscriptions({
-        institute : useInstitute().getInstituteId()
+        institute: useInstitute().getInstituteId()
       })
     );
   }, [dispatch, selectedBranchId, refetch]);
 
-
-  
   return (
     <Card>
       <CardContent>
+        <Button variant='contained' onClick={() => navigate('/payment-management/salaries')}><IconArrowLeft stroke={2}/></Button>
         <SubscriptionHeader />
         <SubscriptionDataTable Subscription={Subscription} />
         <SubscriptionPlans data={Subscription} Subscriptions={subscriptions} />

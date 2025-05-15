@@ -15,8 +15,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { useInstitute } from 'utils/get-institute-details';
+import { useNavigate } from 'react-router';
 
 const StaffNotification = () => {
+  const navigate=useNavigate()
   const dispatch = useDispatch();
   const staffNotifications = useSelector(selectStaffNotifications);
 

@@ -1,13 +1,12 @@
-import { useNavigate } from 'react-router-dom'; 
-import { Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Button, Link } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
 const SubscriptionHeader = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
- 
   const handleHistory = () => {
     navigate('/payment-management/subscriptions/history');
   };
@@ -21,9 +20,7 @@ const SubscriptionHeader = () => {
             <Typography sx={{ color: 'text.secondary' }}>
               All plans include 40+ advanced tools and features to boost your product.
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              Choose the best plan to fit your needs.
-            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>Choose the best plan to fit your needs.</Typography>
           </Box>
         </Box>
         <Box sx={{ textAlign: 'end', mb: 2 }}>

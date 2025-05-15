@@ -1,4 +1,4 @@
-import { CardContent } from '@mui/material';
+import { Button, CardContent } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import StudyMaterialSkelton from 'components/cards/Skeleton/ContentSkeleton/MaterialSkelton';
@@ -20,8 +20,11 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
+import { useNavigate } from 'react-router';
+import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 const Modules = () => {
+  const navigate = useNavigate();
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -33,19 +36,17 @@ const Modules = () => {
   const [refetch, setrefetch] = useState(false);
   const [reFetch, setRefetch] = useState(false);
   const [statusValue, setStatusValue] = useState({});
-  const { show, hide } = useSpinner()
-  const [page,setPage] = useState(1)
+  const { show, hide } = useSpinner();
+  const [page, setPage] = useState(1);
 
   const dispatch = useDispatch();
   const Module = useSelector(selectCourseModules);
   const ModuleLoading = useSelector(selectLoading);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const institute_id = useInstitute().getInstituteId()
+  const institute_id = useInstitute().getInstituteId();
 
   useEffect(() => {
-    dispatch(getAllCourseModules(
-      { branch_id: selectedBranchId,institute_id:institute_id, page: '1' }
-    ));
+    dispatch(getAllCourseModules({ branch_id: selectedBranchId, institute_id: institute_id, page: '1' }));
   }, [dispatch, selectedBranchId, refetch]);
 
   useEffect(() => {
@@ -73,21 +74,19 @@ const Modules = () => {
 
   const handleStatusChangeApi = async () => {
     try {
-     show() 
-     const data = {
-      is_active: !statusValue?.is_active,
-      module_id: statusValue?.uuid
-     };
-     const response = await updateCourseModulesStatus(data);
-     toast.success(response.message);
+      show();
+      const data = {
+        is_active: !statusValue?.is_active,
+        module_id: statusValue?.uuid
+      };
+      const response = await updateCourseModulesStatus(data);
+      toast.success(response.message);
       setRefetch((state) => !state);
-      dispatch(getAllCourseModules(
-        { branch_id: selectedBranchId,institute_id:institute_id, page: page }
-      ));
+      dispatch(getAllCourseModules({ branch_id: selectedBranchId, institute_id: institute_id, page: page }));
     } catch (error) {
       toast.error(response.message);
-    }finally{
-      hide()
+    } finally {
+      hide();
     }
   };
 
@@ -115,13 +114,14 @@ const Modules = () => {
     }
   };
 
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen);
-
 
   return (
     <>
       <Grid container spacing={2}>
+        <Button  variant="contained" sx={{ my: 3,ml:2 }} onClick={() => navigate('/content-management/notes')}>
+          <IconArrowNarrowLeft stroke={2} />
+        </Button>
         <Grid item xs={12}>
           <ModuleHeader toggle={toggleAddUserDrawer} selectedBranchId={selectedBranchId} />
         </Grid>
@@ -130,9 +130,8 @@ const Modules = () => {
             {ModuleLoading ? (
               <StudyMaterialSkelton />
             ) : (
-              <Grid container spacing={2} sx={{ marginLeft: "20px", marginTop: "20px"}} >
-              {
-                Module?.data?.map((module,index) => (
+              <Grid container spacing={2} sx={{ marginLeft: '20px', marginTop: '20px' }}>
+                {Module?.data?.map((module, index) => (
                   <Grid item xs={12} sm={6} md={4} key={module?.id}>
                     <ModuleCard
                       index={index}
@@ -149,18 +148,17 @@ const Modules = () => {
                       handleDelete={handleDelete}
                     />
                   </Grid>
-                ))
-              }
+                ))}
               </Grid>
             )}
-            { !ModuleLoading && Module?.last_page !== 1 && Module?.last_page !== 0 && (
+            {!ModuleLoading && Module?.last_page !== 1 && Module?.last_page !== 0 && (
               <CardContent>
                 <Grid sx={{ mt: 2, mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
                   <Pagination
                     count={Module?.last_page}
                     color="primary"
                     onChange={(e, page) => {
-                      dispatch(getAllCourseModules({ branch_id: selectedBranchId,institute_id:institute_id, page: page }));
+                      dispatch(getAllCourseModules({ branch_id: selectedBranchId, institute_id: institute_id, page: page }));
                     }}
                   />
                 </Grid>

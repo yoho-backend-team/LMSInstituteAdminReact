@@ -12,8 +12,10 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllCourseStudyMaterials } from '../redux/studyMaterialThunks';
+import { useNavigate } from 'react-router';
 
 const StudyMaterialHeader = (props) => {
+  const navigate = useNavigate();
   // ** Props
   const { toggle, selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
@@ -53,14 +55,14 @@ const StudyMaterialHeader = (props) => {
   const toggleInputs = () => {
     setShowInputs((prev) => !prev);
   };
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 6,py:2 }}>
-          <Box sx={{display:"flex",alignItems:"center"}} >
-
-          <Button
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 6, py: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button
                 onClick={toggleInputs}
                 sx={{
                   py: 1,
@@ -71,12 +73,11 @@ const StudyMaterialHeader = (props) => {
                   fontSize: { xs: '0.8rem', sm: '0.9rem' }
                 }}
               >
-                
                 <FilterAltTwoToneIcon />
               </Button>
 
-            <Typography variant="h2">Study materials</Typography>
-          </Box>
+              <Typography variant="h2">Study materials</Typography>
+            </Box>
             <Box>
               <Button
                 onClick={toggle}
@@ -84,7 +85,7 @@ const StudyMaterialHeader = (props) => {
                 sx={{
                   '& svg': { mr: 2 },
                   px: 2,
-                  py:1.7,
+                  py: 1.7,
                   borderRadius: '50px',
                   backgroundColor: '#0CCE7F',
                   ':hover': { backgroundColor: '#0AA865' },
@@ -97,7 +98,7 @@ const StudyMaterialHeader = (props) => {
             </Box>
           </Box>
           {showInputs && (
-            <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' ,boxShadow:3,mt:1 }}>
+            <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex', boxShadow: 3, mt: 1 }}>
               <Grid item xs={12}>
                 <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Grid item xs={12} sm={4}>

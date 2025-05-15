@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { getAllFaqs } from '../redux/faqThunks';
 import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import Icon from 'components/icon';
+import { useNavigate } from 'react-router';
 
 const FaqTableHeader = (props) => {
   const { toggle, selectedBranchId, faqCategories } = props;
@@ -70,6 +71,7 @@ const FaqTableHeader = (props) => {
             </Box>
 
             <Box>
+            
               <Button
                 onClick={toggle}
                 variant="contained"
@@ -89,11 +91,11 @@ const FaqTableHeader = (props) => {
             </Box>
           </Box>
 
-              
-              <Box 
-              sx={{ 
-                mt: 0 , 
-                }}>
+          <Box
+            sx={{
+              mt: 0
+            }}
+          >
             {showFilters && (
               <Grid
                 container

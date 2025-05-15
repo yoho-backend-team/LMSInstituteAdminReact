@@ -19,11 +19,11 @@ const TableHeader = (props) => {
     show();
     const data = branches?.data?.filter((branch) => branch?.branch_identity?.toLowerCase().includes(searchValue?.toLowerCase()));
     if (data && data?.length !== 0) {
-      dispatch(setBranches({ last_page: "1", data: data, count: data?.length }));
+      dispatch(setBranches({ last_page: '1', data: data, count: data?.length }));
       setIsSearch(true);
       hide();
     } else {
-      dispatch(getAllBranches({ perPage: "1000", branch_identity: searchValue }));
+      dispatch(getAllBranches({ perPage: '1000', branch_identity: searchValue }));
       setIsSearch(true);
       hide();
     }
@@ -39,10 +39,10 @@ const TableHeader = (props) => {
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: "white",  
-        boxShadow : "0 .25rem .875rem 0 rgba(38,43,67,.16)",
+        backgroundColor: 'white',
+        boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)',
         borderRadius: '8px',
-        px: 2, 
+        px: 2
       }}
     >
       <TextField
@@ -51,7 +51,7 @@ const TableHeader = (props) => {
           width: 400,
           backgroundColor: '#fff',
           borderRadius: '8px',
-          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
         }}
         placeholder="Search Branch"
         onChange={(e) => setSearchValue(e.target.value)}
@@ -59,7 +59,13 @@ const TableHeader = (props) => {
           endAdornment: (
             <InputAdornment position="end">
               {isSearch ? (
-                <IconButton onClick={() => { setRefetchBranch(!refetchBranch); setIsSearch(false); setSearchValue(""); }}>
+                <IconButton
+                  onClick={() => {
+                    setRefetchBranch(!refetchBranch);
+                    setIsSearch(false);
+                    setSearchValue('');
+                  }}
+                >
                   <Icon icon="material-symbols:close" />
                 </IconButton>
               ) : (
@@ -74,20 +80,20 @@ const TableHeader = (props) => {
       <Box
         component={Link}
         to="branches/add"
-        sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          textDecoration: 'none', 
-          mt: { xs: 3, sm: 0 } 
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          textDecoration: 'none',
+          mt: { xs: 3, sm: 0 }
         }}
       >
-        <Button 
-          variant="contained" 
-          color="primary" 
+        <Button
+          variant="contained"
+          color="primary"
           startIcon={<Icon icon="tabler:plus" />}
           sx={{
             borderRadius: '8px',
-            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.15)',
+            boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.15)'
           }}
         >
           Add New Branch

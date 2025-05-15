@@ -13,9 +13,9 @@ import OptionsMenu from 'components/option-menu';
 import HelpCenterAddDrawer from 'features/help-center/helpsupportAdd/components/HelpCenterAdded';
 import HelpCenterEdit from 'features/help-center/helpsupportAdd/components/HelpCenterEdit';
 import HlepCenterTableHeader from 'features/help-center/helpsupportAdd/components/HelpCenterTableHeader';
-import {  selectHelpCenter, selectLoading } from 'features/help-center/helpsupportAdd/redux/HelpSelectors';
+import { selectHelpCenter, selectLoading } from 'features/help-center/helpsupportAdd/redux/HelpSelectors';
 import { getAllHelpCenterDetails } from 'features/help-center/helpsupportAdd/redux/HelpThunks';
-import { deleteHelpCenter,  updateHelpcenter } from 'features/help-center/helpsupportAdd/service/helpCenter';
+import { deleteHelpCenter, updateHelpcenter } from 'features/help-center/helpsupportAdd/service/helpCenter';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,33 +33,27 @@ const HelpDataGrid = () => {
   const [statusOpen, setStatusDialogOpen] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const selectedBranchId = useSelector((state) => state.auth.selectedBranchId);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 10;
-
-  
 
   const dispatch = useDispatch();
   const HelpCenterData = useSelector(selectHelpCenter);
   const HelpCenterLoading = useSelector(selectLoading);
 
   useEffect(() => {
-
-    
     const data = {
       branchid: selectedBranchId,
       instituteid: useInstitute().getInstituteId(),
-      page : 1,
-      perPage :10
+      page: 1,
+      perPage: 10
     };
-   
+
     dispatch(getAllHelpCenterDetails(data));
     setLoading(false);
   }, [dispatch, selectedBranchId, refetch]);
 
-
-
-const handlePageChange = (event, page) => {
+  const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
 
@@ -73,15 +67,12 @@ const handlePageChange = (event, page) => {
     setStatusDialogOpen(true);
   };
 
-
-  
-
   const handleStatusChangeApi = async () => {
     const data = {
       is_active: selectedHelpCenterStatus,
       uuid: selectedHelpCenter?.uuid
     };
-    const response = await updateHelpcenter(data); 
+    const response = await updateHelpcenter(data);
     if (response.success) {
       toast.success(response.message);
       setRefetch((state) => !state);
@@ -102,8 +93,7 @@ const handlePageChange = (event, page) => {
       toast.error(response.message);
     }
   };
-  const toggleAddUserDrawer = () => 
-    setHelpAddUserOpen(!addHelpUserOpen);
+  const toggleAddUserDrawer = () => setHelpAddUserOpen(!addHelpUserOpen);
 
   const handleHelpDelete = (itemId) => {
     setDeletingHelpItemId(itemId);
@@ -116,15 +106,15 @@ const handlePageChange = (event, page) => {
 
   const columns = [
     {
-      flex: 0.80,
+      flex: 0.8,
       headerName: 'Q No',
       field: 'id',
       headerAlign: 'left',
-      align:"left",
-     
+      align: 'left',
+
       renderCell: ({ row }) => {
         return (
-          <Typography noWrap sx={{fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize'}}>
+          <Typography noWrap sx={{ fontWeight: 500, color: 'text.secondary', textTransform: 'capitalize' }}>
             {row?.id}
           </Typography>
         );
@@ -135,23 +125,19 @@ const handlePageChange = (event, page) => {
       field: 'category_name',
       headerName: 'Category Name',
       headerAlign: 'left',
-      align:"left",
+      align: 'left',
       renderCell: ({ row }) => {
         return (
           <Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column',height:'100%'}}>
-              
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Typography
                 noWrap
                 sx={{
-                  
-                  
                   fontSize: '15px',
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' },
-                  
+                  '&:hover': { color: 'primary.main' }
                 }}
               >
                 {row?.category}
@@ -166,12 +152,11 @@ const handlePageChange = (event, page) => {
       field: 'videolink',
       headerName: 'Video Link',
       headerAlign: 'left',
-      align:"left",
+      align: 'left',
       renderCell: ({ row }) => {
         return (
           <Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column',height:'100%'}}>
-              
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Typography
                 noWrap
                 sx={{
@@ -179,8 +164,7 @@ const handlePageChange = (event, page) => {
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' },
-                  
+                  '&:hover': { color: 'primary.main' }
                 }}
               >
                 {row?.videolink}
@@ -194,13 +178,12 @@ const handlePageChange = (event, page) => {
       flex: 2.2,
       field: 'Q&A',
       headerName: 'Q&A',
-      headerAlign: "left",
-      align:"left",
+      headerAlign: 'left',
+      align: 'left',
       renderCell: ({ row }) => {
         return (
           <Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column',height:'100%'}}>
-              
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <Typography
                 noWrap
                 sx={{
@@ -208,13 +191,12 @@ const handlePageChange = (event, page) => {
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: 'text.secondary',
-                  '&:hover': { color: 'primary.main' },
-                  
+                  '&:hover': { color: 'primary.main' }
                 }}
               >
                 {row?.question}
               </Typography>
-              <Typography noWrap sx={{  color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', mt: 1.3, fontSize: '13px' }}>
                 {row?.answer}
               </Typography>
             </Box>
@@ -295,10 +277,10 @@ const handlePageChange = (event, page) => {
             <Card>
               <DataGrid
                 autoHeight
-                key={"id"}
+                key={'id'}
                 rowHeight={80}
-                sx={{ textAlign:"left"}}
-                 rows={HelpCenterData?.data}
+                sx={{ textAlign: 'left' }}
+                rows={HelpCenterData?.data}
                 columns={columns}
                 disableRowSelectionOnClick
                 hideFooterPagination
@@ -326,18 +308,18 @@ const handlePageChange = (event, page) => {
         />
       </Grid>
       <Grid sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-      {HelpCenterData?.totalPages!== 1 && (
+        {HelpCenterData?.totalPages !== 1 && (
           <Grid item xs={12} sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-           <Pagination
+            <Pagination
               count={HelpCenterData?.totalPages}
               color="primary"
               onChange={(e, page) => {
                 const data = {
                   branchid: selectedBranchId,
                   instituteid: useInstitute().getInstituteId(),
-                  page: page 
+                  page: page
                 };
-                (data,page)
+                data, page;
                 dispatch(getAllHelpCenterDetails(data));
               }}
             />

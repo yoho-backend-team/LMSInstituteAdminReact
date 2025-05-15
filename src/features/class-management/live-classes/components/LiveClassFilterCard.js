@@ -1,5 +1,5 @@
 import Autocomplete from '@mui/material/Autocomplete';
-import {Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -21,6 +21,7 @@ import { Box } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Button from '@mui/material/Button';
 import LiveClassCardHeader from './LiveClassCardHeader';
+import { useNavigate } from 'react-router';
 
 const CustomInput = forwardRef((props, ref) => {
   const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : '';
@@ -33,6 +34,7 @@ const CustomInput = forwardRef((props, ref) => {
 });
 
 const LiveClassFilterCard = (props) => {
+  const navigate = useNavigate();
   const { selectedBranchId } = props;
   const dispatch = useDispatch();
   const [statusValue, setStatusValue] = useState('');

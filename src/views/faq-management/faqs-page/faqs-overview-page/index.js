@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -5,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
+import { IconArrowLeft } from '@tabler/icons-react';
 import FaqSkeleton from 'components/cards/Skeleton/FaqSkeleton';
 import NoDataFoundComponent from 'components/empty/noDataFound';
 import Icon from 'components/icon';
@@ -22,10 +24,12 @@ import { deleteFaq, updateStatusFaq } from 'features/faq-management/faqs/service
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import secureLocalStorage from 'react-secure-storage';
 import { useInstitute } from 'utils/get-institute-details';
 
 const FaqDataGrid = () => {
+  const navigate = useNavigate();
   const [value, setValue] = useState('');
   const [addUserOpen, setAddUserOpen] = useState(false);
   const [editUserOpen, setEditUserOpen] = useState(false);
@@ -90,7 +94,6 @@ const FaqDataGrid = () => {
 
     dispatch(getAllFaqs(data));
   }, [dispatch, selectedBranchId, refetch]);
-
 
   useEffect(() => {
     const getFaqCategories = async () => {
@@ -314,6 +317,10 @@ const FaqDataGrid = () => {
           {/* <FaqAccordian faqCategories={faqCategories?.data} faqs={faqs?.data} /> */}
         </Grid>
         <Grid item xs={12}>
+          <Button variant='contained' sx={{my:2}} onClick={() => navigate('/faq-management/categories')}>
+            <IconArrowLeft stroke={2} />
+          </Button>
+
           <FaqTableHeader
             value={value}
             handleFilter={handleFilter}
@@ -367,14 +374,9 @@ const FaqDataGrid = () => {
           </Grid>
         ) : error ? (
           <Grid item xs={12}>
-            <NoDataFoundComponent
-              title={error}
-              description={error.message}
-              buttonText="Retry"
-              onAdd={() => fetchFaqs(currentPage)}
-            />
+            <NoDataFoundComponent title={error} description={error.message} buttonText="Retry" onAdd={() => fetchFaqs(currentPage)} />
           </Grid>
-        ) : null }
+        ) : null}
 
         <FaqAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} faqCategories={faqCategories || []} setRefetch={setRefetch} />
         <FaqEdit

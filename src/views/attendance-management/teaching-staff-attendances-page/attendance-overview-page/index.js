@@ -1,5 +1,6 @@
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
+import { IconArrowLeft } from '@tabler/icons-react';
 import TeachingStaffSkeleton from 'components/cards/Skeleton/TeachingStaffSkeleton';
 import TeachingStaffCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffCard';
 import TeachingStaffFilterCard from 'features/attandence-management/teaching-staff-attandences/components/TeachingStaffFilterCard';
@@ -12,9 +13,11 @@ import { getAllTeachingStaffAttendances } from 'features/attandence-management/t
 import { use } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { useInstitute } from 'utils/get-institute-details';
 
 const TeachingStaff = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const teachingStaffs = useSelector(selectTeachingStaffAttendances);
   const teachingStaffLoading = useSelector(selectLoading);
@@ -25,19 +28,22 @@ const TeachingStaff = () => {
     const data = {
       type: 'teaching',
       branch: selectedBranchId,
-      institute:useInstitute().getInstituteId(),
+      institute: useInstitute().getInstituteId(),
       page: '1'
     };
     dispatch(getAllTeachingStaffAttendances(data));
   }, [dispatch, selectedBranchId]);
-  
+
   return (
     <>
       <Grid>
+        <Button variant="contained" sx={{ my: 2 }} size="medium" onClick={() => navigate('/attendance-management/student-attendances')}>
+          <IconArrowLeft stroke={2} />
+        </Button>
         <Grid>
           <TeachingStaffFilterCard selectedBranchId={selectedBranchId} />
         </Grid>
-        {teachingStaffLoading? (
+        {teachingStaffLoading ? (
           <TeachingStaffSkeleton />
         ) : (
           <Grid>
@@ -52,7 +58,9 @@ const TeachingStaff = () => {
               count={teachingStaffs?.last_page}
               color="primary"
               onChange={(e, page) => {
-                dispatch(getAllTeachingStaffAttendances({ branch: selectedBranchId,institute:useInstitute().getInstituteId(), page: page }));
+                dispatch(
+                  getAllTeachingStaffAttendances({ branch: selectedBranchId, institute: useInstitute().getInstituteId(), page: page })
+                );
               }}
             />
           </Grid>

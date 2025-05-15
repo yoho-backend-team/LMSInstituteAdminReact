@@ -6,8 +6,11 @@ import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllHelpCenterDetails } from '../redux/HelpThunks';
 import { useInstitute } from 'utils/get-institute-details';
+import { useNavigate } from 'react-router';
+import { IconArrowLeft } from '@tabler/icons-react';
 
 const HlepCenterTableHeader = (props) => {
+  const navigate=useNavigate()
   const { toggle, selectedBranchId } = props;
 
 
@@ -30,6 +33,7 @@ const HlepCenterTableHeader = (props) => {
     <Grid container spacing={2} sx={{ alignItems: 'flex-end', justifyContent: 'flex-end', display: 'flex' }}>
       <Grid item xs={12} sx={{ my: 3 }}>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Button variant='contained' sx={{ml:2}} onClick={()=>navigate('/help-center/help-faqs')}><IconArrowLeft stroke={2}/></Button>
           <Grid item sm={5} xs={12}>
             <TextField
               value={searchValue}

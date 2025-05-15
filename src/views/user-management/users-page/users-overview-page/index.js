@@ -9,14 +9,17 @@ import UserFilterCard from 'features/user-management/users-page/users-overview-p
 import UserHeaderSection from 'features/user-management/users-page/users-overview-page/components/UserHeaderSection';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Icon from 'components/icon';
+import { IconArrowNarrowLeft } from '@tabler/icons-react';
 
 import { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInstitute } from 'utils/get-institute-details';
 import { useSpinner } from 'context/spinnerContext';
 import { useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router';
 
 const UserList = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const users = useSelector(selectUsers);
@@ -51,61 +54,56 @@ const UserList = () => {
       getAllUsers({
         branch_id: selectedBranchId,
         page: '1',
-        institute_id: useInstitute().getInstituteId(),
+        institute_id: useInstitute().getInstituteId()
       })
     );
     hide();
   }, [dispatch, selectedBranchId, userRefetch]);
-
- 
-
+  const handleBack = () => {
+    navigate('/user-management/groups');
+  };
   return (
-    <Grid  container spacing={3} sx={{ position: 'relative' }}>
+    <Grid container spacing={3} sx={{ position: 'relative' }}>
       <Grid item xs={12}>
+        <Button variant='contained' sx={{my:3}} onClick={handleBack}>
+          <IconArrowNarrowLeft stroke={2} />
+        </Button>
         <UserHeaderSection users={users} groups={groups} />
-       
-       
-   
       </Grid>
-
-      <Grid item xs={12} sx={{ zIndex: 20 , display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',}}>
-       <Grid alignItems="center">
-  <Button
-    variant="contained"
-    color="primary"
-    onClick={() => setGridVisible(!isGridVisible)}
-    sx={{ marginBottom: '10px' }}
-    startIcon={<FilterListIcon />}
-  >
-    {isGridVisible ? 'Hide Filter' : 'Show Filter '}
-  </Button>
-  <span
-    style={{
-      mt:-3,
-      fontSize:"20px",
-      padding: '4px 8px',
-      borderRadius: '4px',
-      fontWeight: 'bold',
-    }}
-  >
-    Admin User
-  </span>
-</Grid>
+      <Grid item xs={12} sx={{ zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Grid alignItems="center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setGridVisible(!isGridVisible)}
+            sx={{ marginBottom: '10px' }}
+            startIcon={<FilterListIcon />}
+          >
+            {isGridVisible ? 'Hide Filter' : 'Show Filter '}
+          </Button>
+          <span
+            style={{
+              mt: -3,
+              fontSize: '20px',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontWeight: 'bold'
+            }}
+          >
+            Admin User
+          </span>
+        </Grid>
 
         <Button
-          onClick={toggleAddUserDrawer}  
+          onClick={toggleAddUserDrawer}
           variant="contained"
           sx={{
-           
             backgroundColor: '#0CCE7F',
             '&:hover': {
-              backgroundColor: '#0AA865',
+              backgroundColor: '#0AA865'
             },
             width: 'fit-content',
-            mb:"10px"
-           
+            mb: '10px'
           }}
         >
           <Icon fontSize="1rem" icon="tabler:plus" />
@@ -114,18 +112,16 @@ const UserList = () => {
       </Grid>
 
       {isGridVisible && (
-       <Grid
-       item
-       xs={12}
-      
-       sx={{
-         position: 'relative',
-         maxWidth: '220px',
-         left: 0,
-         mb: 2, 
-       }}
-     >
-     
+        <Grid
+          item
+          xs={12}
+          sx={{
+            position: 'relative',
+            maxWidth: '220px',
+            left: 0,
+            mb: 2
+          }}
+        >
           <UserFilterCard
             users={users}
             groups={groups}
@@ -137,21 +133,9 @@ const UserList = () => {
         </Grid>
       )}
 
-     
-        <UserBodySection
-          groups={groups}
-          users={users}
-          setUserRefetch={setUserRefetch}
-          selectedBranchId={selectedBranchId}
-        />
-    
+      <UserBodySection groups={groups} users={users} setUserRefetch={setUserRefetch} selectedBranchId={selectedBranchId} />
 
-      <UserAddDrawer
-        open={addUserOpen}
-        toggle={toggleAddUserDrawer}
-        groups={groups}
-        branch_id={selectedBranchId}
-      />
+      <UserAddDrawer open={addUserOpen} toggle={toggleAddUserDrawer} groups={groups} branch_id={selectedBranchId} />
     </Grid>
   );
 };

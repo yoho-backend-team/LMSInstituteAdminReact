@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { getAllCourseNotes } from '../redux/noteThunks';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
+
 const NotesHeader = (props) => {
   const { toggle, selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
@@ -108,8 +109,8 @@ const NotesHeader = (props) => {
             </Box>
           </Box>
           {showInputs && (
-            <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center' , boxShadow:3,mt:1}}>
-              <Grid item xs={12} sm={4} >
+            <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center', boxShadow: 3, mt: 1 }}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   select
                   fullWidth

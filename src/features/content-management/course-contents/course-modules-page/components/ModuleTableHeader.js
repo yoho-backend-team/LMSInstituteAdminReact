@@ -14,6 +14,7 @@ import { getAllCourseModules } from '../redux/moduleThunks';
 import { getAllCourses } from 'features/course-management/courses-page/services/courseServices';
 import { useInstitute } from 'utils/get-institute-details';
 
+
 const ModuleHeader = (props) => {
   const { toggle, selectedBranchId } = props;
   const [searchValue, setSearchValue] = useState('');
@@ -67,7 +68,8 @@ const ModuleHeader = (props) => {
         <Card sx={{ boxShadow: '0 .25rem .875rem 0 rgba(38,43,67,.16)' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 6, py: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button
+              
+              <Button
                 onClick={toggleInputs}
                 sx={{
                   py: 1,
@@ -78,31 +80,30 @@ const ModuleHeader = (props) => {
                   fontSize: { xs: '0.8rem', sm: '0.9rem' }
                 }}
               >
-                
                 <FilterAltTwoToneIcon />
               </Button>
 
-            <Typography variant="h2">Modules</Typography>
+              <Typography variant="h2">Modules</Typography>
             </Box>
-              <Button
-                onClick={toggle}
-                variant="contained"
-                sx={{
-                  '& svg': { mr: 1 },
-                  px: 2,
-                  py: 1.7,
-                  borderRadius: '50px',
-                  backgroundColor: '#0CCE7F',
-                  ':hover': { backgroundColor: '#0AA865' },
-                  fontSize: { xs: '0.8rem', sm: '0.9rem' }
-                }}
-              >
-                <Icon fontSize="1.125rem" icon="tabler:plus" />
-                Add Modules
-              </Button>
+            <Button
+              onClick={toggle}
+              variant="contained"
+              sx={{
+                '& svg': { mr: 1 },
+                px: 2,
+                py: 1.7,
+                borderRadius: '50px',
+                backgroundColor: '#0CCE7F',
+                ':hover': { backgroundColor: '#0AA865' },
+                fontSize: { xs: '0.8rem', sm: '0.9rem' }
+              }}
+            >
+              <Icon fontSize="1.125rem" icon="tabler:plus" />
+              Add Modules
+            </Button>
           </Box>
           {showInputs && (
-            <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center' ,boxShadow:3,mt:0.2}}>
+            <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'center', boxShadow: 3, mt: 0.2 }}>
               <Grid item xs={12} sm={4}>
                 <TextField
                   select
